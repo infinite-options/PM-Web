@@ -1,5 +1,7 @@
 
-const baseURL = 'http://localhost:5000'
+const devURL = 'http://localhost:5000'
+const liveURL = 'https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev'
+const baseURL = liveURL;
 
 const get = async (path, token=null) => {
   const headers = {};
