@@ -91,7 +91,7 @@ function ManagerProfileInfo(props) {
       </Form.Group>
       <Form.Group className='mx-2 my-3'>
         <Form.Label as='h6' className='mb-0 ms-2'>Email Address</Form.Label>
-        <Form.Control style={squareForm} placeholder='Email' value={email}
+        <Form.Control style={squareForm} placeholder='Email' value={email} type='email'
           onChange={(e) => setEmail(e.target.value)}/>
       </Form.Group>
       <Form.Group className='mx-2 my-3'>

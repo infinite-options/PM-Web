@@ -11,6 +11,9 @@ import {bolder} from '../utils/styles';
 
 function ProfileInfo() {
   const [profileStage, setProfileStage] = React.useState('BUSINESS');
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [profileStage])
   return (
     <div className='h-100 pb-5'>
       {profileStage === 'BUSINESS' ? (

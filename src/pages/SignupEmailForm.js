@@ -80,11 +80,11 @@ function SignupEmailForm(props) {
             <Form>
               <Form.Group className='mx-2 my-3'>
                 <Form.Label as='h5' className='mb-0 ms-1'>Email Address</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={emailRef} placeholder='Email'/>
+                <Form.Control style={{borderRadius: 0}} ref={emailRef} placeholder='Email' type='email'/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
                 <Form.Label as='h5' className='mb-0 ms-1'>Confirm Email Address</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={confirmEmailRef} placeholder='Confirm Email'/>
+                <Form.Control style={{borderRadius: 0}} ref={confirmEmailRef} placeholder='Confirm Email' type='email'/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
                 <Form.Label as='h5' className='mb-0 ms-1'>Enter Password</Form.Label>

@@ -54,7 +54,7 @@ function Login(props) {
             <Form>
               <Form.Group className='mx-2 my-3'>
                 <Form.Label as='h5' className='mb-0 ms-1'>Email Address</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={emailRef} placeholder='Email'/>
+                <Form.Control style={{borderRadius: 0}} ref={emailRef} placeholder='Email' type='email'/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
                 <Form.Label as='h5' className='mb-0 ms-1'>Password</Form.Label>
