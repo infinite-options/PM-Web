@@ -7,6 +7,9 @@ const boldSmall = {
   fontWeight: 'bolder',
   fontSize: 'smaller'
 }
+const small = {
+  fontSize: 'small'
+}
 const bolder = {
   fontWeight: 'bolder'
 }
@@ -15,6 +18,10 @@ const underline = {
 }
 const gray = {
   color: 'gray',
+  fontSize: 'small'
+}
+const blue = {
+  color: 'blue',
   fontSize: 'small'
 }
 const smallPillButton = {
@@ -37,6 +44,7 @@ export {
   boldSmall,
   underline,
   gray,
+  small,
   smallPillButton,
   squareForm,
   hidden,
