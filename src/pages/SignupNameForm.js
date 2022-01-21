@@ -27,7 +27,7 @@ function SignupNameForm(props) {
   }
   return (
     <div className='h-100 d-flex flex-column'>
-      <Header title='Sign Up' back={props.back}/>
+      <Header title='Sign Up' leftText='< Back' leftFn={props.back}/>
       <Container>
         <Form>
           <Form.Group className='mx-2 my-3'>

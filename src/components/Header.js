@@ -12,17 +12,23 @@ function Header(props) {
   return (
     <Container fluid style={headerContainer} className='mb-4'>
       <Row>
-        {props.back ? (
+        {props.leftText ? (
           <Col className='d-flex flex-column justify-content-end'>
-            <Button style={textButton} onClick={props.back}>
-              {'< Back'}
+            <Button style={textButton} onClick={props.leftFn}>
+              {props.leftText}
             </Button>
           </Col>
         ) : <Col/>}
         <Col xs={5} className='text-center d-flex flex-column justify-content-end'>
           <h6 className='mt-5 mb-2'>{props.title}</h6>
         </Col>
-        <Col/>
+        {props.rightText ? (
+          <Col className='d-flex flex-column justify-content-end'>
+            <Button style={textButton} onClick={props.rightFn}>
+              {props.rightText}
+            </Button>
+          </Col>
+        ) : <Col/>}
       </Row>
     </Container>
   );

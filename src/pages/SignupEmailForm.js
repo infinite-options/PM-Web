@@ -52,7 +52,7 @@ function SignupEmailForm(props) {
   }
   return (
     <div className='d-flex flex-column h-100'>
-      <Header title='Sign Up' back={props.back}/>
+      <Header title='Sign Up' leftText='< Back' leftFn={props.back}/>
       <Container className='px-4'>
         <h5>Full Name</h5>
         <p style={gray}>{props.firstName+' '+props.lastName}</p>

@@ -15,17 +15,25 @@ const get = async (path, token=null) => {
   return data;
 }
 
-const post = async (path, body, token=null) => {
-  const headers = {
+const post = async (path, body, token=null, files=null) => {
+  let headers = {
     'content-type': 'application/json'
   };
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }
+  let requestBody = JSON.stringify(body);
+  if (files !== null) {
+    headers = {};
+    requestBody = new FormData();
+    for (const key of Object.keys(body)) {
+      requestBody.append(key, body[key]);
+    }
+  }
   const response = await fetch(baseURL+path, {
     method: 'POST',
     headers: headers,
-    body: JSON.stringify(body)
+    body: requestBody
   });
   const data = await response.json();
   return data;

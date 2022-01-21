@@ -15,7 +15,7 @@ function SelectRole() {
     // add navigation to correct role pages
     console.log(`load ${selectedRole}`);
     if (selectedRole === 'OWNER') {
-      navigate('/');
+      navigate('/owner');
     } else if (selectedRole === 'MANAGER') {
       navigate('/');
     } else if (selectedRole === 'TENANT') {
@@ -39,7 +39,7 @@ function SelectRole() {
         <h5 className='mb-4'>Login as: (choose one)</h5>
         {availableRoles.map((role, i) => (
           <div key={i} className='d-flex px-4'>
-            <Checkbox checked={role === selectedRole} onClick={() => setSelectedRole(role)}/>
+            <Checkbox type='CIRCLE' checked={role === selectedRole} onClick={() => setSelectedRole(role)}/>
             <p className='d-inline-block text-left'>{longNames[role]}</p>
           </div>
         ))}

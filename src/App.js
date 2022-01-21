@@ -6,11 +6,9 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProfileInfo from './pages/ProfileInfo';
+import OwnerHome from './pages/OwnerHome';
 
 function App() {
-  React.useEffect(() => {
-    console.log('mount app');
-  }, []);
   const [userData, setUserData] = React.useState({
     access_token: localStorage.getItem('access_token'),
     refresh_token: localStorage.getItem('refresh_token'),
@@ -38,6 +36,7 @@ function App() {
             <Route path='login' element={<Login/>}/>
             <Route path='signup' element={<Signup/>}/>
             <Route path='profileInfo' element={<ProfileInfo/>}/>
+            <Route path='owner' element={<OwnerHome/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

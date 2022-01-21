@@ -57,7 +57,7 @@ function PaymentSelection(props) {
       <h6>Accept Payments via:</h6>
       <Row className='mb-1'>
         <Col className='d-flex align-items-center'>
-          <Checkbox onClick={(checked) => setShowPayPal(checked)}/>
+          <Checkbox type='BOX' onClick={(checked) => setShowPayPal(checked)}/>
           <p className='d-inline-block mb-0'>PayPal</p>
         </Col>
         <Col>
@@ -67,7 +67,7 @@ function PaymentSelection(props) {
       </Row>
       <Row className='mb-1'>
         <Col className='d-flex align-items-center'>
-          <Checkbox onClick={(checked) => setShowApplePay(checked)}/>
+          <Checkbox type='BOX' onClick={(checked) => setShowApplePay(checked)}/>
           <p className='d-inline-block mb-0'>Apple Pay</p>
         </Col>
         <Col>
@@ -77,7 +77,7 @@ function PaymentSelection(props) {
       </Row>
       <Row className='mb-1'>
         <Col className='d-flex align-items-center'>
-          <Checkbox onClick={(checked) => setShowZelle(checked)}/>
+          <Checkbox type='BOX' onClick={(checked) => setShowZelle(checked)}/>
           <p className='d-inline-block mb-0'>Zelle</p>
         </Col>
         <Col>
@@ -87,7 +87,7 @@ function PaymentSelection(props) {
       </Row>
       <Row className='mb-1'>
         <Col className='d-flex align-items-center'>
-          <Checkbox onClick={(checked) => setShowVenmo(checked)}/>
+          <Checkbox type='BOX' onClick={(checked) => setShowVenmo(checked)}/>
           <p className='d-inline-block mb-0'>Venmo</p>
         </Col>
         <Col>
@@ -97,7 +97,7 @@ function PaymentSelection(props) {
       </Row>
       <Row className='mb-1'>
         <Col className='d-flex align-items-center'>
-          <Checkbox onClick={(checked) => setShowChecking(checked)}/>
+          <Checkbox type='BOX' onClick={(checked) => setShowChecking(checked)}/>
           <p className='d-inline-block mb-0'>Checking Acct.</p>
         </Col>
         <Col>

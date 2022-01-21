@@ -1,4 +1,5 @@
 import React from 'react';
+import Check from '../icons/Check.svg';
 
 class Checkbox extends React.Component {
   constructor(props) {
@@ -13,24 +14,45 @@ class Checkbox extends React.Component {
     }
   }
   onClick = () => {
-    this.props.onClick(!this.state.checked);
-    this.setState({checked: !this.state.checked});
+    if (this.props.onClick !== undefined) {
+      this.props.onClick(!this.state.checked);
+    }
+    if (this.props.checked === undefined) {
+      this.setState({checked: !this.state.checked});
+    }
   }
   render() {
     const color = (this.state.checked ? 'black' : 'white');
-    return (
-      <div style={{
+    return <>
+      {this.props.type === 'CIRCLE' ? (
+        <div style={{
+            width: '20px',
+            height: '20px',
+            backgroundColor: color,
+            borderRadius: '50%',
+            border: '1px solid black',
+            padding: '2px',
+            margin: '0 5px',
+            backgroundClip: 'content-box',
+            display: 'inline-block'
+        }} onClick={this.onClick}/>
+      ) : this.props.type === 'BOX' ? (
+        <div style={{
           width: '20px',
           height: '20px',
-          backgroundColor: color,
-          borderRadius: '50%',
           border: '1px solid black',
           padding: '2px',
           margin: '0 5px',
-          backgroundClip: 'content-box',
           display: 'inline-block'
-      }} onClick={this.onClick}/>
-    );
+        }} onClick={this.onClick}>
+          <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
+            {this.state.checked ? (
+              <img src={Check} alt='Check'/>
+            ) : ''}
+          </div>
+        </div>
+      ) : ''}
+    </>;
   }
 }
 

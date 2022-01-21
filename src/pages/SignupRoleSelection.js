@@ -34,13 +34,13 @@ function SignupRoleSelection(props) {
   }
   return (
     <div>
-      <Header title='Sign Up' back={props.back}/>
+      <Header title='Sign Up' leftText='< Back' leftFn={props.back}/>
       <Container>
         <h5 className='mb-5'>How do you plan to use this app?</h5>
         {availableRoles.map((role, i) => (
           <Row key={i}>
             <Col xs={2} className='d-flex justify-content-end p-0'>
-              <Checkbox onClick={(checked) => checked ? addRole(role) : removeRole(role)}/>
+              <Checkbox type='CIRCLE' onClick={(checked) => checked ? addRole(role) : removeRole(role)}/>
             </Col>
             <Col className='p-0'>
               <p className='d-inline-block text-left'>{role}</p>

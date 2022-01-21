@@ -38,7 +38,7 @@ function Login(props) {
     <div className='h-100 pb-5'>
       {loginStage === 'LOGIN' ? (
         <div className='d-flex flex-column h-100'>
-          <Header title='Login' back={() => navigate('/')}/>
+          <Header title='Login' leftText='< Back' leftFn={() => navigate('/')}/>
           <Container className='px-4'>
             <div className='text-center'>
               <img src={AppleLogin} alt='Apple Login' className='m-1'/>
