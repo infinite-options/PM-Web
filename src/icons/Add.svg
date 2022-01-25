@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Group_622" data-name="Group 622" transform="translate(-501 -420)">
+    <g id="Rectangle_11" data-name="Rectangle 11" transform="translate(501 420)" fill="#fff" stroke="#007aff" stroke-width="1">
+      <rect width="24" height="24" rx="5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="23" height="23" rx="4.5" fill="none"/>
+    </g>
+    <path id="Icon_open-plus" data-name="Icon open-plus" d="M2.805,0V2.805H0v1.87H2.805V7.48h1.87V4.675H7.48V2.805H4.675V0Z" transform="translate(509.26 428.26)" fill="#007aff"/>
+  </g>
+</svg>

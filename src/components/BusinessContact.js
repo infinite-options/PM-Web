@@ -1,8 +1,8 @@
 import React from 'react';
-import {Form, Button} from 'react-bootstrap';
+import {Form, Container, Button} from 'react-bootstrap';
 import EditIcon from '../icons/EditIcon.svg';
 import DeleteIcon from '../icons/DeleteIcon.svg';
-import {squareForm, pillButton, smallPillButton, gray} from '../utils/styles';
+import {squareForm, pillButton, smallPillButton, gray, red, small, hidden} from '../utils/styles';
 
 function BusinessContact(props) {
   const [contactState, setContactState] = props.state;
@@ -15,6 +15,11 @@ function BusinessContact(props) {
     email: ''
   }
   const addContact = () => {
+    if (newContact.first_name === '' || newContact.last_name === '' || newContact.company_role === '' ||
+      newContact.phone_number === '' || newContact.email === '') {
+      setErrorMessage('Please fill out all fields');
+      return;
+    }
     const newContactState = [...contactState];
     newContactState.push({...newContact});
     setContactState(newContactState);
@@ -22,6 +27,7 @@ function BusinessContact(props) {
   }
   const cancelEdit = () => {
     setNewContact(null);
+    setErrorMessage('');
   }
   const editContact = (i) => {
     setNewContact(contactState[i]);
@@ -36,8 +42,14 @@ function BusinessContact(props) {
     changedContact[field] = event.target.value;
     setNewContact(changedContact);
   }
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const required = (
+    errorMessage === 'Please fill out all fields' ? (
+      <span style={red} className='ms-1'>*</span>
+    ) : ''
+  );
   return (
-    <div>
+    <Container className='mb-4'>
       <h6 className='mb-3'>Contact Info:</h6>
       {contactState.map((contact, i) => (
         <div key={i}>
@@ -68,30 +80,33 @@ function BusinessContact(props) {
       {newContact !== null ? (
         <div>
           <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>First Name</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>First Name {required}</Form.Label>
             <Form.Control style={squareForm} placeholder='First' value={newContact.first_name}
               onChange={(e) => changeNewContact(e, 'first_name')}/>
           </Form.Group>
           <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Last Name</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>Last Name {required}</Form.Label>
             <Form.Control style={squareForm} placeholder='Last' value={newContact.last_name}
               onChange={(e) => changeNewContact(e, 'last_name')}/>
           </Form.Group>
           <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Role at the company</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>Role at the company {required}</Form.Label>
             <Form.Control style={squareForm} placeholder='Role' value={newContact.company_role}
               onChange={(e) => changeNewContact(e, 'company_role')}/>
           </Form.Group>
           <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Phone Number</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>Phone Number {required}</Form.Label>
             <Form.Control style={squareForm} placeholder='(xxx)xxx-xxxx' value={newContact.phone_number}
               onChange={(e) => changeNewContact(e, 'phone_number')}/>
           </Form.Group>
           <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Email Address</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>Email Address {required}</Form.Label>
             <Form.Control style={squareForm} placeholder='Email' value={newContact.email}
               onChange={(e) => changeNewContact(e, 'email')}/>
           </Form.Group>
+          <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+            <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+          </div>
         </div>
       ) : ''}
 
@@ -112,7 +127,7 @@ function BusinessContact(props) {
           </Button>
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 

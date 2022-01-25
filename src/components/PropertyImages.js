@@ -1,6 +1,7 @@
 import React from 'react';
 import {Container} from 'react-bootstrap';
 import Plus from '../icons/Plus.svg';
+import DeleteIcon from '../icons/DeleteIcon.svg';
 import Heart from '../icons/Heart.svg';
 import HeartOutline from '../icons/HeartOutline.svg';
 import {tileImg, xSmall, bold} from '../utils/styles';
@@ -30,6 +31,14 @@ function PropertyImages(props) {
     readImage(file);
   }
 
+  const deleteImage = (image) => {
+    const newImageState = imageState.filter(file => file.index !== image.index);
+    if (image.coverPhoto && newImageState.length > 0) {
+      newImageState[0].coverPhoto = true;
+    }
+    setImageState(newImageState);
+  }
+
   const favoriteImage = (favoriteFile) => {
     const newImageState = [...imageState];
     for (const file of newImageState) {
@@ -43,11 +52,13 @@ function PropertyImages(props) {
       <h6>Take Pictures</h6>
       <div className='d-flex overflow-auto mb-3'>
         {imageState.map((file, i) => (
-          <div className='mx-2' style={{position: 'relative', minHeight: '100px', minWidth: '100px', height: '100px', width: '100px'}} key={i}
-            onClick={() => favoriteImage(file)}>
+          <div className='mx-2' style={{position: 'relative', minHeight: '100px', minWidth: '100px', height: '100px', width: '100px'}} key={i}>
             <img src={file.image} style={{...tileImg, objectFit: 'cover'}}/>
-            <img src={file.coverPhoto ? Heart : HeartOutline}
-              style={{position: 'absolute', right: '5px', top: '5px'}}/>
+            <img src={DeleteIcon} alt='Delete' onClick={() => deleteImage(file)}
+              style={{position: 'absolute', left: '5px', top: '5px'}}/>
+            <img src={file.coverPhoto ? Heart : HeartOutline} alt='Favorite'
+              style={{position: 'absolute', right: '5px', top: '5px'}}
+              onClick={() => favoriteImage(file)}/>
           </div>
         ))}
         <input id='file' type='file' accept='image/*' onChange={addFile} className='d-none'/>

@@ -8,16 +8,18 @@ import Signup from './pages/Signup';
 import ProfileInfo from './pages/ProfileInfo';
 import OwnerHome from './pages/OwnerHome';
 
+import {get} from './utils/api';
+
 function App() {
   const [userData, setUserData] = React.useState({
-    access_token: localStorage.getItem('access_token'),
-    refresh_token: localStorage.getItem('refresh_token'),
+    access_token: JSON.parse(localStorage.getItem('access_token')),
+    refresh_token: JSON.parse(localStorage.getItem('refresh_token')),
     user: JSON.parse(localStorage.getItem('user'))
   });
   const updateUserData = (newUserData) => {
     setUserData(newUserData);
-    localStorage.setItem('access_token', newUserData.access_token);
-    localStorage.setItem('refresh_token', newUserData.refresh_token);
+    localStorage.setItem('access_token', JSON.stringify(newUserData.access_token));
+    localStorage.setItem('refresh_token', JSON.stringify(newUserData.refresh_token));
     localStorage.setItem('user', JSON.stringify(newUserData.user));
   }
   const logout = () => {
@@ -27,8 +29,13 @@ function App() {
       user: null
     });
   }
+  const refresh = async () => {
+    const response = await get('/refresh', userData.refresh_token);
+    updateUserData(response.result);
+  }
+  console.log(userData);
   return (
-    <AppContext.Provider value={{userData, updateUserData, logout}}>
+    <AppContext.Provider value={{userData, updateUserData, logout, refresh}}>
       <BrowserRouter>
         <Routes>
           <Route path='/'>

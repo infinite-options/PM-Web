@@ -8,7 +8,7 @@ import ServicesProvided from '../components/ServicesProvided';
 import PaymentSelection from '../components/PaymentSelection';
 import BusinessContact from '../components/BusinessContact';
 import {get, post} from '../utils/api';
-import {pillButton, squareForm} from '../utils/styles';
+import {pillButton, squareForm, hidden, red, small} from '../utils/styles';
 
 function BusinessProfileInfo(props) {
   const context = React.useContext(AppContext);
@@ -25,6 +25,7 @@ function BusinessProfileInfo(props) {
     accountNumber: '',
     routingNumber: ''
   });
+  const [errorMessage, setErrorMessage] = React.useState('');
   const contactState = React.useState([]);
   React.useEffect(() => {
     if (access_token === null) {
@@ -49,6 +50,22 @@ function BusinessProfileInfo(props) {
   }, []);
   const submitInfo = async () => {
     const {paypal, applePay, zelle, venmo, accountNumber, routingNumber} = paymentState[0];
+    if (businessName === '' || einNumber === '') {
+      setErrorMessage('Please fill out all fields');
+      return;
+    }
+    if (serviceState[0].length === 0) {
+      setErrorMessage('Please add at least one service');
+      return;
+    }
+    if (paypal === '' && applePay === '' && zelle === '' && venmo === '' && (accountNumber === '' || routingNumber === '')) {
+      setErrorMessage('Please add at least one payment method');
+      return;
+    }
+    if (contactState[0].length === 0) {
+      setErrorMessage('Please add at least one contact');
+      return;
+    }
     const businessProfile = {
       name: businessName,
       ein_number: einNumber,
@@ -65,12 +82,17 @@ function BusinessProfileInfo(props) {
     await post('/businessProfileInfo', businessProfile, access_token);
     props.onConfirm();
   }
+  const required = (
+    errorMessage === 'Please fill out all fields' ? (
+      <span style={red} className='ms-1'>*</span>
+    ) : ''
+  );
   return (
     <div>
       <Header title='Business Profile'/>
       <Container className='pb-4'>
         <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>Business Name</Form.Label>
+          <Form.Label as='h6' className='mb-0 ms-2'>Business Name {required}</Form.Label>
           <Form.Control style={squareForm} placeholder='Business Name' value={businessName}
             onChange={(e) => setBusinessName(e.target.value)}/>
         </Form.Group>
@@ -78,7 +100,7 @@ function BusinessProfileInfo(props) {
         <ServicesProvided state={serviceState}/>
 
         <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>EIN Number</Form.Label>
+          <Form.Label as='h6' className='mb-0 ms-2'>EIN Number {required}</Form.Label>
           <Form.Control style={squareForm} placeholder='12-1234567' value={einNumber}
             onChange={(e) => setEinNumber(e.target.value)}/>
         </Form.Group>
@@ -87,7 +109,11 @@ function BusinessProfileInfo(props) {
 
         <BusinessContact state={contactState}/>
 
-        <div className='text-center my-5'>
+        <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+          <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+        </div>
+
+        <div className='text-center mt-4 mb-5'>
           <Button variant='outline-primary' style={pillButton} onClick={submitInfo}>
             Save Business Profile
           </Button>

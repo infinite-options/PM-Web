@@ -2,7 +2,8 @@ import {Container, Row, Col} from 'react-bootstrap';
 import Checkbox from './Checkbox';
 
 function PropertyUtilities(props) {
-  const [utilityState, setUtilityState] = props.state;
+  const {state, edit} = props;
+  const [utilityState, setUtilityState] = state;
   const utilities = Object.keys(utilityState);
 
   const setUtility = (utility, value) => {
@@ -38,11 +39,11 @@ function PropertyUtilities(props) {
           </Col>
           <Col className='d-flex justify-content-center align-items-center'>
             <Checkbox type='CIRCLE' checked={utilityState[utility]}
-              onClick={() => addUtility(utility)}/>
+              onClick={edit ? () => addUtility(utility) : () => {}}/>
           </Col>
           <Col className='d-flex justify-content-center align-items-center'>
             <Checkbox type='CIRCLE' checked={!utilityState[utility]}
-              onClick={() => removeUtility(utility)}/>
+              onClick={edit ? () => removeUtility(utility) : () => {}}/>
           </Col>
         </Row>
       ))}
