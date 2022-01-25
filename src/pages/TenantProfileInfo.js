@@ -112,7 +112,7 @@ function TenantProfileInfo(props) {
       <Row>
         <Col xs={2} className='px-0 d-flex justify-content-end align-items-center'>
           <div>
-            <Checkbox onClick={() => setUsePreviousAddress(!usePreviousAddress)}/>
+            <Checkbox type='BOX' onClick={() => setUsePreviousAddress(!usePreviousAddress)}/>
           </div>
         </Col>
         <Col>

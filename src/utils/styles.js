@@ -10,6 +10,9 @@ const boldSmall = {
 const small = {
   fontSize: 'small'
 }
+const mediumBold = {
+  fontWeight: '600'
+}
 const bold = {
   fontWeight: 'bold'
 }
@@ -26,6 +29,12 @@ const gray = {
 const blue = {
   color: '#007AFF',
   fontSize: 'small'
+}
+const red = {
+  color: '#E3441F'
+}
+const green = {
+  color: '#3DB727'
 }
 const smallPillButton = {
   fontSize: 'small',
@@ -68,6 +77,10 @@ const smallImg = {
   height: '25px',
   margin: '0 5px'
 };
+const mediumImg = {
+  height: '40px',
+  margin: '0 5px'
+};
 const xSmall = {
   fontSize: 'x-small'
 };
@@ -86,11 +99,13 @@ export {
   underline,
   blue,
   gray,
+  red,
   small,
   smallPillButton,
   squareForm,
   hidden,
   none,
+  mediumBold,
   bold,
   bolder,
   greenPill,
@@ -98,7 +113,9 @@ export {
   redPill,
   tileImg,
   smallImg,
+  mediumImg,
   xSmall,
   smallBlue,
-  smallGray
+  smallGray,
+  green
 }

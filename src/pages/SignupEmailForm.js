@@ -8,7 +8,7 @@ import AppleLogin from '../icons/AppleLogin.svg';
 import FacebookLogin from '../icons/FacebookLogin.svg';
 import GoogleLogin from '../icons/GoogleLogin.svg';
 import {post} from '../utils/api';
-import {pillButton, boldSmall, underline, gray} from '../utils/styles';
+import {pillButton, boldSmall, underline, gray, red, small, hidden} from '../utils/styles';
 
 function SignupEmailForm(props) {
   const context = React.useContext(AppContext);
@@ -18,16 +18,23 @@ function SignupEmailForm(props) {
   const confirmEmailRef = React.createRef();
   const passwordRef = React.createRef();
   const confirmPasswordRef = React.createRef();
+  const [errorMessage, setErrorMessage] = React.useState('');
   const submitForm = async () => {
     const email = emailRef.current.value;
     const confirmEmail = confirmEmailRef.current.value;
     const password = passwordRef.current.value;
     const confirmPassword = confirmPasswordRef.current.value;
+    if (email === '' || confirmEmail === '' || password === '' || confirmPassword === '') {
+      setErrorMessage('Please fill out all fields');
+      return;
+    }
     if (email !== confirmEmail) {
-      // add validation
+      setErrorMessage('Emails must match');
+      return;
     }
     if (password !== confirmPassword) {
-      // add validation
+      setErrorMessage('Passwords must match');
+      return;
     }
     const user = {
       first_name: props.firstName,
@@ -39,10 +46,11 @@ function SignupEmailForm(props) {
     }
     const response = await post('/users', user);
     if (response.code !== 200) {
-      console.log(response.message);
+      setErrorMessage(response.message);
       return;
       // add validation
     }
+    setErrorMessage('');
     context.updateUserData(response.result);
     // save to app state / context
     props.onConfirm();
@@ -50,6 +58,11 @@ function SignupEmailForm(props) {
   const goToLogin = () => {
     navigate('/login');
   }
+  const required = (
+    errorMessage === 'Please fill out all fields' ? (
+      <span style={red} className='ms-1'>*</span>
+    ) : ''
+  );
   return (
     <div className='d-flex flex-column h-100'>
       <Header title='Sign Up' leftText='< Back' leftFn={props.back}/>
@@ -79,22 +92,25 @@ function SignupEmailForm(props) {
           <div>
             <Form>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Email Address</Form.Label>
+                <Form.Label as='h5' className='mb-0 ms-1'>Email Address {required}</Form.Label>
                 <Form.Control style={{borderRadius: 0}} ref={emailRef} placeholder='Email' type='email'/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Confirm Email Address</Form.Label>
+                <Form.Label as='h5' className='mb-0 ms-1'>Confirm Email Address {required}</Form.Label>
                 <Form.Control style={{borderRadius: 0}} ref={confirmEmailRef} placeholder='Confirm Email' type='email'/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Enter Password</Form.Label>
+                <Form.Label as='h5' className='mb-0 ms-1'>Enter Password {required}</Form.Label>
                 <Form.Control style={{borderRadius: 0}} ref={passwordRef} placeholder='Password' type='password'/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Confirm Password</Form.Label>
+                <Form.Label as='h5' className='mb-0 ms-1'>Confirm Password {required}</Form.Label>
                 <Form.Control style={{borderRadius: 0}} ref={confirmPasswordRef} placeholder='Confirm Password' type='password'/>
               </Form.Group>
             </Form>
+            <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+              <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+            </div>
             <div className='text-center pt-1 pb-3'>
               <Button variant='outline-primary' style={pillButton} onClick={submitForm}>
                 Next

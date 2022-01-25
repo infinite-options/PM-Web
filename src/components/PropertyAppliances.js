@@ -4,7 +4,8 @@ import {Container, Form, Button} from 'react-bootstrap';
 import {squareForm, pillButton, blue, hidden} from '../utils/styles';
 
 function PropertyAppliances(props) {
-  const [applianceState, setApplianceState] = props.state;
+  const {state, edit} = props;
+  const [applianceState, setApplianceState] = state;
   const appliances = Object.keys(applianceState);
   const toggleAppliance = (appliance) => {
     const newApplianceState = {...applianceState};
@@ -25,11 +26,12 @@ function PropertyAppliances(props) {
       <h6>Appliances</h6>
       {appliances.map((appliance, i) => (
         <div key={i} className='d-flex ps-2 align-items-center'>
-          <Checkbox type='BOX' checked={applianceState[appliance]} onClick={() => toggleAppliance(appliance)}/>
+          <Checkbox type='BOX' checked={applianceState[appliance]}
+            onClick={edit ? () => toggleAppliance(appliance) : () => {}}/>
           <p className='ms-1 mb-1'>{appliance}</p>
         </div>
       ))}
-      {newAppliance === null ? (
+      {!edit ? '' : newAppliance === null ? (
         <div className='d-flex ps-2 align-items-center' onClick={() => setNewAppliance('')}>
           <div style={hidden}>
             <Checkbox type='BOX'/>
