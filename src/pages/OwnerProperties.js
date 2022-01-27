@@ -12,29 +12,11 @@ import {blue, gray, greenPill, orangePill, tileImg, smallImg, xSmall, hidden} fr
 
 function OwnerProperties(props) {
   const navigate = useNavigate();
-  const {setShowFooter} = props;
+  const {setShowFooter, properties, fetchProperties, selectedProperty, setSelectedProperty} = props;
   const {userData, refresh} = React.useContext(AppContext);
   const [stage, setStage] = React.useState('LIST');
-  const [selectedProperty, setSelectedProperty] = React.useState(null);
   const {access_token, user} = userData;
-  const [properties, setProperties] = React.useState([]);
 
-  const fetchProperties = async () => {
-    if (access_token === null || user.role.indexOf('OWNER') === -1) {
-      navigate('/');
-      return;
-    }
-    const response = await get(`/ownerProperties`, access_token);
-    if (response.msg === 'Token has expired') {
-      refresh();
-      return;
-    }
-    if (stage === 'PROPERTY') {
-      const property = response.result.filter(item => item.property_uid === selectedProperty.property_uid)[0];
-      setSelectedProperty(property);
-    }
-    setProperties(response.result);
-  }
   const selectProperty = (property) => {
     setSelectedProperty(property);
     setStage('PROPERTY');
@@ -44,7 +26,6 @@ function OwnerProperties(props) {
     setStage('LIST');
   }
 
-  React.useEffect(fetchProperties, [access_token]);
   React.useEffect(() => {
     setShowFooter(stage !== 'NEW');
   }, [stage, setShowFooter]);

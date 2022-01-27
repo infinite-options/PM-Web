@@ -8,7 +8,9 @@ import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
 import Message from '../icons/Message.svg';
+import CreateExpense from './CreateExpense';
 import CreateTax from './CreateTax';
+import CreateMortgage from './CreateMortgage';
 
 function PropertyView(props) {
 
@@ -63,16 +65,11 @@ function PropertyView(props) {
           <PropertyForm property={property} edit={editProperty} setEdit={setEditProperty}
             onSubmit={reloadProperty}/>
         ) : showCreateExpense ? (
-          <div>
-            Create Expense
-            <Form.Control type='date'/>
-          </div>
+          <CreateExpense back={() => setShowCreateExpense(false)}/>
         ) : showCreateTax ? (
           <CreateTax back={() => setShowCreateTax(false)}/>
         ) : showCreateMortgage ? (
-          <div>
-            Create Mortgage
-          </div>
+          <CreateMortgage back={() => setShowCreateMortgage(false)}/>
         ) : (
           <div>
             <div style={{...tileImg, height: '200px', position: 'relative'}}>

@@ -1,4 +1,5 @@
 import {Container, Row, Col, Button} from 'react-bootstrap';
+import {mediumBold} from '../utils/styles';
 
 function Header(props) {
   const headerContainer = {
@@ -20,7 +21,7 @@ function Header(props) {
           </Col>
         ) : <Col/>}
         <Col xs={5} className='text-center d-flex flex-column justify-content-end'>
-          <h6 className='mt-5 mb-2'>{props.title}</h6>
+          <h6 className='mt-5 mb-2' style={mediumBold}>{props.title}</h6>
         </Col>
         {props.rightText ? (
           <Col className='d-flex flex-column justify-content-end'>

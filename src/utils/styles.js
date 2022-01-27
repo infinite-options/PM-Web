@@ -92,6 +92,9 @@ const smallGray = {
   ...xSmall,
   color: '#C4C4C4'
 };
+const smallLine = {
+  lineHeight: 0.85
+}
 
 export {
   pillButton,
@@ -117,5 +120,6 @@ export {
   xSmall,
   smallBlue,
   smallGray,
-  green
+  green,
+  smallLine
 }

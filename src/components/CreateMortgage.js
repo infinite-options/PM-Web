@@ -3,8 +3,8 @@ import {Form, Button} from 'react-bootstrap';
 import {squareForm, pillButton, small, hidden, red} from '../utils/styles';
 import ArrowDown from '../icons/ArrowDown.svg';
 
-function CreateTax(props) {
-  const [category, setCategory] = React.useState('Tax');
+function CreateMortgage(props) {
+  const [category, setCategory] = React.useState('Mortgage');
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [amount, setAmount] = React.useState('');
@@ -25,7 +25,7 @@ function CreateTax(props) {
       setErrorMessage('Please fill out all fields');
       return;
     }
-    const newTax = {
+    const newMortgage = {
       category: category,
       title: title,
       description: description,
@@ -34,7 +34,7 @@ function CreateTax(props) {
       frequency_of_payment: frequencyOfPayment,
       next_date: date
     };
-    console.log(newTax);
+    console.log(newMortgage);
     props.back();
   }
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -45,14 +45,14 @@ function CreateTax(props) {
   );
   return (
     <div>
-      <h5>Add New Tax Payment</h5>
+      <h5>Add New Mortgage Payment</h5>
       <Form.Group className='mx-2 my-3'>
         <Form.Label as='h6' className='mb-0 ms-2'>
           Category
         </Form.Label>
         <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
           value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option>Tax</option>
+          <option>Mortgage</option>
         </Form.Select>
       </Form.Group>
       <Form.Group className='mx-2 my-3'>
@@ -114,11 +114,11 @@ function CreateTax(props) {
         </Button>
         <Button variant='outline-primary' style={pillButton} onClick={submitForm}
           className='mx-2'>
-          Save Tax
+          Save Mortgage
         </Button>
       </div>
     </div>
   );
 }
 
-export default CreateTax;
+export default CreateMortgage;

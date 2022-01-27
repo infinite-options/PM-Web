@@ -3,8 +3,8 @@ import {Form, Button} from 'react-bootstrap';
 import {squareForm, pillButton, small, hidden, red} from '../utils/styles';
 import ArrowDown from '../icons/ArrowDown.svg';
 
-function CreateTax(props) {
-  const [category, setCategory] = React.useState('Tax');
+function CreateExpense(props) {
+  const [category, setCategory] = React.useState('Management');
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [amount, setAmount] = React.useState('');
@@ -25,7 +25,7 @@ function CreateTax(props) {
       setErrorMessage('Please fill out all fields');
       return;
     }
-    const newTax = {
+    const newExpense = {
       category: category,
       title: title,
       description: description,
@@ -34,7 +34,7 @@ function CreateTax(props) {
       frequency_of_payment: frequencyOfPayment,
       next_date: date
     };
-    console.log(newTax);
+    console.log(newExpense);
     props.back();
   }
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -45,14 +45,16 @@ function CreateTax(props) {
   );
   return (
     <div>
-      <h5>Add New Tax Payment</h5>
+      <h5>Add New Expense Payment</h5>
       <Form.Group className='mx-2 my-3'>
         <Form.Label as='h6' className='mb-0 ms-2'>
           Category
         </Form.Label>
         <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
           value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option>Tax</option>
+          <option>Management</option>
+          <option>Maintenance</option>
+          <option>Repairs</option>
         </Form.Select>
       </Form.Group>
       <Form.Group className='mx-2 my-3'>
@@ -114,11 +116,11 @@ function CreateTax(props) {
         </Button>
         <Button variant='outline-primary' style={pillButton} onClick={submitForm}
           className='mx-2'>
-          Save Tax
+          Save Expense
         </Button>
       </div>
     </div>
   );
 }
 
-export default CreateTax;
+export default CreateExpense;

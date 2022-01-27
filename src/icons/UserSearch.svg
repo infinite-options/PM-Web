@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="52.663" height="52.663" viewBox="0 0 52.663 52.663">
+  <g id="Group_627" data-name="Group 627" transform="translate(-289.808 -703.003)">
+    <g id="Icon_feather-search" data-name="Icon feather-search" transform="translate(292.308 705.503)">
+      <path id="Path_110" data-name="Path 110" d="M45.188,24.844A20.344,20.344,0,1,1,24.844,4.5,20.344,20.344,0,0,1,45.188,24.844Z" transform="translate(-4.5 -4.5)" fill="none" stroke="#007aff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+      <path id="Path_111" data-name="Path 111" d="M36.855,36.855l-11.88-11.88" transform="translate(9.773 9.773)" fill="none" stroke="#007aff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+    </g>
+    <path id="Icon_ionic-md-person" data-name="Icon ionic-md-person" d="M13.471,13.471A4.485,4.485,0,1,0,8.985,8.985,4.5,4.5,0,0,0,13.471,13.471Zm0,2.243C10.5,15.713,4.5,17.227,4.5,20.2v2.243H22.441V20.2C22.441,17.227,16.442,15.713,13.471,15.713Z" transform="translate(300.093 712.558)" fill="#007aff"/>
+  </g>
+</svg>
