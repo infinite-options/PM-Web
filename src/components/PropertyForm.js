@@ -9,6 +9,7 @@ import Checkbox from './Checkbox';
 import PropertyAppliances from './PropertyAppliances';
 import PropertyUtilities from './PropertyUtilities';
 import PropertyImages from './PropertyImages';
+import ArrowDown from '../icons/ArrowDown.svg';
 
 function PropertyForm(props) {
   const {userData} = React.useContext(AppContext);
@@ -34,7 +35,7 @@ function PropertyForm(props) {
   const [city, setCity] = React.useState('');
   const [state, setState] = React.useState('');
   const [zip, setZip] = React.useState('');
-  const [type, setType] = React.useState('');
+  const [type, setType] = React.useState('Apartment');
   const [numBeds, setNumBeds] = React.useState('');
   const [numBaths, setNumBaths] = React.useState('');
   const [area, setArea] = React.useState('');
@@ -73,8 +74,8 @@ function PropertyForm(props) {
   }, [edit, property]);
 
   const submitForm = async () => {
-    if (address === '' || city === '' || state === '' || zip === '' || type === ''
-    || numBeds === '' || numBaths === '' || area === '' || rent === '' || deposit === '') {
+    if (address === '' || city === '' || state === '' || zip === '' || numBeds === '' ||
+    numBaths === '' || area === '' || rent === '' || deposit === '') {
       setErrorMessage('Please fill out all fields');
       return;
     }
@@ -146,30 +147,40 @@ function PropertyForm(props) {
       {edit ? (
         <div>
           <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Address {required}</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>
+              Address {address === '' ? required : ''}
+            </Form.Label>
             <Form.Control style={squareForm} placeholder='283 Barley St' value={address}
               onChange={(e) => setAddress(e.target.value)}/>
           </Form.Group>
           <div className='d-flex my-3'>
             <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>Unit</Form.Label>
+              <Form.Label as='h6' className='mb-0 ms-2'>
+                Unit
+              </Form.Label>
               <Form.Control style={squareForm} placeholder='#122' value={unit}
                 onChange={(e) => setUnit(e.target.value)}/>
             </Form.Group>
             <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>City {required}</Form.Label>
+              <Form.Label as='h6' className='mb-0 ms-2'>
+                City {city === '' ? required : ''}
+              </Form.Label>
               <Form.Control style={squareForm} placeholder='San Jose' value={city}
                 onChange={(e) => setCity(e.target.value)}/>
             </Form.Group>
           </div>
           <div className='d-flex my-3'>
             <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>State {required}</Form.Label>
+              <Form.Label as='h6' className='mb-0 ms-2'>
+                State {state === '' ? required : ''}
+              </Form.Label>
               <Form.Control style={squareForm} placeholder='CA' value={state}
                 onChange={(e) => setState(e.target.value)}/>
             </Form.Group>
             <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>Zip Code {required}</Form.Label>
+              <Form.Label as='h6' className='mb-0 ms-2'>
+                Zip Code {zip === '' ? required : ''}
+              </Form.Label>
               <Form.Control style={squareForm} placeholder='90808' value={zip}
                 onChange={(e) => setZip(e.target.value)}/>
             </Form.Group>
@@ -186,9 +197,14 @@ function PropertyForm(props) {
       )}
       {edit ? (
         <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>Type {required}</Form.Label>
-          <Form.Control style={squareForm} placeholder='Apartment' value={type}
-            onChange={(e) => setType(e.target.value)}/>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Type
+          </Form.Label>
+          <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
+            value={type} onChange={(e) => setType(e.target.value)}>
+            <option>Apartment</option>
+            <option>House</option>
+          </Form.Select>
         </Form.Group>
       ) : (
         <div>
@@ -199,17 +215,23 @@ function PropertyForm(props) {
       {edit ? (
         <div className='d-flex my-3'>
           <Form.Group className='mx-2'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Bedroom {required}</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>
+              Bedroom {numBeds === '' ? required : ''}
+            </Form.Label>
             <Form.Control style={squareForm} placeholder='2' value={numBeds}
               onChange={(e) => setNumBeds(e.target.value)}/>
           </Form.Group>
           <Form.Group className='mx-2'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Bath {required}</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>
+              Bath {numBaths === '' ? required : ''}
+            </Form.Label>
             <Form.Control style={squareForm} placeholder='1.5' value={numBaths}
               onChange={(e) => setNumBaths(e.target.value)}/>
           </Form.Group>
           <Form.Group className='mx-2'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Sq. Ft. {required}</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>
+              Sq. Ft. {area === '' ? required : ''}
+            </Form.Label>
             <Form.Control style={squareForm} placeholder='1100' value={area}
               onChange={(e) => setArea(e.target.value)}/>
           </Form.Group>
@@ -232,7 +254,9 @@ function PropertyForm(props) {
       )}
       {edit ? (
         <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>Monthly Rent {required}</Form.Label>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Monthly Rent {rent === '' ? required : ''}
+          </Form.Label>
           <Form.Control style={squareForm} placeholder='2000' value={rent}
             onChange={(e) => setRent(e.target.value)}/>
         </Form.Group>
@@ -244,7 +268,9 @@ function PropertyForm(props) {
       )}
       {edit ? (
         <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>Deposit {required}</Form.Label>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Deposit {deposit === '' ? required : ''}
+          </Form.Label>
           <Form.Control style={squareForm} placeholder='2000' value={deposit}
             onChange={(e) => setDeposit(e.target.value)}/>
         </Form.Group>

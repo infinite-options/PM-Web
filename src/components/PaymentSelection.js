@@ -53,7 +53,7 @@ function PaymentSelection(props) {
     }
   }, [showChecking]);
   return (
-    <Container>
+    <Container className='mt-3'>
       <h6>Accept Payments via:</h6>
       <Row className='mb-1'>
         <Col className='d-flex align-items-center'>

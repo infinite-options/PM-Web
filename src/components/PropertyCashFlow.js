@@ -3,9 +3,15 @@ import {Container, Row, Col} from 'react-bootstrap';
 import {gray, green, red, mediumBold, small, xSmall} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
+import Add from '../icons/Add.svg';
 
 function PropertyCashFlow(props) {
-  const {property} = props;
+  const {property, state} = props;
+  const {
+    setShowCreateExpense,
+    setShowCreateTax,
+    setShowCreateMortgage
+  } = state;
 
   const [expandCashFlow, setExpandCashFlow] = React.useState(false);
   const [expandExpenses, setExpandExpenses] = React.useState(false);
@@ -68,6 +74,19 @@ function PropertyCashFlow(props) {
     style: 'currency',
     currency: 'USD'
   });
+
+  const addExpense = (e) => {
+    e.stopPropagation();
+    setShowCreateExpense(true);
+  }
+  const addTax = (e) => {
+    e.stopPropagation();
+    setShowCreateTax(true);
+  }
+  const addMortgage = (e) => {
+    e.stopPropagation();
+    setShowCreateMortgage(true);
+  }
 
   return (
     <div>
@@ -267,7 +286,11 @@ function PropertyCashFlow(props) {
       </div>
       <div>
         <div onClick={() => setExpandExpenses(!expandExpenses)}>
-          <h6 style={mediumBold} className='mb-1 mt-3'>Expenses</h6>
+          <div className='d-flex justify-content-between align-items-end mb-1 mt-3'>
+            <h6 style={mediumBold} className='mb-0'>Expenses</h6>
+            <img style={{width: '20px'}} src={Add} alt='Add Expense'
+              onClick={addExpense}/>
+          </div>
           <div className='d-flex justify-content-between'>
             <h6 style={{...red, ...mediumBold}} className='mb-1'>
               ${managementTotal + maintenanceTotal + repairsTotal}/mo
@@ -412,7 +435,11 @@ function PropertyCashFlow(props) {
       </div>
       <div>
         <div onClick={() => setExpandTaxes(!expandTaxes)}>
-          <h6 style={mediumBold} className='mb-1 mt-3'>Taxes</h6>
+          <div className='d-flex justify-content-between align-items-end mb-1 mt-3'>
+            <h6 style={mediumBold} className='mb-0'>Taxes</h6>
+            <img style={{width: '20px'}} src={Add} alt='Add Tax'
+              onClick={addTax}/>
+          </div>
           <div className='d-flex justify-content-between'>
             <h6 style={{...red, ...mediumBold}} className='mb-1'>
               ${taxesTotal}/mo
@@ -464,7 +491,11 @@ function PropertyCashFlow(props) {
       </div>
       <div>
         <div onClick={() => setExpandMortgage(!expandMortgage)}>
-          <h6 style={mediumBold} className='mb-1 mt-3'>Mortgage</h6>
+          <div className='d-flex justify-content-between align-items-end mb-1 mt-3'>
+            <h6 style={mediumBold} className='mb-0'>Mortgage</h6>
+            <img style={{width: '20px'}} src={Add} alt='Add Mortgage'
+              onClick={addMortgage}/>
+          </div>
           <div className='d-flex justify-content-between'>
             <h6 style={{...red, ...mediumBold}} className='mb-1'>
               ${mortgageTotal}/mo

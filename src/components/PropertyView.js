@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container} from 'react-bootstrap';
+import {Container, Form} from 'react-bootstrap';
 import Header from '../components/Header';
 import {tileImg, gray, orangePill, greenPill, mediumBold, mediumImg} from '../utils/styles';
 import PropertyCashFlow from './PropertyCashFlow';
@@ -8,6 +8,7 @@ import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
 import Message from '../icons/Message.svg';
+import CreateTax from './CreateTax';
 
 function PropertyView(props) {
 
@@ -16,9 +17,16 @@ function PropertyView(props) {
   const [currentImg, setCurrentImg] = React.useState(0);
   const [expandDetails, setExpandDetails] = React.useState(false);
   const [editProperty, setEditProperty] = React.useState(false);
+  const [showCreateExpense, setShowCreateExpense] = React.useState(false);
+  const [showCreateTax, setShowCreateTax] = React.useState(false);
+  const [showCreateMortgage, setShowCreateMortgage] = React.useState(false);
 
   const headerBack = () => {
-    editProperty ? setEditProperty(false) : back();
+    editProperty ? setEditProperty(false) :
+    showCreateExpense ? setShowCreateExpense(false) :
+    showCreateTax ? setShowCreateTax(false) :
+    showCreateMortgage ? setShowCreateMortgage(false) :
+    back();
   }
 
   const nextImg = () => {
@@ -41,6 +49,12 @@ function PropertyView(props) {
     reload();
   }
 
+  const cashFlowState = {
+    setShowCreateExpense,
+    setShowCreateTax,
+    setShowCreateMortgage
+  };
+
   return (
     <div>
       <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
@@ -48,6 +62,17 @@ function PropertyView(props) {
         {editProperty ? (
           <PropertyForm property={property} edit={editProperty} setEdit={setEditProperty}
             onSubmit={reloadProperty}/>
+        ) : showCreateExpense ? (
+          <div>
+            Create Expense
+            <Form.Control type='date'/>
+          </div>
+        ) : showCreateTax ? (
+          <CreateTax back={() => setShowCreateTax(false)}/>
+        ) : showCreateMortgage ? (
+          <div>
+            Create Mortgage
+          </div>
         ) : (
           <div>
             <div style={{...tileImg, height: '200px', position: 'relative'}}>
@@ -78,10 +103,10 @@ function PropertyView(props) {
                 <p style={orangePill} className='mb-0'>Not Rented</p>
               )}
             </div>
-            <PropertyCashFlow property={property}/>
+            <PropertyCashFlow property={property} state={cashFlowState}/>
             {property.manager_first_name !== null ? (
               <div>
-                <div className='d-flex justify-content-between'>
+                <div className='d-flex justify-content-between mt-3'>
                   <div>
                     <h6 style={mediumBold} className='mb-1'>
                       {property.manager_first_name} {property.manager_last_name}

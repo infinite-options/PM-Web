@@ -15,8 +15,8 @@ function Login(props) {
   const {userData, updateUserData} = React.useContext(AppContext);
   const navigate = useNavigate();
   const [loginStage, setLoginStage] = React.useState('LOGIN');
-  const emailRef = React.createRef();
-  const passwordRef = React.createRef();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
   React.useEffect(() => {
     if (userData.access_token !== null) {
@@ -24,8 +24,6 @@ function Login(props) {
     }
   }, []);
   const submitForm = async () => {
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
     if (email === '' || password === '') {
       setErrorMessage('Please fill out all fields');
       return;
@@ -69,12 +67,18 @@ function Login(props) {
             </div>
             <Form>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Email Address {required}</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={emailRef} placeholder='Email' type='email'/>
+                <Form.Label as='h5' className='mb-0 ms-1'>
+                  Email Address {email === '' ? required : ''}
+                </Form.Label>
+                <Form.Control style={{borderRadius: 0}} placeholder='Email' type='email'
+                  value={email} onChange={(e) => setEmail(e.target.value)}/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Password {required}</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={passwordRef} placeholder='Password' type='password'/>
+                <Form.Label as='h5' className='mb-0 ms-1'>
+                  Password {password === '' ? required : ''}
+                </Form.Label>
+                <Form.Control style={{borderRadius: 0}}placeholder='Password' type='password'
+                  value={password} onChange={(e) => setPassword(e.target.value)}/>
               </Form.Group>
             </Form>
             <div className='text-center pt-1 pb-3'>

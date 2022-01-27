@@ -2,26 +2,43 @@ import React from 'react';
 import {Container, Row, Col, Button, Form} from 'react-bootstrap';
 import EditIcon from '../icons/EditIcon.svg';
 import DeleteIcon from '../icons/DeleteIcon.svg';
-import {pillButton, smallPillButton, squareForm, gray} from '../utils/styles';
+import {pillButton, smallPillButton, squareForm, gray, red, hidden, small} from '../utils/styles';
 
 function ManagerLocations(props) {
   const [locationState, setLocationState] = props.state;
   const [newLocation, setNewLocation] = React.useState(null);
+  const [editingLocation, setEditingLocation] = React.useState(null);
   const emptyLocation = {
     location: '',
     distance: ''
   }
   const addLocation = () => {
+    if (newLocation.location === '' || newLocation.distance === '') {
+      setErrorMessage('Please fill out all fields');
+      return;
+    }
     const newLocationState = [...locationState];
     newLocationState.push({...newLocation});
     setLocationState(newLocationState);
-    cancelEdit();
+    setNewLocation(null);
+    setErrorMessage('');
   }
   const cancelEdit = () => {
     setNewLocation(null);
+    setErrorMessage('');
+    if (editingLocation !== null) {
+      const newLocationState = [...locationState];
+      newLocationState.push(editingLocation);
+      setLocationState(newLocationState);
+    }
+    setEditingLocation(null);
   }
   const editLocation = (i) => {
-    setNewLocation(locationState[i]);
+    const newLocationState = [...locationState];
+    const location = newLocationState.splice(i, 1)[0];
+    setLocationState(newLocationState);
+    setEditingLocation(location);
+    setNewLocation({...location});
   }
   const deleteLocation = (i) => {
     const newLocationState = [...locationState];
@@ -33,6 +50,12 @@ function ManagerLocations(props) {
     changedLocation[field] = event.target.value;
     setNewLocation(changedLocation);
   }
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const required = (
+    errorMessage === 'Please fill out all fields' ? (
+      <span style={red} className='ms-1'>*</span>
+    ) : ''
+  );
   return (
     <Container className='px-2 py-4'>
       <h6 className='mb-3'>Locations of Service:</h6>
@@ -60,19 +83,26 @@ function ManagerLocations(props) {
           <Row className='my-3'>
             <Col xs={8} className='ps-0'>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>Location</Form.Label>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Location {newLocation.location === '' ? required : ''}
+                </Form.Label>
                 <Form.Control style={squareForm} placeholder='City, State' value={newLocation.location}
                   onChange={(e) => changeNewLocation(e, 'location')}/>
               </Form.Group>
             </Col>
             <Col className='px-0'>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>(+)(-) miles</Form.Label>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  (+)(-) miles {newLocation.distance === '' ? required : ''}
+                </Form.Label>
                 <Form.Control style={squareForm} placeholder='5' value={newLocation.distance}
                   onChange={(e) => changeNewLocation(e, 'distance')}/>
               </Form.Group>
             </Col>
           </Row>
+          <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+            <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+          </div>
         </Container>
       ) : ''}
       {newLocation=== null ? (

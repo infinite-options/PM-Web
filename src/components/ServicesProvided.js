@@ -7,6 +7,7 @@ import {pillButton, smallPillButton, squareForm, gray, small, red, hidden} from 
 function ServicesProvided(props) {
   const [serviceState, setServiceState] = props.state;
   const [newService, setNewService] = React.useState(null);
+  const [editingService, setEditingService] = React.useState(null);
   const emptyService = {
     service_name: '',
     charge: '',
@@ -21,14 +22,25 @@ function ServicesProvided(props) {
     const newServiceState = [...serviceState];
     newServiceState.push({...newService});
     setServiceState(newServiceState);
-    cancelEdit();
+    setNewService(null);
+    setErrorMessage('');
   }
   const cancelEdit = () => {
     setNewService(null);
     setErrorMessage('');
+    if (editingService !== null) {
+      const newServiceState = [...serviceState];
+      newServiceState.push(editingService);
+      setServiceState(newServiceState);
+    }
+    setEditingService(null);
   }
   const editService = (i) => {
-    setNewService(serviceState[i]);
+    const newServiceState = [...serviceState];
+    const service = newServiceState.splice(i, 1)[0];
+    setServiceState(newServiceState);
+    setEditingService(service);
+    setNewService({...service});
   }
   const deleteService = (i) => {
     const newServiceState = [...serviceState];
@@ -70,21 +82,27 @@ function ServicesProvided(props) {
       {newService !== null ? (
         <div>
           <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>Service Name {required}</Form.Label>
+            <Form.Label as='h6' className='mb-0 ms-2'>
+              Service Name {newService.service_name === '' ? required : ''}
+            </Form.Label>
             <Form.Control style={squareForm} placeholder='Toilet Plumbing' value={newService.service_name}
               onChange={(e) => changeNewService(e, 'service_name')}/>
           </Form.Group>
           <Row className='mb-2'>
             <Col>
               <Form.Group className='mx-2'>
-                <Form.Label as='h6' className='mb-0 ms-2'>Charge {required}</Form.Label>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Charge {newService.charge === '' ? required : ''}
+                </Form.Label>
                 <Form.Control style={squareForm} placeholder='20' value={newService.charge}
                   onChange={(e) => changeNewService(e, 'charge')}/>
               </Form.Group>
             </Col>
             <Col>
               <Form.Group className='mx-2'>
-                <Form.Label as='h6' className='mb-0 ms-2'>Per {required}</Form.Label>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Per {newService.per === '' ? required : ''}
+                </Form.Label>
                 <Form.Control style={squareForm} placeholder='Hour' value={newService.per}
                   onChange={(e) => changeNewService(e, 'per')}/>
               </Form.Group>

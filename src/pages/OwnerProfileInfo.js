@@ -90,58 +90,68 @@ function OwnerProfileInfo(props) {
   return (
     <div className='pb-5'>
       <Header title='Owner Profile'/>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>First Name {required}</Form.Label>
-        <Form.Control style={squareForm} placeholder='First' value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>Last Name {required}</Form.Label>
-        <Form.Control style={squareForm} placeholder='Last' value={lastName}
-          onChange={(e) => setLastName(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>Phone Number {required}</Form.Label>
-        <Form.Control style={squareForm} placeholder='(xxx)xxx-xxxx' value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>Email Address {required}</Form.Label>
-        <Form.Control style={squareForm} placeholder='Email' value={email} type='email'
-          onChange={(e) => setEmail(e.target.value)}/>
-      </Form.Group>
       <Container>
-        <h6>Please add at least one:</h6>
-        <Row className='mb-1'>
-          <Col className='d-flex align-items-center'>
-            <Checkbox type='BOX' onClick={(checked) => setShowSsn(checked)}/>
-            <p className='d-inline-block mb-0'>SSN</p>
-          </Col>
-          <Col>
-            <Form.Control style={showSsn ? squareForm : hidden} placeholder='123-45-6789'
-              value={ssn} onChange={e => setSsn(e.target.value)}/>
-          </Col>
-        </Row>
-        <Row className='mb-1'>
-          <Col className='d-flex align-items-center'>
-            <Checkbox type='BOX' onClick={(checked) => setShowEin(checked)}/>
-            <p className='d-inline-block mb-0'>EIN Number</p>
-          </Col>
-          <Col>
-            <Form.Control style={showEin ? squareForm : hidden} placeholder='12-1234567'
-              value={einNumber} onChange={e => setEinNumber(e.target.value)}/>
-          </Col>
-        </Row>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            First Name {firstName === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='First' value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}/>
+        </Form.Group>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Last Name {lastName === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='Last' value={lastName}
+            onChange={(e) => setLastName(e.target.value)}/>
+        </Form.Group>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Phone Number {phoneNumber === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='(xxx)xxx-xxxx' value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}/>
+        </Form.Group>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Email Address {email === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='Email' value={email} type='email'
+            onChange={(e) => setEmail(e.target.value)}/>
+        </Form.Group>
+        <Container>
+          <h6>Please add at least one:</h6>
+          <Row className='mb-1'>
+            <Col className='d-flex align-items-center'>
+              <Checkbox type='BOX' onClick={(checked) => setShowSsn(checked)}/>
+              <p className='d-inline-block mb-0'>SSN</p>
+            </Col>
+            <Col>
+              <Form.Control style={showSsn ? squareForm : hidden} placeholder='123-45-6789'
+                value={ssn} onChange={e => setSsn(e.target.value)}/>
+            </Col>
+          </Row>
+          <Row className='mb-1'>
+            <Col className='d-flex align-items-center'>
+              <Checkbox type='BOX' onClick={(checked) => setShowEin(checked)}/>
+              <p className='d-inline-block mb-0'>EIN Number</p>
+            </Col>
+            <Col>
+              <Form.Control style={showEin ? squareForm : hidden} placeholder='12-1234567'
+                value={einNumber} onChange={e => setEinNumber(e.target.value)}/>
+            </Col>
+          </Row>
+        </Container>
+        <PaymentSelection state={paymentState}/>
+        <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+          <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+        </div>
+        <div className='text-center mb-3'>
+          <Button variant='outline-primary' style={pillButton} onClick={submitInfo}>
+            Save Owner Profile
+          </Button>
+        </div>
       </Container>
-      <PaymentSelection state={paymentState}/>
-      <div className='text-center' style={errorMessage === '' ? hidden : {}}>
-        <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
-      </div>
-      <div className='text-center mb-3'>
-        <Button variant='outline-primary' style={pillButton} onClick={submitInfo}>
-          Save Owner Profile
-        </Button>
-      </div>
     </div>
   );
 }
