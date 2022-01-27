@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "SFProDisplay-Regular";
+  src: local("SFProDisplay-Regular"),
+    url(./fonts/SFProDisplay-Regular.ttf) format("truetype");
+}
+@font-face {
+  font-family: "SFProDisplay-Bold";
+  src: local("SFProDisplay-Bold"),
+    url(./fonts/SFProDisplay-Bold.ttf) format("truetype");
+}
+@font-face {
+  font-family: "SFProDisplay-Semibold";
+  src: local("SFProDisplay-Semibold"),
+    url(./fonts/SFProDisplay-Semibold.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "SFProText-SemiBold";
+  src: local("SFProText-SemiBold"),
+    url(./fonts/SFProText-SemiBold.ttf) format("truetype");
+}
