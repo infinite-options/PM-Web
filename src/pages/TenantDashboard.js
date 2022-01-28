@@ -11,6 +11,7 @@ import Documents from "../icons/documents.svg";
 import Announcements from "../icons/announcements.svg";
 import Emergency from "../icons/emergency.svg";
 import SearchPM from "../icons/searchPM.svg";
+import { get } from "../utils/api";
 import {
   headings,
   upcoming,
@@ -26,11 +27,24 @@ import {
 function TenantDashboard(props) {
   const navigate = useNavigate();
   const { userData } = React.useContext(AppContext);
+  console.log(userData);
   const [footerTab, setFooterTab] = React.useState("DASHBOARD");
+  const [profile, setProfile] = React.useState([]);
   const { setShowFooter } = props;
+  let access_token = userData.access_token;
+  let prof = {
+    tenant_id: userData.user.user_uid,
+  };
+  const fetchProfile = async () => {
+    const response = await get(`/tenantProfileInfo`, access_token);
+    console.log(response);
+    setProfile(response.result[0]);
+  };
+  //console.log(profile);
   React.useEffect(() => {
     setShowFooter(true);
   });
+  React.useEffect(fetchProfile, []);
   const goToRequest = () => {
     navigate("/repairRequest");
   };
@@ -46,12 +60,13 @@ function TenantDashboard(props) {
   const goToDocuments = () => {
     navigate("/tenantDocuments");
   };
+  console.log(profile.tenant_first_name);
   return (
     <div className="h-100">
       <Header title="Home" />
       <Container className="pt-1 mb-4">
         <Row style={headings}>
-          <div>Hello John,</div>
+          <div>Hello {profile.tenant_first_name},</div>
         </Row>
         <Row style={upcoming} className="mt-2 mb-2">
           <div style={upcomingHeading} className="mt-1 mb-1">
@@ -77,10 +92,13 @@ function TenantDashboard(props) {
         </Row>
         <Row>
           <div style={headings} className="mt-4 mb-1">
-            $2,000/mo
+            ${JSON.parse(profile.tenant_current_address).rent}/mo
           </div>
           <div style={address} className="mt-1 mb-1">
-            213 Parkland Ave, San Jose, CA 90820
+            {JSON.parse(profile.tenant_current_address).street},&nbsp;
+            {JSON.parse(profile.tenant_current_address).city},&nbsp;
+            {JSON.parse(profile.tenant_current_address).state}&nbsp;
+            {JSON.parse(profile.tenant_current_address).zip}
           </div>
           <div style={blue} className="mt-1 mb-1">
             Rent paid for Dec, 2021: $1500
