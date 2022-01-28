@@ -9,31 +9,47 @@ import AppleLogin from '../icons/AppleLogin.svg';
 import FacebookLogin from '../icons/FacebookLogin.svg';
 import GoogleLogin from '../icons/GoogleLogin.svg';
 import {post} from '../utils/api';
-import {pillButton, boldSmall} from '../utils/styles';
+import {pillButton, boldSmall, red, small, hidden} from '../utils/styles';
 
 function Login(props) {
-  const context = React.useContext(AppContext);
+  const {userData, updateUserData} = React.useContext(AppContext);
   const navigate = useNavigate();
   const [loginStage, setLoginStage] = React.useState('LOGIN');
   const emailRef = React.createRef();
   const passwordRef = React.createRef();
+  const [errorMessage, setErrorMessage] = React.useState('');
+  React.useEffect(() => {
+    if (userData.access_token !== null) {
+      setLoginStage('ROLE');
+    }
+  }, []);
   const submitForm = async () => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    if (email === '' || password === '') {
+      setErrorMessage('Please fill out all fields');
+      return;
+    }
     const user = {
       email: email,
       password: password
     }
     const response = await post('/login', user);
     if (response.code !== 200) {
-      console.log(response.message);
+      setErrorMessage(response.message);
       return;
       // add validation
     }
-    context.updateUserData(response.result);
+    updateUserData(response.result);
     // save to app state / context
     setLoginStage('ROLE')
   }
+
+  const required = (
+    errorMessage === 'Please fill out all fields' ? (
+      <span style={red} className='ms-1'>*</span>
+    ) : ''
+  );
   return (
     <div className='h-100 pb-5'>
       {loginStage === 'LOGIN' ? (
@@ -53,11 +69,11 @@ function Login(props) {
             </div>
             <Form>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Email Address</Form.Label>
+                <Form.Label as='h5' className='mb-0 ms-1'>Email Address {required}</Form.Label>
                 <Form.Control style={{borderRadius: 0}} ref={emailRef} placeholder='Email' type='email'/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Password</Form.Label>
+                <Form.Label as='h5' className='mb-0 ms-1'>Password {required}</Form.Label>
                 <Form.Control style={{borderRadius: 0}} ref={passwordRef} placeholder='Password' type='password'/>
               </Form.Group>
             </Form>
@@ -65,6 +81,9 @@ function Login(props) {
               <Button variant='outline-primary' style={pillButton} onClick={submitForm}>
                 Login
               </Button>
+            </div>
+            <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+              <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
             </div>
           </Container>
           <div className='flex-grow-1 d-flex flex-column justify-content-end'>

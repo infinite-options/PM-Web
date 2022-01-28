@@ -1,26 +1,38 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
 import {Container, Row, Col} from 'react-bootstrap';
 import AppContext from '../AppContext';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
 import PropertyForm from '../components/PropertyForm';
 import PropertyView from '../components/PropertyView';
 import Phone from '../icons/Phone.svg';
 import Message from '../icons/Message.svg';
 import {get} from '../utils/api';
-import {blue, gray, greenPill, orangePill, redPill, tileImg, smallImg, xSmall, hidden} from '../utils/styles';
+import {blue, gray, greenPill, orangePill, tileImg, smallImg, xSmall, hidden} from '../utils/styles';
 
 function OwnerProperties(props) {
+  const navigate = useNavigate();
   const {setShowFooter} = props;
-  const {userData} = React.useContext(AppContext);
-  const [footerTab, setFooterTab] = React.useState('DASHBOARD');
+  const {userData, refresh} = React.useContext(AppContext);
   const [stage, setStage] = React.useState('LIST');
   const [selectedProperty, setSelectedProperty] = React.useState(null);
   const {access_token, user} = userData;
   const [properties, setProperties] = React.useState([]);
 
   const fetchProperties = async () => {
+    if (access_token === null || user.role.indexOf('OWNER') === -1) {
+      navigate('/');
+      return;
+    }
     const response = await get(`/ownerProperties`, access_token);
+    if (response.msg === 'Token has expired') {
+      refresh();
+      return;
+    }
+    if (stage === 'PROPERTY') {
+      const property = response.result.filter(item => item.property_uid === selectedProperty.property_uid)[0];
+      setSelectedProperty(property);
+    }
     setProperties(response.result);
   }
   const selectProperty = (property) => {
@@ -32,10 +44,10 @@ function OwnerProperties(props) {
     setStage('LIST');
   }
 
-  React.useEffect(fetchProperties, []);
+  React.useEffect(fetchProperties, [access_token]);
   React.useEffect(() => {
     setShowFooter(stage !== 'NEW');
-  }, [stage]);
+  }, [stage, setShowFooter]);
 
   const stopPropagation = (e) => {
     e.stopPropagation();
@@ -43,17 +55,17 @@ function OwnerProperties(props) {
 
   return (
     stage === 'LIST' ? (
-      <div className='h-100'>
+      <div className='pb-5'>
         <Header title='Properties' leftText='+ New' leftFn={() => setStage('NEW')}
           rightText='Sort by'/>
         {properties.map((property, i) => (
-          <Container key={i} onClick={() => selectProperty(property)} className='pt-1 mb-4'>
-            <Row>
-              <Col xs={4}>
+          <Container key={i} onClick={() => selectProperty(property)} className='pt-1 mb-4' style={{height: '100px'}}>
+            <Row className='h-100'>
+              <Col xs={4} className='h-100'>
                 <div style={tileImg}>
                   {JSON.parse(property.images).length > 0 ? (
-                    <img src={JSON.parse(property.images)[0]} alt='Image'
-                      className='h-100 w-100' style={{objectFit: 'cover'}}/>
+                    <img src={JSON.parse(property.images)[0]} alt='Property' className='w-100 h-100'
+                      style={{borderRadius: '4px', objectFit: 'cover'}}/>
                   ) : ''}
                 </div>
               </Col>
@@ -62,7 +74,11 @@ function OwnerProperties(props) {
                   <h5 className='mb-0' style={{fontWeight: '600'}}>
                     ${property.listed_rent}/mo
                   </h5>
-                  <p style={greenPill} className='mb-0'>Rent Paid</p>
+                  {property.rental_uid !== null ? (
+                    <p style={greenPill} className='mb-0'>Rented</p>
+                  ) : (
+                    <p style={orangePill} className='mb-0'>Not Rented</p>
+                  )}
                 </div>
                 <p style={gray} className='mt-2 mb-0'>
                   {property.address}{property.unit !== '' ? ' '+property.unit : ''}, {property.city}, {property.state} <br/>
@@ -93,12 +109,12 @@ function OwnerProperties(props) {
     ) : stage === 'NEW' ? (
       <div className='flex-grow-1'>
         <Header title='Properties' leftText='< Back' leftFn={() => setStage('LIST')}/>
-        <PropertyForm cancel={() => setStage('LIST')} onAdd={addProperty}/>
+        <PropertyForm edit cancel={() => setStage('LIST')} onSubmit={addProperty}/>
       </div>
     ) : stage === 'PROPERTY' ? (
       <div className='flex-grow-1'>
-        <Header title='Properties' leftText='< Back' leftFn={() => setStage('LIST')}/>
-        <PropertyView property={selectedProperty}/>
+        <PropertyView property={selectedProperty} back={() => setStage('LIST')}
+          reload={fetchProperties}/>
       </div>
     ) : ''
   );

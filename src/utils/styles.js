@@ -7,8 +7,11 @@ const boldSmall = {
   fontSize: "smaller",
 };
 const small = {
-  fontSize: "small",
-};
+  fontSize: 'small'
+}
+const mediumBold = {
+  fontWeight: '600'
+}
 const bold = {
   fontWeight: "bold",
 };
@@ -36,6 +39,12 @@ const redRight = {
   font: "normal normal 600 17px/20px SFProDisplay-Semibold",
   textAlign: "right",
 };
+const red = {
+  color: '#E3441F'
+}
+const green = {
+  color: '#3DB727'
+}
 const smallPillButton = {
   fontSize: "small",
   borderRadius: "50px",
@@ -76,6 +85,10 @@ const tileImg = {
 const smallImg = {
   height: "25px",
   margin: "0 5px",
+};
+const mediumImg = {
+  height: '40px',
+  margin: '0 5px'
 };
 const xSmall = {
   fontSize: "x-small",
@@ -224,11 +237,13 @@ export {
   underline,
   blue,
   gray,
+  red,
   small,
   smallPillButton,
   squareForm,
   hidden,
   none,
+  mediumBold,
   bold,
   bolder,
   greenPill,
@@ -237,6 +252,7 @@ export {
   bluePill,
   tileImg,
   smallImg,
+  mediumImg,
   xSmall,
   smallBlue,
   smallGray,
@@ -255,4 +271,5 @@ export {
   redRight,
   timeslotButton,
   activeTimeSlotButton,
-};
+  green
+}

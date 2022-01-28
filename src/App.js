@@ -17,27 +17,34 @@ import TenantDocuments from "./components/TenantDocuments";
 import RentPayment from "./components/RentPayment";
 import PaymentHistory from "./components/PaymentHistory";
 import ScheduleRepairs from "./components/ScheduleRepairs";
+import {get} from './utils/api';
+
 function App() {
   const [userData, setUserData] = React.useState({
-    access_token: localStorage.getItem("access_token"),
-    refresh_token: localStorage.getItem("refresh_token"),
-    user: JSON.parse(localStorage.getItem("user")),
+    access_token: JSON.parse(localStorage.getItem('access_token')),
+    refresh_token: JSON.parse(localStorage.getItem('refresh_token')),
+    user: JSON.parse(localStorage.getItem('user'))
   });
   const updateUserData = (newUserData) => {
     setUserData(newUserData);
-    localStorage.setItem("access_token", newUserData.access_token);
-    localStorage.setItem("refresh_token", newUserData.refresh_token);
-    localStorage.setItem("user", JSON.stringify(newUserData.user));
-  };
+    localStorage.setItem('access_token', JSON.stringify(newUserData.access_token));
+    localStorage.setItem('refresh_token', JSON.stringify(newUserData.refresh_token));
+    localStorage.setItem('user', JSON.stringify(newUserData.user));
+  }
   const logout = () => {
     updateUserData({
       access_token: null,
       refresh_token: null,
       user: null,
     });
-  };
+  }
+  const refresh = async () => {
+    const response = await get('/refresh', userData.refresh_token);
+    updateUserData(response.result);
+  }
+  console.log(userData);
   return (
-    <AppContext.Provider value={{ userData, updateUserData, logout }}>
+    <AppContext.Provider value={{userData, updateUserData, logout, refresh}}>
       <BrowserRouter>
         <Routes>
           <Route path="/">

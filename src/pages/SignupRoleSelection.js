@@ -2,7 +2,7 @@ import React from 'react';
 import {Container, Row, Col, Button} from 'react-bootstrap';
 import Header from '../components/Header';
 import Checkbox from '../components/Checkbox';
-import {pillButton} from '../utils/styles';
+import {pillButton, red, small, hidden} from '../utils/styles';
 
 function SignupRoleSelection(props) {
   const [userRoles, setUserRoles] = React.useState([]);
@@ -30,8 +30,14 @@ function SignupRoleSelection(props) {
     setUserRoles(userRoles);
   }
   const confirmRoles = () => {
+    if (userRoles.length === 0) {
+      setErrorMessage('Please select a role to proceed');
+      return;
+    }
+    setErrorMessage('');
     props.onConfirm(userRoles);
   }
+  const [errorMessage, setErrorMessage] = React.useState('');
   return (
     <div>
       <Header title='Sign Up' leftText='< Back' leftFn={props.back}/>
@@ -47,6 +53,9 @@ function SignupRoleSelection(props) {
             </Col>
           </Row>
         ))}
+        <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+          <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+        </div>
         <div className='text-center mt-5'>
           <Button variant='outline-primary' style={pillButton} onClick={confirmRoles}>
             Next
