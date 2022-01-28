@@ -16,6 +16,7 @@ import RepairStatus from "./components/RepairStatus";
 import TenantDocuments from "./components/TenantDocuments";
 import RentPayment from "./components/RentPayment";
 import PaymentHistory from "./components/PaymentHistory";
+import ScheduleRepairs from "./components/ScheduleRepairs";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: localStorage.getItem("access_token"),
@@ -56,6 +57,7 @@ function App() {
             <Route path="tenantDocuments" element={<TenantDocuments />} />
             <Route path="rentPayment" element={<RentPayment />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />
+            <Route path="scheduleRepairs" element={<ScheduleRepairs />} />
           </Route>
         </Routes>
       </BrowserRouter>

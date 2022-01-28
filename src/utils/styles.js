@@ -186,6 +186,38 @@ const subText = {
   color: "#777777",
 };
 
+const timeslotButton = {
+  width: "6.6rem",
+  height: "2.3rem",
+  maxWidth: "80%",
+  backgroundColor: "white",
+  border: "2px solid #007AFF",
+  color: "#007AFF",
+  // padding: "15px 90px",
+  textAlign: "center",
+  textDecoration: "none",
+  fontSize: "20px",
+  borderRadius: "50px",
+  display: "block",
+  margin: "6px 6px",
+  font: "normal normal 600 12px/14px SFProDisplay-Semibold",
+};
+const activeTimeSlotButton = {
+  width: "6.6rem",
+  height: "2.3rem",
+  maxWidth: "80%",
+  background: "#007AFF",
+  border: "2px solid #007AFF",
+  color: "white",
+  // padding: "15px 90px",
+  textAlign: "center",
+  textDecoration: "none",
+  fontSize: "20px",
+  borderRadius: "50px",
+  display: "block",
+  margin: "6px 6px",
+  font: "normal normal 600 12px/14px SFProDisplay-Semibold",
+};
 export {
   pillButton,
   boldSmall,
@@ -221,4 +253,6 @@ export {
   subText,
   blueRight,
   redRight,
+  timeslotButton,
+  activeTimeSlotButton,
 };
