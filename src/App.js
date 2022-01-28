@@ -1,13 +1,22 @@
-import React from 'react';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import AppContext from './AppContext';
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import ProfileInfo from './pages/ProfileInfo';
-import OwnerHome from './pages/OwnerHome';
-
+import AppContext from "./AppContext";
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ProfileInfo from "./pages/ProfileInfo";
+import OwnerHome from "./pages/OwnerHome";
+import TenantHome from "./pages/TenantHome";
+import "./App.css";
+import RepairRequest from "./components/RepairRequestForm";
+import ResidentAnnouncements from "./components/ResidentAnnouncements";
+import Emergency from "./components/Emergency";
+import RepairStatus from "./components/RepairStatus";
+import TenantDocuments from "./components/TenantDocuments";
+import RentPayment from "./components/RentPayment";
+import PaymentHistory from "./components/PaymentHistory";
+import ScheduleRepairs from "./components/ScheduleRepairs";
 import {get} from './utils/api';
 
 function App() {
@@ -26,7 +35,7 @@ function App() {
     updateUserData({
       access_token: null,
       refresh_token: null,
-      user: null
+      user: null,
     });
   }
   const refresh = async () => {
@@ -38,12 +47,24 @@ function App() {
     <AppContext.Provider value={{userData, updateUserData, logout, refresh}}>
       <BrowserRouter>
         <Routes>
-          <Route path='/'>
-            <Route index element={<Landing/>}/>
-            <Route path='login' element={<Login/>}/>
-            <Route path='signup' element={<Signup/>}/>
-            <Route path='profileInfo' element={<ProfileInfo/>}/>
-            <Route path='owner' element={<OwnerHome/>}/>
+          <Route path="/">
+            <Route index element={<Landing />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+            <Route path="profileInfo" element={<ProfileInfo />} />
+            <Route path="owner" element={<OwnerHome />} />
+            <Route path="tenant" element={<TenantHome />} />
+            <Route path="repairRequest" element={<RepairRequest />} />
+            <Route
+              path="residentAnnouncements"
+              element={<ResidentAnnouncements />}
+            />
+            <Route path="emergency" element={<Emergency />} />
+            <Route path="repairStatus" element={<RepairStatus />} />
+            <Route path="tenantDocuments" element={<TenantDocuments />} />
+            <Route path="rentPayment" element={<RentPayment />} />
+            <Route path="paymentHistory" element={<PaymentHistory />} />
+            <Route path="scheduleRepairs" element={<ScheduleRepairs />} />
           </Route>
         </Routes>
       </BrowserRouter>

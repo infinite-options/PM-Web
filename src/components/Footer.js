@@ -14,10 +14,11 @@ function Footer(props) {
   const {logout} = React.useContext(AppContext);
 
   const footerContainer = {
-    backgroundColor: '#F5F5F5',
-    borderTop: '1px solid #EAEAEA',
-    padding: '10px 0'
-  }
+    backgroundColor: "#F5F5F5",
+    borderTop: "1px solid #EAEAEA",
+    padding: "10px 0",
+    height: "83px",
+  };
 
   return (
     <div style={footerContainer} className='d-flex align-items-center fixed-bottom'>
@@ -27,9 +28,9 @@ function Footer(props) {
           Dashboard
         </p>
       </Col>
-      <Col className='text-center' onClick={() => setTab('ROLES')}>
-        <img src={tab === 'ROLES' ? Roles_Blue : Roles_Gray} alt='Roles'/>
-        <p style={tab === 'ROLES' ? smallBlue : smallGray} className='mb-0'>
+      <Col className="text-center" onClick={() => setTab("ROLES")}>
+        <img src={tab === "ROLES" ? Roles_Blue : Roles_Gray} alt="Roles" />
+        <p style={tab === "ROLES" ? smallBlue : smallGray} className="mb-0">
           Roles
         </p>
       </Col>
@@ -41,7 +42,6 @@ function Footer(props) {
       </Col>
     </div>
   );
-
 }
 
 export default Footer;

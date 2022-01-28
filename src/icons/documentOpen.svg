@@ -1,0 +1,7 @@
+<svg id="Component_54_3" data-name="Component 54 – 3" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <g id="Rectangle_11" data-name="Rectangle 11" fill="#fff" stroke="#007aff" stroke-width="1">
+    <rect width="40" height="40" rx="5" stroke="none"/>
+    <rect x="0.5" y="0.5" width="39" height="39" rx="4.5" fill="none"/>
+  </g>
+  <path id="Icon_material-insert-drive-file" data-name="Icon material-insert-drive-file" d="M8.392,3a2.389,2.389,0,0,0-2.38,2.392L6,24.53a2.389,2.389,0,0,0,2.38,2.392H22.745a2.4,2.4,0,0,0,2.392-2.392V10.177L17.961,3Zm8.373,8.373V4.794l6.579,6.579Z" transform="translate(4.432 5.039)" fill="#007aff"/>
+</svg>

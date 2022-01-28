@@ -1,37 +1,53 @@
-import {Container, Row, Col, Button} from 'react-bootstrap';
+import { Container, Row, Col, Button } from "react-bootstrap";
 
 function Header(props) {
   const headerContainer = {
-    backgroundColor: '#F5F5F5'
-  }
+    backgroundColor: "#F5F5F5",
+  };
   const textButton = {
-    background: 'none',
-    border: 'none',
-    color: '#007AFF'
-  }
+    background: "none",
+    border: "none",
+    color: "#007AFF",
+  };
   return (
-    <Container fluid style={headerContainer} className='mb-4'>
+    <Container fluid style={headerContainer} className="mb-4">
       <Row>
         {props.leftText ? (
-          <Col className='d-flex flex-column justify-content-end'>
+          <Col className="d-flex flex-column justify-content-end">
             <Button style={textButton} onClick={props.leftFn}>
               {props.leftText}
             </Button>
           </Col>
-        ) : <Col/>}
-        <Col xs={5} className='text-center d-flex flex-column justify-content-end'>
-          <h6 className='mt-5 mb-2'>{props.title}</h6>
+        ) : (
+          <Col />
+        )}
+        <Col
+          xs={5}
+          className="text-center d-flex flex-column justify-content-end"
+        >
+          <h6
+            className="mt-5 mb-2"
+            style={{
+              font: "normal normal 600 17px/20px SFProText-Semibold",
+              letterSpacing: "0px",
+              color: "#000000",
+            }}
+          >
+            {props.title}
+          </h6>
         </Col>
         {props.rightText ? (
-          <Col className='d-flex flex-column justify-content-end'>
+          <Col className="d-flex flex-column justify-content-end">
             <Button style={textButton} onClick={props.rightFn}>
               {props.rightText}
             </Button>
           </Col>
-        ) : <Col/>}
+        ) : (
+          <Col />
+        )}
       </Row>
     </Container>
   );
 }
 
-export default Header
+export default Header;
