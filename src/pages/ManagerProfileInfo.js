@@ -156,7 +156,10 @@ function ManagerProfileInfo(props) {
           </Row>
         </Container>
         <PaymentSelection state={paymentState}/>
-        <ManagerFees state={feeState}/>
+        <Container className='px-2'>
+          <h6 className='mb-3'>Fees you charge:</h6>
+          <ManagerFees state={feeState}/>
+        </Container>
         <ManagerLocations state={locationState}/>
         <div className='text-center' style={errorMessage === '' ? hidden : {}}>
           <p style={{...red, ...small}}>{errorMessage || 'error'}</p>

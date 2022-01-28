@@ -11,6 +11,10 @@ import Message from '../icons/Message.svg';
 import CreateExpense from './CreateExpense';
 import CreateTax from './CreateTax';
 import CreateMortgage from './CreateMortgage';
+import ManagerDocs from './ManagerDocs';
+import LeaseDocs from './LeaseDocs';
+import ManagementContract from './ManagementContract';
+import TenantAgreement from './TenantAgreement';
 
 function PropertyView(props) {
 
@@ -22,6 +26,10 @@ function PropertyView(props) {
   const [showCreateExpense, setShowCreateExpense] = React.useState(false);
   const [showCreateTax, setShowCreateTax] = React.useState(false);
   const [showCreateMortgage, setShowCreateMortgage] = React.useState(false);
+  const [expandManagerDocs, setExpandManagerDocs] = React.useState(false);
+  const [expandLeaseDocs, setExpandLeaseDocs] = React.useState(false);
+  const [showManagementContract, setShowManagementContract] = React.useState(false);
+  const [showTenantAgreement, setShowTenantAgreement] = React.useState(false);
 
   const headerBack = () => {
     editProperty ? setEditProperty(false) :
@@ -46,6 +54,10 @@ function PropertyView(props) {
     }
   }
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [editProperty, showCreateExpense, showCreateTax, showCreateMortgage, showManagementContract, showTenantAgreement]);
+
   const reloadProperty = () => {
     setEditProperty(false);
     reload();
@@ -58,86 +70,112 @@ function PropertyView(props) {
   };
 
   return (
-    <div>
+    showManagementContract ? (
+      <ManagementContract back={() => setShowManagementContract(false)}/>
+    ) : showTenantAgreement ? (
+      <TenantAgreement back={() => setShowTenantAgreement(false)}/>
+    ) : (
+      <div>
       <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
-      <Container className='pb-5 mb-5'>
-        {editProperty ? (
-          <PropertyForm property={property} edit={editProperty} setEdit={setEditProperty}
-            onSubmit={reloadProperty}/>
-        ) : showCreateExpense ? (
-          <CreateExpense back={() => setShowCreateExpense(false)}/>
-        ) : showCreateTax ? (
-          <CreateTax back={() => setShowCreateTax(false)}/>
-        ) : showCreateMortgage ? (
-          <CreateMortgage back={() => setShowCreateMortgage(false)}/>
-        ) : (
-          <div>
-            <div style={{...tileImg, height: '200px', position: 'relative'}}>
-              {JSON.parse(property.images).length > 0 ? (
-                <img src={JSON.parse(property.images)[currentImg]} className='w-100 h-100'
-                  style={{borderRadius: '4px', objectFit: 'contain'}} alt='Property'/>
+        <Container className='pb-5 mb-5'>
+          {editProperty ? (
+            <PropertyForm property={property} edit={editProperty} setEdit={setEditProperty}
+              onSubmit={reloadProperty}/>
+          ) : showCreateExpense ? (
+            <CreateExpense back={() => setShowCreateExpense(false)}/>
+          ) : showCreateTax ? (
+            <CreateTax back={() => setShowCreateTax(false)}/>
+          ) : showCreateMortgage ? (
+            <CreateMortgage back={() => setShowCreateMortgage(false)}/>
+          ) : (
+            <div>
+              <div style={{...tileImg, height: '200px', position: 'relative'}}>
+                {JSON.parse(property.images).length > 0 ? (
+                  <img src={JSON.parse(property.images)[currentImg]} className='w-100 h-100'
+                    style={{borderRadius: '4px', objectFit: 'contain'}} alt='Property'/>
+                ) : ''}
+                <div style={{position: 'absolute', left: '5px', top: '90px'}}
+                  onClick={previousImg}>
+                  {'<'}
+                </div>
+                <div style={{position: 'absolute', right: '5px', top: '90px'}}
+                  onClick={nextImg}>
+                  {'>'}
+                </div>
+              </div>
+              <h5 className='mt-2 mb-0' style={mediumBold}>
+                ${property.listed_rent}/mo
+              </h5>
+              <p style={gray} className='mt-1 mb-2'>
+                {property.address}{property.unit !== '' ? ` ${property.unit}, ` : ', '}
+                {property.city}, {property.state} {property.zip}
+              </p>
+              <div className='d-flex'>
+                {property.rental_uid !== null ? (
+                  <p style={greenPill} className='mb-0'>Rented</p>
+                ) : (
+                  <p style={orangePill} className='mb-0'>Not Rented</p>
+                )}
+              </div>
+              <PropertyCashFlow property={property} state={cashFlowState}/>
+              {property.manager_first_name !== null ? (
+                <div>
+                  <div className='d-flex justify-content-between mt-3'>
+                    <div>
+                      <h6 style={mediumBold} className='mb-1'>
+                        {property.manager_first_name} {property.manager_last_name}
+                      </h6>
+                      <p style={{...gray, ...mediumBold}} className='mb-1'>
+                        Property Manager
+                      </p>
+                    </div>
+                    <div>
+                      <a href={`tel:${property.manager_phone_number}`}>
+                        <img src={Phone} alt='Phone' style={mediumImg}/>
+                      </a>
+                      <a href={`mailto:${property.manager_email}`}>
+                        <img src={Message} alt='Message' style={mediumImg}/>
+                      </a>
+                    </div>
+                  </div>
+                  <hr style={{opacity: 1}} className='mt-1'/>
+                </div>
               ) : ''}
-              <div style={{position: 'absolute', left: '5px', top: '90px'}}
-                onClick={previousImg}>
-                {'<'}
-              </div>
-              <div style={{position: 'absolute', right: '5px', top: '90px'}}
-                onClick={nextImg}>
-                {'>'}
-              </div>
-            </div>
-            <h5 className='mt-2 mb-0' style={mediumBold}>
-              ${property.listed_rent}/mo
-            </h5>
-            <p style={gray} className='mt-1 mb-2'>
-              {property.address}{property.unit !== '' ? ` ${property.unit}, ` : ', '}
-              {property.city}, {property.state} {property.zip}
-            </p>
-            <div className='d-flex'>
-              {property.rental_uid !== null ? (
-                <p style={greenPill} className='mb-0'>Rented</p>
-              ) : (
-                <p style={orangePill} className='mb-0'>Not Rented</p>
-              )}
-            </div>
-            <PropertyCashFlow property={property} state={cashFlowState}/>
-            {property.manager_first_name !== null ? (
-              <div>
+              <div onClick={() => setExpandDetails(!expandDetails)}>
                 <div className='d-flex justify-content-between mt-3'>
-                  <div>
-                    <h6 style={mediumBold} className='mb-1'>
-                      {property.manager_first_name} {property.manager_last_name}
-                    </h6>
-                    <p style={{...gray, ...mediumBold}} className='mb-1'>
-                      Property Manager
-                    </p>
-                  </div>
-                  <div>
-                    <a href={`tel:${property.manager_phone_number}`}>
-                      <img src={Phone} alt='Phone' style={mediumImg}/>
-                    </a>
-                    <a href={`mailto:${property.manager_email}`}>
-                      <img src={Message} alt='Message' style={mediumImg}/>
-                    </a>
-                  </div>
+                  <h6 style={mediumBold} className='mb-1'>Details</h6>
+                  <img src={expandDetails ? ArrowUp : ArrowDown} alt='Expand'/>
                 </div>
                 <hr style={{opacity: 1}} className='mt-1'/>
               </div>
-            ) : ''}
-            <div onClick={() => setExpandDetails(!expandDetails)}>
-              <div className='d-flex justify-content-between mt-3'>
-                <h6 style={mediumBold} className='mb-1'>Details</h6>
-                <img src={expandDetails ? ArrowUp : ArrowDown} alt='Expand'/>
+              {expandDetails ? (
+                <PropertyForm property={property} edit={editProperty} setEdit={setEditProperty}/>
+              ) : ''}
+              <div onClick={() => setExpandManagerDocs(!expandManagerDocs)}>
+                <div className='d-flex justify-content-between mt-3'>
+                  <h6 style={mediumBold} className='mb-1'>Management Contract</h6>
+                  <img src={expandManagerDocs ? ArrowUp : ArrowDown} alt='Expand'/>
+                </div>
+                <hr style={{opacity: 1}} className='mt-1'/>
               </div>
-              <hr style={{opacity: 1}} className='mt-1'/>
+              {expandManagerDocs ? (
+                <ManagerDocs property={property} addDocument={() => setShowManagementContract(true)}/>
+              ) : ''}
+              <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
+                <div className='d-flex justify-content-between mt-3'>
+                  <h6 style={mediumBold} className='mb-1'>Tenant Agreement</h6>
+                  <img src={expandLeaseDocs ? ArrowUp : ArrowDown} alt='Expand'/>
+                </div>
+                <hr style={{opacity: 1}} className='mt-1'/>
+              </div>
+              {expandLeaseDocs ? (
+                <LeaseDocs property={property} addDocument={() => setShowTenantAgreement(true)}/>
+              ) : ''}
             </div>
-            {expandDetails ? (
-              <PropertyForm property={property} edit={editProperty} setEdit={setEditProperty}/>
-            ) : ''}
-          </div>
-        )}
-      </Container>
-    </div>
+          )}
+        </Container>
+      </div>
+    )
   );
 
 }

@@ -61,8 +61,7 @@ function ManagerFees(props) {
     ) : ''
   );
   return (
-    <Container className='px-2'>
-      <h6 className='mb-3'>Fees you charge:</h6>
+    <div>
       {feeState.map((fee, i) => (
         <div key={i}>
           <div className='d-flex'>
@@ -77,7 +76,7 @@ function ManagerFees(props) {
             </div>
           </div>
           <p style={gray} className='mb-1'>
-            ${fee.charge} {fee.fee_type === '%' ? `of ${fee.of}` : ''} {fee.frequency}
+            {fee.fee_type === '%' ? `${fee.charge}% of ${fee.of}` : `$${fee.charge}`} {fee.frequency}
           </p>
           <hr className='mt-1'/>
         </div>
@@ -113,7 +112,7 @@ function ManagerFees(props) {
                 <Form.Label as='h6' className='mb-0 ms-2'>
                   Charge {newFee.charge === '' ? required : ''}
                 </Form.Label>
-                <Form.Control style={squareForm} placeholder={newFee.fee_type === '%' ? '10%' : '$100'}
+                <Form.Control style={squareForm} placeholder={newFee.fee_type === '%' ? '10' : '100'}
                   value={newFee.charge} onChange={(e) => changeNewFee(e, 'charge')}/>
               </Form.Group>
             </Col>
@@ -168,7 +167,7 @@ function ManagerFees(props) {
           </Button>
         </div>
       )}
-    </Container>
+    </div>
   );
 }
 

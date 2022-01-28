@@ -61,8 +61,7 @@ function BusinessContact(props) {
     ) : ''
   );
   return (
-    <Container className='mb-4'>
-      <h6 className='mb-3'>Contact Info:</h6>
+    <div>
       {contactState.map((contact, i) => (
         <div key={i}>
           <div className='d-flex'>
@@ -149,7 +148,7 @@ function BusinessContact(props) {
           </Button>
         </div>
       )}
-    </Container>
+    </div>
   );
 }
 

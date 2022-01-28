@@ -111,7 +111,10 @@ function BusinessProfileInfo(props) {
 
         <PaymentSelection state={paymentState}/>
 
-        <BusinessContact state={contactState}/>
+        <Container className='mb-4'>
+          <h6 className='mb-3'>Contact Info:</h6>
+          <BusinessContact state={contactState}/>
+        </Container>
 
         <div className='text-center' style={errorMessage === '' ? hidden : {}}>
           <p style={{...red, ...small}}>{errorMessage || 'error'}</p>

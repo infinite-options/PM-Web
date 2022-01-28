@@ -1,7 +1,15 @@
 
 const pillButton = {
   borderRadius: '50px',
-  padding: '5px 20px'
+  padding: '5px 20px',
+  color: '#007AFF',
+  border: '1px solid #007AFF'
+}
+const smallPillButton = {
+  borderRadius: '50px',
+  padding: '1px 15px',
+  color: '#007AFF',
+  border: '1px solid #007AFF'
 }
 const boldSmall = {
   fontWeight: 'bolder',
@@ -36,11 +44,6 @@ const red = {
 const green = {
   color: '#3DB727'
 }
-const smallPillButton = {
-  fontSize: 'small',
-  borderRadius: '50px',
-  padding: '2px 7px'
-}
 const squareForm = {
   borderRadius: 0,
   border: '1px solid #707070'
@@ -54,16 +57,19 @@ const none = {
 const greenPill = {
   ...smallPillButton,
   backgroundColor: '#3DB727',
+  borderColor: '#3DB727',
   color: 'white'
 }
 const orangePill = {
   ...smallPillButton,
   backgroundColor: '#F89A03',
+  borderColor: '#F89A03',
   color: 'white'
 }
 const redPill = {
   ...smallPillButton,
   backgroundColor: '#E3441F',
+  borderColor: '#E3441F',
   color: 'white'
 }
 const tileImg = {

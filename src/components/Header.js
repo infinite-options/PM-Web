@@ -12,20 +12,20 @@ function Header(props) {
   }
   return (
     <Container fluid style={headerContainer} className='mb-4'>
-      <Row>
+      <Row className='px-3'>
         {props.leftText ? (
-          <Col className='d-flex flex-column justify-content-end'>
-            <Button style={textButton} onClick={props.leftFn}>
+          <Col xs={2} className='d-flex flex-column justify-content-end align-items-start px-0'>
+            <Button style={textButton} onClick={props.leftFn} className='px-0'>
               {props.leftText}
             </Button>
           </Col>
         ) : <Col/>}
-        <Col xs={5} className='text-center d-flex flex-column justify-content-end'>
+        <Col xs={8} className='text-center d-flex flex-column justify-content-end px-0'>
           <h6 className='mt-5 mb-2' style={mediumBold}>{props.title}</h6>
         </Col>
         {props.rightText ? (
-          <Col className='d-flex flex-column justify-content-end'>
-            <Button style={textButton} onClick={props.rightFn}>
+          <Col xs={2} className='d-flex flex-column justify-content-end align-items-end px-0'>
+            <Button style={textButton} onClick={props.rightFn} className='px-0'>
               {props.rightText}
             </Button>
           </Col>
