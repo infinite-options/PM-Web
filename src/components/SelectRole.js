@@ -17,7 +17,7 @@ function SelectRole() {
     if (selectedRole === "OWNER") {
       navigate("/owner");
     } else if (selectedRole === "MANAGER") {
-      navigate("/");
+      navigate("/manager");
     } else if (selectedRole === "TENANT") {
       navigate("/tenant");
     } else if (selectedRole === "MAINTENANCE") {
