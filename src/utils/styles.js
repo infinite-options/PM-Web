@@ -231,6 +231,20 @@ const activeTimeSlotButton = {
   margin: "6px 6px",
   font: "normal normal 600 12px/14px SFProDisplay-Semibold",
 };
+const blueBorderButton = {
+  maxWidth: "80%",
+  backgroundColor: "white",
+  border: "2px solid #007AFF",
+  color: "#007AFF",
+  // padding: "15px 90px",
+  textAlign: "center",
+  textDecoration: "none",
+  fontSize: "20px",
+  borderRadius: "50px",
+  display: "block",
+  margin: "6px 6px",
+  font: "normal normal 600 14px/16px SFProDisplay-Semibold",
+};
 export {
   pillButton,
   boldSmall,
@@ -272,4 +286,5 @@ export {
   timeslotButton,
   activeTimeSlotButton,
   green,
+  blueBorderButton,
 };

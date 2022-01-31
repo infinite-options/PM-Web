@@ -22,7 +22,13 @@ function DetailRepairStatus(props) {
       />
       <Container className="pt-1 mb-4">
         <Row>
-          <Col>
+          <Col
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <div
               style={{
                 width: "350px",

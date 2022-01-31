@@ -9,8 +9,8 @@ import Message from "../icons/Message.svg";
 import RepairRequest from "../icons/repair_request.svg";
 import RepairStatus from "../icons/repair_status.svg";
 import Documents from "../icons/documents.svg";
-import Announcements from "../icons/announcements.svg";
-import Emergency from "../icons/emergency.svg";
+import QuotesRejected from "../icons/QuotesRejected.svg";
+import JobCompleted from "../icons/JobCompleted.svg";
 import SearchPM from "../icons/searchPM.svg";
 import { get } from "../utils/api";
 import {
@@ -50,22 +50,25 @@ function MaintenanceDashboard(props) {
     setShowFooter(true);
   });
 
-  useEffect(fetchProfile, []);
+  //useEffect(fetchProfile, []);
 
-  const goToRequest = () => {
-    navigate("/repairRequest");
+  const goToQuotesRequested = () => {
+    navigate("/ScheduledJobs");
   };
-  const goToAnnouncements = () => {
+  const goToJobsCompleted = () => {
     navigate("/residentAnnouncements");
   };
-  const goToEmergency = () => {
+  const goToQuotesRejectedM = () => {
     navigate("/emergency");
   };
-  const goToStatus = () => {
-    navigate("/repairStatus");
+  const goToQuotesRejectedY = () => {
+    navigate("/emergency");
   };
-  const goToDocuments = () => {
-    navigate("/tenantDocuments");
+  const goToScheduledJobs = () => {
+    navigate("/scheduledJobs");
+  };
+  const goToQuotesSent = () => {
+    navigate("/ScheduledJobs");
   };
   const goToSearchPM = () => {
     navigate("/tenantPropertyManagers");
@@ -73,149 +76,128 @@ function MaintenanceDashboard(props) {
   console.log(profile);
   return (
     <div className="h-100">
-      <Header title="Home" />
-      {isLoading === true || profile.length === 0 ? null : (
-        <Container className="pt-1 mb-4">
-          <Row style={headings}>
-            <div>Hello {profile.tenant_first_name},</div>
-          </Row>
-          <Row style={upcoming} className="mt-2 mb-2">
-            <div style={upcomingHeading} className="mt-1 mb-1">
-              Upcoming:
-              <br />
-              Toilet Maintenance is scheduled for
-              <br /> Dec 12, 2021 at 12:00 pm
-              <br />
-            </div>
+      <Header title="All requests" />
 
-            <Col className="mt-1 mb-1">
-              <div style={upcomingText}>
-                For questions / concerns, feel free to contact the property
-                manager
-              </div>
-            </Col>
-            <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-              <img src={Phone} />
-            </Col>
-            <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-              <img src={Message} />
-            </Col>
-          </Row>
-          <Row>
-            <div style={headings} className="mt-4 mb-1">
-              ${JSON.parse(profile.tenant_current_address).rent}/mo
-            </div>
-            {isLoading === true ? null : (
-              <div style={address} className="mt-1 mb-1">
-                {JSON.parse(profile.tenant_current_address).street},&nbsp;
-                {JSON.parse(profile.tenant_current_address).city},&nbsp;
-                {JSON.parse(profile.tenant_current_address).state}&nbsp;
-                {JSON.parse(profile.tenant_current_address).zip}
-              </div>
-            )}
+      <Container className="pt-1 mb-4">
+        <Row style={headings}>
+          <div>Hector’s Plumbing</div>
+        </Row>
+        <Row style={upcoming} className="mt-2 mb-2">
+          <div style={upcomingHeading} className="mt-1 mb-1">
+            Upcoming job:
+            <br />
+            Toilet Plumbing scheduled for
+            <br /> Today at 12:00 pm
+            <br />
+          </div>
 
-            <div style={blue} className="mt-1 mb-1">
-              Rent paid for {moment().format("MMM")}, {moment().format("YYYY")}:
-              $1400
+          <Col className="mt-1 mb-1">
+            <div style={upcomingText}>
+              For questions / concerns, feel free to contact the property
+              manager
             </div>
+          </Col>
+          <Col xs={2} style={upcomingText} className="mt-1 mb-1">
+            <img src={Phone} />
+          </Col>
+          <Col xs={2} style={upcomingText} className="mt-1 mb-1">
+            <img src={Message} />
+          </Col>
+        </Row>
+
+        <Row
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+          className="mb-4"
+        >
+          <div style={headings} className="mt-4 mb-1">
+            Actions
+          </div>
+          <Col xs={3} style={actions}>
+            <img
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              src={RepairRequest}
+              onClick={goToQuotesRequested}
+            />
+            <div>Quotes Requested</div>
+          </Col>
+          <Col xs={3} style={actions}>
+            <img
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              src={RepairStatus}
+              onClick={goToScheduledJobs}
+            />
+            <div>Scheduled Jobs</div>
+          </Col>
+          <Col xs={3} style={actions}>
+            <img
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              src={Documents}
+              onClick={goToQuotesSent}
+            />
+            <div>Quotes Sent</div>
+          </Col>
+        </Row>
+        <Row
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+          className="mt-1 mb-4"
+        >
+          <Col xs={3} style={actions}>
+            <img
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              src={JobCompleted}
+              onClick={goToJobsCompleted}
+            />
+            <div>Jobs Completed</div>
+          </Col>
+          <Col xs={3} style={actions}>
+            <img
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              src={QuotesRejected}
+              onClick={goToQuotesRejectedM}
+            />
+            <div>Quotes Rejected by Manager</div>
+          </Col>
+          <Col xs={3} style={actions}>
             <div>
-              <Col xs={7} className="mt-1 mb-1">
-                <div style={bluePill} onClick={() => navigate("/rentPayment")}>
-                  Rent due for {moment().format("MMM")},{" "}
-                  {moment().format("YYYY")}: $500
-                </div>
-              </Col>
+              <img
+                style={{ width: "50px", height: "50px", cursor: "pointer" }}
+                src={QuotesRejected}
+                onClick={goToQuotesRejectedY}
+              />
+              <div>Quotes Rejected by You</div>
             </div>
+          </Col>
+        </Row>
+        <Row
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+          className="mt-1 mb-1"
+        >
+          <Col xs={3} style={actions}>
             <div>
-              <Col xs={8} className="mt-1 mb-1">
-                <div style={greenBorderPill}>
-                  Upcoming rent for {moment().add(1, "months").format("MMM")},{" "}
-                  {moment().format("YYYY")}: $2,200
-                </div>
-              </Col>
+              <img
+                style={{ width: "50px", height: "50px", cursor: "pointer" }}
+                src={SearchPM}
+                onClick={goToSearchPM}
+              />
+              <div>Search Property Managers</div>
             </div>
-          </Row>
-          {/* <Row style={headings}>
-          <div>Actions</div>
-        </Row> */}
-          <Row
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}
-            className="mb-4"
-          >
-            <div style={headings} className="mt-4 mb-1">
-              Actions
-            </div>
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={RepairRequest}
-                onClick={goToRequest}
-              />
-              <div>Request Repair</div>
-            </Col>
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={RepairStatus}
-                onClick={goToStatus}
-              />
-              <div>Repair Status</div>
-            </Col>
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={Documents}
-                onClick={goToDocuments}
-              />
-              <div>
-                Your <br /> Documents
-              </div>
-            </Col>
-          </Row>
-          <Row
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}
-            className="mt-1 mb-1"
-          >
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={Announcements}
-                onClick={goToAnnouncements}
-              />
-              <div>
-                Resident <br />
-                Announcements
-              </div>
-            </Col>
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={Emergency}
-                onClick={goToEmergency}
-              />
-              <div>Emergency</div>
-            </Col>
-            <Col xs={3} style={actions}>
-              <div>
-                <img
-                  style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                  src={SearchPM}
-                  onClick={goToSearchPM}
-                />
-                <div>Search Property Managers</div>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      )}
+          </Col>
+          <Col xs={3} style={actions}></Col>
+          <Col xs={3} style={actions}></Col>
+        </Row>
+      </Container>
     </div>
   );
 }

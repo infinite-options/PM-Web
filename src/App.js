@@ -20,7 +20,9 @@ import ScheduleRepairs from "./components/ScheduleRepairs";
 import { get } from "./utils/api";
 import TenantPropertyManagers from "./components/TenantPropertyManagers";
 import DetailRepairStatus from "./components/DetailRepairStatus";
-
+import MaintenanceHome from "./pages/MaintenanceHome";
+import ScheduledJobs from "./components/ScheduledJobs";
+import DetailQuote from "./components/DetailQuote";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -61,6 +63,9 @@ function App() {
             <Route path="signup" element={<Signup />} />
             <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerHome />} />
+            <Route path="maintenance" element={<MaintenanceHome />} />
+            <Route path="scheduledJobs" element={<ScheduledJobs />} />
+            <Route path="detailQuote" element={<DetailQuote />} />
             <Route path="tenant" element={<TenantHome />} />
             <Route path="repairRequest" element={<RepairRequest />} />
             <Route
