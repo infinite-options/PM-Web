@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "../components/Header";
+import Header from "./Header";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import { headings, subText } from "../utils/styles";

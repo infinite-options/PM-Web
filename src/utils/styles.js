@@ -7,11 +7,11 @@ const boldSmall = {
   fontSize: "smaller",
 };
 const small = {
-  fontSize: 'small'
-}
+  fontSize: "small",
+};
 const mediumBold = {
-  fontWeight: '600'
-}
+  fontWeight: "600",
+};
 const bold = {
   fontWeight: "bold",
 };
@@ -40,11 +40,11 @@ const redRight = {
   textAlign: "right",
 };
 const red = {
-  color: '#E3441F'
-}
+  color: "#E3441F",
+};
 const green = {
-  color: '#3DB727'
-}
+  color: "#3DB727",
+};
 const smallPillButton = {
   fontSize: "small",
   borderRadius: "50px",
@@ -87,8 +87,8 @@ const smallImg = {
   margin: "0 5px",
 };
 const mediumImg = {
-  height: '40px',
-  margin: '0 5px'
+  height: "40px",
+  margin: "0 5px",
 };
 const xSmall = {
   fontSize: "x-small",
@@ -271,5 +271,5 @@ export {
   redRight,
   timeslotButton,
   activeTimeSlotButton,
-  green
-}
+  green,
+};

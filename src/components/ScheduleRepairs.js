@@ -210,7 +210,7 @@ function ScheduleRepairs(props) {
   }
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div atyle={{ display: "flex", flexDirection: "column", height: "auto" }}>
       <Header
         title="Schedule Repairs"
         leftText="+ New"
@@ -220,14 +220,14 @@ function ScheduleRepairs(props) {
         //   submitInfo();
         // }}
       />
-      <Container
+      <div
         style={{ display: "flex", flexDirection: "column" }}
         className="pt-1 mb-2"
       >
-        <Row>
+        <div>
           <div style={headings}>Schedule the repair with Joe’s Plumbing</div>
-        </Row>
-        <Row
+        </div>
+        <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -236,35 +236,57 @@ function ScheduleRepairs(props) {
           }}
         >
           <Col style={subHeading}>Dates Available</Col>
-        </Row>
+        </div>
         <div>
           <Calendar
             calendarType="US"
-            onClickDay={dateChange}
+            onClickDay={(e) => {
+              setTimeAASlots([]);
+              dateChange(e);
+            }}
             value={date}
             minDate={minDate}
             next2Label={null}
             prev2Label={null}
           />
         </div>
-        <Row>
-          <div style={subHeading}>Times Available</div>
-        </Row>
-        <Row style={{ display: "flex", justifyContent: "start" }}>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Col style={subHeading}>Times Available</Col>
+        </div>
+        <div style={{ display: "flex", justifyContent: "start" }}>
           {renderAvailableApptsVertical()}
-        </Row>
-        {/* {timeSelected === true ? (
-          <Row className="mt-5 mb-2">
-            <Button
-              className="mt-0"
-              variant="outline-primary"
-              onClick={() => {}}
-            >
-              Schedule Repair
-            </Button>
-          </Row>
-        ) : null} */}
-      </Container>
+        </div>
+      </div>
+
+      <div
+        hidden={!buttonSelect}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: "10rem",
+        }}
+      >
+        <Col>
+          <Button
+            size="medium"
+            style={bluePillButton}
+            variant="outline-primary"
+            //onClick={() => {}}
+          >
+            Schedule Repair
+          </Button>
+        </Col>
+      </div>
     </div>
   );
 }

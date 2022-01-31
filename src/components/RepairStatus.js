@@ -35,7 +35,7 @@ function RepairStatus(props) {
             ></div>
           </Col>
           <Col xs={8} style={{ padding: "5px" }}>
-            <div>
+            <div onClick={() => navigate("/detailRepairStatus")}>
               <Row style={subHeading}>
                 <Col>Carpet Cleaning</Col>
                 <Col xs={5}>
@@ -85,6 +85,42 @@ function RepairStatus(props) {
               </Row>
               <Row style={blue} className="mt=0 pt=0">
                 Request Sent to <br /> property manager
+              </Row>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+      <Container className="pt-1 mb-4">
+        <Row style={headings}>
+          <div>Past Requests</div>
+        </Row>
+        <Row className="mt-2 mb-2">
+          <Col style={{ padding: "5px" }}>
+            <div
+              style={{
+                width: "110px",
+                height: "100%",
+                background: "#F5F5F5 0% 0% no-repeat padding-box",
+                border: "1px solid #C4C4C4",
+                borderRadius: "5px",
+              }}
+            ></div>
+          </Col>
+          <Col xs={8} style={{ padding: "5px" }}>
+            <div>
+              <Row style={subHeading}>
+                <Col>Broken Shower</Col>
+                <Col xs={5}>
+                  <img src={LowPriority} />
+                </Col>
+              </Row>
+              <Row style={subText}>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod
+                <hr />
+              </Row>
+              <Row style={blue} className="mt=0 pt=0">
+                Completed on Dec 1, 2021
               </Row>
             </div>
           </Col>

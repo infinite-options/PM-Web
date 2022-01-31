@@ -25,7 +25,7 @@ import {
   actions,
 } from "../utils/styles";
 
-function TenantDashboard(props) {
+function MaintenanceDashboard(props) {
   const navigate = useNavigate();
   const { userData } = useContext(AppContext);
   const { setShowFooter } = props;
@@ -220,4 +220,4 @@ function TenantDashboard(props) {
   );
 }
 
-export default TenantDashboard;
+export default MaintenanceDashboard;

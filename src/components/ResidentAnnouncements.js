@@ -25,7 +25,7 @@ function ResidentAnnouncements(props) {
         // leftText="< Back"
         // leftFn={() => navigate("/tenant")}
         rightText="Done"
-        leftFn={() => navigate("/tenant")}
+        rightFn={() => navigate("/tenant")}
       />
       <Container className="pt-1 mb-4">
         <Row style={headings}>
