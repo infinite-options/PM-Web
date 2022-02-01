@@ -27,18 +27,18 @@ import {
 
 function TenantDashboard(props) {
   const navigate = useNavigate();
-  const { userData } = useContext(AppContext);
+  const context = useContext(AppContext);
+  const { userData, refresh } = React.useContext(AppContext);
+  const { access_token, user } = userData;
   const { setShowFooter } = props;
   const [profile, setProfile] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  let access_token = userData.access_token;
-
-  const fetchProfile = async () => {
-    const response = await get(`/tenantProfileInfo`, access_token);
-    console.log(response);
-    setProfile(response.result[0]);
-  };
+  console.log(context, access_token, user);
+  // const fetchProfile = async () => {
+  //   const response = await get(`/tenantProfileInfo`, access_token);
+  //   console.log(response);
+  //   setProfile(response.result[0]);
+  // };
   //console.log(profile);
   useEffect(() => {
     if (profile != undefined) {
@@ -50,7 +50,31 @@ function TenantDashboard(props) {
     setShowFooter(true);
   });
 
-  useEffect(fetchProfile, []);
+  //useEffect(fetchProfile, []);
+
+  useEffect(() => {
+    if (access_token === null) {
+      navigate("/");
+      return;
+    }
+    if (user.role.indexOf("TENANT") === -1) {
+      console.log("no tenant profile");
+      props.onConfirm();
+    }
+    const fetchProfile = async () => {
+      const response = await get("/tenantProfileInfo", access_token);
+      console.log(response);
+
+      if (response.msg === "Token has expired") {
+        console.log("here msg");
+        refresh();
+
+        return;
+      }
+      setProfile(response.result[0]);
+    };
+    fetchProfile();
+  }, []);
 
   const goToRequest = () => {
     navigate("/repairRequest");

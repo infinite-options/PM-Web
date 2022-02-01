@@ -17,6 +17,7 @@ function TenantProfile(props) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [salary, setSalary] = React.useState("");
+  const [frequency, setFrequency] = React.useState("");
   const [jobTitle, setJobTitle] = React.useState("");
   const [company, setCompany] = React.useState("");
   const [ssn, setSsn] = React.useState("");
@@ -61,6 +62,7 @@ function TenantProfile(props) {
       first_name: firstName,
       last_name: lastName,
       current_salary: salary,
+      salary_freq: frequency,
       current_job_title: jobTitle,
       ssn: ssn,
       drivers_livense_number: dlNumber,
@@ -108,17 +110,35 @@ function TenantProfile(props) {
             onChange={(e) => setLastName(e.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Annual Salary
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="$75,000"
-            value={salary}
-            onChange={(e) => setSalary(e.target.value)}
-          />
-        </Form.Group>
+        <Row className="mx-0 my-0">
+          <Col className="px-0">
+            <Form.Group className="mx-2 mb-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Salary
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="$"
+                value={salary}
+                onChange={(e) => setSalary(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col className="px-0">
+            <Form.Group className="mx-2 mb-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Frequency
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="Annual"
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
             Current Job Title

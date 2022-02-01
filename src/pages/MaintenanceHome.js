@@ -2,7 +2,7 @@ import React from "react";
 import Footer from "../components/Footer";
 import AppContext from "../AppContext";
 import MaintenanceDashboard from "./MaintenanceDashboard";
-import TenantProfile from "./TenantProfile";
+import BusinessProfile from "./BusinessProfile";
 
 function MaintenanceHome() {
   const { userData } = React.useContext(AppContext);
@@ -17,13 +17,16 @@ function MaintenanceHome() {
           ""
         )}
       </div>
-      {/* <div className="flex-grow-1">
+      <div className="flex-grow-1">
         {footerTab === "PROFILE" ? (
-          <TenantProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
+          <BusinessProfile
+            setShowFooter={setShowFooter}
+            setTab={setFooterTab}
+          />
         ) : (
           ""
         )}
-      </div> */}
+      </div>
       {showFooter ? <Footer tab={footerTab} setTab={setFooterTab} /> : ""}
     </div>
   );

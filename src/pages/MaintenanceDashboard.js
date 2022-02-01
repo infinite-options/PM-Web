@@ -18,10 +18,7 @@ import {
   upcoming,
   upcomingHeading,
   upcomingText,
-  blue,
-  bluePill,
-  greenBorderPill,
-  address,
+  actionsNoColor,
   actions,
 } from "../utils/styles";
 
@@ -56,13 +53,13 @@ function MaintenanceDashboard(props) {
     navigate("/ScheduledJobs");
   };
   const goToJobsCompleted = () => {
-    navigate("/residentAnnouncements");
+    navigate("/jobsCompleted");
   };
   const goToQuotesRejectedM = () => {
-    navigate("/emergency");
+    navigate("/quotesRejectedPM");
   };
   const goToQuotesRejectedY = () => {
-    navigate("/emergency");
+    navigate("/quotesRejectedM");
   };
   const goToScheduledJobs = () => {
     navigate("/scheduledJobs");
@@ -71,12 +68,12 @@ function MaintenanceDashboard(props) {
     navigate("/ScheduledJobs");
   };
   const goToSearchPM = () => {
-    navigate("/tenantPropertyManagers");
+    navigate("/maintenancePropertyManagers");
   };
   console.log(profile);
   return (
     <div className="h-100">
-      <Header title="All requests" />
+      <Header title="Home" />
 
       <Container className="pt-1 mb-4">
         <Row style={headings}>
@@ -194,8 +191,8 @@ function MaintenanceDashboard(props) {
               <div>Search Property Managers</div>
             </div>
           </Col>
-          <Col xs={3} style={actions}></Col>
-          <Col xs={3} style={actions}></Col>
+          <Col xs={3} style={actionsNoColor}></Col>
+          <Col xs={3} style={actionsNoColor}></Col>
         </Row>
       </Container>
     </div>

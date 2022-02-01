@@ -23,6 +23,11 @@ import DetailRepairStatus from "./components/DetailRepairStatus";
 import MaintenanceHome from "./pages/MaintenanceHome";
 import ScheduledJobs from "./components/ScheduledJobs";
 import DetailQuote from "./components/DetailQuote";
+import DetailAnnouncements from "./components/DetailAnnouncement";
+import RescheduleRepair from "./components/RescheduleRepair";
+import JobsCompleted from "./components/JobsCompleted";
+import QuotesRejectedM from "./components/QuotesRejectedM";
+import QuotesRejectedPM from "./components/QuotesRejectedPM";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -66,11 +71,19 @@ function App() {
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
+            <Route path="jobsCompleted" element={<JobsCompleted />} />
+            <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
+            <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
+
             <Route path="tenant" element={<TenantHome />} />
             <Route path="repairRequest" element={<RepairRequest />} />
             <Route
               path="residentAnnouncements"
               element={<ResidentAnnouncements />}
+            />
+            <Route
+              path="detailAnnouncements"
+              element={<DetailAnnouncements />}
             />
             <Route path="emergency" element={<Emergency />} />
             <Route path="repairStatus" element={<RepairStatus />} />
@@ -78,6 +91,7 @@ function App() {
             <Route path="rentPayment" element={<RentPayment />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />
             <Route path="scheduleRepairs" element={<ScheduleRepairs />} />
+            <Route path="rescheduleRepair" element={<RescheduleRepair />} />
             <Route
               path="tenantPropertyManagers"
               element={<TenantPropertyManagers />}

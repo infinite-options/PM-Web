@@ -16,9 +16,8 @@ function DetailRepairStatus(props) {
     <div className="h-100 d-flex flex-column">
       <Header
         title="Repairs"
-        leftText="+ New"
-        leftFn={() => navigate("/repairRequest")}
-        rightText="Sort by"
+        leftText="< Back"
+        leftFn={() => navigate("/tenant")}
       />
       <Container className="pt-1 mb-4">
         <Row>
@@ -62,7 +61,11 @@ function DetailRepairStatus(props) {
         </Row>
         <Row>
           <Col>
-            <Button variant="outline-primary" style={pillButton}>
+            <Button
+              variant="outline-primary"
+              style={pillButton}
+              onClick={() => navigate("/rescheduleRepair")}
+            >
               Reschedule
             </Button>
           </Col>

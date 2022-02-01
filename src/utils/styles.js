@@ -41,6 +41,7 @@ const redRight = {
 };
 const red = {
   color: "#E3441F",
+  font: "normal normal normal 11px/12px SFProDisplay-Regular",
 };
 const green = {
   color: "#3DB727",
@@ -179,6 +180,21 @@ const actions = {
   justifyContent: "space-evenly",
   alignItems: "center",
 };
+const actionsNoColor = {
+  background: "#FFFFFF 0% 0% no-repeat padding-box",
+  border: "1px solid #FFFFFF",
+  borderRadius: "5px",
+  width: "111px",
+  height: "99px",
+  textAlign: "center",
+  font: "normal normal 600 11px/13px SFProDisplay-Regular",
+  letterSpacing: "0px",
+  color: "#000000",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-evenly",
+  alignItems: "center",
+};
 
 const formLabel = {
   textAlign: "left",
@@ -287,4 +303,5 @@ export {
   activeTimeSlotButton,
   green,
   blueBorderButton,
+  actionsNoColor,
 };
