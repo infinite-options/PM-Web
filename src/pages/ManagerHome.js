@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import Footer from '../components/Footer';
 import AppContext from '../AppContext';
 import ManagerOverview from "./ManagerOverview";
+import ManagerProfile from "../components/ManagerProfile";
 
 function ManagerHome() {
     const navigate = useNavigate();
@@ -19,6 +20,10 @@ function ManagerHome() {
             <div className='flex-grow-1'>
                 {footerTab === 'DASHBOARD' ? (
                     <ManagerOverview setShowFooter={setShowFooter}/>
+                ) : ''}
+
+                {footerTab === 'PROFILE' ? (
+                    <ManagerProfile setFooterTab={setFooterTab} setShowFooter={setShowFooter}/>
                 ) : ''}
             </div>
             {showFooter ? (
