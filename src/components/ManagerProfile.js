@@ -170,7 +170,7 @@ function ManagerProfile(props) {
                         {(email && email !== 'NULL') ? email : 'No Email Provided'}</p>
 
                     <div>
-                        <h6>Identification</h6>
+                        <h6 className='mb-3'>Identification</h6>
                         <Container>
                             <Row>
                                 <Col><h6>* &nbsp; SSN</h6></Col>

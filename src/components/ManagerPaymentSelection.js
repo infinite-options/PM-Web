@@ -95,36 +95,36 @@ function ManagerPaymentSelection(props) {
                 </Container>
                 :
                 <Container className='mx-2'>
-                    <h6>Accept Payments via:</h6>
+                    <h6 className='mb-3'>Accept Payments via:</h6>
                     <Row className='mb-1'>
-                        <Col><h6>* &nbsp; PayPal</h6></Col>
+                        <Col><h6 className=>* &nbsp; PayPal</h6></Col>
                         <Col><p style={gray}>
-                            {(paymentState.paypal !== 'NULL') ? paymentState.paypal : 'No PayPal Provided'}</p></Col>
+                            {(paymentState.paypal !== '') ? paymentState.paypal : 'No PayPal Provided'}</p></Col>
                     </Row>
                     <Row className='mb-1'>
                         <Col><h6>* &nbsp; Apple Pay</h6></Col>
                         <Col><p style={gray}>
-                            {(paymentState.applePay !== 'NULL') ? paymentState.applePay : 'No Apple Pay Provided'}</p></Col>
+                            {(paymentState.applePay !== '') ? paymentState.applePay : 'No Apple Pay Provided'}</p></Col>
                     </Row>
                     <Row className='mb-1'>
                         <Col><h6>* &nbsp; Zelle</h6></Col>
                         <Col><p style={gray}>
-                            {(paymentState.zelle !== 'NULL') ? paymentState.zelle : 'No Zelle Provided'}</p></Col>
+                            {(paymentState.zelle !== '') ? paymentState.zelle : 'No Zelle Provided'}</p></Col>
                     </Row>
                     <Row className='mb-1'>
                         <Col><h6>* &nbsp; Venmo</h6></Col>
                         <Col><p style={gray}>
-                            {(paymentState.venmo !== 'NULL') ? paymentState.venmo : 'No Venmo Provided'}</p></Col>
+                            {(paymentState.venmo !== '') ? paymentState.venmo : 'No Venmo Provided'}</p></Col>
                     </Row>
                     <Row className='mb-1'>
-                        <Col><h6>* &nbsp; Checking Acct.</h6></Col>
+                        <Col><h6>* &nbsp; Checking Account</h6></Col>
                         <Col><p style={gray}>
-                            {(paymentState.accountNumber !== 'NULL') ? paymentState.accountNumber : 'No Acct No. Provided'}</p></Col>
+                            {(paymentState.accountNumber !== '') ? paymentState.accountNumber : 'No Acct No. Provided'}</p></Col>
                     </Row>
                     <Row className='mb-1'>
                         <Col></Col>
                         <Col><p style={gray}>
-                            {(paymentState.routingNumber !== 'NULL') ? paymentState.routingNumber : 'No Routing No. Provided'}</p></Col>
+                            {(paymentState.routingNumber !== '') ? paymentState.routingNumber : 'No Routing No. Provided'}</p></Col>
                     </Row>
                 </Container>}
 
