@@ -26,6 +26,7 @@ function PMRepairRequestDetail(props) {
   const [morePictures, setMorePictures] = useState(false);
   const [addBufferAmount, setAddBufferAmount] = useState(false);
   const [rejectQuote, setRejectQuote] = useState(false);
+  const [quote, setQuote] = useState(false);
   return (
     <div className="h-100">
       <Header
@@ -92,7 +93,13 @@ function PMRepairRequestDetail(props) {
             </Form.Group>
 
             <Row className="pt-1 mb-2">
-              <Col>
+              <Col
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
                 <Button
                   style={pillButton}
                   variant="outline-primary"
@@ -101,7 +108,13 @@ function PMRepairRequestDetail(props) {
                   Cancel
                 </Button>
               </Col>
-              <Col>
+              <Col
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
                 <Button style={bluePillButton}>Send Request</Button>
               </Col>
             </Row>
@@ -138,7 +151,13 @@ function PMRepairRequestDetail(props) {
         </Row>
         <hr />
         <Row className="pt-1 mb-2">
-          <Col>
+          <Col
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+            }}
+          >
             <Button
               style={blueBorderButton}
               variant="outline-primary"
@@ -147,7 +166,13 @@ function PMRepairRequestDetail(props) {
               Add buffer amount
             </Button>
           </Col>
-          <Col>
+          <Col
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+            }}
+          >
             <Button
               style={redPill}
               onClick={() => setRejectQuote(!rejectQuote)}
@@ -180,7 +205,13 @@ function PMRepairRequestDetail(props) {
           </Form.Group>
 
           <Row className="pt-1 mb-2">
-            <Col>
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              }}
+            >
               <Button
                 style={pillButton}
                 variant="outline-primary"
@@ -189,8 +220,16 @@ function PMRepairRequestDetail(props) {
                 Cancel
               </Button>
             </Col>
-            <Col>
-              <Button style={bluePillButton}>Add Amount</Button>
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <Button style={bluePillButton} onClick={() => setQuote(!quote)}>
+                Add Amount
+              </Button>
             </Col>
           </Row>
         </Row>
@@ -208,7 +247,13 @@ function PMRepairRequestDetail(props) {
           </Form.Group>
 
           <Row className="pt-1 mb-2">
-            <Col>
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              }}
+            >
               <Button
                 style={pillButton}
                 variant="outline-primary"
@@ -217,7 +262,13 @@ function PMRepairRequestDetail(props) {
                 Cancel
               </Button>
             </Col>
-            <Col>
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              }}
+            >
               <Button style={redPillButton}>Reject Quote</Button>
             </Col>
           </Row>
@@ -239,12 +290,24 @@ function PMRepairRequestDetail(props) {
         </Row>
         <hr />
         <Row className="pt-1 mb-2">
-          <Col>
+          <Col
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+            }}
+          >
             <Button style={blueBorderButton} variant="outline-primary">
               Add buffer amount
             </Button>
           </Col>
-          <Col>
+          <Col
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+            }}
+          >
             <Button style={redPill}>Reject Quote</Button>
           </Col>
         </Row>
@@ -257,6 +320,32 @@ function PMRepairRequestDetail(props) {
         </Row>
       </Container>
       <hr />
+      <Row className="pt-1 mb-4" hidden={!quote}>
+        <Col
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <Button
+            style={pillButton}
+            variant="outline-primary"
+            //onClick={() => setAddBufferAmount(false)}
+          >
+            Reject Quote
+          </Button>
+        </Col>
+        <Col
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <Button style={bluePillButton}>Accept Quote</Button>
+        </Col>
+      </Row>
     </div>
   );
 }
