@@ -26,9 +26,6 @@ function RepairRequest(props) {
     props.onConfirm(requestTitle, requestDescription, tagPriority);
   };
 
-  const goToLogin = () => {
-    navigate("/login");
-  };
   return (
     <div className="h-100 d-flex flex-column">
       <Header

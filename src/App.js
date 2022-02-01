@@ -28,6 +28,7 @@ import RescheduleRepair from "./components/RescheduleRepair";
 import JobsCompleted from "./components/JobsCompleted";
 import QuotesRejectedM from "./components/QuotesRejectedM";
 import QuotesRejectedPM from "./components/QuotesRejectedPM";
+import PMRepairRequestDetail from "./components/PMRepairRequestDetail";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -97,6 +98,11 @@ function App() {
               element={<TenantPropertyManagers />}
             />
             <Route path="detailRepairStatus" element={<DetailRepairStatus />} />
+
+            <Route
+              path="pmRepairRequestDetail"
+              element={<PMRepairRequestDetail />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
