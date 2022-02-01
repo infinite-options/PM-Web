@@ -97,7 +97,7 @@ function ManagerPaymentSelection(props) {
                 <Container className='mx-2'>
                     <h6 className='mb-3'>Accept Payments via:</h6>
                     <Row className='mb-1'>
-                        <Col><h6 className=>* &nbsp; PayPal</h6></Col>
+                        <Col><h6>* &nbsp; PayPal</h6></Col>
                         <Col><p style={gray}>
                             {(paymentState.paypal !== '') ? paymentState.paypal : 'No PayPal Provided'}</p></Col>
                     </Row>
