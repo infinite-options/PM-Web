@@ -17,7 +17,7 @@ import {
   bluePillButton,
 } from "../utils/styles";
 
-function ScheduleRepairs(props) {
+function MaintenanceScheduleRepair(props) {
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   const navigate = useNavigate();
@@ -212,10 +212,10 @@ function ScheduleRepairs(props) {
   return (
     <div atyle={{ display: "flex", flexDirection: "column", height: "auto" }}>
       <Header
-        title="Schedule Repairs"
-        leftText="+ New"
-        //leftFn={() => setTab("DASHBOARD")}
-        rightText="Sort by"
+        title="Your Schedule"
+        leftText="< Back"
+        leftFn={() => navigate("/maintenace")}
+        //rightText="Sort by"
         // rightFn={() => {
         //   submitInfo();
         // }}
@@ -224,9 +224,6 @@ function ScheduleRepairs(props) {
         style={{ display: "flex", flexDirection: "column" }}
         className="pt-1 mb-2"
       >
-        <div>
-          <div style={headings}>Schedule the repair with Joe’s Plumbing</div>
-        </div>
         <div
           style={{
             display: "flex",
@@ -281,9 +278,9 @@ function ScheduleRepairs(props) {
             size="medium"
             style={bluePillButton}
             variant="outline-primary"
-            //onClick={() => {}}
+            //onClick={() => {''}}
           >
-            Schedule Repair
+            Share schedule with tenant
           </Button>
         </Col>
       </div>
@@ -291,4 +288,4 @@ function ScheduleRepairs(props) {
   );
 }
 
-export default ScheduleRepairs;
+export default MaintenanceScheduleRepair;

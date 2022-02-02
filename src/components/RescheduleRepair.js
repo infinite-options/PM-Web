@@ -17,7 +17,7 @@ import {
   bluePillButton,
 } from "../utils/styles";
 
-function ScheduleRepairs(props) {
+function RescheduleRepair(props) {
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   const navigate = useNavigate();
@@ -281,9 +281,9 @@ function ScheduleRepairs(props) {
             size="medium"
             style={bluePillButton}
             variant="outline-primary"
-            //onClick={() => {}}
+            onClick={() => navigate("/repairStatus")}
           >
-            Schedule Repair
+            Reschedule Repair
           </Button>
         </Col>
       </div>
@@ -291,4 +291,4 @@ function ScheduleRepairs(props) {
   );
 }
 
-export default ScheduleRepairs;
+export default RescheduleRepair;

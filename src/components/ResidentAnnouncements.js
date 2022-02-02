@@ -22,10 +22,10 @@ function ResidentAnnouncements(props) {
     <div className="h-100 d-flex flex-column">
       <Header
         title="Announcements"
-        // leftText="< Back"
-        // leftFn={() => navigate("/tenant")}
-        rightText="Done"
+        leftText="< Back"
         leftFn={() => navigate("/tenant")}
+        rightText="Sort by"
+        //rightFn={() => navigate("/tenant")}
       />
       <Container className="pt-1 mb-4">
         <Row style={headings}>
@@ -46,7 +46,11 @@ function ResidentAnnouncements(props) {
               on January 31, 2021.
               <hr />
             </Row>
-            <Row style={blue} className="mx-2">
+            <Row
+              style={blue}
+              className="mx-2"
+              onClick={() => navigate("/detailAnnouncements")}
+            >
               Learn More
             </Row>
           </div>

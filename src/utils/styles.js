@@ -7,11 +7,11 @@ const boldSmall = {
   fontSize: "smaller",
 };
 const small = {
-  fontSize: 'small'
-}
+  fontSize: "small",
+};
 const mediumBold = {
-  fontWeight: '600'
-}
+  fontWeight: "600",
+};
 const bold = {
   fontWeight: "bold",
 };
@@ -40,11 +40,12 @@ const redRight = {
   textAlign: "right",
 };
 const red = {
-  color: '#E3441F'
-}
+  color: "#E3441F",
+  font: "normal normal normal 11px/12px SFProDisplay-Regular",
+};
 const green = {
-  color: '#3DB727'
-}
+  color: "#3DB727",
+};
 const smallPillButton = {
   fontSize: "small",
   borderRadius: "50px",
@@ -74,6 +75,14 @@ const redPill = {
   ...smallPillButton,
   backgroundColor: "#E3441F",
   color: "white",
+  border: "1px solid #E3441F",
+  maxWidth: "80%",
+  textAlign: "center",
+  textDecoration: "none",
+  borderRadius: "50px",
+  display: "block",
+  margin: "6px 6px",
+  font: "normal normal normal 14px SFProDisplay-Regular",
 };
 const tileImg = {
   width: "100%",
@@ -87,8 +96,8 @@ const smallImg = {
   margin: "0 5px",
 };
 const mediumImg = {
-  height: '40px',
-  margin: '0 5px'
+  height: "40px",
+  margin: "0 5px",
 };
 const xSmall = {
   fontSize: "x-small",
@@ -146,7 +155,16 @@ const bluePillButton = {
   font: "normal normal normal 18px/21px SFProDisplay-Regular",
   letterSpacing: "0px",
   color: " #FFFFFF",
-  padding: "5px 20px",
+};
+const redPillButton = {
+  background: "#E3441F 0% 0% no-repeat padding-box",
+  borderRadius: "50px",
+  textAlign: "left",
+  font: "normal normal normal 18px/21px SFProDisplay-Regular",
+  letterSpacing: "0px",
+  color: " #FFFFFF",
+  opacity: "1",
+  border: "1px solid #E3441F",
 };
 const greenBorderPill = {
   border: "1px solid #3DB727",
@@ -167,6 +185,21 @@ const address = {
 const actions = {
   background: "#FFFFFF 0% 0% no-repeat padding-box",
   border: "1px solid #131413",
+  borderRadius: "5px",
+  width: "111px",
+  height: "99px",
+  textAlign: "center",
+  font: "normal normal 600 11px/13px SFProDisplay-Regular",
+  letterSpacing: "0px",
+  color: "#000000",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-evenly",
+  alignItems: "center",
+};
+const actionsNoColor = {
+  background: "#FFFFFF 0% 0% no-repeat padding-box",
+  border: "1px solid #FFFFFF",
   borderRadius: "5px",
   width: "111px",
   height: "99px",
@@ -231,6 +264,24 @@ const activeTimeSlotButton = {
   margin: "6px 6px",
   font: "normal normal 600 12px/14px SFProDisplay-Semibold",
 };
+const blueBorderButton = {
+  ...smallPillButton,
+  backgroundColor: "white",
+  border: "1px solid #007AFF",
+  color: "#007AFF",
+  // padding: "15px 90px",
+  textAlign: "center",
+  textDecoration: "none",
+  borderRadius: "50px",
+  display: "block",
+  margin: "6px 6px",
+  font: "normal normal normal 14px SFProDisplay-Regular",
+};
+const blueLarge = {
+  textAlign: "left",
+  font: " normal normal 600 22px/26px SFProDisplay-Semibold",
+  color: "#007AFF",
+};
 export {
   pillButton,
   boldSmall,
@@ -271,5 +322,9 @@ export {
   redRight,
   timeslotButton,
   activeTimeSlotButton,
-  green
-}
+  green,
+  blueBorderButton,
+  actionsNoColor,
+  redPillButton,
+  blueLarge,
+};

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 import ConfirmCheck from "../icons/confirmCheck.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
 import LowPriority from "../icons/lowPriority.svg";
@@ -227,6 +229,7 @@ function RentPayment(props) {
           </div>
         </Container>
       )}
+      <Footer tab={"DASHBOARD"} />
     </div>
   );
 }
