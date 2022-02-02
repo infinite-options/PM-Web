@@ -93,7 +93,8 @@ function ManagerPropertyView(props) {
                     <Container  className='mt-4 mb-4'>
                         <Row>
                             <Col>
-                                <img src={RequestRepairs} alt='RequestRepairs' style={tileImg}/>
+                                <img src={RequestRepairs} alt='RequestRepairs' style={tileImg}
+                                     onClick={() => {navigate('./repairs', { state: {property: property }})}}/>
                             </Col>
                             <Col>
                                 <img src={RequestRepairs} alt='Maintenance' style={tileImg}/>

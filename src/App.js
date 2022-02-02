@@ -37,6 +37,7 @@ import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
 import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
 import ManagerPropertyView from "./pages/ManagerPropertyView";
+import ManagerRepairsList from "./pages/ManagerRepairsList";
 
 function App() {
   const [userData, setUserData] = React.useState({
@@ -120,8 +121,9 @@ function App() {
               element={<PMRepairRequestDetail />}
             />
             <Route path="pmRepairRequest" element={<PMRepairRequest />} />
-              <Route path="manager-properties" element={<ManagerProperties />} />
+            <Route path="manager-properties" element={<ManagerProperties />} />
             <Route path="manager-properties/:mp_id" element={<ManagerPropertyView />} />
+            <Route path="manager-properties/:mp_id/repairs" element={<ManagerRepairsList />} />
 
           </Route>
         </Routes>
