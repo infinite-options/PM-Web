@@ -46,6 +46,7 @@ function Footer(props) {
           alt="Profile"
         />
         <p style={tab === "PROFILE" ? smallBlue : smallGray} className="mb-0">
+
           Profile
         </p>
       </Col>

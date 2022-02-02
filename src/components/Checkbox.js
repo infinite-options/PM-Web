@@ -7,7 +7,7 @@ class Checkbox extends React.Component {
     this.state = {
       checked: this.props.checked,
     };
-    console.log(props);
+    // console.log(props);
   }
 
   componentDidUpdate(prevProps) {
@@ -27,7 +27,7 @@ class Checkbox extends React.Component {
   };
   render() {
     const color = this.state.checked ? "black" : "white";
-    console.log(color);
+    // console.log(color);
     return (
       <>
         {this.props.type === "CIRCLE" ? (

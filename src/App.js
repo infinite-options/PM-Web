@@ -33,6 +33,11 @@ import DetailQuoteRequest from "./components/DetailQuoteRequest";
 import PMRepairRequest from "./components/PMRepairRequest";
 import QuotesAccepted from "./components/QuotesAccepted";
 import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
+
+import ManagerHome from "./pages/ManagerHome";
+import ManagerProperties from "./pages/ManagerProperties";
+import ManagerPropertyView from "./pages/ManagerPropertyView";
+
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -87,6 +92,7 @@ function App() {
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
 
             <Route path="tenant" element={<TenantHome />} />
+            <Route path="manager" element={<ManagerHome />} />
             <Route path="repairRequest" element={<RepairRequest />} />
             <Route
               path="residentAnnouncements"
@@ -114,6 +120,9 @@ function App() {
               element={<PMRepairRequestDetail />}
             />
             <Route path="pmRepairRequest" element={<PMRepairRequest />} />
+              <Route path="manager-properties" element={<ManagerProperties />} />
+            <Route path="manager-properties/:mp_id" element={<ManagerPropertyView />} />
+
           </Route>
         </Routes>
       </BrowserRouter>
