@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import Header from "../components/Header";
 import ArrowUp from "../icons/ArrowUp.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
@@ -14,6 +14,7 @@ import {
   subHeading,
   subText,
   pillButton,
+  formLabel,
   blueBorderButton,
   bluePillButton,
 } from "../utils/styles";
@@ -21,13 +22,14 @@ import {
 function DetailQuote(props) {
   const navigate = useNavigate();
   const [expandPaymentTerm, setExpandPaymentTerm] = useState(false);
+  const [showAddService, setShowAddService] = useState(false);
+  const [addDate, setAddDate] = useState(false);
   return (
     <div className="h-100 d-flex flex-column">
       <Header
         title="Repairs"
-        leftText="+ New"
-        leftFn={() => navigate("/repairRequest")}
-        rightText="Sort by"
+        leftText="< Back"
+        leftFn={() => navigate("/maintenance")}
       />
       <Container className="pt-1 mb-4">
         <Row>
@@ -41,7 +43,7 @@ function DetailQuote(props) {
             <div
               style={{
                 width: "350px",
-                height: " 198px",
+                height: "198px",
                 background: "#F5F5F5 0% 0% no-repeat padding-box",
                 border: "1px solid #C4C4C4",
                 borderRadius: "5px",
@@ -91,56 +93,107 @@ function DetailQuote(props) {
               $45.00 one-time hardware charge <hr />
             </div>
           </Row>
-          <Row>
+          <Row className="mb-3">
             <Col>
-              <Button variant="outline-primary" style={blueBorderButton}>
+              <Button
+                variant="outline-primary"
+                style={blueBorderButton}
+                onClick={() => setShowAddService(!showAddService)}
+              >
                 Add Another Service / Expense
               </Button>
             </Col>
           </Row>
+          <div hidden={!showAddService}>
+            <div className="mt-2 mx-2">
+              <Form.Group className="mt-3 mb-2">
+                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                  Service notes
+                </Form.Label>
+                <Form.Control
+                  style={{ borderRadius: 0 }}
+                  //ref={requestTitleRef}
+                  placeholder="Shower labor cost"
+                />
+              </Form.Group>
 
-          <div className="mt-2 mx-2">
-            <Row>
-              <div style={subHeading}>Service notes</div>
-            </Row>
-            <Row>
-              <input type="text" placeholder="Shower labor cost" />
-            </Row>
-            <Row>
-              <Col xs={6} style={{ display: "flex", flexDirection: "column" }}>
-                <div style={subHeading}>Fees</div>
-                <input type="text" placeholder="$20.00" />
-              </Col>
-              <Col
-                xs={6}
-                style={{ display: "flex", flexDirection: "column" }}
-                onClick={() => setExpandPaymentTerm(!expandPaymentTerm)}
-              >
-                <div style={subHeading}> Payment Term</div>
-                <div className="d-flex justify-content-between">
-                  One-time
-                  <img
-                    src={expandPaymentTerm ? ArrowUp : ArrowDown}
-                    alt="Expand"
-                  />
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <div className="mt-2 mx-2">
-            <Row>
-              <Col>
-                <Button variant="outline-primary" style={pillButton}>
-                  Cancel
-                </Button>
-              </Col>
-              <Col>
-                {" "}
-                <Button variant="outline-primary" style={bluePillButton}>
-                  Add Quote
-                </Button>
-              </Col>
-            </Row>
+              <Row>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Form.Group className="mt-3 mb-4">
+                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                      Fees
+                    </Form.Label>
+                    <Form.Control
+                      style={{ borderRadius: 0 }}
+                      //ref={requestTitleRef}
+                      placeholder="$20.00"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                  onClick={() => setExpandPaymentTerm(!expandPaymentTerm)}
+                >
+                  <Form.Group className="mt-3 mb-4">
+                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                      Payment Term
+                    </Form.Label>
+
+                    <div
+                      className="d-flex justify-content-between"
+                      style={{ border: "1px solid #777777", padding: "6px" }}
+                    >
+                      One-time
+                      <img
+                        src={expandPaymentTerm ? ArrowUp : ArrowDown}
+                        alt="Expand"
+                      />
+                    </div>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </div>
+            <div className="mt-2 mx-2">
+              <Row>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  <Button
+                    variant="outline-primary"
+                    style={pillButton}
+                    onClick={() => setShowAddService(false)}
+                  >
+                    Cancel
+                  </Button>
+                </Col>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  {" "}
+                  <Button variant="outline-primary" style={bluePillButton}>
+                    Add Quote
+                  </Button>
+                </Col>
+              </Row>
+            </div>
           </div>
         </div>
         <div className="mt-2 mx-2">
@@ -148,22 +201,34 @@ function DetailQuote(props) {
             <div style={headings}>Earliest Availabilty</div>
           </Row>
           <div className="mt-2 mx-2">
-            <Row style={subHeading}>Date</Row>
-            <Row>
-              <input type="date" data-date="" data-date-format="MMMM DD YYYY" />
-            </Row>
+            <Form.Group className="mt-3 mb-2">
+              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                Date
+              </Form.Label>
+              <Form.Control style={{ borderRadius: 0 }} type="date" />
+            </Form.Group>
             <div className="mt-2 mx-2">
               <Row>
-                <Col>
-                  <Button variant="outline-primary" style={pillButton}>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  <Button style={pillButton} variant="outline-primary">
                     Cancel
                   </Button>
                 </Col>
-                <Col>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+                >
                   {" "}
-                  <Button variant="outline-primary" style={bluePillButton}>
-                    Save
-                  </Button>
+                  <Button style={bluePillButton}>Save</Button>
                 </Col>
               </Row>
             </div>
@@ -226,12 +291,17 @@ function DetailQuote(props) {
           </Row>
         </div>
         <div className="mt-2 mx-2">
-          <Row>
-            <div style={headings}>Notes for Manager</div>
-          </Row>
-          <Row>
-            <textarea rows="4" />
-          </Row>
+          <Form.Group className="mt-3 mb-2">
+            <Form.Label style={headings} as="h5" className="ms-1 mb-0">
+              Service notes
+            </Form.Label>
+            <Form.Control
+              style={{ borderRadius: 0 }}
+              //ref={requestTitleRef}
+              //placeholder="Shower labor cost"
+              as="textarea"
+            />
+          </Form.Group>
         </div>
         <div className="mt-2 mx-2 mb-4">
           <Row>
@@ -242,7 +312,13 @@ function DetailQuote(props) {
             </Col>
             <Col>
               {" "}
-              <Button variant="outline-primary" style={bluePillButton}>
+              <Button
+                variant="outline-primary"
+                style={bluePillButton}
+                onClick={() => {
+                  navigate("/jobsCompleted");
+                }}
+              >
                 Job Completed
               </Button>
             </Col>

@@ -29,6 +29,7 @@ import JobsCompleted from "./components/JobsCompleted";
 import QuotesRejectedM from "./components/QuotesRejectedM";
 import QuotesRejectedPM from "./components/QuotesRejectedPM";
 import PMRepairRequestDetail from "./components/PMRepairRequestDetail";
+import DetailQuoteRequest from "./components/DetailQuoteRequest";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -72,6 +73,7 @@ function App() {
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
+            <Route path="detailQuoteRequest" element={<DetailQuoteRequest />} />
             <Route path="jobsCompleted" element={<JobsCompleted />} />
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />

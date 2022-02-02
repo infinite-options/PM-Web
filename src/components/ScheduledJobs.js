@@ -35,7 +35,7 @@ function ScheduledJobs(props) {
             ></div>
           </Col>
           <Col xs={8} style={{ padding: "5px" }}>
-            <div onClick={() => navigate("/detailQuote")}>
+            <div onClick={() => navigate("/detailQuoteRequest")}>
               <Row style={subHeading}>
                 <Col>Carpet Cleaning</Col>
                 <Col xs={5}>
@@ -64,7 +64,7 @@ function ScheduledJobs(props) {
             ></div>
           </Col>
           <Col xs={8} style={{ padding: "5px" }}>
-            <div onClick={() => navigate("/detailQuote")}>
+            <div onClick={() => navigate("/detailQuoteRequest")}>
               <Row style={subHeading}>
                 <Col>Carpet Cleaning</Col>
                 <Col xs={5}>
@@ -98,7 +98,7 @@ function ScheduledJobs(props) {
             ></div>
           </Col>
           <Col xs={8} style={{ padding: "5px" }}>
-            <div>
+            <div onClick={() => navigate("/detailQuote")}>
               <Row style={subHeading}>
                 <Col>Broken Shower</Col>
                 <Col xs={5}>

@@ -21,7 +21,7 @@ function QuotesRejectedM(props) {
 
       <Container className="pt-1 mb-4">
         <Row style={headings}>
-          <div>Quotes Rejected</div>
+          <div>Quotes Rejected by you</div>
         </Row>
         <Row className="mt-2 mb-2">
           <Col style={{ padding: "5px" }}>
