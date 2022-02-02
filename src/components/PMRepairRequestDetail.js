@@ -19,6 +19,8 @@ import {
   redPillButton,
   formLabel,
   bluePillButton,
+  red,
+  small,
 } from "../utils/styles";
 
 function PMRepairRequestDetail(props) {
@@ -26,6 +28,7 @@ function PMRepairRequestDetail(props) {
   const [morePictures, setMorePictures] = useState(false);
   const [addBufferAmount, setAddBufferAmount] = useState(false);
   const [rejectQuote, setRejectQuote] = useState(false);
+  const [quoteRejected, setQuoteRejected] = useState(false);
   const [quote, setQuote] = useState(false);
   return (
     <div className="h-100">
@@ -145,12 +148,17 @@ function PMRepairRequestDetail(props) {
         <Row style={headings}>
           <div>Joe’s Plumbing: Quote</div>
         </Row>
-        <Row className="pt-1 mb-4">
+        <Row hidden={!quoteRejected}>
+          <div style={red}>Quote Rejected</div>
+          <div style={small}>Reason for rejecting the quote</div>
+          <div style={red}>Price too high</div>
+        </Row>
+        <Row className="pt-1 mb-2">
           <div style={subHeading}>Sealing base - labor cost</div>
           <div style={subText}>$30.00 one-time cost</div>
         </Row>
         <hr />
-        <Row className="pt-1 mb-2">
+        <Row className="pt-1 mb-2" hidden={quoteRejected}>
           <Col
             style={{
               display: "flex",
@@ -246,7 +254,7 @@ function PMRepairRequestDetail(props) {
             />
           </Form.Group>
 
-          <Row className="pt-1 mb-2">
+          <Row className="pt-1 mb-2" hidden={quoteRejected}>
             <Col
               style={{
                 display: "flex",
@@ -269,7 +277,15 @@ function PMRepairRequestDetail(props) {
                 justifyContent: "space-evenly",
               }}
             >
-              <Button style={redPillButton}>Reject Quote</Button>
+              <Button
+                style={redPillButton}
+                onClick={() => {
+                  setQuoteRejected(true);
+                  setRejectQuote(false);
+                }}
+              >
+                Reject Quote
+              </Button>
             </Col>
           </Row>
         </Row>
@@ -284,12 +300,12 @@ function PMRepairRequestDetail(props) {
         <Row style={headings}>
           <div>Hector’s Plumbing: Quote</div>
         </Row>
-        <Row className="pt-1 mb-4">
+        <Row className="pt-1">
           <div style={subHeading}>Sealing base - labor cost</div>
           <div style={subText}>$30.00 one-time cost</div>
         </Row>
         <hr />
-        <Row className="pt-1 mb-2">
+        <Row className="pt-1">
           <Col
             style={{
               display: "flex",
@@ -308,7 +324,12 @@ function PMRepairRequestDetail(props) {
               justifyContent: "space-evenly",
             }}
           >
-            <Button style={redPill}>Reject Quote</Button>
+            <Button
+              style={redPill}
+              onClick={() => setRejectQuote(!rejectQuote)}
+            >
+              Reject Quote
+            </Button>
           </Col>
         </Row>
         <Row className="pt-1 ">
