@@ -30,6 +30,7 @@ import QuotesRejectedM from "./components/QuotesRejectedM";
 import QuotesRejectedPM from "./components/QuotesRejectedPM";
 import PMRepairRequestDetail from "./components/PMRepairRequestDetail";
 import DetailQuoteRequest from "./components/DetailQuoteRequest";
+import PMRepairRequest from "./components/PMRepairRequest";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -105,6 +106,7 @@ function App() {
               path="pmRepairRequestDetail"
               element={<PMRepairRequestDetail />}
             />
+            <Route path="pmRepairRequest" element={<PMRepairRequest />} />
           </Route>
         </Routes>
       </BrowserRouter>
