@@ -78,7 +78,7 @@ function ManagerOverview(props) {
                     <Container  className='mt-4 mb-4'>
                         <Row>
                             <Col>
-                                <Button className='px-0 py-0' variant="outline-light" onClick={() => navigate('/managerProperties')}>
+                                <Button className='px-0 py-0' variant="outline-light" onClick={() => navigate('/manager-properties')}>
                                     <img src={RequestRepairs} alt='Properties' style={tileImg}/>
                                 </Button>
                             </Col>

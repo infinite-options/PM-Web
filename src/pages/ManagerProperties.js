@@ -12,6 +12,7 @@ function ManagerProperties(props) {
     const {userData, refresh} = React.useContext(AppContext);
     const {access_token} = userData;
     const [properties, setProperties] = React.useState([]);
+    // const [selectedProperty, setSelectedProperty] = React.useState(null);
 
     const fetchProperties = async () => {
         if (access_token === null) {
@@ -26,18 +27,26 @@ function ManagerProperties(props) {
         }
 
         const properties = response.result
+        console.log(properties)
         setProperties(properties);
     }
 
     React.useEffect(fetchProperties, [access_token]);
 
+    // const selectProperty = (property) => {
+    //     setSelectedProperty(property);
+    //     setStage('PROPERTY');
+    // }
+
 
     return (
         <div className='h-100'>
-            <Header title='Properties' leftText='< Back' leftFn={() => {}}
+            <Header title='Properties' leftText='< Back' leftFn={() => {navigate('/manager')}}
                     rightText='Sort by'/>
             {properties.map((property, i) => (
-                <Container key={i} className='pt-1 mb-4'>
+                <Container key={i} className='pt-1 mb-4' onClick={() => {
+                    navigate(`./${property.property_uid}`, { state: {property: property }})
+                }}>
                     <Row>
                         <Col xs={4}>
                             <div style={tileImg}>

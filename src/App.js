@@ -20,6 +20,7 @@ import ScheduleRepairs from "./components/ScheduleRepairs";
 import {get} from './utils/api';
 import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
+import ManagerPropertyView from "./pages/ManagerPropertyView";
 
 function App() {
   const [userData, setUserData] = React.useState({
@@ -68,7 +69,9 @@ function App() {
             <Route path="rentPayment" element={<RentPayment />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />
             <Route path="scheduleRepairs" element={<ScheduleRepairs />} />
-            <Route path="managerProperties" element={<ManagerProperties />} />
+
+            <Route path="manager-properties" element={<ManagerProperties />} />
+            <Route path="manager-properties/:mp_id" element={<ManagerPropertyView />} />
           </Route>
         </Routes>
       </BrowserRouter>

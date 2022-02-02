@@ -34,7 +34,7 @@ function Footer(props) {
           Roles
         </p>
       </Col>
-      <Col className='text-center' onClick={logout}>
+      <Col className='text-center' onClick={() => setTab('PROFILE')}>
         <img src={tab === 'PROFILE' ? Profile_Blue : Profile_Gray} alt='Profile'/>
         <p style={tab === 'PROFILE' ? smallBlue : smallGray} className='mb-0'>
           Profile
