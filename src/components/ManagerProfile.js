@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import ManagerPaymentSelection from '../components/ManagerPaymentSelection';
 import ManagerFees from '../components/ManagerFees';
 import ManagerLocations from '../components/ManagerLocations';
-import {get, post} from '../utils/api';
+import {get, post, put} from '../utils/api';
 import {squareForm, gray} from '../utils/styles';
 
 function ManagerProfile(props) {
@@ -98,7 +98,7 @@ function ManagerProfile(props) {
 
         console.log(managerProfile)
 
-        const response = await post('/managerProfileInfo', managerProfile, access_token);
+        const response = await put('/managerProfileInfo', managerProfile, access_token);
         console.log(response)
 
     }
