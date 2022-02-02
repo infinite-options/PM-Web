@@ -31,6 +31,8 @@ import QuotesRejectedPM from "./components/QuotesRejectedPM";
 import PMRepairRequestDetail from "./components/PMRepairRequestDetail";
 import DetailQuoteRequest from "./components/DetailQuoteRequest";
 import PMRepairRequest from "./components/PMRepairRequest";
+import QuotesAccepted from "./components/QuotesAccepted";
+import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -75,6 +77,11 @@ function App() {
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
             <Route path="detailQuoteRequest" element={<DetailQuoteRequest />} />
+            <Route
+              path="maintenanceScheduleRepair"
+              element={<MaintenanceScheduleRepair />}
+            />
+            <Route path="quotesAccepted" element={<QuotesAccepted />} />
             <Route path="jobsCompleted" element={<JobsCompleted />} />
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />

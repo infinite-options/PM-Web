@@ -165,7 +165,7 @@ function ScheduledJobs(props) {
             ></div>
           </Col>
           <Col xs={8} style={{ padding: "5px" }}>
-            <div>
+            <div onClick={() => navigate("/quotesAccepted")}>
               <Row style={subHeading}>
                 <Col>Broken Shower</Col>
                 <Col xs={5}>

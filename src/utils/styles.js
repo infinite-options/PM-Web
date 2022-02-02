@@ -277,12 +277,11 @@ const blueBorderButton = {
   margin: "6px 6px",
   font: "normal normal normal 14px SFProDisplay-Regular",
 };
-// const redPill = {
-//   textAlign: "left",
-//   font: " normal normal normal 14px/16px SF Pro Display",
-//   letterSpacing: "0px",
-//   color: "#F5F5F5",
-// };
+const blueLarge = {
+  textAlign: "left",
+  font: " normal normal 600 22px/26px SFProDisplay-Semibold",
+  color: "#007AFF",
+};
 export {
   pillButton,
   boldSmall,
@@ -327,4 +326,5 @@ export {
   blueBorderButton,
   actionsNoColor,
   redPillButton,
+  blueLarge,
 };
