@@ -32,37 +32,23 @@ function TenantDashboard(props) {
   const { access_token, user } = userData;
   const { setShowFooter } = props;
   const [profile, setProfile] = useState([]);
+  const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   console.log(context, access_token, user);
-  // const fetchProfile = async () => {
-  //   const response = await get(`/tenantProfileInfo`, access_token);
-  //   console.log(response);
-  //   setProfile(response.result[0]);
-  // };
-  //console.log(profile);
+
   useEffect(() => {
-    if (profile != undefined) {
+    if (profile != undefined && repairs.length === 0) {
       setIsLoading(false);
     }
-  }, [profile]);
+  }, [profile, repairs]);
 
   useEffect(() => {
     setShowFooter(true);
   });
 
-  //useEffect(fetchProfile, []);
-
   useEffect(() => {
-    if (access_token === null) {
-      navigate("/");
-      return;
-    }
-    if (user.role.indexOf("TENANT") === -1) {
-      console.log("no tenant profile");
-      props.onConfirm();
-    }
     const fetchProfile = async () => {
-      const response = await get("/tenantProfileInfo", access_token);
+      const response = await get("/tenantProperties", access_token);
       console.log(response);
 
       if (response.msg === "Token has expired") {
@@ -76,8 +62,20 @@ function TenantDashboard(props) {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    const fetchRepairs = async () => {
+      const response = await get(
+        `/maintenanceRequests?property_uid=${profile.property_uid}`
+      );
+      console.log(response);
+
+      setRepairs(response.result);
+    };
+    fetchRepairs();
+  }, []);
+
   const goToRequest = () => {
-    navigate("/repairRequest");
+    navigate(`/${profile.property_uid}/repairRequest`);
   };
   const goToAnnouncements = () => {
     navigate("/residentAnnouncements");
@@ -86,7 +84,7 @@ function TenantDashboard(props) {
     navigate("/emergency");
   };
   const goToStatus = () => {
-    navigate("/repairStatus");
+    navigate(`/${profile.property_uid}/repairStatus`);
   };
   const goToDocuments = () => {
     navigate("/tenantDocuments");
@@ -103,38 +101,59 @@ function TenantDashboard(props) {
           <Row style={headings}>
             <div>Hello {profile.tenant_first_name},</div>
           </Row>
-          <Row style={upcoming} className="mt-2 mb-2">
-            <div style={upcomingHeading} className="mt-1 mb-1">
-              Upcoming:
-              <br />
-              Toilet Maintenance is scheduled for
-              <br /> Dec 12, 2021 at 12:00 pm
-              <br />
-            </div>
-
-            <Col className="mt-1 mb-1">
-              <div style={upcomingText}>
-                For questions / concerns, feel free to contact the property
-                manager
+          {repairs.length === 0 ? (
+            <Row style={upcoming} className="mt-2 mb-2">
+              <div style={upcomingHeading} className="mt-1 mb-1">
+                Upcoming:
+                <br />
+                <br />
+                Nothing Scheduled
               </div>
-            </Col>
-            <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-              <img src={Phone} />
-            </Col>
-            <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-              <img src={Message} />
-            </Col>
-          </Row>
+            </Row>
+          ) : repairs.status === "SCHEDULED" ? (
+            <Row style={upcoming} className="mt-2 mb-2">
+              <div style={upcomingHeading} className="mt-1 mb-1">
+                Upcoming:
+                <br />
+                Toilet Maintenance is scheduled for
+                <br /> {repairs.scheduled_date}
+                <br />
+              </div>
+
+              <Col className="mt-1 mb-1">
+                <div style={upcomingText}>
+                  For questions / concerns, feel free to contact the property
+                  manager
+                </div>
+              </Col>
+              <Col xs={2} style={upcomingText} className="mt-1 mb-1">
+                <img src={Phone} />
+              </Col>
+              <Col xs={2} style={upcomingText} className="mt-1 mb-1">
+                <img src={Message} />
+              </Col>
+            </Row>
+          ) : (
+            <Row style={upcoming} className="mt-2 mb-2">
+              <div style={upcomingHeading} className="mt-1 mb-1">
+                Upcoming:
+                <br />
+                <br />
+                Nothing scheduled
+              </div>
+            </Row>
+          )}
+
           <Row>
             <div style={headings} className="mt-4 mb-1">
-              ${JSON.parse(profile.tenant_current_address).rent}/mo
+              ${profile.actual_rent}/mo
             </div>
             {isLoading === true ? null : (
               <div style={address} className="mt-1 mb-1">
-                {JSON.parse(profile.tenant_current_address).street},&nbsp;
-                {JSON.parse(profile.tenant_current_address).city},&nbsp;
-                {JSON.parse(profile.tenant_current_address).state}&nbsp;
-                {JSON.parse(profile.tenant_current_address).zip}
+                {profile.address},&nbsp;
+                {profile.city},&nbsp;
+                {profile.state}&nbsp;
+                {profile.zip}
               </div>
             )}
 
@@ -154,7 +173,7 @@ function TenantDashboard(props) {
               <Col xs={8} className="mt-1 mb-1">
                 <div style={greenBorderPill}>
                   Upcoming rent for {moment().add(1, "months").format("MMM")},{" "}
-                  {moment().format("YYYY")}: $2,200
+                  {moment().format("YYYY")}: ${profile.actual_rent}
                 </div>
               </Col>
             </div>

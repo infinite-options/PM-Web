@@ -94,7 +94,10 @@ function App() {
 
             <Route path="tenant" element={<TenantHome />} />
             <Route path="manager" element={<ManagerHome />} />
-            <Route path="repairRequest" element={<RepairRequest />} />
+            <Route
+              path="/:property_uid/repairRequest"
+              element={<RepairRequest />}
+            />
             <Route
               path="residentAnnouncements"
               element={<ResidentAnnouncements />}
@@ -104,7 +107,10 @@ function App() {
               element={<DetailAnnouncements />}
             />
             <Route path="emergency" element={<Emergency />} />
-            <Route path="repairStatus" element={<RepairStatus />} />
+            <Route
+              path="/:property_uid/repairStatus"
+              element={<RepairStatus />}
+            />
             <Route path="tenantDocuments" element={<TenantDocuments />} />
             <Route path="rentPayment" element={<RentPayment />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />
@@ -122,9 +128,14 @@ function App() {
             />
             <Route path="pmRepairRequest" element={<PMRepairRequest />} />
             <Route path="manager-properties" element={<ManagerProperties />} />
-            <Route path="manager-properties/:mp_id" element={<ManagerPropertyView />} />
-            <Route path="manager-properties/:mp_id/repairs" element={<ManagerRepairsList />} />
-
+            <Route
+              path="manager-properties/:mp_id"
+              element={<ManagerPropertyView />}
+            />
+            <Route
+              path="manager-properties/:mp_id/repairs"
+              element={<ManagerRepairsList />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
