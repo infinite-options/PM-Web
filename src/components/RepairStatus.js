@@ -53,47 +53,51 @@ function RepairStatus(props) {
           <Row className="mt-2 mb-2">
             <div style={blue}>No Scheduled Repairs</div>
           </Row>
-        ) : repairs[0].status === "SCHEDULED" ? (
-          <Row className="mt-2 mb-2">
-            <Col style={{ padding: "5px" }}>
-              <div
-                style={{
-                  width: "110px",
-                  height: "100%",
-                  background: "#F5F5F5 0% 0% no-repeat padding-box",
-                  border: "1px solid #C4C4C4",
-                  borderRadius: "5px",
-                }}
-              ></div>
-            </Col>
-            <Col xs={8} style={{ padding: "5px" }}>
-              <div>
-                <Row style={subHeading}>
-                  <Col className="px-0">{repairs[0].title}</Col>
-                  <Col xs={5}>
-                    {repairs[0].priority === "High" ? (
-                      <img src={HighPriority} />
-                    ) : repairs[0].priority === "Medium" ? (
-                      <img src={MediumPriority} />
-                    ) : (
-                      <img src={LowPriority} />
-                    )}
-                  </Col>
-                </Row>
-                <Row style={subText}>
-                  {repairs[0].description}
-                  <hr />
-                </Row>
-                <Row style={blue} className="mt=0 pt=0">
-                  Request Sent to <br /> property manager
-                </Row>
-              </div>
-            </Col>
-          </Row>
         ) : (
-          <Row className="mt-2 mb-2">
-            <div style={blue}>No Scheduled Repairs</div>
-          </Row>
+          repairs.map((repair) => {
+            return (
+              <div>
+                {repair.status === "SCHEDULED" ? (
+                  <Row className="mt-2 mb-2">
+                    <Col style={{ padding: "5px" }}>
+                      <div
+                        style={{
+                          width: "110px",
+                          height: "100%",
+                          background: "#F5F5F5 0% 0% no-repeat padding-box",
+                          border: "1px solid #C4C4C4",
+                          borderRadius: "5px",
+                        }}
+                      ></div>
+                    </Col>
+                    <Col xs={8} style={{ padding: "5px" }}>
+                      <div>
+                        <Row style={subHeading}>
+                          <Col className="px-0">{repair.title}</Col>
+                          <Col xs={5}>
+                            {repair.priority === "High" ? (
+                              <img src={HighPriority} />
+                            ) : repair.priority === "Medium" ? (
+                              <img src={MediumPriority} />
+                            ) : (
+                              <img src={LowPriority} />
+                            )}
+                          </Col>
+                        </Row>
+                        <Row style={subText}>
+                          {repair.description}
+                          <hr />
+                        </Row>
+                        <Row style={blue} className="mt=0 pt=0">
+                          Request Sent to <br /> property manager
+                        </Row>
+                      </div>
+                    </Col>
+                  </Row>
+                ) : null}
+              </div>
+            );
+          })
         )}
       </Container>
       <Container className="pt-1 mb-4">
@@ -104,47 +108,51 @@ function RepairStatus(props) {
           <Row className="mt-2 mb-2">
             <div style={blue}>No Active Request</div>
           </Row>
-        ) : repairs[0].status === "NEW" ? (
-          <Row className="mt-2 mb-2">
-            <Col style={{ padding: "5px" }}>
-              <div
-                style={{
-                  width: "110px",
-                  height: "100%",
-                  background: "#F5F5F5 0% 0% no-repeat padding-box",
-                  border: "1px solid #C4C4C4",
-                  borderRadius: "5px",
-                }}
-              ></div>
-            </Col>
-            <Col xs={8} style={{ padding: "5px" }}>
-              <div>
-                <Row style={subHeading}>
-                  <Col className="px-0">{repairs[0].title}</Col>
-                  <Col xs={5}>
-                    {repairs[0].priority === "High" ? (
-                      <img src={HighPriority} />
-                    ) : repairs[0].priority === "Medium" ? (
-                      <img src={MediumPriority} />
-                    ) : (
-                      <img src={LowPriority} />
-                    )}
-                  </Col>
-                </Row>
-                <Row style={subText}>
-                  {repairs[0].description}
-                  <hr />
-                </Row>
-                <Row style={blue} className="mt=0 pt=0">
-                  Request Sent to <br /> property manager
-                </Row>
-              </div>
-            </Col>
-          </Row>
         ) : (
-          <Row className="mt-2 mb-2">
-            <div style={blue}>No Active Request1</div>
-          </Row>
+          repairs.map((repair) => {
+            return (
+              <div>
+                {repair.status === "NEW" ? (
+                  <Row className="mt-2 mb-2">
+                    <Col style={{ padding: "5px" }}>
+                      <div
+                        style={{
+                          width: "110px",
+                          height: "100%",
+                          background: "#F5F5F5 0% 0% no-repeat padding-box",
+                          border: "1px solid #C4C4C4",
+                          borderRadius: "5px",
+                        }}
+                      ></div>
+                    </Col>
+                    <Col xs={8} style={{ padding: "5px" }}>
+                      <div>
+                        <Row style={subHeading}>
+                          <Col className="px-0">{repair.title}</Col>
+                          <Col xs={5}>
+                            {repair.priority === "High" ? (
+                              <img src={HighPriority} />
+                            ) : repair.priority === "Medium" ? (
+                              <img src={MediumPriority} />
+                            ) : (
+                              <img src={LowPriority} />
+                            )}
+                          </Col>
+                        </Row>
+                        <Row style={subText}>
+                          {repair.description}
+                          <hr />
+                        </Row>
+                        <Row style={blue} className="mt=0 pt=0">
+                          Request Sent to <br /> property manager
+                        </Row>
+                      </div>
+                    </Col>
+                  </Row>
+                ) : null}
+              </div>
+            );
+          })
         )}
       </Container>
       <Container className="pt-1 mb-4">
@@ -155,47 +163,51 @@ function RepairStatus(props) {
           <Row className="mt-2 mb-2">
             <div style={blue}>No Past Requests</div>
           </Row>
-        ) : repairs[0].status === "COMPLETE" ? (
-          <Row className="mt-2 mb-2">
-            <Col style={{ padding: "5px" }}>
-              <div
-                style={{
-                  width: "110px",
-                  height: "100%",
-                  background: "#F5F5F5 0% 0% no-repeat padding-box",
-                  border: "1px solid #C4C4C4",
-                  borderRadius: "5px",
-                }}
-              ></div>
-            </Col>
-            <Col xs={8} style={{ padding: "5px" }}>
-              <div>
-                <Row style={subHeading}>
-                  <Col className="px-0">{repairs[0].title}</Col>
-                  <Col xs={5}>
-                    {repairs[0].priority === "High" ? (
-                      <img src={HighPriority} />
-                    ) : repairs[0].priority === "Medium" ? (
-                      <img src={MediumPriority} />
-                    ) : (
-                      <img src={LowPriority} />
-                    )}
-                  </Col>
-                </Row>
-                <Row style={subText}>
-                  {repairs[0].description}
-                  <hr />
-                </Row>
-                <Row style={blue} className="mt=0 pt=0">
-                  Request Sent to <br /> property manager
-                </Row>
-              </div>
-            </Col>
-          </Row>
         ) : (
-          <Row className="mt-2 mb-2">
-            <div style={blue}>No Past Requests</div>
-          </Row>
+          repairs.map((repair) => {
+            return (
+              <div>
+                {repair.status === "COMPLETE" ? (
+                  <Row className="mt-2 mb-2">
+                    <Col style={{ padding: "5px" }}>
+                      <div
+                        style={{
+                          width: "110px",
+                          height: "100%",
+                          background: "#F5F5F5 0% 0% no-repeat padding-box",
+                          border: "1px solid #C4C4C4",
+                          borderRadius: "5px",
+                        }}
+                      ></div>
+                    </Col>
+                    <Col xs={8} style={{ padding: "5px" }}>
+                      <div>
+                        <Row style={subHeading}>
+                          <Col className="px-0">{repair.title}</Col>
+                          <Col xs={5}>
+                            {repair.priority === "High" ? (
+                              <img src={HighPriority} />
+                            ) : repair.priority === "Medium" ? (
+                              <img src={MediumPriority} />
+                            ) : (
+                              <img src={LowPriority} />
+                            )}
+                          </Col>
+                        </Row>
+                        <Row style={subText}>
+                          {repair.description}
+                          <hr />
+                        </Row>
+                        <Row style={blue} className="mt=0 pt=0">
+                          Request Sent to <br /> property manager
+                        </Row>
+                      </div>
+                    </Col>
+                  </Row>
+                ) : null}
+              </div>
+            );
+          })
         )}
       </Container>
       <Footer tab={"DASHBOARD"} />
