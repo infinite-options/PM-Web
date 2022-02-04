@@ -28,7 +28,7 @@ import {
 function TenantDashboard(props) {
   const navigate = useNavigate();
   const context = useContext(AppContext);
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh } = context;
   const { access_token, user } = userData;
   const { setShowFooter } = props;
   const [profile, setProfile] = useState([]);
@@ -97,7 +97,7 @@ function TenantDashboard(props) {
     <div className="h-100">
       <Header title="Home" />
       {isLoading === true || profile.length === 0 ? null : (
-        <Container className="pt-1 mb-4">
+        <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
           <Row style={headings}>
             <div>Hello {profile.tenant_first_name},</div>
           </Row>

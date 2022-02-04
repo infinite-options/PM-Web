@@ -45,7 +45,10 @@ function RepairStatus(props) {
         leftFn={() => navigate("/tenant")}
         rightText="Sort by"
       />
-      <Container className="pt-1 mb-4">
+      {/* <Container
+        style={{ display: "flex", flexDirection: "column", overflow: "scroll" }}
+      > */}
+      <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
         <Row style={headings}>
           <div>Scheduled Repairs</div>
         </Row>
@@ -210,7 +213,6 @@ function RepairStatus(props) {
           })
         )}
       </Container>
-      <Footer tab={"DASHBOARD"} />
     </div>
   );
 }
