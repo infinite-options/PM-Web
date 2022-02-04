@@ -34,6 +34,8 @@ function ManagerLocations(props) {
     changedLocation[field] = event.target.value;
     setNewLocation(changedLocation);
   }
+
+  console.log(locationState)
   return (
     <Container className='px-2 py-4'>
       <h6 className='mb-3'>Locations of Service:</h6>
@@ -41,7 +43,7 @@ function ManagerLocations(props) {
         <div key={i}>
           <div className='d-flex'>
             <div className='flex-grow-1'>
-              <h6 className='mb-1'>{location.location}</h6>
+              <h6 className='mb-1'>{`${location.city}, ${location.state}`}</h6>
             </div>
             <div>
               <img src={EditIcon} alt='Edit' className='px-1 mx-2'

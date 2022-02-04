@@ -54,7 +54,7 @@ function ManagerProfile(props) {
         setFeeState(JSON.parse(profile.manager_fees))
 
         const location = JSON.parse(profile.manager_locations)
-        console.log(location)
+        console.log(profile)
         setLocationState(location)
     }
 
@@ -199,7 +199,7 @@ function ManagerProfile(props) {
             {/*<ManagerFees state={feeState}/>*/}
             {/*<ManagerLocations state={locationState}/>*/}
             <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
-            {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
+            <ManagerLocations locationState={locationState} setLocationState={setLocationState}/>
         </div>
     );
 }
