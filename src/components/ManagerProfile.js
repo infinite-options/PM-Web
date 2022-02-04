@@ -30,8 +30,10 @@ function ManagerProfile(props) {
         accountNumber: '',
         routingNumber: ''
     });
-    const feeState = React.useState([]);
-    const locationState = React.useState([]);
+    // const feeState = React.useState([]);
+    // const locationState = React.useState([]);
+    const [feeState, setFeeState] = React.useState([]);
+    const [locationState , setLocationState] = React.useState([]);
 
     const loadProfile = (profile) => {
         setCompanyName(profile.manager_company_name)
@@ -49,6 +51,11 @@ function ManagerProfile(props) {
             accountNumber : profile.manager_account_number === 'NULL' ? '' : profile.manager_account_number,
             routingNumber : profile.manager_routing_number === 'NULL' ? '' : profile.manager_routing_number
         })
+        setFeeState(JSON.parse(profile.manager_fees))
+
+        const location = JSON.parse(profile.manager_locations)
+        console.log(location)
+        setLocationState(location)
     }
 
     React.useEffect(() => {
@@ -189,8 +196,10 @@ function ManagerProfile(props) {
 
             <ManagerPaymentSelection paymentState={paymentState} setPaymentState={setPaymentState} editProfile={editProfile}/>
 
-            <ManagerFees state={feeState}/>
-            <ManagerLocations state={locationState}/>
+            {/*<ManagerFees state={feeState}/>*/}
+            {/*<ManagerLocations state={locationState}/>*/}
+            <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
+            {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
         </div>
     );
 }

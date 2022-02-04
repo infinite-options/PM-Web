@@ -2,7 +2,7 @@ import React from 'react';
 import {Col, Container, Row} from 'react-bootstrap';
 import {useLocation, useNavigate} from "react-router-dom";
 import Header from '../components/Header';
-import {tileImg, gray, orangePill, greenPill, mediumBold, mediumImg, xSmall, redPill} from '../utils/styles';
+import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
@@ -12,6 +12,7 @@ import Emergency from '../icons/emergency.svg'
 import YourDocuments from '../icons/Your_Documents.svg'
 import ResidentAnnouncements from '../icons/Resident_Announcements.svg'
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
+import ManagerPropertyForm from "../components/ManagerPropertyForm";
 
 function ManagerPropertyView(props) {
 
@@ -86,9 +87,9 @@ function ManagerPropertyView(props) {
                         </div>
                         <hr style={{opacity: 1}} className='mt-1'/>
                     </div>
-                    {/*{expandDetails ? (*/}
-                    {/*    <PropertyForm property={property} edit={editProperty} setEdit={setEditProperty}/>*/}
-                    {/*) : ''}*/}
+                    {expandDetails ? (
+                        <ManagerPropertyForm property={property} edit={editProperty} setEdit={setEditProperty}/>
+                    ) : ''}
 
                     <Container  className='mt-4 mb-4'>
                         <Row>

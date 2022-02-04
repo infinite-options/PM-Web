@@ -5,7 +5,8 @@ import DeleteIcon from '../icons/DeleteIcon.svg';
 import {pillButton, smallPillButton, squareForm, gray} from '../utils/styles';
 
 function ManagerLocations(props) {
-  const [locationState, setLocationState] = props.state;
+  // const [locationState, setLocationState] = props.state;
+  const {locationState, setLocationState} = props;
   const [newLocation, setNewLocation] = React.useState(null);
   const emptyLocation = {
     location: '',
