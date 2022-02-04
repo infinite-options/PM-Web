@@ -198,8 +198,8 @@ function ManagerProfile(props) {
 
             {/*<ManagerFees state={feeState}/>*/}
             {/*<ManagerLocations state={locationState}/>*/}
-            <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
-            <ManagerLocations locationState={locationState} setLocationState={setLocationState}/>
+            {/*<ManagerFees feeState={feeState} setFeeState={setFeeState}/>*/}
+            {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
         </div>
     );
 }

@@ -110,6 +110,7 @@ function ManagerPropertyForm(props) {
         if (property) {
             newProperty.owner_id = property.owner_id;
             newProperty.manager_id = property.manager_id;
+            console.log(newProperty)
             const response = await put(`/properties/${property.property_uid}`, newProperty, null, files);
         } else {
             const response = await post('/properties', newProperty, null, files);
