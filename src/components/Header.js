@@ -3,36 +3,52 @@ import {mediumBold} from '../utils/styles';
 
 function Header(props) {
   const headerContainer = {
-    backgroundColor: '#F5F5F5'
-  }
+    backgroundColor: "#F5F5F5",
+  };
   const textButton = {
-    background: 'none',
-    border: 'none',
-    color: '#007AFF'
-  }
+    background: "none",
+    border: "none",
+    color: "#007AFF",
+  };
   return (
-    <Container fluid style={headerContainer} className='mb-4'>
-      <Row className='px-3'>
+    <Container fluid style={headerContainer} className="mb-4">
+      <Row>
         {props.leftText ? (
-          <Col xs={2} className='d-flex flex-column justify-content-end align-items-start px-0'>
-            <Button style={textButton} onClick={props.leftFn} className='px-0'>
+          <Col className="d-flex flex-column justify-content-end">
+            <Button style={textButton} onClick={props.leftFn}>
               {props.leftText}
             </Button>
           </Col>
-        ) : <Col/>}
-        <Col xs={8} className='text-center d-flex flex-column justify-content-end px-0'>
-          <h6 className='mt-5 mb-2' style={mediumBold}>{props.title}</h6>
+        ) : (
+          <Col />
+        )}
+        <Col
+          xs={5}
+          className="text-center d-flex flex-column justify-content-end"
+        >
+          <h6
+            className="mt-5 mb-2"
+            style={{
+              font: "normal normal 600 17px/20px SFProText-Semibold",
+              letterSpacing: "0px",
+              color: "#000000",
+            }}
+          >
+            {props.title}
+          </h6>
         </Col>
         {props.rightText ? (
-          <Col xs={2} className='d-flex flex-column justify-content-end align-items-end px-0'>
-            <Button style={textButton} onClick={props.rightFn} className='px-0'>
+          <Col className="d-flex flex-column justify-content-end">
+            <Button style={textButton} onClick={props.rightFn}>
               {props.rightText}
             </Button>
           </Col>
-        ) : <Col/>}
+        ) : (
+          <Col />
+        )}
       </Row>
     </Container>
   );
 }
 
-export default Header
+export default Header;
