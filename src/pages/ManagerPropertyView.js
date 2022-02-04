@@ -131,10 +131,34 @@ function ManagerPropertyView(props) {
                                     </p>
                                 </div>
                                 <div>
-                                    <a href={`tel:00000`}>
+                                    <a href={`tel:${property.owner_phone_number}`}>
                                         <img src={Phone} alt='Phone' style={mediumImg}/>
                                     </a>
-                                    <a href={`mailto:abc`}>
+                                    <a href={`mailto:${property.owner_email}`}>
+                                        <img src={Message} alt='Message' style={mediumImg}/>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr style={{opacity: 1}} className='mt-1'/>
+                        </div>
+                    ) : ''}
+
+                    {property.tenant_id !== null ? (
+                        <div>
+                            <div className='d-flex justify-content-between'>
+                                <div>
+                                    <h6 style={mediumBold} className='mb-1'>
+                                        {property.tenant_first_name} {property.tenant_last_name}
+                                    </h6>
+                                    <p style={{...gray, ...mediumBold}} className='mb-1'>
+                                        Tenant
+                                    </p>
+                                </div>
+                                <div>
+                                    <a href={`tel:${property.owner_phone_number}`}>
+                                        <img src={Phone} alt='Phone' style={mediumImg}/>
+                                    </a>
+                                    <a href={`mailto:${property.owner_email}`}>
                                         <img src={Message} alt='Message' style={mediumImg}/>
                                     </a>
                                 </div>

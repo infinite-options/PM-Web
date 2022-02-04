@@ -114,7 +114,8 @@ function ManagerPropertyForm(props) {
         } else {
             const response = await post('/properties', newProperty, null, files);
         }
-        props.onSubmit();
+        // props.onSubmit();
+        setEdit(false)
     }
 
     const loadImages = async () => {
