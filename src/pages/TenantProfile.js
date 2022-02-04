@@ -115,6 +115,7 @@ function TenantProfile(props) {
     await put("/tenantProfileInfo", tenantProfile, access_token);
     props.onConfirm();
   };
+  console.log(usePreviousAddress, previousAddressState[0]);
   useEffect(() => {
     setShowFooter(true);
   });

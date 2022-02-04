@@ -110,38 +110,38 @@ function TenantDashboard(props) {
                 Nothing Scheduled
               </div>
             </Row>
-          ) : repairs.status === "SCHEDULED" ? (
-            <Row style={upcoming} className="mt-2 mb-2">
-              <div style={upcomingHeading} className="mt-1 mb-1">
-                Upcoming:
-                <br />
-                Toilet Maintenance is scheduled for
-                <br /> {repairs.scheduled_date}
-                <br />
-              </div>
-
-              <Col className="mt-1 mb-1">
-                <div style={upcomingText}>
-                  For questions / concerns, feel free to contact the property
-                  manager
-                </div>
-              </Col>
-              <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-                <img src={Phone} />
-              </Col>
-              <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-                <img src={Message} />
-              </Col>
-            </Row>
           ) : (
-            <Row style={upcoming} className="mt-2 mb-2">
-              <div style={upcomingHeading} className="mt-1 mb-1">
-                Upcoming:
-                <br />
-                <br />
-                Nothing scheduled
-              </div>
-            </Row>
+            <div>
+              {repairs.map((repair) => {
+                return repair.status === "SCHEDULED" ? (
+                  <Row style={upcoming} className="mt-2 mb-2">
+                    <div style={upcomingHeading} className="mt-1 mb-1">
+                      Upcoming:
+                      <br />
+                      Toilet Maintenance is scheduled for
+                      <br />{" "}
+                      {moment(repair.scheduled_date).format(
+                        "MMM DD, YYYY "
+                      )} at {moment(repair.scheduled_date).format("hh:mm a")}
+                      <br />
+                    </div>
+
+                    <Col className="mt-1 mb-1">
+                      <div style={upcomingText}>
+                        For questions / concerns, feel free to contact the
+                        property manager
+                      </div>
+                    </Col>
+                    <Col xs={2} style={upcomingText} className="mt-1 mb-1">
+                      <img src={Phone} />
+                    </Col>
+                    <Col xs={2} style={upcomingText} className="mt-1 mb-1">
+                      <img src={Message} />
+                    </Col>
+                  </Row>
+                ) : null;
+              })}
+            </div>
           )}
 
           <Row>
