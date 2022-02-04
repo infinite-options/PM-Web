@@ -21,7 +21,7 @@ function SelectRole() {
     } else if (selectedRole === "TENANT") {
       navigate("/tenant");
     } else if (selectedRole === "MAINTENANCE") {
-      navigate("/");
+      navigate("/maintenance");
     }
   };
   const longNames = {

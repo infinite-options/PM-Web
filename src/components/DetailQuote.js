@@ -31,7 +31,7 @@ function DetailQuote(props) {
         leftText="< Back"
         leftFn={() => navigate("/maintenance")}
       />
-      <Container className="pt-1 mb-4">
+      <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
         <Row>
           <Col
             style={{
