@@ -72,7 +72,7 @@ function TenantDashboard(props) {
       setRepairs(response.result);
     };
     fetchRepairs();
-  }, []);
+  }, [profile]);
 
   const goToRequest = () => {
     navigate(`/${profile.property_uid}/repairRequest`);
