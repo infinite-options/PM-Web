@@ -30,6 +30,8 @@ function PropertyView(props) {
   const [expandLeaseDocs, setExpandLeaseDocs] = React.useState(false);
   const [showManagementContract, setShowManagementContract] = React.useState(false);
   const [showTenantAgreement, setShowTenantAgreement] = React.useState(false);
+  const [selectedContract, setSelectedContract] = React.useState(null);
+  const [selectedAgreement, setSelectedAgreement] = React.useState(null);
 
   const headerBack = () => {
     editProperty ? setEditProperty(false) :
@@ -69,11 +71,37 @@ function PropertyView(props) {
     setShowCreateMortgage
   };
 
+  const addContract = () => {
+    setSelectedContract(null);
+    setShowManagementContract(true);
+  }
+  const selectContract = (contract) => {
+    setSelectedContract(contract);
+    setShowManagementContract(true);
+  }
+  const closeContract = () => {
+    reload();
+    setShowManagementContract(false);
+  }
+
+  const addAgreement = () => {
+    setSelectedAgreement(null);
+    setShowTenantAgreement(true);
+  }
+  const selectAgreement = (agreement) => {
+    setSelectedAgreement(agreement);
+    setShowTenantAgreement(true);
+  }
+  const closeAgreement = () => {
+    reload();
+    setShowTenantAgreement(false);
+  }
+
   return (
     showManagementContract ? (
-      <ManagementContract back={() => setShowManagementContract(false)}/>
+      <ManagementContract back={closeContract} property={property} contract={selectedContract}/>
     ) : showTenantAgreement ? (
-      <TenantAgreement back={() => setShowTenantAgreement(false)}/>
+      <TenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}/>
     ) : (
       <div>
       <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
@@ -118,12 +146,12 @@ function PropertyView(props) {
                 )}
               </div>
               <PropertyCashFlow property={property} state={cashFlowState}/>
-              {property.manager_first_name !== null ? (
+              {property.manager_business_name !== null ? (
                 <div>
                   <div className='d-flex justify-content-between mt-3'>
                     <div>
                       <h6 style={mediumBold} className='mb-1'>
-                        {property.manager_first_name} {property.manager_last_name}
+                        {property.manager_business_name}
                       </h6>
                       <p style={{...gray, ...mediumBold}} className='mb-1'>
                         Property Manager
@@ -159,7 +187,7 @@ function PropertyView(props) {
                 <hr style={{opacity: 1}} className='mt-1'/>
               </div>
               {expandManagerDocs ? (
-                <ManagerDocs property={property} addDocument={() => setShowManagementContract(true)}/>
+                <ManagerDocs property={property} addDocument={addContract} selectContract={selectContract} reload={reload}/>
               ) : ''}
               <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
                 <div className='d-flex justify-content-between mt-3'>
@@ -169,7 +197,7 @@ function PropertyView(props) {
                 <hr style={{opacity: 1}} className='mt-1'/>
               </div>
               {expandLeaseDocs ? (
-                <LeaseDocs property={property} addDocument={() => setShowTenantAgreement(true)}/>
+                <LeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
               ) : ''}
             </div>
           )}

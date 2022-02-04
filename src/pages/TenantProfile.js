@@ -110,7 +110,7 @@ function TenantProfile(props) {
       current_job_company: company,
       drivers_license_number: dlNumber,
       current_address: currentAddressState[0],
-      previous_addresses: usePreviousAddress ? previousAddressState[0] : null,
+      previous_address: usePreviousAddress ? previousAddressState[0] : null,
     };
     await put("/tenantProfileInfo", tenantProfile, access_token);
     props.onConfirm();

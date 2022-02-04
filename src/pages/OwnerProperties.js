@@ -68,8 +68,8 @@ function OwnerProperties(props) {
                 <div className='d-flex'>
                   <div className='flex-grow-1 d-flex flex-column justify-content-center'>
                     <p style={{...blue, ...xSmall}} className='mb-0'>
-                      {property.manager_id ?
-                        `Manager: ${property.manager_first_name} ${property.manager_last_name}`
+                      {property.manager_business_name ?
+                        `Manager: ${property.manager_business_name}`
                         : 'No Manager'}
                     </p>
                   </div>

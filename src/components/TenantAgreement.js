@@ -4,19 +4,16 @@ import Header from './Header';
 import File from '../icons/File.svg';
 import ManagerFees from './ManagerFees';
 import BusinessContact from './BusinessContact';
+import {put, post} from '../utils/api';
 import {small, hidden, red, squareForm, mediumBold, smallPillButton} from '../utils/styles';
 
 function TenantAgreement(props) {
-  const {back} = props;
+  const {back, property, agreement} = props;
 
-  const [address, setAddress] = React.useState('');
-  const [unit, setUnit] = React.useState('');
-  const [city, setCity] = React.useState('');
-  const [state, setState] = React.useState('');
-  const [zip, setZip] = React.useState('');
+  const [tenantID, setTenantID] = React.useState('');
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');
-  const feeState = React.useState([]);
+  const [feeState, setFeeState] = React.useState([]);
   const contactState = React.useState([]);
   const [files, setFiles] = React.useState([]);
   const addFile = (e) => {
@@ -24,7 +21,40 @@ function TenantAgreement(props) {
     newFiles.push(e.target.files[0]);
     setFiles(newFiles);
   }
-  const save = () => {
+  const loadAgreement = () => {
+    setTenantID(agreement.tenant_id);
+    setStartDate(agreement.lease_start);
+    setEndDate(agreement.lease_end);
+    setFeeState(JSON.parse(agreement.rent_payments));
+    contactState[1](JSON.parse(agreement.assigned_contacts));
+    setFiles(JSON.parse(agreement.documents));
+  }
+  React.useEffect(() => {
+    if (agreement) {
+      loadAgreement();
+    }
+  }, [agreement]);
+  const save = async () => {
+    const newAgreement = {
+      rental_property_id: property.property_uid,
+      tenant_id: tenantID,
+      lease_start: startDate,
+      lease_end: endDate,
+      rent_payments: JSON.stringify(feeState),
+      assigned_contacts: JSON.stringify(contactState[0])
+    }
+    for (let i = 0; i < files.length; i++) {
+      let key = `img_${i}`;
+      newAgreement[key] = files[i];
+    }
+    if (agreement) {
+      newAgreement.rental_uid = agreement.rental_uid;
+      console.log(newAgreement);
+      const response = await put(`/rentals`, newAgreement, null, files);
+    } else {
+      console.log(newAgreement);
+      const response = await post('/rentals', newAgreement, null, files);
+    }
     back();
   }
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -39,46 +69,14 @@ function TenantAgreement(props) {
         rightText='Save' rightFn={save}/>
       <Container>
         <div className='mb-4'>
-          <h5 style={mediumBold}>Property Details</h5>
+          <h5 style={mediumBold}>Tenant</h5>
           <Form.Group className='mx-2 my-3'>
             <Form.Label as='h6' className='mb-0 ms-2'>
-              Property Street {address === '' ? required : ''}
+              Tenant ID {tenantID === '' ? required : ''}
             </Form.Label>
-            <Form.Control style={squareForm} placeholder='283 Barley St' value={address}
-              onChange={(e) => setAddress(e.target.value)}/>
+            <Form.Control style={squareForm} value={tenantID} placeholder='100-000001'
+              onChange={(e) => setTenantID(e.target.value)}/>
           </Form.Group>
-          <div className='d-flex my-3'>
-            <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>
-                Unit {unit === '' ? required : ''}
-              </Form.Label>
-              <Form.Control style={squareForm} placeholder='#122' value={unit}
-                onChange={(e) => setUnit(e.target.value)}/>
-            </Form.Group>
-            <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>
-                City {city === '' ? required : ''}
-              </Form.Label>
-              <Form.Control style={squareForm} placeholder='San Jose' value={city}
-                onChange={(e) => setCity(e.target.value)}/>
-            </Form.Group>
-          </div>
-          <div className='d-flex my-3'>
-            <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>
-                State {state === '' ? required : ''}
-              </Form.Label>
-              <Form.Control style={squareForm} placeholder='CA' value={state}
-                onChange={(e) => setState(e.target.value)}/>
-            </Form.Group>
-            <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>
-                Zip Code {zip === '' ? required : ''}
-              </Form.Label>
-              <Form.Control style={squareForm} placeholder='95120' value={zip}
-                onChange={(e) => setZip(e.target.value)}/>
-            </Form.Group>
-          </div>
         </div>
         <div className='mb-4'>
           <h5 style={mediumBold}>Lease Dates</h5>
@@ -100,7 +98,7 @@ function TenantAgreement(props) {
         <div className='mb-4'>
           <h5 style={mediumBold}>Rent Payments</h5>
           <div className='mx-2'>
-            <ManagerFees state={feeState}/>
+            <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
           </div>
         </div>
         <div className='mb-4'>
@@ -120,9 +118,9 @@ function TenantAgreement(props) {
           ))}
           <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
           <label htmlFor='file'>
-            <p style={smallPillButton}>
+            <Button variant='outline-primary' style={smallPillButton} as='p'>
               Add Document
-            </p>
+            </Button>
           </label>
         </div>
       </Container>

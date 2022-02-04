@@ -4,19 +4,16 @@ import Header from './Header';
 import File from '../icons/File.svg';
 import ManagerFees from './ManagerFees';
 import BusinessContact from './BusinessContact';
+import {put, post} from '../utils/api';
 import {small, hidden, red, squareForm, mediumBold, smallPillButton} from '../utils/styles';
 
 function ManagementContract(props) {
-  const {back} = props;
+  const {back, property, contract} = props;
 
-  const [address, setAddress] = React.useState('');
-  const [unit, setUnit] = React.useState('');
-  const [city, setCity] = React.useState('');
-  const [state, setState] = React.useState('');
-  const [zip, setZip] = React.useState('');
+
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');
-  const feeState = React.useState([]);
+  const [feeState, setFeeState] = React.useState([]);
   const contactState = React.useState([]);
   const [files, setFiles] = React.useState([]);
   const addFile = (e) => {
@@ -24,7 +21,39 @@ function ManagementContract(props) {
     newFiles.push(e.target.files[0]);
     setFiles(newFiles);
   }
-  const save = () => {
+  const loadContract = () => {
+    setStartDate(contract.start_date);
+    setEndDate(contract.end_date);
+    setFeeState(JSON.parse(contract.contract_fees));
+    contactState[1](JSON.parse(contract.assigned_contacts));
+    setFiles(JSON.parse(contract.documents));
+  }
+  React.useEffect(() => {
+    if (contract) {
+      loadContract();
+    }
+  }, [contract]);
+  const save = async () => {
+    const newContract = {
+      property_uid: property.property_uid,
+      business_uid: property.manager_id,
+      start_date: startDate,
+      end_date: endDate,
+      contract_fees: JSON.stringify(feeState),
+      assigned_contacts: JSON.stringify(contactState[0])
+    }
+    for (let i = 0; i < files.length; i++) {
+      let key = `doc_${i}`;
+      newContract[key] = files[i];
+    }
+    if (contract) {
+      newContract.contract_uid = contract.contract_uid;
+      console.log(newContract);
+      const response = await put(`/contracts`, newContract, null, files);
+    } else {
+      console.log(newContract);
+      const response = await post('/contracts', newContract, null, files);
+    }
     back();
   }
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -38,48 +67,6 @@ function ManagementContract(props) {
       <Header title='Management Contract' leftText='< Back' leftFn={back}
         rightText='Save' rightFn={save}/>
       <Container>
-        <div className='mb-4'>
-          <h5 style={mediumBold}>Property Details</h5>
-          <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>
-              Property Street {address === '' ? required : ''}
-            </Form.Label>
-            <Form.Control style={squareForm} placeholder='283 Barley St' value={address}
-              onChange={(e) => setAddress(e.target.value)}/>
-          </Form.Group>
-          <div className='d-flex my-3'>
-            <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>
-                Unit {unit === '' ? required : ''}
-              </Form.Label>
-              <Form.Control style={squareForm} placeholder='#122' value={unit}
-                onChange={(e) => setUnit(e.target.value)}/>
-            </Form.Group>
-            <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>
-                City {city === '' ? required : ''}
-              </Form.Label>
-              <Form.Control style={squareForm} placeholder='San Jose' value={city}
-                onChange={(e) => setCity(e.target.value)}/>
-            </Form.Group>
-          </div>
-          <div className='d-flex my-3'>
-            <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>
-                State {state === '' ? required : ''}
-              </Form.Label>
-              <Form.Control style={squareForm} placeholder='CA' value={state}
-                onChange={(e) => setState(e.target.value)}/>
-            </Form.Group>
-            <Form.Group className='mx-2'>
-              <Form.Label as='h6' className='mb-0 ms-2'>
-                Zip Code {zip === '' ? required : ''}
-              </Form.Label>
-              <Form.Control style={squareForm} placeholder='95120' value={zip}
-                onChange={(e) => setZip(e.target.value)}/>
-            </Form.Group>
-          </div>
-        </div>
         <div className='mb-4'>
           <h5 style={mediumBold}>PM Agreement Dates</h5>
           <Form.Group className='mx-2 my-3'>
@@ -100,7 +87,7 @@ function ManagementContract(props) {
         <div className='mb-4'>
           <h5 style={mediumBold}>PM Fees</h5>
           <div className='mx-2'>
-            <ManagerFees state={feeState}/>
+            <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
           </div>
         </div>
         <div className='mb-4'>
@@ -112,17 +99,21 @@ function ManagementContract(props) {
           {files.map((file, i) => (
             <div key={i}>
               <div className='d-flex justify-content-between align-items-end'>
-                <h6 style={mediumBold}>{file.name}</h6>
-                <img src={File}/>
+                <h6 style={mediumBold}>
+                  {typeof(file) === typeof('') ? file.split('/').pop() : file.name}
+                </h6>
+                <a href={file} target='_blank'>
+                  <img src={File}/>
+                </a>
               </div>
               <hr style={{opacity: 1}}/>
             </div>
           ))}
           <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
           <label htmlFor='file'>
-            <p style={smallPillButton}>
+            <Button variant='outline-primary' style={smallPillButton} as='p'>
               Add Document
-            </p>
+            </Button>
           </label>
         </div>
       </Container>
