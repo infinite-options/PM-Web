@@ -2,7 +2,7 @@ import React from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 
 import Header from '../components/Header';
-import Emergency from '../icons/Emergency.svg';
+import Emergency from '../icons/emergency.svg';
 import Document from '../icons/Document.svg';
 import Property from '../icons/Property.svg';
 import Repair from '../icons/Repair.svg';

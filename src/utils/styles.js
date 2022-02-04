@@ -4,12 +4,6 @@ const pillButton = {
   color: '#007AFF',
   border: '1px solid #007AFF'
 }
-const smallPillButton = {
-  borderRadius: '50px',
-  padding: '1px 15px',
-  color: '#007AFF',
-  border: '1px solid #007AFF'
-}
 const boldSmall = {
   fontWeight: "bolder",
   fontSize: "smaller",
@@ -336,7 +330,6 @@ export {
   redRight,
   timeslotButton,
   activeTimeSlotButton,
-  green,
   blueBorderButton,
   actionsNoColor,
   redPillButton,
