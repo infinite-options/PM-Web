@@ -2,7 +2,7 @@ import React from 'react';
 import {Col, Container, Row} from 'react-bootstrap';
 import {useLocation, useNavigate} from "react-router-dom";
 import Header from '../components/Header';
-import {tileImg, gray, orangePill, greenPill, mediumBold, mediumImg, xSmall, redPill} from '../utils/styles';
+import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
@@ -12,6 +12,7 @@ import Emergency from '../icons/emergency.svg'
 import YourDocuments from '../icons/Your_Documents.svg'
 import ResidentAnnouncements from '../icons/Resident_Announcements.svg'
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
+import ManagerPropertyForm from "../components/ManagerPropertyForm";
 
 function ManagerPropertyView(props) {
 
@@ -86,9 +87,9 @@ function ManagerPropertyView(props) {
                         </div>
                         <hr style={{opacity: 1}} className='mt-1'/>
                     </div>
-                    {/*{expandDetails ? (*/}
-                    {/*    <PropertyForm property={property} edit={editProperty} setEdit={setEditProperty}/>*/}
-                    {/*) : ''}*/}
+                    {expandDetails ? (
+                        <ManagerPropertyForm property={property} edit={editProperty} setEdit={setEditProperty}/>
+                    ) : ''}
 
                     <Container  className='mt-4 mb-4'>
                         <Row>
@@ -130,10 +131,34 @@ function ManagerPropertyView(props) {
                                     </p>
                                 </div>
                                 <div>
-                                    <a href={`tel:00000`}>
+                                    <a href={`tel:${property.owner_phone_number}`}>
                                         <img src={Phone} alt='Phone' style={mediumImg}/>
                                     </a>
-                                    <a href={`mailto:abc`}>
+                                    <a href={`mailto:${property.owner_email}`}>
+                                        <img src={Message} alt='Message' style={mediumImg}/>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr style={{opacity: 1}} className='mt-1'/>
+                        </div>
+                    ) : ''}
+
+                    {property.tenant_id !== null ? (
+                        <div>
+                            <div className='d-flex justify-content-between'>
+                                <div>
+                                    <h6 style={mediumBold} className='mb-1'>
+                                        {property.tenant_first_name} {property.tenant_last_name}
+                                    </h6>
+                                    <p style={{...gray, ...mediumBold}} className='mb-1'>
+                                        Tenant
+                                    </p>
+                                </div>
+                                <div>
+                                    <a href={`tel:${property.owner_phone_number}`}>
+                                        <img src={Phone} alt='Phone' style={mediumImg}/>
+                                    </a>
+                                    <a href={`mailto:${property.owner_email}`}>
                                         <img src={Message} alt='Message' style={mediumImg}/>
                                     </a>
                                 </div>

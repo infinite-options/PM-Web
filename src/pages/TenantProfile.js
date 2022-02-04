@@ -1,28 +1,34 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import Popover from "@material-ui/core/Popover";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import AddressForm from "../components/AddressForm";
 import Check from "../icons/Check.svg";
-import { post } from "../utils/api";
+import ArrowUp from "../icons/ArrowUp.svg";
+import ArrowDown from "../icons/ArrowDown.svg";
+import { get, put, post } from "../utils/api";
 import { squareForm, pillButton, small, underline } from "../utils/styles";
 
 function TenantProfile(props) {
-  const { userData } = React.useContext(AppContext);
+  const context = useContext(AppContext);
+  const { userData, refresh } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
   const { setShowFooter, setTab } = props;
-  const [footerTab, setFooterTab] = React.useState("PROFILE");
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [salary, setSalary] = React.useState("");
-  const [frequency, setFrequency] = React.useState("");
-  const [jobTitle, setJobTitle] = React.useState("");
-  const [company, setCompany] = React.useState("");
-  const [ssn, setSsn] = React.useState("");
-  const [dlNumber, setDLNumber] = React.useState("");
-  const currentAddressState = React.useState({
+  const [footerTab, setFooterTab] = useState("PROFILE");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [expandFrequency, setExpandFrequency] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [salary, setSalary] = useState("");
+  const [frequency, setFrequency] = useState("Annual");
+  const [jobTitle, setJobTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [ssn, setSsn] = useState("");
+  const [dlNumber, setDLNumber] = useState("");
+  const currentAddressState = useState({
     street: "",
     unit: "",
     city: "",
@@ -34,8 +40,8 @@ function TenantProfile(props) {
     lease_end: "",
     rent: "",
   });
-  const [usePreviousAddress, setUsePreviousAddress] = React.useState(false);
-  const previousAddressState = React.useState({
+  const [usePreviousAddress, setUsePreviousAddress] = useState(false);
+  const previousAddressState = useState({
     street: "",
     unit: "",
     city: "",
@@ -47,34 +53,106 @@ function TenantProfile(props) {
     lease_end: "",
     rent: "",
   });
-  React.useEffect(() => {
-    if (access_token === null) {
-      navigate("/");
-      return;
-    }
-    if (user.role.indexOf("TENANT") === -1) {
-      console.log("no tenant profile");
-      props.onConfirm();
-    }
+  //popover open and close
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const response = await get("/tenantProfileInfo", access_token);
+      console.log(response);
+
+      if (response.msg === "Token has expired") {
+        console.log("here msg");
+        refresh();
+
+        return;
+      }
+      setFirstName(response.result[0].tenant_first_name);
+      setLastName(response.result[0].tenant_last_name);
+      setSsn(response.result[0].tenant_ssn);
+      setSalary(response.result[0].tenant_current_salary);
+      setJobTitle(response.result[0].tenant_current_job_title);
+      setCompany(response.result[0].tenant_current_job_company);
+      setDLNumber(response.result[0].tenant_drivers_license_number);
+      setCompany(response.result[0].tenant_current_job_company);
+      currentAddressState[1](
+        JSON.parse(response.result[0].tenant_current_address)
+      );
+      if (response.result[0].tenant_previous_address != null) {
+        previousAddressState[1](
+          JSON.parse(response.result[0].tenant_previous_address)
+        );
+      }
+      if (response.result[0].tenant_previous_address != null) {
+        setUsePreviousAddress(true);
+      }
+    };
+    fetchProfile();
   }, []);
+
   const submitInfo = async () => {
     const tenantProfile = {
       first_name: firstName,
       last_name: lastName,
-      current_salary: salary,
-      salary_freq: frequency,
-      current_job_title: jobTitle,
       ssn: ssn,
-      drivers_livense_number: dlNumber,
+      current_salary: salary,
+      //salary_freq: frequency,
+      current_job_title: jobTitle,
+      current_job_company: company,
+      drivers_license_number: dlNumber,
       current_address: currentAddressState[0],
-      previous_address: usePreviousAddress ? previousAddressState[0] : null,
+      previous_addresses: usePreviousAddress ? previousAddressState[0] : null,
     };
-    await post("/tenantProfileInfo", tenantProfile, access_token);
+    await put("/tenantProfileInfo", tenantProfile, access_token);
     props.onConfirm();
   };
-  React.useEffect(() => {
+  console.log(usePreviousAddress, previousAddressState[0]);
+  useEffect(() => {
     setShowFooter(true);
   });
+  const allFrequency = [
+    "Weekly",
+    "Biweekly",
+    "Monthly",
+    "Annual",
+    "Hourly Rate",
+  ];
+  const frequencylist = () => {
+    return (
+      <div>
+        {allFrequency.map((freq) => {
+          return (
+            <div
+              style={{
+                cursor: "pointer",
+                //backgroundColor: `${view.color}`,
+                color: "#2C2C2E",
+                fontSize: "16px",
+                padding: "5px",
+                font: "normal normal bold 20px/24px SF Pro Display",
+              }}
+              onClick={(e) => {
+                setFrequency(freq);
+                setExpandFrequency(!false);
+                handleClose(e);
+              }}
+            >
+              {freq}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -87,7 +165,7 @@ function TenantProfile(props) {
           submitInfo();
         }}
       />
-      <Container className="pt-1 mb-4">
+      <Container style={{ minHeight: "100%" }}>
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
             First Name
@@ -124,19 +202,48 @@ function TenantProfile(props) {
               />
             </Form.Group>
           </Col>
-          <Col className="px-0">
+          <Col
+            className="px-0"
+            onClick={(e) => {
+              setExpandFrequency(!expandFrequency);
+              handleClick(e);
+            }}
+          >
             <Form.Group className="mx-2 mb-3">
               <Form.Label as="h6" className="mb-0 ms-2">
                 Frequency
               </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Annual"
-                value={frequency}
-                onChange={(e) => setFrequency(e.target.value)}
-              />
+              <div
+                className="d-flex justify-content-between"
+                style={{ border: "1px solid #777777", padding: "6px" }}
+              >
+                {frequency}
+                <img src={expandFrequency ? ArrowUp : ArrowDown} alt="Expand" />
+              </div>
             </Form.Group>
           </Col>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorReference="anchorPosition"
+            anchorPosition={{ top: 500, left: 300 }}
+            anchorOrigin={{
+              vertical: "center",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            style={{
+              backgroundClip: "context-box",
+              borderRadius: "20px",
+            }}
+          >
+            {frequencylist()}
+          </Popover>
         </Row>
 
         <Form.Group className="mx-2 my-3">

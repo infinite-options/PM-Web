@@ -5,7 +5,8 @@ import DeleteIcon from '../icons/DeleteIcon.svg';
 import {pillButton, smallPillButton, squareForm, gray, red, hidden, small} from '../utils/styles';
 
 function ManagerLocations(props) {
-  const [locationState, setLocationState] = props.state;
+  // const [locationState, setLocationState] = props.state;
+  const {locationState, setLocationState} = props;
   const [newLocation, setNewLocation] = React.useState(null);
   const [editingLocation, setEditingLocation] = React.useState(null);
   const emptyLocation = {
@@ -63,7 +64,7 @@ function ManagerLocations(props) {
         <div key={i}>
           <div className='d-flex'>
             <div className='flex-grow-1'>
-              <h6 className='mb-1'>{location.location}</h6>
+              <h6 className='mb-1'>{`${location.city}, ${location.state}`}</h6>
             </div>
             <div>
               <img src={EditIcon} alt='Edit' className='px-1 mx-2'

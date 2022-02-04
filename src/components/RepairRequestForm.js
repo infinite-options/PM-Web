@@ -1,30 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
+import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../components/Header";
 import HighPriority from "../icons/highPriority.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
 import LowPriority from "../icons/lowPriority.svg";
+import RepairImages from "./RepairImages";
+import { get, post } from "../utils/api";
 import {
   headings,
   formLabel,
   bluePillButton,
   pillButton,
+  red,
+  hidden,
+  small,
 } from "../utils/styles";
 
+const useStyles = makeStyles((theme) => ({
+  priorityInactive: {
+    opacity: "0.5",
+  },
+  priorityActive: {
+    opacity: "1",
+  },
+}));
 function RepairRequest(props) {
+  const classes = useStyles();
   const navigate = useNavigate();
-  const requestTitleRef = React.createRef();
-  const requestDescriptionRef = React.createRef();
-  const tagPriorityRef = React.createRef();
+  const { property_uid } = useParams();
+  console.log(property_uid);
+  const imageState = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const submitForm = async () => {
+    if (title === "" || description === "" || priority === "") {
+      setErrorMessage("Please fill out all fields");
+      return;
+    }
+    const newProperty = {
+      property_uid: property_uid,
+      title: title,
+      description: description,
+      priority: priority,
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newProperty[key] = file.file;
+      } else {
+        newProperty[key] = file.image;
+      }
+    }
 
-  const submitForm = () => {
-    const requestTitle = requestTitleRef.current.value;
-    const requestDescription = requestDescriptionRef.current.value;
-    const tagPriority = tagPriorityRef.current.value;
-
-    props.onConfirm(requestTitle, requestDescription, tagPriority);
+    await post("/maintenanceRequests", newProperty, null, files);
+    navigate(`/${property_uid}/repairStatus`);
+    props.onSubmit();
   };
+
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -40,22 +87,24 @@ function RepairRequest(props) {
         <Form>
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Title (character limit: 15)
+              Title (character limit: 15) {required}
             </Form.Label>
             <Form.Control
               style={{ borderRadius: 0 }}
-              ref={requestTitleRef}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Ex: Paint"
             />
           </Form.Group>
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Description
+              Description {required}
             </Form.Label>
             <Form.Control
               style={{ borderRadius: 0 }}
               as="textarea"
-              ref={requestDescriptionRef}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Ex: Kitchen wall needs repaint. It’s been chipping."
             />
           </Form.Group>
@@ -63,14 +112,15 @@ function RepairRequest(props) {
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
               Take pictures
             </Form.Label>
-            <Form.Control
+            {/* <Form.Control
               type="file"
               onChange={(e) => console.log(e.target.files)}
-            />
+            /> */}
           </Form.Group>
+          <RepairImages state={imageState} />
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="mt-2 mb-1">
-              Tag Priority (Select one)
+              Tag Priority (Select one) {required}
             </Form.Label>
             <Row
               className="mt-2 mb-2"
@@ -83,28 +133,49 @@ function RepairRequest(props) {
               <Col xs={4}>
                 <img
                   src={HighPriority}
-                  ref={tagPriorityRef}
-                  style={{ opacity: "0.5" }}
+                  onClick={() => setPriority("High")}
+                  className={
+                    priority === "High"
+                      ? `${classes.priorityActive}`
+                      : `${classes.priorityInactive}`
+                  }
+                  //style={{ opacity: "0.5" }}
                 />
               </Col>
               <Col xs={4}>
                 <img
                   src={MediumPriority}
-                  ref={tagPriorityRef}
-                  style={{ opacity: "0.5" }}
+                  onClick={() => setPriority("Medium")}
+                  className={
+                    priority === "Medium"
+                      ? `${classes.priorityActive}`
+                      : `${classes.priorityInactive}`
+                  }
+                  //style={{ opacity: "0.5" }}
                 />
               </Col>
               <Col xs={4}>
                 <img
                   src={LowPriority}
-                  ref={tagPriorityRef}
-                  style={{ opacity: "0.5" }}
+                  onClick={() => setPriority("Low")}
+                  className={
+                    priority === "Low"
+                      ? `${classes.priorityActive}`
+                      : `${classes.priorityInactive}`
+                  }
+                  //style={{ opacity: "0.5" }}
                 />
               </Col>
             </Row>
           </Form.Group>
         </Form>
         <div className="text-center mt-5">
+          <div
+            className="text-center"
+            style={errorMessage === "" ? hidden : {}}
+          >
+            <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+          </div>
           <Row
             style={{
               display: "text",
