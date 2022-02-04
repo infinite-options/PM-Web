@@ -6,7 +6,8 @@ import ArrowDown from '../icons/ArrowDown.svg';
 import {pillButton, smallPillButton, squareForm, gray, red, hidden, small} from '../utils/styles';
 
 function ManagerFees(props) {
-  const [feeState, setFeeState] = props.state;
+  // const [feeState, setFeeState] = props.state;
+  const {feeState, setFeeState} = props;
   const [newFee, setNewFee] = React.useState(null);
   const [editingFee, setEditingFee] = React.useState(null);
   const emptyFee = {
