@@ -92,7 +92,9 @@ function BusinessProfileInfo(props) {
       <Header title='Business Profile'/>
       <Container className='pb-4'>
         <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>Business Name {required}</Form.Label>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Business Name {businessName === '' ? required : ''}
+          </Form.Label>
           <Form.Control style={squareForm} placeholder='Business Name' value={businessName}
             onChange={(e) => setBusinessName(e.target.value)}/>
         </Form.Group>
@@ -100,14 +102,19 @@ function BusinessProfileInfo(props) {
         <ServicesProvided state={serviceState}/>
 
         <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>EIN Number {required}</Form.Label>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            EIN Number {einNumber === '' ? required : ''}
+          </Form.Label>
           <Form.Control style={squareForm} placeholder='12-1234567' value={einNumber}
             onChange={(e) => setEinNumber(e.target.value)}/>
         </Form.Group>
 
         <PaymentSelection state={paymentState}/>
 
-        <BusinessContact state={contactState}/>
+        <Container className='mb-4'>
+          <h6 className='mb-3'>Contact Info:</h6>
+          <BusinessContact state={contactState}/>
+        </Container>
 
         <div className='text-center' style={errorMessage === '' ? hidden : {}}>
           <p style={{...red, ...small}}>{errorMessage || 'error'}</p>

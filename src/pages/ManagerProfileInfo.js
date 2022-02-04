@@ -1,14 +1,15 @@
 import React from 'react';
-import {Form, Button} from 'react-bootstrap';
+import {Container, Row, Col, Form, Button} from 'react-bootstrap';
 import {useNavigate} from 'react-router-dom';
 
 import AppContext from '../AppContext';
 import Header from '../components/Header';
+import Checkbox from '../components/Checkbox';
 import PaymentSelection from '../components/PaymentSelection';
 import ManagerFees from '../components/ManagerFees';
 import ManagerLocations from '../components/ManagerLocations';
 import {get, post} from '../utils/api';
-import {squareForm, pillButton} from '../utils/styles';
+import {squareForm, pillButton, hidden, red, small} from '../utils/styles';
 
 function ManagerProfileInfo(props) {
   const context = React.useContext(AppContext);
@@ -20,6 +21,8 @@ function ManagerProfileInfo(props) {
   const [email, setEmail] = React.useState('');
   const [einNumber, setEinNumber] = React.useState('');
   const [ssn, setSsn] = React.useState('');
+  const [showSsn, setShowSsn] = React.useState(false);
+  const [showEin, setShowEin] = React.useState(false);
   const paymentState = React.useState({
     paypal: '',
     applePay: '',
@@ -50,8 +53,29 @@ function ManagerProfileInfo(props) {
     }
     fetchProfileInfo();
   }, []);
+  const [errorMessage, setErrorMessage] = React.useState('');
   const submitInfo = async () => {
     const {paypal, applePay, zelle, venmo, accountNumber, routingNumber} = paymentState[0];
+    if (firstName === '' || lastName === '' || phoneNumber === '' || email === '') {
+      setErrorMessage('Please fill out all fields');
+      return;
+    }
+    if (ssn === '' && einNumber === '') {
+      setErrorMessage('Please add at least one identification number');
+      return;
+    }
+    if (paypal === '' && applePay === '' && zelle === '' && venmo === '' && (accountNumber === '' || routingNumber === '')) {
+      setErrorMessage('Please add at least one payment method');
+      return;
+    }
+    if (feeState[0].length === 0) {
+      setErrorMessage('Please add at least one fee');
+      return;
+    }
+    if (locationState[0].length === 0) {
+      setErrorMessage('Please add at least one location');
+      return;
+    }
     const managerProfile = {
       first_name: firstName,
       last_name: lastName,
@@ -71,47 +95,81 @@ function ManagerProfileInfo(props) {
     await post('/managerProfileInfo', managerProfile, access_token);
     props.onConfirm();
   }
+  const required = (
+    errorMessage === 'Please fill out all fields' ? (
+      <span style={red} className='ms-1'>*</span>
+    ) : ''
+  );
   return (
     <div className='pb-5'>
       <Header title='PM Profile'/>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>First Name</Form.Label>
-        <Form.Control style={squareForm} placeholder='First' value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>Last Name</Form.Label>
-        <Form.Control style={squareForm} placeholder='Last' value={lastName}
-          onChange={(e) => setLastName(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>Phone Number</Form.Label>
-        <Form.Control style={squareForm} placeholder='(xxx)xxx-xxxx' value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>Email Address</Form.Label>
-        <Form.Control style={squareForm} placeholder='Email' value={email} type='email'
-          onChange={(e) => setEmail(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>EIN Number</Form.Label>
-        <Form.Control style={squareForm} placeholder='12-1234567' value={einNumber}
-          onChange={(e) => setEinNumber(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>Social Security Number</Form.Label>
-        <Form.Control style={squareForm} placeholder='123-45-6789' value={ssn}
-          onChange={(e) => setSsn(e.target.value)}/>
-      </Form.Group>
-      <PaymentSelection state={paymentState}/>
-      <ManagerFees state={feeState}/>
-      <ManagerLocations state={locationState}/>
-      <div className='text-center my-3'>
-        <Button variant='outline-primary' style={pillButton} onClick={submitInfo}>
-          Save Manager Profile
-        </Button>
-      </div>
+      <Container>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            First Name {firstName === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='First' value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}/>
+        </Form.Group>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Last Name {lastName === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='Last' value={lastName}
+            onChange={(e) => setLastName(e.target.value)}/>
+        </Form.Group>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Phone Number {phoneNumber === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='(xxx)xxx-xxxx' value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}/>
+        </Form.Group>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Email Address {email === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='Email' value={email} type='email'
+            onChange={(e) => setEmail(e.target.value)}/>
+        </Form.Group>
+        <Container>
+          <h6>Please add at least one:</h6>
+          <Row className='mb-1'>
+            <Col className='d-flex align-items-center'>
+              <Checkbox type='BOX' onClick={(checked) => setShowSsn(checked)}/>
+              <p className='d-inline-block mb-0'>SSN</p>
+            </Col>
+            <Col>
+              <Form.Control style={showSsn ? squareForm : hidden} placeholder='123-45-6789'
+                value={ssn} onChange={e => setSsn(e.target.value)}/>
+            </Col>
+          </Row>
+          <Row className='mb-1'>
+            <Col className='d-flex align-items-center'>
+              <Checkbox type='BOX' onClick={(checked) => setShowEin(checked)}/>
+              <p className='d-inline-block mb-0'>EIN Number</p>
+            </Col>
+            <Col>
+              <Form.Control style={showEin ? squareForm : hidden} placeholder='12-1234567'
+                value={einNumber} onChange={e => setEinNumber(e.target.value)}/>
+            </Col>
+          </Row>
+        </Container>
+        <PaymentSelection state={paymentState}/>
+        <Container className='px-2'>
+          <h6 className='mb-3'>Fees you charge:</h6>
+          <ManagerFees state={feeState}/>
+        </Container>
+        <ManagerLocations state={locationState}/>
+        <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+          <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+        </div>
+        <div className='text-center my-3'>
+          <Button variant='outline-primary' style={pillButton} onClick={submitInfo}>
+            Save Manager Profile
+          </Button>
+        </div>
+      </Container>
     </div>
   );
 }

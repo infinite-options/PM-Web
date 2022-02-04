@@ -1,4 +1,5 @@
-import { Container, Row, Col, Button } from "react-bootstrap";
+import {Container, Row, Col, Button} from 'react-bootstrap';
+import {mediumBold} from '../utils/styles';
 
 function Header(props) {
   const headerContainer = {

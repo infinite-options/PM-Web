@@ -18,6 +18,7 @@ import Checkbox from "./Checkbox";
 import PropertyAppliances from "./PropertyAppliances";
 import PropertyUtilities from "./PropertyUtilities";
 import PropertyImages from "./PropertyImages";
+import ArrowDown from '../icons/ArrowDown.svg';
 
 function PropertyForm(props) {
   const { userData } = React.useContext(AppContext);
@@ -174,7 +175,7 @@ function PropertyForm(props) {
         <div>
           <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Address {required}
+              Address {address === '' ? required : ''}
             </Form.Label>
             <Form.Control
               style={squareForm}
@@ -197,7 +198,7 @@ function PropertyForm(props) {
             </Form.Group>
             <Form.Group className="mx-2">
               <Form.Label as="h6" className="mb-0 ms-2">
-                City {required}
+                City {city === '' ? required : ''}
               </Form.Label>
               <Form.Control
                 style={squareForm}
@@ -210,7 +211,7 @@ function PropertyForm(props) {
           <div className="d-flex my-3">
             <Form.Group className="mx-2">
               <Form.Label as="h6" className="mb-0 ms-2">
-                State {required}
+                State {state === '' ? required : ''}
               </Form.Label>
               <Form.Control
                 style={squareForm}
@@ -221,7 +222,7 @@ function PropertyForm(props) {
             </Form.Group>
             <Form.Group className="mx-2">
               <Form.Label as="h6" className="mb-0 ms-2">
-                Zip Code {required}
+                Zip Code {zip === '' ? required : ''}
               </Form.Label>
               <Form.Control
                 style={squareForm}
@@ -245,16 +246,15 @@ function PropertyForm(props) {
         </div>
       )}
       {edit ? (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Type {required}
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Type
           </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="Apartment"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-          />
+          <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
+            value={type} onChange={(e) => setType(e.target.value)}>
+            <option>Apartment</option>
+            <option>House</option>
+          </Form.Select>
         </Form.Group>
       ) : (
         <div>
@@ -266,7 +266,7 @@ function PropertyForm(props) {
         <div className="d-flex my-3">
           <Form.Group className="mx-2">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Bedroom {required}
+              Bedroom {numBeds === '' ? required : ''}
             </Form.Label>
             <Form.Control
               style={squareForm}
@@ -277,7 +277,7 @@ function PropertyForm(props) {
           </Form.Group>
           <Form.Group className="mx-2">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Bath {required}
+              Bath {numBaths === '' ? required : ''}
             </Form.Label>
             <Form.Control
               style={squareForm}
@@ -288,7 +288,7 @@ function PropertyForm(props) {
           </Form.Group>
           <Form.Group className="mx-2">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Sq. Ft. {required}
+              Sq. Ft. {area === '' ? required : ''}
             </Form.Label>
             <Form.Control
               style={squareForm}
@@ -317,7 +317,7 @@ function PropertyForm(props) {
       {edit ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Monthly Rent {required}
+            Monthly Rent {rent === '' ? required : ''}
           </Form.Label>
           <Form.Control
             style={squareForm}
@@ -335,7 +335,7 @@ function PropertyForm(props) {
       {edit ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Deposit {required}
+            Deposit {deposit === '' ? required : ''}
           </Form.Label>
           <Form.Control
             style={squareForm}

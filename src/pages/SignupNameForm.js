@@ -6,14 +6,11 @@ import {pillButton, boldSmall, hidden, red, small} from '../utils/styles';
 
 function SignupNameForm(props) {
   const navigate = useNavigate();
-  const firstNameRef = React.createRef();
-  const lastNameRef = React.createRef();
-  const phoneNumberRef = React.createRef();
+  const [firstName, setFirstName] = React.useState('');
+  const [lastName, setLastName] = React.useState('');
+  const [phoneNumber, setPhoneNumber] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
   const submitForm = () => {
-    const firstName = firstNameRef.current.value;
-    const lastName = lastNameRef.current.value;
-    const phoneNumber = phoneNumberRef.current.value;
     if (firstName === '' || lastName === '' || phoneNumber === '') {
       setErrorMessage('Please fill out all fields');
       return;
@@ -24,6 +21,11 @@ function SignupNameForm(props) {
   const goToLogin = () => {
     navigate('/login');
   }
+  const required = (
+    errorMessage === 'Please fill out all fields' ? (
+      <span style={red} className='ms-1'>*</span>
+    ) : ''
+  );
   return (
     <div className='h-100 d-flex flex-column'>
       <Header title='Sign Up' leftText='< Back' leftFn={props.back}/>
@@ -31,30 +33,24 @@ function SignupNameForm(props) {
         <Form>
           <Form.Group className='mx-2 my-3'>
             <Form.Label as='h5' className='ms-1 mb-0'>
-              First Name
-              {errorMessage === 'Please fill out all fields' ? (
-                <span style={red} className='ms-1'>*</span>
-              ) : ''}
+              First Name {firstName === '' ? required : ''}
             </Form.Label>
-            <Form.Control style={{borderRadius: 0}} ref={firstNameRef} placeholder='First'/>
+            <Form.Control style={{borderRadius: 0}} placeholder='First'
+              value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
           </Form.Group>
           <Form.Group className='mx-2 my-3'>
             <Form.Label as='h5' className='ms-1 mb-0'>
-              Last Name
-              {errorMessage === 'Please fill out all fields' ? (
-                <span style={red} className='ms-1'>*</span>
-              ) : ''}
+              Last Name {lastName === '' ? required : ''}
             </Form.Label>
-            <Form.Control style={{borderRadius: 0}} ref={lastNameRef} placeholder='Last'/>
+            <Form.Control style={{borderRadius: 0}} placeholder='Last'
+              value={lastName} onChange={(e) => setLastName(e.target.value)}/>
           </Form.Group>
           <Form.Group className='mx-2 my-3'>
             <Form.Label as='h5' className='ms-1 mb-0'>
-              Phone Number
-              {errorMessage === 'Please fill out all fields' ? (
-                <span style={red} className='ms-1'>*</span>
-              ) : ''}
+              Phone Number {phoneNumber === '' ? required : ''}
             </Form.Label>
-            <Form.Control style={{borderRadius: 0}} ref={phoneNumberRef} placeholder='(xxx)xxx-xxxx'/>
+            <Form.Control style={{borderRadius: 0}} placeholder='(xxx)xxx-xxxx'
+              value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
           </Form.Group>
         </Form>
         <div className='text-center' style={errorMessage === '' ? hidden : {}}>

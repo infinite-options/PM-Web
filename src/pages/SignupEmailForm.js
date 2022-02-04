@@ -14,16 +14,12 @@ function SignupEmailForm(props) {
   const context = React.useContext(AppContext);
   const navigate = useNavigate();
   const [showEmailForm, setShowEmailForm] = React.useState(false);
-  const emailRef = React.createRef();
-  const confirmEmailRef = React.createRef();
-  const passwordRef = React.createRef();
-  const confirmPasswordRef = React.createRef();
+  const [email, setEmail] = React.useState('');
+  const [confirmEmail, setConfirmEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
   const submitForm = async () => {
-    const email = emailRef.current.value;
-    const confirmEmail = confirmEmailRef.current.value;
-    const password = passwordRef.current.value;
-    const confirmPassword = confirmPasswordRef.current.value;
     if (email === '' || confirmEmail === '' || password === '' || confirmPassword === '') {
       setErrorMessage('Please fill out all fields');
       return;
@@ -92,20 +88,32 @@ function SignupEmailForm(props) {
           <div>
             <Form>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Email Address {required}</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={emailRef} placeholder='Email' type='email'/>
+                <Form.Label as='h5' className='mb-0 ms-1'>
+                  Email Address {email === '' ? required : ''}
+                </Form.Label>
+                <Form.Control style={{borderRadius: 0}} placeholder='Email' type='email'
+                  value={email} onChange={(e) => setEmail(e.target.value)}/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Confirm Email Address {required}</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={confirmEmailRef} placeholder='Confirm Email' type='email'/>
+                <Form.Label as='h5' className='mb-0 ms-1'>
+                  Confirm Email Address {confirmEmail === '' ? required : ''}
+                </Form.Label>
+                <Form.Control style={{borderRadius: 0}} placeholder='Confirm Email' type='email'
+                  value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)}/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Enter Password {required}</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={passwordRef} placeholder='Password' type='password'/>
+                <Form.Label as='h5' className='mb-0 ms-1'>
+                  Enter Password {password === '' ? required : ''}
+                </Form.Label>
+                <Form.Control style={{borderRadius: 0}} placeholder='Password' type='password'
+                  value={password} onChange={(e) => setPassword(e.target.value)}/>
               </Form.Group>
               <Form.Group className='mx-2 my-3'>
-                <Form.Label as='h5' className='mb-0 ms-1'>Confirm Password {required}</Form.Label>
-                <Form.Control style={{borderRadius: 0}} ref={confirmPasswordRef} placeholder='Confirm Password' type='password'/>
+                <Form.Label as='h5' className='mb-0 ms-1'>
+                  Confirm Password {confirmPassword === '' ? required : ''}
+                </Form.Label>
+                <Form.Control style={{borderRadius: 0}} placeholder='Confirm Password' type='password'
+                  value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
               </Form.Group>
             </Form>
             <div className='text-center' style={errorMessage === '' ? hidden : {}}>

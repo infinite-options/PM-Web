@@ -1,7 +1,9 @@
 const pillButton = {
-  borderRadius: "50px",
-  padding: "5px 20px",
-};
+  borderRadius: '50px',
+  padding: '5px 20px',
+  color: '#007AFF',
+  border: '1px solid #007AFF'
+}
 const boldSmall = {
   fontWeight: "bolder",
   fontSize: "smaller",
@@ -63,14 +65,16 @@ const none = {
 };
 const greenPill = {
   ...smallPillButton,
-  backgroundColor: "#3DB727",
-  color: "white",
-};
+  backgroundColor: '#3DB727',
+  borderColor: '#3DB727',
+  color: 'white'
+}
 const orangePill = {
   ...smallPillButton,
-  backgroundColor: "#F89A03",
-  color: "white",
-};
+  backgroundColor: '#F89A03',
+  borderColor: '#F89A03',
+  color: 'white'
+}
 const redPill = {
   ...smallPillButton,
   backgroundColor: "#E3441F",
@@ -148,6 +152,9 @@ const bluePill = {
 
   padding: "2px 7px",
 };
+const smallLine = {
+  lineHeight: 0.85
+}
 const bluePillButton = {
   background: "#007AFF 0% 0% no-repeat padding-box",
   borderRadius: "50px",
@@ -173,7 +180,6 @@ const greenBorderPill = {
   font: "normal normal normal 14px/16px SFProDisplay-Regular",
   letterSpacing: "0px",
   color: " #3DB727",
-
   padding: "2px 7px",
 };
 const address = {
@@ -307,6 +313,8 @@ export {
   xSmall,
   smallBlue,
   smallGray,
+  green,
+  smallLine,
   headings,
   upcoming,
   upcomingHeading,
@@ -322,7 +330,6 @@ export {
   redRight,
   timeslotButton,
   activeTimeSlotButton,
-  green,
   blueBorderButton,
   actionsNoColor,
   redPillButton,

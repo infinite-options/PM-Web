@@ -2,30 +2,48 @@ import React from 'react';
 import {Container, Row, Col, Button, Form} from 'react-bootstrap';
 import EditIcon from '../icons/EditIcon.svg';
 import DeleteIcon from '../icons/DeleteIcon.svg';
-import {pillButton, smallPillButton, squareForm, gray} from '../utils/styles';
+import ArrowDown from '../icons/ArrowDown.svg';
+import {pillButton, smallPillButton, squareForm, gray, red, hidden, small} from '../utils/styles';
 
 function ManagerFees(props) {
   // const [feeState, setFeeState] = props.state;
   const {feeState, setFeeState} = props;
   const [newFee, setNewFee] = React.useState(null);
+  const [editingFee, setEditingFee] = React.useState(null);
   const emptyFee = {
     fee_name: '',
-    fee_type: '',
+    fee_type: '%',
     charge: '',
-    of: '',
-    frequency: ''
+    of: 'Gross Rent',
+    frequency: 'Weekly'
   }
   const addFee = () => {
+    if (newFee.fee_name === '' || newFee.charge === '') {
+      setErrorMessage('Please fill out all fields');
+      return;
+    }
     const newFeeState = [...feeState];
     newFeeState.push({...newFee});
     setFeeState(newFeeState);
-    cancelEdit();
+    setNewFee(null);
+    setErrorMessage('');
   }
   const cancelEdit = () => {
     setNewFee(null);
+    setErrorMessage('');
+    if (editingFee !== null) {
+      const newFeeState = [...feeState];
+      newFeeState.push(editingFee);
+      setFeeState(newFeeState);
+    }
+    setEditingFee(null);
   }
   const editFee = (i) => {
-    setNewFee(feeState[i]);
+    const newFeeState = [...feeState];
+    const fee = newFeeState.splice(i, 1)[0];
+    setFeeState(newFeeState);
+    setEditingFee(fee);
+    setNewFee({...fee});
   }
   const deleteFee = (i) => {
     const newFeeState = [...feeState];
@@ -37,9 +55,14 @@ function ManagerFees(props) {
     changedFee[field] = event.target.value;
     setNewFee(changedFee);
   }
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const required = (
+    errorMessage === 'Please fill out all fields' ? (
+      <span style={red} className='ms-1'>*</span>
+    ) : ''
+  );
   return (
-    <Container className='px-2'>
-      <h6 className='mb-3'>Fees you charge:</h6>
+    <div>
       {feeState.map((fee, i) => (
         <div key={i}>
           <div className='d-flex'>
@@ -54,7 +77,7 @@ function ManagerFees(props) {
             </div>
           </div>
           <p style={gray} className='mb-1'>
-            {fee.charge} {fee.of !== '' ? `of ${fee.of}` : ''} {fee.frequency}
+            {fee.fee_type === '%' ? `${fee.charge}% of ${fee.of}` : `$${fee.charge}`} {fee.frequency}
           </p>
           <hr className='mt-1'/>
         </div>
@@ -64,45 +87,71 @@ function ManagerFees(props) {
           <Row className='my-3'>
             <Col className='ps-0'>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>Fee Name</Form.Label>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Fee Name {newFee.fee_name === '' ? required : ''}
+                </Form.Label>
                 <Form.Control style={squareForm} placeholder='Service Charge' value={newFee.fee_name}
                   onChange={(e) => changeNewFee(e, 'fee_name')}/>
               </Form.Group>
             </Col>
             <Col className='px-0'>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>Charge Type</Form.Label>
-                <Form.Control style={squareForm} placeholder='%' value={newFee.fee_type}
-                  onChange={(e) => changeNewFee(e, 'fee_type')}/>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Charge Type
+                </Form.Label>
+                <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
+                  value={newFee.fee_type} onChange={(e) => changeNewFee(e, 'fee_type')}>
+                  <option>%</option>
+                  <option>$</option>
+                </Form.Select>
               </Form.Group>
             </Col>
           </Row>
           <Row className='my-3'>
             <Col className='ps-0'>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>Charge</Form.Label>
-                <Form.Control style={squareForm} placeholder='10%' value={newFee.charge}
-                  onChange={(e) => changeNewFee(e, 'charge')}/>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Charge {newFee.charge === '' ? required : ''}
+                </Form.Label>
+                <Form.Control style={squareForm} placeholder={newFee.fee_type === '%' ? '10' : '100'}
+                  value={newFee.charge} onChange={(e) => changeNewFee(e, 'charge')}/>
               </Form.Group>
             </Col>
-            <Col className='ps-0'>
-              <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>Of</Form.Label>
-                <Form.Control style={squareForm} placeholder='Gross Rent' value={newFee.of}
-                  onChange={(e) => changeNewFee(e, 'of')}/>
-              </Form.Group>
-            </Col>
+            {newFee.fee_type === '%' ? (
+              <Col className='ps-0'>
+                <Form.Group>
+                  <Form.Label as='h6' className='mb-0 ms-2'>
+                    Of
+                  </Form.Label>
+                  <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
+                    value={newFee.of} onChange={(e) => changeNewFee(e, 'of')}>
+                    <option>Gross Rent</option>
+                    <option>Total Revenue</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            ) : ''}
             <Col className='px-0'>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>Frequency</Form.Label>
-                <Form.Control style={squareForm} placeholder='Monthly' value={newFee.frequency}
-                  onChange={(e) => changeNewFee(e, 'frequency')}/>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Frequency
+                </Form.Label>
+                <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
+                  value={newFee.frequency} onChange={(e) => changeNewFee(e, 'frequency')}>
+                  <option>Weekly</option>
+                  <option>Monthly</option>
+                  <option>Annually</option>
+                </Form.Select>
               </Form.Group>
             </Col>
           </Row>
+          <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+            <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+          </div>
         </Container>
       ) : ''}
-      {newFee=== null ? (
+
+      {newFee === null ? (
         <Button variant='outline-primary' style={smallPillButton}
           onClick={() => setNewFee({...emptyFee})}>
           Add Fee
@@ -119,7 +168,7 @@ function ManagerFees(props) {
           </Button>
         </div>
       )}
-    </Container>
+    </div>
   );
 }
 
