@@ -5,7 +5,8 @@ import DeleteIcon from '../icons/DeleteIcon.svg';
 import {pillButton, smallPillButton, squareForm, gray} from '../utils/styles';
 
 function ManagerFees(props) {
-  const [feeState, setFeeState] = props.state;
+  // const [feeState, setFeeState] = props.state;
+  const {feeState, setFeeState} = props;
   const [newFee, setNewFee] = React.useState(null);
   const emptyFee = {
     fee_name: '',
