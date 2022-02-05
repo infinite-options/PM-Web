@@ -10,7 +10,7 @@ import RepairRequest from "../icons/repair_request.svg";
 import RepairStatus from "../icons/repair_status.svg";
 import Documents from "../icons/documents.svg";
 import Announcements from "../icons/announcements.svg";
-import Emergency from "../icons/emergency.svg";
+import Emergency from "../icons/Emergency.svg";
 import SearchPM from "../icons/searchPM.svg";
 import { get } from "../utils/api";
 import {

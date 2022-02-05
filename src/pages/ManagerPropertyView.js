@@ -8,11 +8,15 @@ import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
 import Message from '../icons/Message.svg';
 import RequestRepairs from '../icons/request_repair.svg'
-import Emergency from '../icons/emergency.svg'
+import Emergency from '../icons/Emergency.svg'
 import YourDocuments from '../icons/Your_Documents.svg'
 import ResidentAnnouncements from '../icons/Resident_Announcements.svg'
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
+import ManagementContract from "../components/ManagementContract";
+import TenantAgreement from "../components/TenantAgreement";
+import ManagerDocs from "../components/ManagerDocs";
+import LeaseDocs from "../components/LeaseDocs";
 
 function ManagerPropertyView(props) {
 
@@ -23,6 +27,13 @@ function ManagerPropertyView(props) {
     const [currentImg, setCurrentImg] = React.useState(0);
     const [expandDetails, setExpandDetails] = React.useState(false);
     const [editProperty, setEditProperty] = React.useState(false);
+
+    const [expandManagerDocs, setExpandManagerDocs] = React.useState(false);
+    const [expandLeaseDocs, setExpandLeaseDocs] = React.useState(false);
+    const [showManagementContract, setShowManagementContract] = React.useState(false);
+    const [showTenantAgreement, setShowTenantAgreement] = React.useState(false);
+    const [selectedContract, setSelectedContract] = React.useState(null);
+    const [selectedAgreement, setSelectedAgreement] = React.useState(null);
 
     const nextImg = () => {
         if (currentImg === JSON.parse(property.images).length - 1) {
@@ -43,9 +54,43 @@ function ManagerPropertyView(props) {
         navigate('../manager-properties')
     }
 
-    console.log(property)
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [editProperty, showManagementContract, showTenantAgreement]);
+
+    const addContract = () => {
+        setSelectedContract(null);
+        setShowManagementContract(true);
+    }
+    const selectContract = (contract) => {
+        setSelectedContract(contract);
+        setShowManagementContract(true);
+    }
+    const closeContract = () => {
+        // reload();
+        setShowManagementContract(false);
+    }
+
+    const addAgreement = () => {
+        setSelectedAgreement(null);
+        setShowTenantAgreement(true);
+    }
+    const selectAgreement = (agreement) => {
+        setSelectedAgreement(agreement);
+        setShowTenantAgreement(true);
+    }
+    const closeAgreement = () => {
+        // reload();
+        setShowTenantAgreement(false);
+    }
+
     return(
-        <div>
+        showManagementContract ? (
+            <ManagementContract back={closeContract} property={property} contract={selectedContract}/>
+        ) : showTenantAgreement ? (
+            <TenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}/>
+        ) : (
+            <div>
             <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
             <Container className='pb-5 mb-5'>
                 <div>
@@ -90,6 +135,29 @@ function ManagerPropertyView(props) {
                     {expandDetails ? (
                         <ManagerPropertyForm property={property} edit={editProperty} setEdit={setEditProperty}/>
                     ) : ''}
+
+
+                    <div onClick={() => setExpandManagerDocs(!expandManagerDocs)}>
+                        <div className='d-flex justify-content-between mt-3'>
+                            <h6 style={mediumBold} className='mb-1'>Management Contract</h6>
+                            <img src={expandManagerDocs ? ArrowUp : ArrowDown} alt='Expand'/>
+                        </div>
+                        <hr style={{opacity: 1}} className='mt-1'/>
+                    </div>
+                    {expandManagerDocs ? (
+                        <ManagerDocs property={property} addDocument={addContract} selectContract={selectContract} reload={''}/>
+                    ) : ''}
+                    <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
+                        <div className='d-flex justify-content-between mt-3'>
+                            <h6 style={mediumBold} className='mb-1'>Tenant Agreement</h6>
+                            <img src={expandLeaseDocs ? ArrowUp : ArrowDown} alt='Expand'/>
+                        </div>
+                        <hr style={{opacity: 1}} className='mt-1'/>
+                    </div>
+                    {expandLeaseDocs ? (
+                        <LeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
+                    ) : ''}
+
 
                     <Container  className='mt-4 mb-4'>
                         <Row>
@@ -170,6 +238,7 @@ function ManagerPropertyView(props) {
                 </div>
             </Container>
         </div>
+        )
     )
 }
 
