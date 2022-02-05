@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {Button, Col, Container, Row} from 'react-bootstrap';
+import {Col, Container, Row} from 'react-bootstrap';
 import Header from '../components/Header';
-import { tileImg, green, bolder, red} from '../utils/styles';
-import YourDocuments from '../icons/Your_Documents.svg';
-import RequestRepairs from '../icons/request_repair.svg'
-import Emergency from '../icons/emergency.svg'
+import {green, bolder, red, xSmall, smallLine, mediumBold} from '../utils/styles';
+import Repair from '../icons/Repair.svg';
+import Property from '../icons/Property.svg';
+import Emergency from '../icons/Emergency.svg';
+import Document from '../icons/Document.svg';
 import AppContext from "../AppContext";
 import {get} from '../utils/api';
 
@@ -48,7 +49,7 @@ function ManagerOverview(props) {
     return (
         <div>
             <Header title='Properties' rightText='Sort by'/>
-            <Container className='pb-5 mb-5'>
+            <Container className='px-3 pb-5 mb-5'>
                 <div>
 
                     <h6 style={bolder} className='mb-1'>Total No. of Unique Clients</h6>
@@ -74,36 +75,63 @@ function ManagerOverview(props) {
                     <h6 style={{...bolder, ...red}} className='mb-1'>$9,000</h6>
                     <hr style={{opacity: 1}} className='mt-1 mb-3'/>
 
+                    <Row className='px-2'>
+                        <Col onClick={() => navigate('/manager-properties')}
+                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Property} alt='Properties' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Properties
+                            </p>
+                        </Col>
 
-                    <Container  className='mt-4 mb-4'>
-                        <Row>
-                            <Col>
-                                <Button className='px-0 py-0' variant="outline-light" onClick={() => navigate('/manager-properties')}>
-                                    <img src={RequestRepairs} alt='Properties' style={tileImg}/>
-                                </Button>
-                            </Col>
-                            <Col>
-                                <img src={RequestRepairs} alt='Repair Requests' style={tileImg}/>
-                            </Col>
-                            <Col>
-                                <img src={RequestRepairs} alt='Maintenance' style={tileImg}/>
-                            </Col>
-                        </Row>
+                        <Col onClick={() => ''}
+                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Repair} alt='Repair Requests' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Repair Requests
+                            </p>
+                        </Col>
 
-                        <Row className='mt-3'>
-                            <Col>
-                                <img src={YourDocuments} alt='Tenant Documents' style={tileImg}/>
-                            </Col>
-                            <Col>
-                                <img src={YourDocuments} alt='Manager Documents' style={tileImg}/>
-                            </Col>
-                            <Col>
-                                <img src={Emergency} alt='Phone' style={tileImg}/>
-                            </Col>
-                        </Row>
-                    </Container>
+                        <Col onClick={() => ''}
+                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Repair} alt='Maintenance' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Maintenance
+                            </p>
+                        </Col>
+                    </Row>
 
-                    <h6 style={bolder} className='mb-1'>New Maintenance Requests</h6>
+                    <Row className='px-2'>
+                        <Col onClick={() => ''}
+                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Document} alt='Document' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Tenant Documents
+                            </p>
+                        </Col>
+                        <Col onClick={() => ''}
+                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Document} alt='Document' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Manager Documents
+                            </p>
+                        </Col>
+                        <Col onClick={() => ''}
+                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Emergency} alt='Emergency' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Emergency
+                            </p>
+                        </Col>
+                    </Row>
+
+                    <h6 style={bolder} className='mt-4 mb-1'>New Maintenance Requests</h6>
 
 
                 </div>
