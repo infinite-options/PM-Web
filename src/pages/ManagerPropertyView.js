@@ -2,7 +2,7 @@ import React from 'react';
 import {Col, Container, Row} from 'react-bootstrap';
 import {useLocation, useNavigate} from "react-router-dom";
 import Header from '../components/Header';
-import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill} from '../utils/styles';
+import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill, xSmall, smallLine} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
@@ -17,6 +17,8 @@ import ManagementContract from "../components/ManagementContract";
 import TenantAgreement from "../components/TenantAgreement";
 import ManagerDocs from "../components/ManagerDocs";
 import LeaseDocs from "../components/LeaseDocs";
+import Repair from '../icons/Repair.svg';
+import Document from "../icons/Document.svg";
 
 function ManagerPropertyView(props) {
 
@@ -159,36 +161,63 @@ function ManagerPropertyView(props) {
                     ) : ''}
 
 
-                    <Container  className='mt-4 mb-4'>
-                        <Row>
-                            <Col>
-                                <img src={RequestRepairs} alt='RequestRepairs' style={tileImg}
-                                     onClick={() => {navigate('./repairs', { state: {property: property }})}}/>
-                            </Col>
-                            <Col>
-                                <img src={RequestRepairs} alt='Maintenance' style={tileImg}/>
-                            </Col>
-                            <Col>
-                                <img src={YourDocuments} alt='Tenant Documents' style={tileImg}/>
-                            </Col>
-                        </Row>
+                    <Row className='px-2'>
+                        <Col onClick={() => {navigate('./repairs', { state: {property: property }})}}
+                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Repair} alt='Repair Requests' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Repair Requests
+                            </p>
+                        </Col>
+                        <Col onClick={() => ''}
+                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Repair} alt='Maintenance' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Maintenance
+                            </p>
+                        </Col>
+                        <Col onClick={() => ''}
+                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Document} alt='Document' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Tenant Documents
+                            </p>
+                        </Col>
+                    </Row>
 
-                        <Row className='mt-3'>
-                            <Col>
-                                <img src={ResidentAnnouncements} alt='ResidentAnnouncements' style={tileImg}/>
-                            </Col>
-                            <Col>
-                                <img src={Emergency} alt='Emergency' style={tileImg}/>
-                            </Col>
-                            <Col>
-                                <img src={RequestRepairs} alt='Employees Associated' style={tileImg}/>
-                            </Col>
-                        </Row>
-                    </Container>
+                    <Row className='px-2'>
+                        <Col onClick={() => ''}
+                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Emergency} alt='ResidentAnnouncements' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Resident Announcements
+                            </p>
+                        </Col>
+                        <Col onClick={() => ''}
+                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Emergency} alt='Emergency' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Emergency
+                            </p>
+                        </Col>
+                        <Col onClick={() => ''}
+                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
+                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
+                            <img src={Emergency} alt='EmployeesAssociated' style={{width: '50px'}}/>
+                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
+                                Employees Associated
+                            </p>
+                        </Col>
+                    </Row>
 
 
                     {property.owner_id !== null ? (
-                        <div>
+                        <div className='mt-4'>
                             <div className='d-flex justify-content-between'>
                                 <div>
                                     <h6 style={mediumBold} className='mb-1'>
