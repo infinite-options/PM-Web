@@ -9,14 +9,15 @@ function ManagerDocs(props) {
   const {addDocument, property, selectContract, reload} = props;
   const [contracts, setContracts] = React.useState([]);
   const [businesses, setBusinesses] = React.useState([]);
-  const [selectedBusiness, setSelectedBusiness] = React.useState('');
+  const [selectedBusiness, setSelectedBusiness] = React.useState(null);
   const [addPropertyManager, setAddPropertyManager] = React.useState(false);
 
   const updateBusiness = async () => {
     const files = JSON.parse(property.images);
+    const business_uid = JSON.parse(selectedBusiness).business_uid;
     const newProperty = {
       property_uid: property.property_uid,
-      manager_id: selectedBusiness.business_uid
+      manager_id: business_uid
     }
     for (let i = -1; i < files.length-1; i++) {
       let key = `img_${i}`;
@@ -37,7 +38,7 @@ function ManagerDocs(props) {
   React.useEffect(async () => {
     const response = await get(`/businesses?business_type=MANAGEMENT`);
     setBusinesses(response.result);
-    setSelectedBusiness(response.result[0]);
+    setSelectedBusiness(JSON.stringify(response.result[0]));
   }, []);
 
   return (
@@ -65,7 +66,7 @@ function ManagerDocs(props) {
             <Form.Group>
               <Form.Select style={squareForm} value={selectedBusiness} onChange={e => setSelectedBusiness(e.target.value)}>
                 {businesses.map((business, i) => (
-                  <option key={i} value={business}>
+                  <option key={i} value={JSON.stringify(business)}>
                     {business.business_name}
                   </option>
                 ))}

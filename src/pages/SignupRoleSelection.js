@@ -6,13 +6,15 @@ import {pillButton, red, small, hidden} from '../utils/styles';
 
 function SignupRoleSelection(props) {
   const [userRoles, setUserRoles] = React.useState([]);
-  const availableRoles = ['Property Manager', 'Property Owner', 'Tenant', 'Property Maintenance'];
   const roleCodes = {
-    'Property Manager': 'MANAGER',
+    'Property Manager (Business Owner)': 'MANAGER',
+    'Property Manager (Employee)': 'PM_EMPLOYEE',
     'Property Owner': 'OWNER',
     'Tenant': 'TENANT',
-    'Property Maintenance': 'MAINTENANCE'
+    'Property Maintenance (Business Owner)': 'MAINTENANCE',
+    'Property Maintenance (Employee)': 'MAINT_EMPLOYEE'
   }
+  const availableRoles = Object.keys(roleCodes);
   const addRole = (role) => {
     const index = userRoles.indexOf(role);
     if (index !== -1) {
@@ -44,14 +46,13 @@ function SignupRoleSelection(props) {
       <Container>
         <h5 className='mb-5'>How do you plan to use this app?</h5>
         {availableRoles.map((role, i) => (
-          <Row key={i}>
-            <Col xs={2} className='d-flex justify-content-end p-0'>
-              <Checkbox type='CIRCLE' onClick={(checked) => checked ? addRole(role) : removeRole(role)}/>
-            </Col>
-            <Col className='p-0'>
+          <div key={i} className='d-flex'>
+            <Checkbox type='CIRCLE' onClick={(checked) => checked ? addRole(role) : removeRole(role)}/>
+
+            <div className='flex-grow-1'>
               <p className='d-inline-block text-left'>{role}</p>
-            </Col>
-          </Row>
+            </div>
+          </div>
         ))}
         <div className='text-center' style={errorMessage === '' ? hidden : {}}>
           <p style={{...red, ...small}}>{errorMessage || 'error'}</p>

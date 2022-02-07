@@ -31,8 +31,8 @@ function ManagerProfileInfo(props) {
     accountNumber: '',
     routingNumber: ''
   });
-  const feeState = React.useState([]);
-  const locationState = React.useState([]);
+  const [feeState, setFeeState] = React.useState([]);
+  const [locationState, setLocationState] = React.useState([]);
   React.useEffect(() => {
     if (access_token === null) {
       navigate('/');
@@ -158,9 +158,9 @@ function ManagerProfileInfo(props) {
         <PaymentSelection state={paymentState}/>
         <Container className='px-2'>
           <h6 className='mb-3'>Fees you charge:</h6>
-          <ManagerFees state={feeState}/>
+          <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
         </Container>
-        <ManagerLocations state={locationState}/>
+        <ManagerLocations locationState={locationState} setLocationState={setLocationState}/>
         <div className='text-center' style={errorMessage === '' ? hidden : {}}>
           <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
         </div>
