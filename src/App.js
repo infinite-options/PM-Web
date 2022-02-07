@@ -120,7 +120,10 @@ function App() {
               path="tenantPropertyManagers"
               element={<TenantPropertyManagers />}
             />
-            <Route path="detailRepairStatus" element={<DetailRepairStatus />} />
+            <Route
+              path="/:property_uid/:maintenance_request_uid/detailRepairStatus"
+              element={<DetailRepairStatus />}
+            />
 
             <Route
               path="pmRepairRequestDetail"

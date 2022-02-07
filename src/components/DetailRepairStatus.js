@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -12,12 +13,14 @@ import { headings, subHeading, subText, pillButton } from "../utils/styles";
 
 function DetailRepairStatus(props) {
   const navigate = useNavigate();
+  const { maintenance_request_uid, property_uid } = useParams();
+  console.log(maintenance_request_uid, property_uid);
   return (
     <div className="h-100 d-flex flex-column">
       <Header
         title="Repairs"
         leftText="< Back"
-        leftFn={() => navigate("/tenant")}
+        leftFn={() => navigate(`/${property_uid}/repairStatus`)}
       />
       <Container className="pt-1 mb-4">
         <Row>
