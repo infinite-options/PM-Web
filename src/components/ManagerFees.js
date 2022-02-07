@@ -126,7 +126,7 @@ function ManagerFees(props) {
                   <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
                     value={newFee.of} onChange={(e) => changeNewFee(e, 'of')}>
                     <option>Gross Rent</option>
-                    <option>Total Revenue</option>
+                    <option>Net Rent</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -139,8 +139,10 @@ function ManagerFees(props) {
                 <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
                   value={newFee.frequency} onChange={(e) => changeNewFee(e, 'frequency')}>
                   <option>Weekly</option>
+                  <option>Biweekly</option>
                   <option>Monthly</option>
                   <option>Annually</option>
+                  <option>One-time</option>
                 </Form.Select>
               </Form.Group>
             </Col>

@@ -18,17 +18,23 @@ function SelectRole() {
       navigate("/owner");
     } else if (selectedRole === "MANAGER") {
       navigate("/manager");
+    } else if (selectedRole === "PM_EMPLOYEE") {
+      navigate("/manager");
     } else if (selectedRole === "TENANT") {
       navigate("/tenant");
     } else if (selectedRole === "MAINTENANCE") {
       navigate("/maintenance");
+    } else if (selectedRole === "MAINT_EMPLOYEE") {
+      navigate("/maintenance");
     }
   };
   const longNames = {
-    MANAGER: "Property Manager",
+    MANAGER: "Property Manager (Owner)",
+    PM_EMPLOYEE: "Property Manager (Employee)",
     OWNER: "Property Owner",
     TENANT: "Tenant",
-    MAINTENANCE: "Property Maintenance",
+    MAINTENANCE: "Property Maintenance (Owner)",
+    MAINT_EMPLOYEE: "Property Maintenance (Employee)"
   };
   React.useState(() => {}, []);
   return (

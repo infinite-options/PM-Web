@@ -44,7 +44,7 @@ function PropertyForm(props) {
   const [city, setCity] = React.useState("");
   const [state, setState] = React.useState("");
   const [zip, setZip] = React.useState("");
-  const [type, setType] = React.useState("");
+  const [type, setType] = React.useState("Apartment");
   const [numBeds, setNumBeds] = React.useState("");
   const [numBaths, setNumBaths] = React.useState("");
   const [area, setArea] = React.useState("");
@@ -253,7 +253,9 @@ function PropertyForm(props) {
           <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
             value={type} onChange={(e) => setType(e.target.value)}>
             <option>Apartment</option>
+            <option>Condo</option>
             <option>House</option>
+            <option>Townhome</option>
           </Form.Select>
         </Form.Group>
       ) : (
