@@ -114,15 +114,30 @@ function RepairStatus(props) {
                   {repair.status === "NEW" ? (
                     <Row className="mt-2 mb-2">
                       <Col style={{ padding: "5px" }}>
-                        <div
-                          style={{
-                            width: "110px",
-                            height: "100%",
-                            background: "#F5F5F5 0% 0% no-repeat padding-box",
-                            border: "1px solid #C4C4C4",
-                            borderRadius: "5px",
-                          }}
-                        ></div>
+                        {JSON.parse(repair.images).length > 0 ? (
+                          <img
+                            src={JSON.parse(repair.images)}
+                            //className="w-100 h-100"
+                            style={{
+                              objectFit: "cover",
+                              width: "110px",
+                              height: "100%",
+                              border: "1px solid #C4C4C4",
+                              borderRadius: "5px",
+                            }}
+                            alt="repair"
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: "110px",
+                              height: "100%",
+                              background: "#F5F5F5 0% 0% no-repeat padding-box",
+                              border: "1px solid #C4C4C4",
+                              borderRadius: "5px",
+                            }}
+                          ></div>
+                        )}
                       </Col>
                       <Col xs={8} style={{ paddingLeft: "15px" }}>
                         <div>

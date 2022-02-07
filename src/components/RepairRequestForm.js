@@ -42,7 +42,7 @@ function RepairRequest(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    const newProperty = {
+    const newRequest = {
       property_uid: property_uid,
       title: title,
       description: description,
@@ -51,17 +51,17 @@ function RepairRequest(props) {
     const files = imageState[0];
     let i = 0;
     for (const file of imageState[0]) {
-      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      let key = file.coverPhoto ? `img_${i++}` : `img_${i++}`;
       if (file.file !== null) {
-        newProperty[key] = file.file;
+        newRequest[key] = file.file;
       } else {
-        newProperty[key] = file.image;
+        newRequest[key] = file.image;
       }
     }
-
-    await post("/maintenanceRequests", newProperty, null, files);
+    console.log(files);
+    await post("/maintenanceRequests", newRequest, null, files);
     navigate(`/${property_uid}/repairStatus`);
-    props.onSubmit();
+    //props.onSubmit();
   };
 
   const required =
