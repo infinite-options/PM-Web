@@ -39,6 +39,10 @@ function EmployeeProfile(props) {
   );
 
   React.useEffect(async () => {
+    if (user.role.indexOf(`${businessType === 'MANAGEMENT' ? 'PM' : 'MAINT'}_EMPLOYEE`) === -1) {
+      console.log('no employee profile');
+      props.onConfirm();
+    }
     const response = await get(`/businesses?business_type=${businessType}`);
     setBusinesses(response.result);
     setCompany(JSON.stringify(response.result[0]));
