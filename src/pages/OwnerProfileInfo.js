@@ -11,21 +11,31 @@ import {squareForm, pillButton, hidden, red, small} from '../utils/styles';
 
 function OwnerProfileInfo(props) {
   const context = React.useContext(AppContext);
-  const {access_token} = context.userData;
+  const {access_token, user} = context.userData;
   const navigate = useNavigate();
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [einNumber, setEinNumber] = React.useState('');
-  const [ssn, setSsn] = React.useState('');
+  const {autofillState, setAutofillState} = props;
+  const updateAutofillState = (profile) => {
+    const newAutofillState = {...autofillState};
+    for (const key of Object.keys(newAutofillState)) {
+      if (key in profile) {
+        newAutofillState[key] = profile[key];
+      }
+    }
+    setAutofillState(newAutofillState);
+  }
+  const [firstName, setFirstName] = React.useState(autofillState.first_name);
+  const [lastName, setLastName] = React.useState(autofillState.last_name);
+  const [phoneNumber, setPhoneNumber] = React.useState(autofillState.phone_number);
+  const [email, setEmail] = React.useState(autofillState.email);
+  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
+  const [ssn, setSsn] = React.useState(autofillState.ssn);
   const paymentState = React.useState({
-    paypal: '',
-    applePay: '',
-    zelle: '',
-    venmo: '',
-    accountNumber: '',
-    routingNumber: ''
+    paypal: autofillState.paypal,
+    applePay: autofillState.apple_pay,
+    zelle: autofillState.zelle,
+    venmo: autofillState.venmo,
+    accountNumber: autofillState.account_number,
+    routingNumber: autofillState.routing_number
   });
   const [errorMessage, setErrorMessage] = React.useState('');
   React.useEffect(() => {
@@ -68,16 +78,17 @@ function OwnerProfileInfo(props) {
       last_name: lastName,
       phone_number: phoneNumber,
       email: email,
-      ein_number: einNumber,
-      ssn: ssn,
-      paypal: paypal || 'NULL',
-      apple_pay: applePay || 'NULL',
-      zelle: zelle || 'NULL',
-      venmo: venmo || 'NULL',
-      account_number: accountNumber || 'NULL',
-      routing_number: routingNumber || 'NULL'
+      ein_number: showEin ? einNumber : '',
+      ssn: showSsn ? ssn : '',
+      paypal: paypal,
+      apple_pay: applePay,
+      zelle: zelle,
+      venmo: venmo,
+      account_number: accountNumber,
+      routing_number: routingNumber
     }
     await post('/ownerProfileInfo', ownerProfile, access_token);
+    updateAutofillState(ownerProfile);
     props.onConfirm();
   }
   const [showSsn, setShowSsn] = React.useState(false);

@@ -8,16 +8,24 @@ import Header from '../components/Header';
 import ArrowDown from '../icons/ArrowDown.svg';
 
 function EmployeeProfile(props) {
-  const {businessType, onConfirm} = props;
+  const {businessType, onConfirm, autofillState, setAutofillState} = props;
+  const updateAutofillState = (profile) => {
+    const newAutofillState = {...autofillState};
+    for (const key of Object.keys(newAutofillState)) {
+      if (key in profile) {
+        newAutofillState[key] = profile[key];
+      }
+    }
+    setAutofillState(newAutofillState);
+  }
   const {userData} = React.useContext(AppContext);
   const {user, access_token} = userData;
-
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [ssn, setSsn] = React.useState('');
-  const [einNumber, setEinNumber] = React.useState('');
+  const [firstName, setFirstName] = React.useState(autofillState.first_name);
+  const [lastName, setLastName] = React.useState(autofillState.last_name);
+  const [phoneNumber, setPhoneNumber] = React.useState(autofillState.phone_number);
+  const [email, setEmail] = React.useState(autofillState.email);
+  const [ssn, setSsn] = React.useState(autofillState.ssn);
+  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
   const [companyRole, setCompanyRole] = React.useState('');
   const [company, setCompany] = React.useState(null);
   const [businesses, setBusinesses] = React.useState([]);
@@ -58,7 +66,8 @@ function EmployeeProfile(props) {
       ein_number: einNumber
     }
     console.log(employeeInfo);
-    const response = await post('/employees', employeeInfo, access_token)
+    const response = await post('/employees', employeeInfo, access_token);
+    updateAutofillState(employeeInfo);
     onConfirm();
   }
 

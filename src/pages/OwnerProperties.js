@@ -94,8 +94,8 @@ function OwnerProperties(props) {
       </div>
     ) : stage === 'PROPERTY' ? (
       <div className='flex-grow-1'>
-        <PropertyView property={selectedProperty} back={() => setStage('LIST')}
-          reload={fetchProperties}/>
+        <PropertyView property_uid={selectedProperty.property_uid}
+          back={() => setStage('LIST')} reload={fetchProperties}/>
       </div>
     ) : ''
   );
