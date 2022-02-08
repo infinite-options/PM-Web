@@ -14,22 +14,32 @@ import {squareForm, pillButton, hidden, red, small} from '../utils/styles';
 function ManagerProfileInfo(props) {
   const context = React.useContext(AppContext);
   const {access_token, user} = context.userData;
+  const {autofillState, setAutofillState} = props;
+  const updateAutofillState = (profile) => {
+    const newAutofillState = {...autofillState};
+    for (const key of Object.keys(newAutofillState)) {
+      if (key in profile) {
+        newAutofillState[key] = profile[key];
+      }
+    }
+    setAutofillState(newAutofillState);
+  }
   const navigate = useNavigate();
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [einNumber, setEinNumber] = React.useState('');
-  const [ssn, setSsn] = React.useState('');
+  const [firstName, setFirstName] = React.useState(autofillState.first_name);
+  const [lastName, setLastName] = React.useState(autofillState.last_name);
+  const [phoneNumber, setPhoneNumber] = React.useState(autofillState.phone_number);
+  const [email, setEmail] = React.useState(autofillState.email);
+  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
+  const [ssn, setSsn] = React.useState(autofillState.ssn);
   const [showSsn, setShowSsn] = React.useState(false);
   const [showEin, setShowEin] = React.useState(false);
   const paymentState = React.useState({
-    paypal: '',
-    applePay: '',
-    zelle: '',
-    venmo: '',
-    accountNumber: '',
-    routingNumber: ''
+    paypal: autofillState.paypal,
+    applePay: autofillState.apple_pay,
+    zelle: autofillState.zelle,
+    venmo: autofillState.venmo,
+    accountNumber: autofillState.account_number,
+    routingNumber: autofillState.routing_number
   });
   const [feeState, setFeeState] = React.useState([]);
   const [locationState, setLocationState] = React.useState([]);
@@ -55,6 +65,7 @@ function ManagerProfileInfo(props) {
   }, []);
   const [errorMessage, setErrorMessage] = React.useState('');
   const submitInfo = async () => {
+    console.log(paymentState[0]);
     const {paypal, applePay, zelle, venmo, accountNumber, routingNumber} = paymentState[0];
     if (firstName === '' || lastName === '' || phoneNumber === '' || email === '') {
       setErrorMessage('Please fill out all fields');
@@ -68,11 +79,11 @@ function ManagerProfileInfo(props) {
       setErrorMessage('Please add at least one payment method');
       return;
     }
-    if (feeState[0].length === 0) {
+    if (feeState.length === 0) {
       setErrorMessage('Please add at least one fee');
       return;
     }
-    if (locationState[0].length === 0) {
+    if (locationState.length === 0) {
       setErrorMessage('Please add at least one location');
       return;
     }
@@ -81,18 +92,19 @@ function ManagerProfileInfo(props) {
       last_name: lastName,
       phone_number: phoneNumber,
       email: email,
-      ein_number: einNumber,
-      ssn: ssn,
-      paypal: paypal || 'NULL',
-      apple_pay: applePay || 'NULL',
-      zelle: zelle || 'NULL',
-      venmo: venmo || 'NULL',
-      account_number: accountNumber || 'NULL',
-      routing_number: routingNumber || 'NULL',
-      fees: feeState[0],
-      locations: locationState[0]
+      ein_number: showEin ? einNumber : '',
+      ssn: showSsn ? ssn : '',
+      paypal: paypal,
+      apple_pay: applePay,
+      zelle: zelle,
+      venmo: venmo,
+      account_number: accountNumber,
+      routing_number: routingNumber,
+      fees: feeState,
+      locations: locationState
     }
     await post('/managerProfileInfo', managerProfile, access_token);
+    updateAutofillState(managerProfile);
     props.onConfirm();
   }
   const required = (

@@ -15,10 +15,21 @@ import ManagerDocs from './ManagerDocs';
 import LeaseDocs from './LeaseDocs';
 import ManagementContract from './ManagementContract';
 import TenantAgreement from './TenantAgreement';
+import {get} from '../utils/api';
 
 function PropertyView(props) {
 
-  const {property, back, reload} = props;
+  const {property_uid, back, reload} = props;
+  const [property, setProperty] = React.useState({
+    images: '[]'
+  });
+  const fetchProperty = async () => {
+    const response = await get(`/propertyInfo?property_uid=${property_uid}`);
+    setProperty(response.result[0]);
+  }
+  React.useState(() => {
+    fetchProperty();
+  });
 
   const [currentImg, setCurrentImg] = React.useState(0);
   const [expandDetails, setExpandDetails] = React.useState(false);
@@ -62,7 +73,7 @@ function PropertyView(props) {
 
   const reloadProperty = () => {
     setEditProperty(false);
-    reload();
+    fetchProperty();
   }
 
   const cashFlowState = {
@@ -80,7 +91,7 @@ function PropertyView(props) {
     setShowManagementContract(true);
   }
   const closeContract = () => {
-    reload();
+    fetchProperty();
     setShowManagementContract(false);
   }
 
@@ -93,7 +104,7 @@ function PropertyView(props) {
     setShowTenantAgreement(true);
   }
   const closeAgreement = () => {
-    reload();
+    fetchProperty();
     setShowTenantAgreement(false);
   }
 
