@@ -35,7 +35,7 @@ function ProfileInfo() {
   return (
     <div className='h-100 pb-5'>
       {profileStage === 'MANAGER' ? (
-        <ManagerProfileInfo onConfirm={() => setProfileStage('PM_EMPLOYEE')}
+        <BusinessProfileInfo businessType='MANAGEMENT' onConfirm={() => setProfileStage('PM_EMPLOYEE')}
           autofillState={autofillState} setAutofillState={setAutofillState}/>
       ) : profileStage === 'PM_EMPLOYEE' ? (
         <EmployeeProfile businessType='MANAGEMENT' onConfirm={() => setProfileStage('OWNER')}
@@ -47,7 +47,7 @@ function ProfileInfo() {
         <TenantProfileInfo onConfirm={() => setProfileStage('MAINTENANCE')}
           autofillState={autofillState} setAutofillState={setAutofillState}/>
       ) : profileStage === 'MAINTENANCE' ? (
-        <BusinessProfileInfo onConfirm={() => setProfileStage('MAINT_EMPLOYEE')}
+        <BusinessProfileInfo businessType='MAINTENANCE' onConfirm={() => setProfileStage('MAINT_EMPLOYEE')}
           autofillState={autofillState} setAutofillState={setAutofillState}/>
       ) : profileStage === 'MAINT_EMPLOYEE' ? (
         <EmployeeProfile businessType='MAINTENANCE' onConfirm={() => setProfileStage('ROLE')}

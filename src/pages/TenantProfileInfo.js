@@ -43,6 +43,7 @@ function TenantProfileInfo(props) {
   const [company, setCompany] = React.useState("");
   const [ssn, setSsn] = React.useState(autofillState.ssn);
   const [dlNumber, setDLNumber] = React.useState("");
+  const [dlState, setDLState] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
   const currentAddressState = React.useState({
     street: "",
@@ -129,6 +130,7 @@ function TenantProfileInfo(props) {
       current_job_title: jobTitle,
       ssn: ssn,
       drivers_license_number: dlNumber,
+      drivers_license_state: dlState,
       current_address: currentAddressState[0],
       previous_address: usePreviousAddress ? previousAddressState[0] : null
     }
@@ -309,17 +311,26 @@ function TenantProfileInfo(props) {
             onChange={(e) => setSsn(e.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Driver's License Number {dlNumber === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="1234567890"
-            value={dlNumber}
-            onChange={(e) => setDLNumber(e.target.value)}
-          />
-        </Form.Group>
+        <Row className='my-3'>
+          <Col>
+            <Form.Group className='mx-2'>
+              <Form.Label as='h6' className='mb-0 ms-2'>
+                Driver's License Number {dlNumber === '' ? required : ''}
+              </Form.Label>
+              <Form.Control style={squareForm} placeholder='1234567890' value={dlNumber}
+                onChange={(e) => setDLNumber(e.target.value)}/>
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className='mx-2'>
+              <Form.Label as='h6' className='mb-0 ms-2'>
+                Driver's License State {dlState === '' ? required : ''}
+              </Form.Label>
+              <Form.Control style={squareForm} placeholder='CA' value={dlState}
+                onChange={(e) => setDLState(e.target.value)}/>
+            </Form.Group>
+          </Col>
+        </Row>
         <h5 className="mx-2 my-3">Current Address</h5>
         <AddressForm state={currentAddressState} errorMessage={errorMessage} />
         <Row>
