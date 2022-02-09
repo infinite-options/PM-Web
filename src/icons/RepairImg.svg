@@ -1,0 +1,17 @@
+<svg id="Component_168_2" data-name="Component 168 – 2" xmlns="http://www.w3.org/2000/svg" width="113" height="113" viewBox="0 0 113 113">
+  <g id="Rectangle_55" data-name="Rectangle 55" fill="#f5f5f5" stroke="#c4c4c4" stroke-width="1">
+    <rect width="113" height="113" stroke="none"/>
+    <rect x="0.5" y="0.5" width="112" height="112" fill="none"/>
+  </g>
+  <g id="construction_black_24dp" transform="translate(26.5 26.5)">
+    <g id="Group_1" data-name="Group 1">
+      <rect id="Rectangle_4" data-name="Rectangle 4" width="60" height="60" fill="none"/>
+    </g>
+    <g id="Group_3" data-name="Group 3" transform="translate(3.74 5.263)">
+      <g id="Group_2" data-name="Group 2">
+        <rect id="Rectangle_5" data-name="Rectangle 5" width="5.988" height="25.965" transform="translate(29.318 30.068) rotate(-45)" fill="#007aff"/>
+        <path id="Path_2" data-name="Path 2" d="M42.615,22.137A9.165,9.165,0,0,0,50.745,8.658l-7.1,7.136-3.92-3.938,7.1-7.136a9.057,9.057,0,0,0-4.209-1.084,9.239,9.239,0,0,0-9.208,9.25,9.05,9.05,0,0,0,.552,3.066l-4.867,4.889-4.683-4.7,1.868-1.876-3.71-3.727,5.577-5.6a7.866,7.866,0,0,0-11.155,0L7.677,14.288l3.71,3.727H3.968L2.1,19.891l9.313,9.356,1.868-1.876v-7.48l3.71,3.727,1.868-1.876,4.683,4.7L4.047,46.029l5.577,5.6,29.939-30.05A8.936,8.936,0,0,0,42.615,22.137Z" transform="translate(-2.1 -2.613)" fill="#007aff"/>
+      </g>
+    </g>
+  </g>
+</svg>

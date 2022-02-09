@@ -7,6 +7,8 @@ import Footer from "../components/Footer";
 import HighPriority from "../icons/highPriority.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
 import LowPriority from "../icons/lowPriority.svg";
+
+import RepairImg from "../icons/RepairImg.svg";
 import { get } from "../utils/api";
 import { headings, subHeading, subText, blue } from "../utils/styles";
 
@@ -73,18 +75,24 @@ function RepairStatus(props) {
                           alt="repair"
                         />
                       ) : (
-                        <div
+                        <img
+                          src={RepairImg}
+                          //className="w-100 h-100"
                           style={{
+                            objectFit: "cover",
                             width: "110px",
-                            height: "100%",
-                            background: "#F5F5F5 0% 0% no-repeat padding-box",
+                            //height: "100%",
                             border: "1px solid #C4C4C4",
                             borderRadius: "5px",
                           }}
-                        ></div>
+                          alt="repair"
+                        />
                       )}
                     </Col>
-                    <Col xs={8} style={{ paddingLeft: "15px" }}>
+                    <Col
+                      xs={8}
+                      style={{ paddingLeft: "15px", cursor: "pointer" }}
+                    >
                       <div
                         onClick={() =>
                           navigate(
@@ -148,18 +156,24 @@ function RepairStatus(props) {
                             alt="repair"
                           />
                         ) : (
-                          <div
+                          <img
+                            src={RepairImg}
+                            //className="w-100 h-100"
                             style={{
+                              objectFit: "cover",
                               width: "110px",
-                              height: "100%",
-                              background: "#F5F5F5 0% 0% no-repeat padding-box",
+                              // height: "100%",
                               border: "1px solid #C4C4C4",
                               borderRadius: "5px",
                             }}
-                          ></div>
+                            alt="repair"
+                          />
                         )}
                       </Col>
-                      <Col xs={8} style={{ paddingLeft: "15px" }}>
+                      <Col
+                        xs={8}
+                        style={{ paddingLeft: "15px", cursor: "pointer" }}
+                      >
                         <div
                           onClick={() =>
                             navigate(
@@ -224,18 +238,24 @@ function RepairStatus(props) {
                             alt="repair"
                           />
                         ) : (
-                          <div
+                          <img
+                            src={RepairImg}
+                            //className="w-100 h-100"
                             style={{
+                              objectFit: "cover",
                               width: "110px",
-                              height: "100%",
-                              background: "#F5F5F5 0% 0% no-repeat padding-box",
+                              //height: "100%",
                               border: "1px solid #C4C4C4",
                               borderRadius: "5px",
                             }}
-                          ></div>
+                            alt="repair"
+                          />
                         )}
                       </Col>
-                      <Col xs={8} style={{ paddingLeft: "15px" }}>
+                      <Col
+                        xs={8}
+                        style={{ paddingLeft: "15px", cursor: "pointer" }}
+                      >
                         <div
                           onClick={() =>
                             navigate(
