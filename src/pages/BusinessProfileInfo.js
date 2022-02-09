@@ -13,17 +13,27 @@ import {pillButton, squareForm, hidden, red, small} from '../utils/styles';
 function BusinessProfileInfo(props) {
   const context = React.useContext(AppContext);
   const {access_token, user} = context.userData;
+  const {autofillState, setAutofillState} = props;
+  const updateAutofillState = (profile) => {
+    const newAutofillState = {...autofillState};
+    for (const key of Object.keys(newAutofillState)) {
+      if (key in profile) {
+        newAutofillState[key] = profile[key];
+      }
+    }
+    setAutofillState(newAutofillState);
+  }
   const navigate = useNavigate();
   const [businessName, setBusinessName] = React.useState('');
-  const [einNumber, setEinNumber] = React.useState('');
+  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
   const serviceState = React.useState([]);
   const paymentState = React.useState({
-    paypal: '',
-    applePay: '',
-    zelle: '',
-    venmo: '',
-    accountNumber: '',
-    routingNumber: ''
+    paypal: autofillState.paypal,
+    applePay: autofillState.apple_pay,
+    zelle: autofillState.zelle,
+    venmo: autofillState.venmo,
+    accountNumber: autofillState.account_number,
+    routingNumber: autofillState.routing_number
   });
   const [errorMessage, setErrorMessage] = React.useState('');
   const contactState = React.useState([]);
@@ -69,17 +79,18 @@ function BusinessProfileInfo(props) {
     const businessProfile = {
       name: businessName,
       ein_number: einNumber,
-      paypal: paypal || 'NULL',
-      apple_pay: applePay || 'NULL',
-      zelle: zelle || 'NULL',
-      venmo: venmo || 'NULL',
-      account_number: accountNumber || 'NULL',
-      routing_number: routingNumber || 'NULL',
+      paypal: paypal,
+      apple_pay: applePay,
+      zelle: zelle,
+      venmo: venmo,
+      account_number: accountNumber,
+      routing_number: routingNumber,
       services: JSON.stringify(serviceState[0]),
       contact: JSON.stringify(contactState[0])
     }
     console.log(businessProfile);
     await post('/businessProfileInfo', businessProfile, access_token);
+    updateAutofillState(businessProfile);
     props.onConfirm();
   }
   const required = (

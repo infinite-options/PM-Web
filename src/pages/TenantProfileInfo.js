@@ -23,15 +23,25 @@ function TenantProfileInfo(props) {
   const { userData } = React.useContext(AppContext);
   const { access_token, user } = userData;
   const navigate = useNavigate();
+  const {autofillState, setAutofillState} = props;
+  const updateAutofillState = (profile) => {
+    const newAutofillState = {...autofillState};
+    for (const key of Object.keys(newAutofillState)) {
+      if (key in profile) {
+        newAutofillState[key] = profile[key];
+      }
+    }
+    setAutofillState(newAutofillState);
+  }
   const [anchorEl, setAnchorEl] = useState(null);
   const [expandFrequency, setExpandFrequency] = useState(false);
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
+  const [firstName, setFirstName] = React.useState(autofillState.first_name);
+  const [lastName, setLastName] = React.useState(autofillState.last_name);
   const [salary, setSalary] = React.useState("");
   const [frequency, setFrequency] = useState("Annual");
   const [jobTitle, setJobTitle] = React.useState("");
   const [company, setCompany] = React.useState("");
-  const [ssn, setSsn] = React.useState("");
+  const [ssn, setSsn] = React.useState(autofillState.ssn);
   const [dlNumber, setDLNumber] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
   const currentAddressState = React.useState({
@@ -120,9 +130,10 @@ function TenantProfileInfo(props) {
       ssn: ssn,
       drivers_license_number: dlNumber,
       current_address: currentAddressState[0],
-      previous_address: usePreviousAddress ? previousAddressState[0] : null,
-    };
-    await post("/tenantProfileInfo", tenantProfile, access_token);
+      previous_address: usePreviousAddress ? previousAddressState[0] : null
+    }
+    await post('/tenantProfileInfo', tenantProfile, access_token);
+    updateAutofillState(tenantProfile);
     props.onConfirm();
   };
 

@@ -20,11 +20,7 @@ function OwnerHome() {
       navigate('/');
       return;
     }
-    const response = await get(`/ownerProperties`, access_token);
-    if (response.msg === 'Token has expired') {
-      refresh();
-      return;
-    }
+    const response = await get(`/propertyInfo?owner_id=${user.user_uid}`);
     if (stage === 'PROPERTY') {
       const property = response.result.filter(item => item.property_uid === selectedProperty.property_uid)[0];
       setSelectedProperty(property);
