@@ -105,7 +105,7 @@ function TenantProfile(props) {
       last_name: lastName,
       ssn: ssn,
       current_salary: salary,
-      //salary_freq: frequency,
+      salary_freq: frequency,
       current_job_title: jobTitle,
       current_job_company: company,
       drivers_license_number: dlNumber,

@@ -7,6 +7,8 @@ import Footer from "../components/Footer";
 import HighPriority from "../icons/highPriority.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
 import LowPriority from "../icons/lowPriority.svg";
+
+import RepairImg from "../icons/RepairImg.svg";
 import { get } from "../utils/api";
 import { headings, subHeading, subText, blue } from "../utils/styles";
 
@@ -59,19 +61,45 @@ function RepairStatus(props) {
                 return repair.status === "SCHEDULED" ? (
                   <Row>
                     <Col style={{ padding: "5px" }}>
-                      <div
-                        style={{
-                          width: "110px",
-                          height: "100%",
-                          background: "#F5F5F5 0% 0% no-repeat padding-box",
-                          border: "1px solid #C4C4C4",
-                          borderRadius: "5px",
-                        }}
-                      ></div>
-                      {console.log(repair)}
+                      {JSON.parse(repair.images).length > 0 ? (
+                        <img
+                          src={JSON.parse(repair.images)}
+                          //className="w-100 h-100"
+                          style={{
+                            objectFit: "cover",
+                            width: "110px",
+                            height: "100%",
+                            border: "1px solid #C4C4C4",
+                            borderRadius: "5px",
+                          }}
+                          alt="repair"
+                        />
+                      ) : (
+                        <img
+                          src={RepairImg}
+                          //className="w-100 h-100"
+                          style={{
+                            objectFit: "cover",
+                            width: "110px",
+                            //height: "100%",
+                            border: "1px solid #C4C4C4",
+                            borderRadius: "5px",
+                          }}
+                          alt="repair"
+                        />
+                      )}
                     </Col>
-                    <Col xs={8} style={{ paddingLeft: "15px" }}>
-                      <div>
+                    <Col
+                      xs={8}
+                      style={{ paddingLeft: "15px", cursor: "pointer" }}
+                    >
+                      <div
+                        onClick={() =>
+                          navigate(
+                            `/${property_uid}/${repair.maintenance_request_uid}/detailRepairStatus`
+                          )
+                        }
+                      >
                         <Row style={subHeading}>
                           <Col className="px-0">{repair.title}</Col>
                           <Col xs={5}>
@@ -114,18 +142,45 @@ function RepairStatus(props) {
                   {repair.status === "NEW" ? (
                     <Row className="mt-2 mb-2">
                       <Col style={{ padding: "5px" }}>
-                        <div
-                          style={{
-                            width: "110px",
-                            height: "100%",
-                            background: "#F5F5F5 0% 0% no-repeat padding-box",
-                            border: "1px solid #C4C4C4",
-                            borderRadius: "5px",
-                          }}
-                        ></div>
+                        {JSON.parse(repair.images).length > 0 ? (
+                          <img
+                            src={JSON.parse(repair.images)}
+                            //className="w-100 h-100"
+                            style={{
+                              objectFit: "cover",
+                              width: "110px",
+                              height: "100%",
+                              border: "1px solid #C4C4C4",
+                              borderRadius: "5px",
+                            }}
+                            alt="repair"
+                          />
+                        ) : (
+                          <img
+                            src={RepairImg}
+                            //className="w-100 h-100"
+                            style={{
+                              objectFit: "cover",
+                              width: "110px",
+                              // height: "100%",
+                              border: "1px solid #C4C4C4",
+                              borderRadius: "5px",
+                            }}
+                            alt="repair"
+                          />
+                        )}
                       </Col>
-                      <Col xs={8} style={{ paddingLeft: "15px" }}>
-                        <div>
+                      <Col
+                        xs={8}
+                        style={{ paddingLeft: "15px", cursor: "pointer" }}
+                      >
+                        <div
+                          onClick={() =>
+                            navigate(
+                              `/${property_uid}/${repair.maintenance_request_uid}/detailRepairStatus`
+                            )
+                          }
+                        >
                           <Row style={subHeading}>
                             <Col className="px-0">{repair.title}</Col>
                             <Col xs={5}>
@@ -169,18 +224,45 @@ function RepairStatus(props) {
                   {repair.status === "COMPLETE" ? (
                     <Row className="mt-2 mb-2">
                       <Col style={{ padding: "5px" }}>
-                        <div
-                          style={{
-                            width: "110px",
-                            height: "100%",
-                            background: "#F5F5F5 0% 0% no-repeat padding-box",
-                            border: "1px solid #C4C4C4",
-                            borderRadius: "5px",
-                          }}
-                        ></div>
+                        {JSON.parse(repair.images).length > 0 ? (
+                          <img
+                            src={JSON.parse(repair.images)}
+                            //className="w-100 h-100"
+                            style={{
+                              objectFit: "cover",
+                              width: "110px",
+                              height: "100%",
+                              border: "1px solid #C4C4C4",
+                              borderRadius: "5px",
+                            }}
+                            alt="repair"
+                          />
+                        ) : (
+                          <img
+                            src={RepairImg}
+                            //className="w-100 h-100"
+                            style={{
+                              objectFit: "cover",
+                              width: "110px",
+                              //height: "100%",
+                              border: "1px solid #C4C4C4",
+                              borderRadius: "5px",
+                            }}
+                            alt="repair"
+                          />
+                        )}
                       </Col>
-                      <Col xs={8} style={{ paddingLeft: "15px" }}>
-                        <div>
+                      <Col
+                        xs={8}
+                        style={{ paddingLeft: "15px", cursor: "pointer" }}
+                      >
+                        <div
+                          onClick={() =>
+                            navigate(
+                              `/${property_uid}/${repair.maintenance_request_uid}/detailRepairStatus`
+                            )
+                          }
+                        >
                           <Row style={subHeading}>
                             <Col className="px-0">{repair.title}</Col>
                             <Col xs={5}>
