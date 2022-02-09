@@ -6,14 +6,15 @@ import AppContext from '../AppContext';
 import Header from '../components/Header';
 import ServicesProvided from '../components/ServicesProvided';
 import PaymentSelection from '../components/PaymentSelection';
-import BusinessContact from '../components/BusinessContact';
+import ManagerFees from '../components/ManagerFees';
+import ManagerLocations from '../components/ManagerLocations';
 import {get, post} from '../utils/api';
 import {pillButton, squareForm, hidden, red, small} from '../utils/styles';
 
 function BusinessProfileInfo(props) {
   const context = React.useContext(AppContext);
   const {access_token, user} = context.userData;
-  const {autofillState, setAutofillState} = props;
+  const {autofillState, setAutofillState, businessType} = props;
   const updateAutofillState = (profile) => {
     const newAutofillState = {...autofillState};
     for (const key of Object.keys(newAutofillState)) {
@@ -25,8 +26,12 @@ function BusinessProfileInfo(props) {
   }
   const navigate = useNavigate();
   const [businessName, setBusinessName] = React.useState('');
+  const [phoneNumber, setPhoneNumber] = React.useState(autofillState.phone_number);
+  const [email, setEmail] = React.useState(autofillState.email);
   const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
   const serviceState = React.useState([]);
+  const [feeState, setFeeState] = React.useState([]);
+  const [locationState, setLocationState] = React.useState([]);
   const paymentState = React.useState({
     paypal: autofillState.paypal,
     applePay: autofillState.apple_pay,
@@ -36,7 +41,6 @@ function BusinessProfileInfo(props) {
     routingNumber: autofillState.routing_number
   });
   const [errorMessage, setErrorMessage] = React.useState('');
-  const contactState = React.useState([]);
   React.useEffect(() => {
     if (access_token === null) {
       navigate('/');
@@ -64,7 +68,11 @@ function BusinessProfileInfo(props) {
       setErrorMessage('Please fill out all fields');
       return;
     }
-    if (serviceState[0].length === 0) {
+    if (businessType === 'MANAGEMENT' && feeState.length === 0) {
+      setErrorMessage('Please add at least one fee');
+      return;
+    }
+    if (businessType === 'MAINTENANCE' && serviceState[0].length === 0) {
       setErrorMessage('Please add at least one service');
       return;
     }
@@ -72,24 +80,27 @@ function BusinessProfileInfo(props) {
       setErrorMessage('Please add at least one payment method');
       return;
     }
-    if (contactState[0].length === 0) {
-      setErrorMessage('Please add at least one contact');
+    if (locationState.length === 0) {
+      setErrorMessage('Please add at least one location');
       return;
     }
     const businessProfile = {
+      type: businessType,
       name: businessName,
+      phone_number: phoneNumber,
+      email: email,
       ein_number: einNumber,
+      services_fees: businessType === 'MANAGEMENT' ? feeState : serviceState[0],
+      locations: locationState,
       paypal: paypal,
       apple_pay: applePay,
       zelle: zelle,
       venmo: venmo,
       account_number: accountNumber,
-      routing_number: routingNumber,
-      services: JSON.stringify(serviceState[0]),
-      contact: JSON.stringify(contactState[0])
+      routing_number: routingNumber
     }
     console.log(businessProfile);
-    await post('/businessProfileInfo', businessProfile, access_token);
+    await post('/businesses', businessProfile, access_token);
     updateAutofillState(businessProfile);
     props.onConfirm();
   }
@@ -100,7 +111,7 @@ function BusinessProfileInfo(props) {
   );
   return (
     <div>
-      <Header title='Business Profile'/>
+      <Header title={businessType === 'MANAGEMENT' ? 'PM Business Profile' : 'Maintenance Business Profile'}/>
       <Container className='pb-4'>
         <Form.Group className='mx-2 my-3'>
           <Form.Label as='h6' className='mb-0 ms-2'>
@@ -110,7 +121,29 @@ function BusinessProfileInfo(props) {
             onChange={(e) => setBusinessName(e.target.value)}/>
         </Form.Group>
 
-        <ServicesProvided state={serviceState}/>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Phone Number {phoneNumber === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='(xxx)xxx-xxxx' value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}/>
+        </Form.Group>
+        <Form.Group className='mx-2 my-3'>
+          <Form.Label as='h6' className='mb-0 ms-2'>
+            Email Address {email === '' ? required : ''}
+          </Form.Label>
+          <Form.Control style={squareForm} placeholder='Email' value={email} type='email'
+            onChange={(e) => setEmail(e.target.value)}/>
+        </Form.Group>
+
+        {businessType === 'MANAGEMENT' ? (
+          <Container className='px-2'>
+            <h6 className='mb-3'>Fees you charge:</h6>
+            <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
+          </Container>
+        ) : (
+          <ServicesProvided state={serviceState}/>
+        )}
 
         <Form.Group className='mx-2 my-3'>
           <Form.Label as='h6' className='mb-0 ms-2'>
@@ -122,10 +155,7 @@ function BusinessProfileInfo(props) {
 
         <PaymentSelection state={paymentState}/>
 
-        <Container className='mb-4'>
-          <h6 className='mb-3'>Contact Info:</h6>
-          <BusinessContact state={contactState}/>
-        </Container>
+        <ManagerLocations locationState={locationState} setLocationState={setLocationState}/>
 
         <div className='text-center' style={errorMessage === '' ? hidden : {}}>
           <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
