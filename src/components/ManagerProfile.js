@@ -4,8 +4,6 @@ import {Container, Row, Col, Form} from 'react-bootstrap';
 import AppContext from '../AppContext';
 import Header from '../components/Header';
 import ManagerPaymentSelection from '../components/ManagerPaymentSelection';
-import ManagerFees from '../components/ManagerFees';
-import ManagerLocations from '../components/ManagerLocations';
 import {get, post, put} from '../utils/api';
 import {squareForm, gray} from '../utils/styles';
 
