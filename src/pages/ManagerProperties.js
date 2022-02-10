@@ -10,7 +10,7 @@ function ManagerProperties(props) {
 
     const navigate = useNavigate();
     const {userData, refresh} = React.useContext(AppContext);
-    const {access_token} = userData;
+    const {access_token, user} = userData;
     const [properties, setProperties] = React.useState([]);
     // const [selectedProperty, setSelectedProperty] = React.useState(null);
 
@@ -20,14 +20,16 @@ function ManagerProperties(props) {
             return;
         }
 
-        const response = await get(`/managerProperties`, access_token);
+        // const response = await get(`/managerProperties`, access_token);
+        const response =  await get(`/propertyInfo?manager_id=${user.user_uid}`);
+
         if (response.msg === 'Token has expired') {
             refresh();
             return;
         }
 
         const properties = response.result
-        console.log(properties)
+        // console.log(properties)
         setProperties(properties);
     }
 
@@ -45,7 +47,7 @@ function ManagerProperties(props) {
                     rightText='Sort by'/>
             {properties.map((property, i) => (
                 <Container key={i} className='pt-1 mb-4' onClick={() => {
-                    navigate(`./${property.property_uid}`, { state: {property: property }})
+                    navigate(`./${property.property_uid}`, { state: {property: property, property_uid: property.property_uid}})
                 }}>
                     <Row>
                         <Col xs={4}>

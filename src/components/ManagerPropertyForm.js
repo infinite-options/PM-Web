@@ -94,8 +94,10 @@ function ManagerPropertyForm(props) {
             deposit: deposit,
             appliances: JSON.stringify(applianceState[0]),
             utilities: JSON.stringify(utilityState[0]),
-            pets_allowed: petsAllowed,
-            deposit_for_rent: depositForRent
+            // pets_allowed: petsAllowed,
+            // deposit_for_rent: depositForRent
+            pets_allowed: petsAllowed ? 1 : 0,
+            deposit_for_rent: depositForRent ? 1 : 0
         };
         const files = imageState[0];
         let i = 0;
@@ -110,13 +112,13 @@ function ManagerPropertyForm(props) {
         if (property) {
             newProperty.owner_id = property.owner_id;
             newProperty.manager_id = property.manager_id;
-            console.log(newProperty)
+            // console.log(newProperty)
             const response = await put(`/properties/${property.property_uid}`, newProperty, null, files);
         } else {
             const response = await post('/properties', newProperty, null, files);
         }
-        // props.onSubmit();
         setEdit(false)
+        props.onSubmit();
     }
 
     const loadImages = async () => {
