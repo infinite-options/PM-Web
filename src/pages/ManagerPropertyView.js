@@ -19,12 +19,26 @@ import ManagerDocs from "../components/ManagerDocs";
 import LeaseDocs from "../components/LeaseDocs";
 import Repair from '../icons/Repair.svg';
 import Document from "../icons/Document.svg";
+import {get} from "../utils/api";
 
 function ManagerPropertyView(props) {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const property = location.state.property
+    // const property = location.state.property
+    const property_uid = location.state.property_uid
+
+    const [property, setProperty] = React.useState({
+        images: '[]'
+    });
+
+    const fetchProperty = async () => {
+        const response = await get(`/propertyInfo?property_uid=${property_uid}`);
+        setProperty(response.result[0]);
+    }
+    React.useState(() => {
+        fetchProperty();
+    });
 
     const [currentImg, setCurrentImg] = React.useState(0);
     const [expandDetails, setExpandDetails] = React.useState(false);
@@ -86,6 +100,11 @@ function ManagerPropertyView(props) {
         setShowTenantAgreement(false);
     }
 
+    const reloadProperty = () => {
+        setEditProperty(false);
+        fetchProperty();
+    }
+
     return(
         showManagementContract ? (
             <ManagementContract back={closeContract} property={property} contract={selectedContract}/>
@@ -135,7 +154,7 @@ function ManagerPropertyView(props) {
                         <hr style={{opacity: 1}} className='mt-1'/>
                     </div>
                     {expandDetails ? (
-                        <ManagerPropertyForm property={property} edit={editProperty} setEdit={setEditProperty}/>
+                        <ManagerPropertyForm property={property} edit={editProperty} setEdit={setEditProperty} onSubmit={reloadProperty}/>
                     ) : ''}
 
 

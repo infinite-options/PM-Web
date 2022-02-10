@@ -14,7 +14,7 @@ function ManagerOverview(props) {
 
     const navigate = useNavigate();
     const {userData, refresh} = React.useContext(AppContext);
-    const {access_token} = userData;
+    const {access_token, user} = userData;
 
     const [properties, setProperties] = useState([]);
 
@@ -30,7 +30,8 @@ function ManagerOverview(props) {
             return;
         }
 
-        const response = await get(`/managerProperties`, access_token);
+        // const response = await get(`/managerProperties`, access_token);
+        const response =  await get(`/propertyInfo?manager_id=${user.user_uid}`);
         if (response.msg === 'Token has expired') {
             refresh();
             return;

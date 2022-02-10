@@ -1,17 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 50 50">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="111" height="99" viewBox="0 0 111 99">
   <defs>
     <clipPath id="clip-path">
       <rect id="Rectangle_4" data-name="Rectangle 4" width="50" height="50" transform="translate(0.5)" fill="none"/>
     </clipPath>
   </defs>
-  <g id="construction_black_24dp" transform="translate(-0.5)">
-    <g id="Group_1" data-name="Group 1">
-      <g id="Mask_Group_4" data-name="Mask Group 4" clip-path="url(#clip-path)">
-        <g id="report_black_24dp">
-          <path id="Path_19" data-name="Path 19" d="M0,0H50V50H0Z" fill="none"/>
-          <path id="Path_20" data-name="Path 20" d="M32.771,6.25H17.229L6.25,17.229V32.771L17.229,43.75H32.771L43.75,32.771V17.229Zm6.813,24.792-8.542,8.542H18.958l-8.542-8.542V18.958l8.542-8.542H31.042l8.542,8.542V31.042Z" fill="#007aff"/>
-          <circle id="Ellipse_1" data-name="Ellipse 1" cx="2.083" cy="2.083" r="2.083" transform="translate(22.917 31.25)" fill="#007aff"/>
-          <path id="Path_21" data-name="Path 21" d="M22.917,14.583h4.167V29.167H22.917Z" fill="#007aff"/>
+  <g id="Group_605" data-name="Group 605" transform="translate(-550 -283)">
+    <g id="Rectangle_6" data-name="Rectangle 6" transform="translate(550 283)" fill="#fff" stroke="#131413" stroke-width="1">
+      <rect width="111" height="99" rx="5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="110" height="98" rx="4.5" fill="none"/>
+    </g>
+    <text id="Emergency" transform="translate(606 365)" font-size="11" font-family="SFProDisplay-Semibold, SF Pro Display" font-weight="600"><tspan x="-27" y="0">Emergency</tspan></text>
+    <g id="construction_black_24dp" transform="translate(580.5 293)">
+      <g id="Group_1" data-name="Group 1">
+        <g id="Mask_Group_4" data-name="Mask Group 4" clip-path="url(#clip-path)">
+          <g id="report_black_24dp">
+            <path id="Path_19" data-name="Path 19" d="M0,0H50V50H0Z" fill="none"/>
+            <path id="Path_20" data-name="Path 20" d="M32.771,6.25H17.229L6.25,17.229V32.771L17.229,43.75H32.771L43.75,32.771V17.229Zm6.813,24.792-8.542,8.542H18.958l-8.542-8.542V18.958l8.542-8.542H31.042l8.542,8.542V31.042Z" fill="#007aff"/>
+            <circle id="Ellipse_1" data-name="Ellipse 1" cx="2.083" cy="2.083" r="2.083" transform="translate(22.917 31.25)" fill="#007aff"/>
+            <path id="Path_21" data-name="Path 21" d="M22.917,14.583h4.167V29.167H22.917Z" fill="#007aff"/>
+          </g>
         </g>
       </g>
     </g>

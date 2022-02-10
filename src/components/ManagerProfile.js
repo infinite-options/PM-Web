@@ -4,8 +4,6 @@ import {Container, Row, Col, Form} from 'react-bootstrap';
 import AppContext from '../AppContext';
 import Header from '../components/Header';
 import ManagerPaymentSelection from '../components/ManagerPaymentSelection';
-import ManagerFees from '../components/ManagerFees';
-import ManagerLocations from '../components/ManagerLocations';
 import {get, post, put} from '../utils/api';
 import {squareForm, gray} from '../utils/styles';
 
@@ -54,11 +52,11 @@ function ManagerProfile(props) {
         setFeeState(JSON.parse(profile.manager_fees))
 
         const location = JSON.parse(profile.manager_locations)
-        console.log(profile)
+        // console.log(profile)
         setLocationState(location)
     }
 
-    React.useEffect(() => {
+    const fetchProfileInfo = async () => {
         if (access_token === null) {
             navigate('/');
             return;
@@ -67,22 +65,15 @@ function ManagerProfile(props) {
             console.log('no manager profile');
             // props.onConfirm();
         }
-        const fetchProfileInfo = async () => {
-            const response = await get('/managerProfileInfo', access_token);
-            if (response.result.length !== 0) {
-                const profile = response.result[0]
-                // console.log(profile)
-
-                loadProfile(profile)
-
-
-            }
-
+        const response = await get('/managerProfileInfo', access_token);
+        if (response.result.length !== 0) {
+            const profile = response.result[0]
+            // console.log(profile)
+            loadProfile(profile)
         }
-        fetchProfileInfo().then(response => {
+    }
 
-        });
-    }, [access_token]);
+    React.useEffect(fetchProfileInfo, [access_token]);
 
     const saveProfile = async () => {
         const {paypal, applePay, zelle, venmo, accountNumber, routingNumber} = paymentState;
@@ -103,10 +94,12 @@ function ManagerProfile(props) {
             locations: locationState[0]
         }
 
-        console.log(managerProfile)
+        // console.log(managerProfile)
 
         const response = await put('/managerProfileInfo', managerProfile, access_token);
-        console.log(response)
+        // console.log(response)
+        setEditProfile(false)
+        fetchProfileInfo()
 
     }
     return (
