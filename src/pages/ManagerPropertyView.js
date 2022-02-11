@@ -7,10 +7,9 @@ import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
 import Message from '../icons/Message.svg';
-import RequestRepairs from '../icons/request_repair.svg'
-import Emergency from '../icons/Emergency.svg'
-import YourDocuments from '../icons/Your_Documents.svg'
-import ResidentAnnouncements from '../icons/Resident_Announcements.svg'
+import Emergency from '../icons/Emergency.svg';
+import Announcements from "../icons/announcements.svg";
+import SearchPM from "../icons/searchPM.svg";
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
 import ManagementContract from "../components/ManagementContract";
@@ -208,15 +207,15 @@ function ManagerPropertyView(props) {
                     </Row>
 
                     <Row className='px-2'>
-                        <Col onClick={() => ''}
+                        <Col onClick={() => {navigate("./resident-announcements", { state: {property_uid: property.property_uid}})}}
                              className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
                              style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Emergency} alt='ResidentAnnouncements' style={{width: '50px'}}/>
+                            <img src={Announcements} alt='ResidentAnnouncements' style={{width: '50px'}}/>
                             <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
                                 Resident Announcements
                             </p>
                         </Col>
-                        <Col onClick={() => ''}
+                        <Col onClick={() => {navigate("./emergency", { state: {property_uid: property.property_uid}})}}
                              className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
                              style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
                             <img src={Emergency} alt='Emergency' style={{width: '50px'}}/>
@@ -227,7 +226,7 @@ function ManagerPropertyView(props) {
                         <Col onClick={() => ''}
                              className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
                              style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Emergency} alt='EmployeesAssociated' style={{width: '50px'}}/>
+                            <img src={Announcements} alt='EmployeesAssociated' style={{width: '50px'}}/>
                             <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
                                 Employees Associated
                             </p>
