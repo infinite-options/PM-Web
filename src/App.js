@@ -140,10 +140,10 @@ function App() {
               path="manager-properties/:mp_id/repairs"
               element={<ManagerRepairsList />}
             />
-            {/*<Route*/}
-            {/*    path="manager-properties/:mp_id/resident-announcements"*/}
-            {/*    element={<ManagerResidentAnnouncements />}*/}
-            {/*/>*/}
+            <Route
+                path="manager-properties/:mp_id/resident-announcements"
+                element={<ManagerResidentAnnouncements />}
+            />
             <Route path="manager-properties/:mp_id/emergency" element={<ManagerEmergency />} />
           </Route>
         </Routes>
