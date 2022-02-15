@@ -4,6 +4,7 @@ import { Container, Row } from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import { headings,welcome } from "../utils/styles";
+import { fontSize } from "@mui/system";
 
 
 function TenantWelcomePage(props) {
@@ -14,6 +15,11 @@ function TenantWelcomePage(props) {
     const { profile } = props;
     const goToTenantAvailableProperties = () => {
         navigate("/tenantAvailableProperties");
+    };
+    const divStyle = {
+        color: 'blue',
+        fontSize: "20px",
+        textDecoration: "underline"
       };
     return(
         <div className="h-100">
@@ -22,13 +28,13 @@ function TenantWelcomePage(props) {
                 <Container className="pt-1 mb-4" style={{ minHeight: "100%", height:"65vh" }}>
                     <div style={welcome}>
                         <Row style={headings}>
-                            <div>Hello {profile.tenant_first_name},</div>
+                            <div style={{fontSize:"50px"}}>Welcome {profile.tenant_first_name}!</div>
                         </Row>
                         <Row>
-                            <div>
-                                No lease yet? 
+                            <div style={{fontSize:"30px"}}>
+                                Not signed a lease yet? 
                             </div>
-                            <a onClick={goToTenantAvailableProperties} > Check out the available properties here</a>
+                            <a onClick={goToTenantAvailableProperties} style={divStyle}> <bold>Check out the available properties</bold></a>
                         </Row>
                     </div>
                     
