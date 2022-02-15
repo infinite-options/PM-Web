@@ -124,6 +124,13 @@ const headings = {
   paddingTop: "0px",
   paddingBottom: "0px",
 };
+const welcome = {
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  textAlign: "center"
+}
 const upcoming = {
   background: " #007AFF 0% 0% no-repeat padding-box",
   marginTop: "1rem",
@@ -334,4 +341,5 @@ export {
   actionsNoColor,
   redPillButton,
   blueLarge,
+  welcome
 };
