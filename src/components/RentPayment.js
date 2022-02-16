@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loadStripe } from '@stripe/stripe-js';
+import { useElements, useStripe, CardElement, Elements } from '@stripe/react-stripe-js';
+import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { get } from '../utils/api';
+import StripePayment from './StripePayment';
 
 import ConfirmCheck from "../icons/confirmCheck.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
@@ -13,15 +18,21 @@ import {
   bluePillButton,
   pillButton,
   subHeading,
+  squareForm,
 } from "../utils/styles";
 
 function RentPayment(props) {
   const navigate = useNavigate();
+  const { purchase_uid } = useParams();
   const [stripePayment, setStripePayment] = useState(false);
   const [paymentConfirm, setPaymentConfirm] = useState(false);
   const requestTitleRef = React.createRef();
   const requestDescriptionRef = React.createRef();
   const tagPriorityRef = React.createRef();
+  const [stripePromise, setStripePromise] = useState(null);
+  const [purchase, setPurchase] = useState({});
+  const useLiveStripeKey = false;
+  const [message, setMessage] = React.useState('');
 
   const submitForm = () => {
     const requestTitle = requestTitleRef.current.value;
@@ -30,6 +41,26 @@ function RentPayment(props) {
 
     props.onConfirm(requestTitle, requestDescription, tagPriority);
   };
+
+  React.useEffect(async () => {
+    const url = (
+      useLiveStripeKey ?
+        'https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE' :
+        'https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST'
+    );
+    let response = await fetch(url);
+    const responseData = await response.json();
+    const stripePromise = loadStripe(responseData.publicKey);
+    setStripePromise(stripePromise);
+    response = await get(`/purchases?purchase_uid=${purchase_uid}`);
+    setPurchase(response.result[0]);
+  }, []);
+
+  const cancel = () => setStripePayment(false);
+  const submit = () => {
+    cancel();
+    setPaymentConfirm(true);
+  }
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -48,7 +79,7 @@ function RentPayment(props) {
               Payment Received
             </Row>
             <Row style={subHeading} className="mt-2 mb-2">
-              Rent for Dec, 2021: $500
+              {purchase.description}: ${purchase.amount}
             </Row>
             <Row className="mt-2 mb-2">
               <img
@@ -73,33 +104,36 @@ function RentPayment(props) {
         <Container className="pt-1 mb-4">
           <Row>
             <div style={headings}>Pay Rent</div>
-            <div style={subHeading}>Rent due for Dec, 2021: $500</div>
+            <div style={subHeading}>{purchase.description}: ${purchase.amount}</div>
           </Row>
-          <Form>
-            <Form.Group className="mt-3 mb-4">
-              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                Full Name
-              </Form.Label>
-              <Form.Control
-                style={{ borderRadius: 0 }}
-                ref={requestTitleRef}
-                placeholder="Ex: Paint"
+          {/*
+            <StripeElement
+                stripePromise={this.state.stripePromise}
+                customerPassword={this.state.customerPassword}
+                deliveryInstructions={this.state.instructions}
+                setPaymentType={this.setPaymentType}
+                paymentSummary={this.state.paymentSummary}
+                loggedInByPassword={loggedInByPassword}
+                latitude={this.state.latitude.toString()}
+                longitude={this.state.longitude.toString()}
+                email={this.state.email}
+                customerUid={this.state.customerUid}
+                phone={this.state.phone}
+                fetchingFees={this.state.fetchingFees}
+                displayError={this.displayError}
+                dpvCode={this.state.responseCode}
+                ambassadorCode={this.state.ambassadorCode_applied}
               />
-            </Form.Group>
-            <Form.Group className="mt-3 mb-4">
-              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+          */}
+          <div className="mt-5" hidden={stripePayment}>
+            <Form.Group>
+              <Form.Label>
                 Message
               </Form.Label>
-              <Form.Control
-                style={{ borderRadius: 0 }}
-                as="textarea"
-                ref={requestDescriptionRef}
-                placeholder="Message"
-              />
+              <Form.Control placeholder='M4METEST' style={squareForm} value={message}
+                onChange={(e) => setMessage(e.target.value)}/>
             </Form.Group>
-          </Form>
-          <div className="text-center mt-5" hidden={stripePayment}>
-            <Row
+            <Row className='text-center mt-5'
               style={{
                 display: "text",
                 flexDirection: "column",
@@ -133,99 +167,10 @@ function RentPayment(props) {
             </Row>
           </div>
           <div hidden={!stripePayment}>
-            <Form>
-              <Form.Group className="mt-3 mb-4">
-                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                  Card Number
-                </Form.Label>
-                <Form.Control
-                  style={{ borderRadius: 0 }}
-                  ref={requestTitleRef}
-                  placeholder="Ex: Paint"
-                />
-              </Form.Group>
-              <Row>
-                <Col>
-                  <Form.Group className="mt-3 mb-4">
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                      CVV
-                    </Form.Label>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      ref={requestDescriptionRef}
-                      placeholder="***"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group className="mt-3 mb-4">
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                      Zip
-                    </Form.Label>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      ref={requestDescriptionRef}
-                      placeholder="*****"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Form.Group className="mt-3 mb-4">
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                      Exp MM
-                    </Form.Label>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      ref={requestDescriptionRef}
-                      placeholder="**"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group className="mt-3 mb-4">
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                      Exp YY
-                    </Form.Label>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      ref={requestDescriptionRef}
-                      placeholder="**"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-            </Form>
-            <div className="text-center mt-2">
-              <Row
-                style={{
-                  display: "text",
-                  flexDirection: "row",
-                  textAlign: "center",
-                }}
-              >
-                <Col>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => navigate("/tenant")}
-                    style={pillButton}
-                  >
-                    Cancel
-                  </Button>
-                </Col>
-                <Col>
-                  <Button
-                    variant="outline-primary"
-                    //onClick={submitForm}
-                    style={bluePillButton}
-                    onClick={() => setPaymentConfirm(true)}
-                  >
-                    Pay Now
-                  </Button>
-                </Col>
-              </Row>
-            </div>
+            <Elements stripe={stripePromise}>
+              <StripePayment cancel={cancel} submit={submit} purchase={purchase}
+                useLiveStripeKey={message !== 'M4METEST'}/>
+            </Elements>
           </div>
         </Container>
       )}
