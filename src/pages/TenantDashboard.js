@@ -28,10 +28,9 @@ import {
 function TenantDashboard(props) {
   const navigate = useNavigate();
   const context = useContext(AppContext);
-  const { userData, refresh } = context;
+  const { userData } = context;
   const { access_token, user } = userData;
-  const { setShowFooter } = props;
-  const [profile, setProfile] = useState([]);
+  const { setShowFooter, profile } = props;
   const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   console.log(context, access_token, user);
@@ -46,21 +45,7 @@ function TenantDashboard(props) {
     setShowFooter(true);
   });
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const response = await get("/tenantProperties", access_token);
-      console.log(response);
 
-      if (response.msg === "Token has expired") {
-        console.log("here msg");
-        refresh();
-
-        return;
-      }
-      setProfile(response.result[0]);
-    };
-    fetchProfile();
-  }, []);
 
   useEffect(() => {
     const fetchRepairs = async () => {
@@ -90,13 +75,13 @@ function TenantDashboard(props) {
     navigate("/tenantDocuments");
   };
   const goToSearchPM = () => {
-    navigate("/tenantPropertyManagers");
+    navigate("/tenantAvailableProperties");
   };
   console.log(profile);
   return (
     <div className="h-100">
       <Header title="Home" />
-      {isLoading === true || profile.length === 0 ? null : (
+      {isLoading === true || (!profile || profile.length)  === 0 ? null : (
         <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
           <Row style={headings}>
             <div>Hello {profile.tenant_first_name},</div>
