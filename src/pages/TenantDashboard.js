@@ -28,9 +28,9 @@ import {
 function TenantDashboard(props) {
   const navigate = useNavigate();
   const context = useContext(AppContext);
-  const { userData } = context;
+  const { refresh, userData } = context;
   const { access_token, user } = userData;
-  const { setShowFooter, profile } = props;
+  const { setShowFooter, profile, setProfile } = props;
   const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [rent, setRent] = React.useState(0);
@@ -50,11 +50,10 @@ function TenantDashboard(props) {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await get('/tenantProfileInfo', access_token);
+      const response = await get('/tenantProperties', access_token);
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
-
         return;
       }
       setProfile(response.result[0]);
@@ -67,6 +66,7 @@ function TenantDashboard(props) {
       }
       setRent(rentTotal);
       const purchases = JSON.parse(response.result[0].purchases);
+      console.log(purchases);
       for (const purchase of purchases) {
         if (purchase.description.toLowerCase().indexOf('rent') !== -1) {
           setRentPurchase(purchase);
