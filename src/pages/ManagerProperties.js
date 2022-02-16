@@ -12,7 +12,6 @@ function ManagerProperties(props) {
     const {userData, refresh} = React.useContext(AppContext);
     const {access_token, user} = userData;
     const [properties, setProperties] = React.useState([]);
-    // const [selectedProperty, setSelectedProperty] = React.useState(null);
 
     const fetchProperties = async () => {
         if (access_token === null) {
