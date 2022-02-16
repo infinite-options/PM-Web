@@ -1,6 +1,7 @@
 import React from 'react';
 import {Col, Container, Row} from 'react-bootstrap';
 import {useLocation, useNavigate} from "react-router-dom";
+import { useParams } from "react-router";
 import Header from '../components/Header';
 import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill, xSmall, smallLine} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
@@ -25,6 +26,7 @@ function ManagerPropertyView(props) {
     const navigate = useNavigate();
     const location = useLocation();
     // const property = location.state.property
+    // const { property_uid } = useParams();
     const property_uid = location.state.property_uid
 
     const [property, setProperty] = React.useState({

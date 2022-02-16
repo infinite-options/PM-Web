@@ -60,7 +60,8 @@ function ManagerRepairsList(props) {
                     </h4>
 
                     {row.repairs_list.map((repair, j) => (
-                        <Row className='mb-4' key={j} onClick={() => navigate('/pmRepairRequestDetail')}>
+                        <Row className='mb-4' key={j} onClick={() =>
+                            navigate(`./${repair.maintenance_request_uid}`)}>
                             <Col xs={4}>
                                 <div style={tileImg}>
                                     {repair.images.length > 0 ? (
