@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import ProfileInfo from "./pages/ProfileInfo";
 import OwnerHome from "./pages/OwnerHome";
 import TenantHome from "./pages/TenantHome";
+import TenantAvailableProperties from "./pages/TenantAvailableProperties";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
@@ -38,6 +39,8 @@ import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
 import ManagerPropertyView from "./pages/ManagerPropertyView";
 import ManagerRepairsList from "./pages/ManagerRepairsList";
+import ManagerResidentAnnouncements from "./pages/ManagerResidentAnnoucements";
+import ManagerEmergency from "./pages/ManagerEmergency";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -92,6 +95,7 @@ function App() {
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
 
             <Route path="tenant" element={<TenantHome />} />
+            <Route path="tenantAvailableProperties" element={<TenantAvailableProperties/>} />
             <Route path="manager" element={<ManagerHome />} />
             <Route
               path="/:property_uid/repairRequest"
@@ -142,6 +146,11 @@ function App() {
               path="manager-properties/:mp_id/repairs"
               element={<ManagerRepairsList />}
             />
+            <Route
+                path="manager-properties/:mp_id/resident-announcements"
+                element={<ManagerResidentAnnouncements />}
+            />
+            <Route path="manager-properties/:mp_id/emergency" element={<ManagerEmergency />} />
           </Route>
         </Routes>
       </BrowserRouter>
