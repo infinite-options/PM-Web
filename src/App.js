@@ -111,6 +111,10 @@ function App() {
               element={<RepairStatus />}
             />
             <Route path="tenantDocuments" element={<TenantDocuments />} />
+            <Route
+              path="/rentPayment/:purchase_uid"
+              element={<RentPayment />}
+            />
             <Route path="rentPayment" element={<RentPayment />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />
             <Route path="scheduleRepairs" element={<ScheduleRepairs />} />

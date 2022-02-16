@@ -15,6 +15,23 @@ import {
 
 function PaymentHistory(props) {
   const navigate = useNavigate();
+
+  const [payments, setPayments] = React.useState([]);
+
+  const paymentsByMonth = {};
+  for (const payment of payments) {
+    const month = payment.month;
+    if (month in paymentsByMonth) {
+      paymentsByMonth[month].total += payment.amount_due;
+      paymentsByMonth[month].payments.push(payment);
+    } else {
+      paymentsByMonth[month] = {
+        total: payment.amount_due,
+        payments: [payment]
+      }
+    }
+  }
+
   return (
     <div className="h-100 d-flex flex-column">
       <Header

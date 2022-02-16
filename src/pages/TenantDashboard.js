@@ -34,6 +34,8 @@ function TenantDashboard(props) {
   const [profile, setProfile] = useState([]);
   const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [rent, setRent] = React.useState(0);
+  const [rentPurchase, setRentPurchase] = React.useState({});
   console.log(context, access_token, user);
 
   useEffect(() => {
@@ -58,6 +60,21 @@ function TenantDashboard(props) {
         return;
       }
       setProfile(response.result[0]);
+      const payments = JSON.parse(response.result[0].rent_payments);
+      let rentTotal = 0;
+      for (const payment of payments) {
+        if (payment.frequency === 'Monthly' && payment.fee_type === '$') {
+          rentTotal += parseFloat(payment.charge);
+        }
+      }
+      setRent(rentTotal);
+      const purchases = JSON.parse(response.result[0].purchases);
+      for (const purchase of purchases) {
+        if (purchase.description.toLowerCase().indexOf('rent') !== -1) {
+          setRentPurchase(purchase);
+          break;
+        }
+      }
     };
     fetchProfile();
   }, []);
@@ -146,7 +163,7 @@ function TenantDashboard(props) {
 
           <Row>
             <div style={headings} className="mt-4 mb-1">
-              ${profile.actual_rent}/mo
+              ${rentPurchase.amount}/mo
             </div>
             {isLoading === true ? null : (
               <div style={address} className="mt-1 mb-1">
@@ -159,13 +176,13 @@ function TenantDashboard(props) {
 
             <div style={blue} className="mt-1 mb-1">
               Rent paid for {moment().format("MMM")}, {moment().format("YYYY")}:
-              $1400
+              ${rentPurchase.amount}
             </div>
             <div>
               <Col xs={7} className="mt-1 mb-1">
-                <div style={bluePill} onClick={() => navigate("/rentPayment")}>
+                <div style={bluePill} onClick={() => navigate(`/rentPayment/${rentPurchase.purchase_uid}`)}>
                   Rent due for {moment().format("MMM")},{" "}
-                  {moment().format("YYYY")}: $500
+                  {moment().format("YYYY")}: ${rentPurchase.amount}
                 </div>
               </Col>
             </div>
@@ -173,7 +190,7 @@ function TenantDashboard(props) {
               <Col xs={8} className="mt-1 mb-1">
                 <div style={greenBorderPill}>
                   Upcoming rent for {moment().add(1, "months").format("MMM")},{" "}
-                  {moment().format("YYYY")}: ${profile.actual_rent}
+                  {moment().format("YYYY")}: ${rentPurchase.amount}
                 </div>
               </Col>
             </div>
