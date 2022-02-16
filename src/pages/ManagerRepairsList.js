@@ -15,7 +15,7 @@ function ManagerRepairsList(props) {
     const [repairs, setRepairs] = React.useState([]);
     const [newRepairs, setNewRepairs] = React.useState([]);
     const [scheduledRepairs, setScheduledRepairs] = React.useState([]);
-    const [pendingRepairs, setPendingRepairs] = React.useState([]);
+    const [completedRepairs, setCompletedRepairs] = React.useState([]);
     const [repairIter, setRepairIter] = React.useState([])
 
     const property = location.state.property
@@ -35,16 +35,16 @@ function ManagerRepairsList(props) {
         const repairs = response.result.filter(item => item.property_uid === property.property_uid);
         console.log(repairs)
         setRepairs(repairs);
-        const new_repairs = repairs.filter(item => item.status === "COMPLETE")
+        const new_repairs = repairs.filter(item => item.status === "NEW")
         const scheduled_repairs = repairs.filter(item => item.status === "SCHEDULED")
-        const pending_repairs = repairs.filter(item => item.status === "PENDING")
+        const completed_repairs = repairs.filter(item => item.status === "COMPLETE")
         setNewRepairs(new_repairs)
         setScheduledRepairs(scheduled_repairs)
-        setPendingRepairs(pending_repairs)
+        setCompletedRepairs(completed_repairs)
         setRepairIter([
-            {title: "New Request", repairs_list: new_repairs},
+            {title: "New", repairs_list: new_repairs},
             {title: "Upcoming, Scheduled", repairs_list: scheduled_repairs},
-            {title: "Pending", repairs_list: pending_repairs}])
+            {title: "Completed", repairs_list: completed_repairs}])
     }
 
     React.useEffect(fetchRepairs, [access_token]);
@@ -54,13 +54,13 @@ function ManagerRepairsList(props) {
             <Header title='Repairs' leftText='< Back' leftFn={() => ''}
                     rightText='Sort by'/>
             {repairIter.map((row, i) => (row.repairs_list.length > 0 &&
-                <Container key={i}>
+                <Container className='mb-5' key={i}>
                     <h4 className='mt-2 mb-3' style={{fontWeight: '600'}}>
                         {row.title}
                     </h4>
 
                     {row.repairs_list.map((repair, j) => (
-                        <Row key={j} onClick={() => navigate('/pmRepairRequestDetail')}>
+                        <Row className='mb-4' key={j} onClick={() => navigate('/pmRepairRequestDetail')}>
                             <Col xs={4}>
                                 <div style={tileImg}>
                                     {repair.images.length > 0 ? (
