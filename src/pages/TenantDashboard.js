@@ -174,7 +174,7 @@ function TenantDashboard(props) {
               </div>
             )}
 
-            <div style={blue} className="mt-1 mb-1">
+            <div style={blue} className="mt-1 mb-1" onClick={() => navigate('/paymentHistory')}>
               Rent paid for {moment().format("MMM")}, {moment().format("YYYY")}:
               ${rentPurchase.amount}
             </div>

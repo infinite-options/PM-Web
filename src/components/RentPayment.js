@@ -18,6 +18,7 @@ import {
   bluePillButton,
   pillButton,
   subHeading,
+  squareForm,
 } from "../utils/styles";
 
 function RentPayment(props) {
@@ -31,6 +32,7 @@ function RentPayment(props) {
   const [stripePromise, setStripePromise] = useState(null);
   const [purchase, setPurchase] = useState({});
   const useLiveStripeKey = false;
+  const [message, setMessage] = React.useState('');
 
   const submitForm = () => {
     const requestTitle = requestTitleRef.current.value;
@@ -123,8 +125,15 @@ function RentPayment(props) {
                 ambassadorCode={this.state.ambassadorCode_applied}
               />
           */}
-          <div className="text-center mt-5" hidden={stripePayment}>
-            <Row
+          <div className="mt-5" hidden={stripePayment}>
+            <Form.Group>
+              <Form.Label>
+                Message
+              </Form.Label>
+              <Form.Control placeholder='M4METEST' style={squareForm} value={message}
+                onChange={(e) => setMessage(e.target.value)}/>
+            </Form.Group>
+            <Row className='text-center mt-5'
               style={{
                 display: "text",
                 flexDirection: "column",
@@ -159,7 +168,8 @@ function RentPayment(props) {
           </div>
           <div hidden={!stripePayment}>
             <Elements stripe={stripePromise}>
-              <StripePayment cancel={cancel} submit={submit} purchase={purchase}/>
+              <StripePayment cancel={cancel} submit={submit} purchase={purchase}
+                useLiveStripeKey={message !== 'M4METEST'}/>
             </Elements>
           </div>
         </Container>
