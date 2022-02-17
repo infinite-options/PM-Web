@@ -51,7 +51,7 @@ function ManagerRepairsList(props) {
 
     return (
         <div className='h-100'>
-            <Header title='Repairs' leftText='< Back' leftFn={() => ''}
+            <Header title='Repairs' leftText='< Back' leftFn={() => navigate(-1)}
                     rightText='Sort by'/>
             {repairIter.map((row, i) => (row.repairs_list.length > 0 &&
                 <Container className='mb-5' key={i}>
@@ -60,7 +60,8 @@ function ManagerRepairsList(props) {
                     </h4>
 
                     {row.repairs_list.map((repair, j) => (
-                        <Row className='mb-4' key={j} onClick={() => navigate('/pmRepairRequestDetail')}>
+                        <Row className='mb-4' key={j} onClick={() =>
+                            navigate(`./${repair.maintenance_request_uid}`, { state: {repair: repair }})}>
                             <Col xs={4}>
                                 <div style={tileImg}>
                                     {repair.images.length > 0 ? (
