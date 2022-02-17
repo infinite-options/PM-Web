@@ -2,6 +2,7 @@ import React from 'react';
 import {Container, Row, Col, Form, Button} from 'react-bootstrap';
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
+import Document from "../icons/documents.svg";
 
 
 function PropertyCard(props) {
@@ -26,6 +27,7 @@ function PropertyCard(props) {
                             <span style={{marginLeft:"1px"}}>John Doe</span>
                         </div>
                         <div className="btns">
+                            <img src={Document} alt="documentIcon" style={{marginRight:"5px", width:"25px"}} />
                              <img src={Phone} alt="phoneIcon" style={{marginRight:"5px", width:"25px"}} />
                              <img src={Message} alt="messageIcon"  style={{width:"25px"}} />
 

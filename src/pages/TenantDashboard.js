@@ -50,14 +50,14 @@ function TenantDashboard(props) {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await get('/tenantProperties', access_token);
+      const response = await get('/tenantProfileInfo', access_token);
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
         return;
       }
       setProfile(response.result[0]);
-      const payments = JSON.parse(response.result[0].rent_payments);
+      const payments = response.result.length ? JSON.parse(response.result[0].rent_payments) : [];
       let rentTotal = 0;
       for (const payment of payments) {
         if (payment.frequency === 'Monthly' && payment.fee_type === '$') {
@@ -65,7 +65,7 @@ function TenantDashboard(props) {
         }
       }
       setRent(rentTotal);
-      const purchases = JSON.parse(response.result[0].purchases);
+      const purchases = response.result.length ? JSON.parse(response.result[0].purchases)  : [];
       console.log(purchases);
       for (const purchase of purchases) {
         if (purchase.description.toLowerCase().indexOf('rent') !== -1) {
