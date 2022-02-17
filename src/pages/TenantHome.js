@@ -15,7 +15,7 @@ function TenantHome() {
   const [properties, setProperties] = useState([]);
   const { access_token } = userData;
   const [isLoading, setIsLoading] = useState(true);
-
+ 
   useEffect(() => {
     const fetchProfile = async () => {
       // const response = await get("/tenantProperties", access_token);
@@ -62,7 +62,7 @@ function TenantHome() {
             <TenantDashboard setShowFooter={setShowFooter} profile={profile} setProfile={setProfile}/>
           ) : (
             // <TenantAvailableProperties hideBackButton="true"/>
-            <TenantWelcomePage profile={profile} />
+             <TenantWelcomePage setShowFooter={setShowFooter} profile={profile} setProfile={setProfile} />
           ))}
           </div>
           <div className="flex-grow-1">

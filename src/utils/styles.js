@@ -129,7 +129,7 @@ const welcome = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-  textAlign: "center"
+  textAlign: "center",margin:"50px",padding:"50px"
 }
 const upcoming = {
   background: " #007AFF 0% 0% no-repeat padding-box",
@@ -210,6 +210,24 @@ const actions = {
   justifyContent: "space-evenly",
   alignItems: "center",
 };
+const actionsDisabled = {
+  background: "#FFFFFF 0% 0% no-repeat padding-box",
+  border: "1px solid #131413",
+  borderRadius: "5px",
+  width: "111px",
+  height: "99px",
+  textAlign: "center",
+  font: "normal normal 600 11px/13px SFProDisplay-Regular",
+  letterSpacing: "0px",
+  color: "#000000",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-evenly",
+  alignItems: "center",
+  mouseEvent: "none",
+  opacity:"0.6",
+  cursor:"pointer"
+}
 const actionsNoColor = {
   background: "#FFFFFF 0% 0% no-repeat padding-box",
   border: "1px solid #FFFFFF",
@@ -341,5 +359,6 @@ export {
   actionsNoColor,
   redPillButton,
   blueLarge,
-  welcome
+  welcome,
+  actionsDisabled
 };

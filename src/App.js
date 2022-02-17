@@ -34,6 +34,7 @@ import DetailQuoteRequest from "./components/DetailQuoteRequest";
 import PMRepairRequest from "./components/PMRepairRequest";
 import QuotesAccepted from "./components/QuotesAccepted";
 import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
+import TenantDocumentUpload from "./pages/TenantDocumentUpload";
 
 import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
@@ -96,6 +97,7 @@ function App() {
 
             <Route path="tenant" element={<TenantHome />} />
             <Route path="tenantAvailableProperties" element={<TenantAvailableProperties/>} />
+            <Route path="uploadTenantDocuments" element={<TenantDocumentUpload/>} />
             <Route path="manager" element={<ManagerHome />} />
             <Route
               path="/:property_uid/repairRequest"
