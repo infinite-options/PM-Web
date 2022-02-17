@@ -11,23 +11,31 @@ function SelectRole() {
   const { user } = userData;
   const availableRoles = user.role.split(",");
   const [selectedRole, setSelectedRole] = React.useState(null);
-  const selectRole = () => {
+  const navigateToRole = (role) => {
     // add navigation to correct role pages
-    console.log(`load ${selectedRole}`);
-    if (selectedRole === "OWNER") {
+    console.log(`load ${role}`);
+    if (role === "OWNER") {
       navigate("/owner");
-    } else if (selectedRole === "MANAGER") {
+    } else if (role === "MANAGER") {
       navigate("/manager");
-    } else if (selectedRole === "PM_EMPLOYEE") {
+    } else if (role === "PM_EMPLOYEE") {
       navigate("/manager");
-    } else if (selectedRole === "TENANT") {
+    } else if (role === "TENANT") {
       navigate("/tenant");
-    } else if (selectedRole === "MAINTENANCE") {
+    } else if (role === "MAINTENANCE") {
       navigate("/maintenance");
-    } else if (selectedRole === "MAINT_EMPLOYEE") {
+    } else if (role === "MAINT_EMPLOYEE") {
       navigate("/maintenance");
     }
   };
+  const selectRole = () => {
+    navigateToRole(selectedRole);
+  };
+  React.useEffect(() => {
+    if (availableRoles.length === 1) {
+      navigateToRole(availableRoles[0]);
+    }
+  }, []);
   const longNames = {
     MANAGER: "Property Manager (Owner)",
     PM_EMPLOYEE: "Property Manager (Employee)",
