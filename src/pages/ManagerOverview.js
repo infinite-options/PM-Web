@@ -45,13 +45,15 @@ function ManagerOverview(props) {
             management_buid = management_businesses[0].business_uid
         }
 
-        const response =  await get(`/businesses?business_uid=${management_buid}`);
+        // const response =  await get(`/businesses?business_uid=${management_buid}`);
+        const response =  await get(`/propertyInfo?manager_id=${management_buid}`);
         if (response.msg === 'Token has expired') {
             refresh();
             return;
         }
 
         const properties = response.result
+        console.log(properties)
         setProperties(properties);
     }
 
