@@ -9,7 +9,7 @@ import {
 import { post } from '../utils/api';
 
 function StripePayment(props) {
-  const {purchase} = props;
+  const {purchase, message} = props;
   const {userData} = React.useContext(AppContext);
   const {user} = userData;
   const elements = useElements();
@@ -18,7 +18,7 @@ function StripePayment(props) {
   const submitPayment = async () => {
     const paymentData = {
       customer_uid: user.user_uid,
-      business_code: 'M4METEST',
+      business_code: message === 'M4METEST' ?  message : 'M4ME',
       payment_summary: {
         total: purchase.amount
       }
@@ -49,6 +49,7 @@ function StripePayment(props) {
     const newPayment = {
       pay_purchase_id: purchase.purchase_uid,
       amount_due: purchase.amount,
+      payment_notes: message,
       charge_id: paymentIntentID,
       payment_type: 'STRIPE'
     }
