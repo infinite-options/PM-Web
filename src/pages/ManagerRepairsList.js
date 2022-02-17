@@ -51,7 +51,7 @@ function ManagerRepairsList(props) {
 
     return (
         <div className='h-100'>
-            <Header title='Repairs' leftText='< Back' leftFn={() => ''}
+            <Header title='Repairs' leftText='< Back' leftFn={() => navigate(-1)}
                     rightText='Sort by'/>
             {repairIter.map((row, i) => (row.repairs_list.length > 0 &&
                 <Container className='mb-5' key={i}>

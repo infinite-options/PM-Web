@@ -52,7 +52,7 @@ function ManagerRepairDetail(props) {
             <Header
                 title="Repairs"
                 leftText={scheduleMaintenance || requestQuote ? null : "< Back"}
-                //leftFn={() => navigate("/maintenance")}
+                leftFn={() => navigate(-1)}
                 rightText={scheduleMaintenance || requestQuote ? null : "Edit"}
             />
 
