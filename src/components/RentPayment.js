@@ -169,7 +169,7 @@ function RentPayment(props) {
           <div hidden={!stripePayment}>
             <Elements stripe={stripePromise}>
               <StripePayment cancel={cancel} submit={submit} purchase={purchase}
-                useLiveStripeKey={message !== 'M4METEST'}/>
+                message={message}/>
             </Elements>
           </div>
         </Container>
