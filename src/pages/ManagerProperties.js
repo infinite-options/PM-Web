@@ -20,7 +20,21 @@ function ManagerProperties(props) {
         }
 
         // const response = await get(`/managerProperties`, access_token);
-        const response =  await get(`/propertyInfo?manager_id=${user.user_uid}`);
+        // const response =  await get(`/propertyInfo?manager_id=${user.user_uid}`);
+
+        const management_businesses = user.businesses.filter(business => business.business_type === "MANAGEMENT")
+        let management_buid = null
+        if (management_businesses.length < 1) {
+            console.log('No associated PM Businesses')
+            return
+        } else if (management_businesses.length > 1) {
+            console.log('Multiple associated PM Businesses')
+            management_buid = management_businesses[0].business_uid
+        } else {
+            management_buid = management_businesses[0].business_uid
+        }
+
+        const response =  await get(`/propertyInfo?manager_id=${management_buid}`);
 
         if (response.msg === 'Token has expired') {
             refresh();
