@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Checkbox from "../components/Checkbox";
 import HighPriority from "../icons/highPriority.svg";
@@ -23,17 +23,30 @@ import {
     bluePillButton,
     red,
     small,
-    blue,
+    blue, tileImg,
 } from "../utils/styles";
 import { textAlign } from "@mui/system";
+import {useParams} from "react-router";
+import DeleteIcon from "../icons/DeleteIcon.svg";
+import Heart from "../icons/Heart.svg";
+import HeartOutline from "../icons/HeartOutline.svg";
+import Plus from "../icons/Plus.svg";
 
 function ManagerRepairDetail(props) {
+    const location = useLocation();
     const navigate = useNavigate();
     const [morePictures, setMorePictures] = useState(false);
     const [canReschedule, setCanReschedule] = useState(false);
     const [cannotReschedule, setCannotReschedule] = useState(false);
     const [requestQuote, setRequestQuote] = useState(false);
     const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
+
+    const { mp_id, rr_id } = useParams();
+
+    const repair = location.state.repair
+    console.log(repair)
+    console.log(mp_id, rr_id)
+
     return (
         <div className="h-100">
             <Header
@@ -47,33 +60,43 @@ function ManagerRepairDetail(props) {
                 className="pt-1 mb-4"
                 hidden={scheduleMaintenance || requestQuote}
             >
+
                 <Row style={headings}>
                     <div>New Repair Request</div>
                 </Row>
                 <Row className="pt-1 mb-4">
                     <div style={subHeading}>Title (character limit: 15)</div>
-                    <div style={subText}>Bathroom leaking</div>
+                    <div style={subText}>{repair.title}</div>
                 </Row>
                 <Row className="pt-1 mb-4">
                     <div style={subHeading}>Description</div>
-                    <div style={subText}>The toilet plumbing is leaking at the base.</div>
+                    <div style={subText}>{repair.description}</div>
                 </Row>
                 <Row className="pt-1 mb-4">
                     <div className="pt-1 mb-2" style={subHeading}>
                         Pictures from tenant
                     </div>
-                    <div
-                        className="pt-1 mb-2"
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        <Col xs={3} style={actions}></Col>
-                        <Col xs={3} style={actions}></Col>
-                        <Col xs={3} style={actions}></Col>
+                    {/*<div*/}
+                    {/*    className="pt-1 mb-2"*/}
+                    {/*    style={{*/}
+                    {/*        display: "flex",*/}
+                    {/*        flexDirection: "row",*/}
+                    {/*        justifyContent: "space-evenly",*/}
+                    {/*    }}*/}
+                    {/*>*/}
+                    {/*    <Col xs={3} style={actions}></Col>*/}
+                    {/*    <Col xs={3} style={actions}></Col>*/}
+                    {/*    <Col xs={3} style={actions}></Col>*/}
+                    {/*</div>*/}
+
+                    <div className='d-flex overflow-auto mb-3'>
+                        {JSON.parse(repair.images).map((file, i) => (
+                            <div className='mx-2' style={{position: 'relative', minHeight: '100px', minWidth: '100px', height: '100px', width: '100px'}} key={i}>
+                                <img src={file} style={{...tileImg, objectFit: 'cover'}}/>
+                            </div>
+                        ))}
                     </div>
+
                     <div className="pt-1 mb-2">
                         <Button
                             style={pillButton}

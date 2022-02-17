@@ -26,7 +26,7 @@ function ManagerPropertyView(props) {
     const navigate = useNavigate();
     const location = useLocation();
     // const property = location.state.property
-    // const { property_uid } = useParams();
+    // const { mp_id } = useParams();
     const property_uid = location.state.property_uid
 
     const [property, setProperty] = React.useState({
