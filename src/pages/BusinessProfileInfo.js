@@ -46,8 +46,13 @@ function BusinessProfileInfo(props) {
       navigate('/');
       return;
     }
-    if (user.role.indexOf('MAINTENANCE') === -1) {
-      console.log('no business in user role');
+    if (businessType === 'MAINTENANCE' && user.role.indexOf('MAINTENANCE') === -1) {
+      console.log('no maintenance business in user role');
+      props.onConfirm();
+      return;
+    }
+    if (businessType === 'MANAGEMENT' && user.role.indexOf('MANAGER') === -1) {
+      console.log('no manager business in user role');
       props.onConfirm();
       return;
     }
