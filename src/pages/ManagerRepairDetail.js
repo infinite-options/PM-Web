@@ -44,7 +44,7 @@ function ManagerRepairDetail(props) {
     const { mp_id, rr_id } = useParams();
 
     const repair = location.state.repair
-    // console.log(repair)
+    console.log(repair)
     // console.log(mp_id, rr_id)
 
     return (
