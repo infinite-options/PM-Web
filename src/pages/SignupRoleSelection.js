@@ -16,20 +16,36 @@ function SignupRoleSelection(props) {
   }
   const availableRoles = Object.keys(roleCodes);
   const addRole = (role) => {
-    const index = userRoles.indexOf(role);
+    const roleCode = roleCodes[role];
+    const index = userRoles.indexOf(roleCode);
     if (index !== -1) {
       return;
     }
-    userRoles.push(roleCodes[role]);
-    setUserRoles(userRoles);
+    const rolesCopy = [...userRoles];
+    if (roleCode === 'MANAGER') {
+      const employeeIndex = userRoles.indexOf('PM_EMPLOYEE');
+      if (employeeIndex !== -1) rolesCopy.splice(employeeIndex, 1);
+    } else if (roleCode === 'PM_EMPLOYEE') {
+      const ownerIndex = userRoles.indexOf('MANAGER');
+      if (ownerIndex !== -1) rolesCopy.splice(ownerIndex, 1);
+    } else if (roleCode === 'MAINTENANCE') {
+      const employeeIndex = userRoles.indexOf('MAINT_EMPLOYEE');
+      if (employeeIndex !== -1) rolesCopy.splice(employeeIndex, 1);
+    } else if (roleCode === 'MAINT_EMPLOYEE') {
+      const ownerIndex = userRoles.indexOf('MAINTENANCE');
+      if (ownerIndex !== -1) rolesCopy.splice(ownerIndex, 1);
+    }
+    rolesCopy.push(roleCode);
+    setUserRoles(rolesCopy);
   }
   const removeRole = (role) => {
     const index = userRoles.indexOf(roleCodes[role]);
     if (index === -1) {
       return;
     }
-    userRoles.splice(index, 1);
-    setUserRoles(userRoles);
+    const rolesCopy = [...userRoles];
+    rolesCopy.splice(index, 1);
+    setUserRoles(rolesCopy);
   }
   const confirmRoles = () => {
     if (userRoles.length === 0) {
@@ -47,7 +63,8 @@ function SignupRoleSelection(props) {
         <h5 className='mb-5'>How do you plan to use this app?</h5>
         {availableRoles.map((role, i) => (
           <div key={i} className='d-flex'>
-            <Checkbox type='CIRCLE' onClick={(checked) => checked ? addRole(role) : removeRole(role)}/>
+            <Checkbox type='CIRCLE' checked={userRoles.indexOf(roleCodes[role]) !== -1}
+            onClick={(checked) => checked ? addRole(role) : removeRole(role)}/>
 
             <div className='flex-grow-1'>
               <p className='d-inline-block text-left'>{role}</p>
