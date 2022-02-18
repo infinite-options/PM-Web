@@ -33,6 +33,7 @@ function RentPayment(props) {
   const [purchase, setPurchase] = useState({});
   const useLiveStripeKey = false;
   const [message, setMessage] = React.useState('');
+  const [amount, setAmount] = React.useState(0);
 
   const submitForm = () => {
     const requestTitle = requestTitleRef.current.value;
@@ -54,6 +55,7 @@ function RentPayment(props) {
     setStripePromise(stripePromise);
     response = await get(`/purchases?purchase_uid=${purchase_uid}`);
     setPurchase(response.result[0]);
+    setAmount(response.result[0].amount_due - response.result[0].amount_paid)
   }, []);
 
   const cancel = () => setStripePayment(false);
@@ -76,10 +78,10 @@ function RentPayment(props) {
             }}
           >
             <Row style={headings} className="mt-2 mb-2">
-              Payment Received
+              Payment Received {purchase.purchase_notes && `(${purchase.purchase_notes})`}
             </Row>
             <Row style={subHeading} className="mt-2 mb-2">
-              {purchase.description}: ${purchase.amount}
+              {purchase.description}: ${amount}
             </Row>
             <Row className="mt-2 mb-2">
               <img
@@ -103,8 +105,8 @@ function RentPayment(props) {
       ) : (
         <Container className="pt-1 mb-4">
           <Row>
-            <div style={headings}>Pay Rent</div>
-            <div style={subHeading}>{purchase.description}: ${purchase.amount}</div>
+            <div style={headings}>Pay Rent {purchase.purchase_notes && `(${purchase.purchase_notes})`}</div>
+            <div style={subHeading}>{purchase.description}: ${stripePayment ? amount : purchase.amount_due - purchase.amount_paid}</div>
           </Row>
           {/*
             <StripeElement
@@ -126,6 +128,13 @@ function RentPayment(props) {
               />
           */}
           <div className="mt-5" hidden={stripePayment}>
+            <Form.Group>
+              <Form.Label>
+                Amount
+              </Form.Label>
+              <Form.Control placeholder={purchase.amount_due - purchase.amount_paid} style={squareForm}
+                value={amount} onChange={(e) => setAmount(e.target.value)}/>
+            </Form.Group>
             <Form.Group>
               <Form.Label>
                 Message
@@ -169,7 +178,7 @@ function RentPayment(props) {
           <div hidden={!stripePayment}>
             <Elements stripe={stripePromise}>
               <StripePayment cancel={cancel} submit={submit} purchase={purchase}
-                message={message}/>
+                message={message} amount={amount}/>
             </Elements>
           </div>
         </Container>

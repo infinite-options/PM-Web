@@ -9,7 +9,7 @@ import {
 import { post } from '../utils/api';
 
 function StripePayment(props) {
-  const {purchase, message} = props;
+  const {purchase, message, amount} = props;
   const {userData} = React.useContext(AppContext);
   const {user} = userData;
   const elements = useElements();
@@ -20,7 +20,7 @@ function StripePayment(props) {
       customer_uid: user.user_uid,
       business_code: message === 'M4METEST' ?  message : 'M4ME',
       payment_summary: {
-        total: purchase.amount
+        total: parseFloat(amount)
       }
     }
     const response = await fetch('https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/createPaymentIntent', {
@@ -48,7 +48,7 @@ function StripePayment(props) {
     console.log(paymentIntentID);
     const newPayment = {
       pay_purchase_id: purchase.purchase_uid,
-      amount_due: purchase.amount,
+      amount: parseFloat(amount),
       payment_notes: message,
       charge_id: paymentIntentID,
       payment_type: 'STRIPE'

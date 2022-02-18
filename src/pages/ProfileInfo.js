@@ -13,7 +13,7 @@ import {bolder} from '../utils/styles';
 
 function ProfileInfo() {
   const [profileStage, setProfileStage] = React.useState('MANAGER');
-  const {userData} = React.useContext(AppContext);
+  const {userData, refresh} = React.useContext(AppContext);
   const {user} = userData;
   const [autofillState, setAutofillState] = React.useState({
     first_name: user.first_name,
@@ -30,6 +30,9 @@ function ProfileInfo() {
     ein_number: '',
   });
   React.useEffect(() => {
+    if (profileStage === 'ROLE') {
+      refresh();
+    }
     window.scrollTo(0, 0);
   }, [profileStage])
   return (

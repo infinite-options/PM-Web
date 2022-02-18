@@ -34,7 +34,9 @@ function TenantDashboard(props) {
   const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [rent, setRent] = React.useState(0);
-  const [rentPurchase, setRentPurchase] = React.useState({});
+  const [lastPurchase, setLastPurchase] = React.useState(null);
+  const [currentPurchase, setCurrentPurchase] = React.useState(null);
+  const [nextPurchase, setNextPurchase] = React.useState(null);
   console.log(context, access_token, user);
 
   useEffect(() => {
@@ -50,13 +52,14 @@ function TenantDashboard(props) {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await get('/tenantProfileInfo', access_token);
+      let response = await get('/tenantProfileInfo', access_token);
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
         return;
       }
       setProfile(response.result[0]);
+      response = await get('/tenantProperties', access_token);
       const payments = response.result.length ? JSON.parse(response.result[0].rent_payments) : [];
       let rentTotal = 0;
       for (const payment of payments) {
@@ -66,13 +69,21 @@ function TenantDashboard(props) {
       }
       setRent(rentTotal);
       const purchases = response.result.length ? JSON.parse(response.result[0].purchases)  : [];
-      console.log(purchases);
+      let lastPaidPurchase = null;
+      let firstUnpaidPurchase = null;
+      let nextUnpaidPurchase = null;
       for (const purchase of purchases) {
-        if (purchase.description.toLowerCase().indexOf('rent') !== -1) {
-          setRentPurchase(purchase);
-          break;
+        if (purchase.purchase_status === 'UNPAID' && firstUnpaidPurchase === null) {
+          firstUnpaidPurchase = purchase;
+        } else if (purchase.purchase_status === 'UNPAID' && nextUnpaidPurchase === null) {
+          nextUnpaidPurchase = purchase;
+        } else if (purchase.purchase_status === 'PAID') {
+          lastPaidPurchase = purchase;
         }
       }
+      setLastPurchase(lastPaidPurchase);
+      setCurrentPurchase(firstUnpaidPurchase);
+      setNextPurchase(nextUnpaidPurchase);
     };
     fetchProfile();
   }, []);
@@ -161,7 +172,7 @@ function TenantDashboard(props) {
 
           <Row>
             <div style={headings} className="mt-4 mb-1">
-              ${rentPurchase.amount}/mo
+              ${rent}/mo
             </div>
             {isLoading === true ? null : (
               <div style={address} className="mt-1 mb-1">
@@ -172,26 +183,32 @@ function TenantDashboard(props) {
               </div>
             )}
 
-            <div style={blue} className="mt-1 mb-1" onClick={() => navigate('/paymentHistory')}>
-              Rent paid for {moment().format("MMM")}, {moment().format("YYYY")}:
-              ${rentPurchase.amount}
-            </div>
-            <div>
-              <Col xs={7} className="mt-1 mb-1">
-                <div style={bluePill} onClick={() => navigate(`/rentPayment/${rentPurchase.purchase_uid}`)}>
-                  Rent due for {moment().format("MMM")},{" "}
-                  {moment().format("YYYY")}: ${rentPurchase.amount}
-                </div>
-              </Col>
-            </div>
-            <div>
-              <Col xs={8} className="mt-1 mb-1">
-                <div style={greenBorderPill}>
-                  Upcoming rent for {moment().add(1, "months").format("MMM")},{" "}
-                  {moment().format("YYYY")}: ${rentPurchase.amount}
-                </div>
-              </Col>
-            </div>
+            {lastPurchase && (
+              <div style={blue} className="mt-1 mb-1" onClick={() => navigate('/paymentHistory')}>
+                Rent paid for {lastPurchase.purchase_notes}:
+                ${lastPurchase.amount_paid}
+              </div>
+            )}
+            {currentPurchase && (
+              <div>
+                <Col xs={7} className="mt-1 mb-1">
+                  <div style={bluePill} onClick={() => navigate(`/rentPayment/${currentPurchase.purchase_uid}`)}>
+                    Rent due for {currentPurchase.purchase_notes}:
+                    ${currentPurchase.amount_due - currentPurchase.amount_paid}
+                  </div>
+                </Col>
+              </div>
+            )}
+            {nextPurchase && (
+              <div>
+                <Col xs={8} className="mt-1 mb-1">
+                  <div style={greenBorderPill} onClick={() => navigate(`/rentPayment/${nextPurchase.purchase_uid}`)}>
+                    Upcoming rent for {nextPurchase.purchase_notes}:
+                    ${nextPurchase.amount_due - nextPurchase.amount_paid}
+                  </div>
+                </Col>
+              </div>
+            )}
           </Row>
           {/* <Row style={headings}>
           <div>Actions</div>

@@ -85,14 +85,14 @@ function PaymentHistory(props) {
                   className="mt-2 mx-2 p-2"
                 >
                   <Row style={subHeading} className="mx-2">
-                    <Col>{payment.description}</Col>
+                    <Col>{payment.description} {payment.purchase_notes && `(${payment.purchase_notes})`}</Col>
                   </Row>
                   <Row className="mx-2">
                     <Col style={subText}>
                       {moment(payment.payment_date).format('MMM D, YYYY')}
                     </Col>
                     <Col style={blueRight} className="mt-2">
-                      {formatter.format(payment.amount_due)}
+                      {formatter.format(payment.amount)}
                     </Col>
                   </Row>
                 </div>
