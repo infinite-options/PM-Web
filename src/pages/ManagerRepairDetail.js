@@ -121,11 +121,8 @@ function ManagerRepairDetail(props) {
                     </div>
 
                     <div className="pt-1 mb-2">
-                        <Button
-                            style={pillButton}
-                            variant="outline-primary"
-                            onClick={() => setMorePictures(!morePictures)}
-                        >
+                        <Button style={pillButton} variant="outline-primary"
+                            onClick={() => setMorePictures(!morePictures)}>
                             Request more pictures
                         </Button>
                     </div>
@@ -149,28 +146,13 @@ function ManagerRepairDetail(props) {
                         </Form.Group>
 
                         <Row className="pt-1 mb-2">
-                            <Col
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    justifyContent: "space-evenly",
-                                }}
-                            >
-                                <Button
-                                    style={pillButton}
-                                    variant="outline-primary"
-                                    onClick={() => setMorePictures(false)}
-                                >
+                            <Col className='d-flex flex-row justify-content-evenly'>
+                                <Button style={pillButton} variant="outline-primary"
+                                    onClick={() => setMorePictures(false)}>
                                     Cancel
                                 </Button>
                             </Col>
-                            <Col
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    justifyContent: "space-evenly",
-                                }}
-                            >
+                            <Col className='d-flex flex-row justify-content-evenly'>
                                 <Button style={bluePillButton}>Send Request</Button>
                             </Col>
                         </Row>
@@ -218,34 +200,17 @@ function ManagerRepairDetail(props) {
                     </Col>
                 </Row>
                 <Row className="pt-1 mb-2">
-                    <Col
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        <Button
-                            style={bluePillButton}
-                            onClick={() => setScheduleMaintenance(true)}
-                        >
+                    <Col className='d-flex flex-row justify-content-evenly'>
+                        <Button style={bluePillButton}
+                            onClick={() => setScheduleMaintenance(true)}>
                             Schedule Maintenance
                         </Button>
                     </Col>
                 </Row>
                 <Row className="pt-1 mb-2">
-                    <Col
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        <Button
-                            style={pillButton}
-                            variant="outline-primary"
-                            onClick={() => setRequestQuote(true)}
-                        >
+                    <Col className='d-flex flex-row justify-content-evenly'>
+                        <Button style={pillButton} variant="outline-primary"
+                            onClick={() => setRequestQuote(true)}>
                             Request quote from maintenance
                         </Button>
                     </Col>
@@ -272,25 +237,9 @@ function ManagerRepairDetail(props) {
                                 <Row style={subText}>
                                     Services: Toilet repair, Plumbing, Kitchen repair
                                 </Row>
-                                <Row
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "space-evenly",
-                                        //verticalAlign: "middle",
-                                    }}
-                                >
+                                <Row className='d-flex flex-row align-items-center justify-content-evenly'>
                                     <Col style={blue}> Manager: Jane Doe</Col>
-                                    <Col
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-evenly",
-                                            //verticalAlign: "middle",
-                                        }}
-                                    >
+                                    <Col className='d-flex flex-row align-items-center justify-content-evenly'>
                                         <img src={Phone} style={{ width: "30px", height: "30px" }} />
                                         <img
                                             src={Message}
