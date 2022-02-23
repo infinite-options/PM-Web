@@ -6,10 +6,37 @@ import Footer from "../components/Footer";
 import HighPriority from "../icons/highPriority.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
 import LowPriority from "../icons/lowPriority.svg";
-import { headings, subHeading, subText, blue } from "../utils/styles";
+import { headings, subHeading, subText, blue, hidden, tileImg } from "../utils/styles";
+import { get } from '../utils/api';
+import AppContext from '../AppContext';
+import moment from "moment";
 
 function ScheduledJobs(props) {
   const navigate = useNavigate();
+  const {userData} = React.useContext(AppContext);
+  const [jobs, setJobs] = React.useState([]);
+  const loadJobs = async () => {
+    let business_uid = '';
+    for (const business of userData.user.businesses) {
+      if (business.business_type === 'MAINTENANCE') {
+        business_uid = business.business_uid;
+        break;
+      }
+    }
+    if (business_uid === '') {
+      console.log('no maintenance business found');
+    }
+    const response = await get(`/maintenanceQuotes?business_uid=${business_uid}`);
+    console.log(response);
+    setJobs(response.result);
+  }
+  React.useEffect(loadJobs, []);
+  const requestedQuotes = jobs.filter(job => job.status === 'REQUESTED');
+  const sentQuotes = jobs.filter(job => job.status === 'SENT');
+  const scheduledJobs = jobs.filter(job => job.status === 'SCHEDULED');
+  console.log(requestedQuotes);
+  console.log(sentQuotes);
+  console.log(scheduledJobs);
   return (
     <div className="h-100 d-flex flex-column">
       <Header
@@ -22,199 +49,118 @@ function ScheduledJobs(props) {
         <Row style={headings}>
           <div>Quotes Requested</div>
         </Row>
-        <Row className="mt-2 mb-2">
-          <Col style={{ padding: "5px" }}>
-            <div
-              style={{
-                width: "110px",
-                height: "100%",
-                background: "#F5F5F5 0% 0% no-repeat padding-box",
-                border: "1px solid #C4C4C4",
-                borderRadius: "5px",
-              }}
-            ></div>
-          </Col>
-          <Col xs={8} style={{ padding: "5px" }}>
-            <div onClick={() => navigate("/detailQuoteRequest")}>
-              <Row style={subHeading}>
-                <Col>Carpet Cleaning</Col>
-                <Col xs={5}>
-                  <img src={HighPriority} />
-                </Col>
-              </Row>
-              <Row style={subText}>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod
-                <hr />
-              </Row>
-              <Row style={blue}>Received: Monday, Dec 16, 2021</Row>
-            </div>
-          </Col>
-        </Row>
-        <Row className="mt-2 mb-2">
-          <Col style={{ padding: "5px" }}>
-            <div
-              style={{
-                width: "110px",
-                height: "100%",
-                background: "#F5F5F5 0% 0% no-repeat padding-box",
-                border: "1px solid #C4C4C4",
-                borderRadius: "5px",
-              }}
-            ></div>
-          </Col>
-          <Col xs={8} style={{ padding: "5px" }}>
-            <div onClick={() => navigate("/detailQuoteRequest")}>
-              <Row style={subHeading}>
-                <Col>Carpet Cleaning</Col>
-                <Col xs={5}>
-                  <img src={HighPriority} />
-                </Col>
-              </Row>
-              <Row style={subText}>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod
-                <hr />
-              </Row>
-              <Row style={blue}>Received: Monday, Dec 16, 2021</Row>
-            </div>
-          </Col>
-        </Row>
+        {requestedQuotes.length === 0 ? 'None' : ''}
+        {requestedQuotes.map((quote, i) => (
+          <Row className="mt-2 mb-2" key={i}>
+            <Col style={{ padding: "5px" }}>
+              <div style={tileImg}>
+                {JSON.parse(quote.images).length > 0 ? (
+                  <img src={JSON.parse(quote.images)[0]} alt='Quote' className='w-100 h-100'
+                    style={{borderRadius: '4px', objectFit: 'cover'}}/>
+                ) : ''}
+              </div>
+            </Col>
+            <Col xs={8} style={{ padding: "5px" }}>
+              <div onClick={() => navigate(`/detailQuoteRequest/${quote.maintenance_quote_uid}`)}>
+                <Row style={subHeading}>
+                  <Col>{quote.title}</Col>
+                  <Col xs={5}>
+                    {quote.priority === 'Low' ? <img src={LowPriority} />
+                    : quote.priority === 'Medium' ? <img src={MediumPriority} />
+                    : quote.priority === 'High' ? <img src={HighPriority} />
+                    : ''}
+                  </Col>
+                </Row>
+                <Row style={subText}>
+                  {quote.description}
+                  <hr/>
+                </Row>
+                <Row style={blue}>
+                  Received:
+                  {moment(quote.quote_created_date).format(' dddd, MMM DD, YYYY')}
+                </Row>
+              </div>
+            </Col>
+          </Row>
+        ))}
       </Container>
       <Container className="pt-1 mb-4">
         <Row style={headings}>
           <div>Upcoming, Scheduled</div>
         </Row>
-        <Row className="mt-2 mb-2">
-          <Col style={{ padding: "5px" }}>
-            <div
-              style={{
-                width: "110px",
-                height: "100%",
-                background: "#F5F5F5 0% 0% no-repeat padding-box",
-                border: "1px solid #C4C4C4",
-                borderRadius: "5px",
-              }}
-            ></div>
-          </Col>
-          <Col xs={8} style={{ padding: "5px" }}>
-            <div onClick={() => navigate("/detailQuote")}>
-              <Row style={subHeading}>
-                <Col>Broken Shower</Col>
-                <Col xs={5}>
-                  <img src={HighPriority} />
-                </Col>
-              </Row>
-              <Row style={subText}>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod
-                <hr />
-              </Row>
-              <Row style={blue} className="mt=0 pt=0">
-                Scheduled for Monday, Dec 12, 2021
-              </Row>
-            </div>
-          </Col>
-        </Row>
-        <Row className="mt-2 mb-2">
-          <Col style={{ padding: "5px" }}>
-            <div
-              style={{
-                width: "110px",
-                height: "100%",
-                background: "#F5F5F5 0% 0% no-repeat padding-box",
-                border: "1px solid #C4C4C4",
-                borderRadius: "5px",
-              }}
-            ></div>
-          </Col>
-          <Col xs={8} style={{ padding: "5px" }}>
-            <div>
-              <Row style={subHeading}>
-                <Col>Broken Shower</Col>
-                <Col xs={5}>
-                  <img src={HighPriority} />
-                </Col>
-              </Row>
-              <Row style={subText}>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod
-                <hr />
-              </Row>
-              <Row style={blue} className="mt=0 pt=0">
-                Scheduled for Monday, Dec 12, 2021
-              </Row>
-            </div>
-          </Col>
-        </Row>
+        {scheduledJobs.length === 0 ? 'None' : ''}
+        {scheduledJobs.map((quote, i) => (
+          <Row className="mt-2 mb-2" key={i}>
+            <Col style={{ padding: "5px" }}>
+              <div style={tileImg}>
+                {JSON.parse(quote.images).length > 0 ? (
+                  <img src={JSON.parse(quote.images)[0]} alt='Quote' className='w-100 h-100'
+                    style={{borderRadius: '4px', objectFit: 'cover'}}/>
+                ) : ''}
+              </div>
+            </Col>
+            <Col xs={8} style={{ padding: "5px" }}>
+              <div onClick={() => navigate(`/detailQuote/${quote.maintenance_quote_uid}`)}>
+                <Row style={subHeading}>
+                  <Col>{quote.title}</Col>
+                  <Col xs={5}>
+                    {quote.priority === 'Low' ? <img src={LowPriority} />
+                    : quote.priority === 'Medium' ? <img src={MediumPriority} />
+                    : quote.priority === 'High' ? <img src={HighPriority} />
+                    : ''}
+                  </Col>
+                </Row>
+                <Row style={subText}>
+                  {quote.description}
+                  <hr/>
+                </Row>
+                <Row style={blue}>
+                  Scheduled for
+                  {moment(quote.scheduled_date).format(' dddd, MMM DD, YYYY')}
+                </Row>
+              </div>
+            </Col>
+          </Row>
+        ))}
       </Container>
-      <Container className="pt-1 mb-4">
+      <Container className="pt-1 mb-4 pb-5">
         <Row style={headings}>
           <div>Quotes Sent</div>
         </Row>
-        <Row className="mt-2 mb-2">
-          <Col style={{ padding: "5px" }}>
-            <div
-              style={{
-                width: "110px",
-                height: "100%",
-                background: "#F5F5F5 0% 0% no-repeat padding-box",
-                border: "1px solid #C4C4C4",
-                borderRadius: "5px",
-              }}
-            ></div>
-          </Col>
-          <Col xs={8} style={{ padding: "5px" }}>
-            <div onClick={() => navigate("/quotesAccepted")}>
-              <Row style={subHeading}>
-                <Col>Broken Shower</Col>
-                <Col xs={5}>
-                  <img src={LowPriority} />
-                </Col>
-              </Row>
-              <Row style={subText}>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod
-                <hr />
-              </Row>
-              <Row style={blue} className="mt=0 pt=0">
-                Quote sent on Dec 1, 2021
-              </Row>
-            </div>
-          </Col>
-        </Row>
-        <Row className="mt-2 mb-2">
-          <Col style={{ padding: "5px" }}>
-            <div
-              style={{
-                width: "110px",
-                height: "100%",
-                background: "#F5F5F5 0% 0% no-repeat padding-box",
-                border: "1px solid #C4C4C4",
-                borderRadius: "5px",
-              }}
-            ></div>
-          </Col>
-          <Col xs={8} style={{ padding: "5px" }}>
-            <div>
-              <Row style={subHeading}>
-                <Col>Broken Shower</Col>
-                <Col xs={5}>
-                  <img src={LowPriority} />
-                </Col>
-              </Row>
-              <Row style={subText}>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod
-                <hr />
-              </Row>
-              <Row style={blue} className="mt=0 pt=0">
-                Quote sent on Dec 1, 2021
-              </Row>
-            </div>
-          </Col>
-        </Row>
+        {sentQuotes.length === 0 ? 'None' : ''}
+        {sentQuotes.map((quote, i) => (
+          <Row className="mt-2 mb-2" key={i}>
+            <Col style={{ padding: "5px" }}>
+              <div style={tileImg}>
+                {JSON.parse(quote.images).length > 0 ? (
+                  <img src={JSON.parse(quote.images)[0]} alt='Quote' className='w-100 h-100'
+                    style={{borderRadius: '4px', objectFit: 'cover'}}/>
+                ) : ''}
+              </div>
+            </Col>
+            <Col xs={8} style={{ padding: "5px" }}>
+              <div onClick={() => navigate(`/quotesAccepted/${quote.maintenance_quote_uid}`)}>
+                <Row style={subHeading}>
+                  <Col>{quote.title}</Col>
+                  <Col xs={5}>
+                    {quote.priority === 'Low' ? <img src={LowPriority} />
+                    : quote.priority === 'Medium' ? <img src={MediumPriority} />
+                    : quote.priority === 'High' ? <img src={HighPriority} />
+                    : ''}
+                  </Col>
+                </Row>
+                <Row style={subText}>
+                  {quote.description}
+                  <hr/>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+        ))}
       </Container>
+      <div style={hidden}>
+        footer space
+      </div>
       <Footer tab={"DASHBOARD"} />
     </div>
   );

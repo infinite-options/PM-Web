@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { useParams } from "react-router";
 import Header from "../components/Header";
 import ArrowUp from "../icons/ArrowUp.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
@@ -11,6 +12,7 @@ import MediumPriority from "../icons/mediumPriority.svg";
 import LowPriority from "../icons/lowPriority.svg";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
+import { get, put } from '../utils/api';
 import {
   headings,
   subHeading,
@@ -20,10 +22,14 @@ import {
   blueBorderButton,
   bluePillButton,
   redPillButton,
+  tileImg,
+  squareForm
 } from "../utils/styles";
+import ServicesProvided from '../components/ServicesProvided';
 
 function DetailQuote(props) {
   const navigate = useNavigate();
+  const { quote_id } = useParams();
   const [expandPaymentTerm, setExpandPaymentTerm] = useState(false);
   const [expandEventType, setExpandEventType] = useState(false);
   const [showAddService, setShowAddService] = useState(false);
@@ -33,13 +39,69 @@ function DetailQuote(props) {
   const [sendManager, setSendManager] = useState(false);
   const [quoteAccepted, setQuoteAccepted] = useState(false);
   const [quoteRejected, setQuoteRejected] = useState(false);
+  const [quote, setQuote] = React.useState({});
+  const [property, setProperty] = React.useState({});
+  const [currentImg, setCurrentImg] = React.useState(0);
+  const serviceState = React.useState([]);
+  const [earliestAvailability, setEarliestAvailability] = React.useState(Date());
+  const [eventType, setEventType] = React.useState('1 Hour Job');
+
+  const nextImg = () => {
+    if (currentImg === JSON.parse(property.images).length - 1) {
+      setCurrentImg(0);
+    } else {
+      setCurrentImg(currentImg+1);
+    }
+  }
+  const previousImg = () => {
+    if (currentImg === 0) {
+      setCurrentImg(JSON.parse(property.images).length - 1);
+    } else {
+      setCurrentImg(currentImg-1);
+    }
+  }
+
+  const loadQuote = async () => {
+    const response = await get(`/maintenanceQuotes?maintenance_quote_uid=${quote_id}`);
+    if (response.result.length === 0) {
+      console.log('quote not found');
+      navigate('/ScheduledJobs');
+      return;
+    }
+    setQuote(response.result[0]);
+    const property_uid = response.result[0].property_uid;
+    const propertyResponse = await get(`/properties?property_uid=${property_uid}`);
+    setProperty(propertyResponse.result[0]);
+  }
+  React.useEffect(loadQuote, []);
+
+  const sendQuote = async () => {
+    const updatedQuote = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      services_expenses: serviceState[0],
+      earliest_availability: earliestAvailability,
+      status: 'SENT'
+    }
+    const response = await put('/maintenanceQuotes', updatedQuote);
+    navigate('/ScheduledJobs');
+  }
+
+  const rejectQuote = async () => {
+    const updatedQuote = {
+      maintenance_quote_uid: quote.maintenance_quote_uid,
+      status: 'REJECTED'
+    }
+    const response = await put('/maintenanceQuotes', updatedQuote);
+    navigate('/ScheduledJobs');
+  }
+
   console.log(addService, showAddService);
   return (
     <div className="h-100 d-flex flex-column">
       <Header
         title="Repairs"
         leftText="< Back"
-        leftFn={() => navigate("/maintenance")}
+        leftFn={() => navigate("/ScheduledJobs")}
       />
       <Container className="pt-1 mb-4" hidden={quoteAccepted || quoteRejected}>
         <Row>
@@ -50,173 +112,50 @@ function DetailQuote(props) {
               alignItems: "center",
             }}
           >
-            <div
-              style={{
-                width: "350px",
-                height: "198px",
-                background: "#F5F5F5 0% 0% no-repeat padding-box",
-                border: "1px solid #C4C4C4",
-                borderRadius: "5px",
-              }}
-            ></div>
+            <div style={{...tileImg, height: '200px', position: 'relative'}}>
+              {quote.images && JSON.parse(quote.images).length > 0 ? (
+                <img src={JSON.parse(quote.images)[currentImg]} className='w-100 h-100'
+                  style={{borderRadius: '4px', objectFit: 'contain'}} alt='Quote'/>
+              ) : ''}
+              <div style={{position: 'absolute', left: '5px', top: '90px'}}
+                onClick={previousImg}>
+                {'<'}
+              </div>
+              <div style={{position: 'absolute', right: '5px', top: '90px'}}
+                onClick={nextImg}>
+                {'>'}
+              </div>
+            </div>
           </Col>
         </Row>
         <Row>
-          <div style={headings}>Broken Shower</div>
+          <div style={headings}>{quote.title}</div>
         </Row>
         <Row>
-          <div style={subText}>213 Parkland Ave, San Jose, CA 90820</div>
+          <div style={subText}>{property.address}, {property.city}, {property.state} {property.zip}</div>
         </Row>
         <Row className="mt-2">
           <Col>
-            <img src={HighPriority} />
+            {quote.priority === 'Low' ? <img src={LowPriority} />
+            : quote.priority === 'Medium' ? <img src={MediumPriority} />
+            : quote.priority === 'High' ? <img src={HighPriority} />
+            : ''}
           </Col>
         </Row>
         <Row className="mt-2">
           <div style={subText}>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam
+            {quote.description}
           </div>
         </Row>
 
-        <div>
-          <div hidden={!addService}>
-            <Row className="mt-3">
-              <Col style={headings}>Replace Shower</Col>
-              <Col xs={3}>
-                <img
-                  src={EditIcon}
-                  alt="Edit"
-                  className="px-1 mx-2"
-                  //onClick={() => editContact(i)}
-                />
-                <img
-                  src={DeleteIcon}
-                  alt="Delete"
-                  className="px-1 mx-2"
-                  //onClick={() => deleteContact(i)}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <div style={subText}>
-                $45.00 one-time hardware charge <hr />
-              </div>
-            </Row>
-            <Row className="mb-3">
-              <Col>
-                <Button
-                  variant="outline-primary"
-                  style={blueBorderButton}
-                  onClick={() => setShowAddService(false)}
-                >
-                  Add Another Service / Expense
-                </Button>
-              </Col>
-            </Row>
-          </div>
-
-          <div hidden={showAddService}>
-            <div className="mt-2 mx-2">
-              <Form.Group className="mt-3 mb-2">
-                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                  Service notes
-                </Form.Label>
-                <Form.Control
-                  style={{ borderRadius: 0 }}
-                  //ref={requestTitleRef}
-                  placeholder="Shower labor cost"
-                />
-              </Form.Group>
-
-              <Row>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Form.Group className="mt-3 mb-4">
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                      Fees
-                    </Form.Label>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      //ref={requestTitleRef}
-                      placeholder="$20.00"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                  onClick={() => setExpandPaymentTerm(!expandPaymentTerm)}
-                >
-                  <Form.Group className="mt-3 mb-4">
-                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                      Payment Term
-                    </Form.Label>
-
-                    <div
-                      className="d-flex justify-content-between"
-                      style={{ border: "1px solid #777777", padding: "6px" }}
-                    >
-                      One-time
-                      <img
-                        src={expandPaymentTerm ? ArrowUp : ArrowDown}
-                        alt="Expand"
-                      />
-                    </div>
-                  </Form.Group>
-                </Col>
-              </Row>
-            </div>
-            <div className="mt-2 mx-2">
-              <Row>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  <Button
-                    variant="outline-primary"
-                    style={pillButton}
-                    onClick={() => setShowAddService(false)}
-                  >
-                    Cancel
-                  </Button>
-                </Col>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  {" "}
-                  <Button
-                    variant="outline-primary"
-                    style={bluePillButton}
-                    onClick={() => {
-                      setAddService(true);
-                      setShowAddService(true);
-                    }}
-                  >
-                    Add Quote
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          </div>
+        <div className='mt-5'>
+          <Row>
+            <div style={headings}>Services</div>
+          </Row>
+          <ServicesProvided state={serviceState} noHeader/>
         </div>
-        <div className="mt-2 mx-2 mb-4" hidden={!addDate}>
+
+        <div className="mt-2 mx-2 mb-4">
           <Row>
             <div style={headings}>Earliest Availabilty</div>
           </Row>
@@ -225,140 +164,32 @@ function DetailQuote(props) {
               <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
                 Date
               </Form.Label>
-              <div>Monday, Jan 3, 2022</div>
+              <Form.Control type='date' style={squareForm} value={earliestAvailability}
+                onChange={(e) => setEarliestAvailability(e.target.value)}/>
             </Form.Group>
           </div>
         </div>
 
-        <div className="mt-2 mx-2 mb-4" hidden={addDate}>
+        <div className="mt-2 mx-2 mb-4">
           <Row>
-            <div style={headings}>Earliest Availabilty</div>
+            <div style={headings}>Event Type</div>
           </Row>
-          <div className="mt-2 mx-2">
-            <Form.Group className="mt-3 mb-2">
+          <div>
+            <Form.Group className="mt-2 mb-2">
               <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                Date
+                Type
               </Form.Label>
-              <Form.Control style={{ borderRadius: 0 }} type="date" />
+              <Form.Select style={squareForm} value={eventType}
+                onChange={(e) => setEventType(e.target.value)}>
+                <option>1 Hour Job</option>
+                <option>2 Hour Job</option>
+                <option>6 Hour Job</option>
+                <option>1 Day Job</option>
+              </Form.Select>
             </Form.Group>
-            <div className="mt-2 mx-2">
-              <Row>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  <Button style={pillButton} variant="outline-primary">
-                    Cancel
-                  </Button>
-                </Col>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  {" "}
-                  <Button
-                    style={bluePillButton}
-                    onClick={() => setAddDate(!addDate)}
-                  >
-                    Save
-                  </Button>
-                </Col>
-              </Row>
-            </div>
           </div>
         </div>
-        <div className="mt-2 mx-2 mb-4" hidden={!addEventType}>
-          <Row className="mt-3">
-            <Col style={headings}>Event Calendar Shared</Col>
-            <Col xs={1}>
-              <img
-                src={EditIcon}
-                alt="Edit"
-                className="mx-2 px-1"
-                style={{ float: "right" }}
 
-                //onClick={() => editContact(i)}
-              />
-            </Col>
-            <Col xs={1}>
-              <img
-                src={DeleteIcon}
-                alt="Delete"
-                className="mx-2 px-1"
-                style={{ float: "right" }}
-                //onClick={() => deleteContact(i)}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <div style={subText}>
-              2 hour job <hr />
-            </div>
-          </Row>
-          <Row className="mb-3">
-            <Col>
-              <Button variant="outline-primary" style={blueBorderButton}>
-                View Calendar
-              </Button>
-            </Col>
-          </Row>
-        </div>
-        <div className="mt-2 mx-2 mb-4" hidden={addEventType}>
-          <Row>
-            <div style={headings}>Pick Event Type to share calendar</div>
-          </Row>
-          <div className="mt-2 mx-2">
-            <Form.Group className="mt-3 mb-2">
-              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                Event Type
-              </Form.Label>
-              <div
-                className="d-flex justify-content-between"
-                style={{ border: "1px solid #777777", padding: "6px" }}
-                onClick={() => setExpandEventType(!expandEventType)}
-              >
-                2 hour job
-                <img src={expandEventType ? ArrowUp : ArrowDown} alt="Expand" />
-              </div>
-            </Form.Group>
-            <div className="mt-2 mx-2 mb-4">
-              <Row>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  <Button style={pillButton} variant="outline-primary">
-                    Cancel
-                  </Button>
-                </Col>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  {" "}
-                  <Button
-                    style={bluePillButton}
-                    onClick={() => setAddEventType(!addEventType)}
-                  >
-                    Save
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          </div>
-        </div>
 
         <div className="mt-2 mx-2 mb-4" hidden={sendManager}>
           <Row>
@@ -372,7 +203,7 @@ function DetailQuote(props) {
               <Button
                 variant="outline-primary"
                 style={pillButton}
-                onClick={() => setSendManager(true)}
+                onClick={sendQuote}
               >
                 Save
               </Button>
@@ -388,9 +219,7 @@ function DetailQuote(props) {
               <Button
                 variant="outline-primary"
                 style={redPillButton}
-                onClick={() => {
-                  setQuoteRejected(true);
-                }}
+                onClick={rejectQuote}
               >
                 Reject Request
               </Button>

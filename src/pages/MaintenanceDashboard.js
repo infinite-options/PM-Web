@@ -27,12 +27,23 @@ function MaintenanceDashboard(props) {
   const { userData } = useContext(AppContext);
   const { setShowFooter } = props;
   const [profile, setProfile] = useState([]);
+  const [upcomingJob, setUpcomingJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   let access_token = userData.access_token;
 
   const fetchProfile = async () => {
-    const response = await get(`/tenantProfileInfo`, access_token);
+    let business_uid = '';
+    for (const business of userData.user.businesses) {
+      if (business.business_type === 'MAINTENANCE') {
+        business_uid = business.business_uid;
+        break;
+      }
+    }
+    if (business_uid === '') {
+      console.log('no maintenance business found');
+    }
+    const response = await get(`/businesses?business_uid=${business_uid}`);
     console.log(response);
     setProfile(response.result[0]);
   };
@@ -47,7 +58,7 @@ function MaintenanceDashboard(props) {
     setShowFooter(true);
   });
 
-  //useEffect(fetchProfile, []);
+  useEffect(fetchProfile, []);
 
   const goToQuotesRequested = () => {
     navigate("/ScheduledJobs");
@@ -75,32 +86,35 @@ function MaintenanceDashboard(props) {
     <div className="h-100">
       <Header title="Home" />
 
-      <Container className="pt-1 mb-4">
+      <Container className="pt-1 mb-5 pb-5">
         <Row style={headings}>
-          <div>Hector’s Plumbing</div>
+          <div>{profile.business_name}</div>
         </Row>
-        <Row style={upcoming} className="mt-2 mb-2">
-          <div style={upcomingHeading} className="mt-1 mb-1">
-            Upcoming job:
-            <br />
-            Toilet Plumbing scheduled for
-            <br /> Today at 12:00 pm
-            <br />
-          </div>
 
-          <Col className="mt-1 mb-1">
-            <div style={upcomingText}>
-              For questions / concerns, feel free to contact the property
-              manager
+        {upcomingJob ? (
+          <Row style={upcoming} className="mt-2 mb-2">
+            <div style={upcomingHeading} className="mt-1 mb-1">
+              Upcoming job:
+              <br />
+              Toilet Plumbing scheduled for
+              <br /> Today at 12:00 pm
+              <br />
             </div>
-          </Col>
-          <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-            <img src={Phone} />
-          </Col>
-          <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-            <img src={Message} />
-          </Col>
-        </Row>
+
+            <Col className="mt-1 mb-1">
+              <div style={upcomingText}>
+                For questions / concerns, feel free to contact the property
+                manager
+              </div>
+            </Col>
+            <Col xs={2} style={upcomingText} className="mt-1 mb-1">
+              <img src={Phone} />
+            </Col>
+            <Col xs={2} style={upcomingText} className="mt-1 mb-1">
+              <img src={Message} />
+            </Col>
+          </Row>
+        ) : ''}
 
         <Row
           style={{

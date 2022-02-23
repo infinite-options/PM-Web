@@ -37,6 +37,7 @@ function TenantDashboard(props) {
   const [lastPurchase, setLastPurchase] = React.useState(null);
   const [currentPurchase, setCurrentPurchase] = React.useState(null);
   const [nextPurchase, setNextPurchase] = React.useState(null);
+  const [property, setProperty] = React.useState({});
   console.log(context, access_token, user);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ function TenantDashboard(props) {
         }
       }
       setRent(rentTotal);
+      setProperty(response.result[0]);
       const purchases = response.result.length ? JSON.parse(response.result[0].purchases)  : [];
       let lastPaidPurchase = null;
       let firstUnpaidPurchase = null;
@@ -183,10 +185,7 @@ function TenantDashboard(props) {
             </div>
             {isLoading === true ? null : (
               <div style={address} className="mt-1 mb-1">
-                {profile.address},&nbsp;
-                {profile.city},&nbsp;
-                {profile.state}&nbsp;
-                {profile.zip}
+                {`${property.address}, ${property.city}, ${property.state} ${property.zip}`}
               </div>
             )}
 
