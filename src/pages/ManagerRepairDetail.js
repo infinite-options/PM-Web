@@ -31,7 +31,7 @@ import DeleteIcon from "../icons/DeleteIcon.svg";
 import Heart from "../icons/Heart.svg";
 import HeartOutline from "../icons/HeartOutline.svg";
 import Plus from "../icons/Plus.svg";
-import {get} from "../utils/api";
+import {get, post} from "../utils/api";
 
 function ManagerRepairDetail(props) {
     const {userData, refresh} = React.useContext(AppContext);
@@ -48,7 +48,7 @@ function ManagerRepairDetail(props) {
     const { mp_id, rr_id } = useParams();
 
     const repair = location.state.repair
-    console.log(repair)
+    // console.log(repair)
     // console.log(mp_id, rr_id)
 
     const fetchBusinesses = async () => {
@@ -63,12 +63,38 @@ function ManagerRepairDetail(props) {
             return;
         }
 
-        const businesses = response.result
+        const businesses = response.result.map(business => ({...business, quote_requested: false}))
+        console.log(repair)
         console.log(businesses)
         setBusinesses(businesses)
     }
 
     React.useEffect(fetchBusinesses, [access_token]);
+
+    const toggleBusiness = (index) => {
+        const newBusinesses = [...businesses];
+        newBusinesses[index].quote_requested = !newBusinesses[index].quote_requested;
+        setBusinesses(newBusinesses);
+    }
+
+    const sendQuotesRequest = async () => {
+        const business_ids = businesses.filter(b => b.quote_requested).map(b => b.business_uid);
+        if (business_ids.length === 0) {
+            alert('No businesses Selected')
+            return
+        }
+        for (const id of business_ids){
+            const quote_details = {
+                maintenance_request_uid: repair.maintenance_request_uid,
+                business_uid: id
+            }
+            // console.log(quote_details)
+            const response = await post("/maintenanceQuotes", quote_details);
+            const result = response.result
+            // console.log(result)
+        }
+        console.log("Quotes Requested")
+    }
 
     return (
         <div className="h-100">
@@ -226,10 +252,8 @@ function ManagerRepairDetail(props) {
                         (<Row className="mt-2" key={i}>
                             <Col xs={2} className="mt-2">
                                 <Row>
-                                    <Checkbox
-                                        type="BOX"
-                                        //onClick={() => setUsePreviousAddress(!usePreviousAddress)}
-                                    />
+                                    <Checkbox type="BOX" checked={businesses[i].quote_requested}
+                                              onClick={() => toggleBusiness(i)}/>
                                 </Row>
                             </Col>
                             <Col>
@@ -252,7 +276,7 @@ function ManagerRepairDetail(props) {
                 </div>
                 <Row className="mt-4">
                     <Col className='d-flex justify-content-evenly'>
-                        <Button style={bluePillButton}>Request Quotes</Button>
+                        <Button style={bluePillButton} onClick={sendQuotesRequest}>Request Quotes</Button>
                     </Col>
                 </Row>
                 <Row className="mt-3">
