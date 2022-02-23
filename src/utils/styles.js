@@ -129,7 +129,7 @@ const welcome = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-  textAlign: "center",margin:"50px",padding:"50px"
+  textAlign: "center",margin:"30px",padding:"50px"
 }
 const upcoming = {
   background: " #007AFF 0% 0% no-repeat padding-box",
@@ -313,6 +313,8 @@ const blueLarge = {
   font: " normal normal 600 22px/26px SFProDisplay-Semibold",
   color: "#007AFF",
 };
+
+
 export {
   pillButton,
   boldSmall,

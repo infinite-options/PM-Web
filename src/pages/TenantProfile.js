@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button,DropdownButton, Dropdown } from "react-bootstrap";
 import Popover from "@material-ui/core/Popover";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
@@ -28,6 +28,9 @@ function TenantProfile(props) {
   const [company, setCompany] = useState("");
   const [ssn, setSsn] = useState("");
   const [dlNumber, setDLNumber] = useState("");
+  const defaultState = "--";
+  const [selectedState, setSelectedState] = React.useState(defaultState);
+  const [selectedPrevState, setSelectedPrevState] = React.useState(defaultState);
   const currentAddressState = useState({
     street: "",
     unit: "",
@@ -84,14 +87,17 @@ function TenantProfile(props) {
       setCompany(response.result[0].tenant_current_job_company);
       setDLNumber(response.result[0].tenant_drivers_license_number);
       setCompany(response.result[0].tenant_current_job_company);
-      currentAddressState[1](
-        JSON.parse(response.result[0].tenant_current_address)
-      );
+     const currentAddress =  JSON.parse(response.result[0].tenant_current_address);
+      
+      currentAddressState[1](currentAddress);
+      setSelectedState(currentAddress.state);
       if (response.result[0].tenant_previous_address != null) {
-        previousAddressState[1](
-          JSON.parse(response.result[0].tenant_previous_address)
-        );
+        const prevAddress = JSON.parse(response.result[0].tenant_previous_address);
+        previousAddressState[1](prevAddress );
+        setSelectedPrevState(prevAddress.state);
+
       }
+      
       if (response.result[0].tenant_previous_address != null) {
         setUsePreviousAddress(true);
       }
@@ -100,6 +106,11 @@ function TenantProfile(props) {
   }, []);
 
   const submitInfo = async () => {
+    currentAddressState[0].state = selectedState;
+    if(previousAddressState && previousAddressState.length){
+      previousAddressState[0].state = selectedPrevState;
+    }
+
     const tenantProfile = {
       first_name: firstName,
       last_name: lastName,
@@ -126,33 +137,33 @@ function TenantProfile(props) {
     "Annual",
     "Hourly Rate",
   ];
-  const frequencylist = () => {
-    return (
-      <div>
-        {allFrequency.map((freq) => {
-          return (
-            <div
-              style={{
-                cursor: "pointer",
-                //backgroundColor: `${view.color}`,
-                color: "#2C2C2E",
-                fontSize: "16px",
-                padding: "5px",
-                font: "normal normal bold 20px/24px SF Pro Display",
-              }}
-              onClick={(e) => {
-                setFrequency(freq);
-                setExpandFrequency(!false);
-                handleClose(e);
-              }}
-            >
-              {freq}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  // const frequencylist = () => {
+  //   return (
+  //     <div>
+  //       {allFrequency.map((freq) => {
+  //         return (
+  //           <div
+  //             style={{
+  //               cursor: "pointer",
+  //               //backgroundColor: `${view.color}`,
+  //               color: "#2C2C2E",
+  //               fontSize: "16px",
+  //               padding: "5px",
+  //               font: "normal normal bold 20px/24px SF Pro Display",
+  //             }}
+  //             onClick={(e) => {
+  //               setFrequency(freq);
+  //               setExpandFrequency(!false);
+  //               handleClose(e);
+  //             }}
+  //           >
+  //             {freq}
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -213,16 +224,21 @@ function TenantProfile(props) {
               <Form.Label as="h6" className="mb-0 ms-2">
                 Frequency
               </Form.Label>
-              <div
+              <DropdownButton variant="light" id="dropdown-basic-button" title={frequency} >
+                     {allFrequency.map((freq, i) => (
+                     <Dropdown.Item onClick={() => setFrequency(freq)} href="#/action-1" > {freq} </Dropdown.Item>
+                     ))}  
+                 </DropdownButton>
+              {/* <div
                 className="d-flex justify-content-between"
                 style={{ border: "1px solid #777777", padding: "6px" }}
               >
                 {frequency}
                 <img src={expandFrequency ? ArrowUp : ArrowDown} alt="Expand" />
-              </div>
+              </div> */}
             </Form.Group>
           </Col>
-          <Popover
+          {/* <Popover
             id={id}
             open={open}
             anchorEl={anchorEl}
@@ -243,7 +259,7 @@ function TenantProfile(props) {
             }}
           >
             {frequencylist()}
-          </Popover>
+          </Popover> */}
         </Row>
 
         <Form.Group className="mx-2 my-3">
@@ -291,7 +307,7 @@ function TenantProfile(props) {
           />
         </Form.Group>
         <h5 className="mx-2 my-3">Current Address</h5>
-        <AddressForm state={currentAddressState} />
+        <AddressForm state={currentAddressState} selectedState={selectedState} setSelectedState={setSelectedState} />
         <Row>
           <Col
             xs={2}
@@ -324,7 +340,7 @@ function TenantProfile(props) {
         {usePreviousAddress ? (
           <div>
             <h5 className="mx-2 my-3">Previous Address</h5>
-            <AddressForm state={previousAddressState} />
+            <AddressForm state={previousAddressState} selectedState={selectedPrevState} setSelectedState={setSelectedPrevState} />
           </div>
         ) : (
           ""

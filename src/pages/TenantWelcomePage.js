@@ -1,11 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import moment from "moment";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
 import RepairRequest from "../icons/repair_request.svg";
 import RepairStatus from "../icons/repair_status.svg";
 import Documents from "../icons/documents.svg";
@@ -15,13 +12,6 @@ import SearchPM from "../icons/searchPM.svg";
 import { get } from "../utils/api";
 import {
   headings,
-  upcoming,
-  upcomingHeading,
-  upcomingText,
-  blue,
-  bluePill,
-  greenBorderPill,
-  address,
   actions,
   actionsDisabled,
   welcome
@@ -121,7 +111,7 @@ function TenantWelcomePage(props) {
                     <div style={{fontSize:"30px"}}>Welcome {profile.tenant_first_name}!</div>
                 </Row>
             </div>
-        <div style={{margin:"50px",padding:"50px"}}>
+        <div>
           <Row
             style={{
               display: "flex",

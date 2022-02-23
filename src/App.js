@@ -9,6 +9,7 @@ import ProfileInfo from "./pages/ProfileInfo";
 import OwnerHome from "./pages/OwnerHome";
 import TenantHome from "./pages/TenantHome";
 import TenantAvailableProperties from "./pages/TenantAvailableProperties";
+import ApplyToProperty from "./pages/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
@@ -99,6 +100,7 @@ function App() {
             <Route path="tenant" element={<TenantHome />} />
             <Route path="tenantAvailableProperties" element={<TenantAvailableProperties/>} />
             <Route path="uploadTenantDocuments" element={<TenantDocumentUpload/>} />
+            <Route path="applyToProperty" element={<ApplyToProperty/>} />
             <Route path="manager" element={<ManagerHome />} />
             <Route
               path="/:property_uid/repairRequest"
