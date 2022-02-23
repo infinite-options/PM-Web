@@ -61,6 +61,13 @@ function TenantDashboard(props) {
       setProfile(response.result[0]);
       response = await get('/tenantProperties', access_token);
       const payments = response.result.length ? JSON.parse(response.result[0].rent_payments) : [];
+      const property_uid = response.result.length ? (response.result[0].property_uid) : null;
+      if(property_uid){
+        const prof = {...profile};
+        prof.property_uid = property_uid;
+        setProfile(prof);
+
+      }
       let rentTotal = 0;
       for (const payment of payments) {
         if (payment.frequency === 'Monthly' && payment.fee_type === '$') {

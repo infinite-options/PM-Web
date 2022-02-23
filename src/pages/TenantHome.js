@@ -65,7 +65,7 @@ function TenantHome() {
              <TenantWelcomePage setShowFooter={setShowFooter} profile={profile} setProfile={setProfile} />
           ))}
           </div>
-          <div className="flex-grow-1">
+          <div className="flex-grow-1" style={{height:"90%",overflow:"auto"}} >
             {footerTab === "PROFILE" ? (
               <TenantProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
             ) : (

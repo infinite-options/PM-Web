@@ -3,11 +3,17 @@ import {Container, Row, Col, Form, Button} from 'react-bootstrap';
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import Document from "../icons/documents.svg";
+import { useNavigate } from "react-router-dom";
+
 
 
 function PropertyCard(props) {
     const { property } = props;
-    
+    const navigate = useNavigate();
+
+    const goToApplyToProperty = () => {
+        navigate("/applyToProperty");
+    }
     return (      
         <div style={{height: "150px",border:"1px solid lightblue", cursor: "pointer", display: "flex" }} >
                 <div className="img" style={{ flex: "0 0 35%", background:"lightgray" }}>
@@ -27,7 +33,7 @@ function PropertyCard(props) {
                             <span style={{marginLeft:"1px"}}>John Doe</span>
                         </div>
                         <div className="btns">
-                            <img src={Document} alt="documentIcon" style={{marginRight:"5px", width:"25px"}} />
+                            <img src={Document} onClick={goToApplyToProperty} alt="documentIcon" style={{marginRight:"5px", width:"25px"}} />
                              <img src={Phone} alt="phoneIcon" style={{marginRight:"5px", width:"25px"}} />
                              <img src={Message} alt="messageIcon"  style={{width:"25px"}} />
 

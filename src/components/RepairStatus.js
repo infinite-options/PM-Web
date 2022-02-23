@@ -57,9 +57,9 @@ function RepairStatus(props) {
             </Row>
           ) : (
             <div>
-              {repairs.map((repair) => {
+              {repairs.map((repair,i) => {
                 return repair.status === "SCHEDULED" ? (
-                  <Row>
+                  <Row key={i}>
                     <Col style={{ padding: "5px" }}>
                       {JSON.parse(repair.images).length > 0 ? (
                         <img
