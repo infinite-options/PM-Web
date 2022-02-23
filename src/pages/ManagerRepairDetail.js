@@ -40,14 +40,15 @@ function ManagerRepairDetail(props) {
     const navigate = useNavigate();
     const [morePictures, setMorePictures] = useState(false);
     const [canReschedule, setCanReschedule] = useState(false);
-    const [cannotReschedule, setCannotReschedule] = useState(false);
     const [requestQuote, setRequestQuote] = useState(false);
     const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
-    const [businesses, setBusinesses] = React.useState([]);
+    const [businesses, setBusinesses] = useState([]);
 
+    const [edit, setEdit ] = useState(false);
     const { mp_id, rr_id } = useParams();
 
     const repair = location.state.repair
+
     // console.log(repair)
     // console.log(mp_id, rr_id)
 
@@ -67,6 +68,7 @@ function ManagerRepairDetail(props) {
         console.log(repair)
         console.log(businesses)
         setBusinesses(businesses)
+        setCanReschedule(repair.can_reschedule === 1)
     }
 
     React.useEffect(fetchBusinesses, [access_token]);
@@ -98,21 +100,12 @@ function ManagerRepairDetail(props) {
 
     return (
         <div className="h-100">
-            <Header
-                title="Repairs"
-                leftText={scheduleMaintenance || requestQuote ? null : "< Back"}
-                leftFn={() => navigate(-1)}
-                rightText={scheduleMaintenance || requestQuote ? null : "Edit"}
-            />
+            <Header title="Repairs"
+                    leftText={scheduleMaintenance || requestQuote ? null : "< Back"} leftFn={() => navigate(-1)}
+                    rightText={scheduleMaintenance || requestQuote ? null : "Edit"}/>
 
-            <Container
-                className="pt-1 mb-4"
-                hidden={scheduleMaintenance || requestQuote}
-            >
-
-                <Row style={headings}>
-                    <div>New Repair Request</div>
-                </Row>
+            <Container className="pt-1 mb-4" hidden={scheduleMaintenance || requestQuote}>
+                <Row style={headings}><div>New Repair Request</div></Row>
                 <Row className="pt-1 mb-4">
                     <div style={subHeading}>Title (character limit: 15)</div>
                     <div style={subText}>{repair.title}</div>
@@ -125,18 +118,6 @@ function ManagerRepairDetail(props) {
                     <div className="pt-1 mb-2" style={subHeading}>
                         Pictures from tenant
                     </div>
-                    {/*<div*/}
-                    {/*    className="pt-1 mb-2"*/}
-                    {/*    style={{*/}
-                    {/*        display: "flex",*/}
-                    {/*        flexDirection: "row",*/}
-                    {/*        justifyContent: "space-evenly",*/}
-                    {/*    }}*/}
-                    {/*>*/}
-                    {/*    <Col xs={3} style={actions}></Col>*/}
-                    {/*    <Col xs={3} style={actions}></Col>*/}
-                    {/*    <Col xs={3} style={actions}></Col>*/}
-                    {/*</div>*/}
 
                     <div className='d-flex overflow-auto mb-3'>
                         {JSON.parse(repair.images).map((file, i) => (
@@ -147,7 +128,7 @@ function ManagerRepairDetail(props) {
                     </div>
 
                     <div className="pt-1 mb-2">
-                        <Button style={pillButton} variant="outline-primary"
+                        <Button style={pillButton} variant="outline-primary" hidden={morePictures}
                             onClick={() => setMorePictures(!morePictures)}>
                             Request more pictures
                         </Button>
@@ -167,8 +148,7 @@ function ManagerRepairDetail(props) {
                                 style={{ borderRadius: 0 }}
                                 //ref={requestTitleRef}
                                 placeholder="Can you pls share more pictures with the Shower model number?"
-                                as="textarea"
-                            />
+                                as="textarea"/>
                         </Form.Group>
 
                         <Row className="pt-1 mb-2">
@@ -204,23 +184,15 @@ function ManagerRepairDetail(props) {
                     </div>
                     <Col className="pt-1 mx-2">
                         <Row>
-                            <Checkbox
-                                type="CIRCLE"
-                                onClick={(checked) =>
-                                    checked ? setCanReschedule(true) : setCannotReschedule(false)
-                                }
-                            />
+                            <Checkbox type="CIRCLE" checked={canReschedule}
+                                      onClick={edit ? () => setCanReschedule(true) : () => {}}/>
                             Yes
                         </Row>
                     </Col>
                     <Col className="pt-1 mx-2">
                         <Row>
-                            <Checkbox
-                                type="CIRCLE"
-                                onClick={(checked) =>
-                                    checked ? setCannotReschedule(true) : setCanReschedule(false)
-                                }
-                            />
+                            <Checkbox type="CIRCLE" checked={!canReschedule}
+                                      onClick={edit ? () => setCanReschedule(false) : () => {}}/>
                             No
                         </Row>
                     </Col>
