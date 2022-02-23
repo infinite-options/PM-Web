@@ -86,12 +86,13 @@ function App() {
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
-            <Route path="detailQuoteRequest" element={<DetailQuoteRequest />} />
+            <Route path="detailQuoteRequest/:quote_id" element={<DetailQuoteRequest />} />
             <Route
               path="maintenanceScheduleRepair"
               element={<MaintenanceScheduleRepair />}
             />
             <Route path="quotesAccepted" element={<QuotesAccepted />} />
+            <Route path="quotesAccepted/:quote_id" element={<QuotesAccepted />} />
             <Route path="jobsCompleted" element={<JobsCompleted />} />
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />

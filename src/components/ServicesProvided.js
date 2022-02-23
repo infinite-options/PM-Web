@@ -6,6 +6,7 @@ import {pillButton, smallPillButton, squareForm, gray, small, red, hidden} from 
 
 function ServicesProvided(props) {
   const [serviceState, setServiceState] = props.state;
+  const {noHeader} = props;
   const [newService, setNewService] = React.useState(null);
   const [editingService, setEditingService] = React.useState(null);
   const emptyService = {
@@ -59,7 +60,9 @@ function ServicesProvided(props) {
   );
   return (
     <Container className='px-2'>
-      <h6 className='mb-3'>Services you provide:</h6>
+      {noHeader ? '' : (
+        <h6 className='mb-3'>Services you provide:</h6>
+      )}
       {serviceState.map((service, i) => (
         <div key={i}>
           <div className='d-flex'>
