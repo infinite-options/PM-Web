@@ -303,12 +303,12 @@ function ManagerRepairDetail(props) {
                 </div>
                 <Row className="mt-4">
                     <Col className='d-flex justify-content-evenly'>
-                        <Button style={bluePillButton}>Request Quotes from Selected Businesses</Button>
+                        <Button style={bluePillButton}>Request Quotes</Button>
                     </Col>
                 </Row>
-                <Row className="mt-4">
+                <Row className="mt-3">
                     <Col className='d-flex justify-content-evenly'>
-                        <Button style={redPillButton}>Cancel</Button>
+                        <Button style={redPillButton} onClick={() => setRequestQuote(false)}>Cancel</Button>
                     </Col>
                 </Row>
             </Container>
@@ -329,15 +329,13 @@ function ManagerRepairDetail(props) {
                     <Form.Control style={{ borderRadius: 0 }} type="time" />
                 </Form.Group>
                 <Row className="mt-4">
-                    <Col
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        {" "}
-                        <Button style={bluePillButton}>Schedule Maintenace</Button>
+                    <Col className='d-flex justify-content-evenly'>
+                        <Button style={bluePillButton}>Schedule Maintenance</Button>
+                    </Col>
+                </Row>
+                <Row className="mt-3">
+                    <Col className='d-flex justify-content-evenly'>
+                        <Button style={redPillButton} onClick={() => setScheduleMaintenance(false)}>Cancel</Button>
                     </Col>
                 </Row>
             </Container>
