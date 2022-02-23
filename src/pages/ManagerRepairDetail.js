@@ -95,7 +95,7 @@ function ManagerRepairDetail(props) {
             const result = response.result
             // console.log(result)
         }
-        console.log("Quotes Requested")
+        console.log("Quotes Requested from", business_ids)
     }
 
     return (
