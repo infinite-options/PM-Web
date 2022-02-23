@@ -31,8 +31,11 @@ import DeleteIcon from "../icons/DeleteIcon.svg";
 import Heart from "../icons/Heart.svg";
 import HeartOutline from "../icons/HeartOutline.svg";
 import Plus from "../icons/Plus.svg";
+import {get} from "../utils/api";
 
 function ManagerRepairDetail(props) {
+    const {userData, refresh} = React.useContext(AppContext);
+    const {access_token} = userData;
     const location = useLocation();
     const navigate = useNavigate();
     const [morePictures, setMorePictures] = useState(false);
@@ -40,12 +43,32 @@ function ManagerRepairDetail(props) {
     const [cannotReschedule, setCannotReschedule] = useState(false);
     const [requestQuote, setRequestQuote] = useState(false);
     const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
+    const [businesses, setBusinesses] = React.useState([]);
 
     const { mp_id, rr_id } = useParams();
 
     const repair = location.state.repair
     console.log(repair)
     // console.log(mp_id, rr_id)
+
+    const fetchBusinesses = async () => {
+        if (access_token === null) {
+            navigate('/');
+            return;
+        }
+
+        const response = await get("/businesses?business_type=MAINTENANCE");
+        if (response.msg === 'Token has expired') {
+            refresh();
+            return;
+        }
+
+        const businesses = response.result
+        console.log(businesses)
+        setBusinesses(businesses)
+    }
+
+    React.useEffect(fetchBusinesses, [access_token]);
 
     return (
         <div className="h-100">
@@ -234,31 +257,22 @@ function ManagerRepairDetail(props) {
                 </Row>
 
                 <div>
-                    <Row className="mt-2">
-                        <Col xs={2} className="mt-2">
-                            <Row>
-                                <Checkbox
-                                    type="BOX"
-                                    //onClick={() => setUsePreviousAddress(!usePreviousAddress)}
-                                />
-                            </Row>
-                        </Col>
-                        <Col>
-                            <Row style={headings}>Hector’s plumbing</Row>
-                            <Row style={subText}>
-                                Services: Toilet repair, Plumbing, Kitchen repair
-                            </Row>
-                            <Row
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-evenly",
-                                    //verticalAlign: "middle",
-                                }}
-                            >
-                                <Col style={blue}> Manager: Jane Doe</Col>
-                                <Col
+                    {businesses.length > 0 && businesses.map((business, i) =>
+                        (<Row className="mt-2" key={i}>
+                            <Col xs={2} className="mt-2">
+                                <Row>
+                                    <Checkbox
+                                        type="BOX"
+                                        //onClick={() => setUsePreviousAddress(!usePreviousAddress)}
+                                    />
+                                </Row>
+                            </Col>
+                            <Col>
+                                <Row style={headings}>{business.business_name}</Row>
+                                <Row style={subText}>
+                                    Services: Toilet repair, Plumbing, Kitchen repair
+                                </Row>
+                                <Row
                                     style={{
                                         display: "flex",
                                         flexDirection: "row",
@@ -267,110 +281,34 @@ function ManagerRepairDetail(props) {
                                         //verticalAlign: "middle",
                                     }}
                                 >
-                                    <img src={Phone} style={{ width: "30px", height: "30px" }} />
-                                    <img
-                                        src={Message}
-                                        style={{ width: "30px", height: "30px" }}
-                                    />
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                    <Row className="mt-2">
-                        <Col xs={2} className="mt-2">
-                            <Row>
-                                <Checkbox
-                                    type="BOX"
-                                    //onClick={() => setUsePreviousAddress(!usePreviousAddress)}
-                                />
-                            </Row>
-                        </Col>
-                        <Col>
-                            <Row style={headings}>Joe's plumbing</Row>
-                            <Row style={subText}>
-                                Services: Toilet repair, Plumbing, Kitchen repair
-                            </Row>
-                            <Row
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-evenly",
-                                    //verticalAlign: "middle",
-                                }}
-                            >
-                                <Col style={blue}> Manager: Jane Doe</Col>
-                                <Col
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "space-evenly",
-                                        //verticalAlign: "middle",
-                                    }}
-                                >
-                                    <img src={Phone} style={{ width: "30px", height: "30px" }} />
-                                    <img
-                                        src={Message}
-                                        style={{ width: "30px", height: "30px" }}
-                                    />
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                    <Row className="mt-2">
-                        <Col xs={2} className="mt-2">
-                            <Row>
-                                <Checkbox
-                                    type="BOX"
-                                    //onClick={() => setUsePreviousAddress(!usePreviousAddress)}
-                                />
-                            </Row>
-                        </Col>
-                        <Col>
-                            <Row style={headings}>Water Doctors</Row>
-                            <Row style={subText}>
-                                Services: Toilet repair, Plumbing, Kitchen repair
-                            </Row>
-                            <Row
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-evenly",
-                                    //verticalAlign: "middle",
-                                }}
-                            >
-                                <Col style={blue}> Manager: Jane Doe</Col>
-                                <Col
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "space-evenly",
-                                        //verticalAlign: "middle",
-                                    }}
-                                >
-                                    <img src={Phone} style={{ width: "30px", height: "30px" }} />
-                                    <img
-                                        src={Message}
-                                        style={{ width: "30px", height: "30px" }}
-                                    />
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
+                                    <Col style={blue}> Manager: Jane Doe</Col>
+                                    <Col
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-evenly",
+                                            //verticalAlign: "middle",
+                                        }}
+                                    >
+                                        <img src={Phone} style={{ width: "30px", height: "30px" }} />
+                                        <img
+                                            src={Message}
+                                            style={{ width: "30px", height: "30px" }}
+                                        />
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>))}
                 </div>
                 <Row className="mt-4">
-                    <Col
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        {" "}
-                        <Button style={bluePillButton}>Request Quote from Business</Button>
+                    <Col className='d-flex justify-content-evenly'>
+                        <Button style={bluePillButton}>Request Quotes from Selected Businesses</Button>
+                    </Col>
+                </Row>
+                <Row className="mt-4">
+                    <Col className='d-flex justify-content-evenly'>
+                        <Button style={redPillButton}>Cancel</Button>
                     </Col>
                 </Row>
             </Container>
