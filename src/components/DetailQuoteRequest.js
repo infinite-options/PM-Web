@@ -80,7 +80,7 @@ function DetailQuote(props) {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       services_expenses: serviceState[0],
       earliest_availability: earliestAvailability,
-      status: 'SENT'
+      quote_status: 'SENT'
     }
     const response = await put('/maintenanceQuotes', updatedQuote);
     navigate('/ScheduledJobs');
@@ -89,7 +89,7 @@ function DetailQuote(props) {
   const rejectQuote = async () => {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
-      status: 'REJECTED'
+      quote_status: 'REJECTED'
     }
     const response = await put('/maintenanceQuotes', updatedQuote);
     navigate('/ScheduledJobs');
