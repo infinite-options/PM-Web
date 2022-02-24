@@ -43,6 +43,7 @@ function ManagerRepairDetail(props) {
     const [requestQuote, setRequestQuote] = useState(false);
     const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
     const [businesses, setBusinesses] = useState([]);
+    const [quotes, setQuotes] = useState([])
 
     const [edit, setEdit ] = useState(false);
     const [title, setTitle] = useState("")
@@ -61,13 +62,13 @@ function ManagerRepairDetail(props) {
             return;
         }
 
-        const response = await get("/businesses?business_type=MAINTENANCE");
-        if (response.msg === 'Token has expired') {
+        const businesses_request = await get("/businesses?business_type=MAINTENANCE");
+        if (businesses_request.msg === 'Token has expired') {
             refresh();
             return;
         }
 
-        const businesses = response.result.map(business => ({...business, quote_requested: false}))
+        const businesses = businesses_request.result.map(business => ({...business, quote_requested: false}))
         console.log(repair)
         console.log(businesses)
         setBusinesses(businesses)
@@ -75,6 +76,18 @@ function ManagerRepairDetail(props) {
         setDescription(repair.description)
         setPriority(repair.priority)
         setCanReschedule(repair.can_reschedule === 1)
+
+        const quotes_request = await get(`/maintenanceQuotes`);
+        if (quotes_request.msg === 'Token has expired') {
+            refresh();
+            return;
+        }
+
+        // console.log(quotes_request.result)
+        const pending_quotes = quotes_request.result.filter(quote => quote.maintenance_quote_uid === "900-000009")
+        console.log(pending_quotes)
+        setQuotes(pending_quotes)
+
     }
 
     React.useEffect(fetchBusinesses, [access_token]);
@@ -112,7 +125,7 @@ function ManagerRepairDetail(props) {
             description: description,
             priority: priority,
             can_reschedule: canReschedule? 1 : 0,
-            status: repair.status,
+            request_status: repair.request_status,
         }
 
 
@@ -244,7 +257,7 @@ function ManagerRepairDetail(props) {
                                 </Row>
                             </Row>
                         </Row>
-                        <Row className="pt-1 mb-2">
+                        <Row className="pt-1 mb-3">
                             <div style={subHeading} className="pt-1 mb-2">
                                 Tag Priority
                             </div>
@@ -258,7 +271,7 @@ function ManagerRepairDetail(props) {
                                 <img src={LowPriority} style={{ opacity: "0.5" }} />
                             </Col>
                         </Row>
-                        <Row className="pt-1 mb-2">
+                        <Row className="pt-1 mb-3">
                             <div style={subHeading} className="pt-1 mb-2">
                                 Tenant can reschedule this job as needed
                             </div>
@@ -269,7 +282,7 @@ function ManagerRepairDetail(props) {
                                 <Row><Checkbox type="CIRCLE" checked={!canReschedule}/> No</Row>
                             </Col>
                         </Row>
-                        <Row className="pt-1 mb-2">
+                        <Row hidden={true} className="pt-1">
                             <Col className='d-flex flex-row justify-content-evenly'>
                                 <Button style={bluePillButton}
                                         onClick={() => setScheduleMaintenance(true)}>
@@ -277,7 +290,7 @@ function ManagerRepairDetail(props) {
                                 </Button>
                             </Col>
                         </Row>
-                        <Row className="pt-1 mb-2">
+                        <Row className="pt-1 mt-3 mb-2">
                             <Col className='d-flex flex-row justify-content-evenly'>
                                 <Button style={pillButton} variant="outline-primary"
                                         onClick={() => setRequestQuote(true)}>
@@ -288,6 +301,9 @@ function ManagerRepairDetail(props) {
                     </Container>
                     : ""}
             </Container>
+
+
+
             <Container hidden={!requestQuote}>
                 <Row style={headings}>
                     <div>Select businesses to request a quote:</div>
@@ -331,6 +347,7 @@ function ManagerRepairDetail(props) {
                     </Col>
                 </Row>
             </Container>
+
             <Container hidden={!scheduleMaintenance}>
                 <Row>
                     <div style={headings}>Schedule Maintenace</div>
@@ -358,6 +375,12 @@ function ManagerRepairDetail(props) {
                     </Col>
                 </Row>
             </Container>
+
+            {quotes && quotes.length > 0 &&
+                <Container>
+
+                </Container>
+            }
         </div>
     );
 }
