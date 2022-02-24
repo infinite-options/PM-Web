@@ -23,7 +23,7 @@ import {
     bluePillButton,
     red,
     small,
-    blue, tileImg,
+    blue, tileImg, squareForm,
 } from "../utils/styles";
 import { textAlign } from "@mui/system";
 import {useParams} from "react-router";
@@ -45,6 +45,9 @@ function ManagerRepairDetail(props) {
     const [businesses, setBusinesses] = useState([]);
 
     const [edit, setEdit ] = useState(false);
+    const [title, setTitle] = useState("")
+    const [description, setDescription] = useState("")
+    const [priority, setPriority] = useState("")
     const { mp_id, rr_id } = useParams();
 
     const repair = location.state.repair
@@ -68,6 +71,9 @@ function ManagerRepairDetail(props) {
         console.log(repair)
         console.log(businesses)
         setBusinesses(businesses)
+        setTitle(repair.title)
+        setDescription(repair.description)
+        setPriority(repair.priority)
         setCanReschedule(repair.can_reschedule === 1)
     }
 
@@ -98,121 +104,189 @@ function ManagerRepairDetail(props) {
         console.log("Quotes Requested from", business_ids)
     }
 
+    const updateRepair = async () => {
+
+        const newRepair = {
+            maintenance_request_uid: repair.maintenance_request_uid,
+            title: title,
+            description: description,
+            priority: priority,
+            can_reschedule: canReschedule? 1 : 0,
+            status: repair.status,
+        }
+
+
+        console.log("Repair Object to be updated", newRepair)
+        const response = await post("/maintenanceRequests", newRepair, access_token);
+        console.log(response.result)
+        setEdit(false)
+        fetchBusinesses()
+    }
+
     return (
         <div className="h-100">
             <Header title="Repairs"
-                    leftText={scheduleMaintenance || requestQuote ? null : "< Back"} leftFn={() => navigate(-1)}
-                    rightText={scheduleMaintenance || requestQuote ? null : "Edit"}/>
+                    leftText={scheduleMaintenance || requestQuote ? null : edit ? "Cancel" : "< Back"}
+                    leftFn={() => (edit ? setEdit(false) : navigate(-1))}
+                    rightText={scheduleMaintenance || requestQuote ? null : edit ? "Save" : "Edit"}
+                    rightFn={() => (edit ? updateRepair() : setEdit(true))}/>
 
             <Container className="pt-1 mb-4" hidden={scheduleMaintenance || requestQuote}>
                 <Row style={headings}><div>New Repair Request</div></Row>
-                <Row className="pt-1 mb-4">
-                    <div style={subHeading}>Title (character limit: 15)</div>
-                    <div style={subText}>{repair.title}</div>
-                </Row>
-                <Row className="pt-1 mb-4">
-                    <div style={subHeading}>Description</div>
-                    <div style={subText}>{repair.description}</div>
-                </Row>
-                <Row className="pt-1 mb-4">
-                    <div className="pt-1 mb-2" style={subHeading}>
-                        Pictures from tenant
-                    </div>
-
-                    <div className='d-flex overflow-auto mb-3'>
-                        {JSON.parse(repair.images).map((file, i) => (
-                            <div className='mx-2' style={{position: 'relative', minHeight: '100px', minWidth: '100px', height: '100px', width: '100px'}} key={i}>
-                                <img src={file} style={{...tileImg, objectFit: 'cover'}}/>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="pt-1 mb-2">
-                        <Button style={pillButton} variant="outline-primary" hidden={morePictures}
-                            onClick={() => setMorePictures(!morePictures)}>
-                            Request more pictures
-                        </Button>
-                    </div>
-                </Row>
-                <Row>
-                    <Row className="pt-1 mb-4" hidden={!morePictures}>
-                        <div className="pt-1 mb-2" style={subHeading}>
-                            Request more pictures
-                        </div>
-
-                        <Form.Group className="mt-3 mb-4">
-                            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                                Description of what kind of pictures needed
-                            </Form.Label>
-                            <Form.Control
-                                style={{ borderRadius: 0 }}
-                                //ref={requestTitleRef}
-                                placeholder="Can you pls share more pictures with the Shower model number?"
-                                as="textarea"/>
+                {edit ?
+                    <div className="mx-1 pt-2">
+                        <Form.Group className="mx-2 my-3">
+                            <Form.Label style={subHeading} className="mb-0 ms-2">Title (character limit: 15)</Form.Label>
+                            <Form.Control style={squareForm} placeholder={title} value={title}
+                                onChange={(e) => setTitle(e.target.value)}/>
+                        </Form.Group>
+                        <Form.Group className="mx-2 my-3">
+                            <Form.Label style={subHeading} className="mb-0 ms-2">Description</Form.Label>
+                            <Form.Control style={squareForm} placeholder={description} value={description}
+                                          onChange={(e) => setDescription(e.target.value)}/>
                         </Form.Group>
 
+                        <Row className="my-4 pt-1 mx-1">
+                            <div style={subHeading} className="pt-1 mb-2">Tag Priority</div>
+                            <Col xs={4}>
+                                <img src={HighPriority} style={{ opacity: priority === "High" ? "1" : 0.5 }}
+                                     onClick={() => setPriority("High")}/>
+                            </Col>
+                            <Col xs={4}>
+                                <img src={MediumPriority} style={{ opacity: priority === "Medium" ? "1" : 0.5 }}
+                                     onClick={() => setPriority("Medium")}/>
+                            </Col>
+                            <Col xs={4}>
+                                <img src={LowPriority} style={{ opacity: priority === "Low" ? "1" : 0.5 }}
+                                     onClick={() => setPriority("Low")}/>
+                            </Col>
+                        </Row>
+
+                        <Row className="my-4 pt-1 mx-1">
+                            <div style={subHeading} className="pt-1 mb-2">
+                                Tenant can reschedule this job as needed
+                            </div>
+                            <Col className="pt-1 mx-2">
+                                <Row>
+                                    <Checkbox type="CIRCLE" checked={canReschedule}
+                                              onClick={() => setCanReschedule(true)}/>
+                                    Yes
+                                </Row>
+                            </Col>
+                            <Col className="pt-1 mx-2">
+                                <Row>
+                                    <Checkbox type="CIRCLE" checked={!canReschedule}
+                                              onClick={() => setCanReschedule(false)}/>
+                                    No
+                                </Row>
+                            </Col>
+                        </Row>
+                    </div>
+                    : ""}
+
+                {!edit ?
+                    <Container className="mx-1 pt-2">
+                        <Row className="pt-1 mb-4">
+                            <div style={subHeading}>Title (character limit: 15)</div>
+                            <div style={subText}>{repair.title}</div>
+                        </Row>
+                        <Row className="pt-1 mb-4">
+                            <div style={subHeading}>Description</div>
+                            <div style={subText}>{repair.description}</div>
+                        </Row>
+                        <Row className="pt-1 mb-4">
+                            <div className="pt-1 mb-2" style={subHeading}>
+                                Pictures from tenant
+                            </div>
+
+                            <div className='d-flex overflow-auto mb-3'>
+                                {JSON.parse(repair.images).map((file, i) => (
+                                    <div className='mx-2' style={{position: 'relative', minHeight: '100px', minWidth: '100px', height: '100px', width: '100px'}} key={i}>
+                                        <img src={file} style={{...tileImg, objectFit: 'cover'}}/>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="pt-1 mb-2">
+                                <Button style={pillButton} variant="outline-primary" hidden={morePictures}
+                                        onClick={() => setMorePictures(!morePictures)}>
+                                    Request more pictures
+                                </Button>
+                            </div>
+                        </Row>
+                        <Row>
+                            <Row className="pt-1 mb-4" hidden={!morePictures}>
+                                <div className="pt-1 mb-2" style={subHeading}>
+                                    Request more pictures
+                                </div>
+
+                                <Form.Group className="mt-3 mb-4">
+                                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                                        Description of what kind of pictures needed
+                                    </Form.Label>
+                                    <Form.Control
+                                        style={{ borderRadius: 0 }}
+                                        //ref={requestTitleRef}
+                                        placeholder="Can you pls share more pictures with the Shower model number?"
+                                        as="textarea"/>
+                                </Form.Group>
+
+                                <Row className="pt-1 mb-2">
+                                    <Col className='d-flex flex-row justify-content-evenly'>
+                                        <Button style={pillButton} variant="outline-primary"
+                                                onClick={() => setMorePictures(false)}>
+                                            Cancel
+                                        </Button>
+                                    </Col>
+                                    <Col className='d-flex flex-row justify-content-evenly'>
+                                        <Button style={bluePillButton}>Send Request</Button>
+                                    </Col>
+                                </Row>
+                            </Row>
+                        </Row>
+                        <Row className="pt-1 mb-2">
+                            <div style={subHeading} className="pt-1 mb-2">
+                                Tag Priority
+                            </div>
+                            <Col xs={4}>
+                                <img src={HighPriority} style={{ opacity: "1" }} />
+                            </Col>
+                            <Col xs={4}>
+                                <img src={MediumPriority} style={{ opacity: "0.5" }} />
+                            </Col>
+                            <Col xs={4}>
+                                <img src={LowPriority} style={{ opacity: "0.5" }} />
+                            </Col>
+                        </Row>
+                        <Row className="pt-1 mb-2">
+                            <div style={subHeading} className="pt-1 mb-2">
+                                Tenant can reschedule this job as needed
+                            </div>
+                            <Col className="pt-1 mx-2">
+                                <Row><Checkbox type="CIRCLE" checked={canReschedule}/> Yes</Row>
+                            </Col>
+                            <Col className="pt-1 mx-2">
+                                <Row><Checkbox type="CIRCLE" checked={!canReschedule}/> No</Row>
+                            </Col>
+                        </Row>
+                        <Row className="pt-1 mb-2">
+                            <Col className='d-flex flex-row justify-content-evenly'>
+                                <Button style={bluePillButton}
+                                        onClick={() => setScheduleMaintenance(true)}>
+                                    Schedule Maintenance
+                                </Button>
+                            </Col>
+                        </Row>
                         <Row className="pt-1 mb-2">
                             <Col className='d-flex flex-row justify-content-evenly'>
                                 <Button style={pillButton} variant="outline-primary"
-                                    onClick={() => setMorePictures(false)}>
-                                    Cancel
+                                        onClick={() => setRequestQuote(true)}>
+                                    Request quote from maintenance
                                 </Button>
                             </Col>
-                            <Col className='d-flex flex-row justify-content-evenly'>
-                                <Button style={bluePillButton}>Send Request</Button>
-                            </Col>
                         </Row>
-                    </Row>
-                </Row>
-                <Row className="pt-1 mb-2">
-                    <div style={subHeading} className="pt-1 mb-2">
-                        Tag Priority
-                    </div>
-                    <Col xs={4}>
-                        <img src={HighPriority} style={{ opacity: "1" }} />
-                    </Col>
-                    <Col xs={4}>
-                        <img src={MediumPriority} style={{ opacity: "0.5" }} />
-                    </Col>
-                    <Col xs={4}>
-                        <img src={LowPriority} style={{ opacity: "0.5" }} />
-                    </Col>
-                </Row>
-                <Row className="pt-1 mb-2">
-                    <div style={subHeading} className="pt-1 mb-2">
-                        Tenant can reschedule this job as needed
-                    </div>
-                    <Col className="pt-1 mx-2">
-                        <Row>
-                            <Checkbox type="CIRCLE" checked={canReschedule}
-                                      onClick={edit ? () => setCanReschedule(true) : () => {}}/>
-                            Yes
-                        </Row>
-                    </Col>
-                    <Col className="pt-1 mx-2">
-                        <Row>
-                            <Checkbox type="CIRCLE" checked={!canReschedule}
-                                      onClick={edit ? () => setCanReschedule(false) : () => {}}/>
-                            No
-                        </Row>
-                    </Col>
-                </Row>
-                <Row className="pt-1 mb-2">
-                    <Col className='d-flex flex-row justify-content-evenly'>
-                        <Button style={bluePillButton}
-                            onClick={() => setScheduleMaintenance(true)}>
-                            Schedule Maintenance
-                        </Button>
-                    </Col>
-                </Row>
-                <Row className="pt-1 mb-2">
-                    <Col className='d-flex flex-row justify-content-evenly'>
-                        <Button style={pillButton} variant="outline-primary"
-                            onClick={() => setRequestQuote(true)}>
-                            Request quote from maintenance
-                        </Button>
-                    </Col>
-                </Row>
+                    </Container>
+                    : ""}
             </Container>
             <Container hidden={!requestQuote}>
                 <Row style={headings}>
