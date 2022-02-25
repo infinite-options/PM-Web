@@ -26,7 +26,7 @@ function ScheduledJobs(props) {
     if (business_uid === '') {
       console.log('no maintenance business found');
     }
-    const response = await get(`/maintenanceQuotes?business_uid=${business_uid}`);
+    const response = await get(`/maintenanceQuotes?quote_business_uid=${business_uid}`);
     console.log(response);
     setJobs(response.result);
   }
