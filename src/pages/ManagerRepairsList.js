@@ -34,7 +34,7 @@ function ManagerRepairsList(props) {
         }
 
         const repairs = response.result.filter(item => item.property_uid === property.property_uid);
-        console.log(repairs)
+        // console.log(repairs)
         setRepairs(repairs);
         const new_repairs = repairs.filter(item => item.request_status === "NEW")
         const processing_repairs = repairs.filter(item => item.request_status === "PROCESSING")

@@ -23,7 +23,7 @@ import {
     bluePillButton,
     red,
     small,
-    blue, tileImg, squareForm,
+    blue, tileImg, squareForm, greenPill, orangePill,
 } from "../utils/styles";
 import { textAlign } from "@mui/system";
 import {useParams} from "react-router";
@@ -31,7 +31,7 @@ import DeleteIcon from "../icons/DeleteIcon.svg";
 import Heart from "../icons/Heart.svg";
 import HeartOutline from "../icons/HeartOutline.svg";
 import Plus from "../icons/Plus.svg";
-import {get, post} from "../utils/api";
+import {get, post, put} from "../utils/api";
 
 function ManagerRepairDetail(props) {
     const {userData, refresh} = React.useContext(AppContext);
@@ -69,8 +69,8 @@ function ManagerRepairDetail(props) {
         }
 
         const businesses = businesses_request.result.map(business => ({...business, quote_requested: false}))
-        console.log(repair)
-        console.log(businesses)
+        // console.log(repair)
+        // console.log(businesses)
         setBusinesses(businesses)
         setTitle(repair.title)
         setDescription(repair.description)
@@ -82,12 +82,9 @@ function ManagerRepairDetail(props) {
             refresh();
             return;
         }
-
-        // console.log(quotes_request.result)
-        const pending_quotes = quotes_request.result.filter(quote => quote.maintenance_quote_uid === "900-000009")
-        console.log(pending_quotes)
-        setQuotes(pending_quotes)
-
+        const response = await get(`/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`);
+        // console.log(response.result)
+        setQuotes(response.result)
     }
 
     React.useEffect(fetchBusinesses, [access_token]);
@@ -133,6 +130,24 @@ function ManagerRepairDetail(props) {
         const response = await post("/maintenanceRequests", newRepair, access_token);
         console.log(response.result)
         setEdit(false)
+        fetchBusinesses()
+    }
+
+    const acceptQuote = async (quote) => {
+        const body = {
+            maintenance_quote_uid: quote.maintenance_quote_uid,
+            quote_status: "ACCEPTED"
+        }
+        const response = await put("/maintenanceQuotes", body);
+        fetchBusinesses()
+    }
+
+    const rejectQuote = async (quote) => {
+        const body = {
+            maintenance_quote_uid: quote.maintenance_quote_uid,
+            quote_status: "REJECTED"
+        }
+        const response = await put("/maintenanceQuotes", body);
         fetchBusinesses()
     }
 
@@ -294,7 +309,7 @@ function ManagerRepairDetail(props) {
                             <Col className='d-flex flex-row justify-content-evenly'>
                                 <Button style={pillButton} variant="outline-primary"
                                         onClick={() => setRequestQuote(true)}>
-                                    Request quote from maintenance
+                                    Request Quotes from Maintenance
                                 </Button>
                             </Col>
                         </Row>
@@ -376,8 +391,50 @@ function ManagerRepairDetail(props) {
                 </Row>
             </Container>
 
-            {quotes && quotes.length > 0 &&
-                <Container>
+            {!edit && !scheduleMaintenance && !requestQuote && quotes.length > 0 &&
+                <Container className="pb-4">
+                    <hr style={{border: "1px dashed #000000", borderStyle: "none none dashed",
+                        backgroundColor: "white",}}/>
+
+                    {quotes.map((quote, i) => (
+                        <Container className="my-4 pt-3" key={i}>
+                            <Row style={headings}>
+                                <div>{quote.business_name}: Quote</div>
+                            </Row>
+                            {JSON.parse(quote.services_expenses).map((service, j) => (
+                                <Container key={j}>
+                                    <Row className="pt-1 mb-2">
+                                        <div style={subHeading}>{service.service_name}</div>
+                                        <div style={subText}>${service.charge} per {service.per}</div>
+                                    </Row>
+                                </Container>
+                            ))}
+
+                            <Row hidden={quote.quote_status !== "SENT"} className="pt-1 mb-4">
+                                <Col className="d-flex flex-row justify-content-evenly">
+                                    <Button style={bluePillButton}
+                                            onClick={() => acceptQuote(quote)}>
+                                        Accept Quote
+                                    </Button>
+                                </Col>
+                                <Col className="d-flex flex-row justify-content-evenly">
+                                    <Button style={redPillButton}
+                                            onClick={() => rejectQuote(quote)}>
+                                        Reject Quote
+                                    </Button>
+                                </Col>
+                            </Row>
+
+                            <Row hidden={quote.quote_status === "SENT"} className="pt-1 mb-4">
+                                <Col className='d-flex flex-row justify-content-evenly'>
+                                    <Button style={orangePill}>
+                                        {quote.quote_status === "REJECTED" ? "You've Rejected the Quote" : quote.quote_status === "ACCEPTED" ? "You've Accepted the Quote": "Quote Withdrawn by Business"}
+                                    </Button>
+                                </Col>
+                            </Row>
+                            <hr />
+                        </Container>
+                    ))}
 
                 </Container>
             }
