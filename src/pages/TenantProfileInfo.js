@@ -7,7 +7,6 @@ import Header from "../components/Header";
 import Checkbox from "../components/Checkbox";
 import AddressForm from "../components/AddressForm";
 import { get, post } from "../utils/api";
-
 import ArrowUp from "../icons/ArrowUp.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
 import {
@@ -24,8 +23,11 @@ function TenantProfileInfo(props) {
   const { access_token, user } = userData;
   const navigate = useNavigate();
   const {autofillState, setAutofillState} = props;
+  const [type, setType] = React.useState("Apartment");
+
   const updateAutofillState = (profile) => {
-    const newAutofillState = {...autofillState};
+  const newAutofillState = {...autofillState};
+
     for (const key of Object.keys(newAutofillState)) {
       if (key in profile) {
         newAutofillState[key] = profile[key];
@@ -141,6 +143,7 @@ function TenantProfileInfo(props) {
       current_salary: salary,
       salary_frequency: frequency,
       current_job_title: jobTitle,
+      current_job_company: company,
       ssn: ssn,
       drivers_license_number: dlNumber,
       drivers_license_state: selectedDlState,
@@ -403,19 +406,28 @@ function TenantProfileInfo(props) {
               <Form.Label as='h6' className='mb-0 ms-2'>
                 Driver's License State {dlState === '' ? required : ''}
               </Form.Label>
-              <DropdownButton variant="light" id="dropdown-basic-button" title={selectedDlState}>
+              {/* <DropdownButton variant="light" id="dropdown-basic-button" title={selectedDlState} style={{maxHeight:"90%",overflowY:"auto"}}>
                 {usDlStates.map((state, i) => (
                   <Dropdown.Item onClick={() => setSelectedDlState(state.abbreviation)} href="#/action-1" > {state.abbreviation} </Dropdown.Item>
                   ))}  
-              </DropdownButton>
+              </DropdownButton> */}
               {/* <Form.Control style={squareForm} placeholder='CA' value={dlState}
                 onChange={(e) => setDLState(e.target.value)}/> */}
+                <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
+                  value={selectedDlState} onChange={(e) => setSelectedDlState(e.target.value)}>
+                    {usDlStates.map((state, i)=> (
+                   <option key={i}>{state.abbreviation}</option>
+                  ))}
+                </Form.Select>
             </Form.Group>
           </Col>
         </Row>
-
+{/* ===============================Current Address form -- > Address form=================================================== */}
         <h5 className="mx-2 my-3">Current Address</h5>
         <AddressForm state={currentAddressState} errorMessage={errorMessage} selectedState={selectedState} setSelectedState={setSelectedState}/>
+
+
+{/* ===============================Previous Address form -- > Address form=================================================== */}
 
         <Row>
           <Col  xs={2}  className="px-0 d-flex justify-content-end align-items-center"  >

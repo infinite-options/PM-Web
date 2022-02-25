@@ -6,9 +6,12 @@ import {
   small,
   underline,
 } from "../utils/styles";
+import ArrowDown from '../icons/ArrowDown.svg';
+
 function AddressForm(props) {
   const { errorMessage, hideRentingCheckbox, selectedState, setSelectedState} = props;
   const [addressState, setAddressState] = props.state;
+  // const extraDet = !!(addressState && (addressState.pm_name || addressState.pm_number));
   const [useDetailsIfRenting, setUseDetailsIfRenting] = React.useState(false);
   const {
     street,
@@ -27,6 +30,12 @@ function AddressForm(props) {
     newAddressState[field] = event.target.value;
     setAddressState(newAddressState);
   };
+  // const updateIfRent = () =>{
+  //   if(addressState && (addressState.pm_name || addressState.pm_number)) {
+  //     setUseDetailsIfRenting(true);
+  //   }
+  // }
+  // updateIfRent();
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -35,6 +44,7 @@ function AddressForm(props) {
     ) : (
       ""
     );
+  const [type, setType] = React.useState("Apartment");
 
   const usStates = [
       { name: 'ALABAMA', abbreviation: 'AL'},
@@ -149,12 +159,17 @@ function AddressForm(props) {
             <Form.Label as="h6" className="mb-0 ms-2">
               State {state === "" ? required : ""}
             </Form.Label>
-            <DropdownButton variant="light" id="dropdown-basic-button" title={selectedState} >
+            {/* <DropdownButton variant="light" id="dropdown-basic-button" title={selectedState} >
                 {usStates.map((state, i) => (
                   <Dropdown.Item  onClick={() => setSelectedState(state.abbreviation)} href="#/action-1" > {state.abbreviation} </Dropdown.Item>
                   ))}  
-            </DropdownButton>
-          
+            </DropdownButton> */}
+            <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
+                  value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
+                    {usStates.map((state, i)=> (
+                   <option key={i}>{state.abbreviation}</option>
+                  ))}
+            </Form.Select>
           </Form.Group>
         </Col>
         
@@ -180,8 +195,7 @@ function AddressForm(props) {
       (<Row>
              <Col style={{marginLeft:"-8px"}} xs={2}  className="px-0 d-flex justify-content-end align-items-center"  >
                 <div>
-                  <Checkbox  type="BOX"  onClick={() => setUseDetailsIfRenting(!useDetailsIfRenting)}
-                  />
+                  <Checkbox  type="BOX"  onClick={() => setUseDetailsIfRenting(!useDetailsIfRenting)}  />
                 </div>
             </Col>
             <Col>
@@ -192,7 +206,6 @@ function AddressForm(props) {
       </Row>)
       :
       ("")}
-      
     { (useDetailsIfRenting || hideRentingCheckbox) ?
      ( <div>
           <h5 className="mx-2 my-3">Additional details</h5>

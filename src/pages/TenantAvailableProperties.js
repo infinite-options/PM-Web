@@ -32,10 +32,12 @@ function TenantAvailableProperties(props) {
 
      return (
         <div className='mb-5 pb-5'>
-          <Header title='Available Properties' leftText={hideBackButton ? '' : '< Back'} leftFn={() => navigate("/tenant")}
+          <Header 
+            title='Available Properties' 
+            leftText={hideBackButton ? '' : '< Back'} 
+            leftFn={() => navigate("/tenant")}
             rightText='Filter by' />
-            {/* <Header title='Available Properties' 
-            rightText='Filter by' /> */}
+            
           <Container>
            
             {properties.map((value, i) => (

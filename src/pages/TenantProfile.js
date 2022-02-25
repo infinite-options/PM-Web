@@ -174,6 +174,7 @@ function TenantProfile(props) {
         rightText="Save"
         rightFn={() => {
           submitInfo();
+          setTab("DASHBOARD")
         }}
       />
       <Container style={{ minHeight: "100%" }}>
@@ -228,7 +229,7 @@ function TenantProfile(props) {
                      {allFrequency.map((freq, i) => (
                      <Dropdown.Item onClick={() => setFrequency(freq)} href="#/action-1" > {freq} </Dropdown.Item>
                      ))}  
-                 </DropdownButton>
+              </DropdownButton>
               {/* <div
                 className="d-flex justify-content-between"
                 style={{ border: "1px solid #777777", padding: "6px" }}
