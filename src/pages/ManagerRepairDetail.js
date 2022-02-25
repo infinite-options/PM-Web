@@ -77,11 +77,11 @@ function ManagerRepairDetail(props) {
         setPriority(repair.priority)
         setCanReschedule(repair.can_reschedule === 1)
 
-        const quotes_request = await get(`/maintenanceQuotes`);
-        if (quotes_request.msg === 'Token has expired') {
-            refresh();
-            return;
-        }
+        // const quotes_request = await get(`/maintenanceQuotes`);
+        // if (quotes_request.msg === 'Token has expired') {
+        //     refresh();
+        //     return;
+        // }
         const response = await get(`/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`);
         // console.log(response.result)
         setQuotes(response.result)
@@ -101,17 +101,26 @@ function ManagerRepairDetail(props) {
             alert('No businesses Selected')
             return
         }
-        for (const id of business_ids){
-            const quote_details = {
-                maintenance_request_uid: repair.maintenance_request_uid,
-                business_uid: id
-            }
-            // console.log(quote_details)
-            const response = await post("/maintenanceQuotes", quote_details);
-            const result = response.result
-            // console.log(result)
-        }
+        // for (const id of business_ids){
+        //     const quote_details = {
+        //         maintenance_request_uid: repair.maintenance_request_uid,
+        //         business_uid: id
+        //     }
+        //     // console.log(quote_details)
+        //     const response = await post("/maintenanceQuotes", quote_details);
+        //     const result = response.result
+        //     // console.log(result)
+        // }
+
         console.log("Quotes Requested from", business_ids)
+        const quote_details = {
+            linked_request_uid: repair.maintenance_request_uid,
+            quote_business_uid: business_ids
+        }
+        const response = await post("/maintenanceQuotes", quote_details);
+        const result = response.result
+        setRequestQuote(false)
+
     }
 
     const updateRepair = async () => {
@@ -391,17 +400,17 @@ function ManagerRepairDetail(props) {
                 </Row>
             </Container>
 
-            {!edit && !scheduleMaintenance && !requestQuote && quotes.length > 0 &&
+            {!edit && !scheduleMaintenance && !requestQuote && quotes && (quotes.length) > 0 &&
                 <Container className="pb-4">
                     <hr style={{border: "1px dashed #000000", borderStyle: "none none dashed",
                         backgroundColor: "white",}}/>
 
-                    {quotes.map((quote, i) => (
+                    {quotes && (quotes.length > 0) && quotes.map((quote, i) => (
                         <Container className="my-4 pt-3" key={i}>
                             <Row style={headings}>
                                 <div>{quote.business_name}: Quote</div>
                             </Row>
-                            {JSON.parse(quote.services_expenses).map((service, j) => (
+                            {quote.services_expenses && ( quote.services_expenses.length > 0) && JSON.parse(quote.services_expenses).map((service, j) => (
                                 <Container key={j}>
                                     <Row className="pt-1 mb-2">
                                         <div style={subHeading}>{service.service_name}</div>
