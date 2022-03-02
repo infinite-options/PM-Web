@@ -197,8 +197,8 @@ function TenantProfileInfo(props) {
       ssn: ssn,
       drivers_license_number: dlNumber,
       drivers_license_state: selectedDlState,
-      current_address: currentAddressState[0],
-      previous_address: usePreviousAddress ? previousAddressState[0] : null
+      current_address: JSON.stringify(currentAddressState[0]),
+      previous_address: usePreviousAddress ? JSON.stringify(previousAddressState[0]) : null
     }
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
