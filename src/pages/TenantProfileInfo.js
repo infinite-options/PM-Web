@@ -92,7 +92,6 @@ function TenantProfileInfo(props) {
     rent: "",
   });
 
-<<<<<<< Updated upstream
   const [newFile, setNewFile] = React.useState(null);
   const [editingDoc, setEditingDoc] = React.useState(null);
   const [files, setFiles] = React.useState([]);
@@ -139,8 +138,6 @@ function TenantProfileInfo(props) {
     setFiles(newFiles);
   }
 
-=======
->>>>>>> Stashed changes
   React.useEffect(() => {
     if (access_token === null) {
       navigate("/");
@@ -169,15 +166,9 @@ function TenantProfileInfo(props) {
       currentAddressState[0].city === "" ||
       currentAddressState[0].state === defaultState ||
       currentAddressState[0].zip === "";
-<<<<<<< Updated upstream
       // currentAddressState[0].lease_start === "" ||
       // currentAddressState[0].lease_end === "" ||
       // currentAddressState[0].rent === "";
-=======
-    // currentAddressState[0].lease_start === "" ||
-    // currentAddressState[0].lease_end === "" ||
-    // currentAddressState[0].rent === "";
->>>>>>> Stashed changes
 
     previousAddressState[0].state = selectedPrevState;
 
@@ -214,7 +205,6 @@ function TenantProfileInfo(props) {
       ssn: ssn,
       drivers_license_number: dlNumber,
       drivers_license_state: selectedDlState,
-<<<<<<< Updated upstream
       current_address: JSON.stringify(currentAddressState[0]),
       previous_address: usePreviousAddress ? JSON.stringify(previousAddressState[0]) : null
     }
@@ -225,12 +215,6 @@ function TenantProfileInfo(props) {
     }
     tenantProfile.documents = JSON.stringify(files);
     await post('/tenantProfileInfo', tenantProfile, access_token, files);
-=======
-      current_address: currentAddressState[0],
-      previous_address: usePreviousAddress ? previousAddressState[0] : null,
-    };
-    await post("/tenantProfileInfo", tenantProfile, access_token);
->>>>>>> Stashed changes
     updateAutofillState(tenantProfile);
     props.onConfirm();
   };
@@ -378,7 +362,6 @@ function TenantProfileInfo(props) {
           />
         </Form.Group>
         <Row className="mx-0 my-0">
-<<<<<<< Updated upstream
             <Col className="px-0">
                 <Form.Group className="mx-2 my-3">
                     <Form.Label as="h6" className="mb-0 ms-2">
@@ -416,54 +399,6 @@ function TenantProfileInfo(props) {
                 </Form.Group>
             </Col>
             {/* <Popover
-=======
-          <Col className="px-0">
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Annual Salary {salary === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="75000"
-                value={salary}
-                onChange={(e) => setSalary(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col
-            className="px-0"
-            onClick={(e) => {
-              handleClick(e);
-            }}
-          >
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Frequency
-              </Form.Label>
-              {/* <div  className="d-flex justify-content-between" style={{ border: "1px solid #777777", padding: "6px"}}>
-                    {frequency}
-                    <img src={expandFrequency ? ArrowUp : ArrowDown} alt="Expand" />
-                  </div> */}
-              <DropdownButton
-                variant="light"
-                id="dropdown-basic-button"
-                title={frequency}
-              >
-                {allFrequency.map((freq, i) => (
-                  <Dropdown.Item
-                    onClick={() => setFrequency(freq)}
-                    href="#/action-1"
-                  >
-                    {" "}
-                    {freq}{" "}
-                  </Dropdown.Item>
-                ))}
-              </DropdownButton>
-            </Form.Group>
-          </Col>
-          {/* <Popover
->>>>>>> Stashed changes
               id={id}
               open={open}
               anchorEl={anchorEl}
@@ -605,7 +540,6 @@ function TenantProfileInfo(props) {
         ) : (
           ""
         )}
-<<<<<<< Updated upstream
 
         <div className='mb-4'>
           <h5 style={mediumBold}>Tenant Documents</h5>
@@ -671,8 +605,6 @@ function TenantProfileInfo(props) {
             </div>
           )}
         </div>
-=======
->>>>>>> Stashed changes
 
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>
           <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
