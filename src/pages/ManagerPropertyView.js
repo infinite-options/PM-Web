@@ -3,7 +3,18 @@ import {Col, Container, Row} from 'react-bootstrap';
 import {useLocation, useNavigate} from "react-router-dom";
 import { useParams } from "react-router";
 import Header from '../components/Header';
-import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill, xSmall, smallLine} from '../utils/styles';
+import {
+    tileImg,
+    gray,
+    greenPill,
+    mediumBold,
+    mediumImg,
+    redPill,
+    xSmall,
+    smallLine,
+    orangePill,
+    bluePill
+} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
@@ -20,6 +31,7 @@ import LeaseDocs from "../components/LeaseDocs";
 import Repair from '../icons/Repair.svg';
 import Document from "../icons/Document.svg";
 import {get} from "../utils/api";
+import ManagerTenantApplications from "../components/ManagerTenantApplications";
 
 function ManagerPropertyView(props) {
 
@@ -29,9 +41,7 @@ function ManagerPropertyView(props) {
     // const { mp_id } = useParams();
     const property_uid = location.state.property_uid
 
-    const [property, setProperty] = React.useState({
-        images: '[]'
-    });
+    const [property, setProperty] = React.useState({images: '[]'});
 
     const fetchProperty = async () => {
         const response = await get(`/propertyInfo?property_uid=${property_uid}`);
@@ -138,14 +148,13 @@ function ManagerPropertyView(props) {
                         {property.city}, {property.state} {property.zip}
                     </p>
                     <div className='d-flex'>
-                        {property.rental_uid !== null ? (
-                            <p style={greenPill} className='mb-0'>Rent Paid</p>
-                        ) : (
-                            <p style={redPill} className='mb-0'>Past Due</p>
-                        ) }
+                        {property.rental_status === "ACTIVE" ? <p style={greenPill} className='mb-0'>Rented</p>
+                            : property.tenant_id === null ? <p style={orangePill} className='mb-0'>Not Rented</p>:
+                                <p style={bluePill} className='mb-0'>Status Unknown</p>}
                     </div>
 
-                    <ManagerRentalHistory property={property}/>
+                    {(property.rental_status === "ACTIVE") ? <ManagerRentalHistory property={property}/> :
+                        <ManagerTenantApplications property={property}/>}
 
                     <div onClick={() => setExpandDetails(!expandDetails)}>
                         <div className='d-flex justify-content-between mt-3'>
