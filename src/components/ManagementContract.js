@@ -4,6 +4,8 @@ import Header from './Header';
 import File from '../icons/File.svg';
 import ManagerFees from './ManagerFees';
 import BusinessContact from './BusinessContact';
+import EditIcon from '../icons/EditIcon.svg';
+import DeleteIcon from '../icons/DeleteIcon.svg';
 import {put, post} from '../utils/api';
 import {small, hidden, red, squareForm, mediumBold, smallPillButton} from '../utils/styles';
 
@@ -16,9 +18,48 @@ function ManagementContract(props) {
   const [feeState, setFeeState] = React.useState([]);
   const contactState = React.useState([]);
   const [files, setFiles] = React.useState([]);
+  const [newFile, setNewFile] = React.useState(null);
+  const [editingDoc, setEditingDoc] = React.useState(null);
   const addFile = (e) => {
+    const file = e.target.files[0];
+    const newFile = {
+      name: file.name,
+      description: '',
+      file: file
+    }
+    setNewFile(newFile);
+  }
+  const updateNewFile = (field, value) => {
+    const newFileCopy = {...newFile};
+    newFileCopy[field] = value;
+    setNewFile(newFileCopy);
+  }
+  const cancelEdit = () => {
+    setNewFile(null);
+    if (editingDoc !== null) {
+      const newFiles = [...files];
+      newFiles.push(editingDoc);
+      setFiles(newFiles);
+    }
+    setEditingDoc(null);
+  }
+  const editDocument = (i) => {
     const newFiles = [...files];
-    newFiles.push(e.target.files[0]);
+    const file = newFiles.splice(i, 1)[0];
+    setFiles(newFiles);
+    setEditingDoc(file);
+    setNewFile({...file});
+  }
+  const saveNewFile = (e) => {
+    // copied from addFile, change e.target.files to state.newFile
+    const newFiles = [...files];
+    newFiles.push(newFile);
+    setFiles(newFiles);
+    setNewFile(null);
+  }
+  const deleteDocument = (i) => {
+    const newFiles = [...files];
+    newFiles.splice(i, 1);
     setFiles(newFiles);
   }
   const loadContract = () => {
@@ -44,8 +85,10 @@ function ManagementContract(props) {
     }
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
-      newContract[key] = files[i];
+      newContract[key] = files[i].file;
+      delete files[i].file;
     }
+    newContract.documents = JSON.stringify(files);
     if (contract) {
       newContract.contract_uid = contract.contract_uid;
       console.log(newContract);
@@ -99,22 +142,64 @@ function ManagementContract(props) {
           {files.map((file, i) => (
             <div key={i}>
               <div className='d-flex justify-content-between align-items-end'>
-                <h6 style={mediumBold}>
-                  {typeof(file) === typeof('') ? file.split('/').pop() : file.name}
-                </h6>
-                <a href={file} target='_blank'>
-                  <img src={File}/>
-                </a>
+                <div>
+                  <h6 style={mediumBold}>
+                    {file.name}
+                  </h6>
+                  <p style={small} className='m-0'>
+                    {file.description}
+                  </p>
+                </div>
+                <div>
+                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
+                    onClick={() => editDocument(i)}/>
+                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
+                    onClick={() => deleteDocument(i)}/>
+                  <a href={file.link} target='_blank'>
+                    <img src={File}/>
+                  </a>
+                </div>
               </div>
               <hr style={{opacity: 1}}/>
             </div>
           ))}
-          <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
-          <label htmlFor='file'>
-            <Button variant='outline-primary' style={smallPillButton} as='p'>
-              Add Document
-            </Button>
-          </label>
+          {newFile !== null ? (
+            <div>
+              <Form.Group>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Document Name
+                </Form.Label>
+                <Form.Control style={squareForm} value={newFile.name} placeholder='Name'
+                  onChange={(e) => updateNewFile('name', e.target.value)}/>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Description
+                </Form.Label>
+                <Form.Control style={squareForm} value={newFile.description} placeholder='Description'
+                  onChange={(e) => updateNewFile('description', e.target.value)}/>
+              </Form.Group>
+              <div className='text-center my-3'>
+                <Button variant='outline-primary' style={smallPillButton} as='p'
+                  onClick={cancelEdit} className='mx-2'>
+                  Cancel
+                </Button>
+                <Button variant='outline-primary' style={smallPillButton} as='p'
+                  onClick={saveNewFile} className='mx-2'>
+                  Save Document
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
+              <label htmlFor='file'>
+                <Button variant='outline-primary' style={smallPillButton} as='p'>
+                  Add Document
+                </Button>
+              </label>
+            </div>
+          )}
         </div>
       </Container>
     </div>
