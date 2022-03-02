@@ -3,18 +3,7 @@ import {Col, Container, Row} from 'react-bootstrap';
 import {useLocation, useNavigate} from "react-router-dom";
 import { useParams } from "react-router";
 import Header from '../components/Header';
-import {
-    tileImg,
-    gray,
-    greenPill,
-    mediumBold,
-    mediumImg,
-    redPill,
-    xSmall,
-    smallLine,
-    orangePill,
-    bluePill
-} from '../utils/styles';
+import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill, xSmall, smallLine, orangePill, bluePill} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
