@@ -37,7 +37,7 @@ function TenantAgreement(props) {
   const save = async () => {
     const newAgreement = {
       rental_property_id: property.property_uid,
-      tenant_id: tenantID,
+      tenant_id: acceptedTenants[0],
       lease_start: startDate,
       lease_end: endDate,
       rent_payments: JSON.stringify(feeState),
