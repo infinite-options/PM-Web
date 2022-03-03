@@ -104,7 +104,7 @@ function App() {
             <Route path="tenantAvailableProperties" element={<TenantAvailableProperties/>} />
             <Route path="uploadTenantDocuments" element={<TenantDocumentUpload/>} />
             <Route path="applyToProperty" element={<ApplyToProperty/>} />
-            <Route path="reviewTenantProfile" element={<ReviewTenantProfile/>} />
+            <Route path="reviewTenantProfile/:property_uid" element={<ReviewTenantProfile/>} />
             <Route path="tenantPropertyView/:property_uid" element={<TenantPropertyView/>} />
             <Route path="manager" element={<ManagerHome />} />
             <Route

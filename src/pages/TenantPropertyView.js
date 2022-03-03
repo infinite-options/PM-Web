@@ -13,8 +13,8 @@ function TenantPropertyView(props) {
       const navigate = useNavigate();
 
     const [property, setProperty] = React.useState(null);
-    
-    useEffect(() => { 
+
+    useEffect(() => {
         const fetchProperty = async () => {
             const response = await get(`/propertyInfo?property_uid=${property_uid}`);
             setProperty(response.result[0]);
@@ -48,11 +48,11 @@ function TenantPropertyView(props) {
                     }}
                 >
                     {" "}
-                    <Button 
-                        onClick={() => navigate("/reviewTenantProfile")} 
-                        variant='outline-primary' 
+                    <Button
+                        onClick={() => navigate(`/reviewTenantProfile/${property_uid}`)}
+                        variant='outline-primary'
                         style={bluePillButton}>
-                            Send Application to rent
+                            Start Application to rent
                         </Button>
                 </Col>
             </Row>
