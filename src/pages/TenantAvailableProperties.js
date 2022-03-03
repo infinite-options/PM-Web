@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "../components/Header";
 import { get } from "../utils/api";
+import AppContext from "../AppContext";
 
 import PropertyCard from "../components/PropertyCard";
 
@@ -10,6 +11,12 @@ function TenantAvailableProperties(props) {
   const { hideBackButton } = props;
   const [properties, setProperties] = useState([]);
   const navigate = useNavigate();
+  const { userData } = React.useContext(AppContext);
+  const { user } = userData;
+  const [appliedProperties, setAppliedProperties] = useState({});
+
+  useEffect(() => {
+  }, []);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -23,9 +30,18 @@ function TenantAvailableProperties(props) {
           }
         });
       }
-      setProperties(res);
+      await setProperties(res);
     };
-    fetchProperties();
+    const fetchApplications = async () => {
+      const response = await get(`/applications?tenant_id=${user.user_uid}`);
+      const appliedPropertes = {};
+      for (const a of response.result) {
+        appliedProperties[a.property_uid] = true;
+      }
+      console.log(appliedProperties);
+      await setAppliedProperties(appliedProperties);
+    };
+    fetchApplications().then(fetchProperties);
   }, []);
 
 
@@ -40,16 +56,17 @@ function TenantAvailableProperties(props) {
       />
 
       <Container>
-        {properties.map((value, i) => (
-          <div key={i} style={{ marginBottom: "10px" }} onClick={() => navigate(`/tenantPropertyView/${value.property_uid}`)}>
-            <PropertyCard property={value}></PropertyCard>
-          </div>
-        ))}
+        {properties.map((value, i) => {
+          const applied = appliedProperties.hasOwnProperty(value.property_uid);
+          return (
+            <div key={i} style={{ marginBottom: "10px" }} onClick={applied ? () => {} : () => navigate(`/tenantPropertyView/${value.property_uid}`)}>
+              <PropertyCard property={value} applied={applied}></PropertyCard>
+            </div>
+          );
+        })}
       </Container>
     </div>
   );
 }
 
 export default TenantAvailableProperties;
-
-
