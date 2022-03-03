@@ -8,7 +8,7 @@ import {put, post} from '../utils/api';
 import {small, hidden, red, squareForm, mediumBold, smallPillButton} from '../utils/styles';
 
 function TenantAgreement(props) {
-  const {back, property, agreement} = props;
+  const {back, property, agreement, acceptedTenants, setAcceptedTenants} = props;
 
   const [tenantID, setTenantID] = React.useState('');
   const [startDate, setStartDate] = React.useState('');
@@ -69,14 +69,22 @@ function TenantAgreement(props) {
         rightText='Save' rightFn={save}/>
       <Container>
         <div className='mb-4'>
-          <h5 style={mediumBold}>Tenant</h5>
-          <Form.Group className='mx-2 my-3'>
-            <Form.Label as='h6' className='mb-0 ms-2'>
-              Tenant ID {tenantID === '' ? required : ''}
-            </Form.Label>
-            <Form.Control style={squareForm} value={tenantID} placeholder='100-000001'
-              onChange={(e) => setTenantID(e.target.value)}/>
-          </Form.Group>
+          <h5 style={mediumBold}>Tenant(s)</h5>
+          {/*<Form.Group className='mx-2 my-3'>*/}
+          {/*  <Form.Label as='h6' className='mb-0 ms-2'>*/}
+          {/*    Tenant ID {tenantID === '' ? required : ''}*/}
+          {/*  </Form.Label>*/}
+          {/*  <Form.Control style={squareForm} value={tenantID} placeholder='100-000001'*/}
+          {/*    onChange={(e) => setTenantID(e.target.value)}/>*/}
+          {/*</Form.Group>*/}
+          {acceptedTenants && acceptedTenants.length > 0 && acceptedTenants.map((tenant_id, i) =>
+              <Form.Group className='mx-2 my-3' key={i}>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Tenant ID {tenantID === '' ? required : ''}
+                </Form.Label>
+                <Form.Control style={squareForm} value={tenant_id} readOnly={true}/>
+              </Form.Group>
+          )}
         </div>
         <div className='mb-4'>
           <h5 style={mediumBold}>Lease Dates</h5>

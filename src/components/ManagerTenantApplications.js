@@ -10,7 +10,7 @@ import Checkbox from "./Checkbox";
 function ManagerTenantApplications(props) {
     const {userData, refresh} = React.useContext(AppContext);
     const {access_token} = userData;
-    const {property} = props;
+    const {property, createNewTenantAgreement} = props;
     const [expandTenantApplications, setExpandTenantApplications] = React.useState(false);
 
     const [applications, setApplications] = React.useState([])
@@ -48,15 +48,19 @@ function ManagerTenantApplications(props) {
         for (const id of application_uids){
             const request_body = {
                 application_uid: id,
-                message: "Your applications is accepted.",
+                message: "Your application is accepted.",
                 application_status: "ACCEPTED"
             }
 
-            console.log(request_body)
+            // console.log(request_body)
             const response = await put("/applications", request_body);
-            // const result = response.result
-            // console.log(result)
+            // console.log(response)
         }
+
+        const tenant_uids = applications.filter(a => a.application_selected).map(a => a.tenant_id);
+        setExpandTenantApplications(false)
+        createNewTenantAgreement(tenant_uids)
+
 
         // console.log("Quotes Requested from", application_uids)
         // const request_body = {
@@ -81,9 +85,9 @@ function ManagerTenantApplications(props) {
                 </div>
                 {expandTenantApplications ? (
                     <Container>
-                        <Row style={headings}>
-                            <div>Applications:</div>
-                        </Row>
+                        {/*<Row style={headings}>*/}
+                        {/*    <div>Applications:</div>*/}
+                        {/*</Row>*/}
                         <div>
                             {applications.length > 0 && applications.map((application, i) =>
                                 (<Row className="mt-2" key={i}>

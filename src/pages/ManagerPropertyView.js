@@ -50,6 +50,7 @@ function ManagerPropertyView(props) {
     const [showTenantAgreement, setShowTenantAgreement] = React.useState(false);
     const [selectedContract, setSelectedContract] = React.useState(null);
     const [selectedAgreement, setSelectedAgreement] = React.useState(null);
+    const [acceptedTenants, setAcceptedTenants] = React.useState([]);
 
     const nextImg = () => {
         if (currentImg === JSON.parse(property.images).length - 1) {
@@ -97,6 +98,7 @@ function ManagerPropertyView(props) {
     }
     const closeAgreement = () => {
         // reload();
+        setAcceptedTenants([])
         setShowTenantAgreement(false);
     }
 
@@ -105,11 +107,18 @@ function ManagerPropertyView(props) {
         fetchProperty();
     }
 
+    const createNewTenantAgreement = (tenant_uids) => {
+        // console.log(tenant_uids)
+        setAcceptedTenants(tenant_uids)
+        setShowTenantAgreement(true)
+    }
+
     return(
         showManagementContract ? (
             <ManagementContract back={closeContract} property={property} contract={selectedContract}/>
         ) : showTenantAgreement ? (
-            <TenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}/>
+            <TenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
+                             acceptedTenants={acceptedTenants} setAcceptedTenants={setAcceptedTenants}/>
         ) : (
             <div>
             <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
@@ -143,7 +152,7 @@ function ManagerPropertyView(props) {
                     </div>
 
                     {(property.rental_status === "ACTIVE") ? <ManagerRentalHistory property={property}/> :
-                        <ManagerTenantApplications property={property}/>}
+                        <ManagerTenantApplications property={property} createNewTenantAgreement={createNewTenantAgreement}/>}
 
                     <div onClick={() => setExpandDetails(!expandDetails)}>
                         <div className='d-flex justify-content-between mt-3'>
