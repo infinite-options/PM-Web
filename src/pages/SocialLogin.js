@@ -72,8 +72,8 @@ function SocialLogin(props) {
       code: auth_code,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
-      redirect_uri: "http://localhost:3000",
-      //redirectUri: "https://skedul.online",
+      //redirect_uri: "http://localhost:3000",
+      redirectUri: "https://io-propertymanagement.netlify.app/",
       grant_type: "authorization_code",
     };
 
@@ -296,8 +296,8 @@ function SocialLogin(props) {
                 responseType="code"
                 buttonText="Log In"
                 ux_mode="redirect"
-                redirectUri="http://localhost:3000"
-                //redirectUri="https://skedul.online"
+                //redirectUri="http://localhost:3000"
+                redirectUri="https://io-propertymanagement.netlify.app/"
                 scope="https://www.googleapis.com/auth/calendar"
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
@@ -325,8 +325,8 @@ function SocialLogin(props) {
                 responseType="code"
                 buttonText="Log In"
                 ux_mode="redirect"
-                redirectUri="http://localhost:3000"
-                //redirectUri="https://skedul.online"
+                //redirectUri="http://localhost:3000"
+                redirectUri="https://io-propertymanagement.netlify.app/"
                 scope="https://www.googleapis.com/auth/calendar"
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
