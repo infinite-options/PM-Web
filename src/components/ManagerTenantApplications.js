@@ -42,7 +42,7 @@ function ManagerTenantApplications(props) {
     const applicationsResponse = async () => {
         const application_uids = applications.filter(a => a.application_selected).map(a => a.application_uid);
         if (application_uids.length === 0) {
-            alert('No Applications Selected')
+            alert('Please select at least one application')
             return
         }
 
@@ -69,9 +69,6 @@ function ManagerTenantApplications(props) {
         // }
         // const response = await put("/applications", request_body);
         // const result = response.result
-
-        setExpandTenantApplications(false)
-
     }
 
     return (
