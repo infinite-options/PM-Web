@@ -1,11 +1,12 @@
 import React from 'react';
 import {Button, Col, Container, Row} from 'react-bootstrap';
-import {mediumBold, headings, subText, bluePillButton} from '../utils/styles';
+import {mediumBold, headings, subText, bluePillButton, underline} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import {get, put} from "../utils/api";
 import AppContext from "../AppContext";
 import Checkbox from "./Checkbox";
+import File from '../icons/File.svg';
 
 function ManagerTenantApplications(props) {
     const {userData, refresh} = React.useContext(AppContext);
@@ -98,9 +99,20 @@ function ManagerTenantApplications(props) {
                                             </Row>
                                         </Col>
                                         <Col>
-                                            <Row style={headings}>{application.tenant_id}</Row>
+                                            <Row style={headings}>{`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id}) `}</Row>
                                             <Row style={subText}>
-                                                {application.message}
+                                                Note: {application.message}
+                                            </Row>
+                                            <Row>
+                                                {application.documents && application.documents.length > 0
+                                                    && JSON.parse(application.documents).map((document, i) =>
+                                                        <div className='d-flex justify-content-between align-items-end ps-0' key={i}>
+                                                            <h6 style={mediumBold}>{document.name}</h6>
+                                                            <a href={document.link} target='_blank'>
+                                                                <img src={File} alt="Document"/>
+                                                            </a>
+                                                        </div>
+                                                    )}
                                             </Row>
                                         </Col>
                                     </Row>
