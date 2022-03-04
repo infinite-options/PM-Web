@@ -11,10 +11,6 @@ import Google from "../icons/GoogleLogin.svg";
 import AppContext from "../AppContext";
 import { get, post } from "../utils/api";
 
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-
-const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
-const GOOGLE_LOGIN = process.env.REACT_APP_GOOGLE_LOGIN;
 const useStyles = makeStyles({
   textFieldBackgorund: {
     backgroundColor: "#F3F3F8",
@@ -34,6 +30,10 @@ function SocialSignUp(props) {
   const [refreshToken, setrefreshToken] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [accessExpiresIn, setaccessExpiresIn] = useState("");
+
+  const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
+  const GOOGLE_LOGIN = process.env.REACT_APP_GOOGLE_LOGIN;
 
   const responseGoogle = (response) => {
     console.log("response", response);

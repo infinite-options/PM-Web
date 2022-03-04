@@ -13,10 +13,6 @@ import Header from "../components/Header";
 import SelectRole from "../components/SelectRole";
 import { get, post } from "../utils/api";
 
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-
-const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
-const GOOGLE_LOGIN = process.env.REACT_APP_GOOGLE_LOGIN;
 const useStyles = makeStyles({
   textFieldBackgorund: {
     backgroundColor: "#F3F3F8",
@@ -39,6 +35,10 @@ function SocialLogin(props) {
   const [accessToken, setAccessToken] = useState("");
   const [accessExpiresIn, setaccessExpiresIn] = useState("");
   const { userData, updateUserData } = useContext(AppContext);
+
+  const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
+  const GOOGLE_LOGIN = process.env.REACT_APP_GOOGLE_LOGIN;
 
   useEffect(() => {
     if (userData.access_token !== null) {
