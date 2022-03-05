@@ -107,7 +107,7 @@ function ManagerPropertyView(props) {
         fetchProperty();
     }
 
-    const createNewTenantAgreement = (tenant_uids) => {
+    const createNewTenantAgreement = (application_uids, tenant_uids) => {
         // console.log(tenant_uids)
         setAcceptedTenants(tenant_uids)
         setShowTenantAgreement(true)

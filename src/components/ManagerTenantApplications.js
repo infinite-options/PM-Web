@@ -60,7 +60,7 @@ function ManagerTenantApplications(props) {
 
         const tenant_uids = applications.filter(a => a.application_selected).map(a => a.tenant_id);
         setExpandTenantApplications(false)
-        createNewTenantAgreement(tenant_uids)
+        createNewTenantAgreement(application_uids, tenant_uids)
 
 
         // console.log("Quotes Requested from", application_uids)

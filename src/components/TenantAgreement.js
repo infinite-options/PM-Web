@@ -52,8 +52,15 @@ function TenantAgreement(props) {
       console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
     } else {
-      console.log(newAgreement);
-      const response = await post('/rentals', newAgreement, null, files);
+      for(let i = 0; i < acceptedTenants.length; i++){
+        newAgreement.tenant_id = acceptedTenants[i]
+        console.log(newAgreement);
+        const response = await post('/rentals', newAgreement, null, files);
+      }
+
+      // newAgreement.tenant_id = acceptedTenants
+      // console.log(newAgreement);
+      // const response = await post('/rentals', newAgreement, null, files);
     }
     back();
   }
