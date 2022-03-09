@@ -54,7 +54,24 @@ function ManagerOverview(props) {
 
         const properties = response.result
         console.log(properties)
-        setProperties(properties);
+        setProperties(properties)
+
+        const properties_unique = []
+        const pids = new Set()
+        properties.forEach(property => {
+            if (pids.has(property.property_uid)) {
+                // properties_unique[properties_unique.length-1].tenants.push(property)
+                const index = properties_unique.findIndex(item => item.property_uid === property.property_uid);
+                properties_unique[index].tenants.push(property)
+            } else {
+                pids.add(property.property_uid)
+                properties_unique.push(property)
+                properties_unique[properties_unique.length-1].tenants = [property]
+            }
+        });
+        console.log(properties_unique)
+        // setProperties(properties_unique)
+
     }
 
     React.useEffect(fetchProperties, [access_token]);
