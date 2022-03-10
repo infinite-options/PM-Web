@@ -40,28 +40,33 @@ function ManagerTenantApplications(props) {
     }
 
     const applicationsResponse = async () => {
-        const application_uids = applications.filter(a => a.application_selected).map(a => a.application_uid);
-        if (application_uids.length === 0) {
+
+        const selected_applications = applications.filter(a => a.application_selected)
+        if (selected_applications.length === 0) {
             alert('Please select at least one application')
             return
         }
 
-        for (const id of application_uids){
-            const request_body = {
-                application_uid: id,
-                message: "Your application is accepted.",
-                application_status: "ACCEPTED"
-            }
-
-            // console.log(request_body)
-            const response = await put("/applications", request_body);
-            // console.log(response)
-        }
-
-        const tenant_uids = applications.filter(a => a.application_selected).map(a => a.tenant_id);
         setExpandTenantApplications(false)
-        createNewTenantAgreement(application_uids, tenant_uids)
+        createNewTenantAgreement(selected_applications)
 
+        // const application_uids = applications.filter(a => a.application_selected).map(a => a.application_uid);
+        // if (application_uids.length === 0) {
+        //     alert('Please select at least one application')
+        //     return
+        // }
+
+        // for (const id of application_uids){
+        //     const request_body = {
+        //         application_uid: id,
+        //         message: "Your application is accepted.",
+        //         application_status: "ACCEPTED"
+        //     }
+        //
+        //     // console.log(request_body)
+        //     const response = await put("/applications", request_body);
+        //     // console.log(response)
+        // }
 
         // console.log("Quotes Requested from", application_uids)
         // const request_body = {
@@ -69,6 +74,7 @@ function ManagerTenantApplications(props) {
         // }
         // const response = await put("/applications", request_body);
         // const result = response.result
+
     }
 
     return (

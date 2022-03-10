@@ -14,7 +14,7 @@ import SearchPM from "../icons/searchPM.svg";
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
 import ManagementContract from "../components/ManagementContract";
-import TenantAgreement from "../components/TenantAgreement";
+import ManagerTenantAgreement from "./ManagerTenantAgreement";
 import ManagerDocs from "../components/ManagerDocs";
 import LeaseDocs from "../components/LeaseDocs";
 import Repair from '../icons/Repair.svg';
@@ -50,7 +50,7 @@ function ManagerPropertyView(props) {
     const [showTenantAgreement, setShowTenantAgreement] = React.useState(false);
     const [selectedContract, setSelectedContract] = React.useState(null);
     const [selectedAgreement, setSelectedAgreement] = React.useState(null);
-    const [acceptedTenants, setAcceptedTenants] = React.useState([]);
+    const [acceptedTenantApplications, setAcceptedTenantApplications] = React.useState([]);
 
     const nextImg = () => {
         if (currentImg === JSON.parse(property.images).length - 1) {
@@ -98,7 +98,7 @@ function ManagerPropertyView(props) {
     }
     const closeAgreement = () => {
         // reload();
-        setAcceptedTenants([])
+        setAcceptedTenantApplications([])
         setShowTenantAgreement(false);
     }
 
@@ -107,9 +107,9 @@ function ManagerPropertyView(props) {
         fetchProperty();
     }
 
-    const createNewTenantAgreement = (application_uids, tenant_uids) => {
-        // console.log(tenant_uids)
-        setAcceptedTenants(tenant_uids)
+    const createNewTenantAgreement = (selected_applications) => {
+        // console.log(selected_applications)
+        setAcceptedTenantApplications(selected_applications)
         setShowTenantAgreement(true)
     }
 
@@ -117,8 +117,9 @@ function ManagerPropertyView(props) {
         showManagementContract ? (
             <ManagementContract back={closeContract} property={property} contract={selectedContract}/>
         ) : showTenantAgreement ? (
-            <TenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
-                             acceptedTenants={acceptedTenants} setAcceptedTenants={setAcceptedTenants}/>
+            <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
+                                    acceptedTenantApplications={acceptedTenantApplications}
+                                    setAcceptedTenantApplications={setAcceptedTenantApplications}/>
         ) : (
             <div>
             <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
