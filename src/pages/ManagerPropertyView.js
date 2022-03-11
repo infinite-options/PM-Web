@@ -21,6 +21,7 @@ import Repair from '../icons/Repair.svg';
 import Document from "../icons/Document.svg";
 import {get} from "../utils/api";
 import ManagerTenantApplications from "../components/ManagerTenantApplications";
+import ManagerTenantProfileView from "./ManagerTenantProfileView";
 
 function ManagerPropertyView(props) {
 
@@ -51,6 +52,8 @@ function ManagerPropertyView(props) {
     const [selectedContract, setSelectedContract] = React.useState(null);
     const [selectedAgreement, setSelectedAgreement] = React.useState(null);
     const [acceptedTenantApplications, setAcceptedTenantApplications] = React.useState([]);
+    const [showTenantProfile, setShowTenantProfile] = React.useState(false);
+    const [selectedTenantApplication, setSelectedTenantApplication] = React.useState(null);
 
     const nextImg = () => {
         if (currentImg === JSON.parse(property.images).length - 1) {
@@ -113,6 +116,15 @@ function ManagerPropertyView(props) {
         setShowTenantAgreement(true)
     }
 
+    const selectTenantApplication = (application) => {
+        setSelectedTenantApplication(application);
+        setShowTenantProfile(true);
+    }
+
+    const closeTenantApplication = () => {
+        setShowTenantProfile(false);
+    }
+
     return(
         showManagementContract ? (
             <ManagementContract back={closeContract} property={property} contract={selectedContract}/>
@@ -120,6 +132,8 @@ function ManagerPropertyView(props) {
             <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
                                     acceptedTenantApplications={acceptedTenantApplications}
                                     setAcceptedTenantApplications={setAcceptedTenantApplications}/>
+        ) : showTenantProfile ? (
+            <ManagerTenantProfileView back={closeTenantApplication} application={selectedTenantApplication}/>
         ) : (
             <div>
             <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
@@ -153,7 +167,8 @@ function ManagerPropertyView(props) {
                     </div>
 
                     {(property.rental_status === "ACTIVE") ? <ManagerRentalHistory property={property}/> :
-                        <ManagerTenantApplications property={property} createNewTenantAgreement={createNewTenantAgreement}/>}
+                        <ManagerTenantApplications property={property} createNewTenantAgreement={createNewTenantAgreement}
+                                                   selectTenantApplication={selectTenantApplication}/>}
 
                     <div onClick={() => setExpandDetails(!expandDetails)}>
                         <div className='d-flex justify-content-between mt-3'>

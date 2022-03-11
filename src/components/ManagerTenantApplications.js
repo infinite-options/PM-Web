@@ -11,7 +11,7 @@ import File from '../icons/File.svg';
 function ManagerTenantApplications(props) {
     const {userData, refresh} = React.useContext(AppContext);
     const {access_token} = userData;
-    const {property, createNewTenantAgreement} = props;
+    const {property, createNewTenantAgreement, selectTenantApplication} = props;
     const [expandTenantApplications, setExpandTenantApplications] = React.useState(false);
 
     const [applications, setApplications] = React.useState([])
@@ -93,7 +93,7 @@ function ManagerTenantApplications(props) {
                         {/*    <div>Applications:</div>*/}
                         {/*</Row>*/}
                         <div>
-                            {applications.length > 0 && applications.map((application, i) =>
+                            {applications.length > 0 && applications.filter(a => a.application_status !== "REJECTED").map((application, i) =>
                                 (<Row className="mt-2" key={i}>
                                         <Col xs={2} className="mt-2">
                                             <Row>
@@ -102,7 +102,9 @@ function ManagerTenantApplications(props) {
                                             </Row>
                                         </Col>
                                         <Col>
-                                            <Row style={headings}>{`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id}) `}</Row>
+                                            <Row style={headings} onClick={() => selectTenantApplication(application)}>
+                                                {`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id})`}
+                                            </Row>
                                             <Row style={subText}>
                                                 Note: {application.message}
                                             </Row>
