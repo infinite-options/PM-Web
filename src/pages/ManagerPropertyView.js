@@ -35,7 +35,19 @@ function ManagerPropertyView(props) {
 
     const fetchProperty = async () => {
         const response = await get(`/propertyInfo?property_uid=${property_uid}`);
-        setProperty(response.result[0]);
+        // setProperty(response.result[0]);
+
+        const property = response.result[0]
+        property.tenants = []
+
+        if ((response.result.length > 1) || (response.result[0].tenant_id !== null)) {
+            response.result.forEach(row => {
+                property.tenants.push(row)
+            });
+        }
+
+        // console.log(property)
+        setProperty(property);
     }
     React.useState(() => {
         fetchProperty();
@@ -283,29 +295,31 @@ function ManagerPropertyView(props) {
                         </div>
                     ) : ''}
 
-                    {property.tenant_id !== null ? (
-                        <div>
-                            <div className='d-flex justify-content-between'>
-                                <div>
-                                    <h6 style={mediumBold} className='mb-1'>
-                                        {property.tenant_first_name} {property.tenant_last_name}
-                                    </h6>
-                                    <p style={{...gray, ...mediumBold}} className='mb-1'>
-                                        Tenant
-                                    </p>
+                    {property.tenants !== undefined  && property.tenants.length > 0 &&
+                        property.tenants.map((tenant, i) => (
+                            <div key={i}>
+                                <div className='d-flex justify-content-between'>
+                                    <div>
+                                        <h6 style={mediumBold} className='mb-1'>
+                                            {tenant.tenant_first_name} {tenant.tenant_last_name}
+                                        </h6>
+                                        <p style={{...gray, ...mediumBold}} className='mb-1'>
+                                            Tenant
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a href={`tel:${tenant.tenant_email}`}>
+                                            <img src={Phone} alt='Phone' style={mediumImg}/>
+                                        </a>
+                                        <a href={`mailto:${tenant.tenant_phone_number}`}>
+                                            <img src={Message} alt='Message' style={mediumImg}/>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div>
-                                    <a href={`tel:${property.owner_phone_number}`}>
-                                        <img src={Phone} alt='Phone' style={mediumImg}/>
-                                    </a>
-                                    <a href={`mailto:${property.owner_email}`}>
-                                        <img src={Message} alt='Message' style={mediumImg}/>
-                                    </a>
-                                </div>
+                                <hr style={{opacity: 1}} className='mt-1'/>
                             </div>
-                            <hr style={{opacity: 1}} className='mt-1'/>
-                        </div>
-                    ) : ''}
+                        ))
+                    }
 
                 </div>
             </Container>
