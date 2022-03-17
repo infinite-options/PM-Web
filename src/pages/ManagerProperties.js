@@ -42,7 +42,7 @@ function ManagerProperties(props) {
         }
 
         const properties = response.result
-        setProperties(properties);
+        // setProperties(properties);
 
         const properties_unique = []
         const pids = new Set()
@@ -57,8 +57,8 @@ function ManagerProperties(props) {
                 properties_unique[properties_unique.length-1].tenants = [property]
             }
         });
-        console.log(properties_unique)
-        // setProperties(properties_unique)
+        // console.log(properties_unique)
+        setProperties(properties_unique)
     }
 
     React.useEffect(fetchProperties, [access_token]);

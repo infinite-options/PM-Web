@@ -2,7 +2,8 @@ import React from 'react';
 import {Container, Row, Col, Button} from 'react-bootstrap';
 import Header from "../components/Header";
 import {put} from '../utils/api';
-import {gray, redPillButton} from '../utils/styles';
+import {gray, mediumBold, redPillButton} from '../utils/styles';
+import File from "../icons/File.svg";
 
 function ManagerTenantProfileView(props) {
     const {back, application} = props;
@@ -52,6 +53,30 @@ function ManagerTenantProfileView(props) {
                 <p style={gray}>
                     {((application.tenant_drivers_license_number !== null) && (application.tenant_drivers_license_number !== 'null')) ?
                         application.tenant_drivers_license_number : 'No Drivers Licence Provided'}</p>
+
+                <h6>Salary</h6>
+                <p style={gray}>
+                    {((application.tenant_current_salary !== null) && (application.tenant_current_salary !== 'null')) ?
+                        application.tenant_current_salary : 'No Salary Provided'}</p>
+
+                <h6>Current Address</h6>
+                <p style={gray}>
+                    {((application.tenant_current_address !== null) && (application.tenant_current_address !== 'null')) ?
+                        application.tenant_current_address : 'No Address Provided'}</p>
+
+
+                <h6>Documents</h6>
+                <Row>
+                    {application.documents && application.documents.length > 0
+                        && JSON.parse(application.documents).map((document, i) =>
+                            <div className='d-flex justify-content-between align-items-end' key={i}>
+                                <p style={gray}>{document.name}</p>
+                                <a href={document.link} target='_blank'>
+                                    <img src={File} alt="Document"/>
+                                </a>
+                            </div>
+                        )}
+                </Row>
 
                 <Row className="mt-4">
                     <Col className='d-flex justify-content-evenly'>

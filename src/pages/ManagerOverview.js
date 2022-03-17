@@ -53,8 +53,8 @@ function ManagerOverview(props) {
         }
 
         const properties = response.result
-        console.log(properties)
-        setProperties(properties)
+        // console.log(properties)
+        // setProperties(properties)
 
         const properties_unique = []
         const pids = new Set()
@@ -70,7 +70,7 @@ function ManagerOverview(props) {
             }
         });
         console.log(properties_unique)
-        // setProperties(properties_unique)
+        setProperties(properties_unique)
 
     }
 

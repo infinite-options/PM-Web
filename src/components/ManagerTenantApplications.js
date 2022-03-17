@@ -33,8 +33,15 @@ function ManagerTenantApplications(props) {
 
     React.useEffect(fetchApplications, [property]);
 
-    const toggleApplications = (index) => {
+    // const toggleApplications = (index) => {
+    //     const selected = [...applications];
+    //     selected[index].application_selected = !selected[index].application_selected;
+    //     setApplications(selected);
+    // }
+
+    const toggleApplications = (application) => {
         const selected = [...applications];
+        const index = selected.findIndex(a => a.application_uid === application.application_uid);
         selected[index].application_selected = !selected[index].application_selected;
         setApplications(selected);
     }
@@ -98,7 +105,7 @@ function ManagerTenantApplications(props) {
                                         <Col xs={2} className="mt-2">
                                             <Row>
                                                 <Checkbox type="BOX" checked={application.application_selected}
-                                                          onClick={() => toggleApplications(i)}/>
+                                                          onClick={() => toggleApplications(application)}/>
                                             </Row>
                                         </Col>
                                         <Col>
