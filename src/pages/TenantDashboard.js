@@ -122,7 +122,7 @@ function TenantDashboard(props) {
     navigate(`/${profile.property_uid}/repairStatus`);
   };
   const goToDocuments = () => {
-    navigate("/tenantDocuments");
+    navigate("/uploadTenantDocuments");
   };
   const goToSearchPM = () => {
     navigate("/tenantAvailableProperties");
@@ -216,9 +216,7 @@ function TenantDashboard(props) {
               </div>
             )}
           </Row>
-          {/* <Row style={headings}>
-          <div>Actions</div>
-        </Row> */}
+          
           <Row
             style={{
               display: "flex",
@@ -291,13 +289,20 @@ function TenantDashboard(props) {
                   src={SearchPM}
                   onClick={goToSearchPM}
                 />
-                <div>Search Property Managers</div>
+                <div>Search Properties </div>
               </div>
             </Col>
           </Row>
+          
         </Container>
+        
       )}
+     <div>ABCDEFGH</div>
+
     </div>
+
+    
+
   );
 }
 

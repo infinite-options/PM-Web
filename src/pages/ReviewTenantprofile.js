@@ -3,9 +3,11 @@ import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import {squareForm, pillButton, bluePillButton, bold} from '../utils/styles';
+import {squareForm, pillButton, bluePillButton,small, mediumBold} from '../utils/styles';
 import AppContext from "../AppContext";
 import { get, post } from "../utils/api";
+import EditIcon from '../icons/EditIcon.svg';
+import DeleteIcon from '../icons/DeleteIcon.svg';
 
 
 function ReviewTenantProfile (props) {
@@ -14,6 +16,8 @@ function ReviewTenantProfile (props) {
     const { user,access_token } = userData;
     const navigate = useNavigate();
     const [profile,setProfile] = React.useState(null);
+    const [files, setFiles] = React.useState([]);
+
     const goToPropertyView = () => {
         navigate(`/tenantPropertyView/${property_uid}`)
     }
@@ -30,20 +34,69 @@ function ReviewTenantProfile (props) {
       const response = await post('/applications', newApplication, access_token);
       goToShowApplied();
     }
-
+    // const addFile = (e) => {
+    //     const file = e.target.files[0];
+    //     const newFile = {
+    //       name: file.name,
+    //       description: '',
+    //       file: file
+    //     }
+    //     setNewFile(newFile);
+    //   }
+    //   const updateNewFile = (field, value) => {
+    //     const newFileCopy = {...newFile};
+    //     newFileCopy[field] = value;
+    //     setNewFile(newFileCopy);
+    //   }
+    //   const cancelEdit = () => {
+    //     setNewFile(null);
+    //     if (editingDoc !== null) {
+    //       const newFiles = [...files];
+    //       newFiles.push(editingDoc);
+    //       setFiles(newFiles);
+    //     }
+    //     setEditingDoc(null);
+    //   }
+      const editDocument = (i) => {
+        // const newFiles = [...files];
+        // const file = newFiles.splice(i, 1)[0];
+        // setFiles(newFiles);
+        // setEditingDoc(file);
+        // setNewFile({...file});
+      }
+    //   const saveNewFile = (e) => {
+    //     // copied from addFile, change e.target.files to state.newFile
+    //     const newFiles = [...files];
+    //     newFiles.push(newFile);
+    //     setFiles(newFiles);
+    //     setNewFile(null);
+    //   }
+      const deleteDocument = (i) => {
+        const newFiles = [...files];
+        newFiles.splice(i, 1);
+        setFiles(newFiles);
+      }
     React.useEffect(() => {
 
         const fetchProfileInfo = async () => {
           const response = await get("/tenantProfileInfo", access_token);
+          console.log(response);
           if (response.result && response.result.length !== 0) {
-            const res = response.result[0];
-            const currentAdd = JSON.parse(res.tenant_current_address);
-            const previousAdd = JSON.parse(res.tenant_previous_address);
-            res.tenant_current_address = currentAdd;
-            res.tenant_previous_address = previousAdd;
+                const res = response.result[0];
 
-            setProfile(res);
-            return;
+                const currentAdd = JSON.parse(res.tenant_current_address);
+                const previousAdd = JSON.parse(res.tenant_previous_address);
+                res.tenant_current_address = currentAdd;
+                res.tenant_previous_address = previousAdd;
+
+                setProfile(res);
+                const documents = response.result[0].documents? (JSON.parse(response.result[0].documents)) : [];
+                setFiles(documents);
+                return;
+          }
+          if (user.role.indexOf("TENANT") === -1) {
+            console.log("no tenant profile");
+            props.onConfirm();
           }
         };
         fetchProfileInfo();
@@ -57,7 +110,7 @@ function ReviewTenantProfile (props) {
                 leftText="< Back"
                 leftFn={goToPropertyView}
                 rightText="Edit"
-               // rightFn={() => {navigate(`/tenantProfile/${profile.tenant_id}`) }}
+                rightFn={() => {navigate(`/tenantProfile`) }}
             //    rightFn ={() => setTab("PROFILE")}
             />
             {profile ? (<div>
@@ -210,7 +263,38 @@ function ReviewTenantProfile (props) {
                             </div>
                         </div>) : ""}
                </div> ) : ""}
-{/* =======================================Send Button================================================ */}
+{/* =======================================Documents display================================================ */}
+     <div style={{marginTop:"40px",paddingLeft:"20px",fontWeight:"bold"}} > Documents</div>
+     
+      <Container fluid>
+        <div className='mb-4'>
+        {files.map((file, i) => (
+            <div key={i}>
+              <div className='d-flex justify-content-between align-items-end'>
+                <div>
+                  <h6 style={{paddingLeft:"20px",fontWeight:"bold"}}>
+                    {file.name}
+                  </h6>
+                  <p style={{paddingLeft:"20px"}} className='m-0'>
+                    {file.description}
+                  </p>
+                </div>
+                {/* <div>
+                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
+                    onClick={() => editDocument(i)}/>
+                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
+                    onClick={() => deleteDocument(i)}/>
+                  <a href={file.link} target='_blank'>
+                    <img src={File}/>
+                  </a>
+                </div> */}
+              </div>
+              <hr style={{opacity: 1}}/>
+            </div>
+          ))}
+          </div>
+       </Container>   
+{/* =======================================Application Message================================================ */}
 
             <Container fluid>
               <Form.Group className='mx-2 my-3'>
@@ -222,6 +306,7 @@ function ReviewTenantProfile (props) {
               </Form.Group>
             </Container>
 
+{/* =======================================Send Button================================================ */}
 
             <Row className="mt-4">
             <Col

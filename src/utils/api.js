@@ -43,9 +43,7 @@ const put = async (path, body, token=null, files=null) => {
   let headers = {
     'content-type': 'application/json'
   };
-  if (token !== null) {
-    headers.Authorization = `Bearer ${token}`;
-  }
+ 
   let requestBody = JSON.stringify(body);
   if (files !== null) {
     headers = {};
@@ -53,6 +51,9 @@ const put = async (path, body, token=null, files=null) => {
     for (const key of Object.keys(body)) {
       requestBody.append(key, body[key]);
     }
+  }
+  if (token !== null) {
+    headers.Authorization = `Bearer ${token}`;
   }
   const response = await fetch(baseURL+path, {
     method: 'PUT',

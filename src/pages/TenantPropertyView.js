@@ -6,6 +6,7 @@ import PropertyForm from '../components/PropertyForm';
 import { get } from "../utils/api";
 import { Row, Col, Button } from "react-bootstrap";
 import { bluePillButton} from '../utils/styles';
+import { fontWeight } from '@mui/system';
 
 
 function TenantPropertyView(props) {
@@ -26,14 +27,15 @@ function TenantPropertyView(props) {
     return(
         <div className="h-100 d-flex flex-column">
             <Header
-                title="Property Details"
+                title="Application"
                 leftText="< Back"
                 leftFn={() => navigate("/tenantAvailableProperties")}
             />
-
+            <p style={{fontWeight:"bold",textAlign:"center",fontSize:"20px"}}>Let's Start the Application Process</p>
+            <p style={{fontWeight:"bold",textAlign:"left",fontSize:"18px",marginLeft:"50px"}}>Review Property details</p>
             <div style={{padding:"100px",paddingTop:"15px",paddingBottom:"15px"}}>
                 {property?
-                (<PropertyForm property={property}/>)
+                (<PropertyForm property={property} hideEdit="true"/>)
                 :
                 ""}
             </div>
