@@ -22,11 +22,22 @@ function ManagerTenantAgreement(props) {
     const [newFile, setNewFile] = React.useState(null);
     const [editingDoc, setEditingDoc] = React.useState(null);
 
+    // const addFile = (e) => {
+    //     const newFiles = [...files];
+    //     newFiles.push(e.target.files[0]);
+    //     setFiles(newFiles);
+    // }
+
     const addFile = (e) => {
-        const newFiles = [...files];
-        newFiles.push(e.target.files[0]);
-        setFiles(newFiles);
+        const file = e.target.files[0];
+        const newFile = {
+            name: file.name,
+            description: '',
+            file: file
+        }
+        setNewFile(newFile);
     }
+
 
     const updateNewFile = (field, value) => {
         const newFileCopy = {...newFile};
@@ -121,26 +132,37 @@ function ManagerTenantAgreement(props) {
             lease_start: startDate,
             lease_end: endDate,
             rent_payments: JSON.stringify(feeState),
-            assigned_contacts: JSON.stringify(contactState[0])
+            assigned_contacts: JSON.stringify(contactState[0]),
         }
         for (let i = 0; i < files.length; i++) {
-            let key = `img_${i}`;
-            newAgreement[key] = files[i];
+            let key = `doc_${i}`;
+            newAgreement[key] = files[i].file;
+            delete files[i].file;
         }
+
+        newAgreement.documents = JSON.stringify(files);
 
         for (const application of acceptedTenantApplications) {
             newAgreement.tenant_id = application.tenant_id
-            // console.log(newAgreement);
+            console.log(newAgreement);
 
             const request_body = {
                 application_uid: application.application_uid,
-                message: JSON.stringify(newAgreement),
+                message: "Lease details forwarded for review",
                 application_status: "FORWARDED"
             }
             // console.log(request_body)
-            const response = await put("/applications", request_body);
+            const update_application = await put("/applications", request_body);
             // console.log(response)
         }
+
+        // const tenant_ids = acceptedTenantApplications.map(application => application.tenant_id)
+        newAgreement.tenant_id = acceptedTenantApplications.map(application => application.tenant_id)
+        newAgreement.rental_status = "PROCESSING"
+        console.log(newAgreement);
+        const create_rental = await post('/rentals', newAgreement, null, files);
+
+
         back();
     }
 
@@ -260,23 +282,88 @@ function ManagerTenantAgreement(props) {
                 {/*    )}*/}
                 {/*</div>*/}
 
+                {/*<div className='mb-4'>*/}
+                {/*    <h5 style={mediumBold}>Lease Documents</h5>*/}
+                {/*    {files.map((file, i) => (*/}
+                {/*        <div key={i}>*/}
+                {/*            <div className='d-flex justify-content-between align-items-end'>*/}
+                {/*                <h6 style={mediumBold}>{file.name}</h6>*/}
+                {/*                <img src={File}/>*/}
+                {/*            </div>*/}
+                {/*            <hr style={{opacity: 1}}/>*/}
+                {/*        </div>*/}
+                {/*    ))}*/}
+                {/*    <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>*/}
+                {/*    <label htmlFor='file'>*/}
+                {/*        <Button variant='outline-primary' style={smallPillButton} as='p'>*/}
+                {/*            Add Document*/}
+                {/*        </Button>*/}
+                {/*    </label>*/}
+                {/*</div>*/}
+
                 <div className='mb-4'>
                     <h5 style={mediumBold}>Lease Documents</h5>
                     {files.map((file, i) => (
                         <div key={i}>
                             <div className='d-flex justify-content-between align-items-end'>
-                                <h6 style={mediumBold}>{file.name}</h6>
-                                <img src={File}/>
+                                <div>
+                                    <h6 style={mediumBold}>
+                                        {file.name}
+                                    </h6>
+                                    <p style={small} className='m-0'>
+                                        {file.description}
+                                    </p>
+                                </div>
+                                <div>
+                                    <img src={EditIcon} alt='Edit' className='px-1 mx-2'
+                                         onClick={() => editDocument(i)}/>
+                                    <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
+                                         onClick={() => deleteDocument(i)}/>
+                                    <a href={file.link} target='_blank'>
+                                        <img src={File}/>
+                                    </a>
+                                </div>
                             </div>
                             <hr style={{opacity: 1}}/>
                         </div>
                     ))}
-                    <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
-                    <label htmlFor='file'>
-                        <Button variant='outline-primary' style={smallPillButton} as='p'>
-                            Add Document
-                        </Button>
-                    </label>
+                    {newFile !== null ? (
+                        <div>
+                            <Form.Group>
+                                <Form.Label as='h6' className='mb-0 ms-2'>
+                                    Document Name
+                                </Form.Label>
+                                <Form.Control style={squareForm} value={newFile.name} placeholder='Name'
+                                              onChange={(e) => updateNewFile('name', e.target.value)}/>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label as='h6' className='mb-0 ms-2'>
+                                    Description
+                                </Form.Label>
+                                <Form.Control style={squareForm} value={newFile.description} placeholder='Description'
+                                              onChange={(e) => updateNewFile('description', e.target.value)}/>
+                            </Form.Group>
+                            <div className='text-center my-3'>
+                                <Button variant='outline-primary' style={smallPillButton} as='p'
+                                        onClick={cancelEdit} className='mx-2'>
+                                    Cancel
+                                </Button>
+                                <Button variant='outline-primary' style={smallPillButton} as='p'
+                                        onClick={saveNewFile} className='mx-2'>
+                                    Save Document
+                                </Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
+                            <label htmlFor='file'>
+                                <Button variant='outline-primary' style={smallPillButton} as='p'>
+                                    Add Document
+                                </Button>
+                            </label>
+                        </div>
+                    )}
                 </div>
 
                 <Row className="mt-4">
