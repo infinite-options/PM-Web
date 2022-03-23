@@ -152,7 +152,7 @@ function ManagerTenantAgreement(props) {
                 application_status: "FORWARDED"
             }
             // console.log(request_body)
-            // const update_application = await put("/applications", request_body);
+            const update_application = await put("/applications", request_body);
             // console.log(response)
         }
 
