@@ -152,12 +152,12 @@ function ManagerTenantAgreement(props) {
                 application_status: "FORWARDED"
             }
             // console.log(request_body)
-            const update_application = await put("/applications", request_body);
+            // const update_application = await put("/applications", request_body);
             // console.log(response)
         }
 
         // const tenant_ids = acceptedTenantApplications.map(application => application.tenant_id)
-        newAgreement.tenant_id = acceptedTenantApplications.map(application => application.tenant_id)
+        newAgreement.tenant_id = JSON.stringify(acceptedTenantApplications.map(application => application.tenant_id))
         newAgreement.rental_status = "PROCESSING"
         console.log(newAgreement);
         const create_rental = await post('/rentals', newAgreement, null, files);
