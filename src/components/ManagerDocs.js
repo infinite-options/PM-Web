@@ -17,7 +17,8 @@ function ManagerDocs(props) {
     const business_uid = JSON.parse(selectedBusiness).business_uid;
     const newProperty = {
       property_uid: property.property_uid,
-      manager_id: business_uid
+      manager_id: business_uid,
+      // management_status: "FORWARDED"
     }
     for (let i = -1; i < files.length-1; i++) {
       let key = `img_${i}`;
