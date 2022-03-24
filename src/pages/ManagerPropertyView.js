@@ -3,7 +3,7 @@ import {Col, Container, Row} from 'react-bootstrap';
 import {useLocation, useNavigate} from "react-router-dom";
 import { useParams } from "react-router";
 import Header from '../components/Header';
-import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill, xSmall, smallLine} from '../utils/styles';
+import {tileImg, gray, greenPill, mediumBold, mediumImg, redPill, xSmall, smallLine, orangePill, bluePill} from '../utils/styles';
 import ArrowUp from '../icons/ArrowUp.svg';
 import ArrowDown from '../icons/ArrowDown.svg';
 import Phone from '../icons/Phone.svg';
@@ -14,12 +14,14 @@ import SearchPM from "../icons/searchPM.svg";
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
 import ManagementContract from "../components/ManagementContract";
-import TenantAgreement from "../components/TenantAgreement";
+import ManagerTenantAgreement from "./ManagerTenantAgreement";
 import ManagerDocs from "../components/ManagerDocs";
 import LeaseDocs from "../components/LeaseDocs";
 import Repair from '../icons/Repair.svg';
 import Document from "../icons/Document.svg";
 import {get} from "../utils/api";
+import ManagerTenantApplications from "../components/ManagerTenantApplications";
+import ManagerTenantProfileView from "./ManagerTenantProfileView";
 
 function ManagerPropertyView(props) {
 
@@ -29,13 +31,23 @@ function ManagerPropertyView(props) {
     // const { mp_id } = useParams();
     const property_uid = location.state.property_uid
 
-    const [property, setProperty] = React.useState({
-        images: '[]'
-    });
+    const [property, setProperty] = React.useState({images: '[]'});
 
     const fetchProperty = async () => {
         const response = await get(`/propertyInfo?property_uid=${property_uid}`);
-        setProperty(response.result[0]);
+        // setProperty(response.result[0]);
+
+        const property = response.result[0]
+        property.tenants = []
+
+        if ((response.result.length > 1) || (response.result[0].tenant_id !== null)) {
+            response.result.forEach(row => {
+                property.tenants.push(row)
+            });
+        }
+
+        // console.log(property)
+        setProperty(property);
     }
     React.useState(() => {
         fetchProperty();
@@ -51,6 +63,9 @@ function ManagerPropertyView(props) {
     const [showTenantAgreement, setShowTenantAgreement] = React.useState(false);
     const [selectedContract, setSelectedContract] = React.useState(null);
     const [selectedAgreement, setSelectedAgreement] = React.useState(null);
+    const [acceptedTenantApplications, setAcceptedTenantApplications] = React.useState([]);
+    const [showTenantProfile, setShowTenantProfile] = React.useState(false);
+    const [selectedTenantApplication, setSelectedTenantApplication] = React.useState(null);
 
     const nextImg = () => {
         if (currentImg === JSON.parse(property.images).length - 1) {
@@ -98,6 +113,7 @@ function ManagerPropertyView(props) {
     }
     const closeAgreement = () => {
         // reload();
+        setAcceptedTenantApplications([])
         setShowTenantAgreement(false);
     }
 
@@ -106,11 +122,30 @@ function ManagerPropertyView(props) {
         fetchProperty();
     }
 
+    const createNewTenantAgreement = (selected_applications) => {
+        // console.log(selected_applications)
+        setAcceptedTenantApplications(selected_applications)
+        setShowTenantAgreement(true)
+    }
+
+    const selectTenantApplication = (application) => {
+        setSelectedTenantApplication(application);
+        setShowTenantProfile(true);
+    }
+
+    const closeTenantApplication = () => {
+        setShowTenantProfile(false);
+    }
+
     return(
         showManagementContract ? (
             <ManagementContract back={closeContract} property={property} contract={selectedContract}/>
         ) : showTenantAgreement ? (
-            <TenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}/>
+            <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
+                                    acceptedTenantApplications={acceptedTenantApplications}
+                                    setAcceptedTenantApplications={setAcceptedTenantApplications}/>
+        ) : showTenantProfile ? (
+            <ManagerTenantProfileView back={closeTenantApplication} application={selectedTenantApplication}/>
         ) : (
             <div>
             <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
@@ -138,14 +173,14 @@ function ManagerPropertyView(props) {
                         {property.city}, {property.state} {property.zip}
                     </p>
                     <div className='d-flex'>
-                        {property.rental_uid !== null ? (
-                            <p style={greenPill} className='mb-0'>Rent Paid</p>
-                        ) : (
-                            <p style={redPill} className='mb-0'>Past Due</p>
-                        ) }
+                        {property.rental_status === "ACTIVE" ? <p style={greenPill} className='mb-0'>Rented</p>
+                            : property.tenant_id === null ? <p style={orangePill} className='mb-0'>Not Rented</p>:
+                                <p style={bluePill} className='mb-0'>Status Unknown</p>}
                     </div>
 
-                    <ManagerRentalHistory property={property}/>
+                    {(property.rental_status === "ACTIVE") ? <ManagerRentalHistory property={property}/> :
+                        <ManagerTenantApplications property={property} createNewTenantAgreement={createNewTenantAgreement}
+                                                   selectTenantApplication={selectTenantApplication}/>}
 
                     <div onClick={() => setExpandDetails(!expandDetails)}>
                         <div className='d-flex justify-content-between mt-3'>
@@ -260,29 +295,31 @@ function ManagerPropertyView(props) {
                         </div>
                     ) : ''}
 
-                    {property.tenant_id !== null ? (
-                        <div>
-                            <div className='d-flex justify-content-between'>
-                                <div>
-                                    <h6 style={mediumBold} className='mb-1'>
-                                        {property.tenant_first_name} {property.tenant_last_name}
-                                    </h6>
-                                    <p style={{...gray, ...mediumBold}} className='mb-1'>
-                                        Tenant
-                                    </p>
+                    {property.tenants !== undefined  && property.tenants.length > 0 &&
+                        property.tenants.map((tenant, i) => (
+                            <div key={i}>
+                                <div className='d-flex justify-content-between'>
+                                    <div>
+                                        <h6 style={mediumBold} className='mb-1'>
+                                            {tenant.tenant_first_name} {tenant.tenant_last_name}
+                                        </h6>
+                                        <p style={{...gray, ...mediumBold}} className='mb-1'>
+                                            Tenant
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a href={`tel:${tenant.tenant_email}`}>
+                                            <img src={Phone} alt='Phone' style={mediumImg}/>
+                                        </a>
+                                        <a href={`mailto:${tenant.tenant_phone_number}`}>
+                                            <img src={Message} alt='Message' style={mediumImg}/>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div>
-                                    <a href={`tel:${property.owner_phone_number}`}>
-                                        <img src={Phone} alt='Phone' style={mediumImg}/>
-                                    </a>
-                                    <a href={`mailto:${property.owner_email}`}>
-                                        <img src={Message} alt='Message' style={mediumImg}/>
-                                    </a>
-                                </div>
+                                <hr style={{opacity: 1}} className='mt-1'/>
                             </div>
-                            <hr style={{opacity: 1}} className='mt-1'/>
-                        </div>
-                    ) : ''}
+                        ))
+                    }
 
                 </div>
             </Container>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
-import {blue, gray, greenPill, orangePill, redPill, tileImg, xSmall} from '../utils/styles';
+import {blue, bluePill, gray, greenPill, orangePill, redPill, tileImg, xSmall} from '../utils/styles';
 import Header from '../components/Header';
 import AppContext from "../AppContext";
 import {useNavigate} from "react-router-dom";
@@ -42,8 +42,23 @@ function ManagerProperties(props) {
         }
 
         const properties = response.result
-        // console.log(properties)
-        setProperties(properties);
+        // setProperties(properties);
+
+        const properties_unique = []
+        const pids = new Set()
+        properties.forEach(property => {
+            if (pids.has(property.property_uid)) {
+                // properties_unique[properties_unique.length-1].tenants.push(property)
+                const index = properties_unique.findIndex(item => item.property_uid === property.property_uid);
+                properties_unique[index].tenants.push(property)
+            } else {
+                pids.add(property.property_uid)
+                properties_unique.push(property)
+                properties_unique[properties_unique.length-1].tenants = [property]
+            }
+        });
+        // console.log(properties_unique)
+        setProperties(properties_unique)
     }
 
     React.useEffect(fetchProperties, [access_token]);
@@ -76,10 +91,10 @@ function ManagerProperties(props) {
                                 <h5 className='mb-0' style={{fontWeight: '600'}}>
                                     ${property.listed_rent}/mo
                                 </h5>
-                                {property.rent_status === 'green' ? <p style={greenPill} className='mb-0'>Rent Paid</p>
-                                    : property.rent_status === 'orange' ? <p style={orangePill} className='mb-0'>Not Rented</p>
-                                        : property.rent_status === 'red' ? <p style={redPill} className='mb-0'>Past Due</p>:
-                                            <p style={greenPill} className='mb-0'>Rent Status</p>}
+
+                                {property.rental_status === "ACTIVE" ? <p style={greenPill} className='mb-0'>Rented</p>
+                                    : property.tenant_id === null ? <p style={orangePill} className='mb-0'>Not Rented</p>:
+                                            <p style={bluePill} className='mb-0'>Status Unknown</p>}
                             </div>
                             <p style={gray} className='mt-2 mb-0'>
                                 {property.address}{property.unit !== '' ? ' '+property.unit : ''}, {property.city}, {property.state} <br/>

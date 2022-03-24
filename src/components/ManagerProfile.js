@@ -12,6 +12,7 @@ function ManagerProfile(props) {
     const context = React.useContext(AppContext);
     const {access_token, user} = context.userData;
     const navigate = useNavigate();
+    const [profileInfo, setProfileInfo] = React.useState(null);
     const [editProfile, setEditProfile] = React.useState(false);
     const [companyName, setCompanyName] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
@@ -33,26 +34,48 @@ function ManagerProfile(props) {
     const [feeState, setFeeState] = React.useState([]);
     const [locationState , setLocationState] = React.useState([]);
 
-    const loadProfile = (profile) => {
-        setCompanyName(profile.manager_company_name)
-        setFirstName(profile.manager_first_name)
-        setLastName(profile.manager_last_name)
-        setEmail(profile.manager_email)
-        setPhoneNumber(profile.manager_phone_number)
-        setEinNumber(profile.manager_ein_number)
-        setSsn(profile.manager_ssn)
-        setPaymentState({
-            paypal : profile.manager_paypal === 'NULL' ? '' : profile.manager_paypal,
-            applePay : profile.manager_apple_pay === 'NULL' ? '' : profile.manager_apple_pay,
-            zelle : profile.manager_zelle === 'NULL' ? '' : profile.manager_zelle,
-            venmo : profile.manager_venmo === 'NULL' ? '' : profile.manager_venmo,
-            accountNumber : profile.manager_account_number === 'NULL' ? '' : profile.manager_account_number,
-            routingNumber : profile.manager_routing_number === 'NULL' ? '' : profile.manager_routing_number
-        })
-        setFeeState(JSON.parse(profile.manager_fees))
+    // const loadProfile = (profile) => {
+    //     setCompanyName(profile.manager_company_name)
+    //     setFirstName(profile.manager_first_name)
+    //     setLastName(profile.manager_last_name)
+    //     setEmail(profile.manager_email)
+    //     setPhoneNumber(profile.manager_phone_number)
+    //     setEinNumber(profile.manager_ein_number)
+    //     setSsn(profile.manager_ssn)
+    //     setPaymentState({
+    //         paypal : profile.manager_paypal === 'NULL' ? '' : profile.manager_paypal,
+    //         applePay : profile.manager_apple_pay === 'NULL' ? '' : profile.manager_apple_pay,
+    //         zelle : profile.manager_zelle === 'NULL' ? '' : profile.manager_zelle,
+    //         venmo : profile.manager_venmo === 'NULL' ? '' : profile.manager_venmo,
+    //         accountNumber : profile.manager_account_number === 'NULL' ? '' : profile.manager_account_number,
+    //         routingNumber : profile.manager_routing_number === 'NULL' ? '' : profile.manager_routing_number
+    //     })
+    //     setFeeState(JSON.parse(profile.manager_fees))
+    //
+    //     const location = JSON.parse(profile.manager_locations)
+    //     setLocationState(location)
+    // }
 
-        const location = JSON.parse(profile.manager_locations)
-        // console.log(profile)
+    const loadProfile = (profile) => {
+        setProfileInfo(profile)
+        setCompanyName(profile.business_name)
+        setFirstName(profile.employee_first_name)
+        setLastName(profile.employee_last_name)
+        setEmail(profile.employee_email)
+        setPhoneNumber(profile.employee_phone_number)
+        setEinNumber(profile.employee_ein_number)
+        setSsn(profile.employee_ssn)
+        setPaymentState({
+            paypal : profile.business_paypal ? profile.business_paypal : "",
+            applePay : profile.business_apple_pay ? profile.business_apple_pay : "",
+            zelle : profile.business_zelle ? profile.business_zelle : "",
+            venmo : profile.business_venmo ? profile.business_venmo : "",
+            accountNumber : profile.business_account_number ? profile.business_account_number : "",
+            routingNumber : profile.business_routing_number ? profile.business_routing_number : "",
+        })
+        setFeeState(JSON.parse(profile.business_services_fees))
+
+        const location = JSON.parse(profile.business_locations)
         setLocationState(location)
     }
 
@@ -65,9 +88,13 @@ function ManagerProfile(props) {
             console.log('no manager profile');
             // props.onConfirm();
         }
-        const response = await get('/managerProfileInfo', access_token);
-        if (response.result.length !== 0) {
-            const profile = response.result[0]
+
+        const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
+        if (employee_response.result.length !== 0) {
+            const employee = employee_response.result[0]
+            const business_response = await get(`/businesses?business_uid=${employee.business_uid}`);
+            const business = business_response.result[0]
+            const profile = {...employee, ...business}
             // console.log(profile)
             loadProfile(profile)
         }
@@ -75,33 +102,71 @@ function ManagerProfile(props) {
 
     React.useEffect(fetchProfileInfo, [access_token]);
 
+    // const saveProfile = async () => {
+    //     const {paypal, applePay, zelle, venmo, accountNumber, routingNumber} = paymentState;
+    //     const managerProfile = {
+    //         first_name: firstName,
+    //         last_name: lastName,
+    //         phone_number: phoneNumber,
+    //         email: email,
+    //         ein_number: einNumber,
+    //         ssn: ssn,
+    //         paypal: paypal || 'NULL',
+    //         apple_pay: applePay || 'NULL',
+    //         zelle: zelle || 'NULL',
+    //         venmo: venmo || 'NULL',
+    //         account_number: accountNumber || 'NULL',
+    //         routing_number: routingNumber || 'NULL',
+    //         fees: feeState[0],
+    //         locations: locationState[0]
+    //     }
+    //
+    //     // console.log(managerProfile)
+    //
+    //     const response = await put('/managerProfileInfo', managerProfile, access_token);
+    //     // console.log(response)
+    //     setEditProfile(false)
+    //     fetchProfileInfo()
+    //
+    // }
+
     const saveProfile = async () => {
         const {paypal, applePay, zelle, venmo, accountNumber, routingNumber} = paymentState;
-        const managerProfile = {
+        const employee_info = {
+            employee_uid: profileInfo.employee_uid,
+            user_uid: profileInfo.user_uid,
+            business_uid: profileInfo.business_uid,
             first_name: firstName,
             last_name: lastName,
             phone_number: phoneNumber,
             email: email,
             ein_number: einNumber,
             ssn: ssn,
-            paypal: paypal || 'NULL',
-            apple_pay: applePay || 'NULL',
-            zelle: zelle || 'NULL',
-            venmo: venmo || 'NULL',
-            account_number: accountNumber || 'NULL',
-            routing_number: routingNumber || 'NULL',
-            fees: feeState[0],
-            locations: locationState[0]
+        }
+        const business_info = {
+            business_uid: profileInfo.business_uid,
+            type: profileInfo.business_type,
+            name: profileInfo.business_name,
+            phone_number: profileInfo.business_phone_number,
+            email: profileInfo.business_email,
+            ein_number: profileInfo.business_ein_number,
+            services_fees: feeState[0],
+            locations: locationState[0],
+            paypal: paypal || null,
+            apple_pay: applePay || null,
+            zelle: zelle || null,
+            venmo: venmo || null,
+            account_number: accountNumber || null,
+            routing_number: routingNumber || null
         }
 
-        // console.log(managerProfile)
-
-        const response = await put('/managerProfileInfo', managerProfile, access_token);
-        // console.log(response)
+        const employee_response = await put('/employees', employee_info);
+        const business_response = await put('/businesses', business_info);
         setEditProfile(false)
         fetchProfileInfo()
 
     }
+
     return (
         <div className='pb-5 mb-5'>
             <Header title='Profile' leftText={editProfile? 'Cancel' : '< Back'}
