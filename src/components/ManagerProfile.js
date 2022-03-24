@@ -33,26 +33,47 @@ function ManagerProfile(props) {
     const [feeState, setFeeState] = React.useState([]);
     const [locationState , setLocationState] = React.useState([]);
 
-    const loadProfile = (profile) => {
-        setCompanyName(profile.manager_company_name)
-        setFirstName(profile.manager_first_name)
-        setLastName(profile.manager_last_name)
-        setEmail(profile.manager_email)
-        setPhoneNumber(profile.manager_phone_number)
-        setEinNumber(profile.manager_ein_number)
-        setSsn(profile.manager_ssn)
-        setPaymentState({
-            paypal : profile.manager_paypal === 'NULL' ? '' : profile.manager_paypal,
-            applePay : profile.manager_apple_pay === 'NULL' ? '' : profile.manager_apple_pay,
-            zelle : profile.manager_zelle === 'NULL' ? '' : profile.manager_zelle,
-            venmo : profile.manager_venmo === 'NULL' ? '' : profile.manager_venmo,
-            accountNumber : profile.manager_account_number === 'NULL' ? '' : profile.manager_account_number,
-            routingNumber : profile.manager_routing_number === 'NULL' ? '' : profile.manager_routing_number
-        })
-        setFeeState(JSON.parse(profile.manager_fees))
+    // const loadProfile = (profile) => {
+    //     setCompanyName(profile.manager_company_name)
+    //     setFirstName(profile.manager_first_name)
+    //     setLastName(profile.manager_last_name)
+    //     setEmail(profile.manager_email)
+    //     setPhoneNumber(profile.manager_phone_number)
+    //     setEinNumber(profile.manager_ein_number)
+    //     setSsn(profile.manager_ssn)
+    //     setPaymentState({
+    //         paypal : profile.manager_paypal === 'NULL' ? '' : profile.manager_paypal,
+    //         applePay : profile.manager_apple_pay === 'NULL' ? '' : profile.manager_apple_pay,
+    //         zelle : profile.manager_zelle === 'NULL' ? '' : profile.manager_zelle,
+    //         venmo : profile.manager_venmo === 'NULL' ? '' : profile.manager_venmo,
+    //         accountNumber : profile.manager_account_number === 'NULL' ? '' : profile.manager_account_number,
+    //         routingNumber : profile.manager_routing_number === 'NULL' ? '' : profile.manager_routing_number
+    //     })
+    //     setFeeState(JSON.parse(profile.manager_fees))
+    //
+    //     const location = JSON.parse(profile.manager_locations)
+    //     setLocationState(location)
+    // }
 
-        const location = JSON.parse(profile.manager_locations)
-        // console.log(profile)
+    const loadProfile = (profile) => {
+        setCompanyName(profile.business_name)
+        setFirstName(profile.employee_first_name)
+        setLastName(profile.employee_last_name)
+        setEmail(profile.employee_email)
+        setPhoneNumber(profile.employee_phone_number)
+        setEinNumber(profile.employee_ein_number)
+        setSsn(profile.employee_ssn)
+        setPaymentState({
+            paypal : profile.business_paypal ? profile.business_paypal : "",
+            applePay : profile.business_apple_pay ? profile.business_apple_pay : "",
+            zelle : profile.business_zelle ? profile.business_zelle : "",
+            venmo : profile.business_venmo ? profile.business_venmo : "",
+            accountNumber : profile.business_account_number ? profile.business_account_number : "",
+            routingNumber : profile.business_routing_number ? profile.business_routing_number : "",
+        })
+        setFeeState(JSON.parse(profile.business_services_fees))
+
+        const location = JSON.parse(profile.business_locations)
         setLocationState(location)
     }
 
@@ -65,9 +86,13 @@ function ManagerProfile(props) {
             console.log('no manager profile');
             // props.onConfirm();
         }
-        const response = await get('/managerProfileInfo', access_token);
-        if (response.result.length !== 0) {
-            const profile = response.result[0]
+
+        const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
+        if (employee_response.result.length !== 0) {
+            const employee = employee_response.result[0]
+            const business_response = await get(`/businesses?business_uid=${employee.business_uid}`);
+            const business = business_response.result[0]
+            const profile = {...employee, ...business}
             // console.log(profile)
             loadProfile(profile)
         }
