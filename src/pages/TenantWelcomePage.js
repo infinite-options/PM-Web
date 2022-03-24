@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
+import ReviewPropertyLease from "./reviewPropertyLease";
 import RepairRequest from "../icons/repair_request.svg";
 import RepairStatus from "../icons/repair_status.svg";
 import Documents from "../icons/documents.svg";
@@ -26,6 +27,7 @@ function TenantWelcomePage(props) {
   const { setShowFooter, profile, setProfile } = props;
   const [repairs, setRepairs] = useState([]);
   const [applications, setApplications] = useState([]);
+  const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [rent, setRent] = React.useState(0);
   const [rentPurchase, setRentPurchase] = React.useState({});
@@ -83,6 +85,8 @@ function TenantWelcomePage(props) {
     fetchRepairs();
   }, [profile]);
 
+ 
+
   useEffect(() => {
     const fetchApplications = async () => {
       const response = await get(
@@ -95,6 +99,18 @@ function TenantWelcomePage(props) {
       setApplications(response.result);
     };
     fetchApplications();
+  });
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      const response = await get(
+        `/properties/${applications[0].property_uid}`,
+      );
+      console.log(response);
+
+      setProperties(response.result);
+    };
+    if(applications && applications.length){fetchProperties();}
   }, [applications]);
 
   const goToRequest = () => {
@@ -116,6 +132,11 @@ function TenantWelcomePage(props) {
   const goToSearchPM = () => {
     navigate("/tenantAvailableProperties");
   };
+
+  const goToReviewPropertyLease = (application) => {
+    navigate(`/reviewPropertyLease/${application.property_uid}`,{ state: {application_uid: application.application_uid}});
+  };
+
   console.log(profile);
   return (
     <div className="h-100">
@@ -208,8 +229,8 @@ function TenantWelcomePage(props) {
               <p>Your lease applications and their statuses </p>
 
               <div className='mb-4' style={{margin:"20px"}}>
-                  {applications.map((application, i) => (
-                        <div key={i}>
+                  {applications? (applications.map((application, i) => (
+                        <div key={i} onClick={() => goToReviewPropertyLease(application)}>
                               <div className='d-flex justify-content-between align-items-end'>
                                         <div>
                                             <h6 style={mediumBold}>
@@ -223,7 +244,9 @@ function TenantWelcomePage(props) {
                               </div>
                               <hr style={{opacity: 1}}/>
                         </div>
-                  ))}
+                  )))
+                :
+                ""}
               </div>
         </Container>
     )}

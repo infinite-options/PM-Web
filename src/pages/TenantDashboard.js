@@ -23,6 +23,7 @@ import {
   greenBorderPill,
   address,
   actions,
+  mediumBold
 } from "../utils/styles";
 
 function TenantDashboard(props) {
@@ -38,6 +39,8 @@ function TenantDashboard(props) {
   const [currentPurchase, setCurrentPurchase] = React.useState(null);
   const [nextPurchase, setNextPurchase] = React.useState(null);
   const [property, setProperty] = React.useState({});
+  const [applications, setApplications] = useState([]);
+
   console.log(context, access_token, user);
 
   useEffect(() => {
@@ -109,6 +112,20 @@ function TenantDashboard(props) {
     fetchRepairs();
   }, [profile]);
 
+  useEffect(() => {
+    const fetchApplications = async () => {
+      const response = await get(
+        `/applications?tenant_id=${profile.tenant_id}`
+      );
+      console.log(response);
+      //.filter ==== status .map ===  property ids to fetch
+      // const a  = [{name: 'asf', id: 'gfsg'}, ..];
+     // const ids = a.filter((obj) => obj.status === 'forwarded').map(application => application.id); // ['gfsg', '...g]
+      setApplications(response.result);
+    };
+    fetchApplications();
+  }, [profile]);
+
   const goToRequest = () => {
     navigate(`/${profile.property_uid}/repairRequest`);
   };
@@ -126,6 +143,9 @@ function TenantDashboard(props) {
   };
   const goToSearchPM = () => {
     navigate("/tenantAvailableProperties");
+  };
+  const goToReviewPropertyLease = (application) => {
+    navigate(`/reviewPropertyLease/${application.property_uid}`,{ state: {application_uid: application.application_uid}});
   };
   console.log(profile);
   return (
@@ -293,11 +313,35 @@ function TenantDashboard(props) {
               </div>
             </Col>
           </Row>
-          
+            {/* ============================APPLICATION STATUS=========================== */}
+            <div style={headings} className="mt-4 mb-1">
+                  Application Status </div>
+              <p>Your lease applications and their statuses </p>
+
+              <div className='mb-4' style={{margin:"20px"}}>
+                  {applications? (applications.map((application, i) => (
+                        <div key={i} onClick={() => goToReviewPropertyLease(application)}>
+                              <div className='d-flex justify-content-between align-items-end'>
+                                        <div>
+                                            <h6 style={mediumBold}>
+                                              {application.property_uid}
+                                            </h6>
+                                            <h6 style={mediumBold}>
+                                              {application.application_status}
+                                            </h6>
+                                        </div>
+                                       
+                              </div>
+                              <hr style={{opacity: 1}}/>
+                        </div>
+                  )))
+                :
+                ""}
+              </div>
         </Container>
         
       )}
-     <div>ABCDEFGH</div>
+    
 
     </div>
 

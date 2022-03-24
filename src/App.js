@@ -38,6 +38,7 @@ import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
 import TenantDocumentUpload from "./pages/TenantDocumentUpload";
 import ReviewTenantProfile from "./pages/ReviewTenantprofile";
 import TenantPropertyView from "./pages/TenantPropertyView";
+import ReviewPropertyLease from "./pages/reviewPropertyLease";
 import LeaseApplicationStatus from "./pages/LeaseApplicationStatus";
 
 import ManagerHome from "./pages/ManagerHome";
@@ -107,6 +108,7 @@ function App() {
             <Route path="applyToProperty" element={<ApplyToProperty/>} />
             <Route path="reviewTenantProfile/:property_uid" element={<ReviewTenantProfile/>} />
             <Route path="tenantPropertyView/:property_uid" element={<TenantPropertyView/>} />
+            <Route path="reviewPropertyLease/:property_uid" element={<ReviewPropertyLease/>} />
             <Route path="leaseApplicationStatus" element={<LeaseApplicationStatus />} />
             <Route path="manager" element={<ManagerHome />} />
             <Route

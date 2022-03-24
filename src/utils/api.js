@@ -43,7 +43,6 @@ const put = async (path, body, token=null, files=null) => {
   let headers = {
     'content-type': 'application/json'
   };
- 
   let requestBody = JSON.stringify(body);
   if (files !== null) {
     headers = {};
