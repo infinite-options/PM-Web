@@ -95,7 +95,7 @@ function ManagerProfile(props) {
             const business_response = await get(`/businesses?business_uid=${employee.business_uid}`);
             const business = business_response.result[0]
             const profile = {...employee, ...business}
-            console.log(profile)
+            // console.log(profile)
             loadProfile(profile)
         }
     }
