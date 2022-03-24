@@ -9,7 +9,9 @@ import Check from "../icons/Check.svg";
 import ArrowUp from "../icons/ArrowUp.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
 import { get, put, post } from "../utils/api";
-import { squareForm, pillButton, small, underline } from "../utils/styles";
+import { squareForm, smallPillButton, small, underline,mediumBold } from "../utils/styles";
+import EditIcon from '../icons/EditIcon.svg';
+import DeleteIcon from '../icons/DeleteIcon.svg';
 
 function TenantProfile(props) {
   const context = useContext(AppContext);
@@ -31,6 +33,8 @@ function TenantProfile(props) {
   const defaultState = "--";
   const [selectedState, setSelectedState] = React.useState(defaultState);
   const [selectedPrevState, setSelectedPrevState] = React.useState(defaultState);
+  const { autofillState, setAutofillState } = props;
+  
   const currentAddressState = useState({
     street: "",
     unit: "",
@@ -56,6 +60,63 @@ function TenantProfile(props) {
     lease_end: "",
     rent: "",
   });
+  const [newFile, setNewFile] = React.useState(null);
+  const [editingDoc, setEditingDoc] = React.useState(null);
+  const [files, setFiles] = React.useState([]);
+
+  const updateAutofillState = (profile) => {
+    const newAutofillState = { ...autofillState };
+
+    for (const key of Object.keys(newAutofillState)) {
+      if (key in profile) {
+        newAutofillState[key] = profile[key];
+      }
+    }
+    setAutofillState(newAutofillState);
+  };
+
+  const addFile = (e) => {
+    const file = e.target.files[0];
+    const newFile = {
+      name: file.name,
+      description: '',
+      file: file
+    }
+    setNewFile(newFile);
+  }
+  const updateNewFile = (field, value) => {
+    const newFileCopy = {...newFile};
+    newFileCopy[field] = value;
+    setNewFile(newFileCopy);
+  }
+  const cancelEdit = () => {
+    setNewFile(null);
+    if (editingDoc !== null) {
+      const newFiles = [...files];
+      newFiles.push(editingDoc);
+      setFiles(newFiles);
+    }
+    setEditingDoc(null);
+  }
+  const editDocument = (i) => {
+    const newFiles = [...files];
+    const file = newFiles.splice(i, 1)[0];
+    setFiles(newFiles);
+    setEditingDoc(file);
+    setNewFile({...file});
+  }
+  const saveNewFile = (e) => {
+    // copied from addFile, change e.target.files to state.newFile
+    const newFiles = [...files];
+    newFiles.push(newFile);
+    setFiles(newFiles);
+    setNewFile(null);
+  }
+  const deleteDocument = (i) => {
+    const newFiles = [...files];
+    newFiles.splice(i, 1);
+    setFiles(newFiles);
+  }
   //popover open and close
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -76,8 +137,12 @@ function TenantProfile(props) {
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
-
         return;
+      }
+
+      if (user.role.indexOf("TENANT") === -1) {
+        console.log("no tenant profile");
+        props.onConfirm();
       }
       setFirstName(response.result[0].tenant_first_name);
       setLastName(response.result[0].tenant_last_name);
@@ -87,15 +152,17 @@ function TenantProfile(props) {
       setCompany(response.result[0].tenant_current_job_company);
       setDLNumber(response.result[0].tenant_drivers_license_number);
       setCompany(response.result[0].tenant_current_job_company);
-     const currentAddress =  JSON.parse(response.result[0].tenant_current_address);
-      
+      const currentAddress =  JSON.parse(response.result[0].tenant_current_address);
+      const documents = response.result[0].documents? (JSON.parse(response.result[0].documents)) : [];
+      setFiles(documents);
       currentAddressState[1](currentAddress);
       setSelectedState(currentAddress.state);
       if (response.result[0].tenant_previous_address != null) {
         const prevAddress = JSON.parse(response.result[0].tenant_previous_address);
-        previousAddressState[1](prevAddress );
-        setSelectedPrevState(prevAddress.state);
-
+        if(prevAddress){
+          previousAddressState[1](prevAddress );
+          setSelectedPrevState(prevAddress.state);
+        }
       }
       
       if (response.result[0].tenant_previous_address != null) {
@@ -114,17 +181,29 @@ function TenantProfile(props) {
     const tenantProfile = {
       first_name: firstName,
       last_name: lastName,
-      ssn: ssn,
       current_salary: salary,
       salary_freq: frequency,
       current_job_title: jobTitle,
       current_job_company: company,
+      ssn: ssn,
       drivers_license_number: dlNumber,
-      current_address: currentAddressState[0],
-      previous_address: usePreviousAddress ? previousAddressState[0] : null,
+      drivers_license_state: 'CA',
+      current_address: JSON.stringify(currentAddressState[0]),
+      previous_address: usePreviousAddress ? JSON.stringify(previousAddressState[0]) : null,
     };
-    await put("/tenantProfileInfo", tenantProfile, access_token);
+   
+    for (let i = 0; i < files.length; i++) {
+      let key = `doc_${i}`;
+      tenantProfile[key] = files[i].file;
+      delete files[i].file;
+    }
+    tenantProfile.documents = JSON.stringify(files);
+    await put(`/tenantProfileInfo`, tenantProfile, access_token,files);
     props.onConfirm();
+
+    // await post('/tenantProfileInfo', tenantProfile, access_token, files);
+    // updateAutofillState(tenantProfile);
+    // props.onConfirm();
   };
   console.log(usePreviousAddress, previousAddressState[0]);
   useEffect(() => {
@@ -137,33 +216,6 @@ function TenantProfile(props) {
     "Annual",
     "Hourly Rate",
   ];
-  // const frequencylist = () => {
-  //   return (
-  //     <div>
-  //       {allFrequency.map((freq) => {
-  //         return (
-  //           <div
-  //             style={{
-  //               cursor: "pointer",
-  //               //backgroundColor: `${view.color}`,
-  //               color: "#2C2C2E",
-  //               fontSize: "16px",
-  //               padding: "5px",
-  //               font: "normal normal bold 20px/24px SF Pro Display",
-  //             }}
-  //             onClick={(e) => {
-  //               setFrequency(freq);
-  //               setExpandFrequency(!false);
-  //               handleClose(e);
-  //             }}
-  //           >
-  //             {freq}
-  //           </div>
-  //         );
-  //       })}
-  //     </div>
-  //   );
-  // };
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -230,37 +282,9 @@ function TenantProfile(props) {
                      <Dropdown.Item onClick={() => setFrequency(freq)} href="#/action-1" > {freq} </Dropdown.Item>
                      ))}  
               </DropdownButton>
-              {/* <div
-                className="d-flex justify-content-between"
-                style={{ border: "1px solid #777777", padding: "6px" }}
-              >
-                {frequency}
-                <img src={expandFrequency ? ArrowUp : ArrowDown} alt="Expand" />
-              </div> */}
+
             </Form.Group>
           </Col>
-          {/* <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorReference="anchorPosition"
-            anchorPosition={{ top: 500, left: 300 }}
-            anchorOrigin={{
-              vertical: "center",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            style={{
-              backgroundClip: "context-box",
-              borderRadius: "20px",
-            }}
-          >
-            {frequencylist()}
-          </Popover> */}
         </Row>
 
         <Form.Group className="mx-2 my-3">
@@ -346,6 +370,72 @@ function TenantProfile(props) {
         ) : (
           ""
         )}
+        
+        <div className='mb-4' style={{margin:"20px"}}>
+          <h5 style={mediumBold}>Tenant Documents</h5>
+          {files.map((file, i) => (
+            <div key={i}>
+              <div className='d-flex justify-content-between align-items-end'>
+                <div>
+                  <h6 style={mediumBold}>
+                    {file.name}
+                  </h6>
+                  <p style={small} className='m-0'>
+                    {file.description}
+                  </p>
+                </div>
+                <div>
+                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
+                    onClick={() => editDocument(i)}/>
+                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
+                    onClick={() => deleteDocument(i)}/>
+                  <a href={file.link} target='_blank'>
+                    <img src={File}/>
+                  </a>
+                </div>
+              </div>
+              <hr style={{opacity: 1}}/>
+            </div>
+          ))}
+          {newFile !== null ? (
+            <div>
+              <Form.Group>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Document Name
+                </Form.Label>
+                <Form.Control style={squareForm} value={newFile.name} placeholder='Name'
+                  onChange={(e) => updateNewFile('name', e.target.value)}/>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Description
+                </Form.Label>
+                <Form.Control style={squareForm} value={newFile.description} placeholder='Description'
+                  onChange={(e) => updateNewFile('description', e.target.value)}/>
+              </Form.Group>
+              <div className='text-center my-3'>
+                <Button variant='outline-primary' style={smallPillButton} as='p'
+                  onClick={cancelEdit} className='mx-2'>
+                  Cancel
+                </Button>
+                <Button variant='outline-primary' style={smallPillButton} as='p'
+                  onClick={saveNewFile} className='mx-2'>
+                  Save Document
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
+              <label htmlFor='file'>
+                <Button variant='outline-primary' style={smallPillButton} as='p'>
+                  Add Document
+                </Button>
+              </label>
+            </div>
+          )}
+        </div>
+
       </Container>
     </div>
   );

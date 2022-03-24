@@ -335,6 +335,7 @@ function TenantProfileInfo(props) {
     ) : (
       ""
     );
+    
   return (
     <div className="pb-4">
       <Header title="Tenant Profile" />
@@ -493,7 +494,7 @@ function TenantProfileInfo(props) {
             </Form.Group>
           </Col>
         </Row>
-        {/* ===============================Current Address form -- > Address form=================================================== */}
+        {/* ===============================< Current Address form -- > Address form >=================================================== */}
         <h5 className="mx-2 my-3">Current Address</h5>
         <AddressForm
           state={currentAddressState}
@@ -502,7 +503,7 @@ function TenantProfileInfo(props) {
           setSelectedState={setSelectedState}
         />
 
-        {/* ===============================Previous Address form -- > Address form=================================================== */}
+        {/* ===============================< Previous Address form -- > Address form >=================================================== */}
 
         <Row>
           <Col
@@ -540,7 +541,7 @@ function TenantProfileInfo(props) {
         ) : (
           ""
         )}
-
+        {/* ===============================< Uploading Tenant Document >=================================================== */}
         <div className='mb-4'>
           <h5 style={mediumBold}>Tenant Documents</h5>
           {files.map((file, i) => (
@@ -606,10 +607,12 @@ function TenantProfileInfo(props) {
           )}
         </div>
 
+        {/* ===============================< Displaying Error message >=================================================== */}
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>
           <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
         </div>
 
+        {/* ===============================< Save Button >=================================================== */}
         <div className="text-center my-5">
           <Button
             variant="outline-primary"

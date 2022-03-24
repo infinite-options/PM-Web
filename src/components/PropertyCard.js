@@ -16,6 +16,10 @@ function PropertyCard(props) {
     const goToApplyToProperty = () => {
         navigate("/applyToProperty");
     }
+    const stopEventPropagation = (e) =>{
+        e.stopPropagation();
+        e.preventDefault();
+    }
     return (
         <div style={{height: "150px",border:"1px solid lightblue", cursor: "pointer", display: "flex" }} >
                 <div className="img" style={{ flex: "0 0 35%", background:"lightgray" }}>
@@ -35,17 +39,35 @@ function PropertyCard(props) {
                         <div>{property.address}, {property.area}, </div>
                         <div>{property.city}, {property.zip}</div>
                      </div>
-                    <div style={{display:"flex",marginTop:"auto"}}>
+                    <div style={{display:"flex",marginTop:"auto"}} onClick={stopEventPropagation}>
                         <div style={{flex:"1",fontSize:"12px",color:"blue",marginTop:"auto",marginBottom:"auto"}}>
                             Manager :
                             <span style={{marginLeft:"1px"}}>John Doe</span>
                         </div>
-                        <div className="btns">
-                            <img src={Document} onClick={goToApplyToProperty} alt="documentIcon" style={{marginRight:"5px", width:"25px"}} />
-                             <img src={Phone} alt="phoneIcon" style={{marginRight:"5px", width:"25px"}} />
-                             <img src={Message} alt="messageIcon"  style={{width:"25px"}} />
-
-                        </div>
+                        <Row className="btns"> 
+                            <Col className="view overlay zoom" >
+                                 <img src={Document} onClick={goToApplyToProperty} alt="documentIcon" style={{marginRight:"5px", width:"25px"}} />
+                                 <div class="mask flex-center">
+                                    <p class="white-text" style={{fontSize:"14px"}}>Apply</p>
+                                </div>
+                            </Col>
+                            <Col>
+                                <a href={`tel:${property.manager_phone_number}`}>
+                                    <img src={Phone} alt="phoneIcon" style={{marginRight:"5px", width:"25px"}} />
+                                </a>
+                                <div class="mask flex-center">
+                                    <p class="white-text" style={{fontSize:"14px"}}>Call</p>
+                                </div>
+                            </Col>
+                            <Col>
+                                <a href={`mailto:${property.manager_email}`}>
+                                    <img src={Message} alt="messageIcon"  style={{width:"25px"}} />
+                                </a>
+                                <div class="mask flex-center">
+                                    <p class="white-text" style={{fontSize:"14px"}}>Text</p>
+                                </div>
+                            </Col>
+                        </Row>
                     </div>
 
                 </div>

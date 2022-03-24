@@ -54,7 +54,7 @@ function PropertyForm(props) {
   const [depositForRent, setDepositForRent] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
 
-  const { property, edit, setEdit } = props;
+  const { property, edit, setEdit, hideEdit } = props;
   const loadProperty = () => {
     setAddress(property.address);
     setUnit(property.unit);
@@ -237,7 +237,9 @@ function PropertyForm(props) {
         <div>
           <div className="d-flex justify-content-between">
             <h6>Property Address</h6>
-            <img src={Edit} alt="Edit" onClick={() => setEdit(true)} />
+            {hideEdit ? "" :
+               (<img src={Edit} alt="Edit" onClick={() => setEdit(true)} />)
+            }
           </div>
           <p>
             {address}

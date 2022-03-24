@@ -19,7 +19,7 @@ import {get} from '../utils/api';
 
 function PropertyView(props) {
 
-  const {property_uid, back, reload} = props;
+  const {property_uid, back, reload,hideEdit} = props;
   const [property, setProperty] = React.useState({
     images: '[]'
   });

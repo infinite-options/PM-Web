@@ -16,7 +16,7 @@ function OwnerProperties(props) {
   const {userData, refresh} = React.useContext(AppContext);
   const [stage, setStage] = React.useState('LIST');
   const {access_token, user} = userData;
-
+  
   const selectProperty = (property) => {
     setSelectedProperty(property);
     setStage('PROPERTY');
