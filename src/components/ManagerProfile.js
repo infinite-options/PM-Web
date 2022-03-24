@@ -12,6 +12,7 @@ function ManagerProfile(props) {
     const context = React.useContext(AppContext);
     const {access_token, user} = context.userData;
     const navigate = useNavigate();
+    const [profileInfo, setProfileInfo] = React.useState(null);
     const [editProfile, setEditProfile] = React.useState(false);
     const [companyName, setCompanyName] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
@@ -56,6 +57,7 @@ function ManagerProfile(props) {
     // }
 
     const loadProfile = (profile) => {
+        setProfileInfo(profile)
         setCompanyName(profile.business_name)
         setFirstName(profile.employee_first_name)
         setLastName(profile.employee_last_name)
@@ -93,40 +95,78 @@ function ManagerProfile(props) {
             const business_response = await get(`/businesses?business_uid=${employee.business_uid}`);
             const business = business_response.result[0]
             const profile = {...employee, ...business}
-            // console.log(profile)
+            console.log(profile)
             loadProfile(profile)
         }
     }
 
     React.useEffect(fetchProfileInfo, [access_token]);
 
+    // const saveProfile = async () => {
+    //     const {paypal, applePay, zelle, venmo, accountNumber, routingNumber} = paymentState;
+    //     const managerProfile = {
+    //         first_name: firstName,
+    //         last_name: lastName,
+    //         phone_number: phoneNumber,
+    //         email: email,
+    //         ein_number: einNumber,
+    //         ssn: ssn,
+    //         paypal: paypal || 'NULL',
+    //         apple_pay: applePay || 'NULL',
+    //         zelle: zelle || 'NULL',
+    //         venmo: venmo || 'NULL',
+    //         account_number: accountNumber || 'NULL',
+    //         routing_number: routingNumber || 'NULL',
+    //         fees: feeState[0],
+    //         locations: locationState[0]
+    //     }
+    //
+    //     // console.log(managerProfile)
+    //
+    //     const response = await put('/managerProfileInfo', managerProfile, access_token);
+    //     // console.log(response)
+    //     setEditProfile(false)
+    //     fetchProfileInfo()
+    //
+    // }
+
     const saveProfile = async () => {
         const {paypal, applePay, zelle, venmo, accountNumber, routingNumber} = paymentState;
-        const managerProfile = {
+        const employee_info = {
+            employee_uid: profileInfo.employee_uid,
+            user_uid: profileInfo.user_uid,
+            business_uid: profileInfo.business_uid,
             first_name: firstName,
             last_name: lastName,
             phone_number: phoneNumber,
             email: email,
             ein_number: einNumber,
             ssn: ssn,
-            paypal: paypal || 'NULL',
-            apple_pay: applePay || 'NULL',
-            zelle: zelle || 'NULL',
-            venmo: venmo || 'NULL',
-            account_number: accountNumber || 'NULL',
-            routing_number: routingNumber || 'NULL',
-            fees: feeState[0],
-            locations: locationState[0]
+        }
+        const business_info = {
+            business_uid: profileInfo.business_uid,
+            type: profileInfo.business_type,
+            name: profileInfo.business_name,
+            phone_number: profileInfo.business_phone_number,
+            email: profileInfo.business_email,
+            ein_number: profileInfo.business_ein_number,
+            services_fees: feeState[0],
+            locations: locationState[0],
+            paypal: paypal || null,
+            apple_pay: applePay || null,
+            zelle: zelle || null,
+            venmo: venmo || null,
+            account_number: accountNumber || null,
+            routing_number: routingNumber || null
         }
 
-        // console.log(managerProfile)
-
-        const response = await put('/managerProfileInfo', managerProfile, access_token);
-        // console.log(response)
+        const employee_response = await put('/employees', employee_info);
+        const business_response = await put('/businesses', business_info);
         setEditProfile(false)
         fetchProfileInfo()
 
     }
+
     return (
         <div className='pb-5 mb-5'>
             <Header title='Profile' leftText={editProfile? 'Cancel' : '< Back'}
