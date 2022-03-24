@@ -33,7 +33,7 @@ function ScheduledJobs(props) {
   React.useEffect(loadJobs, []);
   const requestedQuotes = jobs.filter(job => job.quote_status === 'REQUESTED');
   const sentQuotes = jobs.filter(job => job.quote_status === 'SENT');
-  const scheduledJobs = jobs.filter(job => job.request_status === 'SCHEDULED');
+  const scheduledJobs = jobs.filter(job => job.quote_status === 'ACCEPTED');
   console.log(requestedQuotes);
   console.log(sentQuotes);
   console.log(scheduledJobs);
