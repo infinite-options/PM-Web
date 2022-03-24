@@ -138,82 +138,77 @@ function TenantAgreement(props) {
                             onChange={(e) => setEndDate(e.target.value)}/>
             </Form.Group>
           </div>
-          <div className='mb-4'>
-            <h5 style={mediumBold}>Rent Payments</h5>
-            <div className='mx-2'>
-              <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
+        </div>
+        <div className='mb-4'>
+          <h5 style={mediumBold}>Contact Details</h5>
+          <BusinessContact state={contactState}/>
+        </div>
+        <div className='mb-4'>
+          <h5 style={mediumBold}>Lease Documents</h5>
+          {files.map((file, i) => (
+            <div key={i}>
+              <div className='d-flex justify-content-between align-items-end'>
+                <div>
+                  <h6 style={mediumBold}>
+                    {file.name}
+                  </h6>
+                  <p style={small} className='m-0'>
+                    {file.description}
+                  </p>
+                </div>
+                <div>
+                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
+                    onClick={() => editDocument(i)}/>
+                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
+                    onClick={() => deleteDocument(i)}/>
+                  <a href={file.link} target='_blank'>
+                    <img src={File}/>
+                  </a>
+                </div>
+              </div>
+              <hr style={{opacity: 1}}/>
             </div>
-          </div>
-          <div className='mb-4'>
-            <h5 style={mediumBold}>Contact Details</h5>
-            <BusinessContact state={contactState}/>
-          </div>
-          <div className='mb-4'>
-            <h5 style={mediumBold}>Lease Documents</h5>
-            {files.map((file, i) => (
-                <div key={i}>
-                  <div className='d-flex justify-content-between align-items-end'>
-                    <div>
-                      <h6 style={mediumBold}>
-                        {file.name}
-                      </h6>
-                      <p style={small} className='m-0'>
-                        {file.description}
-                      </p>
-                    </div>
-                    <div>
-                      <img src={EditIcon} alt='Edit' className='px-1 mx-2'
-                           onClick={() => editDocument(i)}/>
-                      <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
-                           onClick={() => deleteDocument(i)}/>
-                      <a href={file.link} target='_blank'>
-                        <img src={File}/>
-                      </a>
-                    </div>
-                  </div>
-                  <hr style={{opacity: 1}}/>
-                </div>
-            ))}
-            {newFile !== null ? (
-                <div>
-                  <Form.Group>
-                    <Form.Label as='h6' className='mb-0 ms-2'>
-                      Document Name
-                    </Form.Label>
-                    <Form.Control style={squareForm} value={newFile.name} placeholder='Name'
-                                  onChange={(e) => updateNewFile('name', e.target.value)}/>
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label as='h6' className='mb-0 ms-2'>
-                      Description
-                    </Form.Label>
-                    <Form.Control style={squareForm} value={newFile.description} placeholder='Description'
-                                  onChange={(e) => updateNewFile('description', e.target.value)}/>
-                  </Form.Group>
-                  <div className='text-center my-3'>
-                    <Button variant='outline-primary' style={smallPillButton} as='p'
-                            onClick={cancelEdit} className='mx-2'>
-                      Cancel
-                    </Button>
-                    <Button variant='outline-primary' style={smallPillButton} as='p'
-                            onClick={saveNewFile} className='mx-2'>
-                      Save Document
-                    </Button>
-                  </div>
-                </div>
-            ) : (
-                <div>
-                  <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
-                  <label htmlFor='file'>
-                    <Button variant='outline-primary' style={smallPillButton} as='p'>
-                      Add Document
-                    </Button>
-                  </label>
-                </div>
-            )}
-          </div>
-        </Container>
-      </div>
+          ))}
+          {newFile !== null ? (
+            <div>
+              <Form.Group>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Document Name
+                </Form.Label>
+                <Form.Control style={squareForm} value={newFile.name} placeholder='Name'
+                  onChange={(e) => updateNewFile('name', e.target.value)}/>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label as='h6' className='mb-0 ms-2'>
+                  Description
+                </Form.Label>
+                <Form.Control style={squareForm} value={newFile.description} placeholder='Description'
+                  onChange={(e) => updateNewFile('description', e.target.value)}/>
+              </Form.Group>
+              <div className='text-center my-3'>
+                <Button variant='outline-primary' style={smallPillButton} as='p'
+                  onClick={cancelEdit} className='mx-2'>
+                  Cancel
+                </Button>
+                <Button variant='outline-primary' style={smallPillButton} as='p'
+                  onClick={saveNewFile} className='mx-2'>
+                  Save Document
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
+              <label htmlFor='file'>
+                <Button variant='outline-primary' style={smallPillButton} as='p'>
+                  Add Document
+                </Button>
+              </label>
+            </div>
+          )}
+        </div>
+      </Container>
+    </div>
   );
 
 }
