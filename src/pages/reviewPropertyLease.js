@@ -24,6 +24,8 @@ function ReviewPropertyLease (props){
     const [rentPayments,setRentPayments]=useState([]);
     const [lease,setLease]=useState([]);
     const application_uid = location.state.application_uid;
+    const [properties, setProperties] = useState([]);
+    const [images, setImages] = useState({});
 
 
     useEffect(() => {
@@ -57,6 +59,18 @@ function ReviewPropertyLease (props){
             fetchRentals();
         }, [user]
     );
+    useEffect(() => {
+        const fetchProperties = async () => {
+            const response = await get(
+                `/propertyInfo?property_uid=${property_uid}`
+            );
+            console.log(response);
+         const imageParsed = response.result.length ? JSON.parse(response.result[0].images) : [];
+            setImages(imageParsed);
+            setProperties(response.result);
+        };
+        fetchProperties();
+     });
     const approveLease = async () => {
         const updatedRental = {
             // rental_uid: filteredRentals[0].rental_uid,
@@ -93,6 +107,9 @@ function ReviewPropertyLease (props){
         <div className="h-100 d-flex flex-column">
             {/* ==================< Header >=======================================  */}
             <Header title="Property Lease Details" />
+
+            {/* ==================< Images properties >=======================================  */}
+            {images && images.length ? (<img style={{margin:"20px",padding:"10px"}} src={images[0]}/>) : ""}
 
             {/* ==================< Property Details >=======================================  */}
             <TenantPropertyView forPropertyLease="true"/>

@@ -85,33 +85,47 @@ function TenantWelcomePage(props) {
     fetchRepairs();
   }, [profile]);
 
- 
-
   useEffect(() => {
     const fetchApplications = async () => {
       const response = await get(
         `/applications?tenant_id=${profile.tenant_id}`
       );
       console.log(response);
+      const appArray = response.result || [];
+      if(response.result && response.result.length ){
+        appArray.forEach(async(app, i)=>{
+          const property = await get(
+            `/propertyInfo?property_uid=${app.property_uid}`
+          );
+          if(property && property.result.length){
+             app.images = property.result[0].images|| [];
+          }
+          if(i == appArray.length-1){
+              setApplications(appArray);
+          }
+        })
+      }
       //.filter ==== status .map ===  property ids to fetch
       // const a  = [{name: 'asf', id: 'gfsg'}, ..];
      // const ids = a.filter((obj) => obj.status === 'forwarded').map(application => application.id); // ['gfsg', '...g]
-      setApplications(response.result);
+      setApplications(appArray);
     };
     fetchApplications();
-  });
+  }, [profile]);
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      const response = await get(
-        `/properties/${applications[0].property_uid}`,
-      );
-      console.log(response);
+  // useEffect(() => {
+  //   const fetchProperties = async () => {
+  //     const response = await get(
+  //       // `/properties/${applications[0].property_uid}`,
+  //       // `/properties?property_uid=${applications[0].property_uid}`,
+  //       `/propertyInfo?property_uid=${applications[0].result[0].property_uid}`
+  //     );
+  //     console.log(response);
 
-      setProperties(response.result);
-    };
-    if(applications && applications.length){fetchProperties();}
-  }, [applications]);
+  //     setProperties(response.result);
+  //   };
+  //   if(applications && applications.length){fetchProperties();}
+  // }, [applications]);
 
   const goToRequest = () => {
     navigate(`/${profile.property_uid}/repairRequest`);
@@ -229,24 +243,37 @@ function TenantWelcomePage(props) {
               <p>Your lease applications and their statuses </p>
 
               <div className='mb-4' style={{margin:"20px"}}>
-                  {applications? (applications.map((application, i) => (
-                        <div key={i} onClick={() => goToReviewPropertyLease(application)}>
-                              <div className='d-flex justify-content-between align-items-end'>
-                                        <div>
-                                            <h6 style={mediumBold}>
-                                              {application.property_uid}
-                                            </h6>
-                                            <h6 style={mediumBold}>
-                                              {application.application_status}
-                                            </h6>
-                                        </div>
-                                       
-                              </div>
-                              <hr style={{opacity: 1}}/>
-                        </div>
-                  )))
-                :
-                ""}
+                <Row>
+                  <Col>
+                    {/* <div className="img" style={{ flex: "0 0 35%", background:"lightgray" }}>
+                      {properties.images && properties.images.length ? (<img style={{width:"100%", height:"100%"}} src={properties.images[0]}/>) : "" }
+                    </div> */}
+                    <div>
+                      {/* {properties.result.address} */}
+                      ABC
+                    </div>
+                  </Col>
+                  <Col>
+                      {applications? (applications.map((application, i) => (
+                            <div key={i} onClick={() => goToReviewPropertyLease(application)}>
+                                  <div className='d-flex justify-content-between align-items-end'>
+                                            <div>
+                                                <h6 style={mediumBold}>
+                                                  {application.property_uid}
+                                                </h6>
+                                                <h6 style={mediumBold}>
+                                                  {application.application_status}
+                                                </h6>
+                                            </div>
+                                          
+                                  </div>
+                                  <hr style={{opacity: 1}}/>
+                            </div>
+                      )))
+                      :
+                      ""}
+                    </Col>
+                </Row>
               </div>
         </Container>
     )}
