@@ -18,6 +18,7 @@ import {
   welcome,
   mediumBold
 } from "../utils/styles";
+import No_Image from "../icons/No_Image_Available.jpeg";
 
 function TenantWelcomePage(props) {
   const navigate = useNavigate();
@@ -90,24 +91,27 @@ function TenantWelcomePage(props) {
       const response = await get(
         `/applications?tenant_id=${profile.tenant_id}`
       );
-      console.log(response);
+
       const appArray = response.result || [];
-      if(response.result && response.result.length ){
-        appArray.forEach(async(app, i)=>{
-          const property = await get(
-            `/propertyInfo?property_uid=${app.property_uid}`
-          );
-          if(property && property.result.length){
-             app.images = property.result[0].images|| [];
-          }
-          if(i == appArray.length-1){
-              setApplications(appArray);
-          }
-        })
-      }
-      //.filter ==== status .map ===  property ids to fetch
-      // const a  = [{name: 'asf', id: 'gfsg'}, ..];
-     // const ids = a.filter((obj) => obj.status === 'forwarded').map(application => application.id); // ['gfsg', '...g]
+      appArray.forEach((app)=>{
+          app.images = app.images ? JSON.parse(app.images) : [];
+      })
+      // console.log(response);
+      // const appArray = response.result || [];
+      // if(response.result && response.result.length ){
+      //   appArray.forEach(async(app, i)=>{
+      //     const property = await get(
+      //       `/propertyInfo?property_uid=${app.property_uid}`
+      //     );
+      //     if(property && property.result.length){
+      //        app.images = property.result[0].images|| [];
+      //     }
+      //     if(i == appArray.length-1){
+      //         setApplications(appArray);
+      //     }
+      //   })
+      // }
+
       setApplications(appArray);
     };
     fetchApplications();
@@ -245,31 +249,45 @@ function TenantWelcomePage(props) {
               <div className='mb-4' style={{margin:"20px"}}>
                 <Row>
                   <Col>
-                    {/* <div className="img" style={{ flex: "0 0 35%", background:"lightgray" }}>
-                      {properties.images && properties.images.length ? (<img style={{width:"100%", height:"100%"}} src={properties.images[0]}/>) : "" }
-                    </div> */}
-                    <div>
-                      {/* {properties.result.address} */}
-                      ABC
-                    </div>
-                  </Col>
-                  <Col>
-                      {applications? (applications.map((application, i) => (
-                            <div key={i} onClick={() => goToReviewPropertyLease(application)}>
-                                  <div className='d-flex justify-content-between align-items-end'>
-                                            <div>
-                                                <h6 style={mediumBold}>
-                                                  {application.property_uid}
-                                                </h6>
-                                                <h6 style={mediumBold}>
-                                                  {application.application_status}
-                                                </h6>
-                                            </div>
-                                          
-                                  </div>
-                                  <hr style={{opacity: 1}}/>
-                            </div>
-                      )))
+                  {applications? (applications.map((application, i) => (
+                              <div key={i} onClick={() => goToReviewPropertyLease(application)}>
+                                    <div className='d-flex justify-content-between align-items-end'>
+                                              <div className="img" style={{ flex: "0 0 35%", background:"lightgrey",height:"150px", width:"100px" }}>
+                                                   {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
+                                                   {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) :  (<img style={{width:"100%", height:"100%"}} src={No_Image}/>) }
+                                              </div>
+                                              <div>
+                                                  <h5 style={mediumBold}>
+                                                    ADDRESS
+                                                  </h5>
+                                                  <h6>
+                                                    {application.address}
+                                                  </h6>
+                                                  <h6 >
+                                                    {application.city},{application.zip}
+                                                  </h6>
+                                                 
+                                                  <h5 style={mediumBold}>
+                                                      APPLICATION STATUS
+                                                  </h5>
+                                                  <h6 style={mediumBold}>
+                                                      {application.application_status}
+                                                  </h6>
+                                                  {/* {application.application_status === "ACCEPTED" ?
+                                                     ( <h6>
+                                                        {application.application_status}
+                                                      </h6>) 
+                                                      :
+                                                    ( <h6 style={mediumBold}>
+                                                      {application.application_status}
+                                                      </h6>) 
+                                                  } */}
+                                              </div>
+                                            
+                                    </div>
+                                    <hr style={{opacity: 1}}/>
+                              </div>
+                        )))
                       :
                       ""}
                     </Col>
@@ -278,8 +296,8 @@ function TenantWelcomePage(props) {
         </Container>
     )}
       </div>  
-    ) 
-}  
+)}  
   
 
 export default TenantWelcomePage;
+<h6>You have not applied to any property yet.</h6>

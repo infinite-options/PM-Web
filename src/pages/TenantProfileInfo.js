@@ -385,13 +385,9 @@ function TenantProfileInfo(props) {
                 }}
               >
                 <Form.Group className="mx-2 my-3">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Frequency
-                  </Form.Label>
-                  {/* <div  className="d-flex justify-content-between" style={{ border: "1px solid #777777", padding: "6px"}}>
-                    {frequency}
-                    <img src={expandFrequency ? ArrowUp : ArrowDown} alt="Expand" />
-                  </div> */}
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Frequency
+                    </Form.Label>
                   <DropdownButton variant="light" id="dropdown-basic-button" title={frequency} >
                      {allFrequency.map((freq, i) => (
                      <Dropdown.Item onClick={() => setFrequency(freq)} href="#/action-1" > {freq} </Dropdown.Item>
@@ -399,28 +395,6 @@ function TenantProfileInfo(props) {
                  </DropdownButton>
                 </Form.Group>
             </Col>
-            {/* <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorReference="anchorPosition"
-              anchorPosition={{ top: 500, left: 300 }}
-              anchorOrigin={{
-                vertical: "center",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              style={{
-                backgroundClip: "context-box",
-                borderRadius: "20px",
-              }}
-            >
-              {frequencylist()}
-            </Popover> */}
         </Row>
 
         <Form.Group className="mx-2 my-3">
