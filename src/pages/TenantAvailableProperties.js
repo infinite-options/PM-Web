@@ -20,7 +20,7 @@ function TenantAvailableProperties(props) {
 
   useEffect(() => {
     const fetchProperties = async () => {
-      const response = await get("/availableProperties");
+      const response = await get("/availableProperties/${user.user_uid}");
       console.log(response);
       const res = response.result;
       if (res) {

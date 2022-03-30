@@ -25,6 +25,8 @@ import {
   actions,
   mediumBold
 } from "../utils/styles";
+import { color } from "@mui/system";
+import No_Image from "../icons/No_Image_Available.jpeg";
 
 function TenantDashboard(props) {
   const navigate = useNavigate();
@@ -40,6 +42,7 @@ function TenantDashboard(props) {
   const [nextPurchase, setNextPurchase] = React.useState(null);
   const [property, setProperty] = React.useState({});
   const [applications, setApplications] = useState([]);
+  const [properties, setProperties] = useState([]);
 
   console.log(context, access_token, user);
 
@@ -117,11 +120,25 @@ function TenantDashboard(props) {
       const response = await get(
         `/applications?tenant_id=${profile.tenant_id}`
       );
-      console.log(response);
-      //.filter ==== status .map ===  property ids to fetch
-      // const a  = [{name: 'asf', id: 'gfsg'}, ..];
-     // const ids = a.filter((obj) => obj.status === 'forwarded').map(application => application.id); // ['gfsg', '...g]
+
+      // const appArray = response.result || [];
+      // if(response.result && response.result.length ){
+      //   appArray.forEach(async(app, i)=>{
+      //       const property = await get(
+      //         `/propertyInfo?property_uid=${app.property_uid}`
+      //       );
+      //       if(property && property.result.length){
+      //         app.images = JSON.parse(property.result[0].images) || [];
+      //         app.address = property.result[0].address || "";
+      //         app.city = property.result[0].city || "";
+      //         app.area = property.result[0].area || "";
+      //       }
+      //         setApplications(appArray);
+            
+      //   })
+      // }
       setApplications(response.result);
+
     };
     fetchApplications();
   }, [profile]);
@@ -319,24 +336,50 @@ function TenantDashboard(props) {
               <p>Your lease applications and their statuses </p>
 
               <div className='mb-4' style={{margin:"20px"}}>
-                  {applications? (applications.map((application, i) => (
-                        <div key={i} onClick={() => goToReviewPropertyLease(application)}>
-                              <div className='d-flex justify-content-between align-items-end'>
-                                        <div>
-                                            <h6 style={mediumBold}>
-                                              {application.property_uid}
-                                            </h6>
-                                            <h6 style={mediumBold}>
-                                              {application.application_status}
-                                            </h6>
-                                        </div>
-                                       
+                <Row>
+                    <Col>
+                        {applications? (applications.map((application, i) => (
+                              <div key={i} onClick={() => goToReviewPropertyLease(application)}>
+                                    <div className='d-flex justify-content-between align-items-end'>
+                                              <div className="img" style={{ flex: "0 0 35%", background:"lightgrey", width:"100px" }}>
+                                                   {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
+                                                   {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) :  (<img style={{width:"100%", height:"100%"}} src={No_Image}/>) }
+                                              </div>
+                                              <div>
+                                                  <h5 style={mediumBold}>
+                                                    ADDRESS
+                                                  </h5>
+                                                  <h6>
+                                                    {application.address}
+                                                  </h6>
+                                                  <h6 >
+                                                    {application.city},{application.area}
+                                                  </h6>
+                                                  <h5 style={mediumBold}>
+                                                      APPLICATION STATUS
+                                                  </h5>
+                                                  <h6 style={mediumBold}>
+                                                      {application.application_status}
+                                                  </h6>
+                                                  {/* {application.application_status === "ACCEPTED" ?
+                                                     ( <h6>
+                                                        {application.application_status}
+                                                      </h6>) 
+                                                      :
+                                                    ( <h6 style={mediumBold}>
+                                                      {application.application_status}
+                                                      </h6>) 
+                                                  } */}
+                                              </div>
+                                            
+                                    </div>
+                                    <hr style={{opacity: 1}}/>
                               </div>
-                              <hr style={{opacity: 1}}/>
-                        </div>
-                  )))
-                :
-                ""}
+                        )))
+                      :
+                      ""}
+                  </Col>
+                </Row>
               </div>
         </Container>
         
