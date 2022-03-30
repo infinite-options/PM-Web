@@ -65,16 +65,16 @@ function TenantDashboard(props) {
         refresh();
         return;
       }
-      setProfile(response.result[0]);
+      const prof = response.result[0];
+      
       response = await get('/tenantProperties', access_token);
       const payments = response.result.length ? JSON.parse(response.result[0].rent_payments) : [];
       const property_uid = response.result.length ? (response.result[0].property_uid) : null;
       if(property_uid){
-        const prof = {...profile};
         prof.property_uid = property_uid;
-        setProfile(prof);
-
       }
+      setProfile(prof);
+      
       let rentTotal = 0;
       for (const payment of payments) {
         if (payment.frequency === 'Monthly' && payment.fee_type === '$') {
@@ -120,7 +120,12 @@ function TenantDashboard(props) {
       const response = await get(
         `/applications?tenant_id=${profile.tenant_id}`
       );
-
+      
+      const appArray = response.result || [];
+      appArray.forEach((app)=>{
+          app.images = app.images ? JSON.parse(app.images) : [];
+      })
+     
       // const appArray = response.result || [];
       // if(response.result && response.result.length ){
       //   appArray.forEach(async(app, i)=>{
@@ -137,8 +142,8 @@ function TenantDashboard(props) {
             
       //   })
       // }
-      setApplications(response.result);
-
+      setApplications(appArray);
+      console.table(appArray);
     };
     fetchApplications();
   }, [profile]);
@@ -341,7 +346,7 @@ function TenantDashboard(props) {
                         {applications? (applications.map((application, i) => (
                               <div key={i} onClick={() => goToReviewPropertyLease(application)}>
                                     <div className='d-flex justify-content-between align-items-end'>
-                                              <div className="img" style={{ flex: "0 0 35%", background:"lightgrey", width:"100px" }}>
+                                              <div className="img" style={{ flex: "0 0 35%", background:"lightgrey",height:"150px", width:"100px" }}>
                                                    {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
                                                    {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) :  (<img style={{width:"100%", height:"100%"}} src={No_Image}/>) }
                                               </div>
@@ -353,8 +358,9 @@ function TenantDashboard(props) {
                                                     {application.address}
                                                   </h6>
                                                   <h6 >
-                                                    {application.city},{application.area}
+                                                    {application.city},{application.zip}
                                                   </h6>
+                                                  
                                                   <h5 style={mediumBold}>
                                                       APPLICATION STATUS
                                                   </h5>

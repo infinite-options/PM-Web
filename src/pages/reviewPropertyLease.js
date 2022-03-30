@@ -7,6 +7,7 @@ import TenantPropertyView from "./TenantPropertyView";
 import { Row, Col, Button, Container } from "react-bootstrap";
 import { bluePillButton,redPillButton} from '../utils/styles';
 import { get, put } from "../utils/api";
+import No_Image from "../icons/No_Image_Available.jpeg";
 
 
 
@@ -26,7 +27,7 @@ function ReviewPropertyLease (props){
     const application_uid = location.state.application_uid;
     const [properties, setProperties] = useState([]);
     const [images, setImages] = useState({});
-
+    
 
     useEffect(() => {
             const fetchRentals = async () => {
@@ -70,7 +71,9 @@ function ReviewPropertyLease (props){
             setProperties(response.result);
         };
         fetchProperties();
-     });
+     },[property_uid]);
+
+
     const approveLease = async () => {
         const updatedRental = {
             // rental_uid: filteredRentals[0].rental_uid,
@@ -81,12 +84,14 @@ function ReviewPropertyLease (props){
 
         const updatedApplication = {
             application_uid: application_uid,
-            application_status: "ACCEPTED"
+            application_status: "RENTED"
         }
         const response2 = await put('/applications', updatedApplication ,access_token );
 
         navigate('/tenant');
       }
+
+
     const rejectLease = async () => {
         const updatedRental = {
             // rental_uid: filteredRentals[0].rental_uid,
@@ -109,7 +114,7 @@ function ReviewPropertyLease (props){
             <Header title="Property Lease Details" />
 
             {/* ==================< Images properties >=======================================  */}
-            {images && images.length ? (<img style={{margin:"20px",padding:"10px"}} src={images[0]}/>) : ""}
+            {images && images.length ? (<img style={{margin:"20px",padding:"10px"}} src={images[0]}/>) :  (<img style={{margin:"20px",padding:"10px"}} src={No_Image}/>)}
 
             {/* ==================< Property Details >=======================================  */}
             <TenantPropertyView forPropertyLease="true"/>
