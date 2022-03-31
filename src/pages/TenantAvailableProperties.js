@@ -15,8 +15,8 @@ function TenantAvailableProperties(props) {
   const { user } = userData;
   const [appliedProperties, setAppliedProperties] = useState({});
 
-  useEffect(() => {
-  }, []);
+  // useEffect(() => {
+  // }, []);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -34,11 +34,14 @@ function TenantAvailableProperties(props) {
     };
     const fetchApplications = async () => {
       const response = await get(`/applications?tenant_id=${user.user_uid}`);
+      console.log("applications :", response);
+
       const appliedPropertes = {};
       for (const a of response.result) {
-        appliedProperties[a.property_uid] = true;
+        // appliedProperties[a.property_uid] = true;
+        appliedProperties[a.property_uid] = a.application_status;
       }
-      console.log(appliedProperties);
+      console.log("appliedProperties :", appliedProperties);
       await setAppliedProperties(appliedProperties);
     };
     fetchApplications().then(fetchProperties);
@@ -57,9 +60,13 @@ function TenantAvailableProperties(props) {
 
       <Container>
         {properties.map((value, i) => {
-          const applied = appliedProperties.hasOwnProperty(value.property_uid);
+          // const applied = appliedProperties.hasOwnProperty(value.property_uid);
+          let applied = null;
+          if(appliedProperties.hasOwnProperty(value.property_uid)){
+            applied = appliedProperties[value.property_uid];
+          }
           return (
-            <div key={i} style={{ marginBottom: "10px" }} onClick={applied ? () => {} : () => navigate(`/tenantPropertyView/${value.property_uid}`)}>
+            <div key={i} style={{ marginBottom: "10px" }}>
               <PropertyCard property={value} applied={applied}></PropertyCard>
             </div>
           );

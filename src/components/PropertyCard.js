@@ -35,7 +35,7 @@ function PropertyCard(props) {
                             </div>
 
                             {applied ? 
-                            (<p style={greenPill} className='mb-0'>Applied</p>) 
+                            (<p style={greenPill} className='mb-0'>{applied}</p>) 
                             : 
                             ""
                             }
