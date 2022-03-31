@@ -347,7 +347,7 @@ function TenantProfile(props) {
                 textAlign: "center",
               }}
             >
-              {usePreviousAddress ? (
+              {usePreviousAddress && previousAddressState ? (
                 <img src={Check} style={{ width: "13px", height: "9px" }} />
               ) : null}
             </div>
