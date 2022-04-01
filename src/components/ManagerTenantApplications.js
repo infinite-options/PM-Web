@@ -16,6 +16,8 @@ function ManagerTenantApplications(props) {
 
     const [applications, setApplications] = React.useState([])
     // const [selectedApplications, setSelectedApplications] = React.useState([])
+    const [forwardedApplications, setForwardedApplications] = React.useState([])
+    const [rejectedApplications, setRejectedApplications] = React.useState([])
 
     const fetchApplications = async () => {
         if (access_token === null) {return;}
@@ -28,7 +30,9 @@ function ManagerTenantApplications(props) {
 
         const applications = response.result.map(application => ({...application, application_selected: false}))
         console.log(applications)
-        setApplications(applications)
+        setApplications(applications.filter(a => a.application_status.toUpperCase() === "NEW"))
+        setForwardedApplications(applications.filter(a => a.application_status.toUpperCase() === "FORWARDED"))
+        setRejectedApplications(applications.filter(a => a.application_status.toUpperCase() === "REJECTED"))
     }
 
     React.useEffect(fetchApplications, [property]);
@@ -99,38 +103,86 @@ function ManagerTenantApplications(props) {
                         {/*<Row style={headings}>*/}
                         {/*    <div>Applications:</div>*/}
                         {/*</Row>*/}
+
                         <div>
-                            {applications.length > 0 && applications.filter(a => a.application_status !== "REJECTED").map((application, i) =>
-                                (<Row className="mt-2" key={i}>
-                                        <Col xs={2} className="mt-2">
-                                            <Row>
-                                                <Checkbox type="BOX" checked={application.application_selected}
-                                                          onClick={() => toggleApplications(application)}/>
+
+                            {forwardedApplications.length > 0 &&
+                                <div>
+                                    <h3 style={{color: "#3DB727"}}>Forwarded</h3>
+                                    {forwardedApplications.map((application, i) => (
+                                        <Row key={i} className="mt-2">
+                                            <Col xs={2} className="mt-2">
+                                                <Row></Row>
+                                            </Col>
+                                            <Col>
+                                                <Row style={headings} onClick={() => selectTenantApplication(application)}>
+                                                    {`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id})`}
+                                                </Row>
+                                                <Row style={subText}>
+                                                    Note: {application.message}
+                                                </Row>
+                                            </Col>
+                                        </Row>
+                                    ))}
+                                </div>
+                            }
+
+                            {rejectedApplications.length > 0 &&
+                                <div className="mt-4">
+                                    <h3 style={{color: "#E3441F"}}>Rejected</h3>
+                                    {rejectedApplications.map((application, i) => (
+                                        <Row key={i} className="mt-2">
+                                            <Col xs={2} className="mt-2">
+                                                <Row></Row>
+                                            </Col>
+                                            <Col>
+                                                <Row style={headings} onClick={() => selectTenantApplication(application)}>
+                                                    {`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id})`}
+                                                </Row>
+                                                <Row style={subText}>
+                                                    Note: {application.message}
+                                                </Row>
+                                            </Col>
+                                        </Row>
+                                    ))}
+                                </div>
+                            }
+
+                            {applications.length > 0 &&
+                                <div className="mt-4">
+                                    <h3 style={{color: "#007AFF"}}>New</h3>
+                                    {applications.map((application, i) =>
+                                        (<Row className="mt-2" key={i}>
+                                                <Col xs={2} className="mt-2">
+                                                    <Row>
+                                                        <Checkbox type="BOX" checked={application.application_selected}
+                                                                  onClick={() => toggleApplications(application)}/>
+                                                    </Row>
+                                                </Col>
+                                                <Col>
+                                                    <Row style={headings} onClick={() => selectTenantApplication(application)}>
+                                                        {`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id})`}
+                                                    </Row>
+                                                    <Row style={subText}>
+                                                        Note: {application.message}
+                                                    </Row>
+                                                    <Row>
+                                                        {application.documents && application.documents.length > 0
+                                                            && JSON.parse(application.documents).map((document, i) =>
+                                                                <div className='d-flex justify-content-between align-items-end ps-0' key={i}>
+                                                                    <h6 style={mediumBold}>{document.name}</h6>
+                                                                    <a href={document.link} target='_blank'>
+                                                                        <img src={File} alt="Document"/>
+                                                                    </a>
+                                                                </div>
+                                                            )}
+                                                    </Row>
+                                                </Col>
                                             </Row>
-                                        </Col>
-                                        <Col>
-                                            <Row style={headings} onClick={() => selectTenantApplication(application)}>
-                                                {`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id})`}
-                                            </Row>
-                                            <Row style={subText}>
-                                                Note: {application.message}
-                                            </Row>
-                                            <Row>
-                                                {application.documents && application.documents.length > 0
-                                                    && JSON.parse(application.documents).map((document, i) =>
-                                                        <div className='d-flex justify-content-between align-items-end ps-0' key={i}>
-                                                            <h6 style={mediumBold}>{document.name}</h6>
-                                                            <a href={document.link} target='_blank'>
-                                                                <img src={File} alt="Document"/>
-                                                            </a>
-                                                        </div>
-                                                    )}
-                                            </Row>
-                                        </Col>
-                                    </Row>
-                                ))}
+                                        ))}
+                                </div>}
                         </div>
-                        <Row className="mt-4">
+                        <Row className="mt-4" hidden={forwardedApplications.length > 0}>
                             <Col className='d-flex justify-content-evenly'>
                                 <Button style={bluePillButton} onClick={applicationsResponse}>Accept Selected Applicants</Button>
                             </Col>
