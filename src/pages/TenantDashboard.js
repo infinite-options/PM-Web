@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import moment from "moment";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
@@ -24,6 +24,7 @@ import {
   address,
   actions,
   mediumBold,
+  squareForm,
 } from "../utils/styles";
 import { color } from "@mui/system";
 import No_Image from "../icons/No_Image_Available.jpeg";
@@ -36,21 +37,26 @@ function TenantDashboard(props) {
   const { setShowFooter, profile, setProfile } = props;
   const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [rent, setRent] = React.useState(0);
-  const [lastPurchase, setLastPurchase] = React.useState(null);
-  const [currentPurchase, setCurrentPurchase] = React.useState(null);
-  const [nextPurchase, setNextPurchase] = React.useState(null);
-  const [property, setProperty] = React.useState({});
+  const [rent, setRent] = useState(0);
+  const [lastPurchase, setLastPurchase] = useState([]);
+  const [currentPurchase, setCurrentPurchase] = useState([]);
+  const [nextPurchase, setNextPurchase] = useState([]);
+  const [property, setProperty] = useState({});
   const [applications, setApplications] = useState([]);
   const [properties, setProperties] = useState([]);
+  const [selectedProperty, setSelectedProperty] = useState([]);
 
   console.log(context, access_token, user);
 
   useEffect(() => {
-    if (profile != undefined && repairs.length === 0) {
+    if (
+      profile != undefined &&
+      repairs.length === 0 &&
+      selectedProperty.length === 0
+    ) {
       setIsLoading(false);
     }
-  }, [profile, repairs]);
+  }, [profile, repairs, selectedProperty]);
 
   useEffect(() => {
     setShowFooter(true);
@@ -118,20 +124,8 @@ function TenantDashboard(props) {
       //       properties.push({ rent: rent, properties: {} });
       //     })
       //   : (properties = {});
-      let properties = [];
-      properties = response.result.map((id, index) => {
-        return {
-          rent: rentTotal[index],
-          property: response.result[index],
-        };
-      });
 
-      console.log(
-        "tenantProperties properties",
-        response.result.length,
-        properties
-      );
-      setProperties(properties);
+      // setSelectedProperty(properties[0]);
       // const purchases = response.result.length
       //   ? JSON.parse(response.result[0].purchases)
       //   : [];
@@ -141,27 +135,52 @@ function TenantDashboard(props) {
             purchases.push(JSON.parse(purchase.purchases));
           })
         : (purchases = []);
-      console.log("tenantProperties", response.result.length, purchases);
+      console.log(
+        "tenantProperties purchase",
+        response.result.length,
+        purchases
+      );
 
-      let lastPaidPurchase = null;
-      let firstUnpaidPurchase = null;
-      let nextUnpaidPurchase = null;
+      let lastPaidPurchase = [];
+      let firstUnpaidPurchase = [];
+      let nextUnpaidPurchase = [];
       for (const purchase of purchases) {
         console.log("tenantProperties purchase", purchase);
-        if (
-          purchase.purchase_status === "UNPAID" &&
-          firstUnpaidPurchase === null
-        ) {
-          firstUnpaidPurchase = purchase;
-        } else if (
-          purchase.purchase_status === "UNPAID" &&
-          nextUnpaidPurchase === null
-        ) {
-          nextUnpaidPurchase = purchase;
-        } else if (purchase.purchase_status === "PAID") {
-          lastPaidPurchase = purchase;
+        console.log(
+          "tenantProperties purchase",
+          lastPaidPurchase,
+          firstUnpaidPurchase,
+          nextUnpaidPurchase
+        );
+        for (const pur of purchase) {
+          console.log("tenantProperties pur", pur);
+          if (
+            pur.purchase_status === "UNPAID" &&
+            firstUnpaidPurchase.length == 0
+          ) {
+            console.log("in if");
+            // firstUnpaidPurchase = purchase;
+            firstUnpaidPurchase.push(pur);
+          } else if (
+            pur.purchase_status === "UNPAID" &&
+            nextUnpaidPurchase.length == 0
+          ) {
+            console.log("in else if");
+            // nextUnpaidPurchase = purchase;
+            nextUnpaidPurchase.push(pur);
+          } else if (pur.purchase_status === "PAID") {
+            console.log("in else if2");
+            // lastPaidPurchase = purchase;
+            lastPaidPurchase.push(pur);
+          }
         }
       }
+      console.log(
+        "tenantProperties",
+        lastPaidPurchase,
+        firstUnpaidPurchase,
+        nextUnpaidPurchase
+      );
       setLastPurchase(lastPaidPurchase);
       setCurrentPurchase(firstUnpaidPurchase);
       setNextPurchase(nextUnpaidPurchase);
@@ -171,6 +190,28 @@ function TenantDashboard(props) {
         firstUnpaidPurchase,
         nextUnpaidPurchase
       );
+
+      let properties = [];
+      properties = response.result.map((id, index) => {
+        return {
+          rent: rentTotal[index],
+          property: response.result[index],
+          purchases: purchases[index],
+          lastPurchase: lastPaidPurchase[index],
+          currentPurchase: firstUnpaidPurchase[index],
+          nextPurchase: nextUnpaidPurchase[index],
+        };
+      });
+
+      console.log(
+        "tenantProperties properties",
+        response.result.length,
+        properties
+      );
+
+      let selectedProperty = properties[0];
+      setSelectedProperty(selectedProperty);
+      setProperties(properties);
     };
     fetchProfile();
   }, []);
@@ -221,7 +262,7 @@ function TenantDashboard(props) {
   }, [profile]);
 
   const goToRequest = () => {
-    navigate(`/${profile.property_uid}/repairRequest`);
+    navigate(`/${selectedProperty.property.property_uid}/repairRequest`);
   };
   const goToAnnouncements = () => {
     navigate("/residentAnnouncements");
@@ -243,7 +284,6 @@ function TenantDashboard(props) {
       state: { application_uid: application.application_uid },
     });
   };
-  console.log(properties);
   return (
     <div className="h-100">
       <Header title="Home" />
@@ -299,7 +339,27 @@ function TenantDashboard(props) {
             {/* <div style={headings} className="mt-4 mb-1">
               ${rent}/mo
             </div> */}
-            {isLoading === true ? null : (
+            <Form.Group>
+              <Form.Select
+                style={squareForm}
+                value={JSON.stringify(selectedProperty)}
+                onChange={(e) =>
+                  setSelectedProperty(JSON.parse(e.target.value))
+                }
+              >
+                {properties.map((property, i) => (
+                  <option key={i} value={JSON.stringify(property)}>
+                    {property.property.address} {property.property.unit}
+                    ,&nbsp;
+                    {property.property.city}
+                    ,&nbsp;
+                    {property.property.state}&nbsp; {property.property.zip}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            {console.log("selectedProperty", selectedProperty)}
+            {/* {isLoading === true ? null : (
               <div>
                 {properties.map((property) => (
                   <div>
@@ -317,48 +377,72 @@ function TenantDashboard(props) {
                   </div>
                 ))}
 
-                {/* {`${property.address}, ${property.city}, ${property.state} ${property.zip}`} */}
+              
               </div>
-            )}
+            )} */}
+            {isLoading === true || selectedProperty.length == 0 ? null : (
+              <div>
+                <div style={headings} className="mt-4 mb-1">
+                  ${selectedProperty.rent} / mo
+                </div>
 
-            {lastPurchase && (
-              <div
-                style={blue}
-                className="mt-1 mb-1"
-                onClick={() => navigate("/paymentHistory")}
-              >
-                Rent paid for {lastPurchase.purchase_notes}: $
-                {lastPurchase.amount_paid}
-              </div>
-            )}
-            {currentPurchase && (
-              <div>
-                <Col xs={7} className="mt-1 mb-1">
+                <div style={address} className="mt-1 mb-1">
+                  {selectedProperty.property.address}{" "}
+                  {selectedProperty.property.unit}
+                  ,&nbsp;
+                  {selectedProperty.property.city}
+                  ,&nbsp;
+                  {selectedProperty.property.state}&nbsp;{" "}
+                  {selectedProperty.property.zip}
+                </div>
+                {selectedProperty.lastPurchase && (
                   <div
-                    style={bluePill}
-                    onClick={() =>
-                      navigate(`/rentPayment/${currentPurchase.purchase_uid}`)
-                    }
+                    style={blue}
+                    className="mt-1 mb-1"
+                    onClick={() => navigate("/paymentHistory")}
                   >
-                    Rent due for {currentPurchase.purchase_notes}: $
-                    {currentPurchase.amount_due - currentPurchase.amount_paid}
+                    Rent paid for {selectedProperty.lastPurchase.purchase_notes}
+                    : ${selectedProperty.lastPurchase.amount_paid}
                   </div>
-                </Col>
-              </div>
-            )}
-            {nextPurchase && (
-              <div>
-                <Col xs={8} className="mt-1 mb-1">
-                  <div
-                    style={greenBorderPill}
-                    onClick={() =>
-                      navigate(`/rentPayment/${nextPurchase.purchase_uid}`)
-                    }
-                  >
-                    Upcoming rent for {nextPurchase.purchase_notes}: $
-                    {nextPurchase.amount_due - nextPurchase.amount_paid}
+                )}
+                {selectedProperty.currentPurchase && (
+                  <div>
+                    <Col xs={7} className="mt-1 mb-1">
+                      <div
+                        style={bluePill}
+                        onClick={() =>
+                          navigate(
+                            `/rentPayment/${selectedProperty.currentPurchase.purchase_uid}`
+                          )
+                        }
+                      >
+                        Rent due for{" "}
+                        {selectedProperty.currentPurchase.purchase_notes}: $
+                        {selectedProperty.currentPurchase.amount_due -
+                          selectedProperty.currentPurchase.amount_paid}
+                      </div>
+                    </Col>
                   </div>
-                </Col>
+                )}
+                {selectedProperty.nextPurchase && (
+                  <div>
+                    <Col xs={8} className="mt-1 mb-1">
+                      <div
+                        style={greenBorderPill}
+                        onClick={() =>
+                          navigate(
+                            `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
+                          )
+                        }
+                      >
+                        Upcoming rent for{" "}
+                        {selectedProperty.nextPurchase.purchase_notes}: $
+                        {selectedProperty.nextPurchase.amount_due -
+                          selectedProperty.nextPurchase.amount_paid}
+                      </div>
+                    </Col>
+                  </div>
+                )}
               </div>
             )}
           </Row>
