@@ -20,7 +20,7 @@ function TenantAvailableProperties(props) {
 
   useEffect(() => {
     const fetchProperties = async () => {
-      const response = await get(`/availableProperties/${user.user_uid}`);
+      const response = await get(`/availableProperties`);
       console.log(response);
       const res = response.result;
       if (res) {
@@ -47,8 +47,6 @@ function TenantAvailableProperties(props) {
     fetchApplications().then(fetchProperties);
   }, []);
 
-
-
   return (
     <div className="mb-5 pb-5">
       <Header
@@ -62,7 +60,7 @@ function TenantAvailableProperties(props) {
         {properties.map((value, i) => {
           // const applied = appliedProperties.hasOwnProperty(value.property_uid);
           let applied = null;
-          if(appliedProperties.hasOwnProperty(value.property_uid)){
+          if (appliedProperties.hasOwnProperty(value.property_uid)) {
             applied = appliedProperties[value.property_uid];
           }
           return (
