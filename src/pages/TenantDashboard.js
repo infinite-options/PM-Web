@@ -144,6 +144,10 @@ function TenantDashboard(props) {
       let lastPaidPurchase = [];
       let firstUnpaidPurchase = [];
       let nextUnpaidPurchase = [];
+      let lpp = null;
+      let fup = null;
+      let nup = null;
+
       for (const purchase of purchases) {
         console.log("tenantProperties purchase", purchase);
         console.log(
@@ -154,38 +158,36 @@ function TenantDashboard(props) {
         );
         for (const pur of purchase) {
           console.log("tenantProperties pur", pur);
-          if (
-            pur.purchase_status === "UNPAID" &&
-            firstUnpaidPurchase.length == 0
-          ) {
+          console.log(
+            "tenantProperties pur",
+            lastPaidPurchase,
+            firstUnpaidPurchase,
+            nextUnpaidPurchase
+          );
+          if (pur.purchase_status === "UNPAID" && fup === null) {
             console.log("in if");
-            // firstUnpaidPurchase = purchase;
-            firstUnpaidPurchase.push(pur);
-          } else if (
-            pur.purchase_status === "UNPAID" &&
-            nextUnpaidPurchase.length == 0
-          ) {
+            fup = pur;
+            firstUnpaidPurchase.push(fup);
+          } else if (pur.purchase_status === "UNPAID" && nup === null) {
             console.log("in else if");
-            // nextUnpaidPurchase = purchase;
-            nextUnpaidPurchase.push(pur);
+            nup = pur;
+            nextUnpaidPurchase.push(nup);
           } else if (pur.purchase_status === "PAID") {
             console.log("in else if2");
-            // lastPaidPurchase = purchase;
-            lastPaidPurchase.push(pur);
+            lpp = pur;
+            lastPaidPurchase.push(lpp);
           }
         }
+        nup = null;
+        fup = null;
+        lpp = null;
       }
-      console.log(
-        "tenantProperties",
-        lastPaidPurchase,
-        firstUnpaidPurchase,
-        nextUnpaidPurchase
-      );
+
       setLastPurchase(lastPaidPurchase);
       setCurrentPurchase(firstUnpaidPurchase);
       setNextPurchase(nextUnpaidPurchase);
       console.log(
-        "tenantProperties",
+        "tenantProperties purchase 179",
         lastPaidPurchase,
         firstUnpaidPurchase,
         nextUnpaidPurchase
@@ -221,9 +223,9 @@ function TenantDashboard(props) {
       const response = await get(
         `/maintenanceRequests?property_uid=${profile.property_uid}`
       );
-      console.log(response);
+      console.log(response[0].length);
 
-      setRepairs(response.result);
+      setRepairs(response[0]);
     };
     fetchRepairs();
   }, [profile]);
@@ -262,7 +264,11 @@ function TenantDashboard(props) {
   }, [profile]);
 
   const goToRequest = () => {
-    navigate(`/${selectedProperty.property.property_uid}/repairRequest`);
+    navigate(`/${selectedProperty.property.property_uid}/repairRequest`, {
+      state: {
+        property: selectedProperty.property,
+      },
+    });
   };
   const goToAnnouncements = () => {
     navigate("/residentAnnouncements");

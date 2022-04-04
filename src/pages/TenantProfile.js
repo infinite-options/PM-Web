@@ -1,6 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Form, Button,DropdownButton, Dropdown } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  DropdownButton,
+  Dropdown,
+} from "react-bootstrap";
 import Popover from "@material-ui/core/Popover";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
@@ -9,9 +17,16 @@ import Check from "../icons/Check.svg";
 import ArrowUp from "../icons/ArrowUp.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
 import { get, put, post } from "../utils/api";
-import { squareForm, smallPillButton, small, underline,mediumBold } from "../utils/styles";
-import EditIcon from '../icons/EditIcon.svg';
-import DeleteIcon from '../icons/DeleteIcon.svg';
+import {
+  squareForm,
+  smallPillButton,
+  small,
+  underline,
+  mediumBold,
+} from "../utils/styles";
+import EditIcon from "../icons/EditIcon.svg";
+import DeleteIcon from "../icons/DeleteIcon.svg";
+import Logout from "../components/Logout";
 
 function TenantProfile(props) {
   const context = useContext(AppContext);
@@ -32,9 +47,10 @@ function TenantProfile(props) {
   const [dlNumber, setDLNumber] = useState("");
   const defaultState = "--";
   const [selectedState, setSelectedState] = React.useState(defaultState);
-  const [selectedPrevState, setSelectedPrevState] = React.useState(defaultState);
+  const [selectedPrevState, setSelectedPrevState] =
+    React.useState(defaultState);
   const { autofillState, setAutofillState } = props;
-  
+
   const currentAddressState = useState({
     street: "",
     unit: "",
@@ -79,16 +95,16 @@ function TenantProfile(props) {
     const file = e.target.files[0];
     const newFile = {
       name: file.name,
-      description: '',
-      file: file
-    }
+      description: "",
+      file: file,
+    };
     setNewFile(newFile);
-  }
+  };
   const updateNewFile = (field, value) => {
-    const newFileCopy = {...newFile};
+    const newFileCopy = { ...newFile };
     newFileCopy[field] = value;
     setNewFile(newFileCopy);
-  }
+  };
   const cancelEdit = () => {
     setNewFile(null);
     if (editingDoc !== null) {
@@ -97,26 +113,26 @@ function TenantProfile(props) {
       setFiles(newFiles);
     }
     setEditingDoc(null);
-  }
+  };
   const editDocument = (i) => {
     const newFiles = [...files];
     const file = newFiles.splice(i, 1)[0];
     setFiles(newFiles);
     setEditingDoc(file);
-    setNewFile({...file});
-  }
+    setNewFile({ ...file });
+  };
   const saveNewFile = (e) => {
     // copied from addFile, change e.target.files to state.newFile
     const newFiles = [...files];
     newFiles.push(newFile);
     setFiles(newFiles);
     setNewFile(null);
-  }
+  };
   const deleteDocument = (i) => {
     const newFiles = [...files];
     newFiles.splice(i, 1);
     setFiles(newFiles);
-  }
+  };
   //popover open and close
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -152,19 +168,25 @@ function TenantProfile(props) {
       setCompany(response.result[0].tenant_current_job_company);
       setDLNumber(response.result[0].tenant_drivers_license_number);
       setCompany(response.result[0].tenant_current_job_company);
-      const currentAddress =  JSON.parse(response.result[0].tenant_current_address);
-      const documents = response.result[0].documents? (JSON.parse(response.result[0].documents)) : [];
+      const currentAddress = JSON.parse(
+        response.result[0].tenant_current_address
+      );
+      const documents = response.result[0].documents
+        ? JSON.parse(response.result[0].documents)
+        : [];
       setFiles(documents);
       currentAddressState[1](currentAddress);
       setSelectedState(currentAddress.state);
       if (response.result[0].tenant_previous_address != null) {
-        const prevAddress = JSON.parse(response.result[0].tenant_previous_address);
-        if(prevAddress){
-          previousAddressState[1](prevAddress );
+        const prevAddress = JSON.parse(
+          response.result[0].tenant_previous_address
+        );
+        if (prevAddress) {
+          previousAddressState[1](prevAddress);
           setSelectedPrevState(prevAddress.state);
         }
       }
-      
+
       if (response.result[0].tenant_previous_address != null) {
         setUsePreviousAddress(true);
       }
@@ -174,7 +196,7 @@ function TenantProfile(props) {
 
   const submitInfo = async () => {
     currentAddressState[0].state = selectedState;
-    if(previousAddressState && previousAddressState.length){
+    if (previousAddressState && previousAddressState.length) {
       previousAddressState[0].state = selectedPrevState;
     }
 
@@ -187,18 +209,20 @@ function TenantProfile(props) {
       current_job_company: company,
       ssn: ssn,
       drivers_license_number: dlNumber,
-      drivers_license_state: 'CA',
+      drivers_license_state: "CA",
       current_address: JSON.stringify(currentAddressState[0]),
-      previous_address: usePreviousAddress ? JSON.stringify(previousAddressState[0]) : null,
+      previous_address: usePreviousAddress
+        ? JSON.stringify(previousAddressState[0])
+        : null,
     };
-   
+
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
       tenantProfile[key] = files[i].file;
       delete files[i].file;
     }
     tenantProfile.documents = JSON.stringify(files);
-    await put(`/tenantProfileInfo`, tenantProfile, access_token,files);
+    await put(`/tenantProfileInfo`, tenantProfile, access_token, files);
     props.onConfirm();
 
     // await post('/tenantProfileInfo', tenantProfile, access_token, files);
@@ -226,7 +250,7 @@ function TenantProfile(props) {
         rightText="Save"
         rightFn={() => {
           submitInfo();
-          setTab("DASHBOARD")
+          setTab("DASHBOARD");
         }}
       />
       <Container style={{ minHeight: "100%" }}>
@@ -277,12 +301,21 @@ function TenantProfile(props) {
               <Form.Label as="h6" className="mb-0 ms-2">
                 Frequency
               </Form.Label>
-              <DropdownButton variant="light" id="dropdown-basic-button" title={frequency} >
-                     {allFrequency.map((freq, i) => (
-                     <Dropdown.Item onClick={() => setFrequency(freq)} href="#/action-1" > {freq} </Dropdown.Item>
-                     ))}  
+              <DropdownButton
+                variant="light"
+                id="dropdown-basic-button"
+                title={frequency}
+              >
+                {allFrequency.map((freq, i) => (
+                  <Dropdown.Item
+                    onClick={() => setFrequency(freq)}
+                    href="#/action-1"
+                  >
+                    {" "}
+                    {freq}{" "}
+                  </Dropdown.Item>
+                ))}
               </DropdownButton>
-
             </Form.Group>
           </Col>
         </Row>
@@ -332,7 +365,11 @@ function TenantProfile(props) {
           />
         </Form.Group>
         <h5 className="mx-2 my-3">Current Address</h5>
-        <AddressForm state={currentAddressState} selectedState={selectedState} setSelectedState={setSelectedState} />
+        <AddressForm
+          state={currentAddressState}
+          selectedState={selectedState}
+          setSelectedState={setSelectedState}
+        />
         <Row>
           <Col
             xs={2}
@@ -365,77 +402,115 @@ function TenantProfile(props) {
         {usePreviousAddress ? (
           <div>
             <h5 className="mx-2 my-3">Previous Address</h5>
-            <AddressForm state={previousAddressState} selectedState={selectedPrevState} setSelectedState={setSelectedPrevState} />
+            <AddressForm
+              state={previousAddressState}
+              selectedState={selectedPrevState}
+              setSelectedState={setSelectedPrevState}
+            />
           </div>
         ) : (
           ""
         )}
-        
-        <div className='mb-4' style={{margin:"20px"}}>
+
+        <div className="mb-4" style={{ margin: "20px" }}>
           <h5 style={mediumBold}>Tenant Documents</h5>
           {files.map((file, i) => (
             <div key={i}>
-              <div className='d-flex justify-content-between align-items-end'>
+              <div className="d-flex justify-content-between align-items-end">
                 <div>
-                  <h6 style={mediumBold}>
-                    {file.name}
-                  </h6>
-                  <p style={small} className='m-0'>
+                  <h6 style={mediumBold}>{file.name}</h6>
+                  <p style={small} className="m-0">
                     {file.description}
                   </p>
                 </div>
                 <div>
-                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
-                    onClick={() => editDocument(i)}/>
-                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
-                    onClick={() => deleteDocument(i)}/>
-                  <a href={file.link} target='_blank'>
-                    <img src={File}/>
+                  <img
+                    src={EditIcon}
+                    alt="Edit"
+                    className="px-1 mx-2"
+                    onClick={() => editDocument(i)}
+                  />
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete"
+                    className="px-1 mx-2"
+                    onClick={() => deleteDocument(i)}
+                  />
+                  <a href={file.link} target="_blank">
+                    <img src={File} />
                   </a>
                 </div>
               </div>
-              <hr style={{opacity: 1}}/>
+              <hr style={{ opacity: 1 }} />
             </div>
           ))}
           {newFile !== null ? (
             <div>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>
+                <Form.Label as="h6" className="mb-0 ms-2">
                   Document Name
                 </Form.Label>
-                <Form.Control style={squareForm} value={newFile.name} placeholder='Name'
-                  onChange={(e) => updateNewFile('name', e.target.value)}/>
+                <Form.Control
+                  style={squareForm}
+                  value={newFile.name}
+                  placeholder="Name"
+                  onChange={(e) => updateNewFile("name", e.target.value)}
+                />
               </Form.Group>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>
+                <Form.Label as="h6" className="mb-0 ms-2">
                   Description
                 </Form.Label>
-                <Form.Control style={squareForm} value={newFile.description} placeholder='Description'
-                  onChange={(e) => updateNewFile('description', e.target.value)}/>
+                <Form.Control
+                  style={squareForm}
+                  value={newFile.description}
+                  placeholder="Description"
+                  onChange={(e) => updateNewFile("description", e.target.value)}
+                />
               </Form.Group>
-              <div className='text-center my-3'>
-                <Button variant='outline-primary' style={smallPillButton} as='p'
-                  onClick={cancelEdit} className='mx-2'>
+              <div className="text-center my-3">
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                  onClick={cancelEdit}
+                  className="mx-2"
+                >
                   Cancel
                 </Button>
-                <Button variant='outline-primary' style={smallPillButton} as='p'
-                  onClick={saveNewFile} className='mx-2'>
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                  onClick={saveNewFile}
+                  className="mx-2"
+                >
                   Save Document
                 </Button>
               </div>
             </div>
           ) : (
             <div>
-              <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
-              <label htmlFor='file'>
-                <Button variant='outline-primary' style={smallPillButton} as='p'>
+              <input
+                id="file"
+                type="file"
+                accept="image/*,.pdf"
+                onChange={addFile}
+                className="d-none"
+              />
+              <label htmlFor="file">
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                >
                   Add Document
                 </Button>
               </label>
             </div>
           )}
         </div>
-
+        <Logout />
       </Container>
     </div>
   );

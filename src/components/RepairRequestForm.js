@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useParams } from "react-router";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
@@ -30,8 +31,9 @@ const useStyles = makeStyles((theme) => ({
 function RepairRequest(props) {
   const classes = useStyles();
   const navigate = useNavigate();
+  const { state } = useLocation();
   const { property_uid } = useParams();
-  console.log(property_uid);
+  console.log(property_uid, useParams(), state);
   const imageState = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -82,7 +84,14 @@ function RepairRequest(props) {
       />
       <Container className="pt-1 mb-4">
         <Row style={headings}>
-          <div>New Pair Request</div>
+          <div>New Repair Request</div>
+        </Row>
+        <Row style={formLabel} as="h5" className="ms-1 mb-0">
+          {state.property.address} {state.property.unit}
+          ,&nbsp;
+          {state.property.city}
+          ,&nbsp;
+          {state.property.state}&nbsp; {state.property.zip}
         </Row>
         <Form>
           <Form.Group className="mt-3 mb-4">
