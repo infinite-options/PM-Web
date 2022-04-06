@@ -35,10 +35,11 @@ function TenantWelcomePage(props) {
   console.log(context, access_token, user);
 
   useEffect(() => {
-    if (profile != undefined && repairs.length === 0) {
+    // if (profile != undefined && repairs.length === 0) {
+    if (profile != undefined) {
       setIsLoading(false);
     }
-  }, [profile, repairs]);
+  }, [profile]);
 
   useEffect(() => {
     setShowFooter(true);
@@ -52,6 +53,7 @@ function TenantWelcomePage(props) {
         refresh();
         return;
       }
+      console.log("tenantWelcome", response.result[0]);
       setProfile(response.result[0]);
       const payments = response.result.length
         ? JSON.parse(response.result[0].rent_payments)
@@ -77,17 +79,17 @@ function TenantWelcomePage(props) {
     fetchProfile();
   }, []);
 
-  useEffect(() => {
-    const fetchRepairs = async () => {
-      const response = await get(
-        `/maintenanceRequests?property_uid=${profile.property_uid}`
-      );
-      console.log(response);
+  // useEffect(() => {
+  //   const fetchRepairs = async () => {
+  //     const response = await get(
+  //       `/maintenanceRequests?property_uid=${profile.property_uid}`
+  //     );
+  //     console.log(response[0]);
 
-      setRepairs(response[0]);
-    };
-    fetchRepairs();
-  }, [profile]);
+  //     setRepairs(response[0]);
+  //   };
+  //   fetchRepairs();
+  // }, [profile]);
 
   useEffect(() => {
     const fetchApplications = async () => {

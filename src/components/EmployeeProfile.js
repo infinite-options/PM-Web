@@ -1,60 +1,127 @@
-import React from 'react';
-import {Container, Row, Col, Form, Button} from 'react-bootstrap';
-import {squareForm, hidden, red, small, pillButton} from '../utils/styles';
-import {get, post} from '../utils/api';
-import AppContext from '../AppContext';
-import Checkbox from '../components/Checkbox';
-import Header from '../components/Header';
-import ArrowDown from '../icons/ArrowDown.svg';
+import React, { useState, useEffect, useContext } from "react";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { squareForm, hidden, red, small, pillButton } from "../utils/styles";
+import { get, post } from "../utils/api";
+import AppContext from "../AppContext";
+import Checkbox from "../components/Checkbox";
+import Header from "../components/Header";
+import ArrowDown from "../icons/ArrowDown.svg";
 
 function EmployeeProfile(props) {
-  const {businessType, onConfirm, autofillState, setAutofillState} = props;
+  const { businessType, onConfirm, autofillState, setAutofillState } = props;
   const updateAutofillState = (profile) => {
-    const newAutofillState = {...autofillState};
+    const newAutofillState = { ...autofillState };
     for (const key of Object.keys(newAutofillState)) {
       if (key in profile) {
         newAutofillState[key] = profile[key];
       }
     }
     setAutofillState(newAutofillState);
-  }
-  const {userData} = React.useContext(AppContext);
-  const {user, access_token} = userData;
-  const [firstName, setFirstName] = React.useState(autofillState.first_name);
-  const [lastName, setLastName] = React.useState(autofillState.last_name);
-  const [phoneNumber, setPhoneNumber] = React.useState(autofillState.phone_number);
-  const [email, setEmail] = React.useState(autofillState.email);
-  const [ssn, setSsn] = React.useState(autofillState.ssn);
-  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
-  const [companyRole, setCompanyRole] = React.useState('');
-  const [company, setCompany] = React.useState(null);
-  const [businesses, setBusinesses] = React.useState([]);
-  const [showSsn, setShowSsn] = React.useState(false);
-  const [showEin, setShowEin] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const required = (
-    errorMessage === 'Please fill out all fields' ? (
-      <span style={red} className='ms-1'>*</span>
-    ) : ''
-  );
+  };
+  const { userData } = useContext(AppContext);
+  const { user, access_token } = userData;
+  const [firstName, setFirstName] = useState(autofillState.first_name);
+  const [lastName, setLastName] = useState(autofillState.last_name);
+  const [phoneNumber, setPhoneNumber] = useState(autofillState.phone_number);
+  const [email, setEmail] = useState(autofillState.email);
+  const [ssn, setSsn] = useState(autofillState.ssn);
+  const [einNumber, setEinNumber] = useState(autofillState.ein_number);
+  const [companyRole, setCompanyRole] = useState("");
+  const [company, setCompany] = useState(null);
+  const [businesses, setBusinesses] = useState([]);
+  const [showSsn, setShowSsn] = useState(false);
+  const [showEin, setShowEin] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
 
-  React.useEffect(async () => {
-    if (user.role.indexOf(`${businessType === 'MANAGEMENT' ? 'PM' : 'MAINT'}_EMPLOYEE`) === -1) {
-      console.log('no employee profile');
+  useEffect(async () => {
+    console.log(props);
+    const fetchEmployee = async () => {
+      const emp_res = await get(`/employees?employee_email=${user.email}`);
+      console.log("emp_res manangement", emp_res.result, businessType);
+      let emp_res_type = [];
+
+      if (emp_res.result.length > 0) {
+        emp_res.result.map((emp) => {
+          if (emp.employee_role != "Owner") {
+            emp_res_type.push(emp);
+            let buid = emp.business_uid;
+            const fetchBusinesses = async () => {
+              const busi_res = await get(`/businesses?business_uid=${buid}`);
+              console.log(
+                "busi_res maintenance",
+                busi_res.result[0].business_type,
+                businessType
+              );
+              let busi_res_type = [];
+              busi_res.result.length > 1
+                ? busi_res.result.map((busi) => {
+                    busi_res_type.push(busi.business_type);
+                  })
+                : busi_res_type.push(busi_res.result[0].business_type);
+              console.log("maintenance", busi_res_type);
+              if (
+                busi_res.result.length !== 0 &&
+                busi_res_type.includes(businessType)
+              ) {
+                console.log("business profile already set up");
+                // eventually update page with current info, allow user to update and save new info
+                props.onConfirm();
+                return;
+              }
+            };
+            fetchBusinesses();
+          }
+        });
+      } else {
+        if (emp_res.result[0].employee_role != "Owner") {
+          emp_res_type.push(emp_res.result[0].employee_role);
+        }
+      }
+      console.log("manangement", emp_res_type);
+      if (emp_res.result.length !== 0 && emp_res_type.includes(businessType)) {
+        console.log("employee profile already set up");
+        // eventually update page with current info, allow user to update and save new info
+        props.onConfirm();
+        return;
+      }
+    };
+    fetchEmployee();
+
+    if (
+      user.role.indexOf(
+        `${businessType === "MANAGEMENT" ? "PM" : "MAINT"}_EMPLOYEE`
+      ) === -1
+    ) {
+      console.log("no employee profile");
       props.onConfirm();
     }
     const response = await get(`/businesses?business_type=${businessType}`);
+    console.log("response", response.result);
     setBusinesses(response.result);
     setCompany(JSON.stringify(response.result[0]));
   }, []);
 
   const submitForm = async () => {
-    if (firstName === '' || lastName === '' || phoneNumber === '' || email === '' || companyRole === '') {
-      setErrorMessage('Please fill out all fields');
+    if (
+      firstName === "" ||
+      lastName === "" ||
+      phoneNumber === "" ||
+      email === "" ||
+      companyRole === ""
+    ) {
+      setErrorMessage("Please fill out all fields");
       return;
     }
-    if (ssn === '' && einNumber === '') {
-      setErrorMessage('Please include at least one identification number');
+    if (ssn === "" && einNumber === "") {
+      setErrorMessage("Please include at least one identification number");
       return;
     }
     console.log(company);
@@ -67,52 +134,77 @@ function EmployeeProfile(props) {
       phone_number: phoneNumber,
       email: email,
       ssn: ssn,
-      ein_number: einNumber
-    }
+      ein_number: einNumber,
+    };
     console.log(employeeInfo);
-    const response = await post('/employees', employeeInfo, access_token);
+    const response = await post("/employees", employeeInfo, access_token);
     updateAutofillState(employeeInfo);
     onConfirm();
-  }
+  };
 
   return (
-    <div className='pb-5'>
-      <Header title={`${businessType === 'MANAGEMENT' ? 'PM' : 'Mainenance'} Employee Profile`}/>
+    <div className="pb-5">
+      <Header
+        title={`${
+          businessType === "MANAGEMENT" ? "PM" : "Mainenance"
+        } Employee Profile`}
+      />
       <Container>
-        <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>
-            First Name {firstName === '' ? required : ''}
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            First Name {firstName === "" ? required : ""}
           </Form.Label>
-          <Form.Control style={squareForm} placeholder='First' value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}/>
+          <Form.Control
+            style={squareForm}
+            placeholder="First"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
         </Form.Group>
-        <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>
-            Last Name {lastName === '' ? required : ''}
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Last Name {lastName === "" ? required : ""}
           </Form.Label>
-          <Form.Control style={squareForm} placeholder='Last' value={lastName}
-            onChange={(e) => setLastName(e.target.value)}/>
+          <Form.Control
+            style={squareForm}
+            placeholder="Last"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
         </Form.Group>
-        <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>
-            Phone Number {phoneNumber === '' ? required : ''}
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Phone Number {phoneNumber === "" ? required : ""}
           </Form.Label>
-          <Form.Control style={squareForm} placeholder='(xxx)xxx-xxxx' value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}/>
+          <Form.Control
+            style={squareForm}
+            placeholder="(xxx)xxx-xxxx"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
         </Form.Group>
-        <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>
-            Email Address {email === '' ? required : ''}
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Email Address {email === "" ? required : ""}
           </Form.Label>
-          <Form.Control style={squareForm} placeholder='Email' value={email} type='email'
-            onChange={(e) => setEmail(e.target.value)}/>
+          <Form.Control
+            style={squareForm}
+            placeholder="Email"
+            value={email}
+            type="email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </Form.Group>
-        <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
             Company of Employment
           </Form.Label>
-          <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}} value={company}
-            onChange={(e) => setCompany(e.target.value)}>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+          >
+            {console.log("businesses", businesses)}
             {businesses.map((business, i) => (
               <option key={i} value={JSON.stringify(business)}>
                 {business.business_name}
@@ -120,48 +212,66 @@ function EmployeeProfile(props) {
             ))}
           </Form.Select>
         </Form.Group>
-        <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>
-            Your Role at the Company {companyRole === '' ? required : ''}
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Your Role at the Company {companyRole === "" ? required : ""}
           </Form.Label>
-          <Form.Control style={squareForm} placeholder='Role' value={companyRole}
-            onChange={(e) => setCompanyRole(e.target.value)}/>
+          <Form.Control
+            style={squareForm}
+            placeholder="Role"
+            value={companyRole}
+            onChange={(e) => setCompanyRole(e.target.value)}
+          />
         </Form.Group>
-        <Container className='my-5'>
+        <Container className="my-5">
           <h6>Please add at least one:</h6>
-          <Row className='mb-1'>
-            <Col className='d-flex align-items-center'>
-              <Checkbox type='BOX' onClick={(checked) => setShowSsn(checked)}/>
-              <p className='d-inline-block mb-0'>SSN</p>
+          <Row className="mb-1">
+            <Col className="d-flex align-items-center">
+              <Checkbox type="BOX" onClick={(checked) => setShowSsn(checked)} />
+              <p className="d-inline-block mb-0">SSN</p>
             </Col>
             <Col>
-              <Form.Control style={showSsn ? squareForm : hidden} placeholder='123-45-6789'
-                value={ssn} onChange={e => setSsn(e.target.value)}/>
+              <Form.Control
+                style={showSsn ? squareForm : hidden}
+                placeholder="123-45-6789"
+                value={ssn}
+                onChange={(e) => setSsn(e.target.value)}
+              />
             </Col>
           </Row>
-          <Row className='mb-1'>
-            <Col className='d-flex align-items-center'>
-              <Checkbox type='BOX' onClick={(checked) => setShowEin(checked)}/>
-              <p className='d-inline-block mb-0'>EIN Number</p>
+          <Row className="mb-1">
+            <Col className="d-flex align-items-center">
+              <Checkbox type="BOX" onClick={(checked) => setShowEin(checked)} />
+              <p className="d-inline-block mb-0">EIN Number</p>
             </Col>
             <Col>
-              <Form.Control style={showEin ? squareForm : hidden} placeholder='12-1234567'
-                value={einNumber} onChange={e => setEinNumber(e.target.value)}/>
+              <Form.Control
+                style={showEin ? squareForm : hidden}
+                placeholder="12-1234567"
+                value={einNumber}
+                onChange={(e) => setEinNumber(e.target.value)}
+              />
             </Col>
           </Row>
-          <div className='text-center' style={errorMessage === '' ? hidden : {}}>
-            <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+          <div
+            className="text-center"
+            style={errorMessage === "" ? hidden : {}}
+          >
+            <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
         </Container>
-        <div className='my-3 text-center'>
-          <Button variant='outline-primary' style={pillButton} onClick={submitForm}>
+        <div className="my-3 text-center">
+          <Button
+            variant="outline-primary"
+            style={pillButton}
+            onClick={submitForm}
+          >
             Save Profile
           </Button>
         </div>
       </Container>
     </div>
   );
-
 }
 
 export default EmployeeProfile;

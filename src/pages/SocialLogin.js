@@ -11,7 +11,7 @@ import Google from "../icons/GoogleLogin.svg";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import SelectRole from "../components/SelectRole";
-import { get, post } from "../utils/api";
+import { get, post, put } from "../utils/api";
 
 const useStyles = makeStyles({
   textFieldBackgorund: {
@@ -23,6 +23,7 @@ const useStyles = makeStyles({
 
 function SocialLogin(props) {
   const classes = useStyles();
+  const context = useContext(AppContext);
   // const history = useHistory();
   const navigate = useNavigate();
   const [loginStage, setLoginStage] = useState("LOGIN");
@@ -45,21 +46,55 @@ function SocialLogin(props) {
       setLoginStage("ROLE");
     }
   }, []);
+  console.log(props);
+  let signupStage = props.signupStage;
+  console.log(signupStage);
+
   const socialGoogle = async (e) => {
-    const user = {
-      email: e,
-      password: GOOGLE_LOGIN,
-    };
-    const response = await post("/login", user);
-    if (response.code !== 200) {
-      setSocialSignUpModalShow(!socialSignUpModalShow);
-      return;
-      // add validation
+    if (signupStage === "NAME") {
+      const user = {
+        email: e,
+        password: GOOGLE_LOGIN,
+      };
+      const response = await post("/login", user);
+      console.log(response);
+      if (response.code !== 200) {
+        setSocialSignUpModalShow(!socialSignUpModalShow);
+        return;
+        // add validation
+      } else {
+        console.log(response);
+        const userSignUp = {
+          email: e,
+          password: GOOGLE_LOGIN,
+          role: props.role,
+          first_name: response.result.user.first_name,
+          last_name: response.result.user.last_name,
+          phone_number: response.result.user.phone_number,
+        };
+        console.log(userSignUp);
+        const res = await put("/userSocialSignup", userSignUp);
+        console.log(res);
+        console.log("login", res.result);
+        context.updateUserData(res.result);
+        props.onConfirm();
+      }
+    } else {
+      const user = {
+        email: e,
+        password: GOOGLE_LOGIN,
+      };
+      const response = await post("/login", user);
+      if (response.code !== 200) {
+        setSocialSignUpModalShow(!socialSignUpModalShow);
+        return;
+        // add validation
+      }
+      console.log("login", response.result);
+      updateUserData(response.result);
+      // save to app state / context
+      setLoginStage("ROLE");
     }
-    console.log("login", response.result);
-    updateUserData(response.result);
-    // save to app state / context
-    setLoginStage("ROLE");
   };
   const responseGoogle = (response) => {
     console.log("response", response);
