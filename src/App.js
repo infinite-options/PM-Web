@@ -47,6 +47,8 @@ import ManagerRepairsList from "./pages/ManagerRepairsList";
 import ManagerResidentAnnouncements from "./pages/ManagerResidentAnnoucements";
 import ManagerEmergency from "./pages/ManagerEmergency";
 import ManagerRepairDetail from "./pages/ManagerRepairDetail";
+import SignupRoles from "./pages/SignUpRoles";
+import SignupExisting from "./pages/SignUpExisitng";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -85,6 +87,8 @@ function App() {
             <Route index element={<Landing />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
+            <Route path="signupexisting" element={<SignupExisting />} />
+            <Route path="signuproles" element={<SignupRoles />} />
             <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerHome />} />
             <Route path="maintenance" element={<MaintenanceHome />} />
