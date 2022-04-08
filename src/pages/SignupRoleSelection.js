@@ -19,6 +19,7 @@ function SignupRoleSelection(props) {
     "Property Maintenance (Employee)": "MAINT_EMPLOYEE",
   };
   const availableRoles = Object.keys(roleCodes);
+  console.log(availableRoles, roleCodes);
   const addRole = (role) => {
     const roleCode = roleCodes[role];
     const index = userRoles.indexOf(roleCode);
@@ -84,7 +85,9 @@ function SignupRoleSelection(props) {
 
   const [errorMessage, setErrorMessage] = React.useState("");
   let signupStage = props.signupStage;
-  console.log(props.signupStage);
+  let signupRoles = props.signupRoles;
+  console.log(signupStage, signupRoles);
+
   return (
     <div>
       {signupStage !== "ADDROLES" ? (
@@ -132,21 +135,30 @@ function SignupRoleSelection(props) {
               You're currently signed up as {props.signupRoles}, what role do
               you want to add?
             </h5>
-            {availableRoles.map((role, i) => (
-              <div key={i} className="d-flex">
-                <Checkbox
-                  type="CIRCLE"
-                  checked={userRoles.indexOf(roleCodes[role]) !== -1}
-                  onClick={(checked) =>
-                    checked ? addRole(role) : removeRole(role)
-                  }
-                />
+            {availableRoles.map((role, i) => {
+              return signupRoles.includes(roleCodes[role]) ? null : (
+                <div key={i} className="d-flex">
+                  {console.log(
+                    role,
+                    signupRoles,
+                    roleCodes[role],
+                    signupRoles.includes(roleCodes[role])
+                  )}
+                  <Checkbox
+                    type="CIRCLE"
+                    checked={userRoles.indexOf(roleCodes[role]) !== -1}
+                    onClick={(checked) =>
+                      checked ? addRole(role) : removeRole(role)
+                    }
+                  />
 
-                <div className="flex-grow-1">
-                  <p className="d-inline-block text-left">{role}</p>
+                  <div className="flex-grow-1">
+                    <p className="d-inline-block text-left">{role}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
+
             <div
               className="text-center"
               style={errorMessage === "" ? hidden : {}}
