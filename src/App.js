@@ -47,7 +47,7 @@ import ManagerRepairsList from "./pages/ManagerRepairsList";
 import ManagerResidentAnnouncements from "./pages/ManagerResidentAnnoucements";
 import ManagerEmergency from "./pages/ManagerEmergency";
 import ManagerRepairDetail from "./pages/ManagerRepairDetail";
-import SignupExisting from "./pages/SignUpExisitng";
+import SignupExisting from "./pages/SignUpExisiting";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),

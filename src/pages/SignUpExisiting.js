@@ -16,10 +16,12 @@ function SignupExisting() {
   // const [userPhoneNumber, setUserPhoneNumber] = useState();
   const confirmRoles = (roles) => {
     setUserRoles(roles);
-    navigate("/profileInfo");
+    navigate("/profileInfo", {
+      state: { role: roles },
+    });
     // setSignupStage("NAME");
   };
-  console.log("userRoles", userRoles);
+  console.log("userRoles", userRoles, userRoles.join(","));
 
   console.log("signupRoles", signupRoles);
   console.log("email", email);

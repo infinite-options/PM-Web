@@ -64,20 +64,21 @@ function SocialLogin(props) {
         // add validation
       } else {
         console.log(response);
-        const userSignUp = {
-          email: e,
-          password: GOOGLE_LOGIN,
-          role: props.role,
-          first_name: response.result.user.first_name,
-          last_name: response.result.user.last_name,
-          phone_number: response.result.user.phone_number,
-        };
-        console.log(userSignUp);
-        const res = await put("/userSocialSignup", userSignUp);
-        console.log(res);
-        console.log("login", res.result);
-        context.updateUserData(res.result);
-        props.onConfirm();
+        // const userSignUp = {
+        //   email: e,
+        //   password: GOOGLE_LOGIN,
+        //   role: props.role,
+        //   first_name: response.result.user.first_name,
+        //   last_name: response.result.user.last_name,
+        //   phone_number: response.result.user.phone_number,
+        // };
+        // console.log(userSignUp);
+        // const res = await put("/userSocialSignup", userSignUp);
+        // console.log(res);
+        // console.log("login", res.result);
+        // context.updateUserData(res.result);
+        // props.onConfirm();
+        props.onConfirm(response.result.user.role, e);
       }
     } else {
       const user = {
@@ -107,7 +108,7 @@ function SocialLogin(props) {
       code: auth_code,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
-      //redirect_uri: "http://localhost:3000",
+      // redirect_uri: "http://localhost:3000",
       redirectUri: "https://io-propertymanagement.netlify.app",
       grant_type: "authorization_code",
     };
