@@ -17,8 +17,11 @@ function Landing() {
     navigate("/login");
   };
   const signup = () => {
+    navigate("/signup");
+  };
+  const signupexisting = () => {
     // navigate('/signup');
-    navigate("/signuproles");
+    navigate("/signupexisting");
   };
   return (
     <div className="d-flex flex-column justify-content-center h-100">
@@ -31,10 +34,20 @@ function Landing() {
           Login
         </Button>
         <p className="pt-5 pb-0">
-          <b>Don't have an account?</b>
+          <b>Create a new account?</b>
         </p>
         <Button variant="outline-primary" style={pillButton} onClick={signup}>
           Sign Up
+        </Button>
+        <p className="pt-5 pb-0">
+          <b>Modify an exisitng account?</b>
+        </p>
+        <Button
+          variant="outline-primary"
+          style={pillButton}
+          onClick={signupexisting}
+        >
+          Modify
         </Button>
       </Container>
     </div>

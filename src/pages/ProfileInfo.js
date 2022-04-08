@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useState, useContext, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import BusinessProfileInfo from "./BusinessProfileInfo";
 import OwnerProfileInfo from "./OwnerProfileInfo";
 import TenantProfileInfo from "./TenantProfileInfo";
@@ -12,10 +12,22 @@ import AppContext from "../AppContext";
 import { bolder } from "../utils/styles";
 
 function ProfileInfo() {
-  const [profileStage, setProfileStage] = React.useState("MANAGER");
-  const { userData, refresh } = React.useContext(AppContext);
+  const location = useLocation();
+  const role = location.state.role;
+  const [profileStage, setProfileStage] = useState([
+    "MANAGER",
+    "PM_EMPLOYEE",
+    "OWNER",
+    "TENANT",
+    "MAINTENANCE",
+    "MAINT_EMPLOYEE",
+    "ROLE",
+  ]);
+  const { userData, refresh } = useContext(AppContext);
+
   const { user } = userData;
-  const [autofillState, setAutofillState] = React.useState({
+
+  const [autofillState, setAutofillState] = useState({
     first_name: user.first_name,
     last_name: user.last_name,
     phone_number: user.phone_number,
@@ -29,56 +41,80 @@ function ProfileInfo() {
     ssn: "",
     ein_number: "",
   });
-  React.useEffect(() => {
+  useEffect(() => {
     if (profileStage === "ROLE") {
       refresh();
     }
     window.scrollTo(0, 0);
   }, [profileStage]);
-  console.log("profileStage", profileStage);
+  console.log("profileStage", profileStage, role);
   return (
     <div className="h-100 pb-5">
-      {profileStage === "MANAGER" ? (
+      {profileStage.includes("MANAGER") && role.includes("MANAGER") ? (
         <BusinessProfileInfo
           businessType="MANAGEMENT"
-          onConfirm={() => setProfileStage("PM_EMPLOYEE")}
+          onConfirm={() =>
+            setProfileStage([
+              "PM_EMPLOYEE",
+              "OWNER",
+              "TENANT",
+              "MAINTENANCE",
+              "MAINT_EMPLOYEE",
+              "ROLE",
+            ])
+          }
           autofillState={autofillState}
           setAutofillState={setAutofillState}
         />
-      ) : profileStage === "PM_EMPLOYEE" ? (
+      ) : profileStage.includes("PM_EMPLOYEE") &&
+        role.includes("PM_EMPLOYEE") ? (
         <EmployeeProfile
           businessType="MANAGEMENT"
-          onConfirm={() => setProfileStage("OWNER")}
+          onConfirm={() =>
+            setProfileStage([
+              "OWNER",
+              "TENANT",
+              "MAINTENANCE",
+              "MAINT_EMPLOYEE",
+              "ROLE",
+            ])
+          }
           autofillState={autofillState}
           setAutofillState={setAutofillState}
         />
-      ) : profileStage === "OWNER" ? (
+      ) : profileStage.includes("OWNER") && role.includes("OWNER") ? (
         <OwnerProfileInfo
-          onConfirm={() => setProfileStage("TENANT")}
+          onConfirm={() =>
+            setProfileStage(["TENANT", "MAINTENANCE", "MAINT_EMPLOYEE", "ROLE"])
+          }
           autofillState={autofillState}
           setAutofillState={setAutofillState}
         />
-      ) : profileStage === "TENANT" ? (
+      ) : profileStage.includes("TENANT") && role.includes("TENANT") ? (
         <TenantProfileInfo
-          onConfirm={() => setProfileStage("MAINTENANCE")}
+          onConfirm={() =>
+            setProfileStage(["MAINTENANCE", "MAINT_EMPLOYEE", "ROLE"])
+          }
           autofillState={autofillState}
           setAutofillState={setAutofillState}
         />
-      ) : profileStage === "MAINTENANCE" ? (
+      ) : profileStage.includes("MAINTENANCE") &&
+        role.includes("MAINTENANCE") ? (
         <BusinessProfileInfo
           businessType="MAINTENANCE"
-          onConfirm={() => setProfileStage("MAINT_EMPLOYEE")}
+          onConfirm={() => setProfileStage(["MAINT_EMPLOYEE", "ROLE"])}
           autofillState={autofillState}
           setAutofillState={setAutofillState}
         />
-      ) : profileStage === "MAINT_EMPLOYEE" ? (
+      ) : profileStage.includes("MAINTENANCE") &&
+        role.includes("MAINT_EMPLOYEE") ? (
         <EmployeeProfile
           businessType="MAINTENANCE"
-          onConfirm={() => setProfileStage("ROLE")}
+          onConfirm={() => setProfileStage(["ROLE"])}
           autofillState={autofillState}
           setAutofillState={setAutofillState}
         />
-      ) : profileStage === "ROLE" ? (
+      ) : profileStage.includes("ROLE") ? (
         <div className="h-100 d-flex flex-column pb-5">
           <Header title="Sign Up" />
           <div className="text-center mb-5">

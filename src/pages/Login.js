@@ -60,20 +60,21 @@ function Login(props) {
       // add validation
     } else {
       console.log(response);
-      const userSignUp = {
-        first_name: response.result.user.first_name,
-        last_name: response.result.user.last_name,
-        phone_number: response.result.user.phone_number,
-        email: email,
-        password: password,
-        role: props.role,
-      };
-      console.log(userSignUp);
-      const res = await put("/users", userSignUp);
-      console.log(res);
-      console.log("login", res.result);
-      context.updateUserData(res.result);
-      props.onConfirm();
+      // const userSignUp = {
+      //   first_name: response.result.user.first_name,
+      //   last_name: response.result.user.last_name,
+      //   phone_number: response.result.user.phone_number,
+      //   email: email,
+      //   password: password,
+      //   role: props.role,
+      // };
+      // console.log(userSignUp);
+      // const res = await put("/users", userSignUp);
+      // console.log(res);
+      // console.log("login", res.result);
+      // context.updateUserData(res.result);
+      // props.onConfirm();
+      props.onConfirm(response.result.user.role, email);
     }
 
     // save to app state / context
@@ -157,8 +158,8 @@ function Login(props) {
               </p>
               <Button
                 variant="outline-primary"
-                onClick={() => navigate("/signuproles")}
-                // onClick={() => navigate("/signup")}
+                // onClick={() => navigate("/signuproles")}
+                onClick={() => navigate("/signup")}
                 style={pillButton}
                 className="mb-4"
               >
