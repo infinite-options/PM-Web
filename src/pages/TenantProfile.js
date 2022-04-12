@@ -260,7 +260,7 @@ function TenantProfile(props) {
           </Form.Label>
           <Form.Control
             style={squareForm}
-            placeholder="First"
+            placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
@@ -271,7 +271,7 @@ function TenantProfile(props) {
           </Form.Label>
           <Form.Control
             style={squareForm}
-            placeholder="Last"
+            placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
