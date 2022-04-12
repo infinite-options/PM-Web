@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import AppContext from '../AppContext';
 import OwnerProperties from './OwnerProperties';
 import OwnerDashboard from './OwnerDashboard';
+import OwnerProfile from './OwnerProfile';
 
 function OwnerHome() {
   const navigate = useNavigate();
@@ -57,6 +58,19 @@ function OwnerHome() {
           </div>
         ) : ''}
       </div>
+      <div
+            className="flex-grow-1"
+            style={{ height: "90%", overflow: "auto" }}
+          >
+            {footerTab === "PROFILE" ? (
+              <OwnerProfile
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
+            ) : (
+              ""
+            )}
+          </div>
       {showFooter ? (
         <Footer tab={footerTab} setTab={setTab}/>
       ) : ''}

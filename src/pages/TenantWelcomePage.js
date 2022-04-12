@@ -158,7 +158,7 @@ function TenantWelcomePage(props) {
 
   const goToReviewPropertyLease = (application) => {
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
-      state: { application_uid: application.application_uid },
+      state: { application_uid: application.application_uid, application_status_1: application.application_status },
     });
   };
 
@@ -299,15 +299,7 @@ function TenantWelcomePage(props) {
                             <h6 style={mediumBold}>
                               {application.application_status}
                             </h6>
-                            {/* {application.application_status === "ACCEPTED" ?
-                                                     ( <h6>
-                                                        {application.application_status}
-                                                      </h6>) 
-                                                      :
-                                                    ( <h6 style={mediumBold}>
-                                                      {application.application_status}
-                                                      </h6>) 
-                                                  } */}
+                            
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />

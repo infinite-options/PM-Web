@@ -398,7 +398,7 @@ function TenantProfileInfo(props) {
                 {allFrequency.map((freq, i) => (
                   <Dropdown.Item
                     onClick={() => setFrequency(freq)}
-                    // href="#/action-1"
+                    href="#/action-1"
                   >
                     {" "}
                     {freq}{" "}
