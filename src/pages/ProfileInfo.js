@@ -42,7 +42,7 @@ function ProfileInfo() {
     ein_number: "",
   });
   useEffect(() => {
-    if (profileStage === "ROLE") {
+    if (profileStage.includes("ROLE")) {
       refresh();
     }
     window.scrollTo(0, 0);
