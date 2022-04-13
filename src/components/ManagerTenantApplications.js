@@ -156,7 +156,8 @@ function ManagerTenantApplications(props) {
                                                 <Col xs={2} className="mt-2">
                                                     <Row>
                                                         <Checkbox type="BOX" checked={application.application_selected}
-                                                                  onClick={() => toggleApplications(application)}/>
+                                                                  onClick={() => toggleApplications(application)}
+                                                                  hidden={forwardedApplications.length > 0}/>
                                                     </Row>
                                                 </Col>
                                                 <Col>

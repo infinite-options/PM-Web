@@ -73,7 +73,7 @@ function ManagerOverview(props) {
         console.log(properties_unique)
         setProperties(properties_unique)
 
-        await getAlerts(properties_unique)
+        // await getAlerts(properties_unique)
     }
 
     React.useEffect(fetchProperties, [access_token]);
@@ -82,16 +82,16 @@ function ManagerOverview(props) {
     const property_count = properties.length
 
 
-    const getAlerts = async (properties_unique) => {
-        const property = properties_unique[0]
-        const repairs_response = await get(`/maintenanceRequests`, access_token);
-        const repairs = repairs_response.result.filter(item => item.property_uid === property.property_uid);
-        const applications_response = await get(`/applications?property_uid=${property.property_uid}`);
-        const applications = applications_response.result.map(application => ({...application, application_selected: false}))
-        const count = repairs.length + applications.length
-
-        setAlerts({repairs: repairs, applications: applications, count: count})
-    }
+    // const getAlerts = async (properties_unique) => {
+    //     const property = properties_unique[0]
+    //     const repairs_response = await get(`/maintenanceRequests`, access_token);
+    //     const repairs = repairs_response.result.filter(item => item.property_uid === property.property_uid);
+    //     const applications_response = await get(`/applications?property_uid=${property.property_uid}`);
+    //     const applications = applications_response.result.map(application => ({...application, application_selected: false}))
+    //     const count = repairs.length + applications.length
+    //
+    //     setAlerts({repairs: repairs, applications: applications, count: count})
+    // }
 
 
     return (
