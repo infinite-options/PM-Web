@@ -103,7 +103,11 @@ function Login(props) {
               {/* <img src={AppleLogin} alt="Apple Login" className="m-1" />
               <img src={FacebookLogin} alt="Facebook Login" className="m-1" />
               <img src={GoogleLogin} alt="Google Login" className="m-1" /> */}
-              <SocialLogin />
+              <SocialLogin
+                signupStage={props.signupStage}
+                loginStage={loginStage}
+                setLoginStage={setLoginStage}
+              />
             </div>
             <hr className="mt-4 mb-1" />
             <div className="text-center mb-4">
@@ -168,12 +172,12 @@ function Login(props) {
             </div>
           </div>
         </div>
-      ) : loginStage === "ROLE" ? (
+      ) : loginStage === "ROLE" && props.signupStage !== "NAME" ? (
         <div className="d-flex flex-column h-100 pb-5">
           <Header title="Login" />
           <SelectRole />
         </div>
-      ) : (
+      ) : loginStage === "LOGIN" && props.signupStage === "NAME" ? (
         <div className="d-flex flex-column h-100">
           <Header
             title="Login"
@@ -235,6 +239,8 @@ function Login(props) {
             </div>
           </Container>
         </div>
+      ) : (
+        " "
       )}
     </div>
   );

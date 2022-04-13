@@ -64,20 +64,6 @@ function SocialLogin(props) {
         // add validation
       } else {
         console.log(response);
-        // const userSignUp = {
-        //   email: e,
-        //   password: GOOGLE_LOGIN,
-        //   role: props.role,
-        //   first_name: response.result.user.first_name,
-        //   last_name: response.result.user.last_name,
-        //   phone_number: response.result.user.phone_number,
-        // };
-        // console.log(userSignUp);
-        // const res = await put("/userSocialSignup", userSignUp);
-        // console.log(res);
-        // console.log("login", res.result);
-        // context.updateUserData(res.result);
-        // props.onConfirm();
         props.onConfirm(response.result.user.role, e);
       }
     } else {
@@ -95,6 +81,7 @@ function SocialLogin(props) {
       updateUserData(response.result);
       // save to app state / context
       setLoginStage("ROLE");
+      props.setLoginStage("ROLE");
     }
   };
   const responseGoogle = (response) => {
