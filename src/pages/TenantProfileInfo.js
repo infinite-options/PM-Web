@@ -17,8 +17,8 @@ import AddressForm from "../components/AddressForm";
 import { get, post } from "../utils/api";
 import ArrowUp from "../icons/ArrowUp.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
-import EditIcon from '../icons/EditIcon.svg';
-import DeleteIcon from '../icons/DeleteIcon.svg';
+import EditIcon from "../icons/EditIcon.svg";
+import DeleteIcon from "../icons/DeleteIcon.svg";
 import {
   squareForm,
   pillButton,
@@ -33,6 +33,7 @@ import {
 function TenantProfileInfo(props) {
   const { userData } = React.useContext(AppContext);
   const { access_token, user } = userData;
+  console.log("user", user);
   const navigate = useNavigate();
   const { autofillState, setAutofillState } = props;
   const [type, setType] = React.useState("Apartment");
@@ -99,16 +100,16 @@ function TenantProfileInfo(props) {
     const file = e.target.files[0];
     const newFile = {
       name: file.name,
-      description: '',
-      file: file
-    }
+      description: "",
+      file: file,
+    };
     setNewFile(newFile);
-  }
+  };
   const updateNewFile = (field, value) => {
-    const newFileCopy = {...newFile};
+    const newFileCopy = { ...newFile };
     newFileCopy[field] = value;
     setNewFile(newFileCopy);
-  }
+  };
   const cancelEdit = () => {
     setNewFile(null);
     if (editingDoc !== null) {
@@ -117,26 +118,26 @@ function TenantProfileInfo(props) {
       setFiles(newFiles);
     }
     setEditingDoc(null);
-  }
+  };
   const editDocument = (i) => {
     const newFiles = [...files];
     const file = newFiles.splice(i, 1)[0];
     setFiles(newFiles);
     setEditingDoc(file);
-    setNewFile({...file});
-  }
+    setNewFile({ ...file });
+  };
   const saveNewFile = (e) => {
     // copied from addFile, change e.target.files to state.newFile
     const newFiles = [...files];
     newFiles.push(newFile);
     setFiles(newFiles);
     setNewFile(null);
-  }
+  };
   const deleteDocument = (i) => {
     const newFiles = [...files];
     newFiles.splice(i, 1);
     setFiles(newFiles);
-  }
+  };
 
   React.useEffect(() => {
     if (access_token === null) {
@@ -166,9 +167,9 @@ function TenantProfileInfo(props) {
       currentAddressState[0].city === "" ||
       currentAddressState[0].state === defaultState ||
       currentAddressState[0].zip === "";
-      // currentAddressState[0].lease_start === "" ||
-      // currentAddressState[0].lease_end === "" ||
-      // currentAddressState[0].rent === "";
+    // currentAddressState[0].lease_start === "" ||
+    // currentAddressState[0].lease_end === "" ||
+    // currentAddressState[0].rent === "";
 
     previousAddressState[0].state = selectedPrevState;
 
@@ -206,15 +207,17 @@ function TenantProfileInfo(props) {
       drivers_license_number: dlNumber,
       drivers_license_state: selectedDlState,
       current_address: JSON.stringify(currentAddressState[0]),
-      previous_address: usePreviousAddress ? JSON.stringify(previousAddressState[0]) : null
-    }
+      previous_address: usePreviousAddress
+        ? JSON.stringify(previousAddressState[0])
+        : null,
+    };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
       tenantProfile[key] = files[i].file;
       delete files[i].file;
     }
     tenantProfile.documents = JSON.stringify(files);
-    await post('/tenantProfileInfo', tenantProfile, access_token, files);
+    await post("/tenantProfileInfo", tenantProfile, access_token, files);
     updateAutofillState(tenantProfile);
     props.onConfirm();
   };
@@ -335,7 +338,7 @@ function TenantProfileInfo(props) {
     ) : (
       ""
     );
-    
+
   return (
     <div className="pb-4">
       <Header title="Tenant Profile" />
@@ -363,64 +366,47 @@ function TenantProfileInfo(props) {
           />
         </Form.Group>
         <Row className="mx-0 my-0">
-            <Col className="px-0">
-                <Form.Group className="mx-2 my-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Annual Salary {salary === "" ? required : ""}
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="75000"
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
-                    />
-                </Form.Group>
-            </Col>
+          <Col className="px-0">
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Annual Salary {salary === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="75000"
+                value={salary}
+                onChange={(e) => setSalary(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
 
-            <Col
-                className="px-0"
-                onClick={(e) => {
-
-                  handleClick(e);
-                }}
+          <Col
+            className="px-0"
+            onClick={(e) => {
+              handleClick(e);
+            }}
+          >
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Frequency
+              </Form.Label>
+              <DropdownButton
+                variant="light"
+                id="dropdown-basic-button"
+                title={frequency}
               >
-                <Form.Group className="mx-2 my-3">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Frequency
-                  </Form.Label>
-                  {/* <div  className="d-flex justify-content-between" style={{ border: "1px solid #777777", padding: "6px"}}>
-                    {frequency}
-                    <img src={expandFrequency ? ArrowUp : ArrowDown} alt="Expand" />
-                  </div> */}
-                  <DropdownButton variant="light" id="dropdown-basic-button" title={frequency} >
-                     {allFrequency.map((freq, i) => (
-                     <Dropdown.Item onClick={() => setFrequency(freq)} href="#/action-1" > {freq} </Dropdown.Item>
-                     ))}
-                 </DropdownButton>
-                </Form.Group>
-            </Col>
-            {/* <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorReference="anchorPosition"
-              anchorPosition={{ top: 500, left: 300 }}
-              anchorOrigin={{
-                vertical: "center",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              style={{
-                backgroundClip: "context-box",
-                borderRadius: "20px",
-              }}
-            >
-              {frequencylist()}
-            </Popover> */}
+                {allFrequency.map((freq, i) => (
+                  <Dropdown.Item
+                    onClick={() => setFrequency(freq)}
+                    href="#/action-1"
+                  >
+                    {" "}
+                    {freq}{" "}
+                  </Dropdown.Item>
+                ))}
+              </DropdownButton>
+            </Form.Group>
+          </Col>
         </Row>
 
         <Form.Group className="mx-2 my-3">
@@ -542,64 +528,98 @@ function TenantProfileInfo(props) {
           ""
         )}
         {/* ===============================< Uploading Tenant Document >=================================================== */}
-        <div className='mb-4'>
+        <div className="mb-4">
           <h5 style={mediumBold}>Tenant Documents</h5>
           {files.map((file, i) => (
             <div key={i}>
-              <div className='d-flex justify-content-between align-items-end'>
+              <div className="d-flex justify-content-between align-items-end">
                 <div>
-                  <h6 style={mediumBold}>
-                    {file.name}
-                  </h6>
-                  <p style={small} className='m-0'>
+                  <h6 style={mediumBold}>{file.name}</h6>
+                  <p style={small} className="m-0">
                     {file.description}
                   </p>
                 </div>
                 <div>
-                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
-                    onClick={() => editDocument(i)}/>
-                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
-                    onClick={() => deleteDocument(i)}/>
-                  <a href={file.link} target='_blank'>
-                    <img src={File}/>
+                  <img
+                    src={EditIcon}
+                    alt="Edit"
+                    className="px-1 mx-2"
+                    onClick={() => editDocument(i)}
+                  />
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete"
+                    className="px-1 mx-2"
+                    onClick={() => deleteDocument(i)}
+                  />
+                  <a href={file.link} target="_blank">
+                    <img src={File} />
                   </a>
                 </div>
               </div>
-              <hr style={{opacity: 1}}/>
+              <hr style={{ opacity: 1 }} />
             </div>
           ))}
           {newFile !== null ? (
             <div>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>
+                <Form.Label as="h6" className="mb-0 ms-2">
                   Document Name
                 </Form.Label>
-                <Form.Control style={squareForm} value={newFile.name} placeholder='Name'
-                  onChange={(e) => updateNewFile('name', e.target.value)}/>
+                <Form.Control
+                  style={squareForm}
+                  value={newFile.name}
+                  placeholder="Name"
+                  onChange={(e) => updateNewFile("name", e.target.value)}
+                />
               </Form.Group>
               <Form.Group>
-                <Form.Label as='h6' className='mb-0 ms-2'>
+                <Form.Label as="h6" className="mb-0 ms-2">
                   Description
                 </Form.Label>
-                <Form.Control style={squareForm} value={newFile.description} placeholder='Description'
-                  onChange={(e) => updateNewFile('description', e.target.value)}/>
+                <Form.Control
+                  style={squareForm}
+                  value={newFile.description}
+                  placeholder="Description"
+                  onChange={(e) => updateNewFile("description", e.target.value)}
+                />
               </Form.Group>
-              <div className='text-center my-3'>
-                <Button variant='outline-primary' style={smallPillButton} as='p'
-                  onClick={cancelEdit} className='mx-2'>
+              <div className="text-center my-3">
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                  onClick={cancelEdit}
+                  className="mx-2"
+                >
                   Cancel
                 </Button>
-                <Button variant='outline-primary' style={smallPillButton} as='p'
-                  onClick={saveNewFile} className='mx-2'>
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                  onClick={saveNewFile}
+                  className="mx-2"
+                >
                   Save Document
                 </Button>
               </div>
             </div>
           ) : (
             <div>
-              <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
-              <label htmlFor='file'>
-                <Button variant='outline-primary' style={smallPillButton} as='p'>
+              <input
+                id="file"
+                type="file"
+                accept="image/*,.pdf"
+                onChange={addFile}
+                className="d-none"
+              />
+              <label htmlFor="file">
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                >
                   Add Document
                 </Button>
               </label>

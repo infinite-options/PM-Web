@@ -4,6 +4,7 @@ import AppContext from "../AppContext";
 import TenantDashboard from "./TenantDashboard";
 import TenantProfile from "./TenantProfile";
 import TenantAvailableProperties from "./TenantAvailableProperties";
+import SwitchRole from "../components/SwitchRole";
 import { get } from "../utils/api";
 import TenantWelcomePage from "./TenantWelcomePage";
 
@@ -15,7 +16,7 @@ function TenantHome() {
   const [properties, setProperties] = useState([]);
   const { access_token } = userData;
   const [isLoading, setIsLoading] = useState(true);
- 
+
   useEffect(() => {
     const fetchProfile = async () => {
       // const response = await get("/tenantProperties", access_token);
@@ -36,7 +37,7 @@ function TenantHome() {
 
   useEffect(() => {
     const fetchUserProperties = async () => {
-       const response = await get("/tenantProperties", access_token);
+      const response = await get("/tenantProperties", access_token);
 
       console.log(response);
       setIsLoading(false);
@@ -54,26 +55,53 @@ function TenantHome() {
 
   return (
     <div className="d-flex flex-column h-100">
-    {isLoading === false ?
-      (<div>
+      {isLoading === false ? (
+        <div>
           <div className="flex-grow-1">
-            {footerTab === "DASHBOARD" &&  (
-            properties  ? (
-            <TenantDashboard setShowFooter={setShowFooter} profile={profile} setProfile={setProfile}/>
-          ) : (
-            // <TenantAvailableProperties hideBackButton="true"/>
-             <TenantWelcomePage setShowFooter={setShowFooter} profile={profile} setProfile={setProfile} />
-          ))}
+            {footerTab === "DASHBOARD" &&
+              (properties ? (
+                <TenantDashboard
+                  setShowFooter={setShowFooter}
+                  profile={profile}
+                  setProfile={setProfile}
+                />
+              ) : (
+                // <TenantAvailableProperties hideBackButton="true"/>
+                <TenantWelcomePage
+                  setShowFooter={setShowFooter}
+                  profile={profile}
+                  setProfile={setProfile}
+                />
+              ))}
           </div>
-          <div className="flex-grow-1" style={{height:"90%",overflow:"auto"}} >
+          <div
+            className="flex-grow-1"
+            style={{ height: "90%", overflow: "auto" }}
+          >
             {footerTab === "PROFILE" ? (
-              <TenantProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
+              <TenantProfile
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
+            ) : (
+              ""
+            )}
+          </div>
+          <div
+            className="flex-grow-1"
+            style={{ height: "90%", overflow: "auto" }}
+          >
+            {footerTab === "ROLES" ? (
+              <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
             ) : (
               ""
             )}
           </div>
           {showFooter ? <Footer tab={footerTab} setTab={setFooterTab} /> : ""}
-      </div>) : ("") }
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

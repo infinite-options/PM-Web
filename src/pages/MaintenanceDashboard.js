@@ -33,15 +33,16 @@ function MaintenanceDashboard(props) {
   let access_token = userData.access_token;
 
   const fetchProfile = async () => {
-    let business_uid = '';
+    let business_uid = "";
     for (const business of userData.user.businesses) {
-      if (business.business_type === 'MAINTENANCE') {
+      if (business.business_type === "MAINTENANCE") {
         business_uid = business.business_uid;
+        console.log(business_uid);
         break;
       }
     }
-    if (business_uid === '') {
-      console.log('no maintenance business found');
+    if (business_uid === "") {
+      console.log("no maintenance business found");
     }
     const response = await get(`/businesses?business_uid=${business_uid}`);
     console.log(response);
@@ -114,7 +115,9 @@ function MaintenanceDashboard(props) {
               <img src={Message} />
             </Col>
           </Row>
-        ) : ''}
+        ) : (
+          ""
+        )}
 
         <Row
           style={{

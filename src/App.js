@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import AppContext from "./AppContext";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
@@ -48,6 +47,7 @@ import ManagerRepairsList from "./pages/ManagerRepairsList";
 import ManagerResidentAnnouncements from "./pages/ManagerResidentAnnoucements";
 import ManagerEmergency from "./pages/ManagerEmergency";
 import ManagerRepairDetail from "./pages/ManagerRepairDetail";
+import SignupExisting from "./pages/SignUpExisiting";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -86,30 +86,55 @@ function App() {
             <Route index element={<Landing />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
+            <Route path="signupexisting" element={<SignupExisting />} />
             <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerHome />} />
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
-            <Route path="detailQuoteRequest/:quote_id" element={<DetailQuoteRequest />} />
+            <Route
+              path="detailQuoteRequest/:quote_id"
+              element={<DetailQuoteRequest />}
+            />
             <Route
               path="maintenanceScheduleRepair"
               element={<MaintenanceScheduleRepair />}
             />
             <Route path="quotesAccepted" element={<QuotesAccepted />} />
-            <Route path="quotesAccepted/:quote_id" element={<QuotesAccepted />} />
+            <Route
+              path="quotesAccepted/:quote_id"
+              element={<QuotesAccepted />}
+            />
             <Route path="jobsCompleted" element={<JobsCompleted />} />
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
 
             <Route path="tenant" element={<TenantHome />} />
-            <Route path="tenantAvailableProperties" element={<TenantAvailableProperties/>} />
-            <Route path="uploadTenantDocuments" element={<TenantDocumentUpload/>} />
-            <Route path="applyToProperty" element={<ApplyToProperty/>} />
-            <Route path="reviewTenantProfile/:property_uid" element={<ReviewTenantProfile/>} />
-            <Route path="tenantPropertyView/:property_uid" element={<TenantPropertyView/>} />
-            <Route path="reviewPropertyLease/:property_uid" element={<ReviewPropertyLease/>} />
-            {/*<Route path="leaseApplicationStatus" element={<LeaseApplicationStatus />} />*/}
+            <Route
+              path="tenantAvailableProperties"
+              element={<TenantAvailableProperties />}
+            />
+            <Route
+              path="uploadTenantDocuments"
+              element={<TenantDocumentUpload />}
+            />
+            <Route path="applyToProperty" element={<ApplyToProperty />} />
+            <Route
+              path="reviewTenantProfile/:property_uid"
+              element={<ReviewTenantProfile />}
+            />
+            <Route
+              path="tenantPropertyView/:property_uid"
+              element={<TenantPropertyView />}
+            />
+            <Route
+              path="reviewPropertyLease/:property_uid"
+              element={<ReviewPropertyLease />}
+            />
+            <Route
+              path="leaseApplicationStatus"
+              element={<LeaseApplicationStatus />}
+            />
             <Route path="manager" element={<ManagerHome />} />
             <Route
               path="/:property_uid/repairRequest"
@@ -160,14 +185,18 @@ function App() {
               path="manager-properties/:mp_id/repairs"
               element={<ManagerRepairsList />}
             />
-            <Route path="manager-properties/:mp_id/repairs/:rr_id"
-                   element={<ManagerRepairDetail />}
+            <Route
+              path="manager-properties/:mp_id/repairs/:rr_id"
+              element={<ManagerRepairDetail />}
             />
             <Route
-                path="manager-properties/:mp_id/resident-announcements"
-                element={<ManagerResidentAnnouncements />}
+              path="manager-properties/:mp_id/resident-announcements"
+              element={<ManagerResidentAnnouncements />}
             />
-            <Route path="manager-properties/:mp_id/emergency" element={<ManagerEmergency />} />
+            <Route
+              path="manager-properties/:mp_id/emergency"
+              element={<ManagerEmergency />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
