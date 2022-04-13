@@ -131,10 +131,10 @@ function App() {
               path="reviewPropertyLease/:property_uid"
               element={<ReviewPropertyLease />}
             />
-            <Route
-              path="leaseApplicationStatus"
-              element={<LeaseApplicationStatus />}
-            />
+            {/*<Route*/}
+            {/*  path="leaseApplicationStatus"*/}
+            {/*  element={<LeaseApplicationStatus />}*/}
+            {/*/>*/}
             <Route path="manager" element={<ManagerHome />} />
             <Route
               path="/:property_uid/repairRequest"
