@@ -17,6 +17,7 @@ function ManagerOverview(props) {
     const {access_token, user} = userData;
 
     const [properties, setProperties] = useState([]);
+    const [alerts, setAlerts] = useState({repairs: [], applications: [], count: 0})
 
     React.useEffect(() => {
         if (userData.access_token === null) {
@@ -72,12 +73,25 @@ function ManagerOverview(props) {
         console.log(properties_unique)
         setProperties(properties_unique)
 
+        // await getAlerts(properties_unique)
     }
 
     React.useEffect(fetchProperties, [access_token]);
 
     const unique_clients =  [...new Set(properties.map(item => item.owner_id))].length
     const property_count = properties.length
+
+
+    // const getAlerts = async (properties_unique) => {
+    //     const property = properties_unique[0]
+    //     const repairs_response = await get(`/maintenanceRequests`, access_token);
+    //     const repairs = repairs_response.result.filter(item => item.property_uid === property.property_uid);
+    //     const applications_response = await get(`/applications?property_uid=${property.property_uid}`);
+    //     const applications = applications_response.result.map(application => ({...application, application_selected: false}))
+    //     const count = repairs.length + applications.length
+    //
+    //     setAlerts({repairs: repairs, applications: applications, count: count})
+    // }
 
 
     return (
@@ -108,6 +122,22 @@ function ManagerOverview(props) {
                     <h6 style={bolder} className='mb-1'>MTD Maintenance Cost</h6>
                     <h6 style={{...bolder, ...red}} className='mb-1'>$9,000</h6>
                     <hr style={{opacity: 1}} className='mt-1 mb-3'/>
+
+                    {/*Sample Notifications for the first property*/}
+                    {/*{*/}
+                    {/*    alerts.count === 0 ? "No New Alerts" :*/}
+                    {/*        <div>*/}
+                    {/*            You have {alerts.count} new alerts*/}
+                    {/*            {alerts.applications.length > 0 && alerts.applications.map((application, i) => (*/}
+                    {/*                <div key={i}>*/}
+                    {/*                    1 {application.application_status} tenant application from {application.tenant_first_name}*/}
+                    {/*                </div>))}*/}
+                    {/*            {alerts.repairs.length > 0 && alerts.repairs.map((repair, i) => (*/}
+                    {/*                <div key={i}>*/}
+                    {/*                    1 {repair.priority} priority repair with status "{repair.request_status}"*/}
+                    {/*                </div>))}*/}
+                    {/*        </div>*/}
+                    {/*}*/}
 
                     <Row className='px-2'>
                         <Col onClick={() => navigate('/manager-properties')}

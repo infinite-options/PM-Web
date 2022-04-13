@@ -27,12 +27,13 @@ function ManagerRepairsList(props) {
             return;
         }
 
-        const response = await get(`/maintenanceRequests`, access_token);
+        const response = await get(`/maintenanceRequests?property_uid=${property.property_uid}`, access_token);
         if (response.msg === 'Token has expired') {
             refresh();
             return;
         }
 
+        console.log(response.result)
         const repairs = response.result.filter(item => item.property_uid === property.property_uid);
         // console.log(repairs)
         setRepairs(repairs);

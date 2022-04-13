@@ -94,7 +94,7 @@ function ManagerProperties(props) {
 
                                 {property.rental_status === "ACTIVE" ? <p style={greenPill} className='mb-0'>Rented</p>
                                     : property.tenant_id === null ? <p style={orangePill} className='mb-0'>Not Rented</p>:
-                                            <p style={bluePill} className='mb-0'>Status Unknown</p>}
+                                            <p style={bluePill} className='mb-0'>Processing</p>}
                             </div>
                             <p style={gray} className='mt-2 mb-0'>
                                 {property.address}{property.unit !== '' ? ' '+property.unit : ''}, {property.city}, {property.state} <br/>

@@ -18,7 +18,7 @@ function ManagerDocs(props) {
     const newProperty = {
       property_uid: property.property_uid,
       manager_id: business_uid,
-      // management_status: "FORWARDED"
+      management_status: "FORWARDED"
     }
     for (let i = -1; i < files.length-1; i++) {
       let key = `img_${i}`;
