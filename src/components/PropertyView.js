@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import {
   tileImg,
   gray,
+  bPill,
   orangePill,
   greenPill,
   mediumBold,
@@ -25,6 +26,7 @@ import LeaseDocs from "./LeaseDocs";
 import ManagementContract from "./ManagementContract";
 import TenantAgreement from "./TenantAgreement";
 import { get, put } from "../utils/api";
+import File from "../icons/File.svg";
 
 function PropertyView(props) {
   const { property_uid, back, reload, hideEdit } = props;
@@ -34,6 +36,10 @@ function PropertyView(props) {
   const fetchProperty = async () => {
     const response = await get(`/propertyInfo?property_uid=${property_uid}`);
     setProperty(response.result[0]);
+    const res = await get(
+      `/contracts?property_uid=${response.result[0].property_uid}`
+    );
+    setContracts(res.result);
   };
   React.useState(() => {
     fetchProperty();
@@ -42,6 +48,7 @@ function PropertyView(props) {
   const [currentImg, setCurrentImg] = React.useState(0);
   const [expandDetails, setExpandDetails] = React.useState(false);
   const [editProperty, setEditProperty] = React.useState(false);
+  const [contracts, setContracts] = React.useState([]);
   const [showCreateExpense, setShowCreateExpense] = React.useState(false);
   const [showCreateTax, setShowCreateTax] = React.useState(false);
   const [showCreateMortgage, setShowCreateMortgage] = React.useState(false);
@@ -52,7 +59,12 @@ function PropertyView(props) {
   const [showTenantAgreement, setShowTenantAgreement] = React.useState(false);
   const [selectedContract, setSelectedContract] = React.useState(null);
   const [selectedAgreement, setSelectedAgreement] = React.useState(null);
-
+  // React.useEffect(async () => {
+  //   const response = await get(
+  //     `/contracts?property_uid=${property.property_uid}`
+  //   );
+  //   setContracts(response.result);
+  // }, []);
   const headerBack = () => {
     editProperty
       ? setEditProperty(false)
@@ -249,7 +261,11 @@ function PropertyView(props) {
               {property.city}, {property.state} {property.zip}
             </p>
             <div className="d-flex">
-              {property.rental_uid !== null ? (
+              {property.management_status !== "ACCEPTED" ? (
+                <p style={orangePill} className="mb-0">
+                  New
+                </p>
+              ) : property.rental_uid !== null ? (
                 <p style={greenPill} className="mb-0">
                   Rented
                 </p>
@@ -391,14 +407,17 @@ function PropertyView(props) {
                       {property.management_status}
                     </p>
                   </div>
-                  <div>
-                    <a href={`tel:${property.manager_phone_number}`}>
-                      <img src={Phone} alt="Phone" style={mediumImg} />
-                    </a>
-                    <a href={`mailto:${property.manager_email}`}>
-                      <img src={Message} alt="Message" style={mediumImg} />
-                    </a>
-                  </div>
+                </div>
+                <div className="d-flex flex-column gap-2">
+                  {contracts.map((contract, i) => (
+                    <div key={i} onClick={() => selectContract(contract)}>
+                      <div className="d-flex justify-content-between align-items-end">
+                        <h6 style={mediumBold}>Contract {i + 1}</h6>
+                        <img src={File} />
+                      </div>
+                      {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
+                    </div>
+                  ))}
                 </div>
                 <Row className="mt-4">
                   <Col

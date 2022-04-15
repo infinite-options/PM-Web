@@ -17,6 +17,7 @@ import {
   smallImg,
   xSmall,
   hidden,
+  bPill,
 } from "../utils/styles";
 
 function OwnerProperties(props) {
@@ -84,7 +85,11 @@ function OwnerProperties(props) {
                 <h5 className="mb-0" style={{ fontWeight: "600" }}>
                   ${property.listed_rent}/mo
                 </h5>
-                {property.rental_uid !== null ? (
+                {property.management_status !== "ACCEPTED" ? (
+                  <p style={orangePill} className="mb-0">
+                    New
+                  </p>
+                ) : property.rental_uid !== null ? (
                   <p style={greenPill} className="mb-0">
                     Rented
                   </p>
