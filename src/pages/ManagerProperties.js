@@ -41,8 +41,8 @@ function ManagerProperties(props) {
             return;
         }
 
-        const properties = response.result
-        // setProperties(properties);
+        // const properties = response.result
+        const properties = response.result.filter(property => property.management_status !== "REJECTED")
 
         const properties_unique = []
         const pids = new Set()
@@ -93,8 +93,10 @@ function ManagerProperties(props) {
                                 </h5>
 
                                 {property.rental_status === "ACTIVE" ? <p style={greenPill} className='mb-0'>Rented</p>
-                                    : property.tenant_id === null ? <p style={orangePill} className='mb-0'>Not Rented</p>:
-                                            <p style={bluePill} className='mb-0'>Processing</p>}
+                                    : property.rental_status === "PROCESSING" ? <p style={bluePill} className='mb-0'>Processing</p>
+                                    : property.management_status === "FORWARDED" ? <p style={orangePill} className='mb-0'>New</p>
+                                    : property.management_status === "SENT" ? <p style={orangePill} className='mb-0'>Processing</p>
+                                                : <p style={orangePill} className='mb-0'>Not Rented</p>}
                             </div>
                             <p style={gray} className='mt-2 mb-0'>
                                 {property.address}{property.unit !== '' ? ' '+property.unit : ''}, {property.city}, {property.state} <br/>

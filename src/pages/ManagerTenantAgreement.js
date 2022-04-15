@@ -2,12 +2,12 @@ import React from 'react';
 import {Container, Row, Col, Form, Button} from 'react-bootstrap';
 import Header from "../components/Header";
 import File from '../icons/File.svg';
-import ManagerFees from "../components/ManagerFees";
 import BusinessContact from "../components/BusinessContact";
 import {put, post} from '../utils/api';
 import {small, hidden, red, squareForm, mediumBold, smallPillButton, bluePillButton} from '../utils/styles';
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
+import ManagerTenantRentPayments from "../components/ManagerTenantRentPayments";
 
 function ManagerTenantAgreement(props) {
     const {back, property, agreement, acceptedTenantApplications, setAcceptedTenantApplications} = props;
@@ -209,7 +209,7 @@ function ManagerTenantAgreement(props) {
                 <div className='mb-4'>
                     <h5 style={mediumBold}>Rent Payments</h5>
                     <div className='mx-2'>
-                        <ManagerFees feeState={feeState} setFeeState={setFeeState}/>
+                        <ManagerTenantRentPayments feeState={feeState} setFeeState={setFeeState} property={property}/>
                     </div>
                 </div>
                 <div className='mb-4'>
