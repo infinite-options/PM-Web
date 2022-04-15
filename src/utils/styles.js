@@ -1,9 +1,9 @@
 const pillButton = {
-  borderRadius: '50px',
-  padding: '5px 20px',
-  color: '#007AFF',
-  border: '1px solid #007AFF'
-}
+  borderRadius: "50px",
+  padding: "5px 20px",
+  color: "#007AFF",
+  border: "1px solid #007AFF",
+};
 const boldSmall = {
   fontWeight: "bolder",
   fontSize: "smaller",
@@ -65,16 +65,22 @@ const none = {
 };
 const greenPill = {
   ...smallPillButton,
-  backgroundColor: '#3DB727',
-  borderColor: '#3DB727',
-  color: 'white'
-}
+  backgroundColor: "#3DB727",
+  borderColor: "#3DB727",
+  color: "white",
+};
+const bPill = {
+  ...smallPillButton,
+  backgroundColor: "#007AFF",
+  borderColor: "#007AFF",
+  color: "white",
+};
 const orangePill = {
   ...smallPillButton,
-  backgroundColor: '#F89A03',
-  borderColor: '#F89A03',
-  color: 'white'
-}
+  backgroundColor: "#F89A03",
+  borderColor: "#F89A03",
+  color: "white",
+};
 const redPill = {
   ...smallPillButton,
   backgroundColor: "#E3441F",
@@ -129,8 +135,10 @@ const welcome = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-  textAlign: "center",margin:"30px",padding:"50px"
-}
+  textAlign: "center",
+  margin: "30px",
+  padding: "50px",
+};
 const upcoming = {
   background: " #007AFF 0% 0% no-repeat padding-box",
   marginTop: "1rem",
@@ -160,8 +168,8 @@ const bluePill = {
   padding: "2px 7px",
 };
 const smallLine = {
-  lineHeight: 0.85
-}
+  lineHeight: 0.85,
+};
 const bluePillButton = {
   background: "#007AFF 0% 0% no-repeat padding-box",
   borderRadius: "50px",
@@ -225,9 +233,9 @@ const actionsDisabled = {
   justifyContent: "space-evenly",
   alignItems: "center",
   mouseEvent: "none",
-  opacity:"0.6",
-  cursor:"pointer"
-}
+  opacity: "0.6",
+  cursor: "pointer",
+};
 const actionsNoColor = {
   background: "#FFFFFF 0% 0% no-repeat padding-box",
   border: "1px solid #FFFFFF",
@@ -314,7 +322,6 @@ const blueLarge = {
   color: "#007AFF",
 };
 
-
 export {
   pillButton,
   boldSmall,
@@ -362,5 +369,6 @@ export {
   redPillButton,
   blueLarge,
   welcome,
-  actionsDisabled
+  actionsDisabled,
+  bPill,
 };
