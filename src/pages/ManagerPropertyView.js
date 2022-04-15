@@ -174,8 +174,9 @@ function ManagerPropertyView(props) {
                     </p>
                     <div className='d-flex'>
                         {property.rental_status === "ACTIVE" ? <p style={greenPill} className='mb-0'>Rented</p>
-                            : property.tenant_id === null ? <p style={orangePill} className='mb-0'>Not Rented</p>:
-                                <p style={bluePill} className='mb-0'>Processing</p>}
+                            : property.rental_status === "PROCESSING" ? <p style={bluePill} className='mb-0'>Processing</p>
+                                : property.management_status === "FORWARDED" ? <p style={orangePill} className='mb-0'>New</p>:
+                                    <p style={orangePill} className='mb-0'>Not Rented</p>}
                     </div>
 
                     {(property.rental_status === "ACTIVE") ? <ManagerRentalHistory property={property}/> :

@@ -8,10 +8,12 @@ import EditIcon from '../icons/EditIcon.svg';
 import DeleteIcon from '../icons/DeleteIcon.svg';
 import {put, post} from '../utils/api';
 import {small, hidden, red, squareForm, mediumBold, smallPillButton} from '../utils/styles';
+import AppContext from "../AppContext";
 
 function ManagementContract(props) {
+  const {userData, refresh} = React.useContext(AppContext);
+  const {access_token, user} = userData;
   const {back, property, contract} = props;
-
 
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');
@@ -89,6 +91,7 @@ function ManagementContract(props) {
       delete files[i].file;
     }
     newContract.documents = JSON.stringify(files);
+
     if (contract) {
       newContract.contract_uid = contract.contract_uid;
       console.log(newContract);
@@ -97,6 +100,20 @@ function ManagementContract(props) {
       console.log(newContract);
       const response = await post('/contracts', newContract, null, files);
     }
+
+    // Updating Management Status in property to SENT
+    const management_businesses = user.businesses.filter(business => business.business_type === "MANAGEMENT")
+    let management_buid = null
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid
+    }
+    const newProperty = {
+      property_uid: property.property_uid,
+      manager_id: management_buid,
+      management_status: "SENT"
+    }
+    await put('/properties', newProperty, null, files);
+
     back();
   }
   const [errorMessage, setErrorMessage] = React.useState('');

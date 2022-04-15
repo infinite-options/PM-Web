@@ -27,16 +27,24 @@ function ManagerRepairsList(props) {
             return;
         }
 
-        const response = await get(`/maintenanceRequests?property_uid=${property.property_uid}`, access_token);
+        // const response = await get(`/maintenanceRequests?property_uid=${property.property_uid}`, access_token);
+        const response = await get(`/maintenanceRequestsandQuotes?property_uid=${property.property_uid}`);
         if (response.msg === 'Token has expired') {
             refresh();
             return;
         }
 
-        console.log(response.result)
         const repairs = response.result.filter(item => item.property_uid === property.property_uid);
-        // console.log(repairs)
+        repairs.forEach((repair, i) => {
+            const request_created_date = new Date(Date.parse(repair.request_created_date));
+            const current_date = new Date();
+            repairs[i].days_since = Math.ceil((current_date.getTime() - request_created_date.getTime()) / (1000 * 3600 * 24))
+            repairs[i].quotes_to_review = repair.quotes.filter(quote => quote.quote_status === "SENT").length
+        });
+        repairs.sort((a, b) =>  b.quotes_to_review - a.quotes_to_review);
+        console.log(repairs)
         setRepairs(repairs);
+
         const new_repairs = repairs.filter(item => item.request_status === "NEW")
         const processing_repairs = repairs.filter(item => item.request_status === "PROCESSING")
         const scheduled_repairs = repairs.filter(item => item.request_status === "SCHEDULED")
@@ -92,7 +100,15 @@ function ManagerRepairsList(props) {
                                 <div className='d-flex'>
                                     <div className='flex-grow-1 d-flex flex-column justify-content-center'>
                                         <p style={{...blue, ...xSmall}} className='mb-0'>
-                                            Request Sent to Property Manager
+                                            Requested {repair.days_since} days ago
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className='d-flex'>
+                                    <div className='flex-grow-1 d-flex flex-column justify-content-center'>
+                                        <p style={{...blue, ...xSmall}} className='mb-0'>
+                                            {repair.quotes_to_review > 0 ? `${repair.quotes_to_review} new quote(s) to review`
+                                                : "No new quotes"}
                                         </p>
                                     </div>
                                 </div>
