@@ -15,13 +15,13 @@ import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
 import ManagementContract from "../components/ManagementContract";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
-import ManagerDocs from "../components/ManagerDocs";
 import LeaseDocs from "../components/LeaseDocs";
 import Repair from '../icons/Repair.svg';
 import Document from "../icons/Document.svg";
 import {get} from "../utils/api";
 import ManagerTenantApplications from "../components/ManagerTenantApplications";
 import ManagerTenantProfileView from "./ManagerTenantProfileView";
+import PropertyManagerDocs from "../components/PropertyManagerDocs";
 
 function ManagerPropertyView(props) {
 
@@ -139,7 +139,7 @@ function ManagerPropertyView(props) {
 
     return(
         showManagementContract ? (
-            <ManagementContract back={closeContract} property={property} contract={selectedContract}/>
+            <ManagementContract back={closeContract} property={property} contract={selectedContract} reload={reloadProperty}/>
         ) : showTenantAgreement ? (
             <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
                                     acceptedTenantApplications={acceptedTenantApplications}
@@ -203,7 +203,8 @@ function ManagerPropertyView(props) {
                         <hr style={{opacity: 1}} className='mt-1'/>
                     </div>
                     {expandManagerDocs ? (
-                        <ManagerDocs property={property} addDocument={addContract} selectContract={selectContract} reload={''}/>
+                        <PropertyManagerDocs property={property} addDocument={addContract} selectContract={selectContract}
+                                             setExpandManagerDocs={setExpandManagerDocs} reload={''}/>
                     ) : ''}
                     <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
                         <div className='d-flex justify-content-between mt-3'>

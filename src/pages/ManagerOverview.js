@@ -53,9 +53,8 @@ function ManagerOverview(props) {
             return;
         }
 
-        const properties = response.result
-        // console.log(properties)
-        // setProperties(properties)
+        // const properties = response.result
+        const properties = response.result.filter(property => property.management_status !== "REJECTED")
 
         const properties_unique = []
         const pids = new Set()

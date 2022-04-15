@@ -13,7 +13,7 @@ import AppContext from "../AppContext";
 function ManagementContract(props) {
   const {userData, refresh} = React.useContext(AppContext);
   const {access_token, user} = userData;
-  const {back, property, contract} = props;
+  const {back, property, contract, reload} = props;
 
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');
@@ -112,9 +112,17 @@ function ManagementContract(props) {
       manager_id: management_buid,
       management_status: "SENT"
     }
-    await put('/properties', newProperty, null, files);
-
+    const images = JSON.parse(property.images);
+    for (let i = -1; i < images.length-1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = 'img_cover';
+      }
+      newProperty[key] = images[i+1];
+    }
+    await put('/properties', newProperty, null, images);
     back();
+    reload();
   }
   const [errorMessage, setErrorMessage] = React.useState('');
   const required = (
