@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Header from "../components/Header";
 import {
@@ -30,7 +30,7 @@ import File from "../icons/File.svg";
 
 function PropertyView(props) {
   const { property_uid, back, reload, hideEdit } = props;
-  const [property, setProperty] = React.useState({
+  const [property, setProperty] = useState({
     images: "[]",
   });
   const fetchProperty = async () => {
@@ -41,24 +41,23 @@ function PropertyView(props) {
     );
     setContracts(res.result);
   };
-  React.useState(() => {
+  useState(() => {
     fetchProperty();
   });
 
-  const [currentImg, setCurrentImg] = React.useState(0);
-  const [expandDetails, setExpandDetails] = React.useState(false);
-  const [editProperty, setEditProperty] = React.useState(false);
-  const [contracts, setContracts] = React.useState([]);
-  const [showCreateExpense, setShowCreateExpense] = React.useState(false);
-  const [showCreateTax, setShowCreateTax] = React.useState(false);
-  const [showCreateMortgage, setShowCreateMortgage] = React.useState(false);
-  const [expandManagerDocs, setExpandManagerDocs] = React.useState(false);
-  const [expandLeaseDocs, setExpandLeaseDocs] = React.useState(false);
-  const [showManagementContract, setShowManagementContract] =
-    React.useState(false);
-  const [showTenantAgreement, setShowTenantAgreement] = React.useState(false);
-  const [selectedContract, setSelectedContract] = React.useState(null);
-  const [selectedAgreement, setSelectedAgreement] = React.useState(null);
+  const [currentImg, setCurrentImg] = useState(0);
+  const [expandDetails, setExpandDetails] = useState(false);
+  const [editProperty, setEditProperty] = useState(false);
+  const [contracts, setContracts] = useState([]);
+  const [showCreateExpense, setShowCreateExpense] = useState(false);
+  const [showCreateTax, setShowCreateTax] = useState(false);
+  const [showCreateMortgage, setShowCreateMortgage] = useState(false);
+  const [expandManagerDocs, setExpandManagerDocs] = useState(false);
+  const [expandLeaseDocs, setExpandLeaseDocs] = useState(false);
+  const [showManagementContract, setShowManagementContract] = useState(false);
+  const [showTenantAgreement, setShowTenantAgreement] = useState(false);
+  const [selectedContract, setSelectedContract] = useState(null);
+  const [selectedAgreement, setSelectedAgreement] = useState(null);
   // React.useEffect(async () => {
   //   const response = await get(
   //     `/contracts?property_uid=${property.property_uid}`
@@ -92,7 +91,7 @@ function PropertyView(props) {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [
     editProperty,

@@ -27,7 +27,7 @@ function ReviewPropertyLease(props) {
   const { setTab } = props;
   const [properties, setProperties] = useState([]);
   const [images, setImages] = useState({});
-  const [showLease,setShowLease] = useState("True");
+  const [showLease, setShowLease] = useState("True");
 
   useEffect(() => {
     const fetchRentals = async () => {
@@ -62,7 +62,7 @@ function ReviewPropertyLease(props) {
       setRentals(filteredRentals);
     };
     // if(!rentPayments || !lease){
-      if(!rentals){
+    if (!rentals) {
       setShowLease("false");
     }
     fetchRentals();
@@ -103,16 +103,17 @@ function ReviewPropertyLease(props) {
   };
 
   const rejectLease = async () => {
-    const updatedRental = {
-      // rental_uid: filteredRentals[0].rental_uid,
-      rental_uid: rentals[0].rental_uid,
-      rental_status: "REFUSED",
-    };
-    const response = await put("/rentals", updatedRental, null, []);
+    // const updatedRental = {
+    //   // rental_uid: filteredRentals[0].rental_uid,
+    //   rental_uid: rentals[0].rental_uid,
+    //   rental_status: "REFUSED",
+    // };
+    // const response = await put("/rentals", updatedRental, null, []);
 
     const updatedApplication = {
       application_uid: application_uid,
       application_status: "REFUSED",
+      property_uid: property_uid,
     };
     const response2 = await put(
       "/applications",
@@ -131,58 +132,58 @@ function ReviewPropertyLease(props) {
         leftText="< Back"
         leftFn={() => setTab("DASHBOARD")}
       />
-
       {/* ==================< Images properties >=======================================  */}
       {images && images.length ? (
         <img style={{ margin: "20px", padding: "10px" }} src={images[0]} />
       ) : (
         <img style={{ margin: "20px", padding: "10px" }} src={No_Image} />
       )}
-
       {/* ==================< Property Details >=======================================  */}
       <TenantPropertyView forPropertyLease="true" />
-
       {/* ==================< Lease Details >=======================================  */}
-      {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ?
-          (<div style={{ marginLeft: "50px" }}>
-            <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "18px" }}>
-              Rent Details
-            </p>
-            <Row style={{ marginLeft: "10px" }}>
-              <Col>
-                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                  Lease Start Date{" "}
-                </Row>
-                <Row style={{ paddingLeft: "20px" }}>
-                  {" "}
-                  {rentals && rentals.length ? rentals[0].lease_start : ""}{" "}
-                </Row>
-              </Col>
-              <Col>
-                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                  Lease End Date{" "}
-                </Row>
-                <Row style={{ paddingLeft: "20px" }}>
-                  {" "}
-                  {rentals && rentals.length ? rentals[0].lease_end : ""}
-                </Row>
-              </Col>
-            </Row>
-            {/* <div style={{marginLeft:"20px"}}>
+      {application_status_1 === "FORWARDED" ||
+      application_status_1 === "RENTED" ? (
+        <div style={{ marginLeft: "50px" }}>
+          <p
+            style={{ fontWeight: "bold", textAlign: "left", fontSize: "18px" }}
+          >
+            Rent Details
+          </p>
+          <Row style={{ marginLeft: "10px" }}>
+            <Col>
+              <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Lease Start Date{" "}
+              </Row>
+              <Row style={{ paddingLeft: "20px" }}>
+                {" "}
+                {rentals && rentals.length ? rentals[0].lease_start : ""}{" "}
+              </Row>
+            </Col>
+            <Col>
+              <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Lease End Date{" "}
+              </Row>
+              <Row style={{ paddingLeft: "20px" }}>
+                {" "}
+                {rentals && rentals.length ? rentals[0].lease_end : ""}
+              </Row>
+            </Col>
+          </Row>
+          {/* <div style={{marginLeft:"20px"}}>
                             <Row style={{paddingLeft:"20px",fontWeight:"bold"}}>Monthly Rent </Row>
                             <Row style={{paddingLeft:"20px"}}> $2000 </Row>
                         </div> */}
-            <div
-              style={{
-                fontWeight: "bold",
-                textAlign: "left",
-                fontSize: "18px",
-                paddingLeft: "20px",
-                marginTop: "20px",
-              }}
-            >
-              Extra charges
-            </div>
+          <div
+            style={{
+              fontWeight: "bold",
+              textAlign: "left",
+              fontSize: "18px",
+              paddingLeft: "20px",
+              marginTop: "20px",
+            }}
+          >
+            Extra charges
+          </div>
           <Row style={{ marginLeft: "10px" }}>
             <Col>
               <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
@@ -228,15 +229,14 @@ function ReviewPropertyLease(props) {
               </Row>
             </Col>
           </Row>
-        </div>)
-       :
-       ""
-      };
-
-
+        </div>
+      ) : (
+        ""
+      )}
+      ;
       {/* ==================< Lease Documents >=======================================  */}
-      {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ?
-        (
+      {application_status_1 === "FORWARDED" ||
+      application_status_1 === "RENTED" ? (
         <div>
           <p
             style={{
@@ -298,15 +298,13 @@ function ReviewPropertyLease(props) {
             </div>
           </Container>
         </div>
-          ) 
-         :
-         ""
-       }
-
+      ) : (
+        ""
+      )}
       {/* ==================< Approval|Disapprove buttons >=======================================  */}
       <Row className="mt-4">
-       {application_status_1 === "FORWARDED" ? 
-        ( <Col
+        {application_status_1 === "FORWARDED" ? (
+          <Col
             style={{
               display: "flex",
               flexDirection: "row",
@@ -322,32 +320,33 @@ function ReviewPropertyLease(props) {
             >
               Approve
             </Button>
-          </Col>)
-        :
-        ""
-        }
-     
-      { application_status_1 === "FORWARDED" || application_status_1 === "NEW" ? 
-        ( <Col
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            marginBottom: "25px",
-          }}
-           >
-          {" "}
-          <Button
-            onClick={rejectLease}
-            variant="outline-primary"
-            style={redPillButton}
-          >
-            Reject
-          </Button>
-          </Col>)
-          :
+          </Col>
+        ) : (
           ""
-        }
+        )}
+
+        {application_status_1 === "FORWARDED" ||
+        application_status_1 === "NEW" ? (
+          <Col
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              marginBottom: "25px",
+            }}
+          >
+            {" "}
+            <Button
+              onClick={rejectLease}
+              variant="outline-primary"
+              style={redPillButton}
+            >
+              Reject
+            </Button>
+          </Col>
+        ) : (
+          ""
+        )}
       </Row>
     </div>
   );
