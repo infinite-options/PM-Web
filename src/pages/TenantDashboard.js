@@ -110,12 +110,15 @@ function TenantDashboard(props) {
 
       let rentTotal = [];
       for (const payment of payments) {
-        console.log("tenantProperties payment", payment[0]);
-        if (payment[0].frequency === "Monthly" && payment[0].fee_type === "$") {
-          rentTotal.push(parseFloat(payment[0].charge));
-          // rentTotal += parseFloat(payment[0].charge);
-        }
+        console.log("tenantProperties payment", payment);
+        for (const pay of payment)
+          if (pay.frequency === "Monthly" && pay.fee_type === "$") {
+            console.log(" tenantProperties payment here");
+            rentTotal.push(parseFloat(pay.charge));
+            // rentTotal += parseFloat(payment[0].charge);
+          }
       }
+      console.log(rentTotal);
       setRent(rentTotal);
       setProperty(response.result);
 
@@ -212,6 +215,7 @@ function TenantDashboard(props) {
       );
 
       let selectedProperty = properties[0];
+      console.log(selectedProperty);
       setSelectedProperty(selectedProperty);
       setProperties(properties);
     };
@@ -287,7 +291,10 @@ function TenantDashboard(props) {
   };
   const goToReviewPropertyLease = (application) => {
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
-      state: { application_uid: application.application_uid,application_status_1: application.application_status },
+      state: {
+        application_uid: application.application_uid,
+        application_status_1: application.application_status,
+      },
     });
   };
   return (
@@ -529,17 +536,17 @@ function TenantDashboard(props) {
               </div>
             </Col>
           </Row>
-           {/* ============================RENTED Properties =========================== */}
-           <div style={headings} className="mt-4 mb-1">
+          {/* ============================RENTED Properties =========================== */}
+          <div style={headings} className="mt-4 mb-1">
             Properties Rented
           </div>
           <div className="mb-4" style={{ margin: "20px" }}>
             <Row>
               <Col>
-                {applications
-                  ? applications.map((application, i) => (
-                    application.application_status === 'RENTED' ?
-                      (<div
+                {applications ? (
+                  applications.map((application, i) =>
+                    application.application_status === "RENTED" ? (
+                      <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
                       >
@@ -574,16 +581,20 @@ function TenantDashboard(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            <h6 style={{mediumBold,color:"#41fc03"}}>
+                            <h6 style={{ mediumBold, color: "#41fc03" }}>
                               {application.application_status}
                             </h6>
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />
-                      </div>):""
-                    ))
-                  : 
-                  ( <p>You have not rented any property yet. </p>)}
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                ) : (
+                  <p>You have not rented any property yet. </p>
+                )}
               </Col>
             </Row>
           </div>
@@ -596,10 +607,10 @@ function TenantDashboard(props) {
           <div className="mb-4" style={{ margin: "20px" }}>
             <Row>
               <Col>
-                {applications
-                  ? applications.map((application, i) => (
-                    application.application_status !== 'RENTED' ?
-                      (<div
+                {applications ? (
+                  applications.map((application, i) =>
+                    application.application_status !== "RENTED" ? (
+                      <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
                       >
@@ -634,26 +645,30 @@ function TenantDashboard(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "NEW" || application.application_status === "FORWARDED" ?
-                            ( <h6 style={{mediumBold,color:"blue"}}>
-                              {application.application_status}
-                              </h6>) 
-                              : 
-                              application.application_status === "REJECTED" ? 
-                              (<h6 style={{mediumBold,color:"red"}}>
-                              {application.application_status}
-                              </h6>)
-                            :
-                            ""
-                          }
+                            {application.application_status === "NEW" ||
+                            application.application_status === "FORWARDED" ? (
+                              <h6 style={{ mediumBold, color: "blue" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : application.application_status ===
+                              "REJECTED" ? (
+                              <h6 style={{ mediumBold, color: "red" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : (
+                              ""
+                            )}
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />
-                      </div>):""
-                    ))
-                  : 
-                  ( <p>You have not applied for any property yet. </p>)
-                  }
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                ) : (
+                  <p>You have not applied for any property yet. </p>
+                )}
               </Col>
             </Row>
           </div>

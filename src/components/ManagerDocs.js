@@ -49,7 +49,7 @@ function ManagerDocs(props) {
   }, []);
 
   return (
-    <div className="d-flex flex-column gap-2">
+    <div className=" mx-2 d-flex flex-column gap-2">
       {property.management_status === "ACCEPTED" ? (
         <div className="d-flex flex-column gap-2">
           {contracts.map((contract, i) => (
