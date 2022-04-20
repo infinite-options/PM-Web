@@ -34,7 +34,11 @@ function PropertyView(props) {
     images: "[]",
   });
   const fetchProperty = async () => {
-    const response = await get(`/propertyInfo?property_uid=${property_uid}`);
+    // const response = await get(`/propertyInfo?property_uid=${property_uid}`);
+    const response = await get(
+      `/propertiesOwnerDetail?property_uid=${property_uid}`
+    );
+    console.log("property  in databse", response.result[0]);
     setProperty(response.result[0]);
     const res = await get(
       `/contracts?property_uid=${response.result[0].property_uid}`
@@ -139,220 +143,350 @@ function PropertyView(props) {
     setShowTenantAgreement(false);
   };
   const approvePropertyManager = async () => {
-    // const updatedRental = {
-    //     // rental_uid: filteredRentals[0].rental_uid,
-    //     rental_uid: rentals[0].rental_uid,
-    //     rental_status: 'ACTIVE'
-    // }
-    // const response1 = await put('/rentals', updatedRental , null, []);
     const files = JSON.parse(property.images);
-
-    const updatedManagementContract = {
-      property_uid: property.property_uid,
-      management_status: "ACCEPTED",
-      manager_id: property.manager_id,
-    };
-    for (let i = -1; i < files.length - 1; i++) {
-      let key = `img_${i}`;
-      if (i === -1) {
-        key = "img_cover";
+    if (property.property_manager.length > 0) {
+      for (const prop of property.property_manager) {
+        if (prop.management_status !== "REJECTED") {
+          const updatedManagementContract = {
+            property_uid: property.property_uid,
+            management_status: "ACCEPTED",
+            manager_id: prop.manager_id,
+          };
+          for (let i = -1; i < files.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updatedManagementContract[key] = files[i + 1];
+          }
+          console.log(files);
+          const response2 = await put(
+            "/properties",
+            updatedManagementContract,
+            null,
+            files
+          );
+          setExpandManagerDocs(!expandManagerDocs);
+          reloadProperty();
+          //navigate("/tenant");
+        }
       }
-      updatedManagementContract[key] = files[i + 1];
+    } else {
+      const updatedManagementContract = {
+        property_uid: property.property_uid,
+        management_status: "ACCEPTED",
+        manager_id: property.property_manager[0].manager_id,
+      };
+      for (let i = -1; i < files.length - 1; i++) {
+        let key = `img_${i}`;
+        if (i === -1) {
+          key = "img_cover";
+        }
+        updatedManagementContract[key] = files[i + 1];
+      }
+      console.log(files);
+      const response2 = await put(
+        "/properties",
+        updatedManagementContract,
+        null,
+        files
+      );
+      setExpandManagerDocs(!expandManagerDocs);
+      reloadProperty();
+      //navigate("/tenant");
     }
-    console.log(files);
-    const response2 = await put(
-      "/properties",
-      updatedManagementContract,
-      null,
-      files
-    );
-    setExpandManagerDocs(!expandManagerDocs);
-    reloadProperty();
-    //navigate("/tenant");
   };
 
   const rejectPropertyManager = async () => {
     const files = JSON.parse(property.images);
+    if (property.property_manager.length > 0) {
+      for (const prop of property.property_manager) {
+        if (prop.management_status !== "REJECTED") {
+          const updatedManagementContract = {
+            property_uid: property.property_uid,
+            management_status: "REJECTED",
+            manager_id: prop.manager_id,
+          };
+          for (let i = -1; i < files.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updatedManagementContract[key] = files[i + 1];
+          }
+          const response2 = await put(
+            "/properties",
+            updatedManagementContract,
+            null,
+            files
+          );
 
-    const updatedManagementContract = {
-      property_uid: property.property_uid,
-      management_status: "REJECTED",
-      manager_id: property.manager_id,
-    };
-    for (let i = -1; i < files.length - 1; i++) {
-      let key = `img_${i}`;
-      if (i === -1) {
-        key = "img_cover";
+          setExpandManagerDocs(!expandManagerDocs);
+          reloadProperty();
+        }
       }
-      updatedManagementContract[key] = files[i + 1];
+
+      //navigate("/tenant");
+    } else {
+      const updatedManagementContract = {
+        property_uid: property.property_uid,
+        management_status: "REJECTED",
+        manager_id: property.property_manager[0].manager_id,
+      };
+      for (let i = -1; i < files.length - 1; i++) {
+        let key = `img_${i}`;
+        if (i === -1) {
+          key = "img_cover";
+        }
+        updatedManagementContract[key] = files[i + 1];
+      }
+      const response2 = await put(
+        "/properties",
+        updatedManagementContract,
+        null,
+        files
+      );
+
+      setExpandManagerDocs(!expandManagerDocs);
+      reloadProperty();
+      //navigate("/tenant");
     }
-    const response2 = await put(
-      "/properties",
-      updatedManagementContract,
-      null,
-      files
-    );
-    reloadProperty();
-    setExpandManagerDocs(!expandManagerDocs);
-    //navigate("/tenant");
   };
-  return showManagementContract ? (
-    <ManagementContract
-      back={closeContract}
-      property={property}
-      contract={selectedContract}
-    />
-  ) : showTenantAgreement ? (
-    <TenantAgreement
-      back={closeAgreement}
-      property={property}
-      agreement={selectedAgreement}
-    />
-  ) : (
-    <div>
-      <Header title="Properties" leftText="< Back" leftFn={headerBack} />
-      <Container className="pb-5 mb-5">
-        {editProperty ? (
-          <PropertyForm
-            property={property}
-            edit={editProperty}
-            setEdit={setEditProperty}
-            onSubmit={reloadProperty}
-          />
-        ) : showCreateExpense ? (
-          <CreateExpense back={() => setShowCreateExpense(false)} />
-        ) : showCreateTax ? (
-          <CreateTax back={() => setShowCreateTax(false)} />
-        ) : showCreateMortgage ? (
-          <CreateMortgage back={() => setShowCreateMortgage(false)} />
-        ) : (
-          <div>
-            <div style={{ ...tileImg, height: "200px", position: "relative" }}>
-              {JSON.parse(property.images).length > 0 ? (
-                <img
-                  src={JSON.parse(property.images)[currentImg]}
-                  className="w-100 h-100"
-                  style={{ borderRadius: "4px", objectFit: "contain" }}
-                  alt="Property"
+  console.log(property);
+  return Object.keys(property).length > 1 ? (
+    showManagementContract ? (
+      <ManagementContract
+        back={closeContract}
+        property={property}
+        contract={selectedContract}
+      />
+    ) : showTenantAgreement ? (
+      <TenantAgreement
+        back={closeAgreement}
+        property={property}
+        agreement={selectedAgreement}
+      />
+    ) : (
+      <div>
+        <Header title="Properties" leftText="< Back" leftFn={headerBack} />
+        <Container className="pb-5 mb-5">
+          {editProperty ? (
+            <PropertyForm
+              property={property}
+              edit={editProperty}
+              setEdit={setEditProperty}
+              onSubmit={reloadProperty}
+            />
+          ) : showCreateExpense ? (
+            <CreateExpense back={() => setShowCreateExpense(false)} />
+          ) : showCreateTax ? (
+            <CreateTax back={() => setShowCreateTax(false)} />
+          ) : showCreateMortgage ? (
+            <CreateMortgage back={() => setShowCreateMortgage(false)} />
+          ) : (
+            <div>
+              <div
+                style={{ ...tileImg, height: "200px", position: "relative" }}
+              >
+                {JSON.parse(property.images).length > 0 ? (
+                  <img
+                    src={JSON.parse(property.images)[currentImg]}
+                    className="w-100 h-100"
+                    style={{ borderRadius: "4px", objectFit: "contain" }}
+                    alt="Property"
+                  />
+                ) : (
+                  ""
+                )}
+                <div
+                  style={{ position: "absolute", left: "5px", top: "90px" }}
+                  onClick={previousImg}
+                >
+                  {"<"}
+                </div>
+                <div
+                  style={{ position: "absolute", right: "5px", top: "90px" }}
+                  onClick={nextImg}
+                >
+                  {">"}
+                </div>
+              </div>
+              <h5 className="mt-2 mb-0" style={mediumBold}>
+                ${property.listed_rent}/mo
+              </h5>
+              <p style={gray} className="mt-1 mb-2">
+                {property.address}
+                {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+                {property.city}, {property.state} {property.zip}
+              </p>
+              <div className="d-flex">
+                {property.property_manager.length > 1 ? (
+                  property.property_manager.map((p, i) =>
+                    p.management_status === "REJECTED" ? (
+                      ""
+                    ) : p.management_status !== "ACCEPTED" ? (
+                      <p style={orangePill} className="mb-0">
+                        New
+                      </p>
+                    ) : property.rentalInfo[0].rental_uid !== null ? (
+                      <p style={greenPill} className="mb-0">
+                        Rented
+                      </p>
+                    ) : (
+                      <p style={orangePill} className="mb-0">
+                        Not Rented
+                      </p>
+                    )
+                  )
+                ) : property.property_manager[0].management_status !==
+                  "ACCEPTED" ? (
+                  <p style={orangePill} className="mb-0">
+                    New
+                  </p>
+                ) : property.rentalInfo.rental_uid !== null ? (
+                  <p style={greenPill} className="mb-0">
+                    Rented
+                  </p>
+                ) : (
+                  <p style={orangePill} className="mb-0">
+                    Not Rented
+                  </p>
+                )}
+              </div>
+              <PropertyCashFlow property={property} state={cashFlowState} />
+              {property.property_manager.length > 1 ? (
+                property.property_manager.map((p, i) =>
+                  p.management_status === "REJECTED" ? (
+                    ""
+                  ) : p.manager_business_name !== null &&
+                    p.management_status === "ACCEPTED" ? (
+                    <div>
+                      <div className="d-flex justify-content-between mt-3">
+                        <div>
+                          <h6 style={mediumBold} className="mb-1">
+                            {p.manager_business_name}
+                          </h6>
+                          <p
+                            style={{ ...gray, ...mediumBold }}
+                            className="mb-1"
+                          >
+                            Property Manager
+                          </p>
+                        </div>
+                        <div>
+                          <a href={`tel:${p.manager_phone_number}`}>
+                            <img src={Phone} alt="Phone" style={mediumImg} />
+                          </a>
+                          <a href={`mailto:${p.manager_email}`}>
+                            <img
+                              src={Message}
+                              alt="Message"
+                              style={mediumImg}
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <hr style={{ opacity: 1 }} className="mt-1" />
+                    </div>
+                  ) : (
+                    ""
+                  )
+                )
+              ) : property.property_manager[0].manager_business_name !== null &&
+                property.property_manager[0].management_status ===
+                  "ACCEPTED" ? (
+                <div>
+                  <div className="d-flex justify-content-between mt-3">
+                    <div>
+                      <h6 style={mediumBold} className="mb-1">
+                        {property.property_manager[0].manager_business_name}
+                      </h6>
+                      <p style={{ ...gray, ...mediumBold }} className="mb-1">
+                        Property Manager
+                      </p>
+                    </div>
+                    <div>
+                      <a
+                        href={`tel:${property.property_manager[0].manager_phone_number}`}
+                      >
+                        <img src={Phone} alt="Phone" style={mediumImg} />
+                      </a>
+                      <a
+                        href={`mailto:${property.property_manager[0].manager_email}`}
+                      >
+                        <img src={Message} alt="Message" style={mediumImg} />
+                      </a>
+                    </div>
+                  </div>
+                  <hr style={{ opacity: 1 }} className="mt-1" />
+                </div>
+              ) : (
+                ""
+              )}
+              <div onClick={() => setExpandDetails(!expandDetails)}>
+                <div className="d-flex justify-content-between mt-3">
+                  <h6 style={mediumBold} className="mb-1">
+                    Details
+                  </h6>
+                  <img src={expandDetails ? ArrowUp : ArrowDown} alt="Expand" />
+                </div>
+                <hr style={{ opacity: 1 }} className="mt-1" />
+              </div>
+              {expandDetails ? (
+                <PropertyForm
+                  property={property}
+                  edit={editProperty}
+                  setEdit={setEditProperty}
                 />
               ) : (
                 ""
               )}
-              <div
-                style={{ position: "absolute", left: "5px", top: "90px" }}
-                onClick={previousImg}
-              >
-                {"<"}
-              </div>
-              <div
-                style={{ position: "absolute", right: "5px", top: "90px" }}
-                onClick={nextImg}
-              >
-                {">"}
-              </div>
-            </div>
-            <h5 className="mt-2 mb-0" style={mediumBold}>
-              ${property.listed_rent}/mo
-            </h5>
-            <p style={gray} className="mt-1 mb-2">
-              {property.address}
-              {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-              {property.city}, {property.state} {property.zip}
-            </p>
-            <div className="d-flex">
-              {property.management_status !== "ACCEPTED" ? (
-                <p style={orangePill} className="mb-0">
-                  New
-                </p>
-              ) : property.rental_uid !== null ? (
-                <p style={greenPill} className="mb-0">
-                  Rented
-                </p>
-              ) : (
-                <p style={orangePill} className="mb-0">
-                  Not Rented
-                </p>
-              )}
-            </div>
-            <PropertyCashFlow property={property} state={cashFlowState} />
-            {property.manager_business_name !== null &&
-            property.management_status === "ACCEPTED" ? (
-              <div>
+              <div onClick={() => setExpandManagerDocs(!expandManagerDocs)}>
                 <div className="d-flex justify-content-between mt-3">
-                  <div>
-                    <h6 style={mediumBold} className="mb-1">
-                      {property.manager_business_name}
-                    </h6>
-                    <p style={{ ...gray, ...mediumBold }} className="mb-1">
-                      Property Manager
-                    </p>
-                  </div>
-                  <div>
-                    <a href={`tel:${property.manager_phone_number}`}>
-                      <img src={Phone} alt="Phone" style={mediumImg} />
-                    </a>
-                    <a href={`mailto:${property.manager_email}`}>
-                      <img src={Message} alt="Message" style={mediumImg} />
-                    </a>
-                  </div>
+                  <h6 style={mediumBold} className="mb-1">
+                    Management Contract
+                  </h6>
+                  <img
+                    src={expandManagerDocs ? ArrowUp : ArrowDown}
+                    alt="Expand"
+                  />
                 </div>
                 <hr style={{ opacity: 1 }} className="mt-1" />
               </div>
-            ) : (
-              ""
-            )}
-            <div onClick={() => setExpandDetails(!expandDetails)}>
-              <div className="d-flex justify-content-between mt-3">
-                <h6 style={mediumBold} className="mb-1">
-                  Details
-                </h6>
-                <img src={expandDetails ? ArrowUp : ArrowDown} alt="Expand" />
-              </div>
-              <hr style={{ opacity: 1 }} className="mt-1" />
-            </div>
-            {expandDetails ? (
-              <PropertyForm
-                property={property}
-                edit={editProperty}
-                setEdit={setEditProperty}
-              />
-            ) : (
-              ""
-            )}
-            <div onClick={() => setExpandManagerDocs(!expandManagerDocs)}>
-              <div className="d-flex justify-content-between mt-3">
-                <h6 style={mediumBold} className="mb-1">
-                  Management Contract
-                </h6>
-                <img
-                  src={expandManagerDocs ? ArrowUp : ArrowDown}
-                  alt="Expand"
-                />
-              </div>
-              <hr style={{ opacity: 1 }} className="mt-1" />
-            </div>
-            {expandManagerDocs && property.management_status === "FORWARDED" ? (
-              <div>
-                <div className="d-flex justify-content-between mt-3">
-                  <div>
-                    <h6 style={mediumBold} className="mb-1">
-                      {property.manager_business_name}
-                    </h6>
-                    <p style={{ mediumBold, color: "blue" }} className="mb-1">
-                      {property.management_status}
-                    </p>
-                  </div>
-                  <div>
-                    <a href={`tel:${property.manager_phone_number}`}>
-                      <img src={Phone} alt="Phone" style={mediumImg} />
-                    </a>
-                    <a href={`mailto:${property.manager_email}`}>
-                      <img src={Message} alt="Message" style={mediumImg} />
-                    </a>
-                  </div>
-                </div>
-                <Row className="mt-4">
-                  {/* <Col
+              {property.property_manager.length > 1 ? (
+                property.property_manager.map((p, i) =>
+                  p.management_status === "REJECTED" ? (
+                    ""
+                  ) : expandManagerDocs &&
+                    p.management_status === "FORWARDED" ? (
+                    <div>
+                      <div className="d-flex justify-content-between mt-3">
+                        <div>
+                          <h6 style={mediumBold} className="mb-1">
+                            {p.manager_business_name}
+                          </h6>
+                          <p
+                            style={{ mediumBold, color: "blue" }}
+                            className="mb-1"
+                          >
+                            {p.management_status}
+                          </p>
+                        </div>
+                        <div>
+                          <a href={`tel:${p.manager_phone_number}`}>
+                            <img src={Phone} alt="Phone" style={mediumImg} />
+                          </a>
+                          <a href={`mailto:${p.manager_email}`}>
+                            <img
+                              src={Message}
+                              alt="Message"
+                              style={mediumImg}
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <Row className="mt-4">
+                        {/* <Col
                     style={{
                       display: "flex",
                       flexDirection: "row",
@@ -369,57 +503,58 @@ function PropertyView(props) {
                       Approve
                     </Button>
                   </Col> */}
-                  <Col
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-evenly",
-                      marginBottom: "25px",
-                    }}
-                  >
-                    {" "}
-                    <Button
-                      onClick={rejectPropertyManager}
-                      variant="outline-primary"
-                      style={redPillButton}
-                    >
-                      Reject
-                    </Button>
-                  </Col>
-                </Row>
-                <hr style={{ opacity: 1 }} className="mt-1" />
-              </div>
-            ) : (
-              ""
-            )}
-            {expandManagerDocs && property.management_status === "SENT" ? (
-              <div>
-                <div className="d-flex justify-content-between mt-3">
-                  <div>
-                    <h6 style={mediumBold} className="mb-1">
-                      {property.manager_business_name}
-                    </h6>
-                    <p
-                      style={{ mediumBold, color: "#41fc03" }}
-                      className="mb-1"
-                    >
-                      {property.management_status}
-                    </p>
-                  </div>
-                </div>
-                <div className="d-flex flex-column gap-2">
-                  {contracts.map((contract, i) => (
-                    <div key={i} onClick={() => selectContract(contract)}>
-                      <div className="d-flex justify-content-between align-items-end">
-                        <h6 style={mediumBold}>Contract {i + 1}</h6>
-                        <img src={File} />
-                      </div>
-                      {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
+                        <Col
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          {" "}
+                          <Button
+                            onClick={rejectPropertyManager}
+                            variant="outline-primary"
+                            style={redPillButton}
+                          >
+                            Reject
+                          </Button>
+                        </Col>
+                      </Row>
+                      <hr style={{ opacity: 1 }} className="mt-1" />
                     </div>
-                  ))}
-                </div>
-                <Row className="mt-4">
-                  <Col
+                  ) : (
+                    ""
+                  )
+                )
+              ) : expandManagerDocs &&
+                property.property_manager[0].management_status ===
+                  "FORWARDED" ? (
+                <div>
+                  <div className="d-flex justify-content-between mt-3">
+                    <div>
+                      <h6 style={mediumBold} className="mb-1">
+                        {property.property_manager[0].manager_business_name}
+                      </h6>
+                      <p style={{ mediumBold, color: "blue" }} className="mb-1">
+                        {property.property_manager[0].management_status}
+                      </p>
+                    </div>
+                    <div>
+                      <a
+                        href={`tel:${property.property_manager[0].manager_phone_number}`}
+                      >
+                        <img src={Phone} alt="Phone" style={mediumImg} />
+                      </a>
+                      <a
+                        href={`mailto:${property.property_manager[0].manager_email}`}
+                      >
+                        <img src={Message} alt="Message" style={mediumImg} />
+                      </a>
+                    </div>
+                  </div>
+                  <Row className="mt-4">
+                    {/* <Col
                     style={{
                       display: "flex",
                       flexDirection: "row",
@@ -429,68 +564,214 @@ function PropertyView(props) {
                   >
                     {" "}
                     <Button
-                      onClick={approvePropertyManager}
+                      // onClick={approvePropertyManager}
                       variant="outline-primary"
                       style={bluePillButton}
                     >
                       Approve
                     </Button>
-                  </Col>
-                  <Col
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-evenly",
-                      marginBottom: "25px",
-                    }}
-                  >
-                    {" "}
-                    <Button
-                      onClick={rejectPropertyManager}
-                      variant="outline-primary"
-                      style={redPillButton}
+                  </Col> */}
+                    <Col
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-evenly",
+                        marginBottom: "25px",
+                      }}
                     >
-                      Reject
-                    </Button>
-                  </Col>
-                </Row>
+                      {" "}
+                      <Button
+                        onClick={rejectPropertyManager}
+                        variant="outline-primary"
+                        style={redPillButton}
+                      >
+                        Reject
+                      </Button>
+                    </Col>
+                  </Row>
+                  <hr style={{ opacity: 1 }} className="mt-1" />
+                </div>
+              ) : (
+                ""
+              )}
+              {property.property_manager.length > 1 ? (
+                property.property_manager.map((p, i) =>
+                  p.management_status === "REJECTED" ? (
+                    ""
+                  ) : expandManagerDocs && p.management_status === "SENT" ? (
+                    <div>
+                      <div className="d-flex justify-content-between mt-3">
+                        <div>
+                          <h6 style={mediumBold} className="mb-1">
+                            {p.manager_business_name}
+                          </h6>
+                          <p
+                            style={{ mediumBold, color: "#41fc03" }}
+                            className="mb-1"
+                          >
+                            {p.management_status}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="d-flex flex-column gap-2">
+                        {contracts.map((contract, i) => (
+                          <div key={i} onClick={() => selectContract(contract)}>
+                            <div className="d-flex justify-content-between align-items-end">
+                              <h6 style={mediumBold}>Contract {i + 1}</h6>
+                              <img src={File} />
+                            </div>
+                            {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
+                          </div>
+                        ))}
+                      </div>
+                      <Row className="mt-4">
+                        <Col
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          {" "}
+                          <Button
+                            onClick={approvePropertyManager}
+                            variant="outline-primary"
+                            style={bluePillButton}
+                          >
+                            Approve
+                          </Button>
+                        </Col>
+                        <Col
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          {" "}
+                          <Button
+                            onClick={rejectPropertyManager}
+                            variant="outline-primary"
+                            style={redPillButton}
+                          >
+                            Reject
+                          </Button>
+                        </Col>
+                      </Row>
+                      <hr style={{ opacity: 1 }} className="mt-1" />
+                    </div>
+                  ) : (
+                    ""
+                  )
+                )
+              ) : expandManagerDocs &&
+                property.property_manager[0].management_status === "SENT" ? (
+                <div>
+                  <div className="d-flex justify-content-between mt-3">
+                    <div>
+                      <h6 style={mediumBold} className="mb-1">
+                        {property.property_manager[0].manager_business_name}
+                      </h6>
+                      <p
+                        style={{ mediumBold, color: "#41fc03" }}
+                        className="mb-1"
+                      >
+                        {property.property_manager[0].management_status}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="d-flex flex-column gap-2">
+                    {contracts.map((contract, i) => (
+                      <div key={i} onClick={() => selectContract(contract)}>
+                        <div className="d-flex justify-content-between align-items-end">
+                          <h6 style={mediumBold}>Contract {i + 1}</h6>
+                          <img src={File} />
+                        </div>
+                        {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
+                      </div>
+                    ))}
+                  </div>
+                  <Row className="mt-4">
+                    <Col
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-evenly",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      {" "}
+                      <Button
+                        onClick={approvePropertyManager}
+                        variant="outline-primary"
+                        style={bluePillButton}
+                      >
+                        Approve
+                      </Button>
+                    </Col>
+                    <Col
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-evenly",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      {" "}
+                      <Button
+                        onClick={rejectPropertyManager}
+                        variant="outline-primary"
+                        style={redPillButton}
+                      >
+                        Reject
+                      </Button>
+                    </Col>
+                  </Row>
+                  <hr style={{ opacity: 1 }} className="mt-1" />
+                </div>
+              ) : (
+                ""
+              )}
+              {expandManagerDocs ? (
+                <ManagerDocs
+                  property={property}
+                  addDocument={addContract}
+                  selectContract={selectContract}
+                  reload={reloadProperty}
+                />
+              ) : (
+                ""
+              )}
+              <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
+                <div className="d-flex justify-content-between mt-3">
+                  <h6 style={mediumBold} className="mb-1">
+                    Tenant Agreement
+                  </h6>
+                  <img
+                    src={expandLeaseDocs ? ArrowUp : ArrowDown}
+                    alt="Expand"
+                  />
+                </div>
                 <hr style={{ opacity: 1 }} className="mt-1" />
               </div>
-            ) : (
-              ""
-            )}
-            {expandManagerDocs ? (
-              <ManagerDocs
-                property={property}
-                addDocument={addContract}
-                selectContract={selectContract}
-                reload={reloadProperty}
-              />
-            ) : (
-              ""
-            )}
-            <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
-              <div className="d-flex justify-content-between mt-3">
-                <h6 style={mediumBold} className="mb-1">
-                  Tenant Agreement
-                </h6>
-                <img src={expandLeaseDocs ? ArrowUp : ArrowDown} alt="Expand" />
-              </div>
-              <hr style={{ opacity: 1 }} className="mt-1" />
+              {expandLeaseDocs ? (
+                <LeaseDocs
+                  property={property}
+                  addDocument={addAgreement}
+                  selectAgreement={selectAgreement}
+                />
+              ) : (
+                ""
+              )}
             </div>
-            {expandLeaseDocs ? (
-              <LeaseDocs
-                property={property}
-                addDocument={addAgreement}
-                selectAgreement={selectAgreement}
-              />
-            ) : (
-              ""
-            )}
-          </div>
-        )}
-      </Container>
-    </div>
+          )}
+        </Container>
+      </div>
+    )
+  ) : (
+    <div></div>
   );
 }
 

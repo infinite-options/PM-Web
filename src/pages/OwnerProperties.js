@@ -85,7 +85,26 @@ function OwnerProperties(props) {
                 <h5 className="mb-0" style={{ fontWeight: "600" }}>
                   ${property.listed_rent}/mo
                 </h5>
-                {property.management_status !== "ACCEPTED" ? (
+                {property.property_manager.length > 1 ? (
+                  property.property_manager.map((p, i) =>
+                    p.management_status === "REJECTED" ? (
+                      ""
+                    ) : p.management_status !== "ACCEPTED" ? (
+                      <p style={orangePill} className="mb-0">
+                        New
+                      </p>
+                    ) : property.rental_uid !== null ? (
+                      <p style={greenPill} className="mb-0">
+                        Rented
+                      </p>
+                    ) : (
+                      <p style={orangePill} className="mb-0">
+                        Not Rented
+                      </p>
+                    )
+                  )
+                ) : property.property_manager[0].management_status !==
+                  "ACCEPTED" ? (
                   <p style={orangePill} className="mb-0">
                     New
                   </p>
@@ -105,26 +124,62 @@ function OwnerProperties(props) {
                 {property.city}, {property.state} <br />
                 {property.zip}
               </p>
-              <div className="d-flex">
-                <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                  <p style={{ ...blue, ...xSmall }} className="mb-0">
-                    {property.management_status === "ACCEPTED"
-                      ? `Manager: ${property.manager_business_name}`
-                      : "No Manager"}
-                  </p>
+              {property.property_manager.length > 0 ? (
+                property.property_manager.map((p, i) =>
+                  p.management_status === "REJECTED" ? (
+                    ""
+                  ) : (
+                    <div className="d-flex">
+                      <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                        <p style={{ ...blue, ...xSmall }} className="mb-0">
+                          {p.management_status === "ACCEPTED"
+                            ? `Manager: ${p.manager_business_name}`
+                            : "No Manager"}
+                        </p>
+                      </div>
+                      <div
+                        style={p.manager_id ? {} : hidden}
+                        onClick={stopPropagation}
+                      >
+                        <a href={`tel:${p.manager_phone_number}`}>
+                          <img src={Phone} alt="Phone" style={smallImg} />
+                        </a>
+                        <a href={`mailto:${p.manager_email}`}>
+                          <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                      </div>
+                    </div>
+                  )
+                )
+              ) : (
+                <div className="d-flex">
+                  <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                    <p style={{ ...blue, ...xSmall }} className="mb-0">
+                      {property.property_manager[0].management_status ===
+                      "ACCEPTED"
+                        ? `Manager: ${property.property_manager[0].manager_business_name}`
+                        : "No Manager"}
+                    </p>
+                  </div>
+                  <div
+                    style={
+                      property.property_manager[0].manager_id ? {} : hidden
+                    }
+                    onClick={stopPropagation}
+                  >
+                    <a
+                      href={`tel:${property.property_manager[0].manager_phone_number}`}
+                    >
+                      <img src={Phone} alt="Phone" style={smallImg} />
+                    </a>
+                    <a
+                      href={`mailto:${property.property_manager[0].manager_email}`}
+                    >
+                      <img src={Message} alt="Message" style={smallImg} />
+                    </a>
+                  </div>
                 </div>
-                <div
-                  style={property.manager_id ? {} : hidden}
-                  onClick={stopPropagation}
-                >
-                  <a href={`tel:${property.manager_phone_number}`}>
-                    <img src={Phone} alt="Phone" style={smallImg} />
-                  </a>
-                  <a href={`mailto:${property.manager_email}`}>
-                    <img src={Message} alt="Message" style={smallImg} />
-                  </a>
-                </div>
-              </div>
+              )}
             </Col>
           </Row>
         </Container>
