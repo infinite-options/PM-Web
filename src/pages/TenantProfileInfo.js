@@ -53,20 +53,23 @@ function TenantProfileInfo(props) {
   const [firstName, setFirstName] = React.useState(autofillState.first_name);
   const [lastName, setLastName] = React.useState(autofillState.last_name);
   const [salary, setSalary] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [frequency, setFrequency] = useState("Annual");
   const [jobTitle, setJobTitle] = React.useState("");
   const [company, setCompany] = React.useState("");
   const [ssn, setSsn] = React.useState(autofillState.ssn);
   const [dlNumber, setDLNumber] = React.useState("");
-  const [dlState, setDLState] = React.useState("");
+
   const [errorMessage, setErrorMessage] = React.useState("");
+
   const [usePreviousAddress, setUsePreviousAddress] = React.useState(false);
   const [useDetailsIfRenting, setUseDetailsIfRenting] = React.useState(false);
   const defaultState = "--";
   const [selectedState, setSelectedState] = React.useState(defaultState);
   const [selectedDlState, setSelectedDlState] = React.useState(defaultState);
-  const [selectedPrevState, setSelectedPrevState] =
-    React.useState(defaultState);
+  const [selectedPrevState, setSelectedPrevState] = React.useState(defaultState);
+
   const currentAddressState = React.useState({
     street: "",
     unit: "",
@@ -241,34 +244,7 @@ function TenantProfileInfo(props) {
     "Annual",
     "Hourly Rate",
   ];
-  // const frequencylist = () => {
-  //   return (
-  //     <div>
-  //       {allFrequency.map((freq,i) => {
-  //         return (
-  //           <div
-  //             key={i}
-  //             style={{
-  //               cursor: "pointer",
-  //               //backgroundColor: `${view.color}`,
-  //               color: "#2C2C2E",
-  //               fontSize: "16px",
-  //               padding: "5px",
-  //               font: "normal normal  20px/24px SF Pro Display",
-  //             }}
-  //             onClick={(e) => {
-  //               setFrequency(freq);
-  //               setExpandFrequency(!false);
-  //               handleClose(e);
-  //             }}
-  //           >
-  //             {freq}
-  //           </div>
-  //         );
-  //       })}
-  //     </div>
-  //   );
-  // };
+
   const usDlStates = [
     { name: "ALABAMA", abbreviation: "AL" },
     { name: "ALASKA", abbreviation: "AK" },
@@ -459,15 +435,9 @@ function TenantProfileInfo(props) {
           <Col>
             <Form.Group className="mx-2">
               <Form.Label as="h6" className="mb-0 ms-2">
-                Driver's License State {dlState === "" ? required : ""}
+                Driver's License State {selectedDlState === "" ? required : ""}
               </Form.Label>
-              {/* <DropdownButton variant="light" id="dropdown-basic-button" title={selectedDlState} style={{maxHeight:"90%",overflowY:"auto"}}>
-                {usDlStates.map((state, i) => (
-                  <Dropdown.Item onClick={() => setSelectedDlState(state.abbreviation)} href="#/action-1" > {state.abbreviation} </Dropdown.Item>
-                  ))}
-              </DropdownButton> */}
-              {/* <Form.Control style={squareForm} placeholder='CA' value={dlState}
-                onChange={(e) => setDLState(e.target.value)}/> */}
+              
               <Form.Select
                 style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
                 value={selectedDlState}

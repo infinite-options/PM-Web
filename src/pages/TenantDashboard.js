@@ -598,11 +598,81 @@ function TenantDashboard(props) {
               </Col>
             </Row>
           </div>
-          {/* ============================APPLICATION STATUS=========================== */}
+          {/* ============================ LEASE RECEIVED =========================== */}
           <div style={headings} className="mt-4 mb-1">
-            Application Status
+            Lease Received
           </div>
-          <p>Your lease applications and their statuses </p>
+          <p> The lease agreement has been created for these properties </p>
+
+          <div className="mb-4" style={{ margin: "20px" }}>
+            <Row>
+              <Col>
+                {applications ? (
+                  applications.map((application, i) =>
+                    application.application_status === "FORWARDED" ? (
+                      <div
+                        key={i}
+                        onClick={() => goToReviewPropertyLease(application)}
+                      >
+                        <div className="d-flex justify-content-between align-items-end">
+                          <div
+                            className="img"
+                            style={{
+                              flex: "0 0 35%",
+                              background: "lightgrey",
+                              height: "150px",
+                              width: "100px",
+                            }}
+                          >
+                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
+                            {application.images && application.images.length ? (
+                              <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={application.images[0]}
+                              />
+                            ) : (
+                              <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={No_Image}
+                              />
+                            )}
+                          </div>
+                          <div>
+                            <h5 style={mediumBold}>ADDRESS</h5>
+                            <h6>{application.address}</h6>
+                            <h6>
+                              {application.city},{application.zip}
+                            </h6>
+
+                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
+                            { application.application_status === "FORWARDED" ?
+                            ( <h6 style={{mediumBold,color:"blue"}}>
+                              {application.application_status}
+                              </h6>) 
+                            :
+                            ""
+                          }
+                          </div>
+                        </div>
+                        <hr style={{ opacity: 1 }} />
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                ) : (
+                  <p>No property with lease ready to be signed can be seen </p>
+                )}
+              </Col>
+            </Row>
+          </div>
+          <hr style={{ opacity: 1 }} />
+
+          {/* ============================ APPLICATION STATUS =========================== */}
+          <div style={headings} className="mt-4 mb-1">
+            Application Submitted
+          </div>
+          <p>Your  applications and their statuses </p>
 
           <div className="mb-4" style={{ margin: "20px" }}>
             <Row>
@@ -645,19 +715,23 @@ function TenantDashboard(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "NEW" ||
-                            application.application_status === "FORWARDED" ? (
-                              <h6 style={{ mediumBold, color: "blue" }}>
-                                {application.application_status}
-                              </h6>
-                            ) : application.application_status ===
-                              "REJECTED" ? (
-                              <h6 style={{ mediumBold, color: "red" }}>
-                                {application.application_status}
-                              </h6>
-                            ) : (
-                              ""
-                            )}
+                            {application.application_status === "NEW" || application.application_status === "FORWARDED" ?
+                            ( <h6 style={{mediumBold,color:"blue"}}>
+                              {application.application_status}
+                              </h6>) 
+                              : 
+                              application.application_status === "REJECTED" ? 
+                              (<h6 style={{mediumBold,color:"red"}}>
+                              {application.application_status}
+                              </h6>)
+                              :
+                              application.application_status === "REFUSED" ? 
+                              (<h6 style={{mediumBold,color:"red"}}>
+                              {application.application_status}
+                              </h6>)
+                            :
+                            ""
+                          }
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />

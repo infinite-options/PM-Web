@@ -250,6 +250,64 @@ function TenantWelcomePage(props) {
               </Col>
             </Row>
           </div>
+          {/* ============================RENTED Properties =========================== */}
+          <div style={headings} className="mt-4 mb-1">
+            Properties Rented
+          </div>
+          <div className="mb-4" style={{ margin: "20px" }}>
+            <Row>
+              <Col>
+                {applications
+                  ? applications.map((application, i) => (
+                    application.application_status === 'RENTED' ?
+                      (<div
+                        key={i}
+                        onClick={() => goToReviewPropertyLease(application)}
+                      >
+                        <div className="d-flex justify-content-between align-items-end">
+                          <div
+                            className="img"
+                            style={{
+                              flex: "0 0 35%",
+                              background: "lightgrey",
+                              height: "150px",
+                              width: "100px",
+                            }}
+                          >
+                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
+                            {application.images && application.images.length ? (
+                              <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={application.images[0]}
+                              />
+                            ) : (
+                              <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={No_Image}
+                              />
+                            )}
+                          </div>
+                          <div>
+                            <h5 style={mediumBold}>ADDRESS</h5>
+                            <h6>{application.address}</h6>
+                            <h6>
+                              {application.city},{application.zip}
+                            </h6>
+
+                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
+                            <h6 style={{mediumBold,color:"#41fc03"}}>
+                              {application.application_status}
+                            </h6>
+                          </div>
+                        </div>
+                        <hr style={{ opacity: 1 }} />
+                      </div>):""
+                    ))
+                  : 
+                  ( <p>You have not rented any property yet. </p>)}
+              </Col>
+            </Row>
+          </div>
           {/* ============================APPLICATION STATUS=========================== */}
           <div style={headings} className="mt-4 mb-1">
             Application Status{" "}
@@ -261,6 +319,8 @@ function TenantWelcomePage(props) {
               <Col>
                 {applications
                   ? applications.map((application, i) => (
+                    application.application_status !== 'RENTED' ?
+                      (
                       <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
@@ -296,16 +356,26 @@ function TenantWelcomePage(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            <h6 style={mediumBold}>
+                            {application.application_status === "NEW" || application.application_status === "FORWARDED" ?
+                            ( <h6 style={{mediumBold,color:"blue"}}>
                               {application.application_status}
-                            </h6>
-                            
+                              </h6>) 
+                              : 
+                              application.application_status === "REJECTED" ? 
+                              (<h6 style={{mediumBold,color:"red"}}>
+                              {application.application_status}
+                              </h6>)
+                            :
+                            ""
+                          }
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />
-                      </div>
+                      </div>):""
                     ))
-                  : ""}
+                  : 
+                  ( <p>You have not applied for any property yet. </p>)
+                  }
               </Col>
             </Row>
           </div>

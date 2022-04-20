@@ -108,6 +108,19 @@ function TenantDocumentUpload(props) {
     };
     fetchProfile();
   }, []);
+
+  // useEffect(() => {
+  //   const addDocument = async () => {
+
+  //     for (let i = 0; i < files.length; i++) {
+  //       let key = `doc_${i}`;
+  //       tenantProfile[key] = files[i].file;
+  //       delete files[i].file;
+  //     }
+  //     await put("/tenantProfileInfo", tenantProfile, access_token, files);
+
+  //   }
+  // })
   // ======================================<Return function>=======================================
   return (
     <div className="h-100 d-flex flex-column">
