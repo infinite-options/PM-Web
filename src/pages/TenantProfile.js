@@ -39,6 +39,9 @@ function TenantProfile(props) {
   const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+
+  const [phone, setPhone] = React.useState(user.phone_number);
+  const [email, setEmail] = React.useState(user.email);
   const [salary, setSalary] = useState("");
   const [frequency, setFrequency] = useState("Annual");
   const [jobTitle, setJobTitle] = useState("");
@@ -163,6 +166,8 @@ function TenantProfile(props) {
       setFirstName(response.result[0].tenant_first_name);
       setLastName(response.result[0].tenant_last_name);
       setSsn(response.result[0].tenant_ssn);
+      setPhone(response.result[0].tenant_phone_number);
+      setEmail(response.result[0].tenant_email);
       setSalary(response.result[0].tenant_current_salary);
       setJobTitle(response.result[0].tenant_current_job_title);
       setCompany(response.result[0].tenant_current_job_company);
@@ -184,12 +189,14 @@ function TenantProfile(props) {
         if (prevAddress) {
           previousAddressState[1](prevAddress);
           setSelectedPrevState(prevAddress.state);
+          if (prevAddress.street) {
+            setUsePreviousAddress(true);
+          }
         }
+
       }
 
-      if (response.result[0].tenant_previous_address != null) {
-        setUsePreviousAddress(true);
-      }
+    
     };
     fetchProfile();
   }, []);
@@ -204,6 +211,8 @@ function TenantProfile(props) {
       first_name: firstName,
       last_name: lastName,
       current_salary: salary,
+      phone_number: phone,
+      email: email,
       salary_freq: frequency,
       current_job_title: jobTitle,
       current_job_company: company,
@@ -274,6 +283,30 @@ function TenantProfile(props) {
             placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+          />
+         </Form.Group>
+          <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Email ID
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            placeholder="Email ID"
+            value={email}
+            disabled="disabled"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Phone Number
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            placeholder="Phone Number"
+            value={phone}
+            // disabled="disabled"
+            onChange={(e) => setPhone(e.target.value)}
           />
         </Form.Group>
         <Row className="mx-0 my-0">
@@ -384,7 +417,7 @@ function TenantProfile(props) {
                 textAlign: "center",
               }}
             >
-              {usePreviousAddress && previousAddressState ? (
+              {usePreviousAddress && previousAddressState && previousAddressState.state ? (
                 <img src={Check} style={{ width: "13px", height: "9px" }} />
               ) : null}
             </div>

@@ -19,7 +19,9 @@ function ReviewPropertyLease(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const [rentals, setRentals] = useState([]);
-  const [rentPayments, setRentPayments] = useState([]);
+  const [rentPayments0, setRentPayments0] = useState([]);
+  // const [rentPayments1, setRentPayments1] = useState([]);
+  // const [rentPayments2, setRentPayments2] = useState([]);
   const [lease, setLease] = useState([]);
   const application_uid = location.state.application_uid;
   const application_status_1 = location.state.application_status_1;
@@ -52,21 +54,37 @@ function ReviewPropertyLease(props) {
         const leaseDoc = filteredRentals[0].documents
           ? JSON.parse(filteredRentals[0].documents)
           : [];
-        const rentPayments = filteredRentals[0].rent_payments
+        const rentPayments0 = filteredRentals[0].rent_payments
           ? JSON.parse(filteredRentals[0].rent_payments)
           : [];
+          console.log("payment0",rentPayments0);
+
+          // if(filteredRentals[1]){
+          //     const rentPayments1 = filteredRentals[1].rent_payments
+          //   ? JSON.parse(filteredRentals[1].rent_payments)
+          //   : [];
+          //    setRentPayments1(rentPayments1);
+          //   console.log("payment1",rentPayments1);
+          // }
+          // if(filteredRentals[2]){
+          //   const rentPayments0 = filteredRentals[2].rent_payments
+          //   ? JSON.parse(filteredRentals[2].rent_payments)
+          //   : [];
+          // }
 
         setLease(leaseDoc);
-        setRentPayments(rentPayments);
+        setRentPayments0(rentPayments0);
+        // setRentPayments2(rentPayments2);
       }
       setRentals(filteredRentals);
     };
-    // if(!rentPayments || !lease){
-    if (!rentals) {
-      setShowLease("false");
-    }
+
+      if(!rentals){
+       setShowLease("false");
+      }
     fetchRentals();
   }, [user]);
+
   useEffect(() => {
     const fetchProperties = async () => {
       const response = await get(`/propertyInfo?property_uid=${property_uid}`);
@@ -130,7 +148,7 @@ function ReviewPropertyLease(props) {
       <Header
         title="Property Lease Details"
         leftText="< Back"
-        leftFn={() => setTab("DASHBOARD")}
+        leftFn={() => navigate("/tenant")}
       />
       {/* ==================< Images properties >=======================================  */}
       {images && images.length ? (
@@ -141,58 +159,66 @@ function ReviewPropertyLease(props) {
       {/* ==================< Property Details >=======================================  */}
       <TenantPropertyView forPropertyLease="true" />
       {/* ==================< Lease Details >=======================================  */}
-      {application_status_1 === "FORWARDED" ||
-      application_status_1 === "RENTED" ? (
-        <div style={{ marginLeft: "50px" }}>
-          <p
-            style={{ fontWeight: "bold", textAlign: "left", fontSize: "18px" }}
-          >
-            Rent Details
-          </p>
-          <Row style={{ marginLeft: "10px" }}>
-            <Col>
-              <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Lease Start Date{" "}
-              </Row>
-              <Row style={{ paddingLeft: "20px" }}>
-                {" "}
-                {rentals && rentals.length ? rentals[0].lease_start : ""}{" "}
-              </Row>
-            </Col>
-            <Col>
-              <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Lease End Date{" "}
-              </Row>
-              <Row style={{ paddingLeft: "20px" }}>
-                {" "}
-                {rentals && rentals.length ? rentals[0].lease_end : ""}
-              </Row>
-            </Col>
-          </Row>
-          {/* <div style={{marginLeft:"20px"}}>
+      {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ?
+          (<div style={{ marginLeft: "50px" }}>
+            <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "18px" }}>
+              Lease Details
+            </p>
+            <Row style={{ marginLeft: "10px" }}>
+              <Col>
+                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                  Lease Start Date{" "}
+                </Row>
+                <Row style={{ paddingLeft: "20px" }}>
+                  {" "}
+                  {rentals && rentals.length ? rentals[0].lease_start : ""}{" "}
+                </Row>
+              </Col>
+              <Col>
+                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                  Lease End Date{" "}
+                </Row>
+                <Row style={{ paddingLeft: "20px" }}>
+                  {" "}
+                  {rentals && rentals.length ? rentals[0].lease_end : ""}
+                </Row>
+              </Col>
+              <Col>
+                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                  Monthly Rent{" "}
+                </Row>
+                <Row style={{ paddingLeft: "20px" }}>
+                  {" "}
+                  $ {properties && properties.length ? properties[0].listed_rent : ""}
+                </Row>
+              </Col>
+            </Row>
+            {/* <div style={{marginLeft:"20px"}}>
                             <Row style={{paddingLeft:"20px",fontWeight:"bold"}}>Monthly Rent </Row>
                             <Row style={{paddingLeft:"20px"}}> $2000 </Row>
                         </div> */}
-          <div
-            style={{
-              fontWeight: "bold",
-              textAlign: "left",
-              fontSize: "18px",
-              paddingLeft: "20px",
-              marginTop: "20px",
-            }}
-          >
-            Extra charges
-          </div>
+           {rentPayments0 && rentPayments0.length ?
+            (
+            <>
+            <div
+              style={{
+                fontWeight: "bold",
+                textAlign: "left",
+                fontSize: "18px",
+                paddingLeft: "20px",
+                marginTop: "20px",
+              }}
+            >
+              Extra charges
+            </div>
           <Row style={{ marginLeft: "10px" }}>
             <Col>
               <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Name{" "}
+              Fee Name{" "}
               </Row>
               <Row style={{ paddingLeft: "20px" }}>
-                {rentPayments && rentPayments.length
-                  ? rentPayments[0].fee_name
-                  : ""}{" "}
+               1. {rentPayments0[0].fee_name}
+                  {" "}
               </Row>
             </Col>
             <Col>
@@ -201,9 +227,7 @@ function ReviewPropertyLease(props) {
               </Row>
               <Row style={{ paddingLeft: "20px" }}>
                 {" "}
-                {rentPayments && rentPayments.length
-                  ? rentPayments[0].fee_type
-                  : ""}{" "}
+                { rentPayments0[0].fee_type}{" "}
               </Row>
             </Col>
             <Col>
@@ -212,9 +236,7 @@ function ReviewPropertyLease(props) {
               </Row>
               <Row style={{ paddingLeft: "20px" }}>
                 {" "}
-                {rentPayments && rentPayments.length
-                  ? rentPayments[0].charge
-                  : ""}{" "}
+                {rentPayments0[0].charge}{" "}
               </Row>
             </Col>
             <Col>
@@ -223,84 +245,233 @@ function ReviewPropertyLease(props) {
               </Row>
               <Row style={{ paddingLeft: "20px" }}>
                 {" "}
-                {rentPayments && rentPayments.length
-                  ? rentPayments[0].frequency
-                  : ""}{" "}
+                {rentPayments0[0].frequency}{" "}
               </Row>
             </Col>
           </Row>
-        </div>
-      ) : (
-        ""
-      )}
-      ;
+          </>) : ""}
+
+
+          {rentPayments0[1] && rentPayments0.length ?
+          (<>
+            <Row style={{ marginLeft: "10px" }}>
+            <Col>
+              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Fee Name{" "}
+              </Row> */}
+              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
+                2. { rentPayments0[1].fee_name}{" "}
+              </Row>
+            </Col>
+            <Col>
+              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Fee Type{" "}
+              </Row> */}
+              <Row style={{ paddingLeft: "20px ",paddingTop: "10px" }}>
+                {" "}
+                {rentPayments0[1].fee_type}{" "}
+              </Row>
+            </Col>
+            <Col>
+              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Charges{" "}
+              </Row> */}
+              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
+                {" "}
+                {rentPayments0[1].charge}{" "}
+              </Row>
+            </Col>
+            <Col>
+              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Frequency{" "}
+              </Row> */}
+              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
+                {" "}
+                {rentPayments0[1].frequency}{" "}
+              </Row>
+            </Col>
+
+          </Row>
+          </>) : ""}
+
+
+          {rentPayments0[1] && rentPayments0.length ?
+          (<>
+            <Row style={{ marginLeft: "10px" }}>
+            <Col>
+              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Fee Name{" "}
+              </Row> */}
+              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
+                2. { rentPayments0[1].fee_name}{" "}
+              </Row>
+            </Col>
+            <Col>
+              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Fee Type{" "}
+              </Row> */}
+              <Row style={{ paddingLeft: "20px ",paddingTop: "10px" }}>
+                {" "}
+                {rentPayments0[1].fee_type}{" "}
+              </Row>
+            </Col>
+            <Col>
+              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Charges{" "}
+              </Row> */}
+              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
+                {" "}
+                {rentPayments0[1].charge}{" "}
+              </Row>
+            </Col>
+            <Col>
+              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                Frequency{" "}
+              </Row> */}
+              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
+                {" "}
+                {rentPayments0[1].frequency}{" "}
+              </Row>
+            </Col>
+
+          </Row>
+          </>)
+          :
+          ""
+          }
+        </div>)
+       :
+       ""
+      }
+      
+      {/* ===============Manager Contact =================================== */}
+      <div style={{ marginLeft: "50px",marginTop:"25px", paddingBottom:"20px"  }}>
+            <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "18px" }}>
+              Contact
+            </p>
+            <Row style={{ marginLeft: "10px" }}>
+              <Col>
+                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                  Management Name{" "}
+                </Row>
+                <Row style={{ paddingLeft: "20px" }}>
+                  {" "}
+                  {properties && properties.length ? properties[0].manager_business_name : ""}{" "}
+                </Row>
+              </Col>
+            </Row>
+            <Row style={{ marginLeft: "10px",paddingTop: "10px" }}>
+              <Col>
+                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                  Email{" "}
+                </Row>
+                <Row style={{ paddingLeft: "20px" }}>
+                  {" "}
+                  {properties && properties.length ? properties[0].manager_email : ""}{" "}
+                </Row>
+              </Col>
+              <Col>
+                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                  Phone Number{" "}
+                </Row>
+                <Row style={{ paddingLeft: "20px" }}>
+                  {" "}
+                  {properties && properties.length ? properties[0].manager_phone_number : ""}{" "}
+                </Row>
+              </Col>
+              </Row>
+      </div>
       {/* ==================< Lease Documents >=======================================  */}
-      {application_status_1 === "FORWARDED" ||
-      application_status_1 === "RENTED" ? (
-        <div>
-          <p
-            style={{
-              fontWeight: "bold",
-              textAlign: "left",
-              fontSize: "18px",
-              marginLeft: "50px",
-              marginTop: "20px",
-            }}
-          >
-            Lease Documents
-          </p>
+      {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") && lease.length ?
+        (
+            <div>
+              <p
+                style={{
+                  fontWeight: "bold",
+                  textAlign: "left",
+                  fontSize: "18px",
+                  marginLeft: "50px",
+                  marginTop: "20px",
+                }}
+              >
+                Lease Documents
+              </p>
 
-          {/* <div style={{marginTop:"40px",paddingLeft:"20px",fontWeight:"bold"}} > Documents</div> */}
+              {/* <div style={{marginTop:"40px",paddingLeft:"20px",fontWeight:"bold"}} > Documents</div> */}
 
-          <Container fluid>
-            <div
-              className="mb-4"
-              style={{
-                textAlign: "left",
-                fontSize: "18px",
-                paddingLeft: "50px",
-                marginTop: "20px",
-              }}
-            >
-              {lease.map((lease, i) => (
-                <div key={i}>
-                  <div className="d-flex justify-content-between align-items-end">
-                    <div>
-                      <a
-                        href={lease.link}
-                        style={{ paddingLeft: "20px" }}
-                        target="_blank"
-                      >
-                        {" "}
-                        {lease.name}{" "}
-                      </a>
-                      {/* <h6 style={{paddingLeft:"20px",fontWeight:"bold"}}>
-                                      {lease.name}
-                                  </h6> */}
-                      <p style={{ paddingLeft: "20px" }} className="m-0">
-                        {lease.description}
-                      </p>
-                      {/* <a href={lease.link} style={{paddingLeft:"20px"}}> {lease.name} </a> */}
+              <Container fluid>
+                <div
+                  className="mb-4"
+                  style={{
+                    textAlign: "left",
+                    fontSize: "18px",
+                    paddingLeft: "50px",
+                    marginTop: "20px",
+                  }}
+                >
+                  {lease.map((lease, i) => (
+                    <div key={i}>
+                      <div className="d-flex justify-content-between align-items-end">
+                        <div>
+                          <a
+                            href={lease.link}
+                            style={{ paddingLeft: "20px" }}
+                            target="_blank"
+                          >
+                            {" "}
+                            {lease.name}{" "}
+                          </a>
+                          {/* <h6 style={{paddingLeft:"20px",fontWeight:"bold"}}>
+                                          {lease.name}
+                                      </h6> */}
+                          <p style={{ paddingLeft: "20px" }} className="m-0">
+                            {lease.description}
+                          </p>
+                          {/* <a href={lease.link} style={{paddingLeft:"20px"}}> {lease.name} </a> */}
+                        </div>
+                        {/* <div>
+                                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
+                                      onClick={() => editDocument(i)}/>
+                                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
+                                      onClick={() => deleteDocument(i)}/>
+                                  <a href={file.link} target='_blank'>
+                                      <img src={File}/>
+                                  </a>
+                                  </div> */}
+                      </div>
+                      <hr style={{ opacity: 1 }} />
                     </div>
-                    {/* <div>
-                              <img src={EditIcon} alt='Edit' className='px-1 mx-2'
-                                  onClick={() => editDocument(i)}/>
-                              <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
-                                  onClick={() => deleteDocument(i)}/>
-                              <a href={file.link} target='_blank'>
-                                  <img src={File}/>
-                              </a>
-                              </div> */}
-                  </div>
-                  <hr style={{ opacity: 1 }} />
+                  ))}
                 </div>
-              ))}
+              </Container>
             </div>
-          </Container>
-        </div>
-      ) : (
+          ) 
+         :
+         (application_status_1 === "FORWARDED" || application_status_1 === "RENTED") && !lease.length ?
+          (
+              <>
+                  <p
+                    style={{
+                      fontWeight: "bold",
+                      textAlign: "left",
+                      fontSize: "18px",
+                      marginLeft: "50px",
+                      marginTop: "20px"
+                    }}
+                  >
+                    Lease Documents
+                  </p>
+                  <h6 style={{ paddingLeft: "70px",paddingBottom:"40px" }}> Property Manager is yet to upload the lease document. Please contact him </h6>
+                 
+              </>
+          )
+        :
+        (application_status_1 === "REFUSED" || application_status_1 === "NEW") ?
         ""
-      )}
+        :
+        ""
+       }
+
       {/* ==================< Approval|Disapprove buttons >=======================================  */}
       <Row className="mt-4">
         {application_status_1 === "FORWARDED" ? (

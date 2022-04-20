@@ -159,11 +159,7 @@ function AddressForm(props) {
             <Form.Label as="h6" className="mb-0 ms-2">
               State {state === "" ? required : ""}
             </Form.Label>
-            {/* <DropdownButton variant="light" id="dropdown-basic-button" title={selectedState} >
-                {usStates.map((state, i) => (
-                  <Dropdown.Item  onClick={() => setSelectedState(state.abbreviation)} href="#/action-1" > {state.abbreviation} </Dropdown.Item>
-                  ))}  
-            </DropdownButton> */}
+            
             <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
                   value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
                     {usStates.map((state, i)=> (
