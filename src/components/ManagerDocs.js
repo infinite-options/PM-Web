@@ -15,25 +15,67 @@ function ManagerDocs(props) {
   const [businesses, setBusinesses] = React.useState([]);
   const [selectedBusiness, setSelectedBusiness] = React.useState(null);
   const [addPropertyManager, setAddPropertyManager] = React.useState(false);
-
+  console.log(property);
   const updateBusiness = async () => {
     const files = JSON.parse(property.images);
     const business_uid = JSON.parse(selectedBusiness).business_uid;
-    const newProperty = {
-      property_uid: property.property_uid,
-      manager_id: business_uid,
-      management_status: "FORWARDED",
-    };
-    for (let i = -1; i < files.length - 1; i++) {
-      let key = `img_${i}`;
-      if (i === -1) {
-        key = "img_cover";
+
+    if (property.property_manager.length > 0) {
+      console.log("in if");
+      for (const prop of property.property_manager) {
+        if (
+          business_uid === prop.manager_id &&
+          prop.management_status === "REJECTED"
+        ) {
+          console.log("here in if");
+          alert("youve already rejected this Management Company");
+          reload();
+        } else {
+          console.log("here in else");
+          const newProperty = {
+            property_uid: property.property_uid,
+            manager_id: business_uid,
+            management_status: "FORWARDED",
+          };
+          for (let i = -1; i < files.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            newProperty[key] = files[i + 1];
+          }
+          const response = await put("/properties", newProperty, null, files);
+          setAddPropertyManager(false);
+          reload();
+        }
       }
-      newProperty[key] = files[i + 1];
+    } else {
+      console.log("in else");
+      if (
+        business_uid === property.property_manager[0].manager_id &&
+        property.property_manager[0].management_status === "REJECTED"
+      ) {
+        console.log("here in if");
+        alert("youve already rejected this Management Company");
+      } else {
+        console.log("here in else");
+        const newProperty = {
+          property_uid: property.property_uid,
+          manager_id: business_uid,
+          management_status: "FORWARDED",
+        };
+        for (let i = -1; i < files.length - 1; i++) {
+          let key = `img_${i}`;
+          if (i === -1) {
+            key = "img_cover";
+          }
+          newProperty[key] = files[i + 1];
+        }
+        const response = await put("/properties", newProperty, null, files);
+        setAddPropertyManager(false);
+        reload();
+      }
     }
-    const response = await put("/properties", newProperty, null, files);
-    setAddPropertyManager(false);
-    reload();
   };
 
   React.useEffect(async () => {
@@ -49,7 +91,7 @@ function ManagerDocs(props) {
   }, []);
 
   return (
-    <div className=" mx-2 d-flex flex-column gap-2">
+    <div className=" mx-4 d-flex flex-column gap-2">
       {property.management_status === "ACCEPTED" ? (
         <div className="d-flex flex-column gap-2">
           {contracts.map((contract, i) => (
