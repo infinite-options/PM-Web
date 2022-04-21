@@ -53,7 +53,7 @@ function PropertyManagerDocs(props) {
         }
         const newProperty = {
             property_uid: property.property_uid,
-            manager_id: management_buid,
+            // manager_id: management_buid,
             management_status: "REJECTED"
         }
         const files = JSON.parse(property.images);

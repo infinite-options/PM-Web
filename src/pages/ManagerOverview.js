@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {Col, Container, Row} from 'react-bootstrap';
+import {Button, Col, Container, Row} from 'react-bootstrap';
 import Header from '../components/Header';
-import {green, bolder, red, xSmall, smallLine, mediumBold} from '../utils/styles';
+import {green, bolder, red, xSmall, smallLine, mediumBold, redPillButton} from '../utils/styles';
 import Repair from '../icons/Repair.svg';
 import Property from '../icons/Property.svg';
 import Emergency from '../icons/Emergency.svg';
@@ -91,7 +91,6 @@ function ManagerOverview(props) {
     //
     //     setAlerts({repairs: repairs, applications: applications, count: count})
     // }
-
 
     return (
         <div>
@@ -195,6 +194,17 @@ function ManagerOverview(props) {
                     </Row>
 
                     <h6 style={bolder} className='mt-4 mb-1'>New Maintenance Requests</h6>
+
+                    {/*<br/>*/}
+                    {/*<ConfirmDialog*/}
+                    {/*    title={'You are about to delete your profile'}*/}
+                    {/*    isOpen={showDialog}*/}
+                    {/*    onConfirm={onConfirm}*/}
+                    {/*    onCancel={onCancel}*/}
+                    {/*/>*/}
+                    {/*<Button variant='outline-primary' style={redPillButton} onClick={() => setShowDialog(true)}>*/}
+                    {/*    Delete*/}
+                    {/*</Button>*/}
 
 
                 </div>
