@@ -85,7 +85,11 @@ function OwnerProperties(props) {
                 <h5 className="mb-0" style={{ fontWeight: "600" }}>
                   ${property.listed_rent}/mo
                 </h5>
-                {property.property_manager.length > 1 ? (
+                {property.property_manager.length == 0 ? (
+                  <p style={orangePill} className="mb-0">
+                    New
+                  </p>
+                ) : property.property_manager.length > 1 ? (
                   property.property_manager.map((p, i) =>
                     p.management_status === "REJECTED" ? (
                       ""
@@ -124,7 +128,11 @@ function OwnerProperties(props) {
                 {property.city}, {property.state} <br />
                 {property.zip}
               </p>
-              {property.property_manager.length > 0 ? (
+              {property.property_manager.length == 0 ? (
+                <p style={{ ...blue, ...xSmall }} className="mb-0">
+                  No Manager
+                </p>
+              ) : property.property_manager.length > 1 ? (
                 property.property_manager.map((p, i) =>
                   p.management_status === "REJECTED" ? (
                     ""

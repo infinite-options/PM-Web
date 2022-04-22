@@ -27,7 +27,7 @@ import ManagementContract from "./ManagementContract";
 import TenantAgreement from "./TenantAgreement";
 import { get, put } from "../utils/api";
 import File from "../icons/File.svg";
-
+import ConfirmDialog from "./ConfirmDialog";
 function PropertyView(props) {
   const { property_uid, back, reload, hideEdit } = props;
   const [property, setProperty] = useState({
@@ -62,6 +62,7 @@ function PropertyView(props) {
   const [showTenantAgreement, setShowTenantAgreement] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
   const [selectedAgreement, setSelectedAgreement] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
   // React.useEffect(async () => {
   //   const response = await get(
   //     `/contracts?property_uid=${property.property_uid}`
@@ -246,11 +247,15 @@ function PropertyView(props) {
         null,
         files
       );
-
+      setShowDialog(false);
       setExpandManagerDocs(!expandManagerDocs);
       reloadProperty();
       //navigate("/tenant");
     }
+  };
+
+  const onCancel = () => {
+    setShowDialog(false);
   };
   console.log(property);
   return Object.keys(property).length > 1 ? (
@@ -268,6 +273,13 @@ function PropertyView(props) {
       />
     ) : (
       <div>
+        <ConfirmDialog
+          title={"Are you sure you want to reject this Property Manager?"}
+          isOpen={showDialog}
+          onConfirm={rejectPropertyManager}
+          onCancel={onCancel}
+        />
+
         <Header title="Properties" leftText="< Back" leftFn={headerBack} />
         <Container className="pb-5 mb-5">
           {editProperty ? (
@@ -320,7 +332,15 @@ function PropertyView(props) {
                 {property.city}, {property.state} {property.zip}
               </p>
               <div className="d-flex">
-                {property.property_manager.length > 1 ? (
+                {property.property_manager.length == 0 ? (
+                  <p style={orangePill} className="mb-0">
+                    New
+                  </p>
+                ) : property.rentalInfo.length == 0 ? (
+                  <p style={orangePill} className="mb-0">
+                    Not Rented
+                  </p>
+                ) : property.property_manager.length > 1 ? (
                   property.property_manager.map((p, i) =>
                     p.management_status === "REJECTED" ? (
                       ""
@@ -354,7 +374,9 @@ function PropertyView(props) {
                 )}
               </div>
               <PropertyCashFlow property={property} state={cashFlowState} />
-              {property.property_manager.length > 1 ? (
+              {property.property_manager.length == 0 ? (
+                ""
+              ) : property.property_manager.length > 1 ? (
                 property.property_manager.map((p, i) =>
                   p.management_status === "REJECTED" ? (
                     ""
@@ -423,6 +445,7 @@ function PropertyView(props) {
               ) : (
                 ""
               )}
+
               <div onClick={() => setExpandDetails(!expandDetails)}>
                 <div className="d-flex justify-content-between mt-3">
                   <h6 style={mediumBold} className="mb-1">
@@ -453,7 +476,9 @@ function PropertyView(props) {
                 </div>
                 <hr style={{ opacity: 1 }} className="mt-1" />
               </div>
-              {property.property_manager.length > 1 ? (
+              {property.property_manager.length == 0 ? (
+                ""
+              ) : property.property_manager.length > 1 ? (
                 property.property_manager.map((p, i) =>
                   p.management_status === "REJECTED" ? (
                     ""
@@ -486,23 +511,6 @@ function PropertyView(props) {
                         </div>
                       </div>
                       <Row className="mt-4">
-                        {/* <Col
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-evenly",
-                      marginBottom: "25px",
-                    }}
-                  >
-                    {" "}
-                    <Button
-                      // onClick={approvePropertyManager}
-                      variant="outline-primary"
-                      style={bluePillButton}
-                    >
-                      Approve
-                    </Button>
-                  </Col> */}
                         <Col
                           style={{
                             display: "flex",
@@ -513,7 +521,8 @@ function PropertyView(props) {
                         >
                           {" "}
                           <Button
-                            onClick={rejectPropertyManager}
+                            // onClick={rejectPropertyManager}
+                            onClick={() => setShowDialog(true)}
                             variant="outline-primary"
                             style={redPillButton}
                           >
@@ -581,7 +590,8 @@ function PropertyView(props) {
                     >
                       {" "}
                       <Button
-                        onClick={rejectPropertyManager}
+                        // onClick={rejectPropertyManager}
+                        onClick={() => setShowDialog(true)}
                         variant="outline-primary"
                         style={redPillButton}
                       >
@@ -594,7 +604,9 @@ function PropertyView(props) {
               ) : (
                 ""
               )}
-              {property.property_manager.length > 1 ? (
+              {property.property_manager.length == 0 ? (
+                ""
+              ) : property.property_manager.length > 1 ? (
                 property.property_manager.map((p, i) =>
                   p.management_status === "REJECTED" ? (
                     ""
@@ -652,7 +664,8 @@ function PropertyView(props) {
                         >
                           {" "}
                           <Button
-                            onClick={rejectPropertyManager}
+                            // onClick={rejectPropertyManager}
+                            onClick={() => setShowDialog(true)}
                             variant="outline-primary"
                             style={redPillButton}
                           >
@@ -721,7 +734,8 @@ function PropertyView(props) {
                     >
                       {" "}
                       <Button
-                        onClick={rejectPropertyManager}
+                        // onClick={rejectPropertyManager}
+                        onClick={() => setShowDialog(true)}
                         variant="outline-primary"
                         style={redPillButton}
                       >
@@ -731,9 +745,35 @@ function PropertyView(props) {
                   </Row>
                   <hr style={{ opacity: 1 }} className="mt-1" />
                 </div>
+              ) : expandManagerDocs &&
+                property.property_manager[0].management_status ===
+                  "ACCEPTED" ? (
+                <div>
+                  <div className="mx-4 d-flex justify-content-between mt-3">
+                    <div>
+                      <h6 style={mediumBold} className="mb-1">
+                        {property.property_manager[0].manager_business_name}
+                      </h6>
+                    </div>
+                  </div>
+                  <div className="mx-4 d-flex flex-column gap-2">
+                    {contracts.map((contract, i) => (
+                      <div key={i} onClick={() => selectContract(contract)}>
+                        <div className="d-flex justify-content-between align-items-end">
+                          <h6 style={mediumBold}>Contract {i + 1}</h6>
+                          <img src={File} />
+                        </div>
+                        {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
+                      </div>
+                    ))}
+                  </div>
+
+                  <hr style={{ opacity: 1 }} className="mt-1" />
+                </div>
               ) : (
                 ""
               )}
+
               {expandManagerDocs ? (
                 <ManagerDocs
                   property={property}
@@ -744,6 +784,7 @@ function PropertyView(props) {
               ) : (
                 ""
               )}
+
               <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
                 <div className="d-flex justify-content-between mt-3">
                   <h6 style={mediumBold} className="mb-1">
