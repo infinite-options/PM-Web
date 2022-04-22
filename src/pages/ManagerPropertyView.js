@@ -15,7 +15,7 @@ import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
 import ManagementContract from "../components/ManagementContract";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
-import LeaseDocs from "../components/LeaseDocs";
+import ManagerLeaseDocs from "../components/ManagerLeaseDocs";
 import Repair from '../icons/Repair.svg';
 import Document from "../icons/Document.svg";
 import {get} from "../utils/api";
@@ -240,7 +240,7 @@ function ManagerPropertyView(props) {
                         <hr style={{opacity: 1}} className='mt-1'/>
                     </div>
                     {expandLeaseDocs ? (
-                        <LeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
+                        <ManagerLeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
                     ) : ''}
 
 
