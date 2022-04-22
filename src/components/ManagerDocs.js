@@ -1,5 +1,11 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
+
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import File from "../icons/File.svg";
 import { get, put } from "../utils/api";
 import {
@@ -15,6 +21,8 @@ function ManagerDocs(props) {
   const [businesses, setBusinesses] = React.useState([]);
   const [selectedBusiness, setSelectedBusiness] = React.useState(null);
   const [addPropertyManager, setAddPropertyManager] = React.useState(false);
+
+  const [showDialog, setShowDialog] = React.useState(false);
   console.log(property);
   const updateBusiness = async () => {
     const files = JSON.parse(property.images);
@@ -28,7 +36,9 @@ function ManagerDocs(props) {
           prop.management_status === "REJECTED"
         ) {
           console.log("here in if");
-          alert("youve already rejected this Management Company");
+
+          // alert("youve already rejected this Management Company");
+          setShowDialog(true);
           reload();
         } else {
           console.log("here in else");
@@ -49,6 +59,22 @@ function ManagerDocs(props) {
           reload();
         }
       }
+    } else if (property.property_manager.length == 0) {
+      const newProperty = {
+        property_uid: property.property_uid,
+        manager_id: business_uid,
+        management_status: "FORWARDED",
+      };
+      for (let i = -1; i < files.length - 1; i++) {
+        let key = `img_${i}`;
+        if (i === -1) {
+          key = "img_cover";
+        }
+        newProperty[key] = files[i + 1];
+      }
+      const response = await put("/properties", newProperty, null, files);
+      setAddPropertyManager(false);
+      reload();
     } else {
       console.log("in else");
       if (
@@ -56,7 +82,8 @@ function ManagerDocs(props) {
         property.property_manager[0].management_status === "REJECTED"
       ) {
         console.log("here in if");
-        alert("youve already rejected this Management Company");
+        setShowDialog(true);
+        // alert("youve already rejected this Management Company");
       } else {
         console.log("here in else");
         const newProperty = {
@@ -92,6 +119,26 @@ function ManagerDocs(props) {
 
   return (
     <div className=" mx-4 d-flex flex-column gap-2">
+      <Dialog
+        open={showDialog}
+        // onClose={onCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Already Rejected</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            This Property Manager has already been rejected. Please choose
+            another one.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowDialog(false)} color="primary">
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {property.management_status === "ACCEPTED" ? (
         <div className="d-flex flex-column gap-2">
           {contracts.map((contract, i) => (
