@@ -22,11 +22,14 @@ import {get} from "../utils/api";
 import ManagerTenantApplications from "../components/ManagerTenantApplications";
 import ManagerTenantProfileView from "./ManagerTenantProfileView";
 import PropertyManagerDocs from "../components/PropertyManagerDocs";
+import AppContext from "../AppContext";
 
 function ManagerPropertyView(props) {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const {userData, refresh} = React.useContext(AppContext);
+    const {access_token, user} = userData;
     // const property = location.state.property
     // const { mp_id } = useParams();
     const property_uid = location.state.property_uid
@@ -34,21 +37,43 @@ function ManagerPropertyView(props) {
     const [property, setProperty] = React.useState({images: '[]'});
 
     const fetchProperty = async () => {
-        const response = await get(`/propertyInfo?property_uid=${property_uid}`);
-        // setProperty(response.result[0]);
+        const response = await get(`/propertiesOwnerDetail?property_uid=${property_uid}`);
+        const property_details = response.result[0]
 
-        const property = response.result[0]
-        property.tenants = []
+        property_details.tenants = property_details.rentalInfo.filter(r => r.rental_status === "ACTIVE")
 
-        if ((response.result.length > 1) || (response.result[0].tenant_id !== null)) {
-            response.result.forEach(row => {
-                property.tenants.push(row)
-            });
+        const management_businesses = user.businesses.filter(business => business.business_type === "MANAGEMENT")
+        let management_buid = null
+        if (management_businesses.length >= 1) {
+            management_buid = management_businesses[0].business_uid
+        }
+        let owner_negotiations = property_details.property_manager.filter(pm => pm.linked_business_id === management_buid)
+        if (owner_negotiations.length === 0) {
+            property_details.management_status = null
+        } else if (owner_negotiations.length === 1) {
+            property_details.management_status = owner_negotiations[0].management_status
+        } else {
+            // placeholder, scenario needs to be tested and updated
+            property_details.management_status = owner_negotiations[0].management_status
         }
 
-        // console.log(property)
-        setProperty(property);
+        setProperty(property_details);
+
+        // Older Approach
+        const r = await get(`/propertyInfo?property_uid=${property_uid}`);
+        const property_info = r.result[0]
+
+        property_info.tenants = []
+        if ((r.result.length > 1) || (r.result[0].tenant_id !== null)) {
+            r.result.forEach(row => {
+                property_info.tenants.push(row)
+            });
+        }
+        console.log("Property Details Comparison")
+        console.log(property_info)
+        console.log(property_details)
     }
+
     React.useState(() => {
         fetchProperty();
     });
@@ -274,22 +299,22 @@ function ManagerPropertyView(props) {
                     </Row>
 
 
-                    {property.owner_id !== null ? (
+                    {property.owner && (property.owner.length > 0) ? (
                         <div className='mt-4'>
                             <div className='d-flex justify-content-between'>
                                 <div>
                                     <h6 style={mediumBold} className='mb-1'>
-                                        {property.owner_first_name} {property.owner_last_name}
+                                        {property.owner[0].owner_first_name} {property.owner[0].owner_last_name}
                                     </h6>
                                     <p style={{...gray, ...mediumBold}} className='mb-1'>
                                         Owner
                                     </p>
                                 </div>
                                 <div>
-                                    <a href={`tel:${property.owner_phone_number}`}>
+                                    <a href={`tel:${property.owner[0].owner_phone_number}`}>
                                         <img src={Phone} alt='Phone' style={mediumImg}/>
                                     </a>
-                                    <a href={`mailto:${property.owner_email}`}>
+                                    <a href={`mailto:${property.owner[0].owner_email}`}>
                                         <img src={Message} alt='Message' style={mediumImg}/>
                                     </a>
                                 </div>

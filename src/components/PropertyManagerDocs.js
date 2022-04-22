@@ -80,99 +80,66 @@ function PropertyManagerDocs(props) {
 
     return (
         <div className='d-flex flex-column gap-2'>
-            {property.manager_business_name ? (
-                <div className='d-flex flex-column gap-2'>
-                    {contracts.map((contract, i) => (
-                        <div key={i} onClick={() => selectContract(contract)}>
-                            <div className='d-flex justify-content-between align-items-end'>
-                                <h6 style={mediumBold}>Contract {i+1}</h6>
-                                <img src={File}/>
-                            </div>
-                            <hr style={{opacity: 1}} className='mb-0 mt-2'/>
+            <div className='ms-5 md-flex flex-column gap-2'>
+                {contracts.map((contract, i) => (
+                    <div key={i} onClick={() => selectContract(contract)}>
+                        <div className='d-flex justify-content-between align-items-end'>
+                            <h6 style={mediumBold}>Contract {i+1}</h6>
+                            <img src={File}/>
                         </div>
-                    ))}
-                    <div>
-                        <div className='mt-1'>
-                            <div className='d-flex justify-content-between'>
-                                <div>
-                                    <h6 style={mediumBold} className='mb-1'>
-                                        {property.owner_first_name} {property.owner_last_name}
-                                    </h6>
-                                    <p style={{...gray, ...mediumBold}} className='mb-1'>
-                                        Listed Property for Management
-                                    </p>
-                                </div>
-                                <div>
-                                    <a href={`tel:${property.owner_phone_number}`}>
-                                        <img src={Phone} alt='Phone' style={mediumImg}/>
-                                    </a>
-                                    <a href={`mailto:${property.owner_email}`}>
-                                        <img src={Message} alt='Message' style={mediumImg}/>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {property.management_status === "FORWARDED" ?
-                            <Row className="mt-3 mb-4">
-                                <Col className='d-flex flex-row justify-content-evenly mb-1'>
-                                    <Button variant='outline-primary' style={bluePillButton} onClick={addDocument}>
-                                        Create Contract
-                                    </Button>
-                                </Col>
-                                <Col className='d-flex flex-row justify-content-evenly mb-1'>
-                                    <Button variant='outline-primary' style={redPillButton} onClick={rejectManagement}>
-                                        Reject
-                                    </Button>
-                                </Col>
-                            </Row>
-                            : ""}
-
-                        {property.management_status === "SENT" ?
-                            <Row className="mt-3 mb-4">
-                                <Col className='d-flex flex-row justify-content-evenly mb-1'>
-                                    <Button variant='outline-primary' style={redPillButton} onClick={rejectManagement}>
-                                        Withdraw
-                                    </Button>
-                                </Col>
-                            </Row>
-                            : ""}
-
-                        <hr style={{ opacity: 1 }} className="mt-1" />
+                        <hr style={{opacity: 1}} className='mb-0 mt-2'/>
                     </div>
+                ))}
+                <div>
+                    <div className='mt-3'>
+                        <div className='d-flex justify-content-between'>
+                            <div>
+                                <h6 style={mediumBold} className='mb-1'>
+                                    {property.owner[0].owner_first_name} {property.owner[0].owner_last_name}
+                                </h6>
+                                {/*<p style={{...gray, ...mediumBold}} className='mb-1'>*/}
+                                {/*    Listed Property for Management*/}
+                                {/*</p>*/}
+                            </div>
+                            <div>
+                                <a href={`tel:${property.owner_phone_number}`}>
+                                    <img src={Phone} alt='Phone' style={mediumImg}/>
+                                </a>
+                                <a href={`mailto:${property.owner_email}`}>
+                                    <img src={Message} alt='Message' style={mediumImg}/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {property.management_status === "FORWARDED" ?
+                        <Row className="mt-3 mb-4">
+                            <Col className='d-flex flex-row justify-content-evenly mb-1'>
+                                <Button variant='outline-primary' style={bluePillButton} onClick={addDocument}>
+                                    Create Contract
+                                </Button>
+                            </Col>
+                            <Col className='d-flex flex-row justify-content-evenly mb-1'>
+                                <Button variant='outline-primary' style={redPillButton} onClick={rejectManagement}>
+                                    Reject
+                                </Button>
+                            </Col>
+                        </Row>
+                        : ""}
+
+                    {property.management_status === "SENT" ?
+                        <Row className="mt-3 mb-4">
+                            <Col className='d-flex flex-row justify-content-evenly mb-1'>
+                                <Button variant='outline-primary' style={redPillButton} onClick={rejectManagement}>
+                                    Withdraw
+                                </Button>
+                            </Col>
+                        </Row>
+                        : ""}
+
+                    {/*<hr style={{ opacity: 1 }} className="mt-1" />*/}
                 </div>
-            ) : (
-                addPropertyManager ? (
-                    <div>
-                        <Form.Group>
-                            <Form.Select style={squareForm} value={selectedBusiness} onChange={e => setSelectedBusiness(e.target.value)}>
-                                {businesses.map((business, i) => (
-                                    <option key={i} value={JSON.stringify(business)}>
-                                        {business.business_name}
-                                    </option>
-                                ))}
-                            </Form.Select>
-                        </Form.Group>
-                        <div className='mt-2 text-center'>
-                            <Button variant='outline-primary' style={pillButton} className='mx-1'
-                                    onClick={() => setAddPropertyManager(false)}>
-                                Cancel
-                            </Button>
-                            <Button variant='outline-primary' style={pillButton} className='mx-1'
-                                    onClick={updateBusiness}>
-                                Save
-                            </Button>
-                        </div>
-                    </div>
-                ) : (
-                    <div>
-                        <Button variant='outline-primary' style={smallPillButton}
-                                onClick={() => setAddPropertyManager(true)}>
-                            Add Property Manager
-                        </Button>
-                    </div>
-                )
-            )}
+            </div>
         </div>
     );
 
