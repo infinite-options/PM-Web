@@ -125,6 +125,11 @@ function ManagerTenantAgreement(props) {
     );
 
     const forwardLeaseAgreement = async () => {
+        if (startDate === '' || endDate === '') {
+            setErrorMessage('Please fill out all fields');
+            return;
+        }
+        setErrorMessage('');
 
         const newAgreement = {
             rental_property_id: property.property_uid,
@@ -183,7 +188,7 @@ function ManagerTenantAgreement(props) {
                     {acceptedTenantApplications && acceptedTenantApplications.length > 0 && acceptedTenantApplications.map((application, i) =>
                         <Form.Group className='mx-2 my-3' key={i}>
                             <Form.Label as='h6' className='mb-0 ms-2'>
-                                Tenant ID {tenantID === '' ? required : ''}
+                                Tenant ID {application.tenant_id === '' ? required : ''}
                             </Form.Label>
                             <Form.Control style={squareForm} value={application.tenant_id} readOnly={true}/>
                         </Form.Group>
@@ -366,7 +371,10 @@ function ManagerTenantAgreement(props) {
                     )}
                 </div>
 
-                <Row className="mt-4">
+                <Row className="mt-4" hidden={agreement !== null}>
+                    <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+                        <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+                    </div>
                     <Col className='d-flex justify-content-evenly'>
                         <Button style={bluePillButton} onClick={forwardLeaseAgreement}>Send Lease Details to Tenant(s)</Button>
                     </Col>
