@@ -16,6 +16,7 @@ function ReviewPropertyLease(props) {
 
   const { property_uid } = useParams();
   console.log(property_uid);
+  
   const navigate = useNavigate();
   const location = useLocation();
   const [rentals, setRentals] = useState([]);
@@ -58,19 +59,6 @@ function ReviewPropertyLease(props) {
           ? JSON.parse(filteredRentals[0].rent_payments)
           : [];
           console.log("payment0",rentPayments0);
-
-          // if(filteredRentals[1]){
-          //     const rentPayments1 = filteredRentals[1].rent_payments
-          //   ? JSON.parse(filteredRentals[1].rent_payments)
-          //   : [];
-          //    setRentPayments1(rentPayments1);
-          //   console.log("payment1",rentPayments1);
-          // }
-          // if(filteredRentals[2]){
-          //   const rentPayments0 = filteredRentals[2].rent_payments
-          //   ? JSON.parse(filteredRentals[2].rent_payments)
-          //   : [];
-          // }
 
         setLease(leaseDoc);
         setRentPayments0(rentPayments0);
@@ -140,6 +128,11 @@ function ReviewPropertyLease(props) {
     );
     navigate("/tenant");
   };
+  const fromPage = "homePage";
+  const goToApplyToProperty = () => {
+    // navigate(`/tenantPropertyView/${property_uid}`,{ state: {from: "homePage"}})
+    navigate(`/tenantPropertyView/${property_uid}`,{state:{fromPage: fromPage}})
+}
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -183,6 +176,8 @@ function ReviewPropertyLease(props) {
                   {rentals && rentals.length ? rentals[0].lease_end : ""}
                 </Row>
               </Col>
+            </Row>
+            <Row style={{ marginLeft: "10px",paddingTop: "5px" }}>
               <Col>
                 <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
                   Monthly Rent{" "}
@@ -190,6 +185,15 @@ function ReviewPropertyLease(props) {
                 <Row style={{ paddingLeft: "20px" }}>
                   {" "}
                   $ {properties && properties.length ? properties[0].listed_rent : ""}
+                </Row>
+              </Col>
+              <Col>
+                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                   Deposit {" "}
+                </Row>
+                <Row style={{ paddingLeft: "20px" }}>
+                  {" "}
+                  $ {properties && properties.length ? properties[0].deposit : ""}
                 </Row>
               </Col>
             </Row>
@@ -294,58 +298,15 @@ function ReviewPropertyLease(props) {
           </Row>
           </>) : ""}
 
-
-          {rentPayments0[1] && rentPayments0.length ?
-          (<>
-            <Row style={{ marginLeft: "10px" }}>
-            <Col>
-              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Name{" "}
-              </Row> */}
-              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
-                2. { rentPayments0[1].fee_name}{" "}
-              </Row>
-            </Col>
-            <Col>
-              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Type{" "}
-              </Row> */}
-              <Row style={{ paddingLeft: "20px ",paddingTop: "10px" }}>
-                {" "}
-                {rentPayments0[1].fee_type}{" "}
-              </Row>
-            </Col>
-            <Col>
-              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Charges{" "}
-              </Row> */}
-              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
-                {" "}
-                {rentPayments0[1].charge}{" "}
-              </Row>
-            </Col>
-            <Col>
-              {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Frequency{" "}
-              </Row> */}
-              <Row style={{ paddingLeft: "20px",paddingTop: "10px"  }}>
-                {" "}
-                {rentPayments0[1].frequency}{" "}
-              </Row>
-            </Col>
-
-          </Row>
-          </>)
-          :
-          ""
-          }
         </div>)
        :
        ""
       }
       
       {/* ===============Manager Contact =================================== */}
-      <div style={{ marginLeft: "50px",marginTop:"25px", paddingBottom:"20px"  }}>
+      { (application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ?
+      (
+        <div style={{ marginLeft: "50px",marginTop:"25px", paddingBottom:"20px"  }}>
             <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "18px" }}>
               Contact
             </p>
@@ -380,7 +341,11 @@ function ReviewPropertyLease(props) {
                 </Row>
               </Col>
               </Row>
-      </div>
+        </div>
+      )
+      :
+      ""
+      }
       {/* ==================< Lease Documents >=======================================  */}
       {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") && lease.length ?
         (
@@ -513,6 +478,29 @@ function ReviewPropertyLease(props) {
               style={redPillButton}
             >
               Reject
+            </Button>
+          </Col>
+        ) : (
+          ""
+        )}
+
+      {application_status_1 === "REFUSED" ?
+        (
+          <Col
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              marginBottom: "25px",
+            }}
+          >
+            {" "}
+            <Button
+              onClick={goToApplyToProperty}
+              variant="outline-primary"
+              style={bluePillButton}
+            >
+              Reapply
             </Button>
           </Col>
         ) : (

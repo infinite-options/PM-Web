@@ -679,7 +679,7 @@ function TenantDashboard(props) {
               <Col>
                 {applications ? (
                   applications.map((application, i) =>
-                    application.application_status !== "RENTED" ? (
+                    application.application_status !== "RENTED" &&  application.application_status !== "FORWARDED" ? (
                       <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
@@ -715,7 +715,7 @@ function TenantDashboard(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "NEW" || application.application_status === "FORWARDED" ?
+                            {application.application_status === "NEW" ?
                             ( <h6 style={{mediumBold,color:"blue"}}>
                               {application.application_status}
                               </h6>) 
