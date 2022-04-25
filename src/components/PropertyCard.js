@@ -5,7 +5,7 @@ import Message from "../icons/Message.svg";
 import Document from "../icons/documents.svg";
 import Check from "../icons/Check.svg";
 import { useNavigate } from "react-router-dom";
-import { greenPill } from "../utils/styles";
+import { greenPill, redPillButton } from "../utils/styles";
 import No_Image from "../icons/No_Image_Available.jpeg";
 
 
@@ -34,9 +34,13 @@ function PropertyCard(props) {
                                 ${property.listed_rent}/month |   {property.area} .SqFt    
                             </div>
 
-                            {applied ? 
+                            {applied === "NEW" ? 
                             (<p style={greenPill} className='mb-0'>{applied}</p>) 
                             : 
+                            applied === "REFUSED" ?
+                            (<p style={redPillButton} className='mb-0'>{applied}</p>) 
+                            :
+                           
                             ""
                             }
                      </div>
@@ -50,30 +54,60 @@ function PropertyCard(props) {
                     {/* <div style={{display:"flex",marginTop:"auto"}}> */}
 
                         <div style={{flex:"1",fontSize:"12px",color:"blue",marginTop:"auto",marginBottom:"auto"}}>
-                            Manager : <span style={{marginLeft:"1px"}}>John Doe</span>
+                            {/* Manager : <span style={{marginLeft:"1px"}}>John Doe</span> */}
+                            Manager : <span style={{marginLeft:"1px"}}>{property.manager_business_name}</span>
                         </div>
 
                         <Row className="btns"> 
-                            <Col className="view overlay zoom" >
-                                 <img src={Document} onClick={goToApplyToProperty} alt="documentIcon" style={{marginRight:"5px", width:"25px"}} />
-                                 <div class="mask flex-center">
-                                    <p class="white-text" style={{fontSize:"14px"}}>Apply</p>
-                                </div>
-                            </Col>
+                            {applied === "REFUSED" ?
+                                (<Col className="view overlay zoom" >
+                                    <img src={Document} onClick={goToApplyToProperty} alt="documentIcon" style={{marginRight:"5px", width:"25px"}} />
+                                    {/* <img
+                                    onClick={() => goToApplyToProperty  }
+                                    src={Document}
+                                     /> */}
+                                    <div class="mask flex-center">
+                                        <p class="white-text" style={{fontSize:"14px"}}> Reapply</p>
+                                    </div>
+                                </Col>)
+                                :
+                                (<Col className="view overlay zoom" >
+                                    <img src={Document} onClick={goToApplyToProperty} alt="documentIcon" style={{marginRight:"5px", width:"25px"}} />
+                                    {/* <img 
+                                        onClick={() => goToApplyToProperty  }
+                                        src={Document}
+                                     /> */}
+                                    <div class="mask flex-center">
+                                        <p class="white-text" style={{fontSize:"14px"}}>Apply</p>
+                                    </div>
+                                </Col>)
+                                }
                             <Col>
-                                <a href={`tel:${property.manager_phone_number}`}>
+                                {/* <a href={`tel:${property.manager_phone_number}`}>
                                     <img src={Phone} alt="phoneIcon" style={{marginRight:"5px", width:"25px"}} />
-                                </a>
+                                </a> */}
+                                <img
+                                    onClick={() =>
+                                    (window.location.href = `tel:${property.manager_phone_number}`)
+                                    }
+                                    src={Phone}
+                                />
                                 <div class="mask flex-center">
                                     <p class="white-text" style={{fontSize:"14px"}}>Call</p>
                                 </div>
                             </Col>
                             <Col>
-                                <a href={`mailto:${property.manager_email}`}>
+                                {/* <a href={`mailto:${property.manager_email}`}>
                                     <img src={Message} alt="messageIcon"  style={{width:"25px"}} />
-                                </a>
+                                </a> */}
+                                <img
+                                    onClick={() =>
+                                    (window.location.href = `mailto:${property.manager_email}`)
+                                    }
+                                    src={Message}
+                                />
                                 <div class="mask flex-center">
-                                    <p class="white-text" style={{fontSize:"14px"}}>Text</p>
+                                    <p class="white-text" style={{fontSize:"14px"}}>Email</p>
                                 </div>
                             </Col>
                         </Row>

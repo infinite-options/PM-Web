@@ -109,8 +109,8 @@ function ReviewTenantProfile (props) {
                 title="Profile"
                 leftText="< Back"
                 leftFn={goToPropertyView}
-                rightText="Edit"
-                rightFn={() => {navigate(`/tenantProfile`) }}
+                // rightText="Edit"
+                rightFn={() => {navigate(`/tenant`) }}
             //    rightFn ={() => setTab("PROFILE")}
             />
             {profile ? (<div>
