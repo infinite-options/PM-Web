@@ -227,9 +227,9 @@ function TenantDashboard(props) {
       const response = await get(
         `/maintenanceRequests?property_uid=${profile.property_uid}`
       );
-      console.log(response.result[0].length);
+      console.log(response.result.length);
 
-      setRepairs(response.result[0]);
+      setRepairs(response.result);
     };
     fetchRepairs();
   }, [profile]);

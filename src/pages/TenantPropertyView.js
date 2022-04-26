@@ -26,7 +26,7 @@ function TenantPropertyView(props) {
     }, []);
 
     return(
-        <div className="h-100 d-flex flex-column">
+        <div className=" d-flex flex-column">
             {forPropertyLease ?
                  ""
                  :

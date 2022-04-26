@@ -107,6 +107,10 @@ function ReviewPropertyLease(props) {
 
     navigate("/tenant");
   };
+   const displayLease = (path) => {
+      window.location.href = path;
+   }
+
 
   const rejectLease = async () => {
     // const updatedRental = {
@@ -377,15 +381,16 @@ function ReviewPropertyLease(props) {
                   {lease.map((lease, i) => (
                     <div key={i}>
                       <div className="d-flex justify-content-between align-items-end">
-                        <div>
-                          <a
-                            href={lease.link}
+                        <div style={{display:"flex",width:"85%"}}>
+                          <div style={{display: "flex", flexDirection: "column"}}>
+                          <div
+                            
                             style={{ paddingLeft: "20px" }}
                             target="_blank"
                           >
                             {" "}
                             {lease.name}{" "}
-                          </a>
+                          </div>
                           {/* <h6 style={{paddingLeft:"20px",fontWeight:"bold"}}>
                                           {lease.name}
                                       </h6> */}
@@ -393,6 +398,8 @@ function ReviewPropertyLease(props) {
                             {lease.description}
                           </p>
                           {/* <a href={lease.link} style={{paddingLeft:"20px"}}> {lease.name} </a> */}
+                        </div>
+                        <Button style={{marginLeft: "auto"}} onClick={() => displayLease(lease.link)}>View</Button>
                         </div>
                         {/* <div>
                                   <img src={EditIcon} alt='Edit' className='px-1 mx-2'
