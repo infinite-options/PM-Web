@@ -268,13 +268,24 @@ function ManagementContract(props) {
         onConfirm={rejectPropertyManager}
         onCancel={onCancel}
       />
-      <Header
-        title="Management Contract"
-        leftText="< Back"
-        leftFn={back}
-        rightText="Save"
-        rightFn={save}
-      />
+      {pageURL[3] !== "owner" ? (
+        <Header
+          title="Management Contract"
+          leftText="< Back"
+          leftFn={back}
+          rightText="Save"
+          rightFn={save}
+        />
+      ) : (
+        <Header
+          title="Management Contract"
+          leftText="< Back"
+          leftFn={back}
+          // rightText="Save"
+          // rightFn={save}
+        />
+      )}
+
       <Container>
         <div className="mb-4">
           <h5 style={mediumBold}>PM Agreement Dates</h5>
@@ -307,96 +318,7 @@ function ManagementContract(props) {
             <ManagerFees feeState={feeState} setFeeState={setFeeState} />
           </div>
         </div>
-        {property.property_manager.length && (pageURL[3] === "owner") == 0 ? (
-          ""
-        ) : property.property_manager.length && pageURL[3] === "owner" > 1 ? (
-          property.property_manager.map((p, i) =>
-            p.management_status === "REJECTED" ? (
-              ""
-            ) : pageURL[3] === "owner" && p.management_status === "SENT" ? (
-              <Row className="mt-4">
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                    marginBottom: "25px",
-                  }}
-                >
-                  {" "}
-                  <Button
-                    onClick={approvePropertyManager}
-                    variant="outline-primary"
-                    style={bluePillButton}
-                  >
-                    Approve
-                  </Button>
-                </Col>
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                    marginBottom: "25px",
-                  }}
-                >
-                  {" "}
-                  <Button
-                    // onClick={rejectPropertyManager}
-                    onClick={() => setShowDialog(true)}
-                    variant="outline-primary"
-                    style={redPillButton}
-                  >
-                    Reject
-                  </Button>
-                </Col>
-              </Row>
-            ) : (
-              ""
-            )
-          )
-        ) : pageURL[3] === "owner" &&
-          property.property_manager[0].management_status === "SENT" ? (
-          <Row className="mt-4">
-            <Col
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                marginBottom: "25px",
-              }}
-            >
-              {" "}
-              <Button
-                onClick={approvePropertyManager}
-                variant="outline-primary"
-                style={bluePillButton}
-              >
-                Approve
-              </Button>
-            </Col>
-            <Col
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                marginBottom: "25px",
-              }}
-            >
-              {" "}
-              <Button
-                // onClick={rejectPropertyManager}
-                onClick={() => setShowDialog(true)}
-                variant="outline-primary"
-                style={redPillButton}
-              >
-                Reject
-              </Button>
-            </Col>
-          </Row>
-        ) : (
-          ""
-        )}
+
         <div className="mb-4">
           <h5 style={mediumBold}>Contact Details</h5>
           <BusinessContact state={contactState} />
@@ -505,6 +427,96 @@ function ManagementContract(props) {
             </div>
           )}
         </div>
+        {property.property_manager.length && (pageURL[3] === "owner") == 0 ? (
+          ""
+        ) : property.property_manager.length && pageURL[3] === "owner" > 1 ? (
+          property.property_manager.map((p, i) =>
+            p.management_status === "REJECTED" ? (
+              ""
+            ) : pageURL[3] === "owner" && p.management_status === "SENT" ? (
+              <Row className="mt-4">
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    marginBottom: "25px",
+                  }}
+                >
+                  {" "}
+                  <Button
+                    onClick={approvePropertyManager}
+                    variant="outline-primary"
+                    style={bluePillButton}
+                  >
+                    Approve
+                  </Button>
+                </Col>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    marginBottom: "25px",
+                  }}
+                >
+                  {" "}
+                  <Button
+                    // onClick={rejectPropertyManager}
+                    onClick={() => setShowDialog(true)}
+                    variant="outline-primary"
+                    style={redPillButton}
+                  >
+                    Reject
+                  </Button>
+                </Col>
+              </Row>
+            ) : (
+              ""
+            )
+          )
+        ) : pageURL[3] === "owner" &&
+          property.property_manager[0].management_status === "SENT" ? (
+          <Row className="mt-4">
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: "25px",
+              }}
+            >
+              {" "}
+              <Button
+                onClick={approvePropertyManager}
+                variant="outline-primary"
+                style={bluePillButton}
+              >
+                Approve
+              </Button>
+            </Col>
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: "25px",
+              }}
+            >
+              {" "}
+              <Button
+                // onClick={rejectPropertyManager}
+                onClick={() => setShowDialog(true)}
+                variant="outline-primary"
+                style={redPillButton}
+              >
+                Reject
+              </Button>
+            </Col>
+          </Row>
+        ) : (
+          ""
+        )}
       </Container>
     </div>
   );
