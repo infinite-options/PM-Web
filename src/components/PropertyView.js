@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Header from "../components/Header";
+import PropertyCashFlow from "./PropertyCashFlow";
+import PropertyForm from "./PropertyForm";
+import CreateExpense from "./CreateExpense";
+import CreateTax from "./CreateTax";
+import CreateMortgage from "./CreateMortgage";
+import ManagerDocs from "./ManagerDocs";
+import LeaseDocs from "./LeaseDocs";
+import ManagementContract from "./ManagementContract";
+import TenantAgreement from "./TenantAgreement";
+import ConfirmDialog from "./ConfirmDialog";
+import File from "../icons/File.svg";
+import ArrowUp from "../icons/ArrowUp.svg";
+import ArrowDown from "../icons/ArrowDown.svg";
+import Phone from "../icons/Phone.svg";
+import Message from "../icons/Message.svg";
+import { get, put } from "../utils/api";
 import {
   tileImg,
   gray,
@@ -12,22 +28,6 @@ import {
   bluePillButton,
   redPillButton,
 } from "../utils/styles";
-import PropertyCashFlow from "./PropertyCashFlow";
-import PropertyForm from "./PropertyForm";
-import ArrowUp from "../icons/ArrowUp.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import CreateExpense from "./CreateExpense";
-import CreateTax from "./CreateTax";
-import CreateMortgage from "./CreateMortgage";
-import ManagerDocs from "./ManagerDocs";
-import LeaseDocs from "./LeaseDocs";
-import ManagementContract from "./ManagementContract";
-import TenantAgreement from "./TenantAgreement";
-import { get, put } from "../utils/api";
-import File from "../icons/File.svg";
-import ConfirmDialog from "./ConfirmDialog";
 function PropertyView(props) {
   const { property_uid, back, reload, hideEdit } = props;
   const [property, setProperty] = useState({
@@ -264,6 +264,7 @@ function PropertyView(props) {
         back={closeContract}
         property={property}
         contract={selectedContract}
+        reload={reloadProperty}
       />
     ) : showTenantAgreement ? (
       <TenantAgreement
@@ -695,7 +696,7 @@ function PropertyView(props) {
                       </p>
                     </div>
                   </div>
-                  <div className="d-flex flex-column gap-2">
+                  <div className="mx-4 d-flex flex-column gap-2">
                     {contracts.map((contract, i) => (
                       <div key={i} onClick={() => selectContract(contract)}>
                         <div className="d-flex justify-content-between align-items-end">

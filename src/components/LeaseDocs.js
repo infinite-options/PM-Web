@@ -7,6 +7,7 @@ import { smallPillButton, mediumBold } from "../utils/styles";
 function LeaseDocs(props) {
   const { addDocument, property, selectAgreement } = props;
   const [agreements, setAgreements] = React.useState([]);
+  let pageURL = window.location.href.split("/");
 
   React.useEffect(async () => {
     const response = await get(
@@ -26,15 +27,17 @@ function LeaseDocs(props) {
           <hr style={{ opacity: 1 }} className="mb-0 mt-2" />
         </div>
       ))}
-      <div>
-        <Button
-          variant="outline-primary"
-          style={smallPillButton}
-          onClick={addDocument}
-        >
-          Add Document
-        </Button>
-      </div>
+      {pageURL[3] !== "owner" ? (
+        <div>
+          <Button
+            variant="outline-primary"
+            style={smallPillButton}
+            onClick={addDocument}
+          >
+            Add Document
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -2,6 +2,8 @@ import React from "react";
 import { Form, Container, Button } from "react-bootstrap";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
+import Phone from "../icons/Phone.svg";
+import Message from "../icons/Message.svg";
 import {
   squareForm,
   pillButton,
@@ -10,12 +12,12 @@ import {
   red,
   small,
   hidden,
+  mediumImg,
 } from "../utils/styles";
 
 function BusinessContact(props) {
   const [contactState, setContactState] = props.state;
   let pageURL = window.location.href.split("/");
-  console.log("pageURL", pageURL);
   const [newContact, setNewContact] = React.useState(null);
   const [editingContact, setEditingContact] = React.useState(null);
   const emptyContact = {
@@ -105,7 +107,14 @@ function BusinessContact(props) {
                 />
               </div>
             ) : (
-              ""
+              <div>
+                <a href={`tel:${contact.phone_number}`}>
+                  <img src={Phone} alt="Phone" style={mediumImg} />
+                </a>
+                <a href={`mailto:${contact.email}`}>
+                  <img src={Message} alt="Message" style={mediumImg} />
+                </a>
+              </div>
             )}
           </div>
           <div className="d-flex">
