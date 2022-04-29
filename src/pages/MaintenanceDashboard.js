@@ -29,8 +29,14 @@ function MaintenanceDashboard(props) {
   const [profile, setProfile] = useState([]);
   const [upcomingJob, setUpcomingJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [quotes, setQuotes] = useState([]);
 
   let access_token = userData.access_token;
+
+  const sort_quotes = (quotes) =>  {
+    quotes.sort((a,b) => b.priority_n - a.priority_n)
+    return quotes
+  }
 
   const fetchProfile = async () => {
     let business_uid = "";
@@ -47,6 +53,22 @@ function MaintenanceDashboard(props) {
     const response = await get(`/businesses?business_uid=${business_uid}`);
     console.log(response);
     setProfile(response.result[0]);
+
+    const quotes_response  = await get(`/maintenanceQuotes?quote_business_uid=${business_uid}`);
+    console.log("Quotes associated with business")
+    console.log(quotes_response.result)
+    const quotes_unsorted = quotes_response.result
+    quotes_unsorted.forEach((quote, i) => {
+      quote.priority_n = 0
+      if (quote.priority.toLowerCase() === "high") {
+        quote.priority_n = 3
+      } else if (quote.priority.toLowerCase() === "medium") {
+        quote.priority_n = 2
+      } else if (quote.priority.toLowerCase() === "low") {
+        quote.priority_n = 1
+      }
+    });
+    setQuotes(sort_quotes(quotes_unsorted))
   };
   //console.log(profile);
   useEffect(() => {
@@ -68,7 +90,8 @@ function MaintenanceDashboard(props) {
     navigate("/jobsCompleted");
   };
   const goToQuotesRejectedM = () => {
-    navigate("/quotesRejectedPM");
+    const quotes_rejected = quotes.filter(quote => quote.quote_status === "REJECTED")
+    navigate(`/quotesRejectedPM`, { state: {quotes: quotes_rejected }});
   };
   const goToQuotesRejectedY = () => {
     navigate("/quotesRejectedM");

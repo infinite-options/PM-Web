@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import {useLocation, useNavigate} from "react-router-dom";
 import {get} from "../utils/api";
 import AppContext from "../AppContext";
+import No_Image from "../icons/No_Image_Available.jpeg";
 
 function ManagerRepairsList(props) {
 
@@ -21,6 +22,14 @@ function ManagerRepairsList(props) {
 
     const property = location.state.property
 
+    const sort_repairs = (repairs) =>  {
+        const repairs_with_quotes = repairs.filter(repair => repair.quotes_to_review > 0)
+        repairs_with_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || a.days_since - b.days_since))
+        const repairs_without_quotes = repairs.filter(repair => repair.quotes_to_review === 0)
+        repairs_without_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || a.days_since - b.days_since))
+        return [...repairs_with_quotes, ...repairs_without_quotes]
+    }
+
     const fetchRepairs = async () => {
         if (access_token === null) {
             navigate('/');
@@ -34,14 +43,25 @@ function ManagerRepairsList(props) {
             return;
         }
 
-        const repairs = response.result.filter(item => item.property_uid === property.property_uid);
+        let repairs = response.result.filter(item => item.property_uid === property.property_uid);
         repairs.forEach((repair, i) => {
             const request_created_date = new Date(Date.parse(repair.request_created_date));
             const current_date = new Date();
             repairs[i].days_since = Math.ceil((current_date.getTime() - request_created_date.getTime()) / (1000 * 3600 * 24))
             repairs[i].quotes_to_review = repair.quotes.filter(quote => quote.quote_status === "SENT").length
+
+            repair.priority_n = 0
+            if (repair.priority.toLowerCase() === "high") {
+                repair.priority_n = 3
+            } else if (repair.priority.toLowerCase() === "medium") {
+                repair.priority_n = 2
+            } else if (repair.priority.toLowerCase() === "low") {
+                repair.priority_n = 1
+            }
+
         });
-        repairs.sort((a, b) =>  b.quotes_to_review - a.quotes_to_review);
+        // repairs.sort((a, b) =>  b.quotes_to_review - a.quotes_to_review);
+        repairs = sort_repairs(repairs)
         console.log(repairs)
         setRepairs(repairs);
 
@@ -77,10 +97,11 @@ function ManagerRepairsList(props) {
                             navigate(`./${repair.maintenance_request_uid}`, { state: {repair: repair }})}>
                             <Col xs={4}>
                                 <div style={tileImg}>
-                                    {repair.images.length > 0 ? (
+                                    {JSON.parse(repair.images).length > 0 ? (
                                         <img src={JSON.parse(repair.images)[0]} alt='Repair Image'
                                              className='h-100 w-100' style={{objectFit: 'cover'}}/>
-                                    ) : ''}
+                                    ) : <img src={No_Image} alt='No Repair Image'
+                                             className='h-100 w-100' style={{borderRadius: '4px', objectFit: 'cover'}}/>}
                                 </div>
                             </Col>
                             <Col className='ps-0'>
