@@ -87,14 +87,16 @@ function MaintenanceDashboard(props) {
     navigate("/ScheduledJobs");
   };
   const goToJobsCompleted = () => {
-    navigate("/jobsCompleted");
+    const quotes_rejected = quotes.filter(quote => quote.request_status === "COMPLETE")
+    navigate(`/jobsCompleted`, { state: {quotes: quotes_rejected }});
   };
   const goToQuotesRejectedM = () => {
     const quotes_rejected = quotes.filter(quote => quote.quote_status === "REJECTED")
     navigate(`/quotesRejectedPM`, { state: {quotes: quotes_rejected }});
   };
   const goToQuotesRejectedY = () => {
-    navigate("/quotesRejectedM");
+    const quotes_rejected = quotes.filter(quote => quote.quote_status === "REFUSED")
+    navigate(`/quotesRejectedM`, { state: {quotes: quotes_rejected }});
   };
   const goToScheduledJobs = () => {
     navigate("/scheduledJobs");

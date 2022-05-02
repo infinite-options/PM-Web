@@ -3,22 +3,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
-import {
-    headings,
-    subHeading,
-    subText,
-    blue,
-    red,
-    tileImg,
-    greenPill,
-    orangePill,
-    redPill,
-    gray,
-    xSmall
-} from "../utils/styles";
+import {headings, subText, tileImg, greenPill, orangePill, redPill,} from "../utils/styles";
 import No_Image from "../icons/No_Image_Available.jpeg";
 
 function QuotesRejectedPM(props) {
