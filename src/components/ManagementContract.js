@@ -111,10 +111,10 @@ function ManagementContract(props) {
           }
           console.log(files);
           const response2 = await put(
-              "/properties",
-              updatedManagementContract,
-              null,
-              files
+            "/properties",
+            updatedManagementContract,
+            null,
+            files
           );
 
           reload();
@@ -136,10 +136,10 @@ function ManagementContract(props) {
       }
       console.log(files);
       const response2 = await put(
-          "/properties",
-          updatedManagementContract,
-          null,
-          files
+        "/properties",
+        updatedManagementContract,
+        null,
+        files
       );
 
       reload();
@@ -165,10 +165,10 @@ function ManagementContract(props) {
             updatedManagementContract[key] = files[i + 1];
           }
           const response2 = await put(
-              "/properties",
-              updatedManagementContract,
-              null,
-              files
+            "/properties",
+            updatedManagementContract,
+            null,
+            files
           );
 
           reload();
@@ -190,10 +190,10 @@ function ManagementContract(props) {
         updatedManagementContract[key] = files[i + 1];
       }
       const response2 = await put(
-          "/properties",
-          updatedManagementContract,
-          null,
-          files
+        "/properties",
+        updatedManagementContract,
+        null,
+        files
       );
       setShowDialog(false);
 
@@ -228,7 +228,7 @@ function ManagementContract(props) {
 
     // Updating Management Status in property to SENT
     const management_businesses = user.businesses.filter(
-        (business) => business.business_type === "MANAGEMENT"
+      (business) => business.business_type === "MANAGEMENT"
     );
     let management_buid = null;
     if (management_businesses.length >= 1) {
@@ -253,272 +253,272 @@ function ManagementContract(props) {
   };
   const [errorMessage, setErrorMessage] = useState("");
   const required =
-      errorMessage === "Please fill out all fields" ? (
-          <span style={red} className="ms-1">
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
         *
       </span>
-      ) : (
-          ""
-      );
+    ) : (
+      ""
+    );
   return (
-      <div className="mb-5 pb-5">
-        <ConfirmDialog
-            title={"Are you sure you want to reject this Property Manager?"}
-            isOpen={showDialog}
-            onConfirm={rejectPropertyManager}
-            onCancel={onCancel}
+    <div className="mb-5 pb-5">
+      <ConfirmDialog
+        title={"Are you sure you want to reject this Property Manager?"}
+        isOpen={showDialog}
+        onConfirm={rejectPropertyManager}
+        onCancel={onCancel}
+      />
+      {pageURL[3] !== "owner" ? (
+        <Header
+          title="Management Contract"
+          leftText="< Back"
+          leftFn={back}
+          rightText="Save"
+          rightFn={save}
         />
-        {pageURL[3] !== "owner" ? (
-            <Header
-                title="Management Contract"
-                leftText="< Back"
-                leftFn={back}
-                rightText="Save"
-                rightFn={save}
-            />
-        ) : (
-            <Header
-                title="Management Contract"
-                leftText="< Back"
-                leftFn={back}
-                // rightText="Save"
-                // rightFn={save}
-            />
-        )}
+      ) : (
+        <Header
+          title="Management Contract"
+          leftText="< Back"
+          leftFn={back}
+          // rightText="Save"
+          // rightFn={save}
+        />
+      )}
 
-        <Container>
-          <div className="mb-4">
-            <h5 style={mediumBold}>PM Agreement Dates</h5>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Start Date {startDate === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                End Date {endDate === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-              />
-            </Form.Group>
+      <Container>
+        <div className="mb-4">
+          <h5 style={mediumBold}>PM Agreement Dates</h5>
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Start Date {startDate === "" ? required : ""}
+            </Form.Label>
+            <Form.Control
+              style={squareForm}
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              End Date {endDate === "" ? required : ""}
+            </Form.Label>
+            <Form.Control
+              style={squareForm}
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </Form.Group>
+        </div>
+        <div className="mb-4">
+          <h5 style={mediumBold}>PM Fees</h5>
+          <div className="mx-2">
+            <ManagerFees feeState={feeState} setFeeState={setFeeState} />
           </div>
-          <div className="mb-4">
-            <h5 style={mediumBold}>PM Fees</h5>
-            <div className="mx-2">
-              <ManagerFees feeState={feeState} setFeeState={setFeeState} />
+        </div>
+
+        <div className="mb-4">
+          <h5 style={mediumBold}>Contact Details</h5>
+          <BusinessContact state={contactState} />
+        </div>
+        <div className="mb-4">
+          <h5 style={mediumBold}>Property Manager Documents</h5>
+          {files.map((file, i) => (
+            <div key={i}>
+              <div className="d-flex justify-content-between align-items-end">
+                <div>
+                  <h6 style={mediumBold}>{file.name}</h6>
+                  <p style={small} className="m-0">
+                    {file.description}
+                  </p>
+                </div>
+                {pageURL[3] !== "owner" ? (
+                  <div>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="px-1 mx-2"
+                      onClick={() => editDocument(i)}
+                    />
+                    <img
+                      src={DeleteIcon}
+                      alt="Delete"
+                      className="px-1 mx-2"
+                      onClick={() => deleteDocument(i)}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
+                <a href={file.link} target="_blank">
+                  <img src={File} />
+                </a>
+              </div>
+              <hr style={{ opacity: 1 }} />
             </div>
-          </div>
-
-          <div className="mb-4">
-            <h5 style={mediumBold}>Contact Details</h5>
-            <BusinessContact state={contactState} />
-          </div>
-          <div className="mb-4">
-            <h5 style={mediumBold}>Property Manager Documents</h5>
-            {files.map((file, i) => (
-                <div key={i}>
-                  <div className="d-flex justify-content-between align-items-end">
-                    <div>
-                      <h6 style={mediumBold}>{file.name}</h6>
-                      <p style={small} className="m-0">
-                        {file.description}
-                      </p>
-                    </div>
-                    {pageURL[3] !== "owner" ? (
-                        <div>
-                          <img
-                              src={EditIcon}
-                              alt="Edit"
-                              className="px-1 mx-2"
-                              onClick={() => editDocument(i)}
-                          />
-                          <img
-                              src={DeleteIcon}
-                              alt="Delete"
-                              className="px-1 mx-2"
-                              onClick={() => deleteDocument(i)}
-                          />
-                        </div>
-                    ) : (
-                        ""
-                    )}
-                    <a href={file.link} target="_blank">
-                      <img src={File} />
-                    </a>
-                  </div>
-                  <hr style={{ opacity: 1 }} />
-                </div>
-            ))}
-            {(newFile !== null) & (pageURL[3] !== "owner") ? (
-                <div>
-                  <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Document Name
-                    </Form.Label>
-                    <Form.Control
-                        style={squareForm}
-                        value={newFile.name}
-                        placeholder="Name"
-                        onChange={(e) => updateNewFile("name", e.target.value)}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Description
-                    </Form.Label>
-                    <Form.Control
-                        style={squareForm}
-                        value={newFile.description}
-                        placeholder="Description"
-                        onChange={(e) => updateNewFile("description", e.target.value)}
-                    />
-                  </Form.Group>
-                  <div className="text-center my-3">
-                    <Button
-                        variant="outline-primary"
-                        style={smallPillButton}
-                        as="p"
-                        onClick={cancelEdit}
-                        className="mx-2"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                        variant="outline-primary"
-                        style={smallPillButton}
-                        as="p"
-                        onClick={saveNewFile}
-                        className="mx-2"
-                    >
-                      Save Document
-                    </Button>
-                  </div>
-                </div>
-            ) : (newFile === null) & (pageURL[3] === "owner") ? (
-                ""
-            ) : (
-                <div>
-                  <input
-                      id="file"
-                      type="file"
-                      accept="image/*,.pdf"
-                      onChange={addFile}
-                      className="d-none"
-                  />
-                  <label htmlFor="file">
-                    <Button
-                        variant="outline-primary"
-                        style={smallPillButton}
-                        as="p"
-                    >
-                      Add Document
-                    </Button>
-                  </label>
-                </div>
-            )}
-          </div>
-          {property.property_manager.length && (pageURL[3] === "owner") == 0 ? (
+          ))}
+          {(newFile !== null) & (pageURL[3] !== "owner") ? (
+            <div>
+              <Form.Group>
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Document Name
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  value={newFile.name}
+                  placeholder="Name"
+                  onChange={(e) => updateNewFile("name", e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Description
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  value={newFile.description}
+                  placeholder="Description"
+                  onChange={(e) => updateNewFile("description", e.target.value)}
+                />
+              </Form.Group>
+              <div className="text-center my-3">
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                  onClick={cancelEdit}
+                  className="mx-2"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                  onClick={saveNewFile}
+                  className="mx-2"
+                >
+                  Save Document
+                </Button>
+              </div>
+            </div>
+          ) : (newFile === null) & (pageURL[3] === "owner") ? (
+            ""
+          ) : (
+            <div>
+              <input
+                id="file"
+                type="file"
+                accept="image/*,.pdf"
+                onChange={addFile}
+                className="d-none"
+              />
+              <label htmlFor="file">
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                >
+                  Add Document
+                </Button>
+              </label>
+            </div>
+          )}
+        </div>
+        {property.property_manager.length && (pageURL[3] === "owner") == 0 ? (
+          ""
+        ) : property.property_manager.length && pageURL[3] === "owner" > 1 ? (
+          property.property_manager.map((p, i) =>
+            p.management_status === "REJECTED" ? (
               ""
-          ) : property.property_manager.length && pageURL[3] === "owner" > 1 ? (
-              property.property_manager.map((p, i) =>
-                  p.management_status === "REJECTED" ? (
-                      ""
-                  ) : pageURL[3] === "owner" && p.management_status === "SENT" ? (
-                      <Row className="mt-4">
-                        <Col
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-evenly",
-                              marginBottom: "25px",
-                            }}
-                        >
-                          {" "}
-                          <Button
-                              onClick={approvePropertyManager}
-                              variant="outline-primary"
-                              style={bluePillButton}
-                          >
-                            Approve
-                          </Button>
-                        </Col>
-                        <Col
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-evenly",
-                              marginBottom: "25px",
-                            }}
-                        >
-                          {" "}
-                          <Button
-                              // onClick={rejectPropertyManager}
-                              onClick={() => setShowDialog(true)}
-                              variant="outline-primary"
-                              style={redPillButton}
-                          >
-                            Reject
-                          </Button>
-                        </Col>
-                      </Row>
-                  ) : (
-                      ""
-                  )
-              )
-          ) : pageURL[3] === "owner" &&
-          property.property_manager[0].management_status === "SENT" ? (
+            ) : pageURL[3] === "owner" && p.management_status === "SENT" ? (
               <Row className="mt-4">
                 <Col
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-evenly",
-                      marginBottom: "25px",
-                    }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    marginBottom: "25px",
+                  }}
                 >
                   {" "}
                   <Button
-                      onClick={approvePropertyManager}
-                      variant="outline-primary"
-                      style={bluePillButton}
+                    onClick={approvePropertyManager}
+                    variant="outline-primary"
+                    style={bluePillButton}
                   >
                     Approve
                   </Button>
                 </Col>
                 <Col
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-evenly",
-                      marginBottom: "25px",
-                    }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    marginBottom: "25px",
+                  }}
                 >
                   {" "}
                   <Button
-                      // onClick={rejectPropertyManager}
-                      onClick={() => setShowDialog(true)}
-                      variant="outline-primary"
-                      style={redPillButton}
+                    // onClick={rejectPropertyManager}
+                    onClick={() => setShowDialog(true)}
+                    variant="outline-primary"
+                    style={redPillButton}
                   >
                     Reject
                   </Button>
                 </Col>
               </Row>
-          ) : (
+            ) : (
               ""
-          )}
-        </Container>
-      </div>
+            )
+          )
+        ) : pageURL[3] === "owner" &&
+          property.property_manager[0].management_status === "SENT" ? (
+          <Row className="mt-4">
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: "25px",
+              }}
+            >
+              {" "}
+              <Button
+                onClick={approvePropertyManager}
+                variant="outline-primary"
+                style={bluePillButton}
+              >
+                Approve
+              </Button>
+            </Col>
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: "25px",
+              }}
+            >
+              {" "}
+              <Button
+                // onClick={rejectPropertyManager}
+                onClick={() => setShowDialog(true)}
+                variant="outline-primary"
+                style={redPillButton}
+              >
+                Reject
+              </Button>
+            </Col>
+          </Row>
+        ) : (
+          ""
+        )}
+      </Container>
+    </div>
   );
 }
 
