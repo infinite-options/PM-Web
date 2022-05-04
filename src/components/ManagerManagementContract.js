@@ -67,6 +67,7 @@ function ManagerManagementContract(props) {
         setFiles(newFiles);
     }
     const loadContract = () => {
+        setContractName(contract.contract_name)
         setStartDate(contract.start_date);
         setEndDate(contract.end_date);
         setFeeState(JSON.parse(contract.contract_fees));
