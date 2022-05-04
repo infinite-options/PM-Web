@@ -13,7 +13,6 @@ import Announcements from "../icons/announcements.svg";
 import SearchPM from "../icons/searchPM.svg";
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
-import ManagementContract from "../components/ManagementContract";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
 import ManagerLeaseDocs from "../components/ManagerLeaseDocs";
 import Repair from '../icons/Repair.svg';
@@ -23,6 +22,7 @@ import ManagerTenantApplications from "../components/ManagerTenantApplications";
 import ManagerTenantProfileView from "./ManagerTenantProfileView";
 import PropertyManagerDocs from "../components/PropertyManagerDocs";
 import AppContext from "../AppContext";
+import ManagerManagementContract from "../components/ManagerManagementContract";
 
 function ManagerPropertyView(props) {
 
@@ -164,7 +164,7 @@ function ManagerPropertyView(props) {
 
     return(
         showManagementContract ? (
-            <ManagementContract back={closeContract} property={property} contract={selectedContract} reload={reloadProperty}/>
+            <ManagerManagementContract back={closeContract} property={property} contract={selectedContract} reload={reloadProperty}/>
         ) : showTenantAgreement ? (
             <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
                                     acceptedTenantApplications={acceptedTenantApplications}
