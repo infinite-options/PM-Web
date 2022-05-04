@@ -15,6 +15,8 @@ function ManagementContract(props) {
   const {access_token, user} = userData;
   const {back, property, contract, reload} = props;
 
+  const [contractName, setContractName] = React.useState('');
+
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');
   const [feeState, setFeeState] = React.useState([]);
@@ -76,10 +78,18 @@ function ManagementContract(props) {
       loadContract();
     }
   }, [contract]);
+
   const save = async () => {
+    if (contractName === '' || startDate === '' || endDate === '') {
+      setErrorMessage('Please fill out all fields');
+      return;
+    }
+    setErrorMessage('');
+
     const newContract = {
       property_uid: property.property_uid,
       business_uid: property.manager_id,
+      contract_name : contractName,
       start_date: startDate,
       end_date: endDate,
       contract_fees: JSON.stringify(feeState),
@@ -130,11 +140,25 @@ function ManagementContract(props) {
       <span style={red} className='ms-1'>*</span>
     ) : ''
   );
+
   return (
     <div className='mb-5 pb-5'>
       <Header title='Management Contract' leftText='< Back' leftFn={back}
         rightText='Save' rightFn={save}/>
       <Container>
+        <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+          <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+        </div>
+        <div className='mb-4'>
+          <h5 style={mediumBold}>Contract Details</h5>
+          <Form.Group className='mx-2 my-3'>
+            <Form.Label as='h6' className='mb-0 ms-2'>
+              Contract Name {contractName === '' ? required : ''}
+            </Form.Label>
+            <Form.Control style={squareForm} value={contractName} placeholder='Contract Name'
+              onChange={(e) => setContractName(e.target.value)}/>
+          </Form.Group>
+        </div>
         <div className='mb-4'>
           <h5 style={mediumBold}>PM Agreement Dates</h5>
           <Form.Group className='mx-2 my-3'>
@@ -142,14 +166,14 @@ function ManagementContract(props) {
               Start Date {startDate === '' ? required : ''}
             </Form.Label>
             <Form.Control style={squareForm} type='date' value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}/>
+                          onChange={(e) => setStartDate(e.target.value)}/>
           </Form.Group>
           <Form.Group className='mx-2 my-3'>
             <Form.Label as='h6' className='mb-0 ms-2'>
               End Date {endDate === '' ? required : ''}
             </Form.Label>
             <Form.Control style={squareForm} type='date' value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}/>
+                          onChange={(e) => setEndDate(e.target.value)}/>
           </Form.Group>
         </div>
         <div className='mb-4'>
