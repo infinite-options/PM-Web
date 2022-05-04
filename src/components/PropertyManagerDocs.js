@@ -70,6 +70,7 @@ function PropertyManagerDocs(props) {
 
     React.useEffect(async () => {
         const response = await get(`/contracts?property_uid=${property.property_uid}`);
+        console.log(response.result)
         setContracts(response.result);
     }, []);
     React.useEffect(async () => {
@@ -84,7 +85,7 @@ function PropertyManagerDocs(props) {
                 {contracts.map((contract, i) => (
                     <div key={i} onClick={() => selectContract(contract)}>
                         <div className='d-flex justify-content-between align-items-end'>
-                            <h6 style={mediumBold}>Contract {i+1}</h6>
+                            <h6 style={mediumBold}>Contract {i+1} ({contract.contract_uid})</h6>
                             <img src={File}/>
                         </div>
                         <hr style={{opacity: 1}} className='mb-0 mt-2'/>
