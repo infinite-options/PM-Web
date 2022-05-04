@@ -437,7 +437,11 @@ function ManagerRepairDetail(props) {
                             <Row hidden={quote.quote_status === "SENT"} className="pt-1 mb-4">
                                 <Col className='d-flex flex-row justify-content-evenly'>
                                     <Button style={orangePill}>
-                                        {quote.quote_status === "REJECTED" ? "You've Rejected the Quote" : quote.quote_status === "ACCEPTED" ? "You've Accepted the Quote": "Quote Withdrawn by Business"}
+                                        {quote.quote_status === "REQUESTED" ? "Waiting for quote from business"
+                                            :quote.quote_status === "REJECTED" ? "You've Rejected the Quote"
+                                            : quote.quote_status === "ACCEPTED" ? "You've Accepted the Quote"
+                                                : quote.quote_status === "SENT" ? "Waiting for quote from business"
+                                                : "Quote Withdrawn by Business"}
                                     </Button>
                                 </Col>
                             </Row>

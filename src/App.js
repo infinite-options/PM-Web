@@ -48,6 +48,7 @@ import ManagerResidentAnnouncements from "./pages/ManagerResidentAnnoucements";
 import ManagerEmergency from "./pages/ManagerEmergency";
 import ManagerRepairDetail from "./pages/ManagerRepairDetail";
 import SignupExisting from "./pages/SignUpExisiting";
+import ManagerRepairsOverview from "./pages/ManagerRepairsOverview";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -196,6 +197,10 @@ function App() {
             <Route
               path="manager-properties/:mp_id/emergency"
               element={<ManagerEmergency />}
+            />
+            <Route
+                path="manager-repairs"
+                element={<ManagerRepairsOverview />}
             />
           </Route>
         </Routes>

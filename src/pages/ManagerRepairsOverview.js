@@ -7,7 +7,7 @@ import {get} from "../utils/api";
 import AppContext from "../AppContext";
 import No_Image from "../icons/No_Image_Available.jpeg";
 
-function ManagerRepairsList(props) {
+function ManagerRepairsOverview(props) {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -20,7 +20,7 @@ function ManagerRepairsList(props) {
     const [completedRepairs, setCompletedRepairs] = React.useState([]);
     const [repairIter, setRepairIter] = React.useState([])
 
-    const property = location.state.property
+    const properties = location.state.properties
 
     const sort_repairs = (repairs) =>  {
         const repairs_with_quotes = repairs.filter(repair => repair.quotes_to_review > 0)
@@ -36,39 +36,42 @@ function ManagerRepairsList(props) {
             return;
         }
 
-        // const response = await get(`/maintenanceRequests?property_uid=${property.property_uid}`, access_token);
-        const response = await get(`/maintenanceRequestsandQuotes?property_uid=${property.property_uid}`);
-        if (response.msg === 'Token has expired') {
-            refresh();
-            return;
+        let repairs_unsorted = []
+
+        for (const property of properties) {
+            const response = await get(`/maintenanceRequestsandQuotes?property_uid=${property.property_uid}`);
+            if (response.msg === 'Token has expired') {
+                refresh();
+                return;
+            }
+            let repairs = response.result.filter(item => item.property_uid === property.property_uid);
+            repairs.forEach((repair, i) => {
+                const request_created_date = new Date(Date.parse(repair.request_created_date));
+                const current_date = new Date();
+                repairs[i].days_since = Math.ceil((current_date.getTime() - request_created_date.getTime()) / (1000 * 3600 * 24))
+                repairs[i].quotes_to_review = repair.quotes.filter(quote => quote.quote_status === "SENT").length
+
+                repair.priority_n = 0
+                if (repair.priority.toLowerCase() === "high") {
+                    repair.priority_n = 3
+                } else if (repair.priority.toLowerCase() === "medium") {
+                    repair.priority_n = 2
+                } else if (repair.priority.toLowerCase() === "low") {
+                    repair.priority_n = 1
+                }
+                repair.property = property
+            });
+            repairs_unsorted = [...repairs_unsorted, ...repairs]
         }
 
-        let repairs = response.result.filter(item => item.property_uid === property.property_uid);
-        repairs.forEach((repair, i) => {
-            const request_created_date = new Date(Date.parse(repair.request_created_date));
-            const current_date = new Date();
-            repairs[i].days_since = Math.ceil((current_date.getTime() - request_created_date.getTime()) / (1000 * 3600 * 24))
-            repairs[i].quotes_to_review = repair.quotes.filter(quote => quote.quote_status === "SENT").length
+        let repairs_sorted = sort_repairs(repairs_unsorted)
+        console.log(repairs_sorted)
+        setRepairs(repairs_sorted);
 
-            repair.priority_n = 0
-            if (repair.priority.toLowerCase() === "high") {
-                repair.priority_n = 3
-            } else if (repair.priority.toLowerCase() === "medium") {
-                repair.priority_n = 2
-            } else if (repair.priority.toLowerCase() === "low") {
-                repair.priority_n = 1
-            }
-
-        });
-        // repairs.sort((a, b) =>  b.quotes_to_review - a.quotes_to_review);
-        repairs = sort_repairs(repairs)
-        console.log(repairs)
-        setRepairs(repairs);
-
-        const new_repairs = repairs.filter(item => item.request_status === "NEW")
-        const processing_repairs = repairs.filter(item => item.request_status === "PROCESSING")
-        const scheduled_repairs = repairs.filter(item => item.request_status === "SCHEDULED")
-        const completed_repairs = repairs.filter(item => item.request_status === "COMPLETE")
+        const new_repairs = repairs_sorted.filter(item => item.request_status === "NEW")
+        const processing_repairs = repairs_sorted.filter(item => item.request_status === "PROCESSING")
+        const scheduled_repairs = repairs_sorted.filter(item => item.request_status === "SCHEDULED")
+        const completed_repairs = repairs_sorted.filter(item => item.request_status === "COMPLETE")
         setNewRepairs(new_repairs)
         setProcessingRepairs(processing_repairs)
         setScheduledRepairs(scheduled_repairs)
@@ -115,8 +118,8 @@ function ManagerRepairsList(props) {
                                                 <p style={greenPill} className='mb-0'>No Priority</p>}
                                 </div>
                                 <p style={gray} className='mt-2 mb-0'>
-                                    {property.address}{property.unit !== '' ? ' '+property.unit : ''}, {property.city}, {property.state} <br/>
-                                    {property.zip}
+                                    {repair.property.address}{repair.property.unit !== '' ? ' '+repair.property.unit : ''}, {repair.property.city}, {repair.property.state} <br/>
+                                    {repair.property.zip}
                                 </p>
                                 <div className='d-flex'>
                                     <div className='flex-grow-1 d-flex flex-column justify-content-center'>
@@ -141,4 +144,4 @@ function ManagerRepairsList(props) {
     );
 }
 
-export default ManagerRepairsList;
+export default ManagerRepairsOverview;

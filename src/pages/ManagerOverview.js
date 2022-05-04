@@ -147,7 +147,7 @@ function ManagerOverview(props) {
                             </p>
                         </Col>
 
-                        <Col onClick={() => ''}
+                        <Col onClick={() => {navigate('/manager-repairs', { state: {properties: properties }})}}
                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
                              style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
                             <img src={Repair} alt='Repair Requests' style={{width: '50px'}}/>
