@@ -67,7 +67,9 @@ function ManagerManagementContract(props) {
         setFiles(newFiles);
     }
     const loadContract = () => {
-        setContractName(contract.contract_name)
+        if (contract.contract_name) {
+            setContractName(contract.contract_name)
+        }
         setStartDate(contract.start_date);
         setEndDate(contract.end_date);
         setFeeState(JSON.parse(contract.contract_fees));
@@ -83,6 +85,13 @@ function ManagerManagementContract(props) {
     const save = async () => {
         if (contractName === '' || startDate === '' || endDate === '') {
             setErrorMessage('Please fill out all fields');
+            return;
+        }
+
+        let start_date = new Date(startDate)
+        let end_date = new Date(endDate)
+        if (start_date >= end_date) {
+            setErrorMessage('Select an End Date later than Start Date');
             return;
         }
         setErrorMessage('');
