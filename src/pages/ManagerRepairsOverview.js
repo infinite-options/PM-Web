@@ -24,9 +24,9 @@ function ManagerRepairsOverview(props) {
 
     const sort_repairs = (repairs) =>  {
         const repairs_with_quotes = repairs.filter(repair => repair.quotes_to_review > 0)
-        repairs_with_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || a.days_since - b.days_since))
+        repairs_with_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || b.days_since - a.days_since))
         const repairs_without_quotes = repairs.filter(repair => repair.quotes_to_review === 0)
-        repairs_without_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || a.days_since - b.days_since))
+        repairs_without_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || b.days_since - a.days_since))
         return [...repairs_with_quotes, ...repairs_without_quotes]
     }
 

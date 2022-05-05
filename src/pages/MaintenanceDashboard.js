@@ -34,7 +34,7 @@ function MaintenanceDashboard(props) {
   let access_token = userData.access_token;
 
   const sort_quotes = (quotes) =>  {
-    quotes.sort((a,b) => ((b.priority_n - a.priority_n) || (a.days_since - b.days_since)))
+    quotes.sort((a,b) => ((b.priority_n - a.priority_n) || (b.days_since - a.days_since)))
     return quotes
   }
 
