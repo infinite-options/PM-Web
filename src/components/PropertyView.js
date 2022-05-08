@@ -295,7 +295,10 @@ function PropertyView(props) {
           ) : showCreateTax ? (
             <CreateTax back={() => setShowCreateTax(false)} />
           ) : showCreateMortgage ? (
-            <CreateMortgage back={() => setShowCreateMortgage(false)} />
+            <CreateMortgage
+              property={property}
+              back={() => setShowCreateMortgage(false)}
+            />
           ) : (
             <div>
               <div

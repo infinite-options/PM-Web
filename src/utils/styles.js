@@ -13,6 +13,7 @@ const small = {
 };
 const mediumBold = {
   fontWeight: "600",
+  font: "normal normal bold 20px/28px Bahnschrift;",
 };
 const bold = {
   fontWeight: "bold",
