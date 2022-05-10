@@ -109,6 +109,17 @@ function TenantDocumentUpload(props) {
     fetchProfile();
   }, []);
 
+  const submitInfo = async () => {
+    const tenantProfile = {};
+    for (let i = 0; i < files.length; i++) {
+      let key = `doc_${i}`;
+      tenantProfile[key] = files[i].file;
+      delete files[i].file;
+    }
+    tenantProfile.documents = JSON.stringify(files);
+    await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    props.onConfirm();
+  };
   // useEffect(() => {
   //   const addDocument = async () => {
 
@@ -124,7 +135,12 @@ function TenantDocumentUpload(props) {
   // ======================================<Return function>=======================================
   return (
     <div className="h-100 d-flex flex-column">
-      <Header  title="Documents" leftText="< Back" leftFn={() => navigate("/tenant")} />
+      <Header  
+        title="Documents" 
+        leftText="< Back" leftFn={() => navigate("/tenant")}   
+        rightText="Save" rightFn={() => ( 
+          submitInfo())}
+      />
 
       <Container className="pt-1 mb-4">
           {/* <div style={{display:"flex",justifyContent: "space-around"}}>
@@ -199,23 +215,40 @@ function TenantDocumentUpload(props) {
               </div>
             </div>
           ) : (
+            // <div>
+            // <div style={{width:"50px",height:"50px"}}>
+            //   <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
+            //   {/* <label htmlFor='file'>
+            //     <Button variant='outline-primary' style={smallPillButton} as='p'>
+            //       Add Document
+            //     </Button>
+            //   </label> */}
+            //  <div className='mx-2' style={{minHeight: '100px', minWidth: '100px'}}>
+            //     <label htmlFor='file' style={tileImg} className='d-flex justify-content-center align-items-center'>
+            //         <img src={Plus}/>
+            //     </label>
+            //     <div style={{textAlign:"center"}}>Click to Upload</div>
+            //   </div>
+            // </div>
+            // </div>
             <div>
-            <div style={{width:"50px",height:"50px"}}>
-              <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
-              {/* <label htmlFor='file'>
-                <Button variant='outline-primary' style={smallPillButton} as='p'>
+              <input
+                id="file"
+                type="file"
+                accept="image/*,.pdf"
+                onChange={addFile}
+                className="d-none"
+              />
+              <label htmlFor="file">
+                <Button
+                  variant="outline-primary"
+                  style={smallPillButton}
+                  as="p"
+                >
                   Add Document
                 </Button>
-              </label> */}
-             <div className='mx-2' style={{minHeight: '100px', minWidth: '100px'}}>
-                <label htmlFor='file' style={tileImg} className='d-flex justify-content-center align-items-center'>
-                    <img src={Plus}/>
-                </label>
-                <div style={{textAlign:"center"}}>Click to Upload</div>
-              </div>
-            </div>
-            </div>
-          )}
+              </label>
+            </div>)}
         </div>
       </Container>
     </div>

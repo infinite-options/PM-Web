@@ -287,7 +287,7 @@ function TenantWelcomePage(props) {
                               />
                             )}
                           </div>
-                          <div>
+                          <div >
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>

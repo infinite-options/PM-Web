@@ -73,7 +73,7 @@ function TenantDashboard(props) {
       const prof = response.result[0];
 
       response = await get("/tenantProperties", access_token);
-      console.log("tenantProperties", response.result);
+      console.table("tenantProperties", response.result);
 
       let payments = [];
       let property_uid = [];
@@ -573,7 +573,7 @@ function TenantDashboard(props) {
                               />
                             )}
                           </div>
-                          <div>
+                          <div style={{paddingLeft:"15px"}}>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
@@ -637,7 +637,7 @@ function TenantDashboard(props) {
                               />
                             )}
                           </div>
-                          <div>
+                          <div style={{paddingLeft:"15px"}}>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
@@ -707,7 +707,7 @@ function TenantDashboard(props) {
                               />
                             )}
                           </div>
-                          <div>
+                          <div style={{paddingLeft:"15px"}}>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
