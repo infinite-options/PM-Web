@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="86" height="40" viewBox="0 0 86 40">
+  <g id="Group_668" data-name="Group 668" transform="translate(-770 -177)">
+    <g id="Rectangle_12" data-name="Rectangle 12" transform="translate(770 177)" fill="#fff" stroke="#007aff" stroke-width="1">
+      <rect width="86" height="40" rx="5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="85" height="39" rx="4.5" fill="none"/>
+    </g>
+    <text id="Apply" transform="translate(785 184)" fill="#007aff" font-size="18" font-family="SegoeUI, Segoe UI"><tspan x="5" y="19">Apply</tspan></text>
+  </g>
+</svg>
