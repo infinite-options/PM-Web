@@ -29,6 +29,7 @@ function CreateMortgage(props) {
       return;
     }
     let mortgage = [];
+    const files = JSON.parse(props.property.images);
     const newMortgage = {
       category: category,
       title: title,
@@ -41,14 +42,19 @@ function CreateMortgage(props) {
     mortgage.push(newMortgage);
     console.log(newMortgage);
     // let formData = new FormData();
-    const formData = {
+    const updateMortgage = {
       property_uid: props.property.property_uid,
-      mortgages: mortgage,
+      mortgages: JSON.stringify(newMortgage),
     };
-    // formData.append("property_uid", props.property.property_uid);
-    // formData.append("mortgages", mortgage);
-    // console.log(formData);
-    const response = await put(`/mortgage`, formData);
+    for (let i = -1; i < files.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      updateMortgage[key] = files[i + 1];
+    }
+
+    const response = await put("/properties", updateMortgage, null, files);
     props.back();
   };
   const [errorMessage, setErrorMessage] = React.useState("");

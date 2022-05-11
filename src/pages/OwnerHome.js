@@ -6,6 +6,7 @@ import AppContext from "../AppContext";
 import OwnerProperties from "./OwnerProperties";
 import OwnerDashboard from "./OwnerDashboard";
 import OwnerProfile from "./OwnerProfile";
+import SwitchRole from "../components/SwitchRole";
 
 function OwnerHome() {
   const navigate = useNavigate();
@@ -53,7 +54,11 @@ function OwnerHome() {
         {footerTab === "DASHBOARD" ? (
           <div>
             {stage === "DASHBOARD" ? (
-              <OwnerDashboard setStage={setStage} properties={properties} />
+              <OwnerDashboard
+                setShowFooter={setShowFooter}
+                setStage={setStage}
+                properties={properties}
+              />
             ) : stage === "PROPERTIES" ? (
               <OwnerProperties
                 setShowFooter={setShowFooter}
@@ -70,13 +75,22 @@ function OwnerHome() {
           ""
         )}
       </div>
-      <div className="flex-grow-1" style={{ height: "90%", overflow: "auto" }}>
+      <div className="flex-grow-1">
         {footerTab === "PROFILE" ? (
           <OwnerProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
         )}
+        {footerTab === "ROLES" ? (
+          <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
+        ) : (
+          ""
+        )}
       </div>
+      {/* <div
+        className="flex-grow-1"
+        style={{ height: "90%", overflow: "auto" }}
+      ></div> */}
       {showFooter ? <Footer tab={footerTab} setTab={setTab} /> : ""}
     </div>
   );

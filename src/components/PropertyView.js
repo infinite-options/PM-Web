@@ -291,9 +291,15 @@ function PropertyView(props) {
               onSubmit={reloadProperty}
             />
           ) : showCreateExpense ? (
-            <CreateExpense back={() => setShowCreateExpense(false)} />
+            <CreateExpense
+              property={property}
+              back={() => setShowCreateExpense(false)}
+            />
           ) : showCreateTax ? (
-            <CreateTax back={() => setShowCreateTax(false)} />
+            <CreateTax
+              property={property}
+              back={() => setShowCreateTax(false)}
+            />
           ) : showCreateMortgage ? (
             <CreateMortgage
               property={property}
