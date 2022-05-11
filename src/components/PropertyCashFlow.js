@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { gray, green, red, mediumBold, small, xSmall } from "../utils/styles";
 import ArrowUp from "../icons/ArrowUp.svg";
@@ -10,68 +10,18 @@ function PropertyCashFlow(props) {
   const { setShowCreateExpense, setShowCreateTax, setShowCreateMortgage } =
     state;
 
-  const [expandCashFlow, setExpandCashFlow] = React.useState(false);
+  const [expandRevenue, setExpandRevenue] = React.useState(false);
   const [expandExpenses, setExpandExpenses] = React.useState(false);
   const [expandTaxes, setExpandTaxes] = React.useState(false);
   const [expandMortgage, setExpandMortgage] = React.useState(false);
+  const [revenue, setRevenue] = useState("");
+  const [expense, setExpense] = useState("");
+  const [maintenance, setMaintenance] = useState("");
+  const [mortgage, setMortgage] = useState("");
+  const [tax, setTax] = useState("");
 
-  const revenue = [
-    { name: "Rent", amount: property.listed_rent },
-    { name: "Fees", amount: 300 },
-  ];
-  const expenses = [
-    { type: "Management", name: "Management", amount: 300 },
-    { type: "Maintenance", name: "Painting", amount: 300 },
-    { type: "Maintenance", name: "Plumbing check", amount: 30 },
-    { type: "Maintenance", name: "Gardening", amount: 30 },
-    { type: "Repairs", name: "Dishwasher", amount: 30 },
-    { type: "Repairs", name: "Doorlock", amount: 20 },
-  ];
-  const taxes = [
-    { name: "State Taxes", amount: 80 },
-    { name: "Property Taxes", amount: 50 },
-    { name: "Rental Taxes", amount: 20 },
-  ];
-  const mortgage = [
-    { name: "Principal", amount: 300 },
-    { name: "Interest", amount: 250 },
-    { name: "Insurance", amount: 150 },
-    { name: "Esrow", amount: 150 },
-  ];
-  const management = expenses.filter((item) => item.type === "Management");
-  const maintenance = expenses.filter((item) => item.type === "Maintenance");
-  const repairs = expenses.filter((item) => item.type === "Repairs");
-  let revenueTotal = 0;
-  for (const item of revenue) {
-    revenueTotal += item.amount;
-  }
-  let managementTotal = 0;
-  for (const item of management) {
-    managementTotal += item.amount;
-  }
-  let maintenanceTotal = 0;
-  for (const item of maintenance) {
-    maintenanceTotal += item.amount;
-  }
-  let repairsTotal = 0;
-  for (const item of repairs) {
-    repairsTotal += item.amount;
-  }
-  let taxesTotal = 0;
-  for (const item of taxes) {
-    taxesTotal += item.amount;
-  }
-  let mortgageTotal = 0;
-  for (const item of mortgage) {
-    mortgageTotal += item.amount;
-  }
-  const expensesTotal =
-    managementTotal +
-    maintenanceTotal +
-    repairsTotal +
-    taxesTotal +
-    mortgageTotal;
-  const cashFlow = revenueTotal - expensesTotal;
+  console.log(property);
+
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -90,509 +40,562 @@ function PropertyCashFlow(props) {
     setShowCreateMortgage(true);
   };
 
+  let revenueTotal = 0;
+  let expenseTotal = 0;
+  let mortgageTotal = 0;
+  let taxTotal = 0;
+  let maintenanceTotal = 0;
+  useEffect(() => {
+    console.log("in useeffect");
+    if (property.owner_revenue.length == 0) {
+    } else if (property.owner_revenue.length == 1) {
+      revenueTotal += property.owner_revenue[0].amount_paid;
+    } else {
+      for (const or of property.owner_revenue) {
+        revenueTotal += or.amount_paid;
+      }
+    }
+    setRevenue(revenueTotal);
+    console.log("in useeffect", revenueTotal);
+    if (property.owner_expense.length == 0) {
+    } else if (property.owner_expense.length == 1) {
+      expenseTotal += property.owner_expense[0].amount_paid;
+      maintenanceTotal += property.owner_expense[0].amount_paid;
+    } else {
+      for (const or of property.owner_expense) {
+        expenseTotal += or.amount_paid;
+        maintenanceTotal += or.amount_paid;
+      }
+    }
+    if (property.mortgages !== null) {
+      expenseTotal += Number(JSON.parse(property.mortgages).amount);
+      mortgageTotal += Number(JSON.parse(property.mortgages).amount);
+    }
+    if (property.taxes !== null) {
+      console.log(
+        property.property_uid,
+        typeof property.taxes,
+        JSON.parse(property.taxes)[0].amount
+      );
+      expenseTotal += Number(JSON.parse(property.taxes)[0].amount);
+      taxTotal += Number(JSON.parse(property.taxes)[0].amount);
+    }
+    console.log("in useeffect", expenseTotal);
+    setExpense(expenseTotal);
+    setMaintenance(maintenanceTotal);
+    setMortgage(mortgageTotal);
+    setTax(taxTotal);
+  });
+
+  const cashFlow = revenue - expense;
+
   return (
     <div>
+      <Row
+        className="mx-2 my-2 p-3"
+        style={{
+          background:
+            revenue > expense
+              ? "#93EE9C 0% 0% no-repeat padding-box"
+              : "#FFBCBC 0% 0% no-repeat padding-box",
+          boxShadow: "0px 3px 3px #00000029",
+          borderRadius: "20px",
+        }}
+      >
+        <Col style={mediumBold}>Cash Flow</Col>
+        <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
+          <Col style={mediumBold}>${cashFlow}</Col>
+          <Col></Col>
+        </Col>
+      </Row>
+      <Row
+        onClick={() => setExpandRevenue(!expandRevenue)}
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#93EE9C 0% 0% no-repeat padding-box",
+          boxShadow: "0px 3px 3px #00000029",
+          borderRadius: "20px",
+        }}
+      >
+        <Col style={mediumBold}>Revenue</Col>
+        <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
+          <Col style={mediumBold}>${revenue}</Col>
+          <Col></Col>
+        </Col>
+      </Row>
       <div>
-        <div onClick={() => setExpandCashFlow(!expandCashFlow)}>
-          <h6 style={mediumBold} className="mb-1 mt-3">
-            Cash Flow
-          </h6>
-          <div className="d-flex justify-content-between">
-            <h6 style={{ ...green, ...mediumBold }} className="mb-1">
-              ${cashFlow}/mo
-            </h6>
-            <img src={expandCashFlow ? ArrowUp : ArrowDown} alt="Expand" />
+        {expandRevenue ? (
+          <div>
+            <Container
+              style={{ border: "1px solid #707070", borderRadius: "5px" }}
+            >
+              <Row>
+                <Col />
+                <Col>
+                  <p
+                    style={{
+                      ...gray,
+                      ...small,
+                    }}
+                    className="text-center m-1"
+                  >
+                    MTD
+                  </p>
+                </Col>
+                <Col>
+                  <p style={{ ...gray, ...small }} className="text-center m-1">
+                    YTD
+                  </p>
+                </Col>
+              </Row>
+              {property.owner_revenue.length >= 1 ? (
+                <div>
+                  {property.owner_revenue.map((owr) => {
+                    return owr.purchase_type === "RENT" ? (
+                      <Row style={{}}>
+                        <Col>
+                          <p
+                            style={{ ...small, ...mediumBold }}
+                            className=" m-1"
+                          >
+                            Rent
+                          </p>
+                        </Col>
+                        <Col>
+                          <p
+                            style={{ ...small, ...green }}
+                            className="text-center m-1"
+                          >
+                            {owr.amount_paid}
+                          </p>
+                        </Col>
+                        <Col>
+                          <p
+                            style={{ ...small, ...green }}
+                            className="text-center m-1"
+                          ></p>
+                        </Col>
+                      </Row>
+                    ) : (
+                      <Row style={{}}>
+                        <Col>
+                          <p
+                            style={{ ...small, ...mediumBold }}
+                            className=" m-1"
+                          >
+                            Fees
+                          </p>
+                        </Col>
+                        <Col>
+                          <p
+                            style={{ ...small, ...green }}
+                            className="text-center m-1"
+                          >
+                            {owr.amount_paid}
+                          </p>
+                        </Col>
+                        <Col>
+                          <p
+                            style={{ ...small, ...green }}
+                            className="text-center m-1"
+                          ></p>
+                        </Col>
+                      </Row>
+                    );
+                  })}
+                </div>
+              ) : (
+                ""
+              )}
+
+              <Row
+                style={{
+                  background: "#F3F3F3 0% 0% no-repeat padding-box",
+                }}
+              >
+                <Col>
+                  <p style={{ ...small, ...mediumBold }} className=" m-1">
+                    Total
+                  </p>
+                </Col>
+                <Col>
+                  <p style={{ ...small, ...green }} className="text-center m-1">
+                    {revenue}
+                  </p>
+                </Col>
+                <Col>
+                  <p
+                    style={{ ...small, ...green }}
+                    className="text-center m-1"
+                  ></p>
+                </Col>
+              </Row>
+            </Container>
           </div>
-          <hr style={{ opacity: 1 }} className="mt-1" />
-        </div>
-        {expandCashFlow ? (
-          <Container>
-            <Row>
-              <Col />
-              <Col>
-                <p style={{ ...gray, ...xSmall }} className="mb-1">
-                  MTD
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...gray, ...xSmall }} className="mb-1">
-                  YTD
-                </p>
-              </Col>
-            </Row>
-            <div>
-              <p style={{ ...small, ...mediumBold }} className="mb-1">
-                Revenue
-              </p>
-              {revenue.map((item, i) => (
-                <Row key={i}>
-                  <Col>
-                    <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                      {item.name}
-                    </p>
-                  </Col>
-                  <Col>
-                    <p style={{ ...xSmall, ...green }} className="mb-1">
-                      {formatter.format(item.amount)}
-                    </p>
-                  </Col>
-                  <Col>
-                    <p style={{ ...xSmall, ...green }} className="mb-1">
-                      {formatter.format(item.amount * 12)}
-                    </p>
-                  </Col>
-                </Row>
-              ))}
-              <Row>
-                <Col>
-                  <p style={{ ...small, ...mediumBold }} className="mb-1">
-                    Total
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...green }} className="mb-1">
-                    {formatter.format(revenueTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...green }} className="mb-1">
-                    {formatter.format(revenueTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
-            </div>
-            <div onClick={() => setExpandCashFlow(!expandCashFlow)}>
-              <h6 style={mediumBold} className="mb-1 mt-3">
-                Cash Flow
-              </h6>
-              <div className="d-flex justify-content-between">
-                <h6 style={{ ...green, ...mediumBold }} className="mb-1">
-                  ${cashFlow}/mo
-                </h6>
-                <img src={expandCashFlow ? ArrowUp : ArrowDown} alt="Expand" />
-              </div>
-              <hr style={{ opacity: 1 }} className="mt-1" />
-            </div>
-            <div>
-              <p style={{ ...small, ...mediumBold }} className="mb-1">
-                Expenses
-              </p>
-              <Row>
-                <Col>
-                  <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                    Management
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(managementTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(managementTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                    Maintenance
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(maintenanceTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(maintenanceTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                    Repairs
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(repairsTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(repairsTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                    Taxes
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(taxesTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(taxesTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                    Mortgage
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(mortgageTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(mortgageTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <p style={{ ...small, ...mediumBold }} className="mb-1">
-                    Total
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(expensesTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(expensesTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
-            </div>
-            <Row>
-              <Col>
-                <p style={{ ...small, ...mediumBold }} className="mb-1">
-                  Cash Flow
-                </p>
-              </Col>
-              <Col>
-                <p
-                  style={{ ...xSmall, ...(cashFlow > 0 ? green : red) }}
-                  className="mb-1"
-                >
-                  {formatter.format(cashFlow)}
-                </p>
-              </Col>
-              <Col>
-                <p
-                  style={{ ...xSmall, ...(cashFlow > 0 ? green : red) }}
-                  className="mb-1"
-                >
-                  {formatter.format(cashFlow * 12)}
-                </p>
-              </Col>
-            </Row>
-          </Container>
         ) : (
           ""
         )}
       </div>
-      <div>
-        <div onClick={() => setExpandExpenses(!expandExpenses)}>
-          <div className="d-flex justify-content-between align-items-end mb-1 mt-3">
-            <h6 style={mediumBold} className="mb-0">
-              Expenses
-            </h6>
+      <Row
+        onClick={() => setExpandExpenses(!expandExpenses)}
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFBCBC 0% 0% no-repeat padding-box",
+          boxShadow: "0px 3px 3px #00000029",
+          borderRadius: "20px",
+        }}
+      >
+        <Col style={mediumBold}>Expenses</Col>
+        <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
+          <Col style={mediumBold}>${expense}</Col>
+          <Col>
             <img
               style={{ width: "20px" }}
               src={Add}
               alt="Add Expense"
               onClick={addExpense}
             />
-          </div>
-          <div className="d-flex justify-content-between">
-            <h6 style={{ ...red, ...mediumBold }} className="mb-1">
-              ${managementTotal + maintenanceTotal + repairsTotal}/mo
-            </h6>
-            <img src={expandExpenses ? ArrowUp : ArrowDown} alt="Expand" />
-          </div>
-          <hr style={{ opacity: 1 }} className="mt-1" />
-        </div>
+          </Col>
+        </Col>
+      </Row>
+
+      <div>
         {expandExpenses ? (
-          <Container>
-            <Row>
-              <Col />
-              <Col>
-                <p style={{ ...gray, ...xSmall }} className="mb-1">
-                  MTD
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...gray, ...xSmall }} className="mb-1">
-                  YTD
-                </p>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <p style={{ ...small, ...mediumBold }} className="mb-1">
-                  Management
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...xSmall, ...red }} className="mb-1">
-                  {formatter.format(managementTotal)}
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...xSmall, ...red }} className="mb-1">
-                  {formatter.format(managementTotal * 12)}
-                </p>
-              </Col>
-            </Row>
-            <div>
-              <p style={{ ...small, ...mediumBold }} className="mb-1">
-                Maintenance
-              </p>
-              {maintenance.map((item, i) => (
-                <Row key={i}>
+          <div>
+            {property.owner_expense.length >= 1 ? (
+              <Container
+                style={{ border: "1px solid #707070", borderRadius: "5px" }}
+              >
+                <Row>
                   <Col>
-                    <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                      {item.name}
+                    <p
+                      style={{
+                        ...gray,
+                        ...small,
+                      }}
+                      className="m-1"
+                    >
+                      Expenses
                     </p>
                   </Col>
                   <Col>
-                    <p style={{ ...xSmall, ...red }} className="mb-1">
-                      {formatter.format(item.amount)}
+                    <p
+                      style={{
+                        ...gray,
+                        ...small,
+                      }}
+                      className="text-center m-1"
+                    >
+                      MTD
                     </p>
                   </Col>
                   <Col>
-                    <p style={{ ...xSmall, ...red }} className="mb-1">
-                      {formatter.format(item.amount * 12)}
+                    <p
+                      style={{ ...gray, ...small }}
+                      className="text-center m-1"
+                    >
+                      YTD
                     </p>
                   </Col>
                 </Row>
-              ))}
-              <Row>
-                <Col>
-                  <p style={{ ...small, ...mediumBold }} className="mb-1">
-                    Total
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(maintenanceTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(maintenanceTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
-            </div>
-            <div>
-              <p style={{ ...small, ...mediumBold }} className="mb-1">
-                Repairs
-              </p>
-              {repairs.map((item, i) => (
-                <Row key={i}>
+
+                <div>
+                  {property.owner_expense.length >= 1
+                    ? property.owner_expense.map((owe) => {
+                        return (
+                          <Row>
+                            <Col xs={4}>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                }}
+                                className=" m-1"
+                              >
+                                {owe.purchase_type}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...red }}
+                                className="text-center m-1"
+                              >
+                                {owe.amount_paid}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...red }}
+                                className="text-center m-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        );
+                      })
+                    : ""}
+                </div>
+
+                <Row
+                  style={{
+                    background: "#F3F3F3 0% 0% no-repeat padding-box",
+                  }}
+                >
                   <Col>
-                    <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                      {item.name}
+                    <p style={{ ...small, ...mediumBold }} className=" m-1">
+                      Total
                     </p>
                   </Col>
                   <Col>
-                    <p style={{ ...xSmall, ...red }} className="mb-1">
-                      {formatter.format(item.amount)}
+                    <p style={{ ...small, ...red }} className="text-center m-1">
+                      {maintenance}
                     </p>
                   </Col>
                   <Col>
-                    <p style={{ ...xSmall, ...red }} className="mb-1">
-                      {formatter.format(item.amount * 12)}
-                    </p>
+                    <p
+                      style={{ ...small, ...red }}
+                      className="text-center m-1"
+                    ></p>
                   </Col>
                 </Row>
-              ))}
-              <Row>
+              </Container>
+            ) : (
+              ""
+            )}
+            <Row
+              onClick={() => setExpandMortgage(!expandMortgage)}
+              className="mx-2 my-2 p-3"
+              style={{
+                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                boxShadow: "0px 3px 3px #00000029",
+                borderRadius: "20px",
+              }}
+            >
+              <Col style={mediumBold}>Mortgage</Col>
+              <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
+                <Col style={mediumBold}>${mortgage}</Col>
                 <Col>
-                  <p style={{ ...small, ...mediumBold }} className="mb-1">
-                    Total
-                  </p>
+                  <img
+                    style={{ width: "20px" }}
+                    src={Add}
+                    alt="Add Mortgage"
+                    onClick={addMortgage}
+                  />
                 </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(repairsTotal)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(repairsTotal * 12)}
-                  </p>
-                </Col>
-              </Row>
+              </Col>
+            </Row>
+            <div>
+              {expandMortgage && property.mortgages !== null ? (
+                <div>
+                  <Container
+                    style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                  >
+                    <Row>
+                      <Col />
+                      <Col>
+                        <p
+                          style={{
+                            ...gray,
+                            ...small,
+                          }}
+                          className="text-center m-1"
+                        >
+                          MTD
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...gray, ...small }}
+                          className="text-center m-1"
+                        >
+                          YTD
+                        </p>
+                      </Col>
+                    </Row>
+                    <Row
+                      style={
+                        {
+                          // background:
+                          //   i % 2 === 0
+                          //     ? "#FFFFFF 0% 0% no-repeat padding-box"
+                          //     : "#F3F3F3 0% 0% no-repeat padding-box",
+                        }
+                      }
+                    >
+                      <Col xs={4}>
+                        <p
+                          style={{
+                            ...small,
+                            ...mediumBold,
+                          }}
+                          className=" m-1"
+                        >
+                          Mortgages
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        >
+                          {JSON.parse(property.mortgages).amount}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                    <Row
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      }}
+                    >
+                      <Col>
+                        <p style={{ ...small, ...mediumBold }} className=" m-1">
+                          Total
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        >
+                          {mortgage}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                  </Container>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
-            <Row>
-              <Col>
-                <p style={{ ...small, ...mediumBold }} className="mb-1">
-                  Total
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...xSmall, ...red }} className="mb-1">
-                  {formatter.format(
-                    managementTotal + maintenanceTotal + repairsTotal
-                  )}
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...xSmall, ...red }} className="mb-1">
-                  {formatter.format(
-                    (managementTotal + maintenanceTotal + repairsTotal) * 12
-                  )}
-                </p>
+            <Row
+              onClick={() => setExpandTaxes(!expandTaxes)}
+              className="mx-2 my-2 p-3"
+              style={{
+                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                boxShadow: "0px 3px 3px #00000029",
+                borderRadius: "20px",
+              }}
+            >
+              <Col style={mediumBold}>Taxes</Col>
+              <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
+                <Col style={mediumBold}>${tax}</Col>
+                <Col>
+                  <img
+                    style={{ width: "20px" }}
+                    src={Add}
+                    alt="Add Tax"
+                    onClick={addTax}
+                  />
+                </Col>
               </Col>
             </Row>
-          </Container>
-        ) : (
-          ""
-        )}
-      </div>
-      <div>
-        <div onClick={() => setExpandTaxes(!expandTaxes)}>
-          <div className="d-flex justify-content-between align-items-end mb-1 mt-3">
-            <h6 style={mediumBold} className="mb-0">
-              Taxes
-            </h6>
-            <img
-              style={{ width: "20px" }}
-              src={Add}
-              alt="Add Tax"
-              onClick={addTax}
-            />
+            <div>
+              {expandTaxes && property.taxes !== null ? (
+                <div>
+                  <Container
+                    style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                  >
+                    <Row>
+                      <Col />
+                      <Col>
+                        <p
+                          style={{
+                            ...gray,
+                            ...small,
+                          }}
+                          className="text-center m-1"
+                        >
+                          MTD
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...gray, ...small }}
+                          className="text-center m-1"
+                        >
+                          YTD
+                        </p>
+                      </Col>
+                    </Row>
+                    <Row
+                      style={
+                        {
+                          // background:
+                          //   i % 2 === 0
+                          //     ? "#FFFFFF 0% 0% no-repeat padding-box"
+                          //     : "#F3F3F3 0% 0% no-repeat padding-box",
+                        }
+                      }
+                    >
+                      <Col xs={4}>
+                        <p
+                          style={{
+                            ...small,
+                            ...mediumBold,
+                          }}
+                          className=" m-1"
+                        >
+                          Taxes
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        >
+                          {JSON.parse(property.taxes)[0].amount}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                    <Row
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      }}
+                    >
+                      <Col>
+                        <p style={{ ...small, ...mediumBold }} className=" m-1">
+                          Total
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        >
+                          {tax}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                  </Container>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
-          <div className="d-flex justify-content-between">
-            <h6 style={{ ...red, ...mediumBold }} className="mb-1">
-              ${taxesTotal}/mo
-            </h6>
-            <img src={expandTaxes ? ArrowUp : ArrowDown} alt="Expand" />
-          </div>
-          <hr style={{ opacity: 1 }} className="mt-1" />
-        </div>
-        {expandTaxes ? (
-          <Container>
-            {taxes.map((item, i) => (
-              <Row key={i}>
-                <Col>
-                  <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                    {item.name}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(item.amount)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(item.amount * 12)}
-                  </p>
-                </Col>
-              </Row>
-            ))}
-            <Row>
-              <Col>
-                <p style={{ ...small, ...mediumBold }} className="mb-1">
-                  Total
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...xSmall, ...red }} className="mb-1">
-                  {formatter.format(taxesTotal)}
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...xSmall, ...red }} className="mb-1">
-                  {formatter.format(taxesTotal * 12)}
-                </p>
-              </Col>
-            </Row>
-          </Container>
-        ) : (
-          ""
-        )}
-      </div>
-      <div>
-        <div onClick={() => setExpandMortgage(!expandMortgage)}>
-          <div className="d-flex justify-content-between align-items-end mb-1 mt-3">
-            <h6 style={mediumBold} className="mb-0">
-              Mortgage
-            </h6>
-            <img
-              style={{ width: "20px" }}
-              src={Add}
-              alt="Add Mortgage"
-              onClick={addMortgage}
-            />
-          </div>
-          <div className="d-flex justify-content-between">
-            <h6 style={{ ...red, ...mediumBold }} className="mb-1">
-              ${mortgageTotal}/mo
-            </h6>
-            <img src={expandMortgage ? ArrowUp : ArrowDown} alt="Expand" />
-          </div>
-          <hr style={{ opacity: 1 }} className="mt-1" />
-        </div>
-        {expandMortgage ? (
-          <Container>
-            {mortgage.map((item, i) => (
-              <Row key={i}>
-                <Col>
-                  <p style={{ ...xSmall, ...mediumBold }} className="mb-1">
-                    {item.name}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(item.amount)}
-                  </p>
-                </Col>
-                <Col>
-                  <p style={{ ...xSmall, ...red }} className="mb-1">
-                    {formatter.format(item.amount * 12)}
-                  </p>
-                </Col>
-              </Row>
-            ))}
-            <Row>
-              <Col>
-                <p style={{ ...small, ...mediumBold }} className="mb-1">
-                  Total
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...xSmall, ...red }} className="mb-1">
-                  {formatter.format(mortgageTotal)}
-                </p>
-              </Col>
-              <Col>
-                <p style={{ ...xSmall, ...red }} className="mb-1">
-                  {formatter.format(mortgageTotal * 12)}
-                </p>
-              </Col>
-            </Row>
-          </Container>
         ) : (
           ""
         )}

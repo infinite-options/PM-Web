@@ -1,121 +1,184 @@
-import React from 'react';
-import {Form, Button} from 'react-bootstrap';
-import {squareForm, pillButton, small, hidden, red} from '../utils/styles';
-import ArrowDown from '../icons/ArrowDown.svg';
+import React from "react";
+import { Form, Button } from "react-bootstrap";
+import { squareForm, pillButton, small, hidden, red } from "../utils/styles";
+import ArrowDown from "../icons/ArrowDown.svg";
+import { post } from "../utils/api";
 
 function CreateExpense(props) {
-  const [category, setCategory] = React.useState('Management');
-  const [title, setTitle] = React.useState('');
-  const [description, setDescription] = React.useState('');
-  const [amount, setAmount] = React.useState('');
-  const [frequency, setFrequency] = React.useState('Monthly');
-  const [frequencyOfPayment, setFrequencyOfPayment] = React.useState('Every other month');
-  const [date, setDate] = React.useState('');
+  const { property } = props;
+  const [category, setCategory] = React.useState("Management");
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [amount, setAmount] = React.useState("");
+  const [frequency, setFrequency] = React.useState("Monthly");
+  const [frequencyOfPayment, setFrequencyOfPayment] =
+    React.useState("Every other month");
+  const [date, setDate] = React.useState("");
   React.useEffect(() => {
-    if (frequency === 'Monthly') {
-      const newFrequencyOfPayment = frequencyOfPayment.replace('year', 'month');
+    if (frequency === "Monthly") {
+      const newFrequencyOfPayment = frequencyOfPayment.replace("year", "month");
       setFrequencyOfPayment(newFrequencyOfPayment);
-    } else if (frequency === 'Annually') {
-      const newFrequencyOfPayment = frequencyOfPayment.replace('month', 'year');
+    } else if (frequency === "Annually") {
+      const newFrequencyOfPayment = frequencyOfPayment.replace("month", "year");
+      setFrequencyOfPayment(newFrequencyOfPayment);
+    } else {
+      const newFrequencyOfPayment = "One-time";
       setFrequencyOfPayment(newFrequencyOfPayment);
     }
-  }, [frequency])
-  const submitForm = () => {
-    if (title === '' || amount === '' || date === '') {
-      setErrorMessage('Please fill out all fields');
+  }, [frequency]);
+  const submitForm = async () => {
+    if (amount === "") {
+      setErrorMessage("Please fill out all fields");
       return;
     }
     const newExpense = {
-      category: category,
-      title: title,
+      pur_property_id: property.property_uid,
+      payer: property.owner_id,
+      receiver: property.property_uid,
+      purchase_type: category,
+      // title: title,
       description: description,
-      amount: amount,
-      frequency: frequency,
-      frequency_of_payment: frequencyOfPayment,
-      next_date: date
+      amount_due: amount,
+      purchase_frequency: frequency,
+      purchase_notes: frequencyOfPayment,
+      purchase_date: date,
     };
     console.log(newExpense);
+    const response = await post("/createExpenses", newExpense);
     props.back();
-  }
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const required = (
-    errorMessage === 'Please fill out all fields' ? (
-      <span style={red} className='ms-1'>*</span>
-    ) : ''
-  );
+  };
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
   return (
     <div>
       <h5>Add New Expense Payment</h5>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>
+      <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
           Category
         </Form.Label>
-        <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
-          value={category} onChange={(e) => setCategory(e.target.value)}>
+        <Form.Select
+          style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
           <option>Management</option>
           <option>Maintenance</option>
           <option>Repairs</option>
         </Form.Select>
       </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>
-          Title {title === '' ? required : ''}
+      {/* <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
+          Title {title === "" ? required : ""}
         </Form.Label>
-        <Form.Control style={squareForm} placeholder='Painting'
-          value={title} onChange={(e) => setTitle(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>
+        <Form.Control
+          style={squareForm}
+          placeholder="Painting"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </Form.Group> */}
+      <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
           Description
         </Form.Label>
-        <Form.Control style={squareForm} placeholder='Apartment Maintenance'
-          value={description} onChange={(e) => setDescription(e.target.value)}/>
+        <Form.Control
+          style={squareForm}
+          placeholder="Apartment Maintenance"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
       </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>
-          Amount {amount === '' ? required : ''}
+      <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
+          Amount {amount === "" ? required : ""}
         </Form.Label>
-        <Form.Control style={squareForm} placeholder='200'
-          value={amount} onChange={(e) => setAmount(e.target.value)}/>
+        <Form.Control
+          style={squareForm}
+          placeholder="200"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
       </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>
+      <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
           Frequency
         </Form.Label>
-        <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
-          value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+        <Form.Select
+          style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+          value={frequency}
+          onChange={(e) => setFrequency(e.target.value)}
+        >
           <option>Monthly</option>
           <option>Annually</option>
+          <option>One-time</option>
         </Form.Select>
       </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>
+      <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
           Frequency of payment
         </Form.Label>
-        <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
-          value={frequencyOfPayment} onChange={(e) => setFrequencyOfPayment(e.target.value)}>
-          <option>Every other {frequency === 'Monthly' ? 'month' : 'year'}</option>
-          <option>Once a {frequency === 'Monthly' ? 'month' : 'year'}</option>
-          <option>Twice a {frequency === 'Monthly' ? 'month' : 'year'}</option>
-        </Form.Select>
+
+        {frequency === "One-time" ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>One-time</option>
+          </Form.Select>
+        ) : (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>
+              Every other {frequency === "Monthly" ? "month" : "year"}
+            </option>
+            <option>Once a {frequency === "Monthly" ? "month" : "year"}</option>
+            <option>
+              Twice a {frequency === "Monthly" ? "month" : "year"}
+            </option>
+          </Form.Select>
+        )}
       </Form.Group>
-      <Form.Group className='mx-2 my-3'>
-        <Form.Label as='h6' className='mb-0 ms-2'>
-          Next payment {date === '' ? required : ''}
+      <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
+          Next payment {date === "" ? required : ""}
         </Form.Label>
-        <Form.Control style={squareForm} placeholder='200' type='date'
-          value={date} onChange={(e) => setDate(e.target.value)}/>
+        <Form.Control
+          style={squareForm}
+          placeholder="200"
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
       </Form.Group>
-      <div className='text-center' style={errorMessage === '' ? hidden : {}}>
-        <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
+      <div className="text-center" style={errorMessage === "" ? hidden : {}}>
+        <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
       </div>
-      <div className='d-flex justify-content-center my-4'>
-        <Button variant='outline-primary' style={pillButton} onClick={props.back}
-          className='mx-2'>
+      <div className="d-flex justify-content-center my-4">
+        <Button
+          variant="outline-primary"
+          style={pillButton}
+          onClick={props.back}
+          className="mx-2"
+        >
           Cancel
         </Button>
-        <Button variant='outline-primary' style={pillButton} onClick={submitForm}
-          className='mx-2'>
+        <Button
+          variant="outline-primary"
+          style={pillButton}
+          onClick={submitForm}
+          className="mx-2"
+        >
           Save Expense
         </Button>
       </div>

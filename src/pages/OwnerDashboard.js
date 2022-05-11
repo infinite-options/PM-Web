@@ -14,10 +14,58 @@ import {
   mediumBold,
   green,
   red,
+  gray,
+  small,
 } from "../utils/styles";
 
 function OwnerDashboard(props) {
   const { setStage, properties } = props;
+  const [expandRevenue, setExpandRevenue] = React.useState(false);
+  const [expandExpenses, setExpandExpenses] = React.useState(false);
+  const [expandProperties, setExpandProperties] = React.useState(false);
+
+  let revenueTotal = 0;
+  for (const item of properties) {
+    if (item.owner_revenue.length == 0) {
+    } else if (item.owner_revenue.length == 1) {
+      revenueTotal += item.owner_revenue[0].amount_paid;
+    } else {
+      for (const or of item.owner_revenue) {
+        revenueTotal += or.amount_paid;
+      }
+    }
+  }
+
+  let expenseTotal = 0;
+  for (const item of properties) {
+    if (item.owner_expense.length == 0) {
+    } else if (item.owner_expense.length == 1) {
+      expenseTotal += item.owner_expense[0].amount_paid;
+    } else {
+      for (const or of item.owner_expense) {
+        expenseTotal += or.amount_paid;
+      }
+    }
+    if (item.mortgages !== null) {
+      expenseTotal += Number(JSON.parse(item.mortgages).amount);
+    }
+    if (item.taxes !== null) {
+      console.log(
+        item.property_uid,
+        typeof item.taxes,
+        JSON.parse(item.taxes)[0].amount
+      );
+      expenseTotal += Number(JSON.parse(item.taxes)[0].amount);
+    }
+  }
+  console.log(expenseTotal);
+
+  const cashFlow = revenueTotal - expenseTotal;
+
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
@@ -46,13 +94,17 @@ function OwnerDashboard(props) {
           <Row
             className="mx-2 my-2 p-3"
             style={{
-              background: "#93EE9C 0% 0% no-repeat padding-box",
+              background:
+                revenueTotal > expenseTotal
+                  ? "#93EE9C 0% 0% no-repeat padding-box"
+                  : "#FFBCBC 0% 0% no-repeat padding-box",
+              // background: "#93EE9C 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
           >
             <Col style={mediumBold}>Cash Flow</Col>
-            <Col style={mediumBold}>$3000</Col>
+            <Col style={mediumBold}>${cashFlow}</Col>
           </Row>
           <Row
             className="mx-2 my-2 p-3"
@@ -61,10 +113,176 @@ function OwnerDashboard(props) {
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
+            onClick={() => setExpandRevenue(!expandRevenue)}
           >
             <Col style={mediumBold}>Revenue</Col>
-            <Col style={mediumBold}>$5850</Col>
+            <Col style={mediumBold}>${revenueTotal}</Col>
           </Row>
+          <div>
+            {expandRevenue ? (
+              <div>
+                <Container
+                  style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                >
+                  <Row>
+                    <Col />
+                    <Col>
+                      <p
+                        style={{
+                          ...gray,
+                          ...small,
+                        }}
+                        className="text-center m-1"
+                      >
+                        MTD
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...gray, ...small }}
+                        className="text-center m-1"
+                      >
+                        YTD
+                      </p>
+                    </Col>
+                  </Row>
+                  {properties.map((property, i) => {
+                    return property.owner_revenue.length >= 1 ? (
+                      <div>
+                        {console.log(i)}
+                        <Row
+                          style={{
+                            background:
+                              i % 2 === 0
+                                ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                : "#F3F3F3 0% 0% no-repeat padding-box",
+                          }}
+                        >
+                          <Col>
+                            <p
+                              style={{ ...small, ...mediumBold }}
+                              className=" m-1"
+                            >
+                              {property.address}
+                            </p>
+                          </Col>
+                          {/* <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1"
+                            ></p>
+                          </Col> */}
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1"
+                            ></p>
+                          </Col>
+                        </Row>
+                        {property.owner_revenue.map((owr) => {
+                          return owr.purchase_type === "RENT" ? (
+                            <Row
+                              style={{
+                                background:
+                                  i % 2 === 0
+                                    ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                    : "#F3F3F3 0% 0% no-repeat padding-box",
+                              }}
+                            >
+                              <Col>
+                                <p
+                                  style={{ ...small, ...mediumBold }}
+                                  className=" m-1"
+                                >
+                                  Rent
+                                </p>
+                              </Col>
+                              <Col>
+                                <p
+                                  style={{ ...small, ...green }}
+                                  className="text-center m-1"
+                                >
+                                  {owr.amount_paid}
+                                </p>
+                              </Col>
+                              <Col>
+                                <p
+                                  style={{ ...small, ...green }}
+                                  className="text-center m-1"
+                                ></p>
+                              </Col>
+                            </Row>
+                          ) : (
+                            <Row
+                              style={{
+                                background:
+                                  i % 2 === 0
+                                    ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                    : "#F3F3F3 0% 0% no-repeat padding-box",
+                              }}
+                            >
+                              <Col>
+                                <p
+                                  style={{ ...small, ...mediumBold }}
+                                  className=" m-1"
+                                >
+                                  Fees
+                                </p>
+                              </Col>
+                              <Col>
+                                <p
+                                  style={{ ...small, ...green }}
+                                  className="text-center m-1"
+                                >
+                                  {owr.amount_paid}
+                                </p>
+                              </Col>
+                              <Col>
+                                <p
+                                  style={{ ...small, ...green }}
+                                  className="text-center m-1"
+                                ></p>
+                              </Col>
+                            </Row>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      ""
+                    );
+                  })}
+
+                  <Row
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    }}
+                  >
+                    <Col>
+                      <p style={{ ...small, ...mediumBold }} className=" m-1">
+                        Total
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...small, ...green }}
+                        className="text-center m-1"
+                      >
+                        {revenueTotal}
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...small, ...green }}
+                        className="text-center m-1"
+                      ></p>
+                    </Col>
+                  </Row>
+                </Container>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
           <Row
             className="mx-2 my-2 p-3"
             style={{
@@ -72,45 +290,227 @@ function OwnerDashboard(props) {
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
+            onClick={() => setExpandExpenses(!expandExpenses)}
           >
             <Col style={mediumBold}>Expenses</Col>
-            <Col style={mediumBold}>$1250</Col>
+            <Col style={mediumBold}>${expenseTotal}</Col>
           </Row>
-          {/* <div>
-            <h5 style={mediumBold}>Cashflow</h5>
-            <h5 style={{ ...green, ...mediumBold }} className="mb-0">
-              $3450/mo
-            </h5>
-            <hr style={{ opacity: 1 }} className="mt-1" />
-          </div>
           <div>
-            <h5 style={mediumBold}>Revenue</h5>
-            <h5 style={{ ...green, ...mediumBold }} className="mb-0">
-              $6000/mo
-            </h5>
-            <hr style={{ opacity: 1 }} className="mt-1" />
+            {expandExpenses ? (
+              <div>
+                <Container
+                  style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                >
+                  <Row>
+                    <Col />
+                    <Col>
+                      <p
+                        style={{
+                          ...gray,
+                          ...small,
+                        }}
+                        className="text-center m-1"
+                      >
+                        MTD
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...gray, ...small }}
+                        className="text-center m-1"
+                      >
+                        YTD
+                      </p>
+                    </Col>
+                  </Row>
+                  {properties.map((property, i) => {
+                    return property.owner_expense.length >= 1 ||
+                      property.mortgages !== null ||
+                      property.taxes !== null ? (
+                      <div>
+                        {console.log(i)}
+                        <Row
+                          style={{
+                            background:
+                              i % 2 === 0
+                                ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                : "#F3F3F3 0% 0% no-repeat padding-box",
+                          }}
+                        >
+                          <Col>
+                            <p
+                              style={{ ...small, ...mediumBold }}
+                              className=" m-1"
+                            >
+                              {property.address}
+                            </p>
+                          </Col>
+                          {/* <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1"
+                            ></p>
+                          </Col> */}
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1"
+                            ></p>
+                          </Col>
+                        </Row>
+                        {property.owner_expense.length >= 1
+                          ? property.owner_expense.map((owe) => {
+                              return (
+                                <Row
+                                  style={{
+                                    background:
+                                      i % 2 === 0
+                                        ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                        : "#F3F3F3 0% 0% no-repeat padding-box",
+                                  }}
+                                >
+                                  <Col xs={4}>
+                                    <p
+                                      style={{
+                                        ...small,
+                                        ...mediumBold,
+                                      }}
+                                      className=" m-1"
+                                    >
+                                      {owe.purchase_type}
+                                    </p>
+                                  </Col>
+                                  <Col>
+                                    <p
+                                      style={{ ...small, ...red }}
+                                      className="text-center m-1"
+                                    >
+                                      {owe.amount_paid}
+                                    </p>
+                                  </Col>
+                                  <Col>
+                                    <p
+                                      style={{ ...small, ...red }}
+                                      className="text-center m-1"
+                                    ></p>
+                                  </Col>
+                                </Row>
+                              );
+                            })
+                          : ""}
+                        {property.mortgages !== null ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col xs={4}>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                }}
+                                className=" m-1"
+                              >
+                                Mortgages
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...red }}
+                                className="text-center m-1"
+                              >
+                                {JSON.parse(property.mortgages).amount}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...red }}
+                                className="text-center m-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.taxes !== null ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col xs={4}>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                }}
+                                className=" m-1"
+                              >
+                                Taxes
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...red }}
+                                className="text-center m-1"
+                              >
+                                {JSON.parse(property.taxes)[0].amount}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...red }}
+                                className="text-center m-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    ) : (
+                      ""
+                    );
+                  })}
+
+                  <Row
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    }}
+                  >
+                    <Col>
+                      <p style={{ ...small, ...mediumBold }} className=" m-1">
+                        Total
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...small, ...red }}
+                        className="text-center m-1"
+                      >
+                        {expenseTotal}
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...small, ...red }}
+                        className="text-center m-1"
+                      ></p>
+                    </Col>
+                  </Row>
+                </Container>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
-          <div>
-            <h5 style={mediumBold}>Expenses</h5>
-            <h5 style={{ ...red, ...mediumBold }} className="mb-0">
-              $1550/mo
-            </h5>
-            <hr style={{ opacity: 1 }} className="mt-1" />
-          </div>
-          <div>
-            <h5 style={mediumBold}>Taxes</h5>
-            <h5 style={{ ...red, ...mediumBold }} className="mb-0">
-              $150/mo
-            </h5>
-            <hr style={{ opacity: 1 }} className="mt-1" />
-          </div>
-          <div>
-            <h5 style={mediumBold}>Mortgage</h5>
-            <h5 style={{ ...red, ...mediumBold }} className="mb-0">
-              $850/mo
-            </h5>
-            <hr style={{ opacity: 1 }} className="mt-1" />
-          </div> */}
         </div>
 
         <Row className="px-2">

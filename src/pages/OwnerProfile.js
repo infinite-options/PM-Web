@@ -253,7 +253,7 @@ function OwnerProfile(props) {
           <Col className="px-0">
             <Form.Group className="mx-2 mb-3">
               <Form.Label as="h6" className="mb-0 ms-2">
-                Checking Account Number
+                Checking Account
               </Form.Label>
               <Form.Control
                 style={squareForm}
