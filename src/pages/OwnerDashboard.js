@@ -87,10 +87,48 @@ function OwnerDashboard(props) {
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
+            onClick={() => setExpandProperties(!expandProperties)}
           >
             <Col style={mediumBold}>Properties</Col>
             <Col style={mediumBold}>{properties.length}</Col>
           </Row>
+          {expandProperties ? (
+            <div>
+              <Container
+                style={{ border: "1px solid #707070", borderRadius: "5px" }}
+              >
+                <Row>
+                  <Col>
+                    <p style={{ ...small }} className=" m-1">
+                      Properties
+                    </p>
+                  </Col>
+                </Row>
+
+                {properties.map((property, i) => {
+                  return (
+                    <Row
+                      style={{
+                        background:
+                          i % 2 === 0
+                            ? "#FFFFFF 0% 0% no-repeat padding-box"
+                            : "#F3F3F3 0% 0% no-repeat padding-box",
+                      }}
+                    >
+                      <Col>
+                        <p style={{ ...small, ...mediumBold }} className=" m-1">
+                          {property.address} {property.unit}, {property.city},{" "}
+                          {property.state} {property.zip}
+                        </p>
+                      </Col>
+                    </Row>
+                  );
+                })}
+              </Container>
+            </div>
+          ) : (
+            ""
+          )}
           <Row
             className="mx-2 my-2 p-3"
             style={{
@@ -382,16 +420,24 @@ function OwnerDashboard(props) {
                                   </Col>
                                   <Col>
                                     <p
-                                      style={{ ...small, ...red }}
-                                      className="text-center m-1"
+                                      style={{
+                                        ...small,
+                                        ...red,
+                                        ...mediumBold,
+                                      }}
+                                      className="text-center m-1 pt-1"
                                     >
                                       {owe.amount_paid}
                                     </p>
                                   </Col>
                                   <Col>
                                     <p
-                                      style={{ ...small, ...red }}
-                                      className="text-center m-1"
+                                      style={{
+                                        ...small,
+                                        ...red,
+                                        ...mediumBold,
+                                      }}
+                                      className="text-center m-1 pt-1"
                                     ></p>
                                   </Col>
                                 </Row>
@@ -418,18 +464,18 @@ function OwnerDashboard(props) {
                                 Mortgages
                               </p>
                             </Col>
-                            <Col>
+                            <Col xs={4}>
                               <p
-                                style={{ ...small, ...red }}
-                                className="text-center m-1"
+                                style={{ ...small, ...red, ...mediumBold }}
+                                className="text-center m-1 pt-1"
                               >
                                 {JSON.parse(property.mortgages).amount}
                               </p>
                             </Col>
                             <Col>
                               <p
-                                style={{ ...small, ...red }}
-                                className="text-center m-1"
+                                style={{ ...small, ...red, ...mediumBold }}
+                                className="text-center m-1 pt-1"
                               ></p>
                             </Col>
                           </Row>
@@ -458,16 +504,16 @@ function OwnerDashboard(props) {
                             </Col>
                             <Col>
                               <p
-                                style={{ ...small, ...red }}
-                                className="text-center m-1"
+                                style={{ ...small, ...red, ...mediumBold }}
+                                className="text-center m-1 pt-1"
                               >
                                 {JSON.parse(property.taxes)[0].amount}
                               </p>
                             </Col>
                             <Col>
                               <p
-                                style={{ ...small, ...red }}
-                                className="text-center m-1"
+                                style={{ ...small, ...red, ...mediumBold }}
+                                className="text-center m-1 pt-1"
                               ></p>
                             </Col>
                           </Row>
