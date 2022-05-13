@@ -69,6 +69,7 @@ function  MaintenanceQuoteSentDetail (props) {
         setPropertyManager(quote.property_manager.filter(manager => manager.management_status === "ACCEPTED"))
         setTenants(quote.rentalInfo.filter(r => r.rental_status === "ACTIVE"))
         setServiceState(JSON.parse(quote.services_expenses))
+        setEventType(quote.event_type)
     }
 
     const updateQuote = async () => {
@@ -78,15 +79,17 @@ function  MaintenanceQuoteSentDetail (props) {
         }
         setErrorMessage('');
 
+
+
         const updatedQuote = {
             maintenance_quote_uid: quote.maintenance_quote_uid,
             services_expenses: serviceState,
             earliest_availability: earliestAvailability,
-            eventType: eventType,
+            event_type: eventType,
             quote_status: 'SENT'
         }
         const response = await put('/maintenanceQuotes', updatedQuote);
-        navigate('/maintenance');
+        navigate(-2);
     }
 
     const withdrawQuote = async () => {
@@ -161,7 +164,8 @@ function  MaintenanceQuoteSentDetail (props) {
                     <Row>
                         <div style={headings}>Service Charge(s)</div>
                     </Row>
-                    <ServicesProvided serviceState={serviceState} setServiceState={setServiceState}/>
+                    <ServicesProvided serviceState={serviceState} setServiceState={setServiceState}
+                                      eventType={eventType} setEventType={setEventType}/>
                 </div>
 
 
@@ -180,33 +184,28 @@ function  MaintenanceQuoteSentDetail (props) {
                     </div>
                 </div>
 
-                <div className="mt-2 mx-2 mb-4">
-                    <Row>
-                        <div style={headings}>Event Type</div>
-                    </Row>
-                    <div>
-                        <Form.Group className="mt-2 mb-2">
-                            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                                Type
-                            </Form.Label>
-                            <Form.Select style={squareForm} value={eventType}
-                                         onChange={(e) => setEventType(e.target.value)}>
-                                <option>1 Hour Job</option>
-                                <option>2 Hour Job</option>
-                                <option>3 Hour Job</option>
-                                <option>4 Hour Job</option>
-                                <option>6 Hour Job</option>
-                                <option>8 Hour Job</option>
-                                <option>1 Day Job</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </div>
-                </div>
-
-                <div className="mt-2 mx-2 mb-4">
-                    <div style={headings}>Total Estimate</div>
-                    <div style={subText}>$</div>
-                </div>
+                {/*<div className="mt-2 mx-2 mb-4">*/}
+                {/*    <Row>*/}
+                {/*        <div style={headings}>Event Type</div>*/}
+                {/*    </Row>*/}
+                {/*    <div>*/}
+                {/*        <Form.Group className="mt-2 mb-2">*/}
+                {/*            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">*/}
+                {/*                Type*/}
+                {/*            </Form.Label>*/}
+                {/*            <Form.Select style={squareForm} value={eventType}*/}
+                {/*                         onChange={(e) => setEventType(e.target.value)}>*/}
+                {/*                <option>1 Hour Job</option>*/}
+                {/*                <option>2 Hour Job</option>*/}
+                {/*                <option>3 Hour Job</option>*/}
+                {/*                <option>4 Hour Job</option>*/}
+                {/*                <option>6 Hour Job</option>*/}
+                {/*                <option>8 Hour Job</option>*/}
+                {/*                <option>1 Day Job</option>*/}
+                {/*            </Form.Select>*/}
+                {/*        </Form.Group>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 {propertyManager && (propertyManager.length > 0) ? (
                     <div className='mt-5'>

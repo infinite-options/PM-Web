@@ -143,10 +143,12 @@ function ManagerRepairDetail(props) {
     const requestMorePictures = async (quote) =>  {
         const newRepair = {
             maintenance_request_uid: repair.maintenance_request_uid,
+            request_status: "INFO",
             notes: morePicturesNotes
         }
 
-        console.log("Repair Object to be updated", newRepair)
+        console.log("Repair Object to be updated")
+        console.log(newRepair)
         const response = await put("/maintenanceRequests", newRepair, access_token);
         console.log(response.result)
         setMorePictures(false)
