@@ -3,16 +3,17 @@ import {Container, Row, Col, Button, Form} from 'react-bootstrap';
 import EditIcon from '../icons/EditIcon.svg';
 import DeleteIcon from '../icons/DeleteIcon.svg';
 import {pillButton, smallPillButton, squareForm, gray, small, red, hidden} from '../utils/styles';
+import ArrowDown from "../icons/ArrowDown.svg";
 
 function ServicesProvided(props) {
-  const [serviceState, setServiceState] = props.state;
-  const {noHeader} = props;
+  // const [serviceState, setServiceState] = props.state;
+  const {serviceState, setServiceState} = props
   const [newService, setNewService] = React.useState(null);
   const [editingService, setEditingService] = React.useState(null);
   const emptyService = {
     service_name: '',
     charge: '',
-    per: ''
+    per: 'Hour'
   }
   const [errorMessage, setErrorMessage] = React.useState('');
   const addService = () => {
@@ -20,6 +21,8 @@ function ServicesProvided(props) {
       setErrorMessage('Please fill out all fields');
       return;
     }
+    console.log('***')
+    console.log(newService)
     const newServiceState = [...serviceState];
     newServiceState.push({...newService});
     setServiceState(newServiceState);
@@ -60,10 +63,7 @@ function ServicesProvided(props) {
   );
   return (
     <Container className='px-2'>
-      {noHeader ? '' : (
-        <h6 className='mb-3'>Services you provide:</h6>
-      )}
-      {serviceState.map((service, i) => (
+      {serviceState.length > 0 && serviceState.map((service, i) => (
         <div key={i}>
           <div className='d-flex'>
             <div className='flex-grow-1'>
@@ -97,7 +97,7 @@ function ServicesProvided(props) {
                 <Form.Label as='h6' className='mb-0 ms-2'>
                   Charge {newService.charge === '' ? required : ''}
                 </Form.Label>
-                <Form.Control style={squareForm} placeholder='20' value={newService.charge}
+                <Form.Control style={squareForm} type="number" placeholder='20' value={newService.charge}
                   onChange={(e) => changeNewService(e, 'charge')}/>
               </Form.Group>
             </Col>
@@ -106,8 +106,14 @@ function ServicesProvided(props) {
                 <Form.Label as='h6' className='mb-0 ms-2'>
                   Per {newService.per === '' ? required : ''}
                 </Form.Label>
-                <Form.Control style={squareForm} placeholder='Hour' value={newService.per}
-                  onChange={(e) => changeNewService(e, 'per')}/>
+                <Form.Select
+                    style={{...squareForm, backgroundImage: `url(${ArrowDown})`,}}
+                    value={newService.per} onChange={(e) => changeNewService(e, 'per')}>
+                  <option>Hour</option>
+                  <option>One-time</option>
+                </Form.Select>
+                {/*<Form.Control style={squareForm} placeholder='Hour' value={newService.per}*/}
+                {/*  onChange={(e) => changeNewService(e, 'per')}/>*/}
               </Form.Group>
             </Col>
           </Row>

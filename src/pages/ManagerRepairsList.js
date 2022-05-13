@@ -94,7 +94,7 @@ function ManagerRepairsList(props) {
 
                     {row.repairs_list.map((repair, j) => (
                         <Row className='mb-4' key={j} onClick={() =>
-                            navigate(`./${repair.maintenance_request_uid}`, { state: {repair: repair }})}>
+                            navigate(`./${repair.maintenance_request_uid}`, { state: {repair: repair }})}   >
                             <Col xs={4}>
                                 <div style={tileImg}>
                                     {JSON.parse(repair.images).length > 0 ? (

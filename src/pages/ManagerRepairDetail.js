@@ -5,32 +5,12 @@ import Checkbox from "../components/Checkbox";
 import HighPriority from "../icons/highPriority.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
 import LowPriority from "../icons/lowPriority.svg";
-import Reject from "../icons/Reject.svg";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
-import {
-    actions,
-    headings,
-    pillButton,
-    redPill,
-    subHeading,
-    subText,
-    blueBorderButton,
-    redPillButton,
-    formLabel,
-    bluePillButton,
-    red,
-    small,
-    blue, tileImg, squareForm, greenPill, orangePill,
-} from "../utils/styles";
-import { textAlign } from "@mui/system";
+import {headings, pillButton, subHeading, subText, redPillButton, formLabel, bluePillButton, blue, tileImg, squareForm, orangePill,} from "../utils/styles";
 import {useParams} from "react-router";
-import DeleteIcon from "../icons/DeleteIcon.svg";
-import Heart from "../icons/Heart.svg";
-import HeartOutline from "../icons/HeartOutline.svg";
-import Plus from "../icons/Plus.svg";
 import {get, post, put} from "../utils/api";
 
 function ManagerRepairDetail(props) {
@@ -39,6 +19,7 @@ function ManagerRepairDetail(props) {
     const location = useLocation();
     const navigate = useNavigate();
     const [morePictures, setMorePictures] = useState(false);
+    const [morePicturesNotes, setMorePicturesNotes] = useState("Can you please share more pictures regarding the request?");
     const [canReschedule, setCanReschedule] = useState(false);
     const [requestQuote, setRequestQuote] = useState(false);
     const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
@@ -134,7 +115,6 @@ function ManagerRepairDetail(props) {
             request_status: repair.request_status,
         }
 
-
         console.log("Repair Object to be updated", newRepair)
         const response = await post("/maintenanceRequests", newRepair, access_token);
         console.log(response.result)
@@ -157,6 +137,19 @@ function ManagerRepairDetail(props) {
             quote_status: "REJECTED"
         }
         const response = await put("/maintenanceQuotes", body);
+        fetchBusinesses()
+    }
+
+    const requestMorePictures = async (quote) =>  {
+        const newRepair = {
+            maintenance_request_uid: repair.maintenance_request_uid,
+            notes: morePicturesNotes
+        }
+
+        console.log("Repair Object to be updated", newRepair)
+        const response = await put("/maintenanceRequests", newRepair, access_token);
+        console.log(response.result)
+        setMorePictures(false)
         fetchBusinesses()
     }
 
@@ -259,12 +252,12 @@ function ManagerRepairDetail(props) {
 
                                 <Form.Group className="mt-3 mb-4">
                                     <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                                        Description of what kind of pictures needed
+                                        Description of the request
                                     </Form.Label>
                                     <Form.Control
-                                        style={{ borderRadius: 0 }}
-                                        //ref={requestTitleRef}
-                                        placeholder="Can you pls share more pictures with the Shower model number?"
+                                        style={squareForm} value={morePicturesNotes}
+                                        placeholder="Can you please share more pictures regarding the request?"
+                                        onChange={(e) => setMorePicturesNotes(e.target.value)}
                                         as="textarea"/>
                                 </Form.Group>
 
@@ -276,7 +269,9 @@ function ManagerRepairDetail(props) {
                                         </Button>
                                     </Col>
                                     <Col className='d-flex flex-row justify-content-evenly'>
-                                        <Button style={bluePillButton}>Send Request</Button>
+                                        <Button style={bluePillButton}
+                                                onClick={requestMorePictures}>
+                                            Send Request</Button>
                                     </Col>
                                 </Row>
                             </Row>
@@ -414,7 +409,7 @@ function ManagerRepairDetail(props) {
                                 <Container key={j}>
                                     <Row className="pt-1 mb-2">
                                         <div style={subHeading}>{service.service_name}</div>
-                                        <div style={subText}>${service.charge} per {service.per}</div>
+                                        <div style={subText}>${service.charge} {service.per === 'Hour' ? `per ${service.per}` : 'One-Time Fee'}</div>
                                     </Row>
                                 </Container>
                             ))}

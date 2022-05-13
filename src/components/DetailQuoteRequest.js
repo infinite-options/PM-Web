@@ -42,8 +42,8 @@ function DetailQuote(props) {
   const [quote, setQuote] = React.useState({});
   const [property, setProperty] = React.useState({});
   const [currentImg, setCurrentImg] = React.useState(0);
-  const serviceState = React.useState([]);
-  const [earliestAvailability, setEarliestAvailability] = React.useState(Date());
+  const [serviceState, setServiceState] = React.useState([]);
+  const [earliestAvailability, setEarliestAvailability] = React.useState('');
   const [eventType, setEventType] = React.useState('1 Hour Job');
 
   const nextImg = () => {
@@ -78,7 +78,7 @@ function DetailQuote(props) {
   const sendQuote = async () => {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
-      services_expenses: serviceState[0],
+      services_expenses: serviceState,
       earliest_availability: earliestAvailability,
       quote_status: 'SENT'
     }
@@ -152,7 +152,7 @@ function DetailQuote(props) {
           <Row>
             <div style={headings}>Services</div>
           </Row>
-          <ServicesProvided state={serviceState} noHeader/>
+          <ServicesProvided serviceState={serviceState} setServiceState={setServiceState}/>
         </div>
 
         <div className="mt-2 mx-2 mb-4">
@@ -183,13 +183,15 @@ function DetailQuote(props) {
                 onChange={(e) => setEventType(e.target.value)}>
                 <option>1 Hour Job</option>
                 <option>2 Hour Job</option>
+                <option>3 Hour Job</option>
+                <option>4 Hour Job</option>
                 <option>6 Hour Job</option>
+                <option>8 Hour Job</option>
                 <option>1 Day Job</option>
               </Form.Select>
             </Form.Group>
           </div>
         </div>
-
 
         <div className="mt-2 mx-2 mb-4" hidden={sendManager}>
           <Row>
