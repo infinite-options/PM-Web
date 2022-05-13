@@ -40,9 +40,10 @@ function CreateExpense(props) {
       description: description,
       amount_due: amount,
       purchase_frequency: frequency,
-      purchase_notes: frequencyOfPayment,
-      purchase_date: date,
+      payment_frequency: frequencyOfPayment,
+      next_payment: date,
     };
+
     console.log(newExpense);
     const response = await post("/createExpenses", newExpense);
     props.back();
