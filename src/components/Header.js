@@ -31,7 +31,7 @@ function Header(props) {
             style={{
               font: "normal normal 600 17px/20px SFProText-Semibold",
               letterSpacing: "0px",
-              color: "#000000",
+              color: "#007AFF",
             }}
           >
             {props.title}

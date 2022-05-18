@@ -9,6 +9,7 @@ import {
   Carousel,
   CarouselItem,
   Image,
+  Form,
 } from "react-bootstrap";
 import moment from "moment";
 import Header from "../components/Header";
@@ -20,14 +21,18 @@ import LowPriority from "../icons/lowPriority.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import RepairImg from "../icons/RepairImg.svg";
-import { get } from "../utils/api";
+import { get , put} from "../utils/api";
+import RepairImages from "./RepairImages";
 import {
   headings,
   subHeading,
   subText,
   pillButton,
   blue,
+  editButton,
+  squareForm,
 } from "../utils/styles";
+import { relativeTimeRounding } from "moment";
 
 function DetailRepairStatus(props) {
   const navigate = useNavigate();
@@ -37,9 +42,14 @@ function DetailRepairStatus(props) {
   const { access_token, user } = userData;
   const [profile, setProfile] = useState([]);
   const [repairsDetail, setRepairsDetail] = useState([]);
-  const [repairsImages, setRepairsImages] = useState([]);
   const [busineesAssigned, setBusineesAssigned] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  //Editable information
+  const [repairsImages, setRepairsImages] = useState([]);
+  const [priority, setPriority] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     if (repairsDetail !== undefined) {
@@ -50,7 +60,6 @@ function DetailRepairStatus(props) {
     const fetchProfile = async () => {
       const response = await get("/tenantProperties", access_token);
       console.log(response);
-
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
@@ -67,15 +76,25 @@ function DetailRepairStatus(props) {
       const response = await get(
         `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`
       );
-      console.log(response.result[0]);
+      console.log(maintenance_request_uid);
+      if (response.msg === "Token has expired") {
+        console.log("here msg");
+        refresh();
+        return;
+      }
+      console.log(response.result);
       setRepairsDetail(response.result);
+      
       setRepairsImages(JSON.parse(response.result[0].images));
+      setPriority(response.result[0].priority);
+      setDescription(response.result[0].description);
+      setTitle(response.result[0].title);
+      console.log(repairsDetail);
       const fetchBusinessAssigned = async () => {
         const res = await get(
           `/businesses?business_uid=${response.result[0].assigned_business}`
         );
         console.log(res.result[0]);
-
         setBusineesAssigned(res.result[0]);
       };
       fetchBusinessAssigned();
@@ -94,7 +113,41 @@ function DetailRepairStatus(props) {
   //   fetchBusinessAssigned();
   // }, []);
 
-  console.log(repairsImages);
+  function editRepair(){
+      console.log("Editing repair");
+      console.log(busineesAssigned);
+      setIsEditing(true);
+  } 
+  const updateRepair = async () => {
+      console.log("Putting changes to database");
+      console.log(repairsDetail);
+      const files = JSON.parse(repairsDetail[0].images)
+      const newRepair = {
+        maintenance_request_uid: maintenance_request_uid,
+        title: title,
+        priority: priority,
+        can_reschedule: true,
+        assigned_business: repairsDetail[0].assigned_business,
+        notes: repairsDetail[0].notes,
+        request_status: repairsDetail[0].request_status,
+        description: description,
+        scheduled_date: repairsDetail[0].scheduled_date,
+        assigned_worker: repairsDetail[0].assigned_worker,
+      }
+      console.log(newRepair);
+      // for (let i = 0; i < repairsImages.length; i++) {
+      //   let key = `img_${i}`;
+      //   newRepair[key] = repairsImages[i];
+      // }
+      const res = await put("/maintenanceRequests", newRepair, null, files);
+      console.log(res);
+      
+      // 1) ? Remove the previous object from the database ?
+      // 2) Create updated version of repair object with datafield entered in by the user
+      // 3) Use a put/post request in order to send new object into database
+      setIsEditing(false);
+  }
+
 
   return (
     <div className="h-100 d-flex flex-column" style={{ minHeight: "100%" }}>
@@ -102,8 +155,9 @@ function DetailRepairStatus(props) {
         title="Repairs"
         leftText="< Back"
         leftFn={() => navigate(`/${property_uid}/repairStatus`)}
+        rightText="Edit"
+        rightFn={() => editRepair()}
       />
-      {console.log(repairsDetail)}
       {repairsDetail === [] || isLoading === true ? (
         <Row className="mt-2 mb-2">
           <div style={blue}></div>
@@ -121,7 +175,6 @@ function DetailRepairStatus(props) {
                       alignItems: "center",
                     }}
                   >
-                    {console.log(repair)}
                     {JSON.parse(repair.images).length === 0 ? (
                       <img
                         src={RepairImg}
@@ -175,7 +228,21 @@ function DetailRepairStatus(props) {
                 </Row>
 
                 <Row className="mt-4">
-                  <div style={headings}>{repair.title}</div>
+                  <Col>
+                        {isEditing ?
+                        (<RepairImages  />,
+                      <input
+                        style={{margin: '10px 0px'}}
+                        defaultValue={title}
+                        onChange={(e) =>{
+                          setTitle(e.target.value);
+                        }}
+                      >
+                      </input>)
+                  : <div style={headings}>{title}</div>                 
+                  }
+                  </Col>
+                  
                 </Row>
 
                 <Row>
@@ -187,20 +254,57 @@ function DetailRepairStatus(props) {
                   </div>
                 </Row>
 
-                <Row className="mt-2">
+                <Row className="mt-2" style={{padding: '7px 0px'}}>
+                  {isEditing ? (
+                    <Form.Group>
+                    <Form.Select
+                      style={squareForm}
+                      value={priority}
+                      onChange={(e) =>
+                        setPriority(e.target.value)
+                      }
+                    >
+                        <option value="High">High Priority</option>
+                        <option value="Medium">Medium Priority</option>
+                        <option value="Low">Low Priority</option>
+                      {/* {properties.map((property, i) => (
+                        <option key={i} value={JSON.stringify(property)}>
+                          {property.property.address} {property.property.unit}
+                          ,&nbsp;
+                          {property.property.city}
+                          ,&nbsp;
+                          {property.property.state}&nbsp; {property.property.zip}
+                        </option>
+                      ))} */}
+                    </Form.Select>
+                  </Form.Group>
+                  ) : 
                   <Col>
-                    {repair.priority === "High" ? (
+                    {priority === "High" ? (
                       <img src={HighPriority} />
-                    ) : repair.priority === "Medium" ? (
+                    ) : priority === "Medium" ? (
                       <img src={MediumPriority} />
                     ) : (
                       <img src={LowPriority} />
                     )}
                   </Col>
+                  }
+                  
                 </Row>
-                <Row className="mt-2">
-                  <div style={subText}>{repair.description}</div>
-                </Row>
+                {isEditing ?
+                  <input 
+                    defaultValue = {description} 
+                    style={{width: '80vw'}}
+                    onChange={(e) => {
+                      console.log(e);
+                      setDescription(e.target.value);
+                    }}
+                  ></input> : 
+                  <Row className="mt-2">
+                      <div style={subText}>{description}</div>
+                  </Row>
+                }
+                
                 {repair.status === "NEW" ? (
                   <Row></Row>
                 ) : repair.status === "SCHEDULED" ? (
@@ -268,14 +372,14 @@ function DetailRepairStatus(props) {
                     <Row></Row>
                   ) : (
                     <Row>
-                      <Col>
+                      {/* <Col>
                         <div style={headings}>
-                          {busineesAssigned.business_name}
+                          {busineesAssigned.business_name ? busineesAssigned.business_name : "hi"}
                         </div>
                         <div style={subText}>
-                          {busineesAssigned.business_name}
+                          {busineesAssigned.business_name? busineesAssigned.business_name : "hi"}
                         </div>
-                      </Col>
+                      </Col> */}
                       <Col xs={2} className="mt-1 mb-1">
                         <img
                           onClick={() =>
@@ -301,6 +405,14 @@ function DetailRepairStatus(props) {
           })}
         </div>
       )}
+      {isEditing ? 
+      <button 
+        style={editButton} 
+        onClick={()=>updateRepair()}
+      >
+          Done
+      </button> : null
+      }  
     </div>
   );
 }

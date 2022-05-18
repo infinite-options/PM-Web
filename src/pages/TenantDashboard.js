@@ -232,7 +232,7 @@ function TenantDashboard(props) {
       setRepairs(response.result);
     };
     fetchRepairs();
-  }, [profile]);
+  }, [profile ]);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -297,14 +297,36 @@ function TenantDashboard(props) {
       },
     });
   };
+  console.log(selectedProperty);
+  console.log(repairs);
   return (
     <div className="h-100">
       <Header title="Home" />
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
         <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
           <Row style={headings}>
-            <div>Hello {profile.tenant_first_name},</div>
+              <div style={{backgroundColor: '#FFFFFF', color: '#007AFF', fontSize: '24px', padding: '10px', borderRadius: '10px 10px 0px 00px'}}>
+                {profile.tenant_first_name}'s Property
+              </div>
+              {/*Div to contain property information*/}
+            {isLoading === true || selectedProperty.length == 0 ? null :
+              <div style={{display: 'flex', backgroundColor: '#F3F3F3', padding: '15px', alignItems: 'center'}}>
+                <img src = {selectedProperty.property.images ? JSON.parse(selectedProperty.property.images) : '../icons/No_Image_Available.jpeg'} style={{width: '113px', height: '113px'}}></img>
+                  <div style={{width: '170px'}}>
+                    <div style={{paddingLeft: '10px', fontSize: '22px'}}>${selectedProperty.rent} / mo</div>                    
+                      <div style={{paddingLeft: '10px', fontSize: '16px', lineHeight: '20px', color: '#777777', padding: '10px'}}>
+                        {selectedProperty.property.address}, {selectedProperty.property.city}, {selectedProperty.property.zip}, {selectedProperty.property.state}
+                      </div>                  
+                    <div style={{marginLeft: '10px', fontSize: '12px', color: '#007AFF'}}>Manager: Jane Doe</div>
+                  </div>
+                <div style={{backgroundColor: '#93EE9C', borderRadius: '20px', fontSize: '13px', width: '73px', height: '24px', textAlign: 'center'}}>Rent paid</div>
+              </div>
+            }
+            
+            {/*Div to contain property information*/}
           </Row>
+
+          {/*Repairs*/}
           {repairs.length === 0 ? (
             <Row style={upcoming} className="mt-2 mb-2">
               <div style={upcomingHeading} className="mt-1 mb-1">
@@ -347,11 +369,9 @@ function TenantDashboard(props) {
               })}
             </div>
           )}
+          {/*Repairs*/}
 
           <Row>
-            {/* <div style={headings} className="mt-4 mb-1">
-              ${rent}/mo
-            </div> */}
             <Form.Group>
               <Form.Select
                 style={squareForm}
@@ -393,7 +413,7 @@ function TenantDashboard(props) {
               
               </div>
             )} */}
-            {isLoading === true || selectedProperty.length == 0 ? null : (
+            {/* {isLoading === true || selectedProperty.length == 0 ? null : (
               <div>
                 <div style={headings} className="mt-4 mb-1">
                   ${selectedProperty.rent} / mo
@@ -457,7 +477,33 @@ function TenantDashboard(props) {
                   </div>
                 )}
               </div>
-            )}
+            )} */}
+            {/*For some reason these elements have a margin on the left and right*/}
+          {selectedProperty.nextPurchase &&
+            <div style={{display: 'flex', flexDirection: 'row', textAlign: 'center'}}>
+              <div onClick = { ()=>
+                navigate(`/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`)
+              }
+              style={{height: '120px', width: '167px', backgroundColor: '#F7FB94', borderRadius: '10px', margin: '10px'}}>
+                <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>Upcoming</div>
+                <div style={{fontSize: '22px', lineHeight: '35px'}}>
+                  {selectedProperty.nextPurchase.purchase_notes} <br/> 
+                  ${selectedProperty.nextPurchase.amount_due - selectedProperty.nextPurchase.amount_paid}
+                </div>
+              </div>
+              <div onClick = {()=>{
+                navigate(`/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`)
+              }} 
+              style={{height: '120px', width: '167px', backgroundColor: '#93EE9C', borderRadius: '10px', margin: '10px'}}>
+                <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>Rent Paid </div>
+                <div style={{fontSize: '22px', lineHeight: '35px'}}>
+                {selectedProperty.nextPurchase.purchase_notes} <br/> 
+                ${selectedProperty.lastPurchase.amount_paid}
+
+                </div>
+              </div>
+            </div>
+          }
           </Row>
 
           <Row
@@ -468,9 +514,9 @@ function TenantDashboard(props) {
             }}
             className="mb-4"
           >
-            <div style={headings} className="mt-4 mb-1">
+            {/* <div style={headings} className="mt-4 mb-1">
               Actions
-            </div>
+            </div> */}
             <Col xs={3} style={actions}>
               <img
                 style={{ width: "50px", height: "50px", cursor: "pointer" }}
