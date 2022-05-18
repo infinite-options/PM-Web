@@ -149,8 +149,7 @@ function ManagerRepairDetail(props) {
 
         console.log("Repair Object to be updated")
         console.log(newRepair)
-        const response = await put("/maintenanceRequests", newRepair, access_token);
-        console.log(response.result)
+        const response = await put("/maintenanceRequests", newRepair, null, newRepair);
         setMorePictures(false)
         fetchBusinesses()
     }
@@ -239,12 +238,17 @@ function ManagerRepairDetail(props) {
                                 ))}
                             </div>
 
-                            <div className="pt-1 mb-2">
-                                <Button style={pillButton} variant="outline-primary" hidden={morePictures}
-                                        onClick={() => setMorePictures(!morePictures)}>
-                                    Request more pictures
-                                </Button>
-                            </div>
+                            {repair.request_status === "NEW" ?
+                                <div className="pt-1 mb-2">
+                                    <Button style={pillButton} variant="outline-primary" hidden={morePictures}
+                                            onClick={() => setMorePictures(!morePictures)}>
+                                        Request more pictures
+                                    </Button>
+                                </div> : repair.request_status === "INFO" ?
+                                    <div className="pt-1 mb-2" style={subHeading}>
+                                        Requested more pictures from tenant
+                                    </div> : ''}
+
                         </Row>
                         <Row>
                             <Row className="pt-1 mb-4" hidden={!morePictures}>
@@ -405,16 +409,37 @@ function ManagerRepairDetail(props) {
                     {quotes && (quotes.length > 0) && quotes.map((quote, i) => (
                         <Container className="my-4 pt-3" key={i}>
                             <Row style={headings}>
-                                <div>{quote.business_name}: Quote</div>
+                                <div>{quote.business_name}</div>
                             </Row>
-                            {quote.services_expenses && ( quote.services_expenses.length > 0) && JSON.parse(quote.services_expenses).map((service, j) => (
-                                <Container key={j}>
-                                    <Row className="pt-1 mb-2">
-                                        <div style={subHeading}>{service.service_name}</div>
-                                        <div style={subText}>${service.charge} {service.per === 'Hour' ? `per ${service.per}` : 'One-Time Fee'}</div>
-                                    </Row>
-                                </Container>
-                            ))}
+
+                            <Row hidden={quote.quote_status !== "SENT"}>
+                                <Row className="mt-4 mb-2">
+                                    <div style={headings}>Fess Included:</div>
+                                </Row>
+                                {quote.services_expenses && ( quote.services_expenses.length > 0) && JSON.parse(quote.services_expenses).map((service, j) => (
+                                    <Container key={j}>
+                                        <Row className="pt-1 mb-2 mx-3">
+                                            <div style={subHeading}>{service.service_name}</div>
+                                            <div style={subText}>${service.charge} {service.per === 'Hour' ? `per ${service.per}` : 'One-Time Fee'}</div>
+                                        </Row>
+                                    </Container>
+                                ))}
+
+                                <Row className="mt-4 mb-4">
+                                    <div style={headings}>Event Type</div>
+                                    <div style={subText}>{quote.event_type}</div>
+                                </Row>
+
+                                <Row className="mb-4">
+                                    <div style={headings}>Total Estimate</div>
+                                    <div style={subText}>$ {quote.total_estimate}</div>
+                                </Row>
+
+                                <Row className="mb-4">
+                                    <div style={headings}>Earliest Availability</div>
+                                    <div style={subText}>{quote.earliest_availability}</div>
+                                </Row>
+                            </Row>
 
                             <Row hidden={quote.quote_status !== "SENT"} className="pt-1 mb-4">
                                 <Col className="d-flex flex-row justify-content-evenly">
@@ -431,7 +456,7 @@ function ManagerRepairDetail(props) {
                                 </Col>
                             </Row>
 
-                            <Row hidden={quote.quote_status === "SENT"} className="pt-1 mb-4">
+                            <Row hidden={quote.quote_status === "SENT"} className="pt-4 mb-4">
                                 <Col className='d-flex flex-row justify-content-evenly'>
                                     <Button style={orangePill}>
                                         {quote.quote_status === "REQUESTED" ? "Waiting for quote from business"

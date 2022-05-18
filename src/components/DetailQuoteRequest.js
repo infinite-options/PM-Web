@@ -43,6 +43,7 @@ function DetailQuote(props) {
   const [property, setProperty] = React.useState({});
   const [currentImg, setCurrentImg] = React.useState(0);
   const [serviceState, setServiceState] = React.useState([]);
+  const [totalEstimate, setTotalEstimate] = React.useState(0)
   const [earliestAvailability, setEarliestAvailability] = React.useState('');
   const [eventType, setEventType] = React.useState('1 Hour Job');
 
@@ -82,9 +83,11 @@ function DetailQuote(props) {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
       services_expenses: serviceState,
+      total_estimate: totalEstimate,
       earliest_availability: earliestAvailability,
       quote_status: 'SENT',
-      event_type: eventType
+      event_type: eventType,
+
     }
     const response = await put('/maintenanceQuotes', updatedQuote);
     navigate('/ScheduledJobs');
@@ -157,7 +160,8 @@ function DetailQuote(props) {
             <div style={headings}>Services</div>
           </Row>
           <ServicesProvided serviceState={serviceState} setServiceState={setServiceState}
-                            eventType={eventType} setEventType={setEventType}/>
+                            eventType={eventType} setEventType={setEventType}
+                            totalEstimate={totalEstimate} setTotalEstimate={setTotalEstimate}/>
         </div>
 
         <div className="mt-2 mx-2 mb-4">

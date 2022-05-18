@@ -15,6 +15,7 @@ function ManagerRepairsList(props) {
     const {access_token} = userData;
     const [repairs, setRepairs] = React.useState([]);
     const [newRepairs, setNewRepairs] = React.useState([]);
+    const [infoRepairs, setInfoRepairs] = React.useState([]);
     const [processingRepairs, setProcessingRepairs] = React.useState([]);
     const [scheduledRepairs, setScheduledRepairs] = React.useState([]);
     const [completedRepairs, setCompletedRepairs] = React.useState([]);
@@ -66,15 +67,18 @@ function ManagerRepairsList(props) {
         setRepairs(repairs);
 
         const new_repairs = repairs.filter(item => item.request_status === "NEW")
+        const info_repairs = repairs.filter(item => item.request_status === "INFO")
         const processing_repairs = repairs.filter(item => item.request_status === "PROCESSING")
         const scheduled_repairs = repairs.filter(item => item.request_status === "SCHEDULED")
         const completed_repairs = repairs.filter(item => item.request_status === "COMPLETE")
         setNewRepairs(new_repairs)
+        setInfoRepairs(info_repairs)
         setProcessingRepairs(processing_repairs)
         setScheduledRepairs(scheduled_repairs)
         setCompletedRepairs(completed_repairs)
         setRepairIter([
             {title: "New", repairs_list: new_repairs},
+            {title: "Info Requested", repairs_list: info_repairs},
             {title: "Processing", repairs_list: processing_repairs},
             {title: "Upcoming, Scheduled", repairs_list: scheduled_repairs},
             {title: "Completed", repairs_list: completed_repairs}])

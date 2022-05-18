@@ -18,10 +18,10 @@ import ArrowDown from "../icons/ArrowDown.svg";
 
 function ServicesProvided(props) {
   // const [serviceState, setServiceState] = props.state;
-  const {serviceState, setServiceState, eventType, setEventType} = props
+  const {serviceState, setServiceState, eventType, setEventType, totalEstimate, setTotalEstimate} = props
   const [newService, setNewService] = React.useState(null);
   const [editingService, setEditingService] = React.useState(null);
-  const [totalEstimate, setTotalEstimate] = React.useState(0)
+  // const [totalEstimate, setTotalEstimate] = React.useState(0)
   const emptyService = {
     service_name: '',
     charge: '',

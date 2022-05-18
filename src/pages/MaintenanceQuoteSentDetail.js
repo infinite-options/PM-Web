@@ -29,6 +29,7 @@ function  MaintenanceQuoteSentDetail (props) {
 
     const [currentImg, setCurrentImg] = React.useState(0);
     const [serviceState, setServiceState] = React.useState([]);
+    const [totalEstimate, setTotalEstimate] = React.useState(0)
     const [tenants, setTenants] = React.useState([]);
     const [propertyManager, setPropertyManager] = React.useState([]);
     const [earliestAvailability, setEarliestAvailability] = React.useState('');
@@ -79,11 +80,10 @@ function  MaintenanceQuoteSentDetail (props) {
         }
         setErrorMessage('');
 
-
-
         const updatedQuote = {
             maintenance_quote_uid: quote.maintenance_quote_uid,
             services_expenses: serviceState,
+            total_estimate: totalEstimate,
             earliest_availability: earliestAvailability,
             event_type: eventType,
             quote_status: 'SENT'
@@ -165,7 +165,9 @@ function  MaintenanceQuoteSentDetail (props) {
                         <div style={headings}>Service Charge(s)</div>
                     </Row>
                     <ServicesProvided serviceState={serviceState} setServiceState={setServiceState}
-                                      eventType={eventType} setEventType={setEventType}/>
+                                      eventType={eventType} setEventType={setEventType}
+                                      totalEstimate={totalEstimate} setTotalEstimate={setTotalEstimate}
+                    />
                 </div>
 
 
