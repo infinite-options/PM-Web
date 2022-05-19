@@ -52,6 +52,7 @@ import ManagerRepairsOverview from "./pages/ManagerRepairsOverview";
 import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
 import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
+import MaintenanceQuotesScheduledDetail from "./pages/MaintenanceQuotesScheduledDetail";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -220,6 +221,10 @@ function App() {
             <Route
                 path="quotes-scheduled"
                 element={<MaintenanceQuotesScheduled />}
+            />
+            <Route
+                path="quotes-scheduled/:q_id"
+                element={<MaintenanceQuotesScheduledDetail />}
             />
           </Route>
         </Routes>

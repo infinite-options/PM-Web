@@ -414,7 +414,7 @@ function ManagerRepairDetail(props) {
 
                             <Row hidden={quote.quote_status !== "SENT" && quote.quote_status !== "REJECTED"}>
                                 <Row className="mt-4 mb-2">
-                                    <div style={headings}>Fess Included:</div>
+                                    <div style={headings}>Fees Included:</div>
                                 </Row>
                                 {quote.services_expenses && ( quote.services_expenses.length > 0) && JSON.parse(quote.services_expenses).map((service, j) => (
                                     <Container key={j}>
