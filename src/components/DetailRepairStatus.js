@@ -131,7 +131,7 @@ function DetailRepairStatus(props) {
         scheduled_date: repairsDetail[0].scheduled_date,
         assigned_worker: repairsDetail[0].assigned_worker,
       }
-      console.log(imageState);
+      console.log(repairsImages.length);
       for (let i = 0; i < imageState.length; i++) {
         let key = `img_${i}`;
         
@@ -157,6 +157,7 @@ function DetailRepairStatus(props) {
         </Row>
       ) : (
         <div>
+          
           {repairsDetail.map((repair) => {
             return (
               <Container className="pt-1 mb-4">
@@ -185,9 +186,17 @@ function DetailRepairStatus(props) {
                       />
                       
                     ) : JSON.parse(repair.images).length > 1 ? (
+                      // <div>
+
+                      // {console.log(repairsImages.length)}
+                      // {repairsImages.map((img) => {
+                      //    return <img src = {img} style = {{width: "350px", height: "198px", borderRadius: "5px", objectFit: "cover"}}></img>
+                        
+                      // })}
+                      // </div>
                       <Carousel>
                         {repairsImages.map((img) => {
-                          <Carousel.Item>
+                           return <Carousel.Item>
                             <Image
                               src={img}
                               style={{
@@ -199,10 +208,6 @@ function DetailRepairStatus(props) {
                               }}
                               alt="repair"
                             />
-                            <Carousel.Caption>
-                              <h3>New York</h3>
-                              <p>We love the Big Apple!</p>
-                            </Carousel.Caption>
                           </Carousel.Item>;
                         })}
                       </Carousel>
@@ -414,7 +419,7 @@ function DetailRepairStatus(props) {
       >
           Done
       </button> : null
-      }  
+      } 
     </div>
   );
 }
