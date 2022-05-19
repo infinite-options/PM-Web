@@ -26,7 +26,7 @@ function PropertyCard(props) {
         e.preventDefault();
     }
     return (
-        <div style={{border:"1px solid lightblue", cursor: "pointer", display: "flex" }} >
+        <div style={{border:"1px solid lightblue", cursor: "pointer", display: "flex"}} >
             <div className="img" style={{ flex: "0 0 35%", background:"lightgrey" }}>
                 {property.images && property.images.length ? (<img style={{width:"100%", height:"100%"}} src={property.images[0]}/>) : (<img style={{width:"100%", height:"100%"}} src={No_Image}/>) }
             </div>
@@ -53,24 +53,26 @@ function PropertyCard(props) {
                 </div>
                     
                 <div style={{display:"flex",marginTop:"10px",marginBottom:"10px"}} onClick={stopEventPropagation}>
+
+                    {/*//Remove property management*/}
                     <Row style={{flex:"1",fontSize:"12px",color:"blue",marginTop:"auto",paddingRight:"20px",marginBottom:"auto"}}>
-                        {/* Manager : <span style={{marginLeft:"1px"}}>John Doe</span> */}
                         <span style={{marginLeft:"1px"}}>{property.manager_business_name}</span>
                     </Row>
+                    {/*//Remove property management*/}
                 </div>
                     <Row className="btns" style={{width:"250px"}}> 
                         {applied === "REFUSED" ?
                             (<Col className="view overlay zoom" style={{marginRight:"8px"}} >
                                 <img src={Apply} onClick={goToApplyToProperty} alt="documentIcon"  />
-                                <div class="mask flex-center">
-                                    <p class="white-text" style={{fontSize:"14px"}}>ReApply</p>
+                                <div className="mask flex-center">
+                                    <p className="white-text" style={{fontSize:"14px"}}>ReApply</p>
                                 </div> 
                             </Col>)
                             :
                             (<Col className="view overlay zoom" >
                                 <img src={Apply} onClick={goToApplyToProperty} alt="documentIcon"  />
-                                <div class="mask flex-center">
-                                    <p class="white-text" style={{fontSize:"14px"}}>Apply</p>
+                                <div className="mask flex-center">
+                                    <p className="white-text" style={{fontSize:"14px"}}>Apply</p>
                                 </div>                            
                             </Col>)
                             }
@@ -82,8 +84,8 @@ function PropertyCard(props) {
                                     src={Phone}
                                     style={{marginRight:"10px"}}
                                 />
-                                <div class="mask flex-center">
-                                    <p class="white-text" style={{fontSize:"14px"}}>Call</p>
+                                <div className="mask flex-center">
+                                    <p className="white-text" style={{fontSize:"14px"}}>Call</p>
                                 </div>
                             </Col>
                             <Col>
@@ -94,8 +96,8 @@ function PropertyCard(props) {
                                     src={Message}
                                     style={{marginRight:"10px"}}
                                 />
-                                <div class="mask flex-center">
-                                    <p class="white-text" style={{fontSize:"14px"}}>Email</p>
+                                <div className="mask flex-center">
+                                    <p className="white-text" style={{fontSize:"14px"}}>Email</p>
                                 </div>
                             </Col>
                     </Row>

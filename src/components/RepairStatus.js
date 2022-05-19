@@ -15,25 +15,57 @@ import { headings, subHeading, subText, blue } from "../utils/styles";
 function RepairStatus(props) {
   const navigate = useNavigate();
   const { property_uid } = useParams();
-  console.log(property_uid);
-
   const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  var sortedRepairs = [];
+
 
   useEffect(() => {
     if (repairs.length !== 0) {
       setIsLoading(false);
     }
   }, [repairs]);
+  function sortDateTime() {
 
+  }
+  function sortRepairs(repairs1) {
+    let highCount = 0;
+    let medCount = 0;
+    let lowCount = 0;
+    for (const repair of repairs1) {
+      if(repair.priority == "High")
+      {
+        sortedRepairs.push(repair);
+        highCount++;
+      }
+    }
+    for (const repair of repairs1) {
+      if(repair.priority == "Medium")
+      {
+        sortedRepairs.push(repair);
+        medCount++;
+      }
+    }
+    for (const repair of repairs1) {
+      if(repair.priority == "Low")
+      {
+        sortedRepairs.push(repair);
+        lowCount++;
+      }
+    }
+  }
   useEffect(() => {
     const fetchRepairs = async () => {
       const response = await get(
         `/maintenanceRequests?property_uid=${property_uid}`
       );
-      console.log(response.result);
-
-      setRepairs(response.result);
+      console.log(response.result); 
+      if(response.result.length !== 0)
+      {
+        sortRepairs(response.result);
+        setRepairs(sortedRepairs);
+      }
     };
     fetchRepairs();
   }, []);
@@ -56,6 +88,7 @@ function RepairStatus(props) {
               <div style={blue}>No Scheduled Repairs</div>
             </Row>
           ) : (
+              
             repairs.map((repair, i) => {
               return (
                 <div>
@@ -113,11 +146,11 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img src={HighPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={HighPriority} />
                               ) : repair.priority === "Medium" ? (
-                                <img src={MediumPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={MediumPriority}/>
                               ) : (
-                                <img src={LowPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={LowPriority} />
                               )}
                             </Col>
                           </Row>
@@ -203,11 +236,11 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img src={HighPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={HighPriority} />
                               ) : repair.priority === "Medium" ? (
-                                <img src={MediumPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={MediumPriority} />
                               ) : (
-                                <img src={LowPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={LowPriority} />
                               )}
                             </Col>
                           </Row>
@@ -293,11 +326,11 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img src={HighPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={HighPriority} />
                               ) : repair.priority === "Medium" ? (
-                                <img src={MediumPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={MediumPriority} />
                               ) : (
-                                <img src={LowPriority} />
+                                <img style={{width: '100px', height: '25px'}} src={LowPriority} />
                               )}
                             </Col>
                           </Row>

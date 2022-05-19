@@ -69,6 +69,7 @@ const greenPill = {
   backgroundColor: "#3DB727",
   borderColor: "#3DB727",
   color: "white",
+  height: '30px'
 };
 const bPill = {
   ...smallPillButton,
@@ -139,6 +140,7 @@ const welcome = {
   textAlign: "center",
   margin: "30px",
   padding: "50px",
+  backgroundColor: 'teal'
 };
 const upcoming = {
   background: " #007AFF 0% 0% no-repeat padding-box",
@@ -188,6 +190,7 @@ const redPillButton = {
   color: " #FFFFFF",
   opacity: "1",
   border: "1px solid #E3441F",
+  height: '25px'
 };
 const greenBorderPill = {
   border: "1px solid #3DB727",
@@ -208,8 +211,8 @@ const actions = {
   background: "#FFFFFF 0% 0% no-repeat padding-box",
   border: "1px solid #131413",
   borderRadius: "5px",
-  width: "111px",
-  height: "99px",
+  width: "89px",
+  height: "85px",
   textAlign: "center",
   font: "normal normal 600 11px/13px SFProDisplay-Regular",
   letterSpacing: "0px",
@@ -223,8 +226,8 @@ const actionsDisabled = {
   background: "#FFFFFF 0% 0% no-repeat padding-box",
   border: "1px solid #131413",
   borderRadius: "5px",
-  width: "111px",
-  height: "99px",
+  width: "89px",
+  height: "85px",
   textAlign: "center",
   font: "normal normal 600 11px/13px SFProDisplay-Regular",
   letterSpacing: "0px",
@@ -322,8 +325,24 @@ const blueLarge = {
   font: " normal normal 600 22px/26px SFProDisplay-Semibold",
   color: "#007AFF",
 };
+//Wrote code here
+const newHeading = {
+  backgroundColor: "blue",
+}
 
+const editButton = {
+  color: '#007AFF',
+  border: "2px solid #007AFF",
+  borderRadius: '20px',
+  width: '50vw'
+}
+//Wrote code here
 export {
+
+  //Wrote Code here
+  newHeading,
+  editButton,
+  //Wrote Code here
   pillButton,
   boldSmall,
   underline,

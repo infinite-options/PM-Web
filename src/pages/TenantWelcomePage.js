@@ -23,6 +23,7 @@ import No_Image from "../icons/No_Image_Available.jpeg";
 function TenantWelcomePage(props) {
   const navigate = useNavigate();
   const context = useContext(AppContext);
+  console.log(context);
   const { refresh, userData } = context;
   const { access_token, user } = userData;
   const { setShowFooter, profile, setProfile } = props;
@@ -34,6 +35,10 @@ function TenantWelcomePage(props) {
   const [rentPurchase, setRentPurchase] = React.useState({});
   console.log(context, access_token, user);
 
+
+
+
+  // //Loaf Profile
   useEffect(() => {
     // if (profile != undefined && repairs.length === 0) {
     if (profile != undefined) {
@@ -41,9 +46,20 @@ function TenantWelcomePage(props) {
     }
   }, [profile]);
 
+  // //setShowFooter: toggles whether to show footer or not?
   useEffect(() => {
     setShowFooter(true);
   });
+
+  //// Wrote code here: fetch payments endpoint
+  // useEffect(() => {
+
+  // });
+
+
+  //// Wrote code here
+
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -91,6 +107,9 @@ function TenantWelcomePage(props) {
   //   fetchRepairs();
   // }, [profile]);
 
+
+
+  // Repeatedly Fetching applications the user has sent out and sets 'applications'.
   useEffect(() => {
     const fetchApplications = async () => {
       const response = await get(
@@ -165,6 +184,8 @@ function TenantWelcomePage(props) {
   console.log(profile);
   return (
     <div className="h-100">
+
+      {/* ============================HEADER =========================== */}
       <Header title="Home" />
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
         <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
@@ -287,7 +308,7 @@ function TenantWelcomePage(props) {
                               />
                             )}
                           </div>
-                          <div >
+                          <div>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
@@ -308,12 +329,12 @@ function TenantWelcomePage(props) {
               </Col>
             </Row>
           </div>
-          {/* ============================APPLICATION STATUS=========================== */}
+          
           <div style={headings} className="mt-4 mb-1">
             Application Status{" "}
           </div>
           <p>Your lease applications and their statuses </p>
-
+          {/* Mapping through applications array and creating page elements for each*/}
           <div className="mb-4" style={{ margin: "20px" }}>
             <Row>
               <Col>

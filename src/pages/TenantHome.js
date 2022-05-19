@@ -17,11 +17,14 @@ function TenantHome() {
   const { access_token } = userData;
   const [isLoading, setIsLoading] = useState(true);
 
+  /*
+   * Fetches user profile from the database based on a given access token.
+  */
   useEffect(() => {
     const fetchProfile = async () => {
       // const response = await get("/tenantProperties", access_token);
       const response = await get("/tenantProfileInfo", access_token);
-
+      console.log("first");
       console.log(response);
 
       if (response.msg === "Token has expired") {
@@ -30,15 +33,20 @@ function TenantHome() {
 
         return;
       }
+
+      //Extracts user profile
       setProfile(response.result[0]);
     };
     fetchProfile();
   }, []);
 
+  /*
+  * Fetches tenant properties based on user access_token
+  */
   useEffect(() => {
     const fetchUserProperties = async () => {
       const response = await get("/tenantProperties", access_token);
-
+      console.log("second");
       console.log(response);
       setIsLoading(false);
 
@@ -56,7 +64,7 @@ function TenantHome() {
   return (
     <div className="d-flex flex-column h-100">
       {isLoading === false ? (
-        <div>
+        <div >
           <div className="flex-grow-1">
             {footerTab === "DASHBOARD" &&
               (properties ? (
@@ -73,6 +81,8 @@ function TenantHome() {
                   setProfile={setProfile}
                 />
               ))}
+              
+              
           </div>
           <div
             className="flex-grow-1"
