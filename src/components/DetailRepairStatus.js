@@ -35,6 +35,7 @@ import {
 import { relativeTimeRounding } from "moment";
 
 function DetailRepairStatus(props) {
+  const imageState = useState([]);
   const navigate = useNavigate();
   const { maintenance_request_uid, property_uid } = useParams();
   const context = useContext(AppContext);

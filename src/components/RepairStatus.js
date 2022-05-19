@@ -29,25 +29,25 @@ function RepairStatus(props) {
   function sortDateTime() {
 
   }
-  function sortRepairs() {
+  function sortRepairs(repairs1) {
     let highCount = 0;
     let medCount = 0;
     let lowCount = 0;
-    for (const repair of repairs) {
+    for (const repair of repairs1) {
       if(repair.priority == "High")
       {
         sortedRepairs.push(repair);
         highCount++;
       }
     }
-    for (const repair of repairs) {
+    for (const repair of repairs1) {
       if(repair.priority == "Medium")
       {
         sortedRepairs.push(repair);
         medCount++;
       }
     }
-    for (const repair of repairs) {
+    for (const repair of repairs1) {
       if(repair.priority == "Low")
       {
         sortedRepairs.push(repair);
@@ -61,16 +61,14 @@ function RepairStatus(props) {
         `/maintenanceRequests?property_uid=${property_uid}`
       );
       console.log(response.result); 
-      setRepairs(response.result);
-      if(repairs.length != 0){
-        sortRepairs();
-        console.log(sortedRepairs);
+      if(response.result.length !== 0)
+      {
+        sortRepairs(response.result);
         setRepairs(sortedRepairs);
       }
-      
     };
     fetchRepairs();
-  }, [repairs]);
+  }, []);
 
   return (
     <div className="h-100 d-flex flex-column">
