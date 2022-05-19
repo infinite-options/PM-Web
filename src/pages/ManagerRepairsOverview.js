@@ -12,9 +12,10 @@ function ManagerRepairsOverview(props) {
     const navigate = useNavigate();
     const location = useLocation();
     const {userData, refresh} = React.useContext(AppContext);
-    const {access_token} = userData;
+    const {access_token, user} = userData;
     const [repairs, setRepairs] = React.useState([]);
     const [newRepairs, setNewRepairs] = React.useState([]);
+    const [infoRepairs, setInfoRepairs] = React.useState([]);
     const [processingRepairs, setProcessingRepairs] = React.useState([]);
     const [scheduledRepairs, setScheduledRepairs] = React.useState([]);
     const [completedRepairs, setCompletedRepairs] = React.useState([]);
@@ -24,9 +25,9 @@ function ManagerRepairsOverview(props) {
 
     const sort_repairs = (repairs) =>  {
         const repairs_with_quotes = repairs.filter(repair => repair.quotes_to_review > 0)
-        repairs_with_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || a.days_since - b.days_since))
+        repairs_with_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || b.days_since - a.days_since))
         const repairs_without_quotes = repairs.filter(repair => repair.quotes_to_review === 0)
-        repairs_without_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || a.days_since - b.days_since))
+        repairs_without_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || b.days_since - a.days_since))
         return [...repairs_with_quotes, ...repairs_without_quotes]
     }
 
@@ -36,48 +37,85 @@ function ManagerRepairsOverview(props) {
             return;
         }
 
-        let repairs_unsorted = []
-
-        for (const property of properties) {
-            const response = await get(`/maintenanceRequestsandQuotes?property_uid=${property.property_uid}`);
-            if (response.msg === 'Token has expired') {
-                refresh();
-                return;
-            }
-            let repairs = response.result.filter(item => item.property_uid === property.property_uid);
-            repairs.forEach((repair, i) => {
-                const request_created_date = new Date(Date.parse(repair.request_created_date));
-                const current_date = new Date();
-                repairs[i].days_since = Math.ceil((current_date.getTime() - request_created_date.getTime()) / (1000 * 3600 * 24))
-                repairs[i].quotes_to_review = repair.quotes.filter(quote => quote.quote_status === "SENT").length
-
-                repair.priority_n = 0
-                if (repair.priority.toLowerCase() === "high") {
-                    repair.priority_n = 3
-                } else if (repair.priority.toLowerCase() === "medium") {
-                    repair.priority_n = 2
-                } else if (repair.priority.toLowerCase() === "low") {
-                    repair.priority_n = 1
-                }
-                repair.property = property
-            });
-            repairs_unsorted = [...repairs_unsorted, ...repairs]
+        const management_businesses = user.businesses.filter(business => business.business_type === "MANAGEMENT")
+        let management_buid = null
+        if (management_businesses.length < 1) {
+            console.log('No associated PM Businesses')
+            return
+        } else if (management_businesses.length > 1) {
+            console.log('Multiple associated PM Businesses')
+            management_buid = management_businesses[0].business_uid
+        } else {
+            management_buid = management_businesses[0].business_uid
         }
 
-        let repairs_sorted = sort_repairs(repairs_unsorted)
+        // let repairs_unsorted = []
+        // for (const property of properties) {
+        //     const response = await get(`/maintenanceRequestsandQuotes?property_uid=${property.property_uid}`);
+        //     if (response.msg === 'Token has expired') {
+        //         refresh();
+        //         return;
+        //     }
+        //     let repairs = response.result.filter(item => item.property_uid === property.property_uid);
+        //     repairs.forEach((repair, i) => {
+        //         const request_created_date = new Date(Date.parse(repair.request_created_date));
+        //         const current_date = new Date();
+        //         repairs[i].days_since = Math.ceil((current_date.getTime() - request_created_date.getTime()) / (1000 * 3600 * 24))
+        //         repairs[i].quotes_to_review = repair.quotes.filter(quote => quote.quote_status === "SENT").length
+        //
+        //         repair.priority_n = 0
+        //         if (repair.priority.toLowerCase() === "high") {
+        //             repair.priority_n = 3
+        //         } else if (repair.priority.toLowerCase() === "medium") {
+        //             repair.priority_n = 2
+        //         } else if (repair.priority.toLowerCase() === "low") {
+        //             repair.priority_n = 1
+        //         }
+        //         repair.property = property
+        //     });
+        //     repairs_unsorted = [...repairs_unsorted, ...repairs]
+        // }
+
+        const response = await get(`/maintenanceRequestsandQuotes?manager_id=${management_buid}`);
+        if (response.msg === 'Token has expired') {
+            refresh();
+            return;
+        }
+        let repairs = response.result
+        console.log(repairs)
+        repairs.forEach((repair, i) => {
+            const request_created_date = new Date(Date.parse(repair.request_created_date));
+            const current_date = new Date();
+            repairs[i].days_since = Math.ceil((current_date.getTime() - request_created_date.getTime()) / (1000 * 3600 * 24))
+            repairs[i].quotes_to_review = repair.quotes.filter(quote => quote.quote_status === "SENT").length
+
+            repair.priority_n = 0
+            if (repair.priority.toLowerCase() === "high") {
+                repair.priority_n = 3
+            } else if (repair.priority.toLowerCase() === "medium") {
+                repair.priority_n = 2
+            } else if (repair.priority.toLowerCase() === "low") {
+                repair.priority_n = 1
+            }
+        });
+
+        let repairs_sorted = sort_repairs(repairs)
         console.log(repairs_sorted)
         setRepairs(repairs_sorted);
 
         const new_repairs = repairs_sorted.filter(item => item.request_status === "NEW")
+        const info_repairs = repairs.filter(item => item.request_status === "INFO")
         const processing_repairs = repairs_sorted.filter(item => item.request_status === "PROCESSING")
         const scheduled_repairs = repairs_sorted.filter(item => item.request_status === "SCHEDULED")
         const completed_repairs = repairs_sorted.filter(item => item.request_status === "COMPLETE")
         setNewRepairs(new_repairs)
+        setInfoRepairs(info_repairs)
         setProcessingRepairs(processing_repairs)
         setScheduledRepairs(scheduled_repairs)
         setCompletedRepairs(completed_repairs)
         setRepairIter([
             {title: "New", repairs_list: new_repairs},
+            {title: "Info Requested", repairs_list: info_repairs},
             {title: "Processing", repairs_list: processing_repairs},
             {title: "Upcoming, Scheduled", repairs_list: scheduled_repairs},
             {title: "Completed", repairs_list: completed_repairs}])
@@ -118,8 +156,10 @@ function ManagerRepairsOverview(props) {
                                                 <p style={greenPill} className='mb-0'>No Priority</p>}
                                 </div>
                                 <p style={gray} className='mt-2 mb-0'>
-                                    {repair.property.address}{repair.property.unit !== '' ? ' '+repair.property.unit : ''}, {repair.property.city}, {repair.property.state} <br/>
-                                    {repair.property.zip}
+                                    {/*{repair.property.address}{repair.property.unit !== '' ? ' '+repair.property.unit : ''}, {repair.property.city}, {repair.property.state} <br/>*/}
+                                    {/*{repair.property.zip}*/}
+                                    {repair.address}{repair.unit !== '' ? ' '+repair.unit : ''}, {repair.city}, {repair.state} <br/>
+                                    {repair.zip}
                                 </p>
                                 <div className='d-flex'>
                                     <div className='flex-grow-1 d-flex flex-column justify-content-center'>
