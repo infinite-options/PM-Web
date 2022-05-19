@@ -412,7 +412,7 @@ function ManagerRepairDetail(props) {
                                 <div>{quote.business_name}</div>
                             </Row>
 
-                            <Row hidden={quote.quote_status !== "SENT"}>
+                            <Row hidden={quote.quote_status !== "SENT" && quote.quote_status !== "REJECTED"}>
                                 <Row className="mt-4 mb-2">
                                     <div style={headings}>Fess Included:</div>
                                 </Row>

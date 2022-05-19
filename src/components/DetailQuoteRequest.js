@@ -96,7 +96,7 @@ function DetailQuote(props) {
   const rejectQuote = async () => {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
-      quote_status: 'REJECTED'
+      quote_status: 'REFUSED'
     }
     const response = await put('/maintenanceQuotes', updatedQuote);
     navigate('/ScheduledJobs');
