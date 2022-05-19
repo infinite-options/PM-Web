@@ -17,7 +17,6 @@ function RepairStatus(props) {
   const { property_uid } = useParams();
   const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
   var sortedRepairs = [];
 
 
@@ -106,7 +105,7 @@ function RepairStatus(props) {
                               border: "1px solid #C4C4C4",
                               borderRadius: "5px",
                             }}
-                            alt="repair"
+                            alt="repairs1"
                           />
                         ) : (
                           <img
@@ -119,7 +118,7 @@ function RepairStatus(props) {
                               border: "1px solid #C4C4C4",
                               borderRadius: "5px",
                             }}
-                            alt="repair"
+                            alt="repairs1"
                           />
                         )}
                       </Col>
@@ -187,7 +186,7 @@ function RepairStatus(props) {
                       <Col style={{ padding: "5px" }}>
                         {JSON.parse(repair.images).length > 0 ? (
                           <img
-                            src={JSON.parse(repair.images)}
+                            src={JSON.parse(repair.images)[0]}
                             //className="w-100 h-100"
                             style={{
                               objectFit: "cover",
@@ -196,7 +195,7 @@ function RepairStatus(props) {
                               border: "1px solid #C4C4C4",
                               borderRadius: "5px",
                             }}
-                            alt="repair"
+                            alt="repairs2"
                           />
                         ) : (
                           <img
@@ -209,7 +208,7 @@ function RepairStatus(props) {
                               border: "1px solid #C4C4C4",
                               borderRadius: "5px",
                             }}
-                            alt="repair"
+                            alt="repairs23"
                           />
                         )}
                       </Col>
@@ -286,7 +285,7 @@ function RepairStatus(props) {
                               border: "1px solid #C4C4C4",
                               borderRadius: "5px",
                             }}
-                            alt="repair"
+                            alt="repairs3"
                           />
                         ) : (
                           <img
@@ -299,7 +298,7 @@ function RepairStatus(props) {
                               border: "1px solid #C4C4C4",
                               borderRadius: "5px",
                             }}
-                            alt="repair"
+                            alt="repairs3"
                           />
                         )}
                       </Col>

@@ -60,7 +60,7 @@ function DetailRepairStatus(props) {
   useEffect(() => {
     const fetchProfile = async () => {
       const response = await get("/tenantProperties", access_token);
-      console.log(response);
+      console.log("Tenant Profile", response);
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
@@ -77,25 +77,21 @@ function DetailRepairStatus(props) {
       const response = await get(
         `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`
       );
-      console.log(maintenance_request_uid);
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
         return;
       }
-      console.log(response.result);
       setRepairsDetail(response.result);
-      
       setRepairsImages(JSON.parse(response.result[0].images));
       setPriority(response.result[0].priority);
       setDescription(response.result[0].description);
       setTitle(response.result[0].title);
-      console.log(repairsDetail);
       const fetchBusinessAssigned = async () => {
         const res = await get(
           `/businesses?business_uid=${response.result[0].assigned_business}`
         );
-        console.log(res.result[0]);
+
         setBusineesAssigned(res.result[0]);
       };
       fetchBusinessAssigned();
@@ -116,12 +112,12 @@ function DetailRepairStatus(props) {
 
   function editRepair(){
       console.log("Editing repair");
-      console.log(busineesAssigned);
       setIsEditing(true);
   } 
   const updateRepair = async () => {
       console.log("Putting changes to database");
-      console.log(repairsDetail);
+      console.log("repairsDetails\n", repairsDetail);
+      console.log("repairsImages\n", repairsImages);
       const files = JSON.parse(repairsDetail[0].images)
       const newRepair = {
         maintenance_request_uid: maintenance_request_uid,
@@ -135,17 +131,13 @@ function DetailRepairStatus(props) {
         scheduled_date: repairsDetail[0].scheduled_date,
         assigned_worker: repairsDetail[0].assigned_worker,
       }
-      console.log(newRepair);
-      // for (let i = 0; i < repairsImages.length; i++) {
-      //   let key = `img_${i}`;
-      //   newRepair[key] = repairsImages[i];
-      // }
+      console.log(imageState);
+      for (let i = 0; i < imageState.length; i++) {
+        let key = `img_${i}`;
+        
+      }
       const res = await put("/maintenanceRequests", newRepair, null, files);
       console.log(res);
-      
-      // 1) ? Remove the previous object from the database ?
-      // 2) Create updated version of repair object with datafield entered in by the user
-      // 3) Use a put/post request in order to send new object into database
       setIsEditing(false);
   }
 
@@ -176,7 +168,9 @@ function DetailRepairStatus(props) {
                       alignItems: "center",
                     }}
                   >
+                    
                     {JSON.parse(repair.images).length === 0 ? (
+                      
                       <img
                         src={RepairImg}
                         //className="w-100 h-100"
@@ -189,6 +183,7 @@ function DetailRepairStatus(props) {
                         }}
                         alt="repair"
                       />
+                      
                     ) : JSON.parse(repair.images).length > 1 ? (
                       <Carousel>
                         {repairsImages.map((img) => {
@@ -227,7 +222,13 @@ function DetailRepairStatus(props) {
                     )}
                   </Col>
                 </Row>
-
+                {isEditing ? 
+                  <Row>
+                    <RepairImages state={imageState} />
+                  </Row> :
+                  null
+                }
+                        
                 <Row className="mt-4">
                   <Col>
                         {isEditing ?
@@ -369,18 +370,16 @@ function DetailRepairStatus(props) {
                     </Col>
                     <hr />
                   </Row>
-                  {repair.assigned_business === null ? (
-                    <Row></Row>
-                  ) : (
+                  {busineesAssigned ? (
                     <Row>
-                      {/* <Col>
+                      <Col>
                         <div style={headings}>
                           {busineesAssigned.business_name ? busineesAssigned.business_name : "hi"}
                         </div>
                         <div style={subText}>
                           {busineesAssigned.business_name? busineesAssigned.business_name : "hi"}
                         </div>
-                      </Col> */}
+                      </Col>
                       <Col xs={2} className="mt-1 mb-1">
                         <img
                           onClick={() =>
@@ -399,7 +398,9 @@ function DetailRepairStatus(props) {
                       </Col>
                       <hr />
                     </Row>
-                  )}
+                  ) : (
+                    <Row></Row>)
+                  }
                 </div>
               </Container>
             );

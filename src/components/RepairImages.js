@@ -27,7 +27,7 @@ function RepairImages(props) {
       image: null,
       coverPhoto: imageState.length === 0,
     };
-    readImage(file);
+    readImage(file); 
   };
 
   const deleteImage = (image) => {
