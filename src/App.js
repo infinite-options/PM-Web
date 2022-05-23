@@ -101,7 +101,7 @@ function App() {
               element={<DetailQuoteRequest />}
             />
             <Route
-              path="maintenanceScheduleRepair"
+              path="maintenanceScheduleRepair/:quote_id"
               element={<MaintenanceScheduleRepair />}
             />
             <Route path="quotesAccepted" element={<QuotesAccepted />} />
@@ -202,24 +202,21 @@ function App() {
               element={<ManagerEmergency />}
             />
             <Route
-                path="manager-repairs"
-                element={<ManagerRepairsOverview />}
+              path="manager-repairs"
+              element={<ManagerRepairsOverview />}
             />
             <Route
-                path="manager-repairs/:rr_id"
-                element={<ManagerRepairDetail />}
+              path="manager-repairs/:rr_id"
+              element={<ManagerRepairDetail />}
+            />
+            <Route path="quotes-sent" element={<MaintenanceQuotesSent />} />
+            <Route
+              path="quotes-sent/:q_id"
+              element={<MaintenanceQuoteSentDetail />}
             />
             <Route
-                path="quotes-sent"
-                element={<MaintenanceQuotesSent />}
-            />
-            <Route
-                path="quotes-sent/:q_id"
-                element={<MaintenanceQuoteSentDetail />}
-            />
-            <Route
-                path="quotes-scheduled"
-                element={<MaintenanceQuotesScheduled />}
+              path="quotes-scheduled"
+              element={<MaintenanceQuotesScheduled />}
             />
           </Route>
         </Routes>
