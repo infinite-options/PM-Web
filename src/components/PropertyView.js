@@ -153,13 +153,13 @@ function PropertyView(props) {
             management_status: "ACCEPTED",
             manager_id: prop.manager_id,
           };
-          for (let i = -1; i < files.length - 1; i++) {
-            let key = `img_${i}`;
-            if (i === -1) {
-              key = "img_cover";
-            }
-            updatedManagementContract[key] = files[i + 1];
-          }
+          // for (let i = -1; i < files.length - 1; i++) {
+          //   let key = `img_${i}`;
+          //   if (i === -1) {
+          //     key = "img_cover";
+          //   }
+          //   updatedManagementContract[key] = files[i + 1];
+          // }
           console.log(files);
           const response2 = await put(
             "/properties",
@@ -178,13 +178,13 @@ function PropertyView(props) {
         management_status: "ACCEPTED",
         manager_id: property.property_manager[0].manager_id,
       };
-      for (let i = -1; i < files.length - 1; i++) {
-        let key = `img_${i}`;
-        if (i === -1) {
-          key = "img_cover";
-        }
-        updatedManagementContract[key] = files[i + 1];
-      }
+      // for (let i = -1; i < files.length - 1; i++) {
+      //   let key = `img_${i}`;
+      //   if (i === -1) {
+      //     key = "img_cover";
+      //   }
+      //   updatedManagementContract[key] = files[i + 1];
+      // }
       console.log(files);
       const response2 = await put(
         "/properties",
@@ -208,13 +208,13 @@ function PropertyView(props) {
             management_status: "REJECTED",
             manager_id: prop.manager_id,
           };
-          for (let i = -1; i < files.length - 1; i++) {
-            let key = `img_${i}`;
-            if (i === -1) {
-              key = "img_cover";
-            }
-            updatedManagementContract[key] = files[i + 1];
-          }
+          // for (let i = -1; i < files.length - 1; i++) {
+          //   let key = `img_${i}`;
+          //   if (i === -1) {
+          //     key = "img_cover";
+          //   }
+          //   updatedManagementContract[key] = files[i + 1];
+          // }
           const response2 = await put(
             "/properties",
             updatedManagementContract,
@@ -234,13 +234,13 @@ function PropertyView(props) {
         management_status: "REJECTED",
         manager_id: property.property_manager[0].manager_id,
       };
-      for (let i = -1; i < files.length - 1; i++) {
-        let key = `img_${i}`;
-        if (i === -1) {
-          key = "img_cover";
-        }
-        updatedManagementContract[key] = files[i + 1];
-      }
+      // for (let i = -1; i < files.length - 1; i++) {
+      //   let key = `img_${i}`;
+      //   if (i === -1) {
+      //     key = "img_cover";
+      //   }
+      //   updatedManagementContract[key] = files[i + 1];
+      // }
       const response2 = await put(
         "/properties",
         updatedManagementContract,

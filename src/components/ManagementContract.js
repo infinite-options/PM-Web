@@ -102,13 +102,13 @@ function ManagementContract(props) {
             management_status: "ACCEPTED",
             manager_id: prop.manager_id,
           };
-          for (let i = -1; i < files.length - 1; i++) {
-            let key = `img_${i}`;
-            if (i === -1) {
-              key = "img_cover";
-            }
-            updatedManagementContract[key] = files[i + 1];
-          }
+          // for (let i = -1; i < files.length - 1; i++) {
+          //   let key = `img_${i}`;
+          //   if (i === -1) {
+          //     key = "img_cover";
+          //   }
+          //   updatedManagementContract[key] = files[i + 1];
+          // }
           console.log(files);
           const response2 = await put(
             "/properties",
@@ -127,13 +127,13 @@ function ManagementContract(props) {
         management_status: "ACCEPTED",
         manager_id: property.property_manager[0].manager_id,
       };
-      for (let i = -1; i < files.length - 1; i++) {
-        let key = `img_${i}`;
-        if (i === -1) {
-          key = "img_cover";
-        }
-        updatedManagementContract[key] = files[i + 1];
-      }
+      // for (let i = -1; i < files.length - 1; i++) {
+      //   let key = `img_${i}`;
+      //   if (i === -1) {
+      //     key = "img_cover";
+      //   }
+      //   updatedManagementContract[key] = files[i + 1];
+      // }
       console.log(files);
       const response2 = await put(
         "/properties",
@@ -157,13 +157,13 @@ function ManagementContract(props) {
             management_status: "REJECTED",
             manager_id: prop.manager_id,
           };
-          for (let i = -1; i < files.length - 1; i++) {
-            let key = `img_${i}`;
-            if (i === -1) {
-              key = "img_cover";
-            }
-            updatedManagementContract[key] = files[i + 1];
-          }
+          // for (let i = -1; i < files.length - 1; i++) {
+          //   let key = `img_${i}`;
+          //   if (i === -1) {
+          //     key = "img_cover";
+          //   }
+          //   updatedManagementContract[key] = files[i + 1];
+          // }
           const response2 = await put(
             "/properties",
             updatedManagementContract,
@@ -287,31 +287,51 @@ function ManagementContract(props) {
       )}
 
       <Container>
-        <div className="mb-4">
-          <h5 style={mediumBold}>PM Agreement Dates</h5>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Start Date {startDate === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              End Date {endDate === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </Form.Group>
-        </div>
+        {pageURL[3] !== "owner" ? (
+          <div className="mb-4">
+            <h5 style={mediumBold}>PM Agreement Dates</h5>
+
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Start Date {startDate === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                End Date {endDate === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </Form.Group>
+          </div>
+        ) : (
+          <div className="mb-4">
+            <h5 style={mediumBold}>PM Agreement Dates</h5>
+
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Start Date {startDate === "" ? required : ""}
+              </Form.Label>
+              <div className="mb-0 ms-2">{startDate}</div>
+            </Form.Group>
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                End Date {endDate === "" ? required : ""}
+              </Form.Label>
+              <div className="mb-0 ms-2">{endDate}</div>
+            </Form.Group>
+          </div>
+        )}
         <div className="mb-4">
           <h5 style={mediumBold}>PM Fees</h5>
           <div className="mx-2">

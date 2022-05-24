@@ -108,7 +108,9 @@ function OwnerDashboard(props) {
                 {properties.map((property, i) => {
                   return (
                     <Row
+                      onClick={() => setStage("PROPERTIES")}
                       style={{
+                        cursor: "pointer",
                         background:
                           i % 2 === 0
                             ? "#FFFFFF 0% 0% no-repeat padding-box"

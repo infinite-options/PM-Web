@@ -111,8 +111,7 @@ function OwnerProperties(props) {
                       </p>
                     )
                   )
-                ) : property.property_manager[0].management_status !==
-                  "ACCEPTED" ? (
+                ) : property.management_status !== "ACCEPTED" ? (
                   <p style={redPill} className="mb-0">
                     New
                   </p>
