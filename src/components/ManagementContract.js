@@ -240,13 +240,13 @@ function ManagementContract(props) {
       management_status: "SENT",
     };
     const images = JSON.parse(property.images);
-    for (let i = -1; i < images.length - 1; i++) {
-      let key = `img_${i}`;
-      if (i === -1) {
-        key = "img_cover";
-      }
-      newProperty[key] = images[i + 1];
-    }
+    // for (let i = -1; i < images.length - 1; i++) {
+    //   let key = `img_${i}`;
+    //   if (i === -1) {
+    //     key = "img_cover";
+    //   }
+    //   newProperty[key] = images[i + 1];
+    // }
     await put("/properties", newProperty, null, images);
     back();
     reload();
