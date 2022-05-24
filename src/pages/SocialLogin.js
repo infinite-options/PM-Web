@@ -21,6 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
+const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 function SocialLogin(props) {
   const classes = useStyles();
   const context = useContext(AppContext);
@@ -32,8 +33,10 @@ function SocialLogin(props) {
   const [newFName, setNewFName] = useState("");
   const [newLName, setNewLName] = useState("");
   const [socialId, setSocialId] = useState("");
+  const [idToken, setIdToken] = useState("");
   const [refreshToken, setrefreshToken] = useState("");
   const [accessToken, setAccessToken] = useState("");
+  const [userID, setUserID] = useState("");
   const [accessExpiresIn, setaccessExpiresIn] = useState("");
   const { userData, updateUserData } = useContext(AppContext);
 
@@ -85,96 +88,201 @@ function SocialLogin(props) {
     }
   };
   const responseGoogle = (response) => {
-    console.log("response", response);
-
-    let auth_code = response.code;
-    let authorization_url = "https://accounts.google.com/o/oauth2/token";
-
-    console.log("auth_code", auth_code);
-    var details = {
-      code: auth_code,
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
-      //redirect_uri: "http://localhost:3000",
-      redirectUri: "https://io-propertymanagement.netlify.app",
-      grant_type: "authorization_code",
-    };
-
-    var formBody = [];
-    for (var property in details) {
-      var encodedKey = encodeURIComponent(property);
-      var encodedValue = encodeURIComponent(details[property]);
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-    formBody = formBody.join("&");
-
-    fetch(authorization_url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-      },
-      body: formBody,
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((responseData) => {
-        console.log(responseData);
-        return responseData;
-      })
-      .then((data) => {
-        console.log(data);
-        let at = data["access_token"];
-        let rt = data["refresh_token"];
-        let ax = data["expires_in"].toString();
-        setAccessToken(at);
-        setrefreshToken(rt);
-        setaccessExpiresIn(ax);
-        console.log("res", at, rt);
-
-        axios
-          .get(
-            "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" +
-              at
-          )
-          .then((response) => {
-            console.log(response.data);
-
-            let data = response.data;
-            //setUserInfo(data);
-            let e = data["email"];
-            let fn = data["given_name"];
-            let ln = data["family_name"];
-            let si = data["id"];
-
-            setNewEmail(e);
-            setNewFName(fn);
-            setNewLName(ln);
-            setSocialId(si);
-
-            socialGoogle(e);
-          })
-          .catch((error) => {
-            console.log("its in landing page");
-            console.log(error);
-          });
-
-        // setSocialSignUpModalShow(!socialSignUpModalShow);
-
-        return (
-          accessToken,
-          refreshToken,
-          accessExpiresIn,
-          newEmail,
-          newFName,
-          newLName,
-          socialId
+    console.log(response);
+    if (response.profileObj) {
+      let email = response.profileObj.email;
+      let user_id = "";
+      setSocialId(response.googleId);
+      axios.get(BASE_URL + `/UserToken/${email}`).then((response) => {
+        console.log(
+          "in events",
+          response["data"]["result"][0]["user_uid"],
+          response["data"]["result"][0]["google_auth_token"]
         );
-      })
-      .catch((err) => {
-        console.log(err);
+        console.log("in events", response);
+        setAccessToken(response["data"]["result"][0]["google_auth_token"]);
+        let url =
+          "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=";
+
+        setUserID(response["data"]["result"][0]["user_uid"]);
+        user_id = response["data"]["result"][0]["user_uid"];
+        var old_at = response["data"]["result"][0]["google_auth_token"];
+        console.log("in events", old_at);
+        var refreshToken =
+          response["data"]["result"][0]["google_refresh_token"];
+
+        let checkExp_url = url + old_at;
+        console.log("in events", checkExp_url);
+        fetch(
+          `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
+          {
+            method: "GET",
+          }
+        )
+          .then((response) => {
+            console.log("in events", response);
+            if (response["status"] === 400) {
+              console.log("in events if");
+              let authorization_url =
+                "https://accounts.google.com/o/oauth2/token";
+
+              var details = {
+                refresh_token: refreshToken,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+                grant_type: "refresh_token",
+              };
+
+              var formBody = [];
+              for (var property in details) {
+                var encodedKey = encodeURIComponent(property);
+                var encodedValue = encodeURIComponent(details[property]);
+                formBody.push(encodedKey + "=" + encodedValue);
+              }
+              formBody = formBody.join("&");
+
+              fetch(authorization_url, {
+                method: "POST",
+                headers: {
+                  "Content-Type":
+                    "application/x-www-form-urlencoded;charset=UTF-8",
+                },
+                body: formBody,
+              })
+                .then((response) => {
+                  return response.json();
+                })
+                .then((responseData) => {
+                  console.log(responseData);
+                  return responseData;
+                })
+                .then((data) => {
+                  console.log(data);
+                  let at = data["access_token"];
+                  var id_token = data["id_token"];
+                  setAccessToken(at);
+                  setIdToken(id_token);
+                  console.log("in events", at);
+                  let url = BASE_URL + `/UpdateAccessToken/${user_id}`;
+                  axios
+                    .post(url, {
+                      google_auth_token: at,
+                    })
+                    .then((response) => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  return accessToken;
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            } else {
+              setAccessToken(old_at);
+              console.log(old_at);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        console.log("in events", refreshToken, accessToken);
       });
+
+      //  _socialLoginAttempt(email, accessToken, socialId, "GOOGLE");
+      socialGoogle(email);
+    }
   };
+  // const responseGoogle = (response) => {
+  //   console.log("response", response);
+
+  //   let auth_code = response.code;
+  //   let authorization_url = "https://accounts.google.com/o/oauth2/token";
+
+  //   console.log("auth_code", auth_code);
+  //   var details = {
+  //     code: auth_code,
+  //     client_id: CLIENT_ID,
+  //     client_secret: CLIENT_SECRET,
+  //     redirect_uri: "http://localhost:3000",
+  //     // redirectUri: "https://io-propertymanagement.netlify.app",
+  //     grant_type: "authorization_code",
+  //   };
+
+  //   var formBody = [];
+  //   for (var property in details) {
+  //     var encodedKey = encodeURIComponent(property);
+  //     var encodedValue = encodeURIComponent(details[property]);
+  //     formBody.push(encodedKey + "=" + encodedValue);
+  //   }
+  //   formBody = formBody.join("&");
+
+  //   fetch(authorization_url, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+  //     },
+  //     body: formBody,
+  //   })
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((responseData) => {
+  //       console.log(responseData);
+  //       return responseData;
+  //     })
+  //     .then((data) => {
+  //       console.log(data);
+  //       let at = data["access_token"];
+  //       let rt = data["refresh_token"];
+  //       let ax = data["expires_in"].toString();
+  //       setAccessToken(at);
+  //       setrefreshToken(rt);
+  //       setaccessExpiresIn(ax);
+  //       console.log("res", at, rt);
+
+  //       axios
+  //         .get(
+  //           "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" +
+  //             at
+  //         )
+  //         .then((response) => {
+  //           console.log("here", response.data);
+
+  //           let data = response.data;
+  //           //setUserInfo(data);
+  //           let e = data["email"];
+  //           let fn = data["given_name"];
+  //           let ln = data["family_name"];
+  //           let si = data["id"];
+
+  //           setNewEmail(e);
+  //           setNewFName(fn);
+  //           setNewLName(ln);
+  //           setSocialId(si);
+
+  //           socialGoogle(e);
+  //         })
+  //         .catch((error) => {
+  //           console.log("its in landing page");
+  //           console.log(error);
+  //         });
+
+  //       // setSocialSignUpModalShow(!socialSignUpModalShow);
+
+  //       return (
+  //         accessToken,
+  //         refreshToken,
+  //         accessExpiresIn,
+  //         newEmail,
+  //         newFName,
+  //         newLName,
+  //         socialId
+  //       );
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
   console.log(newEmail);
 
   const hideSignUp = () => {
@@ -343,11 +451,11 @@ function SocialLogin(props) {
             <Button>
               <GoogleLogin
                 clientId={CLIENT_ID}
-                accessType="offline"
-                prompt="consent"
-                responseType="code"
-                buttonText="Log In"
-                ux_mode="redirect"
+                // accessType="offline"
+                // prompt="consent"
+                // responseType="code"
+                // buttonText="Log In"
+                // ux_mode="redirect"
                 //redirectUri="http://localhost:3000"
                 redirectUri="https://io-propertymanagement.netlify.app"
                 scope="https://www.googleapis.com/auth/calendar"

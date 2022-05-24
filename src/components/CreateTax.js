@@ -44,16 +44,16 @@ function CreateTax(props) {
       property_uid: props.property.property_uid,
       taxes: JSON.stringify(taxes),
     };
-    for (let i = -1; i < files.length - 1; i++) {
-      let key = `img_${i}`;
-      if (i === -1) {
-        key = "img_cover";
-      }
-      updateTaxes[key] = files[i + 1];
-    }
+    // for (let i = -1; i < files.length - 1; i++) {
+    //   let key = `img_${i}`;
+    //   if (i === -1) {
+    //     key = "img_cover";
+    //   }
+    //   updateTaxes[key] = files[i + 1];
+    // }
 
     const response = await put("/properties", updateTaxes, null, files);
-
+    props.reload();
     props.back();
   };
   const [errorMessage, setErrorMessage] = React.useState("");
