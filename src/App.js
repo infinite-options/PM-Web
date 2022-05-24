@@ -39,7 +39,7 @@ import ReviewTenantProfile from "./pages/ReviewTenantprofile";
 import TenantPropertyView from "./pages/TenantPropertyView";
 import ReviewPropertyLease from "./pages/reviewPropertyLease";
 import LeaseApplicationStatus from "./pages/LeaseApplicationStatus";
-
+import SearchPM from "./pages/SearchPM";
 import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
 import ManagerPropertyView from "./pages/ManagerPropertyView";
@@ -96,6 +96,7 @@ function App() {
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
+            <Route path="search-pm" element={<SearchPM />} />
             <Route
               path="detailQuoteRequest/:quote_id"
               element={<DetailQuoteRequest />}

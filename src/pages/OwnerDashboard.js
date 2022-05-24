@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Emergency from "../icons/Emergency.svg";
 import Document from "../icons/Document.svg";
@@ -20,6 +20,7 @@ import {
 
 function OwnerDashboard(props) {
   const { setStage, properties } = props;
+  const navigate = useNavigate();
   const [expandRevenue, setExpandRevenue] = React.useState(false);
   const [expandExpenses, setExpandExpenses] = React.useState(false);
   const [expandProperties, setExpandProperties] = React.useState(false);
@@ -570,6 +571,7 @@ function OwnerDashboard(props) {
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              cursor: "pointer",
             }}
           >
             <Col>
@@ -592,6 +594,7 @@ function OwnerDashboard(props) {
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              cursor: "pointer",
             }}
           >
             <Col>
@@ -615,6 +618,7 @@ function OwnerDashboard(props) {
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              cursor: "pointer",
             }}
           >
             <Col>
@@ -637,6 +641,7 @@ function OwnerDashboard(props) {
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              cursor: "pointer",
             }}
           >
             <Col>
@@ -660,6 +665,7 @@ function OwnerDashboard(props) {
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              cursor: "pointer",
             }}
           >
             <Col>
@@ -675,12 +681,14 @@ function OwnerDashboard(props) {
             </Col>
           </Col>
           <Col
+            onClick={() => navigate("/search-pm")}
             className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
             style={{
               height: "87px",
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              cursor: "pointer",
             }}
           >
             <Col>
