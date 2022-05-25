@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import ManagerPaymentSelection from "../components/ManagerPaymentSelection";
 import { get, post, put } from "../utils/api";
 import { squareForm, gray } from "../utils/styles";
+import Logout from "./Logout";
 
 function ManagerProfile(props) {
   const { setFooterTab } = props;
@@ -342,6 +343,10 @@ function ManagerProfile(props) {
       {/*<ManagerLocations state={locationState}/>*/}
       {/*<ManagerFees feeState={feeState} setFeeState={setFeeState}/>*/}
       {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
+
+      <Row className="my-4">
+        <Logout/>
+      </Row>
     </div>
   );
 }
