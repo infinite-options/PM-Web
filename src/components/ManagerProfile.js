@@ -5,7 +5,7 @@ import AppContext from "../AppContext";
 import Header from "../components/Header";
 import ManagerPaymentSelection from "../components/ManagerPaymentSelection";
 import { get, post, put } from "../utils/api";
-import { squareForm, gray } from "../utils/styles";
+import {squareForm, gray, headings} from "../utils/styles";
 import Logout from "./Logout";
 
 function ManagerProfile(props) {
@@ -269,7 +269,10 @@ function ManagerProfile(props) {
           </Form.Group>
         </div>
       ) : (
-        <div className="mx-3">
+        <div className="mx-3 my-3">
+          <Row className="mb-4" style={headings}>
+            <div>Personal Details</div>
+          </Row>
           <h6>Company Name</h6>
           <p style={gray}>
             {companyName && companyName !== "NULL"
@@ -277,58 +280,93 @@ function ManagerProfile(props) {
               : "No Company Details Provided"}
           </p>
 
-          <h6>First Name</h6>
-          <p style={gray}>
-            {firstName && firstName !== "NULL"
-              ? firstName
-              : "No First Name Provided"}
-          </p>
+          <Row>
+            <Col>
+              <h6>First Name</h6>
+              <p style={gray}>
+                {firstName && firstName !== "NULL"
+                    ? firstName
+                    : "No First Name Provided"}
+              </p>
+            </Col>
+            <Col>
+              <h6>Last Name</h6>
+              <p style={gray}>
+                {lastName && lastName !== "NULL"
+                    ? lastName
+                    : "No Last Name Provided"}
+              </p>
+            </Col>
+          </Row>
 
-          <h6>Last Name</h6>
-          <p style={gray}>
-            {lastName && lastName !== "NULL"
-              ? lastName
-              : "No Last Name Provided"}
-          </p>
+          <Row>
+            <Col>
+              <h6>Phone Number</h6>
+              <p style={gray}>
+                {phoneNumber && phoneNumber !== "NULL"
+                    ? phoneNumber
+                    : "No Phone Number Provided"}
+              </p>
+            </Col>
+            <Col>
+              <h6>Email</h6>
+              <p style={gray}>
+                {email && email !== "NULL" ? email : "No Email Provided"}
+              </p>
+            </Col>
+          </Row>
 
-          <h6>Phone Number</h6>
-          <p style={gray}>
-            {phoneNumber && phoneNumber !== "NULL"
-              ? phoneNumber
-              : "No Phone Number Provided"}
-          </p>
 
-          <h6>Email</h6>
-          <p style={gray}>
-            {email && email !== "NULL" ? email : "No Email Provided"}
-          </p>
 
-          <div>
-            <h6 className="mb-3">Identification</h6>
-            <Container>
-              <Row>
-                <Col>
-                  <h6>* &nbsp; SSN</h6>
-                </Col>
-                <Col>
-                  <p style={gray}>
-                    {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}
-                  </p>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <h6>* &nbsp; EIN</h6>
-                </Col>
-                <Col>
-                  <p style={gray}>
-                    {einNumber && einNumber !== "NULL"
+
+
+
+          <div className="my-2">
+            <Row className="mb-4" style={headings}>
+              <div>Identification Details</div>
+            </Row>
+
+            <Row>
+              <Col>
+                <h6>SSN</h6>
+                <p style={gray}>
+                  {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}
+                </p>
+              </Col>
+              <Col>
+                <h6>EIN</h6>
+                <p style={gray}>
+                  {einNumber && einNumber !== "NULL"
                       ? ssn
                       : "No EIN Provided"}
-                  </p>
-                </Col>
-              </Row>
-            </Container>
+                </p>
+              </Col>
+            </Row>
+
+            {/*<Container>*/}
+            {/*  <Row>*/}
+            {/*    <Col>*/}
+            {/*      <h6>* &nbsp; SSN</h6>*/}
+            {/*    </Col>*/}
+            {/*    <Col>*/}
+            {/*      <p style={gray}>*/}
+            {/*        {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}*/}
+            {/*      </p>*/}
+            {/*    </Col>*/}
+            {/*  </Row>*/}
+            {/*  <Row>*/}
+            {/*    <Col>*/}
+            {/*      <h6>* &nbsp; EIN</h6>*/}
+            {/*    </Col>*/}
+            {/*    <Col>*/}
+            {/*      <p style={gray}>*/}
+            {/*        {einNumber && einNumber !== "NULL"*/}
+            {/*          ? ssn*/}
+            {/*          : "No EIN Provided"}*/}
+            {/*      </p>*/}
+            {/*    </Col>*/}
+            {/*  </Row>*/}
+            {/*</Container>*/}
           </div>
         </div>
       )}
