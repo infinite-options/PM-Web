@@ -71,34 +71,28 @@ function OwnerHome() {
               ""
             )}
           </div>
-        ) : footerTab === "PROFILE" ? (
-          <OwnerProfile
-            setShowFooter={setShowFooter}
-            setFooterTab={setFooterTab}
-          />
-        ) : footerTab === "ROLES" ? (
-          <SwitchRole
-            setShowFooter={setShowFooter}
-            setFooterTab={setFooterTab}
-          />
+        ) : (
+          ""
+        )}
+        {footerTab === "PROFILE" ? (
+          <OwnerProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
+        ) : (
+          ""
+        )}
+        {footerTab === "ROLES" ? (
+          <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
         )}
       </div>
       {/* <div className="flex-grow-1">
         {footerTab === "PROFILE" ? (
-          <OwnerProfile
-            setShowFooter={setShowFooter}
-            setFooterTab={setFooterTab}
-          />
+          <OwnerProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
         )}
         {footerTab === "ROLES" ? (
-          <SwitchRole
-            setShowFooter={setShowFooter}
-            setFooterTab={setFooterTab}
-          />
+          <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
         )}
@@ -107,7 +101,7 @@ function OwnerHome() {
         className="flex-grow-1"
         style={{ height: "90%", overflow: "auto" }}
       ></div> */}
-      {showFooter ? <Footer tab={footerTab} setTab={setFooterTab} /> : ""}
+      {showFooter ? <Footer tab={footerTab} setTab={setTab} /> : ""}
     </div>
   );
 }
