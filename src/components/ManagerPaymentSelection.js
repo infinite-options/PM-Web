@@ -121,7 +121,7 @@ function ManagerPaymentSelection(props) {
                         <Col>
                             <h6>Zelle</h6>
                             <p style={gray}>
-                                {(paymentState.applePay !== '') ? paymentState.applePay : 'No Apple Pay Provided'}
+                                {(paymentState.zelle !== '') ? paymentState.zelle : 'No Zelle Provided'}
                             </p>
                         </Col>
                         <Col>

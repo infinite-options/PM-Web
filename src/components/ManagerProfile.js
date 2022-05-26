@@ -177,7 +177,7 @@ function ManagerProfile(props) {
   };
 
   return (
-    <div className="pb-5 mb-5">
+    <div className="mx-3 pb-5 mb-5">
       <Header
         title="Profile"
         leftText={editProfile ? "Cancel" : "< Back"}
