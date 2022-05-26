@@ -28,8 +28,11 @@ function ManagerPaymentSelection(props) {
     return (
         <div>
             {editProfile?
-                <Container>
-                    <h6>Accept Payments via:</h6>
+                <div className='mx-3 mt-5'>
+                    <Row className="mb-4" style={headings}>
+                        <div>Payment Details</div>
+                    </Row>
+
                     <Row className='mb-1'>
                         <Col className='d-flex align-items-center'>
                             <Checkbox type='BOX' checked={showPayPal ? 'checked' : ''}
@@ -92,7 +95,7 @@ function ManagerPaymentSelection(props) {
                                           value={routingNumber} onChange={(e) => onChange(e, 'routingNumber')}/>
                         </Col>
                     </Row>
-                </Container>
+                </div>
                 :
                 <div className='mx-3 my-3'>
                     <Row className="mb-4" style={headings}>

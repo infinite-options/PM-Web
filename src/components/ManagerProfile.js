@@ -188,85 +188,120 @@ function ManagerProfile(props) {
         rightFn={() => (editProfile ? saveProfile() : setEditProfile(true))}
       />
       {editProfile ? (
-        <div>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Company Name
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="Company Name"
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              First Name
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Last Name
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="Last"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Phone Number
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="(xxx)xxx-xxxx"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Email Address
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="Email"
-              value={email}
-              type="email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              EIN Number
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="12-1234567"
-              value={einNumber}
-              onChange={(e) => setEinNumber(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Social Security Number
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="123-45-6789"
-              value={ssn}
-              onChange={(e) => setSsn(e.target.value)}
-            />
-          </Form.Group>
+        <div className="mx-3 my-3">
+
+          <div className="my-3">
+            <Row className="mb-4" style={headings}>
+              <div>Personal Details</div>
+            </Row>
+
+            <Form.Group className="my-2">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Company Name
+              </Form.Label>
+              <Form.Control
+                  style={squareForm}
+                  placeholder="Company Name"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+              />
+            </Form.Group>
+
+            <Row>
+              <Col>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    First Name
+                  </Form.Label>
+                  <Form.Control
+                      style={squareForm}
+                      placeholder="First Name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Last Name
+                  </Form.Label>
+                  <Form.Control
+                      style={squareForm}
+                      placeholder="Last"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Phone Number
+                  </Form.Label>
+                  <Form.Control
+                      style={squareForm}
+                      placeholder="(xxx)xxx-xxxx"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Email Address
+                  </Form.Label>
+                  <Form.Control
+                      style={squareForm}
+                      placeholder="Email"
+                      value={email}
+                      type="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+
+          <div className="my-4">
+            <Row className="mb-4" style={headings}>
+              <div>Identification Details</div>
+            </Row>
+
+            <Row>
+              <Col>
+                <Form.Group className="my-0">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    EIN Number
+                  </Form.Label>
+                  <Form.Control
+                      style={squareForm}
+                      placeholder="12-1234567"
+                      value={einNumber}
+                      onChange={(e) => setEinNumber(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="my-0">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Social Security Number
+                  </Form.Label>
+                  <Form.Control
+                      style={squareForm}
+                      placeholder="123-45-6789"
+                      value={ssn}
+                      onChange={(e) => setSsn(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+
         </div>
       ) : (
         <div className="mx-3 my-3">
@@ -284,17 +319,13 @@ function ManagerProfile(props) {
             <Col>
               <h6>First Name</h6>
               <p style={gray}>
-                {firstName && firstName !== "NULL"
-                    ? firstName
-                    : "No First Name Provided"}
+                {firstName && firstName !== "NULL" ? firstName : "No First Name Provided"}
               </p>
             </Col>
             <Col>
               <h6>Last Name</h6>
               <p style={gray}>
-                {lastName && lastName !== "NULL"
-                    ? lastName
-                    : "No Last Name Provided"}
+                {lastName && lastName !== "NULL" ? lastName : "No Last Name Provided"}
               </p>
             </Col>
           </Row>
@@ -303,9 +334,7 @@ function ManagerProfile(props) {
             <Col>
               <h6>Phone Number</h6>
               <p style={gray}>
-                {phoneNumber && phoneNumber !== "NULL"
-                    ? phoneNumber
-                    : "No Phone Number Provided"}
+                {phoneNumber && phoneNumber !== "NULL" ? phoneNumber : "No Phone Number Provided"}
               </p>
             </Col>
             <Col>
@@ -315,11 +344,6 @@ function ManagerProfile(props) {
               </p>
             </Col>
           </Row>
-
-
-
-
-
 
           <div className="my-2">
             <Row className="mb-4" style={headings}>
@@ -336,9 +360,7 @@ function ManagerProfile(props) {
               <Col>
                 <h6>EIN</h6>
                 <p style={gray}>
-                  {einNumber && einNumber !== "NULL"
-                      ? ssn
-                      : "No EIN Provided"}
+                  {einNumber && einNumber !== "NULL" ? ssn : "No EIN Provided"}
                 </p>
               </Col>
             </Row>
@@ -382,9 +404,9 @@ function ManagerProfile(props) {
       {/*<ManagerFees feeState={feeState} setFeeState={setFeeState}/>*/}
       {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
 
-      <Row className="my-4">
-        <Logout/>
-      </Row>
+
+      {editProfile ? '' : <Row className="my-4"><Logout/></Row>}
+
     </div>
   );
 }
