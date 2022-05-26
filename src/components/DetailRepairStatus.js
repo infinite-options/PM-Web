@@ -84,6 +84,7 @@ function DetailRepairStatus(props) {
       }
       setRepairsDetail(response.result);
       setRepairsImages(JSON.parse(response.result[0].images));
+      
       setPriority(response.result[0].priority);
       setDescription(response.result[0].description);
       setTitle(response.result[0].title);
@@ -118,7 +119,9 @@ function DetailRepairStatus(props) {
       console.log("Putting changes to database");
       console.log("repairsDetails\n", repairsDetail);
       console.log("repairsImages\n", repairsImages);
-      const files = JSON.parse(repairsDetail[0].images)
+      console.log(imageState);
+      const files = JSON.parse(repairsDetail[0].images);
+      console.log(files);
       const newRepair = {
         maintenance_request_uid: maintenance_request_uid,
         title: title,
@@ -126,14 +129,15 @@ function DetailRepairStatus(props) {
         can_reschedule: true,
         assigned_business: repairsDetail[0].assigned_business,
         notes: repairsDetail[0].notes,
-        request_status: repairsDetail[0].request_status,
+        request_status: repairsDetail[0].request_status === "INFO" ? "PROCESSING" : repairsDetail[0].request_status,
         description: description,
         scheduled_date: repairsDetail[0].scheduled_date,
         assigned_worker: repairsDetail[0].assigned_worker,
+        
       }
-      console.log(repairsImages.length);
+      console.log(newRepair);
       for (let i = 0; i < imageState.length; i++) {
-        let key = `img_${i}`;
+        // let key = `img_${i}`;
         
       }
       const res = await put("/maintenanceRequests", newRepair, null, files);
@@ -210,6 +214,22 @@ function DetailRepairStatus(props) {
                             />
                           </Carousel.Item>;
                         })}
+                        {imageState[0].length > 0 ? 
+                        imageState[0].map((img) => {
+                          return <Carousel.Item>
+                            <Image
+                              src={JSON.parse(img.image)}
+                              style={{
+                                objectFit: "cover",
+                                width: "350px",
+                                height: " 198px",
+                                border: "1px solid #C4C4C4",
+                                borderRadius: "5px",
+                              }}
+                              alt="repair"
+                            />
+                          </Carousel.Item>;
+                        }) : null}
                       </Carousel>
                     ) : (
                       <img

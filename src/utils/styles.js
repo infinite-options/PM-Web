@@ -69,7 +69,6 @@ const greenPill = {
   backgroundColor: "#3DB727",
   borderColor: "#3DB727",
   color: "white",
-  height: '30px'
 };
 const bPill = {
   ...smallPillButton,

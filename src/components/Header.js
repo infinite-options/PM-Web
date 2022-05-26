@@ -5,13 +5,17 @@ function Header(props) {
   const headerContainer = {
     backgroundColor: "#F5F5F5",
   };
+  let className = props.customClass;
+  if (!className) {
+    className = "mb-4"
+  }
   const textButton = {
     background: "none",
     border: "none",
     color: "#007AFF",
   };
   return (
-    <Container fluid style={headerContainer} className="mb-4">
+    <Container fluid style={headerContainer} className={className}>
       <Row>
         {props.leftText ? (
           <Col className="d-flex flex-column justify-content-end">
