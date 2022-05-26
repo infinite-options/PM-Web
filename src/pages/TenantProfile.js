@@ -193,10 +193,7 @@ function TenantProfile(props) {
             setUsePreviousAddress(true);
           }
         }
-
       }
-
-    
     };
     fetchProfile();
   }, []);
@@ -251,7 +248,7 @@ function TenantProfile(props) {
   ];
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="mb-5 pb-5">
       <Header
         title="Profile"
         leftText="Cancel"
@@ -284,8 +281,8 @@ function TenantProfile(props) {
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
-         </Form.Group>
-          <Form.Group className="mx-2 my-3">
+        </Form.Group>
+        <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
             Email ID
           </Form.Label>
@@ -417,7 +414,9 @@ function TenantProfile(props) {
                 textAlign: "center",
               }}
             >
-              {usePreviousAddress && previousAddressState && previousAddressState.state ? (
+              {usePreviousAddress &&
+              previousAddressState &&
+              previousAddressState.state ? (
                 <img src={Check} style={{ width: "13px", height: "9px" }} />
               ) : null}
             </div>
@@ -543,8 +542,8 @@ function TenantProfile(props) {
             </div>
           )}
         </div>
-        <Logout />
       </Container>
+      <Logout />
     </div>
   );
 }

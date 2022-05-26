@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 import AppContext from "../AppContext";
 import MaintenanceDashboard from "./MaintenanceDashboard";
 import BusinessProfile from "./BusinessProfile";
-
+import SwitchRole from "../components/SwitchRole";
 function MaintenanceHome() {
   const { userData } = React.useContext(AppContext);
   const [footerTab, setFooterTab] = React.useState("DASHBOARD");
@@ -16,13 +16,17 @@ function MaintenanceHome() {
         ) : (
           ""
         )}
-      </div>
-      <div className="flex-grow-1">
+
         {footerTab === "PROFILE" ? (
           <BusinessProfile
             setShowFooter={setShowFooter}
             setTab={setFooterTab}
           />
+        ) : (
+          ""
+        )}
+        {footerTab === "ROLES" ? (
+          <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
         )}
