@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container, Row, Col, Form} from 'react-bootstrap';
 import Checkbox from './Checkbox';
-import {squareForm, hidden, gray} from '../utils/styles';
+import {squareForm, hidden, gray, headings} from '../utils/styles';
 
 function ManagerPaymentSelection(props) {
     const {editProfile, paymentState, setPaymentState} = props;
@@ -28,8 +28,11 @@ function ManagerPaymentSelection(props) {
     return (
         <div>
             {editProfile?
-                <Container>
-                    <h6>Accept Payments via:</h6>
+                <div className='mx-3 mt-5'>
+                    <Row className="mb-4" style={headings}>
+                        <div>Payment Details</div>
+                    </Row>
+
                     <Row className='mb-1'>
                         <Col className='d-flex align-items-center'>
                             <Checkbox type='BOX' checked={showPayPal ? 'checked' : ''}
@@ -92,41 +95,89 @@ function ManagerPaymentSelection(props) {
                                           value={routingNumber} onChange={(e) => onChange(e, 'routingNumber')}/>
                         </Col>
                     </Row>
-                </Container>
+                </div>
                 :
-                <Container className='mx-2'>
-                    <h6 className='mb-3'>Accept Payments via:</h6>
-                    <Row className='mb-1'>
-                        <Col><h6>* &nbsp; PayPal</h6></Col>
-                        <Col><p style={gray}>
-                            {(paymentState.paypal !== '') ? paymentState.paypal : 'No PayPal Provided'}</p></Col>
+                <div className='mx-3 my-3'>
+                    <Row className="mb-4" style={headings}>
+                        <div>Payment Details</div>
                     </Row>
-                    <Row className='mb-1'>
-                        <Col><h6>* &nbsp; Apple Pay</h6></Col>
-                        <Col><p style={gray}>
-                            {(paymentState.applePay !== '') ? paymentState.applePay : 'No Apple Pay Provided'}</p></Col>
+
+                    <Row>
+                        <Col>
+                            <h6>PayPal</h6>
+                            <p style={gray}>
+                                {(paymentState.paypal !== '') ? paymentState.paypal : 'No PayPal Provided'}
+                            </p>
+                        </Col>
+                        <Col>
+                            <h6>Apple Pay</h6>
+                            <p style={gray}>
+                                {(paymentState.applePay !== '') ? paymentState.applePay : 'No Apple Pay Provided'}
+                            </p>
+                        </Col>
                     </Row>
-                    <Row className='mb-1'>
-                        <Col><h6>* &nbsp; Zelle</h6></Col>
-                        <Col><p style={gray}>
-                            {(paymentState.zelle !== '') ? paymentState.zelle : 'No Zelle Provided'}</p></Col>
+
+                    <Row>
+                        <Col>
+                            <h6>Zelle</h6>
+                            <p style={gray}>
+                                {(paymentState.zelle !== '') ? paymentState.zelle : 'No Zelle Provided'}
+                            </p>
+                        </Col>
+                        <Col>
+                            <h6>Venmo</h6>
+                            <p style={gray}>
+                                {(paymentState.venmo !== '') ? paymentState.venmo : 'No Venmo Provided'}
+                            </p>
+                        </Col>
                     </Row>
-                    <Row className='mb-1'>
-                        <Col><h6>* &nbsp; Venmo</h6></Col>
-                        <Col><p style={gray}>
-                            {(paymentState.venmo !== '') ? paymentState.venmo : 'No Venmo Provided'}</p></Col>
+
+                    <Row>
+                        <Col>
+                            <h6>Checking Acc. Number</h6>
+                            <p style={gray}>
+                                {(paymentState.accountNumber !== '') ? paymentState.accountNumber : 'No Acct No. Provided'}
+                            </p>
+                        </Col>
+                        <Col>
+                            <h6>Checking Acc. Routing Number</h6>
+                            <p style={gray}>
+                                {(paymentState.routingNumber !== '') ? paymentState.routingNumber : 'No Routing No. Provided'}
+                            </p>
+                        </Col>
                     </Row>
-                    <Row className='mb-1'>
-                        <Col><h6>* &nbsp; Checking Account</h6></Col>
-                        <Col><p style={gray}>
-                            {(paymentState.accountNumber !== '') ? paymentState.accountNumber : 'No Acct No. Provided'}</p></Col>
-                    </Row>
-                    <Row className='mb-1'>
-                        <Col></Col>
-                        <Col><p style={gray}>
-                            {(paymentState.routingNumber !== '') ? paymentState.routingNumber : 'No Routing No. Provided'}</p></Col>
-                    </Row>
-                </Container>}
+
+                    {/*<Row className='mb-1'>*/}
+                    {/*    <Col><h6>* &nbsp; PayPal</h6></Col>*/}
+                    {/*    <Col><p style={gray}>*/}
+                    {/*        {(paymentState.paypal !== '') ? paymentState.paypal : 'No PayPal Provided'}</p></Col>*/}
+                    {/*</Row>*/}
+                    {/*<Row className='mb-1'>*/}
+                    {/*    <Col><h6>* &nbsp; Apple Pay</h6></Col>*/}
+                    {/*    <Col><p style={gray}>*/}
+                    {/*        {(paymentState.applePay !== '') ? paymentState.applePay : 'No Apple Pay Provided'}</p></Col>*/}
+                    {/*</Row>*/}
+                    {/*<Row className='mb-1'>*/}
+                    {/*    <Col><h6>* &nbsp; Zelle</h6></Col>*/}
+                    {/*    <Col><p style={gray}>*/}
+                    {/*        {(paymentState.zelle !== '') ? paymentState.zelle : 'No Zelle Provided'}</p></Col>*/}
+                    {/*</Row>*/}
+                    {/*<Row className='mb-1'>*/}
+                    {/*    <Col><h6>* &nbsp; Venmo</h6></Col>*/}
+                    {/*    <Col><p style={gray}>*/}
+                    {/*        {(paymentState.venmo !== '') ? paymentState.venmo : 'No Venmo Provided'}</p></Col>*/}
+                    {/*</Row>*/}
+                    {/*<Row className='mb-1'>*/}
+                    {/*    <Col><h6>* &nbsp; Checking Account</h6></Col>*/}
+                    {/*    <Col><p style={gray}>*/}
+                    {/*        {(paymentState.accountNumber !== '') ? paymentState.accountNumber : 'No Acct No. Provided'}</p></Col>*/}
+                    {/*</Row>*/}
+                    {/*<Row className='mb-1'>*/}
+                    {/*    <Col></Col>*/}
+                    {/*    <Col><p style={gray}>*/}
+                    {/*        {(paymentState.routingNumber !== '') ? paymentState.routingNumber : 'No Routing No. Provided'}</p></Col>*/}
+                    {/*</Row>*/}
+                </div>}
 
         </div>
 
