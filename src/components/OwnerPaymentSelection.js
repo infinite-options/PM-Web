@@ -167,7 +167,7 @@ function OwnerPaymentSelection(props) {
               <p style={gray}>
                 {paymentState.applePay !== ""
                   ? paymentState.applePay
-                  : "No Apple Pay Provided"}
+                  : "No Zelle Provided"}
               </p>
             </Col>
             <Col>
