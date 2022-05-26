@@ -19,7 +19,7 @@ function TenantHome() {
 
   /*
    * Fetches user profile from the database based on a given access token.
-  */
+   */
   useEffect(() => {
     const fetchProfile = async () => {
       // const response = await get("/tenantProperties", access_token);
@@ -41,8 +41,8 @@ function TenantHome() {
   }, []);
 
   /*
-  * Fetches tenant properties based on user access_token
-  */
+   * Fetches tenant properties based on user access_token
+   */
   useEffect(() => {
     const fetchUserProperties = async () => {
       const response = await get("/tenantProperties", access_token);
@@ -64,7 +64,7 @@ function TenantHome() {
   return (
     <div className="d-flex flex-column h-100">
       {isLoading === false ? (
-        <div >
+        <div>
           <div className="flex-grow-1">
             {footerTab === "DASHBOARD" &&
               (properties ? (
@@ -81,13 +81,6 @@ function TenantHome() {
                   setProfile={setProfile}
                 />
               ))}
-              
-              
-          </div>
-          <div
-            className="flex-grow-1"
-            style={{ height: "90%", overflow: "auto" }}
-          >
             {footerTab === "PROFILE" ? (
               <TenantProfile
                 setShowFooter={setShowFooter}
@@ -96,17 +89,13 @@ function TenantHome() {
             ) : (
               ""
             )}
-          </div>
-          <div
-            className="flex-grow-1"
-            style={{ height: "90%", overflow: "auto" }}
-          >
             {footerTab === "ROLES" ? (
               <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
             ) : (
               ""
             )}
           </div>
+
           {showFooter ? <Footer tab={footerTab} setTab={setFooterTab} /> : ""}
         </div>
       ) : (
