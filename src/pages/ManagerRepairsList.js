@@ -15,6 +15,7 @@ function ManagerRepairsList(props) {
     const {access_token} = userData;
     const [repairs, setRepairs] = React.useState([]);
     const [newRepairs, setNewRepairs] = React.useState([]);
+    const [infoRepairs, setInfoRepairs] = React.useState([]);
     const [processingRepairs, setProcessingRepairs] = React.useState([]);
     const [scheduledRepairs, setScheduledRepairs] = React.useState([]);
     const [completedRepairs, setCompletedRepairs] = React.useState([]);
@@ -24,9 +25,9 @@ function ManagerRepairsList(props) {
 
     const sort_repairs = (repairs) =>  {
         const repairs_with_quotes = repairs.filter(repair => repair.quotes_to_review > 0)
-        repairs_with_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || a.days_since - b.days_since))
+        repairs_with_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || b.days_since - a.days_since))
         const repairs_without_quotes = repairs.filter(repair => repair.quotes_to_review === 0)
-        repairs_without_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || a.days_since - b.days_since))
+        repairs_without_quotes.sort((a,b) => ((b.priority_n - a.priority_n) || b.days_since - a.days_since))
         return [...repairs_with_quotes, ...repairs_without_quotes]
     }
 
@@ -66,15 +67,18 @@ function ManagerRepairsList(props) {
         setRepairs(repairs);
 
         const new_repairs = repairs.filter(item => item.request_status === "NEW")
+        const info_repairs = repairs.filter(item => item.request_status === "INFO")
         const processing_repairs = repairs.filter(item => item.request_status === "PROCESSING")
         const scheduled_repairs = repairs.filter(item => item.request_status === "SCHEDULED")
         const completed_repairs = repairs.filter(item => item.request_status === "COMPLETE")
         setNewRepairs(new_repairs)
+        setInfoRepairs(info_repairs)
         setProcessingRepairs(processing_repairs)
         setScheduledRepairs(scheduled_repairs)
         setCompletedRepairs(completed_repairs)
         setRepairIter([
             {title: "New", repairs_list: new_repairs},
+            {title: "Info Requested", repairs_list: info_repairs},
             {title: "Processing", repairs_list: processing_repairs},
             {title: "Upcoming, Scheduled", repairs_list: scheduled_repairs},
             {title: "Completed", repairs_list: completed_repairs}])
@@ -94,7 +98,7 @@ function ManagerRepairsList(props) {
 
                     {row.repairs_list.map((repair, j) => (
                         <Row className='mb-4' key={j} onClick={() =>
-                            navigate(`./${repair.maintenance_request_uid}`, { state: {repair: repair }})}>
+                            navigate(`./${repair.maintenance_request_uid}`, { state: {repair: repair }})}   >
                             <Col xs={4}>
                                 <div style={tileImg}>
                                     {JSON.parse(repair.images).length > 0 ? (

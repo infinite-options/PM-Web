@@ -5,7 +5,7 @@ import ArrowDown from "../icons/ArrowDown.svg";
 import { post } from "../utils/api";
 
 function CreateExpense(props) {
-  const { property } = props;
+  const { property, reload } = props;
   const [category, setCategory] = React.useState("Management");
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -40,11 +40,13 @@ function CreateExpense(props) {
       description: description,
       amount_due: amount,
       purchase_frequency: frequency,
-      purchase_notes: frequencyOfPayment,
-      purchase_date: date,
+      payment_frequency: frequencyOfPayment,
+      next_payment: date,
     };
+
     console.log(newExpense);
     const response = await post("/createExpenses", newExpense);
+    reload();
     props.back();
   };
   const [errorMessage, setErrorMessage] = React.useState("");

@@ -189,7 +189,7 @@ const redPillButton = {
   color: " #FFFFFF",
   opacity: "1",
   border: "1px solid #E3441F",
-  height: '25px'
+  // height: '25px'
 };
 const greenBorderPill = {
   border: "1px solid #3DB727",
@@ -210,8 +210,10 @@ const actions = {
   background: "#FFFFFF 0% 0% no-repeat padding-box",
   border: "1px solid #131413",
   borderRadius: "5px",
-  width: "89px",
-  height: "85px",
+  // width: "89px",
+  // height: "85px",
+  width: "111px",
+  height: "99px",
   textAlign: "center",
   font: "normal normal 600 11px/13px SFProDisplay-Regular",
   letterSpacing: "0px",
@@ -225,8 +227,10 @@ const actionsDisabled = {
   background: "#FFFFFF 0% 0% no-repeat padding-box",
   border: "1px solid #131413",
   borderRadius: "5px",
-  width: "89px",
-  height: "85px",
+  // width: "89px",
+  // height: "85px",
+  width: "111px",
+  height: "99px",
   textAlign: "center",
   font: "normal normal 600 11px/13px SFProDisplay-Regular",
   letterSpacing: "0px",

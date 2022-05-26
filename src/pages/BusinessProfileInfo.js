@@ -32,7 +32,7 @@ function BusinessProfileInfo(props) {
   );
   const [email, setEmail] = React.useState(autofillState.email);
   const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
-  const serviceState = React.useState([]);
+  const [serviceState, setServiceState] = React.useState([]);
   const [feeState, setFeeState] = React.useState([]);
   const [locationState, setLocationState] = React.useState([]);
   const paymentState = React.useState({
@@ -236,7 +236,11 @@ function BusinessProfileInfo(props) {
             <ManagerFees feeState={feeState} setFeeState={setFeeState} />
           </Container>
         ) : (
-          <ServicesProvided state={serviceState} />
+          <ServicesProvided
+            serviceState={serviceState}
+            setServiceState={setServiceState}
+            businessType={businessType}
+          />
         )}
 
         <Form.Group className="mx-2 my-3">
