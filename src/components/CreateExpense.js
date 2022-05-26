@@ -73,6 +73,7 @@ function CreateExpense(props) {
           <option>Management</option>
           <option>Maintenance</option>
           <option>Repairs</option>
+          <option>Insurance</option>
         </Form.Select>
       </Form.Group>
       {/* <Form.Group className="mx-2 my-3">
