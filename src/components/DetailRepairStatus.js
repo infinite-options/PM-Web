@@ -60,7 +60,7 @@ function DetailRepairStatus(props) {
   useEffect(() => {
     const fetchProfile = async () => {
       const response = await get("/tenantProperties", access_token);
-      console.log(response);
+      console.log("Tenant Profile", response);
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
@@ -77,25 +77,22 @@ function DetailRepairStatus(props) {
       const response = await get(
         `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`
       );
-      console.log(maintenance_request_uid);
       if (response.msg === "Token has expired") {
         console.log("here msg");
         refresh();
         return;
       }
-      console.log(response.result);
       setRepairsDetail(response.result);
-      
       setRepairsImages(JSON.parse(response.result[0].images));
+      
       setPriority(response.result[0].priority);
       setDescription(response.result[0].description);
       setTitle(response.result[0].title);
-      console.log(repairsDetail);
       const fetchBusinessAssigned = async () => {
         const res = await get(
           `/businesses?business_uid=${response.result[0].assigned_business}`
         );
-        console.log(res.result[0]);
+
         setBusineesAssigned(res.result[0]);
       };
       fetchBusinessAssigned();
@@ -116,13 +113,15 @@ function DetailRepairStatus(props) {
 
   function editRepair(){
       console.log("Editing repair");
-      console.log(busineesAssigned);
       setIsEditing(true);
   } 
   const updateRepair = async () => {
       console.log("Putting changes to database");
-      console.log(repairsDetail);
-      const files = JSON.parse(repairsDetail[0].images)
+      console.log("repairsDetails\n", repairsDetail);
+      console.log("repairsImages\n", repairsImages);
+      console.log(imageState);
+      const files = JSON.parse(repairsDetail[0].images);
+      console.log(files);
       const newRepair = {
         maintenance_request_uid: maintenance_request_uid,
         title: title,
@@ -130,22 +129,19 @@ function DetailRepairStatus(props) {
         can_reschedule: true,
         assigned_business: repairsDetail[0].assigned_business,
         notes: repairsDetail[0].notes,
-        request_status: repairsDetail[0].request_status,
+        request_status: repairsDetail[0].request_status === "INFO" ? "PROCESSING" : repairsDetail[0].request_status,
         description: description,
         scheduled_date: repairsDetail[0].scheduled_date,
         assigned_worker: repairsDetail[0].assigned_worker,
+        
       }
       console.log(newRepair);
-      // for (let i = 0; i < repairsImages.length; i++) {
-      //   let key = `img_${i}`;
-      //   newRepair[key] = repairsImages[i];
-      // }
+      for (let i = 0; i < imageState.length; i++) {
+        // let key = `img_${i}`;
+        
+      }
       const res = await put("/maintenanceRequests", newRepair, null, files);
       console.log(res);
-      
-      // 1) ? Remove the previous object from the database ?
-      // 2) Create updated version of repair object with datafield entered in by the user
-      // 3) Use a put/post request in order to send new object into database
       setIsEditing(false);
   }
 
@@ -165,6 +161,7 @@ function DetailRepairStatus(props) {
         </Row>
       ) : (
         <div>
+          
           {repairsDetail.map((repair) => {
             return (
               <Container className="pt-1 mb-4">
@@ -176,7 +173,9 @@ function DetailRepairStatus(props) {
                       alignItems: "center",
                     }}
                   >
+                    
                     {JSON.parse(repair.images).length === 0 ? (
+                      
                       <img
                         src={RepairImg}
                         //className="w-100 h-100"
@@ -189,10 +188,19 @@ function DetailRepairStatus(props) {
                         }}
                         alt="repair"
                       />
+                      
                     ) : JSON.parse(repair.images).length > 1 ? (
+                      // <div>
+
+                      // {console.log(repairsImages.length)}
+                      // {repairsImages.map((img) => {
+                      //    return <img src = {img} style = {{width: "350px", height: "198px", borderRadius: "5px", objectFit: "cover"}}></img>
+                        
+                      // })}
+                      // </div>
                       <Carousel>
                         {repairsImages.map((img) => {
-                          <Carousel.Item>
+                           return <Carousel.Item>
                             <Image
                               src={img}
                               style={{
@@ -204,12 +212,24 @@ function DetailRepairStatus(props) {
                               }}
                               alt="repair"
                             />
-                            <Carousel.Caption>
-                              <h3>New York</h3>
-                              <p>We love the Big Apple!</p>
-                            </Carousel.Caption>
                           </Carousel.Item>;
                         })}
+                        {imageState[0].length > 0 ? 
+                        imageState[0].map((img) => {
+                          return <Carousel.Item>
+                            <Image
+                              src={JSON.parse(img.image)}
+                              style={{
+                                objectFit: "cover",
+                                width: "350px",
+                                height: " 198px",
+                                border: "1px solid #C4C4C4",
+                                borderRadius: "5px",
+                              }}
+                              alt="repair"
+                            />
+                          </Carousel.Item>;
+                        }) : null}
                       </Carousel>
                     ) : (
                       <img
@@ -227,7 +247,13 @@ function DetailRepairStatus(props) {
                     )}
                   </Col>
                 </Row>
-
+                {isEditing ? 
+                  <Row>
+                    <RepairImages state={imageState} />
+                  </Row> :
+                  null
+                }
+                        
                 <Row className="mt-4">
                   <Col>
                         {isEditing ?
@@ -369,18 +395,16 @@ function DetailRepairStatus(props) {
                     </Col>
                     <hr />
                   </Row>
-                  {repair.assigned_business === null ? (
-                    <Row></Row>
-                  ) : (
+                  {busineesAssigned ? (
                     <Row>
-                      {/* <Col>
+                      <Col>
                         <div style={headings}>
                           {busineesAssigned.business_name ? busineesAssigned.business_name : "hi"}
                         </div>
                         <div style={subText}>
                           {busineesAssigned.business_name? busineesAssigned.business_name : "hi"}
                         </div>
-                      </Col> */}
+                      </Col>
                       <Col xs={2} className="mt-1 mb-1">
                         <img
                           onClick={() =>
@@ -399,7 +423,9 @@ function DetailRepairStatus(props) {
                       </Col>
                       <hr />
                     </Row>
-                  )}
+                  ) : (
+                    <Row></Row>)
+                  }
                 </div>
               </Container>
             );
@@ -413,7 +439,7 @@ function DetailRepairStatus(props) {
       >
           Done
       </button> : null
-      }  
+      } 
     </div>
   );
 }

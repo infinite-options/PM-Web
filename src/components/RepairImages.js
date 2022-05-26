@@ -27,7 +27,7 @@ function RepairImages(props) {
       image: null,
       coverPhoto: imageState.length === 0,
     };
-    readImage(file);
+    readImage(file); 
   };
 
   const deleteImage = (image) => {
@@ -51,8 +51,8 @@ function RepairImages(props) {
   return (
     <Container>
       <div className="d-flex overflow-auto mb-3">
-        {imageState.map((file, i) => (
-          <div
+        {imageState.map((file, i) => {
+          return <div
             className="mx-2"
             style={{
               position: "relative",
@@ -77,7 +77,7 @@ function RepairImages(props) {
               onClick={() => favoriteImage(file)}
             />
           </div>
-        ))}
+        })} 
         <input
           id="file"
           type="file"
