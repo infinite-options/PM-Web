@@ -1,22 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  DropdownButton,
-  Dropdown,
-} from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
-import Check from "../icons/Check.svg";
-import { squareForm, red } from "../utils/styles";
+import { squareForm, red, gray, headings } from "../utils/styles";
 import { get, put } from "../utils/api";
-
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
+import OwnerPaymentSelection from "../components/OwnerPaymentSelection";
 import Logout from "../components/Logout";
 
 function OwnerProfile(props) {
@@ -24,73 +13,95 @@ function OwnerProfile(props) {
   const { userData, refresh } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
-  const { errorMessage, setShowFooter, setTab } = props;
-  const [footerTab, setFooterTab] = useState("PROFILE");
-
+  const { errorMessage, setShowFooter, setFooterTab } = props;
+  const [profileInfo, setProfileInfo] = useState(null);
+  const [editProfile, setEditProfile] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [einNumber, setEinNumber] = useState("");
   const [ssn, setSsn] = useState("");
-  const [paypal, setPaypal] = useState("");
-  const [applePay, setApplePay] = useState("");
-  const [zelle, setZelle] = useState("");
-  const [venmo, setVenmo] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [routingNumber, setRoutingNumber] = useState("");
+  const [paymentState, setPaymentState] = useState({
+    paypal: "",
+    applePay: "",
+    zelle: "",
+    venmo: "",
+    accountNumber: "",
+    routingNumber: "",
+  });
 
+  const loadProfile = (profile) => {
+    setProfileInfo(profile);
+    setFirstName(profile.owner_first_name);
+    setLastName(profile.owner_last_name);
+    setEmail(profile.owner_email);
+    setPhoneNumber(profile.owner_phone_number);
+    setEinNumber(profile.owner_ein_number);
+    setSsn(profile.owner_ssn);
+    setPaymentState({
+      paypal: profile.owner_paypal ? profile.owner_paypal : "",
+      applePay: profile.owner_apple_pay ? profile.owner_apple_pay : "",
+      zelle: profile.owner_zelle ? profile.owner_zelle : "",
+      venmo: profile.owner_venmo ? profile.owner_venmo : "",
+      accountNumber: profile.owner_account_number
+        ? profile.owner_account_number
+        : "",
+      routingNumber: profile.owner_routing_number
+        ? profile.owner_routing_number
+        : "",
+    });
+  };
+  const fetchProfile = async () => {
+    if (access_token === null) {
+      navigate("/");
+      return;
+    }
+    const response = await get("/ownerProfileInfo", access_token);
+    console.log(response);
+
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+      return;
+    }
+
+    if (user.role.indexOf("OWNER") === -1) {
+      console.log("no owner profile");
+      props.onConfirm();
+    }
+
+    const owner = response.result[0];
+    const profile = { ...owner };
+    loadProfile(profile);
+  };
   useEffect(() => {
-    const fetchProfile = async () => {
-      const response = await get("/ownerProfileInfo", access_token);
-      console.log(response);
-
-      if (response.msg === "Token has expired") {
-        console.log("here msg");
-        refresh();
-        return;
-      }
-
-      if (user.role.indexOf("OWNER") === -1) {
-        console.log("no owner profile");
-        props.onConfirm();
-      }
-
-      setFirstName(response.result[0].owner_first_name);
-      setLastName(response.result[0].owner_last_name);
-      setEmail(response.result[0].owner_email);
-      setSsn(response.result[0].owner_ssn);
-      setPhoneNumber(response.result[0].owner_phone_number);
-      setEinNumber(response.result[0].owner_ein_number);
-      setPaypal(response.result[0].owner_paypal);
-      setApplePay(response.result[0].owner_apple_pay);
-      setZelle(response.result[0].owner_zelle);
-      setVenmo(response.result[0].owner_venmo);
-      setAccountNumber(response.result[0].owner_account_number);
-      setRoutingNumber(response.result[0].owner_routing_number);
-    };
-
     fetchProfile();
-  }, []);
+  }, [access_token]);
 
   const submitInfo = async () => {
+    const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
+      paymentState;
+
     const ownerProfile = {
-      first_name: firstName,
-      last_name: lastName,
-      email: email,
-      phone_number: phoneNumber,
-      ein_number: einNumber,
-      paypal: paypal,
-      apple_pay: applePay,
-      ssn: ssn,
-      zelle: zelle,
-      venmo: venmo,
-      account_number: accountNumber,
-      routing_number: routingNumber,
+      first_name: profileInfo.firstName,
+      last_name: profileInfo.lastName,
+      email: profileInfo.email,
+      phone_number: profileInfo.phoneNumber,
+      ssn: profileInfo.ssn,
+      ein_number: profileInfo.einNumber,
+      paypal: paypal || null,
+      apple_pay: applePay || null,
+      zelle: zelle || null,
+      venmo: venmo || null,
+      account_number: accountNumber || null,
+      routing_number: routingNumber || null,
     };
 
     await put(`/ownerProfileInfo`, ownerProfile, access_token);
-    props.onConfirm();
+    setEditProfile(false);
+    fetchProfile();
+    // props.onConfirm();
   };
 
   useEffect(() => {
@@ -106,179 +117,189 @@ function OwnerProfile(props) {
     );
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="pb-5 mb-5">
       <Header
         title="Profile"
-        leftText="Cancel"
-        leftFn={() => setTab("DASHBOARD")}
-        rightText="Save"
-        rightFn={() => {
-          submitInfo();
-          setTab("DASHBOARD");
-        }}
+        leftText={editProfile ? "Cancel" : "< Back"}
+        leftFn={() =>
+          editProfile ? setEditProfile(false) : setFooterTab("DASHBOARD")
+        }
+        rightText={editProfile ? "Save" : "Edit"}
+        rightFn={() => (editProfile ? submitInfo() : setEditProfile(true))}
       />
-      <Container style={{ minHeight: "100%" }}>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            First Name
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="First"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Last Name
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="Last"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Email Id
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="nikTesla@gmail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Phone Number
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="(789)909-9099"
-            value={lastName}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
-        </Form.Group>
-        <h5 className="mx-2 my-3">Identification Numbers</h5>
-        <Row>
-          <Col className="px-0">
-            <Form.Group className="mx-2 mb-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                SSN {ssn === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="131-89-1829"
-                value={ssn}
-                onChange={(e) => setSsn(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-          <Col className="px-0">
-            <Form.Group className="mx-2 mb-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                EIN Number
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="1231"
-                value={einNumber}
-                onChange={(e) => setEinNumber(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+      {editProfile ? (
+        <div className="mx-3 my-3">
+          <div className="my-3">
+            <Row className="mb-4" style={headings}>
+              <div>Personal Details</div>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    First Name
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="First"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Last Name
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="Last"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Phone Number
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="(789)909-9099"
+                    value={lastName}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Email Id
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="nikTesla@gmail.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+          <div className="my-4">
+            <Row className="mb-4" style={headings}>
+              <div>Identification Details</div>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="my-0">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    SSN {ssn === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="131-89-1829"
+                    value={ssn}
+                    onChange={(e) => setSsn(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="my-0">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    EIN Number
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="1231"
+                    value={einNumber}
+                    onChange={(e) => setEinNumber(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      ) : (
+        <div className="mx-3 my-3">
+          <Row className="mb-4" style={headings}>
+            <div>Personal Details</div>
+          </Row>
 
-        <h5 className="mx-2 my-3">Payment Options</h5>
-        <Row>
-          <Col className="px-0">
-            <Form.Group className="mx-2 mb-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                PayPal
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="albert_einstein@gmail.com"
-                value={paypal}
-                onChange={(e) => setPaypal(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-          <Col className="px-0">
-            <Form.Group className="mx-2 mb-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Apple Pay
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="(081)230-1901"
-                value={applePay}
-                onChange={(e) => setApplePay(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
+          <Row>
+            <Col>
+              <h6>First Name</h6>
+              <p style={gray}>
+                {firstName && firstName !== "NULL"
+                  ? firstName
+                  : "No First Name Provided"}
+              </p>
+            </Col>
+            <Col>
+              <h6>Last Name</h6>
+              <p style={gray}>
+                {lastName && lastName !== "NULL"
+                  ? lastName
+                  : "No Last Name Provided"}
+              </p>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <h6>Phone Number</h6>
+              <p style={gray}>
+                {phoneNumber && phoneNumber !== "NULL"
+                  ? phoneNumber
+                  : "No Phone Number Provided"}
+              </p>
+            </Col>
+            <Col>
+              <h6>Email</h6>
+              <p style={gray}>
+                {email && email !== "NULL" ? email : "No Email Provided"}
+              </p>
+            </Col>
+          </Row>
+
+          <div className="my-2">
+            <Row className="mb-4" style={headings}>
+              <div>Identification Details</div>
+            </Row>
+
+            <Row>
+              <Col>
+                <h6>SSN</h6>
+                <p style={gray}>
+                  {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}
+                </p>
+              </Col>
+              <Col>
+                <h6>EIN</h6>
+                <p style={gray}>
+                  {einNumber && einNumber !== "NULL" ? ssn : "No EIN Provided"}
+                </p>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      )}
+      <OwnerPaymentSelection
+        paymentState={paymentState}
+        setPaymentState={setPaymentState}
+        editProfile={editProfile}
+      />
+      {editProfile ? (
+        ""
+      ) : (
+        <Row className="my-4">
+          <Logout />
         </Row>
-        <Row>
-          <Col className="px-0">
-            <Form.Group className="mx-2 mb-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Zelle
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="albert_einstein@gmail.com"
-                value={zelle}
-                onChange={(e) => setZelle(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-          <Col className="px-0">
-            <Form.Group className="mx-2 mb-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Venmo
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="1231"
-                value={venmo}
-                onChange={(e) => setVenmo(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="px-0">
-            <Form.Group className="mx-2 mb-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Checking Account
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Account Number"
-                value={accountNumber}
-                onChange={(e) => setAccountNumber(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-          <Col className="px-0">
-            <Form.Group className="mx-2 mb-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Routing Number
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Routing Number"
-                value={routingNumber}
-                onChange={(e) => setRoutingNumber(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Logout />
-      </Container>
+      )}
     </div>
   );
 }

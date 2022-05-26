@@ -71,27 +71,43 @@ function OwnerHome() {
               ""
             )}
           </div>
+        ) : footerTab === "PROFILE" ? (
+          <OwnerProfile
+            setShowFooter={setShowFooter}
+            setFooterTab={setFooterTab}
+          />
+        ) : footerTab === "ROLES" ? (
+          <SwitchRole
+            setShowFooter={setShowFooter}
+            setFooterTab={setFooterTab}
+          />
         ) : (
           ""
         )}
       </div>
-      <div className="flex-grow-1">
+      {/* <div className="flex-grow-1">
         {footerTab === "PROFILE" ? (
-          <OwnerProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
+          <OwnerProfile
+            setShowFooter={setShowFooter}
+            setFooterTab={setFooterTab}
+          />
         ) : (
           ""
         )}
         {footerTab === "ROLES" ? (
-          <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
+          <SwitchRole
+            setShowFooter={setShowFooter}
+            setFooterTab={setFooterTab}
+          />
         ) : (
           ""
         )}
-      </div>
+      </div> */}
       {/* <div
         className="flex-grow-1"
         style={{ height: "90%", overflow: "auto" }}
       ></div> */}
-      {showFooter ? <Footer tab={footerTab} setTab={setTab} /> : ""}
+      {showFooter ? <Footer tab={footerTab} setTab={setFooterTab} /> : ""}
     </div>
   );
 }
