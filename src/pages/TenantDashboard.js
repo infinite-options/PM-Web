@@ -302,7 +302,7 @@ function TenantDashboard(props) {
   return (
     <div className="h-100" style={{backgroundColor: '#E9E9E9'}}>
     
-     <Header title="Home" customClass={"mb-2"}/>
+     <Header title="Tenant Dashboard" customClass={"mb-2"}/>
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
         <Container className="mb-4" style={{minHeight: "100%", width: '98%', borderRadius: '10px 10px 0px 0px'}}>
           <Row style={headings}>
@@ -498,11 +498,11 @@ function TenantDashboard(props) {
                 }} 
                 style={{height: '120px', width: '167px', backgroundColor: '#93EE9C', borderRadius: '10px', margin: '10px'}}>
                 <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>Rent Paid </div>
+                {selectedProperty.lastPurchase.amount_paid ? 
                 <div style={{fontSize: '22px', lineHeight: '35px'}}>
-                {selectedProperty.nextPurchase.purchase_notes} <br/> 
-                ${selectedProperty.lastPurchase.amount_paid}
-
-                </div>
+                  {selectedProperty.nextPurchase.purchase_notes} <br/> 
+                  ${selectedProperty.lastPurchase.amount_paid}
+                </div> : null}
               </div>
             </div>
           }

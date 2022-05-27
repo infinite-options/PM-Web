@@ -186,7 +186,7 @@ function TenantWelcomePage(props) {
     <div className="h-100">
 
       {/* ============================HEADER =========================== */}
-      <Header title="Home" />
+      <Header title="Tenant Dashboard" />
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
         <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
           <div style={welcome}>
