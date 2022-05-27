@@ -34,7 +34,7 @@ function MaintenanceDashboard(props) {
   let access_token = userData.access_token;
 
   const sort_quotes = (quotes) =>  {
-    quotes.sort((a,b) => b.priority_n - a.priority_n)
+    quotes.sort((a,b) => ((b.priority_n - a.priority_n) || (b.days_since - a.days_since)))
     return quotes
   }
 
@@ -59,6 +59,10 @@ function MaintenanceDashboard(props) {
     console.log(quotes_response.result)
     const quotes_unsorted = quotes_response.result
     quotes_unsorted.forEach((quote, i) => {
+      const quote_created_date = new Date(Date.parse(quote.quote_created_date));
+      const current_date = new Date();
+      quotes_unsorted[i].days_since = Math.ceil((current_date.getTime() - quote_created_date.getTime()) / (1000 * 3600 * 24))
+
       quote.priority_n = 0
       if (quote.priority.toLowerCase() === "high") {
         quote.priority_n = 3
@@ -99,10 +103,14 @@ function MaintenanceDashboard(props) {
     navigate(`/quotesRejectedM`, { state: {quotes: quotes_rejected }});
   };
   const goToScheduledJobs = () => {
-    navigate("/scheduledJobs");
+    const quotes_accepted = quotes.filter(quote => quote.quote_status === "ACCEPTED")
+    const quotes_scheduled = quotes.filter(quote => quote.quote_status === "SCHEDULED")
+    const quotes_total = [...quotes_accepted, ...quotes_scheduled]
+    navigate(`/quotes-scheduled`, { state: {quotes: quotes_total}});
   };
   const goToQuotesSent = () => {
-    navigate("/ScheduledJobs");
+    const quotes_sent = quotes.filter(quote => quote.quote_status === "SENT")
+    navigate(`/quotes-sent`, { state: {quotes: quotes_sent }});
   };
   const goToSearchPM = () => {
     navigate("/maintenancePropertyManagers");
@@ -165,19 +173,19 @@ function MaintenanceDashboard(props) {
           </Col>
           <Col xs={3} style={actions}>
             <img
+                style={{ width: "50px", height: "50px", cursor: "pointer" }}
+                src={Documents}
+                onClick={goToQuotesSent}
+            />
+            <div>Quotes Sent</div>
+          </Col>
+          <Col xs={3} style={actions}>
+            <img
               style={{ width: "50px", height: "50px", cursor: "pointer" }}
               src={RepairStatus}
               onClick={goToScheduledJobs}
             />
             <div>Scheduled Jobs</div>
-          </Col>
-          <Col xs={3} style={actions}>
-            <img
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
-              src={Documents}
-              onClick={goToQuotesSent}
-            />
-            <div>Quotes Sent</div>
           </Col>
         </Row>
         <Row

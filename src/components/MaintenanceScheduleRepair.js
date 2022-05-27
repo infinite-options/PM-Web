@@ -1,52 +1,267 @@
 import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import moment from "moment";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-
+import { get, post, put } from "../utils/api";
 import Grid from "@mui/material/Grid";
 import Item from "@mui/material/Grid";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import Calendar from "react-calendar";
 import "./calendar.css";
+import Phone from "../icons/Phone.svg";
+import Message from "../icons/Message.svg";
 import {
   headings,
   subHeading,
   timeslotButton,
   activeTimeSlotButton,
   bluePillButton,
+  subText,
+  hidden,
 } from "../utils/styles";
+
+const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
+const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
+const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 function MaintenanceScheduleRepair(props) {
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const quotes = location.state.quote;
   //for axios.get
   const [date, setDate] = useState(new Date());
   const [timeSelected, setTimeSelected] = useState(false);
-  const [minDate, setMinDate] = useState(new Date());
+  const [showTimes, setShowTimes] = useState(false);
+
+  const [showButton, setShowButton] = useState(false);
+  const [minDate, setMinDate] = useState(
+    new Date(moment(quotes.earliest_availability))
+  );
+  console.log(quotes);
   const [dateString, setDateString] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [dateString1, setDateString1] = useState(null);
-  const [dateHasBeenChanged, setDateHasBeenChanged] = useState(true);
-  const [apiDateString, setApiDateString] = useState(null);
+  const [timeSlots, setTimeSlots] = useState([]);
   const [timeAASlots, setTimeAASlots] = useState([]);
-  const [duration, setDuration] = useState(null);
+
+  const [meetDate, setMeetDate] = useState("");
+  const [meetTime, setMeetTime] = useState("");
+  const [attendees, setAttendees] = useState([{ email: "" }]);
+
+  const [accessToken, setAccessToken] = useState("");
+
+  const [userEmail, setUserEmail] = useState("");
 
   const [buttonSelect, setButtonSelect] = useState(false);
-  useEffect(() => {
-    if (dateHasBeenChanged) {
-      console.log("here1");
 
+  function convert(value) {
+    var a = value.split(":"); // split it at the colons
+
+    // minutes are worth 60 seconds. Hours are worth 60 minutes.
+    var seconds = +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
+
+    return seconds + 1;
+  }
+
+  useEffect(() => {
+    // setMinDate(moment(quotes.earliest_availability).toString());
+    axios
+      .get(BASE_URL + `/UserDetails/${quotes.rentalInfo[0].tenant_id}`)
+      .then((response) => {
+        console.log(response.data);
+        setAccessToken(response.data.result[0].google_auth_token);
+        // setSelectedUser(response.data.result[0].user_unique_id);
+        setUserEmail(response.data.result[0].email);
+        setAttendees([{ email: response.data.result[0].email }]);
+
+        var old_at = response.data.result[0].google_auth_token;
+        var refresh_token = response.data.result[0].google_refresh_token;
+        //console.log(refresh_token);
+        //console.log('in events', old_at);
+        fetch(
+          `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
+          {
+            method: "GET",
+          }
+        ).then((response) => {
+          //console.log('in events', response);
+          if (response["status"] === 400) {
+            //console.log('in events if');
+            let authorization_url =
+              "https://accounts.google.com/o/oauth2/token";
+
+            var details = {
+              refresh_token: refresh_token,
+              client_id: CLIENT_ID,
+              client_secret: CLIENT_SECRET,
+              grant_type: "refresh_token",
+            };
+            //console.log(details);
+            var formBody = [];
+            for (var property in details) {
+              var encodedKey = encodeURIComponent(property);
+              var encodedValue = encodeURIComponent(details[property]);
+              formBody.push(encodedKey + "=" + encodedValue);
+            }
+            formBody = formBody.join("&");
+
+            fetch(authorization_url, {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded;charset=UTF-8",
+              },
+              body: formBody,
+            })
+              .then((response) => {
+                return response.json();
+              })
+              .then((responseData) => {
+                console.log(responseData);
+                return responseData;
+              })
+              .then((data) => {
+                //console.log(data);
+                let at = data["access_token"];
+                setAccessToken(at);
+                //console.log('in events', at);
+                let url =
+                  BASE_URL +
+                  `/UpdateAccessToken/${quotes.rentalInfo[0].tenant_id}`;
+                axios
+                  .post(url, {
+                    google_auth_token: at,
+                  })
+                  .then((response) => {})
+                  .catch((err) => {
+                    console.log(err);
+                  });
+                return accessToken;
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else {
+            setAccessToken(old_at);
+            //console.log(old_at);
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (timeSelected) {
+      let timeMini = dateString + "T" + "08:00:00";
+      let timeMaxi = dateString + "T" + "20:00:00";
+
+      const headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + accessToken,
+      };
+      const data = {
+        timeMin: moment(timeMini).format("YYYY-MM-DDTHH:mm:ssZZ"),
+        timeMax: moment(timeMaxi).format("YYYY-MM-DDTHH:mm:ssZZ"),
+        items: [
+          {
+            id: "primary",
+          },
+        ],
+      };
+
+      console.log("freebusy data", data);
+      const timeMin = dateString + "T" + "08:00:00";
+      const timeMax = dateString + "T" + "20:00:00";
+
+      axios
+        .post(
+          `https://www.googleapis.com/calendar/v3/freeBusy?key=${API_KEY}`,
+          data,
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          let busy = response.data.calendars.primary.busy;
+          console.log("freebusy", busy);
+          let start_time = Date.parse(timeMin) / 1000;
+          let end_time = Date.parse(timeMax) / 1000;
+          let free = [];
+          let appt_start_time = start_time;
+          let seconds = convert(quotes.event_duration);
+
+          // Loop through each appt slot in the search range.
+          while (appt_start_time < end_time) {
+            // Add appt duration to the appt start time so we know where the appt will end.
+            let appt_end_time = appt_start_time + seconds;
+            console.log("freebusy in while");
+            // For each appt slot, loop through the current appts to see if it falls
+            // in a slot that is already taken.
+
+            let slot_available = true;
+            busy.forEach((times) => {
+              let this_start = Date.parse(times["start"]) / 1000;
+              let this_end = Date.parse(times["end"]) / 1000;
+
+              // If the appt start time or appt end time falls on a current appt, slot is taken.
+
+              if (
+                (appt_start_time >= this_start && appt_start_time < this_end) ||
+                (appt_end_time > this_start && appt_end_time <= this_end) ||
+                (appt_start_time < this_start && appt_end_time > this_end) ||
+                appt_end_time > end_time
+              ) {
+                slot_available = false;
+                return; // No need to continue if it's taken.
+              }
+            });
+
+            // If we made it through all appts and the slot is still available, it's an open slot.
+            if (slot_available) {
+              free.push(
+                moment(new Date(appt_start_time * 1000)).format("HH:mm:ss")
+              );
+            }
+            // + duration minutes
+            appt_start_time += 60 * 30;
+          }
+          console.log("freebusy", free);
+          setTimeSlots(free);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
+    setTimeSelected(false);
+  });
+  useEffect(() => {
+    if (timeSelected) {
+      console.log("here1");
+      let interval = "";
       setTimeAASlots([]);
+
       console.log("here2");
       axios
         .get(
-          "https://mfrbehiqnb.execute-api.us-west-1.amazonaws.com/dev/api/v2/availableAppointments/" +
-            apiDateString +
+          BASE_URL +
+            "/AvailableAppointments/" +
+            dateString +
             "/" +
-            "0:59:59"
+            quotes.event_duration +
+            "/" +
+            quotes.rentalInfo[0].tenant_id +
+            "/" +
+            "08:00" +
+            "," +
+            "20:00"
         )
         .then((res) => {
           console.log("This is the information we got" + res);
@@ -59,8 +274,9 @@ function MaintenanceScheduleRepair(props) {
           setTimeAASlots(timeAASlots);
         });
     }
-    setDateHasBeenChanged(false);
+    setTimeSelected(false);
   });
+
   const doubleDigitMonth = (date) => {
     let str = "00" + (date.getMonth() + 1);
     return str.substring(str.length - 2);
@@ -136,23 +352,35 @@ function MaintenanceScheduleRepair(props) {
       doubleDigitDay(date)
     );
   };
-  const dateStringChange = (date) => {
-    setDateString(dateFormat1(date));
-    setApiDateString(dateFormat3(date));
-    setDateString1(dateFormat2(date));
-    setDateHasBeenChanged(true);
-  };
-  const dateChange = (date) => {
-    console.log(timeAASlots);
 
+  const dateChange = (date) => {
+    setTimeSelected(true);
+    setShowTimes(true);
+    console.log(date);
     setDate(date);
-    console.log("here3");
+    setDateString(date);
     dateStringChange(date);
     // setTimeSelected(true);
     if (timeSelected === true) {
       setTimeSelected(false);
     }
   };
+
+  const dateStringChange = (date) => {
+    setDateString(dateFormat3(date));
+    // setApiDateString(dateFormat3(date));
+    // setDateString1(dateFormat2(date));
+    // setDateHasBeenChanged(true);
+  };
+  function selectApptTime(element) {
+    console.log("selected time", element);
+    setSelectedTime(element);
+    setMeetDate(dateString);
+    setMeetTime(element);
+    setShowButton(true);
+    setButtonSelect(true);
+  }
+
   function formatTime(date, time) {
     if (time == null) {
       return "?";
@@ -171,7 +399,16 @@ function MaintenanceScheduleRepair(props) {
   }
   function renderAvailableApptsVertical() {
     console.log("TimeSlotsAA", timeAASlots);
-
+    let result = [];
+    {
+      timeSlots.length === 0
+        ? (result = timeAASlots)
+        : timeAASlots.length === 0
+        ? (result = timeSlots)
+        : (result = timeSlots.filter((o1) =>
+            timeAASlots.some((o2) => o1 === o2)
+          ));
+    }
     return (
       <div style={{ height: "10rem" }}>
         <Grid
@@ -182,7 +419,7 @@ function MaintenanceScheduleRepair(props) {
           justifyContent="center"
           alignItems="left"
         >
-          {timeAASlots.map(function (element) {
+          {result.map(function (element) {
             return (
               <button
                 style={
@@ -192,8 +429,7 @@ function MaintenanceScheduleRepair(props) {
                 }
                 onClick={() => selectApptTime(element)}
               >
-                {formatTime(apiDateString, element)}
-                {console.log(element)}
+                {formatTime(dateString, element)}
               </button>
             );
           })}
@@ -202,19 +438,84 @@ function MaintenanceScheduleRepair(props) {
     );
   }
 
-  function selectApptTime(element) {
-    console.log("selected time", element);
-    setSelectedTime(element);
-    setTimeSelected(true);
-    setButtonSelect(true);
+  const scheduleRequest = async () => {
+    console.log("selected", meetTime, dateString);
+    let meeting = {
+      maintenance_request_uid: quotes.maintenance_request_uid,
+      request_status: "SCHEDULED",
+      scheduled_date: meetDate,
+      scheduled_time: meetTime,
+    };
+
+    const response = await put("/maintenanceRequests", meeting, null, meeting);
+  };
+
+  function createMeet() {
+    console.log("selected", meetTime, dateString);
+    let start_time = meetDate + "T" + meetTime;
+    console.log(start_time);
+    let d = convert(quotes.event_duration);
+    let et = Date.parse(start_time) / 1000 + d;
+    //console.log(d);
+    console.log(et);
+    let end_time = moment(new Date(et * 1000)).format();
+    attendees.push({ email: userEmail });
+    console.log(attendees);
+    var meet = {
+      summary: quotes.title,
+      location:
+        quotes.address +
+        ", " +
+        quotes.city +
+        ", " +
+        quotes.state +
+        " " +
+        quotes.zip,
+      creator: {
+        email: user.email,
+        self: true,
+      },
+      organizer: {
+        email: user.email,
+        self: true,
+      },
+      start: {
+        dateTime: moment(start_time).format(),
+      },
+      end: {
+        dateTime: moment(end_time).format(),
+      },
+      attendees: attendees,
+    };
+    console.log(meet);
+
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: "Bearer " + accessToken,
+    };
+    axios
+      .post(
+        `https://www.googleapis.com/calendar/v3/calendars/primary/events?key=${API_KEY}`,
+        meet,
+        {
+          headers: headers,
+        }
+      )
+      .then((response) => {})
+      .catch((error) => {
+        console.log("error", error);
+      });
+
+    setAttendees([{ email: "" }]);
   }
 
   return (
-    <div atyle={{ display: "flex", flexDirection: "column", height: "auto" }}>
+    <div className="d-flex flex-column" style={{ overflow: "auto" }}>
       <Header
-        title="Your Schedule"
-        leftText="< Back"
-        leftFn={() => navigate("/maintenace")}
+        title="Schedule Repair"
+        // leftText="< Back"
+        // leftFn={() => navigate("/quotes-scheduled")}
         //rightText="Sort by"
         // rightFn={() => {
         //   submitInfo();
@@ -224,7 +525,7 @@ function MaintenanceScheduleRepair(props) {
         style={{ display: "flex", flexDirection: "column" }}
         className="pt-1 mb-2"
       >
-        <div
+        {/* <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -233,12 +534,11 @@ function MaintenanceScheduleRepair(props) {
           }}
         >
           <Col style={subHeading}>Dates Available</Col>
-        </div>
+        </div> */}
         <div>
           <Calendar
             calendarType="US"
             onClickDay={(e) => {
-              setTimeAASlots([]);
               dateChange(e);
             }}
             value={date}
@@ -258,11 +558,39 @@ function MaintenanceScheduleRepair(props) {
           }}
         >
           <Col style={subHeading}>Times Available</Col>
-        </div>
-        <div style={{ display: "flex", justifyContent: "start" }}>
-          {renderAvailableApptsVertical()}
+          <Col
+            hidden={showTimes}
+            style={{
+              font: "normal normal normal 20px/28px Bahnschrift",
+              color: "#A2A2A2",
+              marginTop: "3rem",
+            }}
+          >
+            Please Select a Date Above
+          </Col>
         </div>
       </div>
+      {showTimes === true ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "start",
+              height: "50vh",
+              overflow: "scroll",
+            }}
+          >
+            {renderAvailableApptsVertical()}
+          </div>
+        </div>
+      ) : (
+        <div></div>
+      )}
 
       <div
         hidden={!buttonSelect}
@@ -270,7 +598,7 @@ function MaintenanceScheduleRepair(props) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginTop: "10rem",
+          marginBottom: "10rem",
         }}
       >
         <Col>
@@ -278,11 +606,42 @@ function MaintenanceScheduleRepair(props) {
             size="medium"
             style={bluePillButton}
             variant="outline-primary"
-            //onClick={() => {''}}
+            onClick={() => {
+              scheduleRequest();
+              createMeet();
+            }}
           >
             Share schedule with tenant
           </Button>
         </Col>
+      </div>
+
+      <div className="d-flex align-items-center fixed-bottom flex-grow-1">
+        <Row style={{ background: "white" }}>
+          <hr />
+          <Col>
+            <div style={headings}>
+              {quotes.property_manager[0].manager_business_name}
+            </div>
+            <div style={subText}>Property Manager</div>
+          </Col>
+          <Col xs={2} className="mt-1 mb-1">
+            <img
+              onClick={() =>
+                (window.location.href = `tel:${quotes.property_manager[0].manager_phone_number}`)
+              }
+              src={Phone}
+            />
+          </Col>
+          <Col xs={2} className="mt-1 mb-1">
+            <img
+              onClick={() =>
+                (window.location.href = `mailto:${quotes.property_manager[0].manager_email}`)
+              }
+              src={Message}
+            />
+          </Col>
+        </Row>
       </div>
     </div>
   );
