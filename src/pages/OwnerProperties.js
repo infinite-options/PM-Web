@@ -85,33 +85,7 @@ function OwnerProperties(props) {
                 <h5 className="mb-0" style={{ fontWeight: "600" }}>
                   ${property.listed_rent}/mo
                 </h5>
-                {property.property_manager.length == 0 ? (
-                  <p style={redPill} className="mb-0">
-                    New
-                  </p>
-                ) : property.property_manager.length > 1 ? (
-                  property.property_manager.map((p, i) =>
-                    p.management_status === "REJECTED" ? (
-                      ""
-                    ) : p.management_status !== "ACCEPTED" ? (
-                      <p style={redPill} className="mb-0">
-                        New
-                      </p>
-                    ) : property.rental_status === "ACTIVE" ? (
-                      <p style={greenPill} className="mb-0">
-                        Rented
-                      </p>
-                    ) : property.rental_status === "PROCESSING" ? (
-                      <p style={greenPill} className="mb-0">
-                        Processing
-                      </p>
-                    ) : (
-                      <p style={orangePill} className="mb-0">
-                        Not Rented
-                      </p>
-                    )
-                  )
-                ) : property.management_status !== "ACCEPTED" ? (
+                {property.management_status !== "ACCEPTED" ? (
                   <p style={redPill} className="mb-0">
                     New
                   </p>

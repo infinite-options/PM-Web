@@ -21,6 +21,7 @@ import {
   tileImg,
   gray,
   bPill,
+  redPill,
   orangePill,
   greenPill,
   mediumBold,
@@ -345,40 +346,17 @@ function PropertyView(props) {
                 {property.city}, {property.state} {property.zip}
               </p>
               <div className="d-flex">
-                {property.property_manager.length == 0 ? (
-                  <p style={orangePill} className="mb-0">
+                {property.management_status !== "ACCEPTED" ? (
+                  <p style={redPill} className="mb-0">
                     New
                   </p>
-                ) : property.rentalInfo.length == 0 ? (
-                  <p style={orangePill} className="mb-0">
-                    Not Rented
-                  </p>
-                ) : property.property_manager.length > 1 ? (
-                  property.property_manager.map((p, i) =>
-                    p.management_status === "REJECTED" ? (
-                      ""
-                    ) : p.management_status !== "ACCEPTED" ? (
-                      <p style={orangePill} className="mb-0">
-                        New
-                      </p>
-                    ) : property.rentalInfo[0].rental_uid !== null ? (
-                      <p style={greenPill} className="mb-0">
-                        Rented
-                      </p>
-                    ) : (
-                      <p style={orangePill} className="mb-0">
-                        Not Rented
-                      </p>
-                    )
-                  )
-                ) : property.property_manager[0].management_status !==
-                  "ACCEPTED" ? (
-                  <p style={orangePill} className="mb-0">
-                    New
-                  </p>
-                ) : property.rentalInfo.rental_uid !== null ? (
+                ) : property.rental_status === "ACTIVE" ? (
                   <p style={greenPill} className="mb-0">
                     Rented
+                  </p>
+                ) : property.rental_status === "PROCESSING" ? (
+                  <p style={greenPill} className="mb-0">
+                    Processing
                   </p>
                 ) : (
                   <p style={orangePill} className="mb-0">
@@ -387,7 +365,7 @@ function PropertyView(props) {
                 )}
               </div>
               <PropertyCashFlow property={property} state={cashFlowState} />
-              {property.property_manager.length == 0 ? (
+              {property.management_status !== "ACCEPTED" ? (
                 ""
               ) : property.property_manager.length > 1 ? (
                 property.property_manager.map((p, i) =>
