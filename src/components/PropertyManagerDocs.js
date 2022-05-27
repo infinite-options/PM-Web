@@ -10,7 +10,7 @@ import {
   redPillButton,
   bluePillButton,
   mediumImg,
-  gray,
+  gray, headings,
 } from "../utils/styles";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
@@ -92,6 +92,11 @@ function PropertyManagerDocs(props) {
 
   return (
     <div className="d-flex flex-column gap-2">
+
+      <Row className="mb-2" style={{...headings}}>
+        <div>Active Contract</div>
+      </Row>
+
       <div className="ms-5 md-flex flex-column gap-2">
         {contracts.map((contract, i) => (
           <div key={i} onClick={() => selectContract(contract)}>
