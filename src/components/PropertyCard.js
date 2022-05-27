@@ -38,10 +38,10 @@ function PropertyCard(props) {
                     </div>
 
                     {applied === "NEW" ? 
-                    (<p style={greenPill} className='mb-0'>{applied}</p>) 
+                    (<p style={{...greenPill, height: '25px'}} className='mb-0'>{applied}</p>) 
                     : 
                     applied === "REFUSED" ?
-                    (<p style={redPillButton} className='mb-0'>{applied}</p>) 
+                    (<p style={{...redPillButton, height: '25px'}} className='mb-0'>{applied}</p>) 
                     :
                     ""
                     }
