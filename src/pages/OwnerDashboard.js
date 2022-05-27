@@ -51,15 +51,29 @@ function OwnerDashboard(props) {
       expenseTotal += Number(JSON.parse(item.mortgages).amount);
     }
     if (item.taxes !== null) {
-      console.log(
-        item.property_uid,
-        typeof item.taxes,
-        JSON.parse(item.taxes)[0].amount
-      );
-      expenseTotal += Number(JSON.parse(item.taxes)[0].amount);
+      for (const or of JSON.parse(item.taxes)) {
+        expenseTotal += Number(or.amount);
+      }
+      // expenseTotal += Number(JSON.parse(item.taxes)[0].amount);
     }
   }
-  console.log(expenseTotal);
+
+  let yearExpenseTotal = 0;
+  for (const item of properties) {
+    console.log(item);
+    if (item.year_expense !== 0) {
+      console.log(item.year_expense);
+      yearExpenseTotal += item.year_expense;
+    }
+  }
+
+  let yearRevenueTotal = 0;
+  for (const item of properties) {
+    if (item.year_revenue !== 0) {
+      console.log(item.year_revenue);
+      yearRevenueTotal += item.year_revenue;
+    }
+  }
 
   const cashFlow = revenueTotal - expenseTotal;
 
@@ -175,7 +189,7 @@ function OwnerDashboard(props) {
                         }}
                         className="text-center m-1"
                       >
-                        MTD
+                        MTD($)
                       </p>
                     </Col>
                     <Col>
@@ -183,7 +197,7 @@ function OwnerDashboard(props) {
                         style={{ ...gray, ...small }}
                         className="text-center m-1"
                       >
-                        YTD
+                        YTD($)
                       </p>
                     </Col>
                   </Row>
@@ -207,17 +221,20 @@ function OwnerDashboard(props) {
                               {property.address}
                             </p>
                           </Col>
-                          {/* <Col>
-                            <p
-                              style={{ ...small, ...red }}
-                              className="text-center m-1"
-                            ></p>
-                          </Col> */}
                           <Col>
                             <p
                               style={{ ...small, ...red }}
                               className="text-center m-1"
                             ></p>
+                          </Col>
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1 pt-1"
+                            >
+                              {" "}
+                              {property.year_revenue}
+                            </p>
                           </Col>
                         </Row>
                         {property.owner_revenue.map((owr) => {
@@ -314,8 +331,10 @@ function OwnerDashboard(props) {
                     <Col>
                       <p
                         style={{ ...small, ...green }}
-                        className="text-center m-1"
-                      ></p>
+                        className="text-center m-1 pt-1"
+                      >
+                        {yearRevenueTotal}
+                      </p>
                     </Col>
                   </Row>
                 </Container>
@@ -352,7 +371,7 @@ function OwnerDashboard(props) {
                         }}
                         className="text-center m-1"
                       >
-                        MTD
+                        MTD($)
                       </p>
                     </Col>
                     <Col>
@@ -360,7 +379,7 @@ function OwnerDashboard(props) {
                         style={{ ...gray, ...small }}
                         className="text-center m-1"
                       >
-                        YTD
+                        YTD($)
                       </p>
                     </Col>
                   </Row>
@@ -381,22 +400,27 @@ function OwnerDashboard(props) {
                           <Col>
                             <p
                               style={{ ...small, ...mediumBold }}
-                              className=" m-1"
+                              className="m-1"
                             >
                               {property.address}
                             </p>
                           </Col>
-                          {/* <Col>
+                          <Col xs={4}>
                             <p
                               style={{ ...small, ...red }}
-                              className="text-center m-1"
+                              className="text-center m-1 pt-1"
                             ></p>
-                          </Col> */}
+                          </Col>
                           <Col>
                             <p
-                              style={{ ...small, ...red }}
-                              className="text-center m-1"
-                            ></p>
+                              style={{
+                                ...small,
+                                ...red,
+                              }}
+                              className="text-center m-1 pt-1"
+                            >
+                              {property.year_expense}
+                            </p>
                           </Col>
                         </Row>
                         {property.owner_expense.length >= 1
@@ -426,7 +450,6 @@ function OwnerDashboard(props) {
                                       style={{
                                         ...small,
                                         ...red,
-                                        ...mediumBold,
                                       }}
                                       className="text-center m-1 pt-1"
                                     >
@@ -438,7 +461,6 @@ function OwnerDashboard(props) {
                                       style={{
                                         ...small,
                                         ...red,
-                                        ...mediumBold,
                                       }}
                                       className="text-center m-1 pt-1"
                                     ></p>
@@ -469,7 +491,7 @@ function OwnerDashboard(props) {
                             </Col>
                             <Col xs={4}>
                               <p
-                                style={{ ...small, ...red, ...mediumBold }}
+                                style={{ ...small, ...red }}
                                 className="text-center m-1 pt-1"
                               >
                                 {JSON.parse(property.mortgages).amount}
@@ -477,7 +499,7 @@ function OwnerDashboard(props) {
                             </Col>
                             <Col>
                               <p
-                                style={{ ...small, ...red, ...mediumBold }}
+                                style={{ ...small, ...red }}
                                 className="text-center m-1 pt-1"
                               ></p>
                             </Col>
@@ -485,44 +507,46 @@ function OwnerDashboard(props) {
                         ) : (
                           ""
                         )}
-                        {property.taxes !== null ? (
-                          <Row
-                            style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
-                            }}
-                          >
-                            <Col xs={4}>
-                              <p
-                                style={{
-                                  ...small,
-                                  ...mediumBold,
-                                }}
-                                className=" m-1"
-                              >
-                                Taxes
-                              </p>
-                            </Col>
-                            <Col>
-                              <p
-                                style={{ ...small, ...red, ...mediumBold }}
-                                className="text-center m-1 pt-1"
-                              >
-                                {JSON.parse(property.taxes)[0].amount}
-                              </p>
-                            </Col>
-                            <Col>
-                              <p
-                                style={{ ...small, ...red, ...mediumBold }}
-                                className="text-center m-1 pt-1"
-                              ></p>
-                            </Col>
-                          </Row>
-                        ) : (
-                          ""
-                        )}
+                        {property.taxes !== null
+                          ? JSON.parse(property.taxes).map((tax) => {
+                              return (
+                                <Row
+                                  style={{
+                                    background:
+                                      i % 2 === 0
+                                        ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                        : "#F3F3F3 0% 0% no-repeat padding-box",
+                                  }}
+                                >
+                                  <Col xs={4}>
+                                    <p
+                                      style={{
+                                        ...small,
+                                        ...mediumBold,
+                                      }}
+                                      className=" m-1"
+                                    >
+                                      Taxes
+                                    </p>
+                                  </Col>
+                                  <Col>
+                                    <p
+                                      style={{ ...small, ...red }}
+                                      className="text-center m-1 pt-1"
+                                    >
+                                      {tax.amount}
+                                    </p>
+                                  </Col>
+                                  <Col>
+                                    <p
+                                      style={{ ...small, ...red }}
+                                      className="text-center m-1 pt-1"
+                                    ></p>
+                                  </Col>
+                                </Row>
+                              );
+                            })
+                          : ""}
                       </div>
                     ) : (
                       ""
@@ -542,7 +566,7 @@ function OwnerDashboard(props) {
                     <Col>
                       <p
                         style={{ ...small, ...red }}
-                        className="text-center m-1"
+                        className="text-center m-1 pt-1"
                       >
                         {expenseTotal}
                       </p>
@@ -550,8 +574,10 @@ function OwnerDashboard(props) {
                     <Col>
                       <p
                         style={{ ...small, ...red }}
-                        className="text-center m-1"
-                      ></p>
+                        className="text-center m-1 pt-1"
+                      >
+                        {yearExpenseTotal}
+                      </p>
                     </Col>
                   </Row>
                 </Container>

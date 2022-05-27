@@ -10,12 +10,14 @@ function PropertyCashFlow(props) {
   const { setShowCreateExpense, setShowCreateTax, setShowCreateMortgage } =
     state;
 
-  const [expandRevenue, setExpandRevenue] = React.useState(false);
-  const [expandExpenses, setExpandExpenses] = React.useState(false);
-  const [expandTaxes, setExpandTaxes] = React.useState(false);
-  const [expandMortgage, setExpandMortgage] = React.useState(false);
+  const [expandRevenue, setExpandRevenue] = useState(false);
+  const [expandExpenses, setExpandExpenses] = useState(false);
+  const [expandTaxes, setExpandTaxes] = useState(false);
+  const [expandMortgage, setExpandMortgage] = useState(false);
   const [revenue, setRevenue] = useState("");
   const [expense, setExpense] = useState("");
+  const [yearRevenue, setYearRevenue] = useState("");
+  const [yearExpense, setYearExpense] = useState("");
   const [maintenance, setMaintenance] = useState("");
   const [mortgage, setMortgage] = useState("");
   const [tax, setTax] = useState("");
@@ -45,6 +47,9 @@ function PropertyCashFlow(props) {
   let mortgageTotal = 0;
   let taxTotal = 0;
   let maintenanceTotal = 0;
+  let yearExpenseTotal = 0;
+  let yearRevenueTotal = 0;
+
   useEffect(() => {
     console.log("in useeffect");
     if (property.owner_revenue.length == 0) {
@@ -72,19 +77,29 @@ function PropertyCashFlow(props) {
       mortgageTotal += Number(JSON.parse(property.mortgages).amount);
     }
     if (property.taxes !== null) {
-      console.log(
-        property.property_uid,
-        typeof property.taxes,
-        JSON.parse(property.taxes)[0].amount
-      );
-      expenseTotal += Number(JSON.parse(property.taxes)[0].amount);
-      taxTotal += Number(JSON.parse(property.taxes)[0].amount);
+      for (const or of JSON.parse(property.taxes)) {
+        expenseTotal += Number(or.amount);
+        taxTotal += Number(or.amount);
+      }
+      // expenseTotal += Number(JSON.parse(property.taxes)[0].amount);
+      // taxTotal += Number(JSON.parse(property.taxes)[0].amount);
+    }
+    if (property.year_expense !== 0) {
+      console.log(property.year_expense);
+      yearExpenseTotal += property.year_expense;
+    }
+
+    if (property.year_revenue !== 0) {
+      console.log(property.year_revenue);
+      yearRevenueTotal += property.year_revenue;
     }
     console.log("in useeffect", expenseTotal);
     setExpense(expenseTotal);
     setMaintenance(maintenanceTotal);
     setMortgage(mortgageTotal);
     setTax(taxTotal);
+    setYearExpense(yearExpenseTotal);
+    setYearRevenue(yearRevenueTotal);
   });
 
   const cashFlow = revenue - expense;
@@ -139,12 +154,12 @@ function PropertyCashFlow(props) {
                     }}
                     className="text-center m-1"
                   >
-                    MTD
+                    MTD($)
                   </p>
                 </Col>
                 <Col>
                   <p style={{ ...gray, ...small }} className="text-center m-1">
-                    YTD
+                    YTD($)
                   </p>
                 </Col>
               </Row>
@@ -224,10 +239,9 @@ function PropertyCashFlow(props) {
                   </p>
                 </Col>
                 <Col>
-                  <p
-                    style={{ ...small, ...green }}
-                    className="text-center m-1"
-                  ></p>
+                  <p style={{ ...small, ...green }} className="text-center m-1">
+                    {yearRevenue}
+                  </p>
                 </Col>
               </Row>
             </Container>
@@ -286,7 +300,7 @@ function PropertyCashFlow(props) {
                       }}
                       className="text-center m-1"
                     >
-                      MTD
+                      MTD($)
                     </p>
                   </Col>
                   <Col>
@@ -294,7 +308,7 @@ function PropertyCashFlow(props) {
                       style={{ ...gray, ...small }}
                       className="text-center m-1"
                     >
-                      YTD
+                      YTD($)
                     </p>
                   </Col>
                 </Row>
@@ -351,10 +365,9 @@ function PropertyCashFlow(props) {
                     </p>
                   </Col>
                   <Col>
-                    <p
-                      style={{ ...small, ...red }}
-                      className="text-center m-1"
-                    ></p>
+                    <p style={{ ...small, ...red }} className="text-center m-1">
+                      {yearExpense}
+                    </p>
                   </Col>
                 </Row>
               </Container>
@@ -399,7 +412,7 @@ function PropertyCashFlow(props) {
                           }}
                           className="text-center m-1"
                         >
-                          MTD
+                          MTD($)
                         </p>
                       </Col>
                       <Col>
@@ -407,7 +420,7 @@ function PropertyCashFlow(props) {
                           style={{ ...gray, ...small }}
                           className="text-center m-1"
                         >
-                          YTD
+                          YTD($)
                         </p>
                       </Col>
                     </Row>
@@ -516,7 +529,7 @@ function PropertyCashFlow(props) {
                           }}
                           className="text-center m-1"
                         >
-                          MTD
+                          MTD($)
                         </p>
                       </Col>
                       <Col>
@@ -524,46 +537,51 @@ function PropertyCashFlow(props) {
                           style={{ ...gray, ...small }}
                           className="text-center m-1"
                         >
-                          YTD
+                          YTD($)
                         </p>
                       </Col>
                     </Row>
-                    <Row
-                      style={
-                        {
-                          // background:
-                          //   i % 2 === 0
-                          //     ? "#FFFFFF 0% 0% no-repeat padding-box"
-                          //     : "#F3F3F3 0% 0% no-repeat padding-box",
-                        }
-                      }
-                    >
-                      <Col xs={4}>
-                        <p
-                          style={{
-                            ...small,
-                            ...mediumBold,
-                          }}
-                          className=" m-1"
+                    {JSON.parse(property.taxes).map((tax) => {
+                      return (
+                        <Row
+                          style={
+                            {
+                              // background:
+                              //   i % 2 === 0
+                              //     ? "#FFFFFF 0% 0% no-repeat padding-box"
+                              //     : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }
+                          }
                         >
-                          Taxes
-                        </p>
-                      </Col>
-                      <Col>
-                        <p
-                          style={{ ...small, ...red }}
-                          className="text-center m-1"
-                        >
-                          {JSON.parse(property.taxes)[0].amount}
-                        </p>
-                      </Col>
-                      <Col>
-                        <p
-                          style={{ ...small, ...red }}
-                          className="text-center m-1"
-                        ></p>
-                      </Col>
-                    </Row>
+                          <Col xs={4}>
+                            <p
+                              style={{
+                                ...small,
+                                ...mediumBold,
+                              }}
+                              className=" m-1"
+                            >
+                              Taxes
+                            </p>
+                          </Col>
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1"
+                            >
+                              {tax.amount}
+                            </p>
+                          </Col>
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1"
+                            ></p>
+                          </Col>
+                        </Row>
+                      );
+                    })}
+
                     <Row
                       style={{
                         background: "#F3F3F3 0% 0% no-repeat padding-box",

@@ -27,7 +27,10 @@ function CreateTax(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    let taxes = [];
+
+    let taxes =
+      props.property.taxes == null ? [] : JSON.parse(props.property.taxes);
+    // console.log(taxes);
     const files = JSON.parse(props.property.images);
     const newTax = {
       category: category,
@@ -38,8 +41,8 @@ function CreateTax(props) {
       frequency_of_payment: frequencyOfPayment,
       next_date: date,
     };
-    console.log(newTax);
     taxes.push(newTax);
+    // console.log(taxes);
     const updateTaxes = {
       property_uid: props.property.property_uid,
       taxes: JSON.stringify(taxes),
@@ -51,7 +54,7 @@ function CreateTax(props) {
     //   }
     //   updateTaxes[key] = files[i + 1];
     // }
-
+    // console.log(updateTaxes);
     const response = await put("/properties", updateTaxes, null, files);
     props.reload();
     props.back();
