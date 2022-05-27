@@ -221,7 +221,7 @@ function PropertyView(props) {
             null,
             files
           );
-
+          setShowDialog(false);
           setExpandManagerDocs(!expandManagerDocs);
           reloadProperty();
         }
@@ -273,7 +273,7 @@ function PropertyView(props) {
         agreement={selectedAgreement}
       />
     ) : (
-      <div>
+      <div className="pb-5 mb-5">
         <ConfirmDialog
           title={"Are you sure you want to reject this Property Manager?"}
           isOpen={showDialog}

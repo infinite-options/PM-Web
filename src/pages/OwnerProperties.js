@@ -51,7 +51,7 @@ function OwnerProperties(props) {
   };
 
   return stage === "LIST" ? (
-    <div className="pb-5">
+    <div className="pb-5 mb-5">
       <Header
         title="Properties"
         leftText="+ New"
