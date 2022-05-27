@@ -6,7 +6,7 @@ import ManagerFees from "./ManagerFees";
 import BusinessContact from "./BusinessContact";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
-import { put, post } from "../utils/api";
+import {put, post, get} from "../utils/api";
 import {
   small,
   hidden,
@@ -16,8 +16,10 @@ import {
   smallPillButton,
 } from "../utils/styles";
 import AppContext from "../AppContext";
+import {useNavigate} from "react-router-dom";
 
 function ManagerManagementContract(props) {
+  const navigate = useNavigate();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
   const { back, property, contract, reload } = props;
@@ -86,6 +88,8 @@ function ManagerManagementContract(props) {
   React.useEffect(() => {
     if (contract) {
       loadContract();
+    } else {
+      loadManagerFees();
     }
   }, [contract]);
 
@@ -162,6 +166,32 @@ function ManagerManagementContract(props) {
     ) : (
       ""
     );
+
+  const loadManagerFees = async () => {
+    if (access_token === null) {
+      navigate("/");
+      return;
+    }
+    const busi_res = await get(`/businesses?business_email=${user.email}`);
+    // console.log("busi_res", busi_res);
+    // if (user.role.indexOf("MANAGER") === -1 || busi_res.result.length > 0) {
+    //   console.log("no manager profile");
+    //   // props.onConfirm();
+    // }
+
+    const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
+    if (employee_response.result.length !== 0) {
+      const employee = employee_response.result[0];
+      const business_response = await get(
+          `/businesses?business_uid=${employee.business_uid}`
+      );
+      const business = business_response.result[0];
+      const profile = { ...employee, ...business };
+
+      // console.log(profile)
+      setFeeState(JSON.parse(profile.business_services_fees));
+    }
+  };
 
   return (
     <div className="mb-5 pb-5">
