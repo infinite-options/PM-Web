@@ -44,6 +44,7 @@ function PropertyView(props) {
     const res = await get(
       `/contracts?property_uid=${response.result[0].property_uid}`
     );
+
     setContracts(res.result);
   };
   useState(() => {
@@ -79,7 +80,8 @@ function PropertyView(props) {
       ? setShowCreateTax(false)
       : showCreateMortgage
       ? setShowCreateMortgage(false)
-      : back();
+      : reload();
+    back();
   };
 
   const nextImg = () => {
@@ -546,6 +548,24 @@ function PropertyView(props) {
                         </div>
                       </div>
 
+                      <div className="d-flex flex-column gap-2">
+                        {contracts.map((contract, i) =>
+                          contract.business_uid === p.manager_id ? (
+                            <div
+                              key={i}
+                              onClick={() => selectContract(contract)}
+                            >
+                              <div className="d-flex justify-content-between align-items-end">
+                                <h6 style={mediumBold}>Contract {i + 1}</h6>
+                                <img src={File} />
+                              </div>
+                            </div>
+                          ) : (
+                            ""
+                          )
+                        )}
+                      </div>
+
                       <Row className="mt-4">
                         <Col
                           style={{
@@ -604,6 +624,21 @@ function PropertyView(props) {
                         Contract in Review
                       </p>
                     </div>
+                  </div>
+                  <div className="d-flex flex-column gap-2">
+                    {contracts.map((contract, i) =>
+                      contract.business_uid ===
+                      property.property_manager[0].manager_id ? (
+                        <div key={i} onClick={() => selectContract(contract)}>
+                          <div className="d-flex justify-content-between align-items-end">
+                            <h6 style={mediumBold}>Contract {i + 1}</h6>
+                            <img src={File} />
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )
+                    )}
                   </div>
 
                   <Row className="mt-4">

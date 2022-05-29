@@ -125,7 +125,47 @@ function OwnerProperties(props) {
                         <p style={{ ...blue, ...xSmall }} className="mb-0">
                           {p.management_status === "ACCEPTED"
                             ? `Manager: ${p.manager_business_name}`
-                            : "No Manager"}
+                            : property.management_status !== "ACCEPTED"
+                            ? property.property_manager.map((pm) => {
+                                return pm.management_status !== "REJECTED" ? (
+                                  <div className="d-flex">
+                                    <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                                      {pm.management_status === "FORWARDED" ? (
+                                        <p
+                                          style={{ ...blue, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          Property Manager Selected
+                                        </p>
+                                      ) : pm.management_status === "SENT" ? (
+                                        <p
+                                          style={{ ...blue, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          Contract in Review
+                                        </p>
+                                      ) : pm.management_status === "REFUSED" ? (
+                                        <p
+                                          style={{ ...blue, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          Denied by Property Manager
+                                        </p>
+                                      ) : (
+                                        <p
+                                          style={{ ...blue, ...xSmall }}
+                                          className="mb-0"
+                                        >
+                                          No Manager
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  ""
+                                );
+                              })
+                            : ""}
                         </p>
                       </div>
                       <div
@@ -149,7 +189,47 @@ function OwnerProperties(props) {
                       {property.property_manager[0].management_status ===
                       "ACCEPTED"
                         ? `Manager: ${property.property_manager[0].manager_business_name}`
-                        : "No Manager"}
+                        : property.management_status !== "ACCEPTED"
+                        ? property.property_manager.map((pm) => {
+                            return pm.management_status !== "REJECTED" ? (
+                              <div className="d-flex">
+                                <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                                  {pm.management_status === "FORWARDED" ? (
+                                    <p
+                                      style={{ ...blue, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      Property Manager Selected
+                                    </p>
+                                  ) : pm.management_status === "SENT" ? (
+                                    <p
+                                      style={{ ...blue, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      Contract in Review
+                                    </p>
+                                  ) : pm.management_status === "REFUSED" ? (
+                                    <p
+                                      style={{ ...blue, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      Denied by Property Manager
+                                    </p>
+                                  ) : (
+                                    <p
+                                      style={{ ...blue, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      No Manager
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            ) : (
+                              ""
+                            );
+                          })
+                        : ""}
                     </p>
                   </div>
                   <div
