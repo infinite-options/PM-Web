@@ -545,17 +545,7 @@ function PropertyView(props) {
                           </p>
                         </div>
                       </div>
-                      <div className="d-flex flex-column gap-2">
-                        {contracts.map((contract, i) => (
-                          <div key={i} onClick={() => selectContract(contract)}>
-                            <div className="d-flex justify-content-between align-items-end">
-                              <h6 style={mediumBold}>Contract {i + 1}</h6>
-                              <img src={File} />
-                            </div>
-                            {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
-                          </div>
-                        ))}
-                      </div>
+
                       <Row className="mt-4">
                         <Col
                           style={{
@@ -615,17 +605,7 @@ function PropertyView(props) {
                       </p>
                     </div>
                   </div>
-                  <div className="mx-4 d-flex flex-column gap-2">
-                    {contracts.map((contract, i) => (
-                      <div key={i} onClick={() => selectContract(contract)}>
-                        <div className="d-flex justify-content-between align-items-end">
-                          <h6 style={mediumBold}>Contract {i + 1}</h6>
-                          <img src={File} />
-                        </div>
-                        {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
-                      </div>
-                    ))}
-                  </div>
+
                   <Row className="mt-4">
                     <Col
                       style={{
@@ -703,17 +683,7 @@ function PropertyView(props) {
                           </a>
                         </div>
                       </div>
-                      <div className="mx-4 d-flex flex-column gap-2">
-                        {contracts.map((contract, i) => (
-                          <div key={i} onClick={() => selectContract(contract)}>
-                            <div className="d-flex justify-content-between align-items-end">
-                              <h6 style={mediumBold}>Contract {i + 1}</h6>
-                              <img src={File} />
-                            </div>
-                            {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
-                          </div>
-                        ))}
-                      </div>
+
                       <hr style={{ opacity: 1 }} className="mt-1" />
                     </div>
                   ) : (
@@ -747,17 +717,7 @@ function PropertyView(props) {
                       </a>
                     </div>
                   </div>
-                  <div className="mx-4 d-flex flex-column gap-2">
-                    {contracts.map((contract, i) => (
-                      <div key={i} onClick={() => selectContract(contract)}>
-                        <div className="d-flex justify-content-between align-items-end">
-                          <h6 style={mediumBold}>Contract {i + 1}</h6>
-                          <img src={File} />
-                        </div>
-                        {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
-                      </div>
-                    ))}
-                  </div>
+
                   <hr style={{ opacity: 1 }} className="mt-1" />
                 </div>
               ) : (
