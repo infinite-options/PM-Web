@@ -84,7 +84,7 @@ function OwnerDashboard(props) {
 
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
-      <Header title="Dashboard" />
+      <Header title="Owner Dashboard" />
       <Container className="px-3 pb-5 mb-5">
         <div
           className="px-2 p-2"

@@ -6,13 +6,17 @@ class Checkbox extends React.Component {
     super(props);
     this.state = {
       checked: this.props.checked,
+      default: this.props.default,
     };
-    // console.log(props);
+    console.log(this.state.checked, this.state.default);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.checked !== this.props.checked) {
       this.setState({ checked: this.props.checked });
+    }
+    if (prevProps.default !== this.props.default) {
+      this.setState({ default: this.props.default });
     }
   }
   onClick = () => {
@@ -24,10 +28,19 @@ class Checkbox extends React.Component {
       this.setState({ checked: !this.state.checked });
       console.log(this.state.checked);
     }
+    if (this.props.onClick !== undefined) {
+      this.props.onClick(!this.state.default);
+      console.log(this.state.default);
+    }
+    if (this.props.default === undefined) {
+      this.setState({ default: !this.state.default });
+      console.log(this.state.default);
+    }
   };
+
   render() {
-    const color = this.state.checked ? "black" : "white";
-    // console.log(color);
+    const color = this.state.checked || this.state.default ? "black" : "white";
+
     return (
       <>
         {this.props.type === "CIRCLE" ? (
@@ -58,7 +71,11 @@ class Checkbox extends React.Component {
             onClick={this.onClick}
           >
             <div className="h-100 w-100 d-flex justify-content-center align-items-center">
-              {this.state.checked ? <img src={Check} alt="Check" /> : ""}
+              {this.state.checked || this.state.default ? (
+                <img src={Check} alt="Check" />
+              ) : (
+                ""
+              )}
             </div>
           </div>
         ) : (

@@ -117,6 +117,8 @@ function OwnerProperties(props) {
                 property.property_manager.map((p, i) =>
                   p.management_status === "REJECTED" ? (
                     ""
+                  ) : p.management_status === "REFUSED" ? (
+                    ""
                   ) : (
                     <div className="d-flex">
                       <div className="flex-grow-1 d-flex flex-column justify-content-center">

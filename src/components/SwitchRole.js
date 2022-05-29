@@ -10,7 +10,6 @@ function SwitchRole(props) {
   const navigate = useNavigate();
   const { userData } = React.useContext(AppContext);
   const { user } = userData;
-  const { setShowFooter, setTab } = props;
   const [footerTab, setFooterTab] = React.useState("ROLES");
   const availableRoles = user.role.split(",");
   const [selectedRole, setSelectedRole] = React.useState(null);
@@ -47,6 +46,8 @@ function SwitchRole(props) {
     MAINTENANCE: "Property Maintenance (Owner)",
     MAINT_EMPLOYEE: "Property Maintenance (Employee)",
   };
+  let currentRole = window.location.href.split("/")[3];
+
   React.useState(() => {}, []);
   return (
     <div className="flex-grow-1 d-flex flex-column pb-5 mb-5">
@@ -57,10 +58,16 @@ function SwitchRole(props) {
           <div key={i} className="d-flex px-4">
             <Checkbox
               type="CIRCLE"
+              default={role === currentRole.toUpperCase()}
               checked={role === selectedRole}
               onClick={() => setSelectedRole(role)}
             />
             <p className="d-inline-block text-left">{longNames[role]}</p>
+            {console.log(
+              role == currentRole.toUpperCase(),
+              role.toUpperCase(),
+              currentRole
+            )}
           </div>
         ))}
       </div>

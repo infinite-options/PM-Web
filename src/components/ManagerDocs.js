@@ -33,7 +33,7 @@ function ManagerDocs(props) {
       for (const prop of property.property_manager) {
         if (
           business_uid === prop.manager_id &&
-          prop.management_status === "REJECTED"
+          prop.management_status === "REFUSED"
         ) {
           console.log("here in if");
 
@@ -128,8 +128,8 @@ function ManagerDocs(props) {
         <DialogTitle id="alert-dialog-title">Already Rejected</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            This Property Manager has already been rejected. Please choose
-            another one.
+            This Property Manager has already refused. Please choose another
+            one.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -365,77 +365,6 @@ function PropertyView(props) {
                 )}
               </div>
               <PropertyCashFlow property={property} state={cashFlowState} />
-              {property.management_status !== "ACCEPTED" ? (
-                ""
-              ) : property.property_manager.length > 1 ? (
-                property.property_manager.map((p, i) =>
-                  p.management_status === "REJECTED" ? (
-                    ""
-                  ) : p.manager_business_name !== null &&
-                    p.management_status === "ACCEPTED" ? (
-                    <div>
-                      <div className="d-flex justify-content-between mt-3">
-                        <div>
-                          <h6 style={mediumBold} className="mb-1">
-                            {p.manager_business_name}
-                          </h6>
-                          <p
-                            style={{ ...gray, ...mediumBold }}
-                            className="mb-1"
-                          >
-                            Property Manager
-                          </p>
-                        </div>
-                        <div>
-                          <a href={`tel:${p.manager_phone_number}`}>
-                            <img src={Phone} alt="Phone" style={mediumImg} />
-                          </a>
-                          <a href={`mailto:${p.manager_email}`}>
-                            <img
-                              src={Message}
-                              alt="Message"
-                              style={mediumImg}
-                            />
-                          </a>
-                        </div>
-                      </div>
-                      <hr style={{ opacity: 1 }} className="mt-1" />
-                    </div>
-                  ) : (
-                    ""
-                  )
-                )
-              ) : property.property_manager[0].manager_business_name !== null &&
-                property.property_manager[0].management_status ===
-                  "ACCEPTED" ? (
-                <div>
-                  <div className="d-flex justify-content-between mt-3">
-                    <div>
-                      <h6 style={mediumBold} className="mb-1">
-                        {property.property_manager[0].manager_business_name}
-                      </h6>
-                      <p style={{ ...gray, ...mediumBold }} className="mb-1">
-                        Property Manager
-                      </p>
-                    </div>
-                    <div>
-                      <a
-                        href={`tel:${property.property_manager[0].manager_phone_number}`}
-                      >
-                        <img src={Phone} alt="Phone" style={mediumImg} />
-                      </a>
-                      <a
-                        href={`mailto:${property.property_manager[0].manager_email}`}
-                      >
-                        <img src={Message} alt="Message" style={mediumImg} />
-                      </a>
-                    </div>
-                  </div>
-                  <hr style={{ opacity: 1 }} className="mt-1" />
-                </div>
-              ) : (
-                ""
-              )}
 
               <div onClick={() => setExpandDetails(!expandDetails)}>
                 <div className="d-flex justify-content-between mt-3">
@@ -485,7 +414,7 @@ function PropertyView(props) {
                             style={{ mediumBold, color: "blue" }}
                             className="mb-1"
                           >
-                            {p.management_status}
+                            Property Manager Selected
                           </p>
                         </div>
                         <div>
@@ -537,7 +466,7 @@ function PropertyView(props) {
                         {property.property_manager[0].manager_business_name}
                       </h6>
                       <p style={{ mediumBold, color: "blue" }} className="mb-1">
-                        {property.property_manager[0].management_status}
+                        Property Manager Selected
                       </p>
                     </div>
                     <div>
@@ -612,7 +541,7 @@ function PropertyView(props) {
                             style={{ mediumBold, color: "#41fc03" }}
                             className="mb-1"
                           >
-                            {p.management_status}
+                            Contract in Review
                           </p>
                         </div>
                       </div>
@@ -682,7 +611,7 @@ function PropertyView(props) {
                         style={{ mediumBold, color: "#41fc03" }}
                         className="mb-1"
                       >
-                        {property.property_manager[0].management_status}
+                        Contract in Review
                       </p>
                     </div>
                   </div>
@@ -736,15 +665,86 @@ function PropertyView(props) {
                   </Row>
                   <hr style={{ opacity: 1 }} className="mt-1" />
                 </div>
+              ) : (
+                ""
+              )}
+              {expandManagerDocs &&
+              property.management_status !== "ACCEPTED" ? (
+                ""
+              ) : expandManagerDocs && property.property_manager.length > 1 ? (
+                property.property_manager.map((p, i) =>
+                  p.management_status === "REJECTED" ? (
+                    ""
+                  ) : p.manager_business_name !== null &&
+                    p.management_status === "ACCEPTED" ? (
+                    <div>
+                      <div className="d-flex justify-content-between mt-3">
+                        <div>
+                          <h6 style={mediumBold} className="mb-1">
+                            {p.manager_business_name}
+                          </h6>
+                          <p
+                            style={{ ...gray, ...mediumBold }}
+                            className="mb-1"
+                          >
+                            Property Manager
+                          </p>
+                        </div>
+                        <div>
+                          <a href={`tel:${p.manager_phone_number}`}>
+                            <img src={Phone} alt="Phone" style={mediumImg} />
+                          </a>
+                          <a href={`mailto:${p.manager_email}`}>
+                            <img
+                              src={Message}
+                              alt="Message"
+                              style={mediumImg}
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <div className="mx-4 d-flex flex-column gap-2">
+                        {contracts.map((contract, i) => (
+                          <div key={i} onClick={() => selectContract(contract)}>
+                            <div className="d-flex justify-content-between align-items-end">
+                              <h6 style={mediumBold}>Contract {i + 1}</h6>
+                              <img src={File} />
+                            </div>
+                            {/* <hr style={{ opacity: 1 }} className="mb-0 mt-2" /> */}
+                          </div>
+                        ))}
+                      </div>
+                      <hr style={{ opacity: 1 }} className="mt-1" />
+                    </div>
+                  ) : (
+                    ""
+                  )
+                )
               ) : expandManagerDocs &&
+                property.property_manager[0].manager_business_name !== null &&
                 property.property_manager[0].management_status ===
                   "ACCEPTED" ? (
                 <div>
-                  <div className="mx-4 d-flex justify-content-between mt-3">
+                  <div className="d-flex justify-content-between mt-3">
                     <div>
                       <h6 style={mediumBold} className="mb-1">
                         {property.property_manager[0].manager_business_name}
                       </h6>
+                      <p style={{ ...gray, ...mediumBold }} className="mb-1">
+                        Property Manager
+                      </p>
+                    </div>
+                    <div>
+                      <a
+                        href={`tel:${property.property_manager[0].manager_phone_number}`}
+                      >
+                        <img src={Phone} alt="Phone" style={mediumImg} />
+                      </a>
+                      <a
+                        href={`mailto:${property.property_manager[0].manager_email}`}
+                      >
+                        <img src={Message} alt="Message" style={mediumImg} />
+                      </a>
                     </div>
                   </div>
                   <div className="mx-4 d-flex flex-column gap-2">
@@ -758,7 +758,6 @@ function PropertyView(props) {
                       </div>
                     ))}
                   </div>
-
                   <hr style={{ opacity: 1 }} className="mt-1" />
                 </div>
               ) : (
