@@ -13,6 +13,9 @@ function SwitchRole(props) {
   const [footerTab, setFooterTab] = React.useState("ROLES");
   const availableRoles = user.role.split(",");
   const [selectedRole, setSelectedRole] = React.useState(null);
+  const [currentRole, setCurrentRole] = React.useState(
+    window.location.href.split("/")[3]
+  );
   const navigateToRole = (role) => {
     // add navigation to correct role pages
     console.log(`load ${role}`);
@@ -46,7 +49,6 @@ function SwitchRole(props) {
     MAINTENANCE: "Property Maintenance (Owner)",
     MAINT_EMPLOYEE: "Property Maintenance (Employee)",
   };
-  let currentRole = window.location.href.split("/")[3];
 
   React.useState(() => {}, []);
   return (
@@ -58,16 +60,15 @@ function SwitchRole(props) {
           <div key={i} className="d-flex px-4">
             <Checkbox
               type="CIRCLE"
-              default={role === currentRole.toUpperCase()}
-              checked={role === selectedRole}
-              onClick={() => setSelectedRole(role)}
+              checked={
+                role === selectedRole || role === currentRole.toUpperCase()
+              }
+              onClick={() => {
+                setSelectedRole(role);
+                setCurrentRole(role);
+              }}
             />
             <p className="d-inline-block text-left">{longNames[role]}</p>
-            {console.log(
-              role == currentRole.toUpperCase(),
-              role.toUpperCase(),
-              currentRole
-            )}
           </div>
         ))}
       </div>
