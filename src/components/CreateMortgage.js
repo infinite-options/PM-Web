@@ -10,7 +10,7 @@ function CreateMortgage(props) {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [amount, setAmount] = React.useState("");
-  const [frequency, setFrequency] = React.useState("Monthly");
+  const [frequency, setFrequency] = React.useState("Weekly");
   const [frequencyOfPayment, setFrequencyOfPayment] =
     React.useState("Every other month");
   const [date, setDate] = React.useState("");
@@ -20,6 +20,9 @@ function CreateMortgage(props) {
       setFrequencyOfPayment(newFrequencyOfPayment);
     } else if (frequency === "Annually") {
       const newFrequencyOfPayment = frequencyOfPayment.replace("month", "year");
+      setFrequencyOfPayment(newFrequencyOfPayment);
+    } else {
+      const newFrequencyOfPayment = frequencyOfPayment.replace("week");
       setFrequencyOfPayment(newFrequencyOfPayment);
     }
   }, [frequency]);
@@ -124,6 +127,7 @@ function CreateMortgage(props) {
           value={frequency}
           onChange={(e) => setFrequency(e.target.value)}
         >
+          <option>Weekly</option>
           <option>Monthly</option>
           <option>Annually</option>
         </Form.Select>
@@ -132,17 +136,31 @@ function CreateMortgage(props) {
         <Form.Label as="h6" className="mb-0 ms-2">
           Frequency of payment
         </Form.Label>
-        <Form.Select
-          style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-          value={frequencyOfPayment}
-          onChange={(e) => setFrequencyOfPayment(e.target.value)}
-        >
-          <option>
-            Every other {frequency === "Monthly" ? "month" : "year"}
-          </option>
-          <option>Once a {frequency === "Monthly" ? "month" : "year"}</option>
-          <option>Twice a {frequency === "Monthly" ? "month" : "year"}</option>
-        </Form.Select>
+        {frequency === "Weekly" ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a week</option>
+            <option>Biweekly</option>
+            <option>Every other week</option>
+          </Form.Select>
+        ) : (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>
+              Every other {frequency === "Monthly" ? "month" : "year"}
+            </option>
+            <option>Once a {frequency === "Monthly" ? "month" : "year"}</option>
+            <option>
+              Twice a {frequency === "Monthly" ? "month" : "year"}
+            </option>
+          </Form.Select>
+        )}
       </Form.Group>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
