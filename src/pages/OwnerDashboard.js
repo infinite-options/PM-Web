@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -21,9 +21,9 @@ import {
 function OwnerDashboard(props) {
   const { setStage, properties } = props;
   const navigate = useNavigate();
-  const [expandRevenue, setExpandRevenue] = React.useState(false);
-  const [expandExpenses, setExpandExpenses] = React.useState(false);
-  const [expandProperties, setExpandProperties] = React.useState(false);
+  const [expandRevenue, setExpandRevenue] = useState(false);
+  const [expandExpenses, setExpandExpenses] = useState(false);
+  const [expandProperties, setExpandProperties] = useState(false);
 
   let revenueTotal = 0;
   for (const item of properties) {
@@ -202,111 +202,114 @@ function OwnerDashboard(props) {
                     </Col>
                   </Row>
                   {properties.map((property, i) => {
-                    return property.owner_revenue.length >= 1 ? (
+                    return (
                       <div>
-                        {console.log(i)}
-                        <Row
-                          style={{
-                            background:
-                              i % 2 === 0
-                                ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                : "#F3F3F3 0% 0% no-repeat padding-box",
-                          }}
-                        >
-                          <Col>
-                            <p
-                              style={{ ...small, ...mediumBold }}
-                              className=" m-1"
-                            >
-                              {property.address}
-                            </p>
-                          </Col>
-                          <Col>
-                            <p
-                              style={{ ...small, ...red }}
-                              className="text-center m-1"
-                            ></p>
-                          </Col>
-                          <Col>
-                            <p
-                              style={{ ...small, ...red }}
-                              className="text-center m-1 pt-1"
-                            >
-                              {" "}
-                              {property.year_revenue}
-                            </p>
-                          </Col>
-                        </Row>
-                        {property.owner_revenue.map((owr) => {
-                          return owr.purchase_type === "RENT" ? (
-                            <Row
-                              style={{
-                                background:
-                                  i % 2 === 0
-                                    ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                    : "#F3F3F3 0% 0% no-repeat padding-box",
-                              }}
-                            >
-                              <Col>
-                                <p
-                                  style={{ ...small, ...mediumBold }}
-                                  className=" m-1"
-                                >
-                                  Rent
-                                </p>
-                              </Col>
-                              <Col>
-                                <p
-                                  style={{ ...small, ...green }}
-                                  className="text-center m-1"
-                                >
-                                  {owr.amount_paid}
-                                </p>
-                              </Col>
-                              <Col>
-                                <p
-                                  style={{ ...small, ...green }}
-                                  className="text-center m-1"
-                                ></p>
-                              </Col>
-                            </Row>
-                          ) : (
-                            <Row
-                              style={{
-                                background:
-                                  i % 2 === 0
-                                    ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                    : "#F3F3F3 0% 0% no-repeat padding-box",
-                              }}
-                            >
-                              <Col>
-                                <p
-                                  style={{ ...small, ...mediumBold }}
-                                  className=" m-1"
-                                >
-                                  Fees
-                                </p>
-                              </Col>
-                              <Col>
-                                <p
-                                  style={{ ...small, ...green }}
-                                  className="text-center m-1"
-                                >
-                                  {owr.amount_paid}
-                                </p>
-                              </Col>
-                              <Col>
-                                <p
-                                  style={{ ...small, ...green }}
-                                  className="text-center m-1"
-                                ></p>
-                              </Col>
-                            </Row>
-                          );
-                        })}
+                        {property.extraCharges_revenue !== 0 ||
+                        property.rental_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{ ...small, ...mediumBold }}
+                                className=" m-1"
+                              >
+                                {property.address}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              ></p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1 pt-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+
+                        {property.rental_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{ ...small, ...mediumBold }}
+                                className=" m-1"
+                              >
+                                Rent
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              >
+                                {property.rental_revenue}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.extraCharges_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{ ...small, ...mediumBold }}
+                                className=" m-1"
+                              >
+                                Extra Charges
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              >
+                                {property.extraCharges_revenue}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
                       </div>
-                    ) : (
-                      ""
                     );
                   })}
 
@@ -331,7 +334,7 @@ function OwnerDashboard(props) {
                     <Col>
                       <p
                         style={{ ...small, ...green }}
-                        className="text-center m-1 pt-1"
+                        className="text-center m-1 "
                       >
                         {yearRevenueTotal}
                       </p>
@@ -384,11 +387,13 @@ function OwnerDashboard(props) {
                     </Col>
                   </Row>
                   {properties.map((property, i) => {
-                    return property.owner_expense.length >= 1 ||
-                      property.mortgages !== null ||
-                      property.taxes !== null ? (
+                    return property.maintenance_expenses !== 0 ||
+                      property.management_expenses !== 0 ||
+                      property.insurance_expenses !== 0 ||
+                      property.repairs_expenses !== 0 ||
+                      property.mortgage_expenses !== 0 ||
+                      property.taxes_expenses !== 0 ? (
                       <div>
-                        {console.log(i)}
                         <Row
                           style={{
                             background:
@@ -397,7 +402,7 @@ function OwnerDashboard(props) {
                                 : "#F3F3F3 0% 0% no-repeat padding-box",
                           }}
                         >
-                          <Col>
+                          <Col xs={6}>
                             <p
                               style={{ ...small, ...mediumBold }}
                               className="m-1"
@@ -405,7 +410,7 @@ function OwnerDashboard(props) {
                               {property.address}
                             </p>
                           </Col>
-                          <Col xs={4}>
+                          <Col>
                             <p
                               style={{ ...small, ...red }}
                               className="text-center m-1 pt-1"
@@ -418,58 +423,10 @@ function OwnerDashboard(props) {
                                 ...red,
                               }}
                               className="text-center m-1 pt-1"
-                            >
-                              {property.year_expense}
-                            </p>
+                            ></p>
                           </Col>
                         </Row>
-                        {property.owner_expense.length >= 1
-                          ? property.owner_expense.map((owe) => {
-                              return (
-                                <Row
-                                  style={{
-                                    background:
-                                      i % 2 === 0
-                                        ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                        : "#F3F3F3 0% 0% no-repeat padding-box",
-                                  }}
-                                >
-                                  <Col xs={4}>
-                                    <p
-                                      style={{
-                                        ...small,
-                                        ...mediumBold,
-                                      }}
-                                      className=" m-1"
-                                    >
-                                      {owe.purchase_type}
-                                    </p>
-                                  </Col>
-                                  <Col>
-                                    <p
-                                      style={{
-                                        ...small,
-                                        ...red,
-                                      }}
-                                      className="text-center m-1 pt-1"
-                                    >
-                                      {owe.amount_paid}
-                                    </p>
-                                  </Col>
-                                  <Col>
-                                    <p
-                                      style={{
-                                        ...small,
-                                        ...red,
-                                      }}
-                                      className="text-center m-1 pt-1"
-                                    ></p>
-                                  </Col>
-                                </Row>
-                              );
-                            })
-                          : ""}
-                        {property.mortgages !== null ? (
+                        {property.maintenance_expenses !== 0 ? (
                           <Row
                             style={{
                               background:
@@ -478,7 +435,7 @@ function OwnerDashboard(props) {
                                   : "#F3F3F3 0% 0% no-repeat padding-box",
                             }}
                           >
-                            <Col xs={4}>
+                            <Col>
                               <p
                                 style={{
                                   ...small,
@@ -486,20 +443,26 @@ function OwnerDashboard(props) {
                                 }}
                                 className=" m-1"
                               >
-                                Mortgages
-                              </p>
-                            </Col>
-                            <Col xs={4}>
-                              <p
-                                style={{ ...small, ...red }}
-                                className="text-center m-1 pt-1"
-                              >
-                                {JSON.parse(property.mortgages).amount}
+                                Maintenance
                               </p>
                             </Col>
                             <Col>
                               <p
-                                style={{ ...small, ...red }}
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.maintenance_expenses}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
                                 className="text-center m-1 pt-1"
                               ></p>
                             </Col>
@@ -507,46 +470,226 @@ function OwnerDashboard(props) {
                         ) : (
                           ""
                         )}
-                        {property.taxes !== null
-                          ? JSON.parse(property.taxes).map((tax) => {
-                              return (
-                                <Row
-                                  style={{
-                                    background:
-                                      i % 2 === 0
-                                        ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                        : "#F3F3F3 0% 0% no-repeat padding-box",
-                                  }}
-                                >
-                                  <Col xs={4}>
-                                    <p
-                                      style={{
-                                        ...small,
-                                        ...mediumBold,
-                                      }}
-                                      className=" m-1"
-                                    >
-                                      Taxes
-                                    </p>
-                                  </Col>
-                                  <Col>
-                                    <p
-                                      style={{ ...small, ...red }}
-                                      className="text-center m-1 pt-1"
-                                    >
-                                      {tax.amount}
-                                    </p>
-                                  </Col>
-                                  <Col>
-                                    <p
-                                      style={{ ...small, ...red }}
-                                      className="text-center m-1 pt-1"
-                                    ></p>
-                                  </Col>
-                                </Row>
-                              );
-                            })
-                          : ""}
+                        {property.management_expenses !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                }}
+                                className=" m-1"
+                              >
+                                Management
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.management_expenses}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.insurance_expenses !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                }}
+                                className=" m-1"
+                              >
+                                Insurance
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.insurance_expenses}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.repairs_expenses !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                }}
+                                className=" m-1"
+                              >
+                                Repairs
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.repairs_expenses}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.mortgage_expenses !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                }}
+                                className=" m-1"
+                              >
+                                Mortgage
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.mortgage_expenses}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.taxes_expenses !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                }}
+                                className=" m-1"
+                              >
+                                Taxes
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.taxes_expenses}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     ) : (
                       ""
