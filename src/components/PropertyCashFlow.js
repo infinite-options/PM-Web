@@ -7,19 +7,25 @@ import Add from "../icons/Add.svg";
 
 function PropertyCashFlow(props) {
   const { property, state } = props;
-  const { setShowCreateExpense, setShowCreateTax, setShowCreateMortgage } =
-    state;
+  const {
+    setShowCreateExpense,
+    setShowCreateTax,
+    setShowCreateMortgage,
+    setShowCreateInsurance,
+  } = state;
 
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
   const [expandTaxes, setExpandTaxes] = useState(false);
   const [expandMortgage, setExpandMortgage] = useState(false);
+  const [expandInsurance, setExpandInsurance] = useState(false);
   const [revenue, setRevenue] = useState("");
   const [expense, setExpense] = useState("");
   const [yearRevenue, setYearRevenue] = useState("");
   const [yearExpense, setYearExpense] = useState("");
   const [maintenance, setMaintenance] = useState("");
   const [mortgage, setMortgage] = useState("");
+  const [insurance, setInsurance] = useState("");
   const [tax, setTax] = useState("");
 
   console.log(property);
@@ -41,11 +47,16 @@ function PropertyCashFlow(props) {
     e.stopPropagation();
     setShowCreateMortgage(true);
   };
+  const addInsurance = (e) => {
+    e.stopPropagation();
+    setShowCreateInsurance(true);
+  };
 
   let revenueTotal = 0;
   let expenseTotal = 0;
   let mortgageTotal = 0;
   let taxTotal = 0;
+  let insuranceTotal = 0;
   let maintenanceTotal = 0;
   let yearExpenseTotal = 0;
   let yearRevenueTotal = 0;
@@ -84,6 +95,14 @@ function PropertyCashFlow(props) {
       // expenseTotal += Number(JSON.parse(property.taxes)[0].amount);
       // taxTotal += Number(JSON.parse(property.taxes)[0].amount);
     }
+    if (property.insurance !== null) {
+      for (const or of JSON.parse(property.insurance)) {
+        expenseTotal += Number(or.amount);
+        insuranceTotal += Number(or.amount);
+      }
+      // expenseTotal += Number(JSON.parse(property.taxes)[0].amount);
+      // taxTotal += Number(JSON.parse(property.taxes)[0].amount);
+    }
     if (property.year_expense !== 0) {
       console.log(property.year_expense);
       yearExpenseTotal += property.year_expense;
@@ -98,6 +117,7 @@ function PropertyCashFlow(props) {
     setMaintenance(maintenanceTotal);
     setMortgage(mortgageTotal);
     setTax(taxTotal);
+    setInsurance(insuranceTotal);
     setYearExpense(yearExpenseTotal);
     setYearRevenue(yearRevenueTotal);
   });
@@ -411,52 +431,7 @@ function PropertyCashFlow(props) {
                   ) : (
                     ""
                   )}
-                  {property.insurance_expenses !== 0 ? (
-                    <Row
-                      style={
-                        {
-                          // background:
-                          //   i % 2 === 0
-                          //     ? "#FFFFFF 0% 0% no-repeat padding-box"
-                          //     : "#F3F3F3 0% 0% no-repeat padding-box",
-                        }
-                      }
-                    >
-                      <Col>
-                        <p
-                          style={{
-                            ...small,
-                            ...mediumBold,
-                          }}
-                          className=" m-1"
-                        >
-                          Insurance
-                        </p>
-                      </Col>
-                      <Col>
-                        <p
-                          style={{
-                            ...small,
-                            ...red,
-                          }}
-                          className="text-center m-1 pt-1"
-                        >
-                          {property.insurance_expenses}
-                        </p>
-                      </Col>
-                      <Col>
-                        <p
-                          style={{
-                            ...small,
-                            ...red,
-                          }}
-                          className="text-center m-1 pt-1"
-                        ></p>
-                      </Col>
-                    </Row>
-                  ) : (
-                    ""
-                  )}
+
                   {property.repairs_expenses !== 0 ? (
                     <Row
                       style={
@@ -760,6 +735,123 @@ function PropertyCashFlow(props) {
                           className="text-center m-1"
                         >
                           {tax}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                  </Container>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <Row
+              onClick={() => setExpandInsurance(!expandInsurance)}
+              className="mx-2 my-2 p-3"
+              style={{
+                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                boxShadow: "0px 3px 3px #00000029",
+                borderRadius: "20px",
+              }}
+            >
+              <Col style={mediumBold}>Insurance</Col>
+              <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
+                <Col style={mediumBold}>${insurance}</Col>
+                <Col>
+                  <img
+                    style={{ width: "20px" }}
+                    src={Add}
+                    alt="Add Insurance"
+                    onClick={addInsurance}
+                  />
+                </Col>
+              </Col>
+            </Row>
+            <div>
+              {expandInsurance && property.insurance !== null ? (
+                <div>
+                  <Container
+                    style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                  >
+                    <Row>
+                      <Col />
+                      <Col>
+                        <p
+                          style={{
+                            ...gray,
+                            ...small,
+                          }}
+                          className="text-center m-1"
+                        >
+                          MTD($)
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...gray, ...small }}
+                          className="text-center m-1"
+                        >
+                          YTD($)
+                        </p>
+                      </Col>
+                    </Row>
+                    <Row
+                      style={
+                        {
+                          // background:
+                          //   i % 2 === 0
+                          //     ? "#FFFFFF 0% 0% no-repeat padding-box"
+                          //     : "#F3F3F3 0% 0% no-repeat padding-box",
+                        }
+                      }
+                    >
+                      <Col xs={4}>
+                        <p
+                          style={{
+                            ...small,
+                            ...mediumBold,
+                          }}
+                          className=" m-1"
+                        >
+                          Insurance
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        >
+                          {JSON.parse(property.insurance).amount}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                    <Row
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      }}
+                    >
+                      <Col>
+                        <p style={{ ...small, ...mediumBold }} className=" m-1">
+                          Total
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        >
+                          {insurance}
                         </p>
                       </Col>
                       <Col>

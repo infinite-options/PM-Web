@@ -29,6 +29,7 @@ import {
   bluePillButton,
   redPillButton,
 } from "../utils/styles";
+import CreateInsurance from "./CreateInsurance";
 function PropertyView(props) {
   const { property_uid, back, reload, hideEdit } = props;
   const [property, setProperty] = useState({
@@ -58,6 +59,7 @@ function PropertyView(props) {
   const [showCreateExpense, setShowCreateExpense] = useState(false);
   const [showCreateTax, setShowCreateTax] = useState(false);
   const [showCreateMortgage, setShowCreateMortgage] = useState(false);
+  const [showCreateInsurance, setShowCreateInsurance] = useState(false);
   const [expandManagerDocs, setExpandManagerDocs] = useState(false);
   const [expandLeaseDocs, setExpandLeaseDocs] = useState(false);
   const [showManagementContract, setShowManagementContract] = useState(false);
@@ -80,6 +82,8 @@ function PropertyView(props) {
       ? setShowCreateTax(false)
       : showCreateMortgage
       ? setShowCreateMortgage(false)
+      : showCreateInsurance
+      ? setShowCreateInsurance(false)
       : reload();
     back();
   };
@@ -106,6 +110,7 @@ function PropertyView(props) {
     showCreateExpense,
     showCreateTax,
     showCreateMortgage,
+    showCreateInsurance,
     showManagementContract,
     showTenantAgreement,
   ]);
@@ -119,6 +124,7 @@ function PropertyView(props) {
     setShowCreateExpense,
     setShowCreateTax,
     setShowCreateMortgage,
+    setShowCreateInsurance,
   };
 
   const addContract = () => {
@@ -310,6 +316,12 @@ function PropertyView(props) {
               property={property}
               reload={reloadProperty}
               back={() => setShowCreateMortgage(false)}
+            />
+          ) : showCreateInsurance ? (
+            <CreateInsurance
+              property={property}
+              reload={reloadProperty}
+              back={() => setShowCreateInsurance(false)}
             />
           ) : (
             <div>

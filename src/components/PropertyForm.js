@@ -49,6 +49,8 @@ function PropertyForm(props) {
   const [numBaths, setNumBaths] = React.useState("");
   const [area, setArea] = React.useState("");
   const [rent, setRent] = React.useState("");
+  const [activeDate, setActiveDate] = React.useState("");
+
   const [deposit, setDeposit] = React.useState("");
   const [petsAllowed, setPetsAllowed] = React.useState(false);
   const [depositForRent, setDepositForRent] = React.useState(false);
@@ -65,6 +67,7 @@ function PropertyForm(props) {
     setNumBaths(property.num_baths);
     setArea(property.area);
     setRent(property.listed_rent);
+    setActiveDate(property.active_date);
     setDeposit(property.deposit);
     setPetsAllowed(property.pets_allowed);
     setDepositForRent(property.deposit_for_rent);
@@ -331,6 +334,7 @@ function PropertyForm(props) {
       numBaths === "" ||
       area === "" ||
       rent === "" ||
+      activeDate === "" ||
       deposit === ""
     ) {
       setErrorMessage("Please fill out all fields");
@@ -339,6 +343,7 @@ function PropertyForm(props) {
     const newProperty = {
       owner_id: user.user_uid,
       manager_id: "",
+      active_date: activeDate,
       address: address,
       unit: unit,
       city: city,
@@ -586,6 +591,25 @@ function PropertyForm(props) {
             <p>{area}</p>
           </Col>
         </Row>
+      )}
+      {edit ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Active Date {activeDate === "" ? required : ""}
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            type="date"
+            // placeholder="2000"
+            value={activeDate}
+            onChange={(e) => setActiveDate(e.target.value)}
+          />
+        </Form.Group>
+      ) : (
+        <div>
+          <h6>Active Date</h6>
+          <p>{formatter.format(activeDate)}</p>
+        </div>
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">

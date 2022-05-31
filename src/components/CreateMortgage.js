@@ -18,9 +18,6 @@ function CreateMortgage(props) {
     if (frequency === "Monthly") {
       const newFrequencyOfPayment = frequencyOfPayment.replace("year", "month");
       setFrequencyOfPayment(newFrequencyOfPayment);
-    } else if (frequency === "Annually") {
-      const newFrequencyOfPayment = frequencyOfPayment.replace("month", "year");
-      setFrequencyOfPayment(newFrequencyOfPayment);
     } else {
       const newFrequencyOfPayment = frequencyOfPayment.replace("week");
       setFrequencyOfPayment(newFrequencyOfPayment);
@@ -129,7 +126,6 @@ function CreateMortgage(props) {
         >
           <option>Weekly</option>
           <option>Monthly</option>
-          <option>Annually</option>
         </Form.Select>
       </Form.Group>
       <Form.Group className="mx-2 my-3">
@@ -143,7 +139,6 @@ function CreateMortgage(props) {
             onChange={(e) => setFrequencyOfPayment(e.target.value)}
           >
             <option>Once a week</option>
-            <option>Biweekly</option>
             <option>Every other week</option>
           </Form.Select>
         ) : (
@@ -152,13 +147,8 @@ function CreateMortgage(props) {
             value={frequencyOfPayment}
             onChange={(e) => setFrequencyOfPayment(e.target.value)}
           >
-            <option>
-              Every other {frequency === "Monthly" ? "month" : "year"}
-            </option>
-            <option>Once a {frequency === "Monthly" ? "month" : "year"}</option>
-            <option>
-              Twice a {frequency === "Monthly" ? "month" : "year"}
-            </option>
+            <option>Once a month</option>
+            <option>Twice a month</option>
           </Form.Select>
         )}
       </Form.Group>
