@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AppContext from "../AppContext";
 import Checkbox from "../components/Checkbox";
+import Header from "../components/Header";
 import { pillButton, bluePillButton } from "../utils/styles";
 
 function SwitchRole(props) {
@@ -49,9 +50,10 @@ function SwitchRole(props) {
   React.useState(() => {}, []);
   return (
     <div className="flex-grow-1 d-flex flex-column pb-5 mb-5">
+      <Header title="Switch Roles" />
       <div className="flex-grow-1 mx-3">
         <h5 className="mb-4">Switch to one of the following roles:</h5>
-        {/* {availableRoles.map((role, i) => (
+        {availableRoles.map((role, i) => (
           <div key={i} className="d-flex px-4">
             <Checkbox
               type="CIRCLE"
@@ -60,7 +62,7 @@ function SwitchRole(props) {
             />
             <p className="d-inline-block text-left">{longNames[role]}</p>
           </div>
-        ))} */}
+        ))}
       </div>
       <div className="text-center">
         <Button

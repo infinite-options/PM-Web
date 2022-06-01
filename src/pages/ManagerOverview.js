@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Button, Col, Container, Row} from 'react-bootstrap';
 import Header from '../components/Header';
-import {green, bolder, red, xSmall, smallLine, mediumBold, redPillButton} from '../utils/styles';
+import {green, bolder, red, xSmall, smallLine, mediumBold, redPillButton, small} from '../utils/styles';
 import Repair from '../icons/Repair.svg';
 import Property from '../icons/Property.svg';
 import Emergency from '../icons/Emergency.svg';
@@ -18,6 +18,8 @@ function ManagerOverview(props) {
 
     const [properties, setProperties] = useState([]);
     const [alerts, setAlerts] = useState({repairs: [], applications: [], count: 0})
+
+    const [expandProperties, setExpandProperties] = React.useState(false);
 
     React.useEffect(() => {
         if (userData.access_token === null) {
@@ -94,16 +96,53 @@ function ManagerOverview(props) {
 
     return (
         <div>
-            <Header title='Properties' rightText='Sort by'/>
+            <Header title='PM Dashboard' rightText='Sort by'/>
             <Container className='px-3 pb-5 mb-5'>
                 <div>
 
                     <h6 style={bolder} className='mb-1'>Total No. of Unique Clients</h6>
-                    <h6 style={{...bolder, ...green}} className='mb-1'>{unique_clients}</h6>
+
+                        <h6 style={{...bolder, ...green}} className='mb-1'>{unique_clients}</h6>
+
+
                     <hr style={{opacity: 1}} className='mt-1 mb-3'/>
 
                     <h6 style={bolder} className='mb-1'>Total No. of Properties</h6>
-                    <h6 style={{...bolder, ...green}} className='mb-1'>{property_count}</h6>
+                    <div onClick={() => setExpandProperties(!expandProperties)}>
+                        <h6 style={{...bolder, ...green}} className='mb-1'>{property_count}</h6>
+                    </div>
+
+                    {expandProperties ? (
+                        <div>
+                            <Container style={{ border: "1px solid #707070", borderRadius: "5px" }}>
+                                <Row>
+                                    <Col>
+                                        <p style={{ ...small }} className=" m-1">Properties</p>
+                                    </Col>
+                                </Row>
+
+                                {properties.map((property, i) =>
+                                    <Row key={i}
+                                        onClick={() => {
+                                            navigate(`/manager-properties/${property.property_uid}`, { state: {property: property, property_uid: property.property_uid}})
+                                        }}
+                                        style={{cursor: "pointer",
+                                            background: i % 2 === 0 ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                                : "#F3F3F3 0% 0% no-repeat padding-box",}}>
+                                        <Col>
+                                            <p style={{ ...small, ...mediumBold }} className=" m-1">
+                                                {property.address} {property.unit}, {property.city},{" "}
+                                                {property.state} {property.zip}
+                                            </p>
+                                        </Col>
+                                    </Row>
+                                )}
+                            </Container>
+                        </div>
+                    ) : (
+                        ""
+                    )}
+
                     <hr style={{opacity: 1}} className='mt-1 mb-3'/>
 
                     <h6 style={bolder} className='mb-1'>Estimated Monthly Revenue</h6>

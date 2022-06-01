@@ -69,6 +69,10 @@ function ManagerProperties(props) {
                 scheduled: scheduled_repairs.length,
                 complete: completed_repairs.length,
             }
+
+
+            property.new_tenant_applications = property.applications.filter(a => a.application_status === "NEW")
+
         })
 
         console.log(properties_unique)
@@ -126,11 +130,29 @@ function ManagerProperties(props) {
                             {/*    </div>*/}
                             {/*</div>*/}
 
+
                             <div className='d-flex'>
                                 <div className='d-flex align-items-end'>
                                     <p style={{...blue, ...xSmall}} className='mb-0'>
                                         {property.repairs.new > 0 ?
                                             `${property.repairs.new} new repair requests to review`
+
+                            <div className='d-flex'>
+                                <div className='d-flex align-items-end'>
+                                    <p style={{...blue, ...xSmall}} className='mb-0'>
+                                        {property.repairs.new > 0 ?
+                                            `${property.repairs.new} new repair requests to review`
+                                            : ''}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className='d-flex'>
+                                <div className='d-flex align-items-end'>
+                                    <p style={{...blue, ...xSmall}} className='mb-0'>
+                                        {property.new_tenant_applications.length > 0 ?
+                                            `${property.new_tenant_applications.length} new tenant application(s) to review`
+
                                             : ''}
                                     </p>
                                 </div>
