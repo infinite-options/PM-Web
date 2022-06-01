@@ -88,8 +88,10 @@ function ManagerManagementContract(props) {
   React.useEffect(() => {
     if (contract) {
       loadContract();
+
     } else {
       loadManagerFees();
+
     }
   }, [contract]);
 
@@ -97,6 +99,77 @@ function ManagerManagementContract(props) {
     if (contractName === "" || startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
       return;
+
+    }
+
+    let start_date = new Date(startDate);
+    let end_date = new Date(endDate);
+    if (start_date >= end_date) {
+      setErrorMessage("Select an End Date later than Start Date");
+      return;
+    }
+    setErrorMessage("");
+
+    const newContract = {
+      property_uid: property.property_uid,
+      business_uid: property.manager_id,
+      contract_name: contractName,
+      start_date: startDate,
+      end_date: endDate,
+      contract_fees: JSON.stringify(feeState),
+      assigned_contacts: JSON.stringify(contactState[0]),
+    };
+    for (let i = 0; i < files.length; i++) {
+      let key = `doc_${i}`;
+      newContract[key] = files[i].file;
+      delete files[i].file;
+    }
+    newContract.documents = JSON.stringify(files);
+
+    if (contract) {
+      newContract.contract_uid = contract.contract_uid;
+      console.log(newContract);
+      const response = await put(`/contracts`, newContract, null, files);
+    } else {
+      console.log(newContract);
+      const response = await post("/contracts", newContract, null, files);
+    }
+
+    // Updating Management Status in property to SENT
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
+    const newProperty = {
+      property_uid: property.property_uid,
+      manager_id: management_buid,
+      management_status: "SENT",
+    };
+    const images = JSON.parse(property.images);
+    // for (let i = -1; i < images.length-1; i++) {
+    //     let key = `img_${i}`;
+    //     if (i === -1) {
+    //         key = 'img_cover';
+    //     }
+    //     newProperty[key] = images[i+1];
+    // }
+    await put("/properties", newProperty, null, images);
+    back();
+    reload();
+  };
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
+
     }
 
     let start_date = new Date(startDate);
@@ -192,6 +265,7 @@ function ManagerManagementContract(props) {
       setFeeState(JSON.parse(profile.business_services_fees));
     }
   };
+
 
   return (
     <div className="mb-5 pb-5">

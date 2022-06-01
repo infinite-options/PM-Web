@@ -45,6 +45,8 @@ function TenantDashboard(props) {
   const [applications, setApplications] = useState([]);
   const [properties, setProperties] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState([]);
+  const [scheduled, setScheduled] = useState(0);
+
 
   console.log(context, access_token, user);
 
@@ -73,7 +75,7 @@ function TenantDashboard(props) {
       const prof = response.result[0];
 
       response = await get("/tenantProperties", access_token);
-      console.table("tenantProperties", response.result);
+      console.log("tenantProperties", response.result);
 
       let payments = [];
       let property_uid = [];
@@ -90,7 +92,7 @@ function TenantDashboard(props) {
           })
         : (payments = []);
 
-      console.log("tenantProperties", response.result.length, payments);
+      console.log("tenantProperties payments", response.result.length, payments);
 
       // const property_uid = response.result.length
       //   ? response.result[0].property_uid
@@ -101,7 +103,7 @@ function TenantDashboard(props) {
             property_uid.push(property.property_uid);
           })
         : (property_uid = []);
-      console.log("tenantProperties", response.result.length, property_uid);
+      console.log("tenantProperties property_uid", response.result.length, property_uid);
 
       if (property_uid) {
         prof.property_uid = property_uid;
@@ -118,10 +120,10 @@ function TenantDashboard(props) {
             // rentTotal += parseFloat(payment[0].charge);
           }
       }
-      console.log(rentTotal);
+      console.log("rentTotal", rentTotal);
       setRent(rentTotal);
       setProperty(response.result);
-
+      
       // response.result.length > 0
       //   ? rentTotal.map((rent) => {
       //       properties.push({ rent: rent, properties: {} });
@@ -132,18 +134,18 @@ function TenantDashboard(props) {
       // const purchases = response.result.length
       //   ? JSON.parse(response.result[0].purchases)
       //   : [];
-
-      response.result.length > 0
-        ? response.result.map((purchase) => {
-            purchases.push(JSON.parse(purchase.purchases));
-          })
-        : (purchases = []);
-      console.log(
-        "tenantProperties purchase",
-        response.result.length,
-        purchases
-      );
-
+      
+      // response.result.length > 0
+      //   ? response.result.map((purchase) => {
+      //       purchases.push(JSON.parse(purchase.purchases));
+      //     })
+      //   : (purchases = []);
+      // console.log(
+      //   "tenantProperties purchase",
+      //   response.result.length,
+      //   purchases
+      // );
+      
       let lastPaidPurchase = [];
       let firstUnpaidPurchase = [];
       let nextUnpaidPurchase = [];
@@ -185,7 +187,7 @@ function TenantDashboard(props) {
         fup = null;
         lpp = null;
       }
-
+      console.log("Hello");
       setLastPurchase(lastPaidPurchase);
       setCurrentPurchase(firstUnpaidPurchase);
       setNextPurchase(nextUnpaidPurchase);
@@ -215,9 +217,9 @@ function TenantDashboard(props) {
       );
 
       let selectedProperty = properties[0];
-      console.log(selectedProperty);
       setSelectedProperty(selectedProperty);
       setProperties(properties);
+      
     };
     fetchProfile();
   }, []);
@@ -230,6 +232,12 @@ function TenantDashboard(props) {
       console.log(response.result.length);
 
       setRepairs(response.result);
+      for (const repair of repairs) {
+        if (repair.request_status === "SCHEDULED") {
+          setScheduled(scheduled + 1);
+        }
+      }
+      
     };
     fetchRepairs();
   }, [profile]);
@@ -262,7 +270,7 @@ function TenantDashboard(props) {
       //   })
       // }
       setApplications(appArray);
-      console.table(appArray);
+      console.log("applications", appArray);
     };
     fetchApplications();
   }, [profile]);
@@ -297,50 +305,70 @@ function TenantDashboard(props) {
       },
     });
   };
-  console.log(selectedProperty);
-  console.log(repairs);
+
   return (
     <div className="h-100" style={{backgroundColor: '#E9E9E9'}}>
-    
      <Header title="Tenant Dashboard" customClass={"mb-2"}/>
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
         <Container className="mb-4" style={{minHeight: "100%", width: '98%', borderRadius: '10px 10px 0px 0px'}}>
-          <Row style={headings}>
+          <Row style={{...headings, marginBottom: '0px'}}>
+            
               <div style={{backgroundColor: '#FFFFFF', color: '#007AFF', fontSize: '24px', padding: '10px', borderRadius: '10px 10px 0px 0px'}}>
                 {profile.tenant_first_name}'s Property
               </div>
-              {/*Div to contain property information*/}
-            {isLoading === true || selectedProperty.length == 0 ? null :
-              <div style={{display: 'flex', backgroundColor: '#F3F3F3', padding: '15px', alignItems: 'center'}}>
-                <img src = {selectedProperty.property.images ? JSON.parse(selectedProperty.property.images) : '../icons/No_Image_Available.jpeg'} style={{width: '113px', height: '113px'}}></img>
-                  <div style={{width: '170px'}}>
-                    <div style={{paddingLeft: '10px', fontSize: '22px'}}>${selectedProperty.rent} / mo</div>                    
-                      <div style={{paddingLeft: '10px', fontSize: '16px', lineHeight: '20px', color: '#777777', padding: '10px'}}>
-                        {selectedProperty.property.address}, {selectedProperty.property.city}, {selectedProperty.property.zip}, {selectedProperty.property.state}
-                      </div>                  
-                    <div style={{marginLeft: '10px', fontSize: '12px', color: '#007AFF'}}>Manager: Jane Doe</div>
-                  </div>
-                <div style={{backgroundColor: '#93EE9C', borderRadius: '20px', fontSize: '13px', width: '73px', height: '24px', textAlign: 'center'}}>Rent paid</div>
-              </div>
-            }
-            
-            {/*Div to contain property information*/}
+              {isLoading === true || selectedProperty.length == 0 ? null :
+                <div style={{display: 'flex', backgroundColor: '#F3F3F3', padding: '15px', alignItems: 'center'}}>
+                  <img src = {selectedProperty.property.images.length > 0 ? JSON.parse(selectedProperty.property.images) : No_Image} style={{width: '113px', height: '113px', borderRadius: '10px'}}></img>
+                    <div style={{width: '170px'}}>
+                      <div style={{paddingLeft: '10px', fontSize: '22px'}}>${selectedProperty.rent} / mo</div>                    
+                        <div style={{paddingLeft: '10px', fontSize: '16px', lineHeight: '20px', color: '#777777', padding: '10px'}}>
+                          {selectedProperty.property.address}, {selectedProperty.property.city}, {selectedProperty.property.zip}, {selectedProperty.property.state}
+                        </div>                  
+                      <div style={{marginLeft: '10px', fontSize: '12px', color: '#007AFF', backgroundColor: 'yellow'}}>Manager: Jane Doe</div>
+                    </div>
+                    {/*'#93EE9C'*/}
+                  <div style={{backgroundColor: 'yellow', borderRadius: '20px', fontSize: '13px', width: '73px', height: '24px', textAlign: 'center'}}>Rent paid</div>
+                </div>
+              }
           </Row>
-          {/*Repairs*/}
-          {console.log("Repairs", repairs)}
-          {repairs.length === 0 ? (
-            <Row style={upcoming} className="mt-2 mb-2">
+          <Row style={{backgroundColor: '#F3F3F3'}}>
+            <Form.Group>
+              <Form.Select
+                style={squareForm}
+                value={JSON.stringify(selectedProperty)}
+                onChange={(e) =>
+                  setSelectedProperty(JSON.parse(e.target.value))
+                }
+              >
+                {properties.map((property, i) => (
+                  <option key={i} value={JSON.stringify(property)}>
+                    {property.property.address} {property.property.unit}
+                    ,&nbsp;
+                    {property.property.city}
+                    ,&nbsp;
+                    {property.property.state}&nbsp; {property.property.zip}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          </Row>
+          
+          {scheduled === 0 ? (
+            <Row style={{...upcoming, padding: '10px', height: 'auto', marginTop: '0px', marginBottom: '0px'}} >
               <div style={upcomingHeading} className="mt-1 mb-1">
                 Upcoming:
                 <br />
+                <div style={{marginTop: '15px'}}>
+                  Nothing Scheduled
+                </div>
+                
                 <br />
-                Nothing Scheduled
               </div>
             </Row>
           ) : (
             <div>
               {repairs.map((repair) => {
-                return repair.status === "SCHEDULED" ? (
+                return repair.status === "PROCESSING" ? (
                   <Row style={upcoming} className="mt-2 mb-2">
                     <div style={upcomingHeading} className="mt-1 mb-1">
                       Upcoming:
@@ -370,29 +398,17 @@ function TenantDashboard(props) {
               })}
             </div>
           )}
-          {/*Repairs*/}
-
+          
+          <Row>
+            <div style={{backgroundColor: '#F3F3F3', color: '#007AFF', font: 'Bahnschrift bold'}}>
+              <div style={{padding: '10px'}} onClick={goToAnnouncements}>
+                <div style={{fontSize: '22px', padding: '0px', font: 'normal normal bold Bahnschrift', fontWeight: 'Bold'}}>Resident Announcements</div>
+                <div style={{fontSize: '16px', font: 'normal normal bold Bahnschrift'}}>No announcements thus far</div>
+              </div>
+            </div>
+          </Row>
           <Row style={{backgroundColor:'#FFFFFF'}}>
-            <Form.Group>
-              <Form.Select
-                style={squareForm}
-                value={JSON.stringify(selectedProperty)}
-                onChange={(e) =>
-                  setSelectedProperty(JSON.parse(e.target.value))
-                }
-              >
-                {properties.map((property, i) => (
-                  <option key={i} value={JSON.stringify(property)}>
-                    {property.property.address} {property.property.unit}
-                    ,&nbsp;
-                    {property.property.city}
-                    ,&nbsp;
-                    {property.property.state}&nbsp; {property.property.zip}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-            {console.log("selectedProperty", selectedProperty)}
+            
             {/* {isLoading === true ? null : (
               <div>
                 {properties.map((property) => (
@@ -479,17 +495,17 @@ function TenantDashboard(props) {
                 )}
               </div>
             )} */}
-          {selectedProperty.nextPurchase &&
+          {selectedProperty &&
             <div style={{display: 'flex', flexDirection: 'row', textAlign: 'center', backgroundColor: '#FFFFFF'}}>
               <div 
                 onClick = { ()=>
                   navigate(`/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`)
                 }
                 style={{height: '120px', width: '167px', backgroundColor: '#F7FB94', borderRadius: '10px', margin: '10px'}}>
-                <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>Upcoming</div>
+                <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>Rent</div>
                 <div style={{fontSize: '22px', lineHeight: '35px'}}>
-                  {selectedProperty.nextPurchase.purchase_notes} <br/> 
-                  ${selectedProperty.nextPurchase.amount_due - selectedProperty.nextPurchase.amount_paid}
+                  <p style={{backgroundColor: 'yellow', margin: '0px'}}>date</p> 
+                  ${selectedProperty.rent}
                 </div>
               </div>
               <div 
@@ -497,17 +513,17 @@ function TenantDashboard(props) {
                   navigate(`/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`)
                 }} 
                 style={{height: '120px', width: '167px', backgroundColor: '#93EE9C', borderRadius: '10px', margin: '10px'}}>
-                <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>Rent Paid </div>
-                {selectedProperty.lastPurchase.amount_paid ? 
+                <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>What here </div>
+                {selectedProperty ? 
                 <div style={{fontSize: '22px', lineHeight: '35px'}}>
-                  {selectedProperty.nextPurchase.purchase_notes} <br/> 
-                  ${selectedProperty.lastPurchase.amount_paid}
+                   <br/> 
+                  What goes here
                 </div> : null}
               </div>
             </div>
           }
           </Row>
-
+          
           <Row
             style={{
               display: "flex",
@@ -516,9 +532,7 @@ function TenantDashboard(props) {
             }}
             className="mb-4"
           >
-            {/* <div style={headings} className="mt-4 mb-1">
-              Actions
-            </div> */}
+            
             <Col xs={3} style={actions}>
               <img
                 style={{ width: "50px", height: "50px", cursor: "pointer" }}
