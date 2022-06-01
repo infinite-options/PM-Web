@@ -39,7 +39,7 @@ import ReviewTenantProfile from "./pages/ReviewTenantprofile";
 import TenantPropertyView from "./pages/TenantPropertyView";
 import ReviewPropertyLease from "./pages/reviewPropertyLease";
 import LeaseApplicationStatus from "./pages/LeaseApplicationStatus";
-
+import SearchPM from "./pages/SearchPM";
 import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
 import ManagerPropertyView from "./pages/ManagerPropertyView";
@@ -49,6 +49,9 @@ import ManagerEmergency from "./pages/ManagerEmergency";
 import ManagerRepairDetail from "./pages/ManagerRepairDetail";
 import SignupExisting from "./pages/SignUpExisiting";
 import ManagerRepairsOverview from "./pages/ManagerRepairsOverview";
+import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
+import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
+import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -93,12 +96,13 @@ function App() {
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
+            <Route path="search-pm" element={<SearchPM />} />
             <Route
               path="detailQuoteRequest/:quote_id"
               element={<DetailQuoteRequest />}
             />
             <Route
-              path="maintenanceScheduleRepair"
+              path="maintenanceScheduleRepair/:quote_id"
               element={<MaintenanceScheduleRepair />}
             />
             <Route path="quotesAccepted" element={<QuotesAccepted />} />
@@ -199,8 +203,21 @@ function App() {
               element={<ManagerEmergency />}
             />
             <Route
-                path="manager-repairs"
-                element={<ManagerRepairsOverview />}
+              path="manager-repairs"
+              element={<ManagerRepairsOverview />}
+            />
+            <Route
+              path="manager-repairs/:rr_id"
+              element={<ManagerRepairDetail />}
+            />
+            <Route path="quotes-sent" element={<MaintenanceQuotesSent />} />
+            <Route
+              path="quotes-sent/:q_id"
+              element={<MaintenanceQuoteSentDetail />}
+            />
+            <Route
+              path="quotes-scheduled"
+              element={<MaintenanceQuotesScheduled />}
             />
           </Route>
         </Routes>

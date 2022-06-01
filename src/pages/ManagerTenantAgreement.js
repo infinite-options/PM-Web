@@ -129,6 +129,13 @@ function ManagerTenantAgreement(props) {
             setErrorMessage('Please fill out all fields');
             return;
         }
+
+        let start_date = new Date(startDate)
+        let end_date = new Date(endDate)
+        if (start_date >= end_date) {
+            setErrorMessage('Select an End Date later than Start Date');
+            return;
+        }
         setErrorMessage('');
 
         const newAgreement = {

@@ -33,17 +33,34 @@
 }
 .react-calendar__navigation {
   height: 2em;
-  margin-bottom: 1em;
+  margin: 1em;
   font: normal normal normal 19px/23px SFProText-Semibold;
   display: flex;
   justify-content: center;
 }
-.react-calendar__navigation button {
+/* .react-calendar__navigation button {
   width: auto;
   height: auto;
   background: none;
   color: #007aff;
   font: normal normal normal 19px/23px SFProText-Semibold;
+} */
+.react-calendar__navigation__label {
+  font-weight: bold;
+  color: #000000;
+  width: auto;
+  height: auto;
+  background: none;
+  font: normal normal normal 19px/23px SFProText-Semibold;
+  
+}
+.react-calendar__navigation__arrow {
+  border: 2px solid #007aff;
+  border-radius: 100%;
+  width: auto;
+  height: auto;
+  color: #007aff;
+  background: none;
 }
 /* .react-calendar__navigation button:enabled:hover, */
 /* .react-calendar__navigation button:enabled:focus {

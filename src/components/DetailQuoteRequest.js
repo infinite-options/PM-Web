@@ -42,8 +42,9 @@ function DetailQuote(props) {
   const [quote, setQuote] = React.useState({});
   const [property, setProperty] = React.useState({});
   const [currentImg, setCurrentImg] = React.useState(0);
-  const serviceState = React.useState([]);
-  const [earliestAvailability, setEarliestAvailability] = React.useState(Date());
+  const [serviceState, setServiceState] = React.useState([]);
+  const [totalEstimate, setTotalEstimate] = React.useState(0)
+  const [earliestAvailability, setEarliestAvailability] = React.useState('');
   const [eventType, setEventType] = React.useState('1 Hour Job');
 
   const nextImg = () => {
@@ -71,6 +72,9 @@ function DetailQuote(props) {
     setQuote(response.result[0]);
     const property_uid = response.result[0].property_uid;
     const propertyResponse = await get(`/properties?property_uid=${property_uid}`);
+    // if (!quote.event_type) {
+    //   setEventType(quote.event_type)
+    // }
     setProperty(propertyResponse.result[0]);
   }
   React.useEffect(loadQuote, []);
@@ -78,9 +82,12 @@ function DetailQuote(props) {
   const sendQuote = async () => {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
-      services_expenses: serviceState[0],
+      services_expenses: serviceState,
+      total_estimate: totalEstimate,
       earliest_availability: earliestAvailability,
-      quote_status: 'SENT'
+      quote_status: 'SENT',
+      event_type: eventType,
+
     }
     const response = await put('/maintenanceQuotes', updatedQuote);
     navigate('/ScheduledJobs');
@@ -89,13 +96,13 @@ function DetailQuote(props) {
   const rejectQuote = async () => {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
-      quote_status: 'REJECTED'
+      quote_status: 'REFUSED'
     }
     const response = await put('/maintenanceQuotes', updatedQuote);
     navigate('/ScheduledJobs');
   }
 
-  console.log(addService, showAddService);
+  // console.log(addService, showAddService);
   return (
     <div className="h-100 d-flex flex-column">
       <Header
@@ -152,7 +159,9 @@ function DetailQuote(props) {
           <Row>
             <div style={headings}>Services</div>
           </Row>
-          <ServicesProvided state={serviceState} noHeader/>
+          <ServicesProvided serviceState={serviceState} setServiceState={setServiceState}
+                            eventType={eventType} setEventType={setEventType}
+                            totalEstimate={totalEstimate} setTotalEstimate={setTotalEstimate}/>
         </div>
 
         <div className="mt-2 mx-2 mb-4">
@@ -170,26 +179,28 @@ function DetailQuote(props) {
           </div>
         </div>
 
-        <div className="mt-2 mx-2 mb-4">
-          <Row>
-            <div style={headings}>Event Type</div>
-          </Row>
-          <div>
-            <Form.Group className="mt-2 mb-2">
-              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                Type
-              </Form.Label>
-              <Form.Select style={squareForm} value={eventType}
-                onChange={(e) => setEventType(e.target.value)}>
-                <option>1 Hour Job</option>
-                <option>2 Hour Job</option>
-                <option>6 Hour Job</option>
-                <option>1 Day Job</option>
-              </Form.Select>
-            </Form.Group>
-          </div>
-        </div>
-
+        {/*<div className="mt-2 mx-2 mb-4">*/}
+        {/*  <Row>*/}
+        {/*    <div style={headings}>Event Type</div>*/}
+        {/*  </Row>*/}
+        {/*  <div>*/}
+        {/*    <Form.Group className="mt-2 mb-2">*/}
+        {/*      <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">*/}
+        {/*        Type*/}
+        {/*      </Form.Label>*/}
+        {/*      <Form.Select style={squareForm} value={eventType}*/}
+        {/*        onChange={(e) => setEventType(e.target.value)}>*/}
+        {/*        <option>1 Hour Job</option>*/}
+        {/*        <option>2 Hour Job</option>*/}
+        {/*        <option>3 Hour Job</option>*/}
+        {/*        <option>4 Hour Job</option>*/}
+        {/*        <option>6 Hour Job</option>*/}
+        {/*        <option>8 Hour Job</option>*/}
+        {/*        <option>1 Day Job</option>*/}
+        {/*      </Form.Select>*/}
+        {/*    </Form.Group>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         <div className="mt-2 mx-2 mb-4" hidden={sendManager}>
           <Row>

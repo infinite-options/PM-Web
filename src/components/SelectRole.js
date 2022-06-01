@@ -23,9 +23,9 @@ function SelectRole() {
     } else if (role === "TENANT") {
       navigate("/tenant");
     } else if (role === "MAINTENANCE") {
-      navigate("/maintenance");
+      navigate("/maintenance", { state: { roles: role } });
     } else if (role === "MAINT_EMPLOYEE") {
-      navigate("/maintenance");
+      navigate("/maintenance", { state: { roles: role } });
     }
   };
   const selectRole = () => {
@@ -42,7 +42,7 @@ function SelectRole() {
     OWNER: "Property Owner",
     TENANT: "Tenant",
     MAINTENANCE: "Property Maintenance (Owner)",
-    MAINT_EMPLOYEE: "Property Maintenance (Employee)"
+    MAINT_EMPLOYEE: "Property Maintenance (Employee)",
   };
   React.useState(() => {}, []);
   return (

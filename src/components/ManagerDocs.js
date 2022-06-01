@@ -47,13 +47,13 @@ function ManagerDocs(props) {
             manager_id: business_uid,
             management_status: "FORWARDED",
           };
-          for (let i = -1; i < files.length - 1; i++) {
-            let key = `img_${i}`;
-            if (i === -1) {
-              key = "img_cover";
-            }
-            newProperty[key] = files[i + 1];
-          }
+          // for (let i = -1; i < files.length - 1; i++) {
+          //   let key = `img_${i}`;
+          //   if (i === -1) {
+          //     key = "img_cover";
+          //   }
+          //   newProperty[key] = files[i + 1];
+          // }
           const response = await put("/properties", newProperty, null, files);
           setAddPropertyManager(false);
           reload();
@@ -65,13 +65,13 @@ function ManagerDocs(props) {
         manager_id: business_uid,
         management_status: "FORWARDED",
       };
-      for (let i = -1; i < files.length - 1; i++) {
-        let key = `img_${i}`;
-        if (i === -1) {
-          key = "img_cover";
-        }
-        newProperty[key] = files[i + 1];
-      }
+      // for (let i = -1; i < files.length - 1; i++) {
+      //   let key = `img_${i}`;
+      //   if (i === -1) {
+      //     key = "img_cover";
+      //   }
+      //   newProperty[key] = files[i + 1];
+      // }
       const response = await put("/properties", newProperty, null, files);
       setAddPropertyManager(false);
       reload();
@@ -91,13 +91,13 @@ function ManagerDocs(props) {
           manager_id: business_uid,
           management_status: "FORWARDED",
         };
-        for (let i = -1; i < files.length - 1; i++) {
-          let key = `img_${i}`;
-          if (i === -1) {
-            key = "img_cover";
-          }
-          newProperty[key] = files[i + 1];
-        }
+        // for (let i = -1; i < files.length - 1; i++) {
+        //   let key = `img_${i}`;
+        //   if (i === -1) {
+        //     key = "img_cover";
+        //   }
+        //   newProperty[key] = files[i + 1];
+        // }
         const response = await put("/properties", newProperty, null, files);
         setAddPropertyManager(false);
         reload();
@@ -141,7 +141,7 @@ function ManagerDocs(props) {
 
       {property.management_status === "ACCEPTED" ? (
         <div className="d-flex flex-column gap-2">
-          {contracts.map((contract, i) => (
+          {/* {contracts.map((contract, i) => (
             <div key={i} onClick={() => selectContract(contract)}>
               <div className="d-flex justify-content-between align-items-end">
                 <h6 style={mediumBold}>Contract {i + 1}</h6>
@@ -149,7 +149,7 @@ function ManagerDocs(props) {
               </div>
               <hr style={{ opacity: 1 }} className="mb-0 mt-2" />
             </div>
-          ))}
+          ))} 
           <div>
             <Button
               variant="outline-primary"
@@ -158,7 +158,7 @@ function ManagerDocs(props) {
             >
               Add Document
             </Button>
-          </div>
+          </div>*/}
         </div>
       ) : addPropertyManager ? (
         <div>
@@ -194,7 +194,7 @@ function ManagerDocs(props) {
             </Button>
           </div>
         </div>
-      ) : (
+      ) : property.management_status !== "ACCEPTED" ? (
         <div>
           <Button
             variant="outline-primary"
@@ -204,7 +204,7 @@ function ManagerDocs(props) {
             Add Property Manager
           </Button>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

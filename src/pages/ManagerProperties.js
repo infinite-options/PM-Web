@@ -44,7 +44,7 @@ function ManagerProperties(props) {
         // const properties = response.result
         const properties = response.result.filter(property => property.management_status !== "REJECTED")
 
-        const properties_unique = []
+        let properties_unique = []
         const pids = new Set()
         properties.forEach(property => {
             if (pids.has(property.property_uid)) {
@@ -57,7 +57,21 @@ function ManagerProperties(props) {
                 properties_unique[properties_unique.length-1].tenants = [property]
             }
         });
-        // console.log(properties_unique)
+
+        properties_unique.forEach(property => {
+            const new_repairs = property.maintenanceRequests.filter(item => item.request_status === "NEW")
+            const processing_repairs = property.maintenanceRequests.filter(item => item.request_status === "PROCESSING")
+            const scheduled_repairs = property.maintenanceRequests.filter(item => item.request_status === "SCHEDULED")
+            const completed_repairs = property.maintenanceRequests.filter(item => item.request_status === "COMPLETE")
+            property.repairs = {
+                new: new_repairs.length,
+                processing: processing_repairs.length,
+                scheduled: scheduled_repairs.length,
+                complete: completed_repairs.length,
+            }
+        })
+
+        console.log(properties_unique)
         setProperties(properties_unique)
     }
 
@@ -102,12 +116,22 @@ function ManagerProperties(props) {
                                 {property.address}{property.unit !== '' ? ' '+property.unit : ''}, {property.city}, {property.state} <br/>
                                 {property.zip}
                             </p>
+                            {/*<div className='d-flex'>*/}
+                            {/*    <div className='flex-grow-1 d-flex flex-column justify-content-center'>*/}
+                            {/*        <p style={{...blue, ...xSmall}} className='mb-0'>*/}
+                            {/*            {property.owner_id ?*/}
+                            {/*                `Owner: ${property.owner_first_name} ${property.owner_last_name}`*/}
+                            {/*                : 'No Owner'}*/}
+                            {/*        </p>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
+
                             <div className='d-flex'>
-                                <div className='flex-grow-1 d-flex flex-column justify-content-center'>
+                                <div className='d-flex align-items-end'>
                                     <p style={{...blue, ...xSmall}} className='mb-0'>
-                                        {property.owner_id ?
-                                            `Owner: ${property.owner_first_name} ${property.owner_last_name}`
-                                            : 'No Owner'}
+                                        {property.repairs.new > 0 ?
+                                            `${property.repairs.new} new repair requests to review`
+                                            : ''}
                                     </p>
                                 </div>
                             </div>
