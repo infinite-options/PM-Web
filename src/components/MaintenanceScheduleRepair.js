@@ -22,16 +22,14 @@ import {
   hidden,
 } from "../utils/styles";
 
-const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
-const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
-
 function MaintenanceScheduleRepair(props) {
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   const navigate = useNavigate();
-
+  const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
+  const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
+  const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
   const location = useLocation();
   const quotes = location.state.quote;
   //for axios.get
