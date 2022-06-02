@@ -26,6 +26,7 @@ import {
   squareForm
 } from "../utils/styles";
 import ServicesProvided from '../components/ServicesProvided';
+import ServicesProvidedQuotes from "./ServicesProvidedQuotes";
 
 function DetailQuote(props) {
   const navigate = useNavigate();
@@ -159,7 +160,7 @@ function DetailQuote(props) {
           <Row>
             <div style={headings}>Services</div>
           </Row>
-          <ServicesProvided serviceState={serviceState} setServiceState={setServiceState}
+          <ServicesProvidedQuotes serviceState={serviceState} setServiceState={setServiceState}
                             eventType={eventType} setEventType={setEventType}
                             totalEstimate={totalEstimate} setTotalEstimate={setTotalEstimate}/>
         </div>

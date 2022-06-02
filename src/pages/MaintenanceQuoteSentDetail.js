@@ -21,6 +21,7 @@ import Message from "../icons/Message.svg";
 import {put} from "../utils/api";
 import ServicesProvided from "../components/ServicesProvided";
 import ConfirmDialog from "../components/ConfirmDialog";
+import ServicesProvidedQuotes from "../components/ServicesProvidedQuotes";
 
 function  MaintenanceQuoteSentDetail (props) {
     const navigate = useNavigate();
@@ -164,7 +165,7 @@ function  MaintenanceQuoteSentDetail (props) {
                     <Row>
                         <div style={headings}>Service Charge(s)</div>
                     </Row>
-                    <ServicesProvided serviceState={serviceState} setServiceState={setServiceState}
+                    <ServicesProvidedQuotes serviceState={serviceState} setServiceState={setServiceState}
                                       eventType={eventType} setEventType={setEventType}
                                       totalEstimate={totalEstimate} setTotalEstimate={setTotalEstimate}
                     />
