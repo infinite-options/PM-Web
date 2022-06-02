@@ -47,7 +47,7 @@ function SocialSignUp(props) {
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
       //redirect_uri: "http://localhost:3000",
-      redirectUri: "https://io-propertymanagement.netlify.app",
+      redirectUri: "https://io-pm.netlify.app",
       grant_type: "authorization_code",
     };
 
@@ -164,7 +164,7 @@ function SocialSignUp(props) {
             buttonText="Log In"
             ux_mode="redirect"
             //redirectUri="http://localhost:3000"
-            redirectUri="https://io-propertymanagement.netlify.app"
+            redirectUri="https://io-pm.netlify.app"
             scope="https://www.googleapis.com/auth/calendar"
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
@@ -193,7 +193,7 @@ function SocialSignUp(props) {
             buttonText="Log In"
             ux_mode="redirect"
             //redirectUri="http://localhost:3000"
-            redirectUri="https://io-propertymanagement.netlify.app"
+            redirectUri="https://io-pm.netlify.app"
             scope="https://www.googleapis.com/auth/calendar"
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
