@@ -7,7 +7,7 @@ class Checkbox extends React.Component {
     this.state = {
       checked: this.props.checked,
     };
-    // console.log(props);
+    console.log(this.state.checked);
   }
 
   componentDidUpdate(prevProps) {
@@ -20,14 +20,16 @@ class Checkbox extends React.Component {
       this.props.onClick(!this.state.checked);
       console.log(this.state.checked);
     }
+
     if (this.props.checked === undefined) {
       this.setState({ checked: !this.state.checked });
       console.log(this.state.checked);
     }
   };
+
   render() {
     const color = this.state.checked ? "black" : "white";
-    // console.log(color);
+
     return (
       <>
         {this.props.type === "CIRCLE" ? (

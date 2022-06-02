@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Form } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Row, Col } from "react-bootstrap";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -14,15 +14,21 @@ import {
   mediumBold,
   squareForm,
 } from "../utils/styles";
+import ManagerFees from "./ManagerFees";
+import BusinessContact from "./BusinessContact";
 
 function ManagerDocs(props) {
   const { addDocument, property, selectContract, reload } = props;
-  const [contracts, setContracts] = React.useState([]);
-  const [businesses, setBusinesses] = React.useState([]);
-  const [selectedBusiness, setSelectedBusiness] = React.useState(null);
-  const [addPropertyManager, setAddPropertyManager] = React.useState(false);
+  const [contracts, setContracts] = useState([]);
+  const [businesses, setBusinesses] = useState([]);
+  const [selectedBusiness, setSelectedBusiness] = useState(null);
+  const [addPropertyManager, setAddPropertyManager] = useState(false);
 
-  const [showDialog, setShowDialog] = React.useState(false);
+  const contactState = useState([]);
+  const [feeState, setFeeState] = useState([]);
+  const [showDialog, setShowDialog] = useState(false);
+
+  const [files, setFiles] = useState([]);
   console.log(property);
   const updateBusiness = async () => {
     const files = JSON.parse(property.images);
@@ -33,7 +39,7 @@ function ManagerDocs(props) {
       for (const prop of property.property_manager) {
         if (
           business_uid === prop.manager_id &&
-          prop.management_status === "REJECTED"
+          prop.management_status === "REFUSED"
         ) {
           console.log("here in if");
 
@@ -105,13 +111,18 @@ function ManagerDocs(props) {
     }
   };
 
-  React.useEffect(async () => {
+  useEffect(async () => {
     const response = await get(
       `/contracts?property_uid=${property.property_uid}`
     );
     setContracts(response.result);
+    setFeeState(JSON.parse(response.result[0].contract_fees));
+
+    setFiles(JSON.parse(response.result[0].documents));
+
+    contactState[1](JSON.parse(response.result[0].assigned_contacts));
   }, []);
-  React.useEffect(async () => {
+  useEffect(async () => {
     const response = await get(`/businesses?business_type=MANAGEMENT`);
     setBusinesses(response.result);
     setSelectedBusiness(JSON.stringify(response.result[0]));
@@ -128,8 +139,8 @@ function ManagerDocs(props) {
         <DialogTitle id="alert-dialog-title">Already Rejected</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            This Property Manager has already been rejected. Please choose
-            another one.
+            This Property Manager has already refused. Please choose another
+            one.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -141,15 +152,75 @@ function ManagerDocs(props) {
 
       {property.management_status === "ACCEPTED" ? (
         <div className="d-flex flex-column gap-2">
-          {/* {contracts.map((contract, i) => (
-            <div key={i} onClick={() => selectContract(contract)}>
+          {contracts.map((contract, i) => (
+            <div key={i}>
               <div className="d-flex justify-content-between align-items-end">
-                <h6 style={mediumBold}>Contract {i + 1}</h6>
-                <img src={File} />
+                {contract.contract_name != null ? (
+                  <h6 style={mediumBold}> {contract.contract_name} </h6>
+                ) : (
+                  <h6 style={mediumBold}> Contract {i + 1} </h6>
+                )}
+                {JSON.parse(contract.documents).length === 0
+                  ? ""
+                  : JSON.parse(contract.documents).map((file) => {
+                      return (
+                        <a href={file.link} target="_blank">
+                          <img src={File} />
+                        </a>
+                      );
+                    })}
+
+                {/* <a href={JSON.parse(contract.documents).link} target="_blank">
+                  <img src={File} />
+                </a> */}
               </div>
-              <hr style={{ opacity: 1 }} className="mb-0 mt-2" />
+              <Row>
+                <Col>
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Start Date
+                    </Form.Label>
+                    <div className="mb-0 ms-2">{contract.start_date}</div>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      End Date
+                    </Form.Label>
+                    <div className="mb-0 ms-2">{contract.end_date}</div>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Form.Group className="mx-2 my-3">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    PM Fees
+                  </Form.Label>
+                  <div className="mb-0 ms-2">
+                    <ManagerFees
+                      feeState={JSON.parse(contract.contract_fees)}
+                      setFeeState={setFeeState}
+                    />
+                  </div>
+                </Form.Group>
+              </Row>
+              {JSON.parse(contract.assigned_contacts).length === 0 ? (
+                ""
+              ) : (
+                <Row>
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Contact Details
+                    </Form.Label>
+                    <div className="mb-0 ms-2">
+                      <BusinessContact state={contactState} />
+                    </div>
+                  </Form.Group>
+                </Row>
+              )}
             </div>
-          ))} 
+          ))}
           <div>
             <Button
               variant="outline-primary"
@@ -158,7 +229,7 @@ function ManagerDocs(props) {
             >
               Add Document
             </Button>
-          </div>*/}
+          </div>
         </div>
       ) : addPropertyManager ? (
         <div>

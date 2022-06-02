@@ -116,7 +116,7 @@ function ManagementContract(props) {
             null,
             files
           );
-
+          back();
           reload();
           //navigate("/tenant");
         }
@@ -141,7 +141,7 @@ function ManagementContract(props) {
         null,
         files
       );
-
+      back();
       reload();
       //navigate("/tenant");
     }

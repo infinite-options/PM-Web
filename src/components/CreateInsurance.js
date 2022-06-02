@@ -4,8 +4,8 @@ import { squareForm, pillButton, small, hidden, red } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
 import { put, post } from "../utils/api";
 
-function CreateTax(props) {
-  const [category, setCategory] = React.useState("Tax");
+function CreateInsurance(props) {
+  const [category, setCategory] = React.useState("Insurance");
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [amount, setAmount] = React.useState("");
@@ -28,11 +28,13 @@ function CreateTax(props) {
       return;
     }
 
-    let taxes =
-      props.property.taxes == null ? [] : JSON.parse(props.property.taxes);
-    // console.log(taxes);
+    let insurance =
+      props.property.insurance == null
+        ? []
+        : JSON.parse(props.property.insurance);
+    // console.log(insurance);
     const files = JSON.parse(props.property.images);
-    const newTax = {
+    const newInsurance = {
       category: category,
       title: title,
       description: description,
@@ -41,11 +43,11 @@ function CreateTax(props) {
       frequency_of_payment: frequencyOfPayment,
       next_date: date,
     };
-    taxes.push(newTax);
-    // console.log(taxes);
-    const updateTaxes = {
+    insurance.push(newInsurance);
+    // console.log(insurance);
+    const updateInsurance = {
       property_uid: props.property.property_uid,
-      taxes: JSON.stringify(taxes),
+      insurance: JSON.stringify(insurance),
     };
     // for (let i = -1; i < files.length - 1; i++) {
     //   let key = `img_${i}`;
@@ -55,7 +57,7 @@ function CreateTax(props) {
     //   updateTaxes[key] = files[i + 1];
     // }
     // console.log(updateTaxes);
-    const response = await put("/properties", updateTaxes, null, files);
+    const response = await put("/properties", updateInsurance, null, files);
     props.reload();
     props.back();
   };
@@ -70,7 +72,7 @@ function CreateTax(props) {
     );
   return (
     <div>
-      <h5>Add New Tax Payment</h5>
+      <h5>Add New Insurance Payment</h5>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Category
@@ -80,7 +82,7 @@ function CreateTax(props) {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
-          <option>Tax</option>
+          <option>Insurance</option>
         </Form.Select>
       </Form.Group>
       <Form.Group className="mx-2 my-3">
@@ -172,11 +174,11 @@ function CreateTax(props) {
           onClick={submitForm}
           className="mx-2"
         >
-          Save Tax
+          Save Insurance
         </Button>
       </div>
     </div>
   );
 }
 
-export default CreateTax;
+export default CreateInsurance;

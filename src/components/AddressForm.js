@@ -1,15 +1,20 @@
 import React from "react";
-import { Container, Row, Col, Form, DropdownButton, Dropdown } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  DropdownButton,
+  Dropdown,
+} from "react-bootstrap";
 import { squareForm, red } from "../utils/styles";
 import Checkbox from "../components/Checkbox";
-import {
-  small,
-  underline,
-} from "../utils/styles";
-import ArrowDown from '../icons/ArrowDown.svg';
+import { small, underline } from "../utils/styles";
+import ArrowDown from "../icons/ArrowDown.svg";
 
 function AddressForm(props) {
-  const { errorMessage, hideRentingCheckbox, selectedState, setSelectedState} = props;
+  const { errorMessage, hideRentingCheckbox, selectedState, setSelectedState } =
+    props;
   const [addressState, setAddressState] = props.state;
   // const extraDet = !!(addressState && (addressState.pm_name || addressState.pm_number));
   const [useDetailsIfRenting, setUseDetailsIfRenting] = React.useState(false);
@@ -47,65 +52,242 @@ function AddressForm(props) {
   const [type, setType] = React.useState("Apartment");
 
   const usStates = [
-      { name: 'ALABAMA', abbreviation: 'AL'},
-      { name: 'ALASKA', abbreviation: 'AK'},
-      { name: 'AMERICAN SAMOA', abbreviation: 'AS'},
-      { name: 'ARIZONA', abbreviation: 'AZ'},
-      { name: 'ARKANSAS', abbreviation: 'AR'},
-      { name: 'CALIFORNIA', abbreviation: 'CA'},
-      { name: 'COLORADO', abbreviation: 'CO'},
-      { name: 'CONNECTICUT', abbreviation: 'CT'},
-      { name: 'DELAWARE', abbreviation: 'DE'},
-      { name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC'},
-      { name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM'},
-      { name: 'FLORIDA', abbreviation: 'FL'},
-      { name: 'GEORGIA', abbreviation: 'GA'},
-      { name: 'GUAM', abbreviation: 'GU'},
-      { name: 'HAWAII', abbreviation: 'HI'},
-      { name: 'IDAHO', abbreviation: 'ID'},
-      { name: 'ILLINOIS', abbreviation: 'IL'},
-      { name: 'INDIANA', abbreviation: 'IN'},
-      { name: 'IOWA', abbreviation: 'IA'},
-      { name: 'KANSAS', abbreviation: 'KS'},
-      { name: 'KENTUCKY', abbreviation: 'KY'},
-      { name: 'LOUISIANA', abbreviation: 'LA'},
-      { name: 'MAINE', abbreviation: 'ME'},
-      { name: 'MARSHALL ISLANDS', abbreviation: 'MH'},
-      { name: 'MARYLAND', abbreviation: 'MD'},
-      { name: 'MASSACHUSETTS', abbreviation: 'MA'},
-      { name: 'MICHIGAN', abbreviation: 'MI'},
-      { name: 'MINNESOTA', abbreviation: 'MN'},
-      { name: 'MISSISSIPPI', abbreviation: 'MS'},
-      { name: 'MISSOURI', abbreviation: 'MO'},
-      { name: 'MONTANA', abbreviation: 'MT'},
-      { name: 'NEBRASKA', abbreviation: 'NE'},
-      { name: 'NEVADA', abbreviation: 'NV'},
-      { name: 'NEW HAMPSHIRE', abbreviation: 'NH'},
-      { name: 'NEW JERSEY', abbreviation: 'NJ'},
-      { name: 'NEW MEXICO', abbreviation: 'NM'},
-      { name: 'NEW YORK', abbreviation: 'NY'},
-      { name: 'NORTH CAROLINA', abbreviation: 'NC'},
-      { name: 'NORTH DAKOTA', abbreviation: 'ND'},
-      { name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP'},
-      { name: 'OHIO', abbreviation: 'OH'},
-      { name: 'OKLAHOMA', abbreviation: 'OK'},
-      { name: 'OREGON', abbreviation: 'OR'},
-      { name: 'PALAU', abbreviation: 'PW'},
-      { name: 'PENNSYLVANIA', abbreviation: 'PA'},
-      { name: 'PUERTO RICO', abbreviation: 'PR'},
-      { name: 'RHODE ISLAND', abbreviation: 'RI'},
-      { name: 'SOUTH CAROLINA', abbreviation: 'SC'},
-      { name: 'SOUTH DAKOTA', abbreviation: 'SD'},
-      { name: 'TENNESSEE', abbreviation: 'TN'},
-      { name: 'TEXAS', abbreviation: 'TX'},
-      { name: 'UTAH', abbreviation: 'UT'},
-      { name: 'VERMONT', abbreviation: 'VT'},
-      { name: 'VIRGIN ISLANDS', abbreviation: 'VI'},
-      { name: 'VIRGINIA', abbreviation: 'VA'},
-      { name: 'WASHINGTON', abbreviation: 'WA'},
-      { name: 'WEST VIRGINIA', abbreviation: 'WV'},
-      { name: 'WISCONSIN', abbreviation: 'WI'},
-      { name: 'WYOMING', abbreviation: 'WY' }
+    {
+      name: "Alabama",
+      abbreviation: "AL",
+    },
+    {
+      name: "Alaska",
+      abbreviation: "AK",
+    },
+    {
+      name: "American Samoa",
+      abbreviation: "AS",
+    },
+    {
+      name: "Arizona",
+      abbreviation: "AZ",
+    },
+    {
+      name: "Arkansas",
+      abbreviation: "AR",
+    },
+    {
+      name: "California",
+      abbreviation: "CA",
+    },
+    {
+      name: "Colorado",
+      abbreviation: "CO",
+    },
+    {
+      name: "Connecticut",
+      abbreviation: "CT",
+    },
+    {
+      name: "Delaware",
+      abbreviation: "DE",
+    },
+    {
+      name: "District Of Columbia",
+      abbreviation: "DC",
+    },
+    {
+      name: "Federated States Of Micronesia",
+      abbreviation: "FM",
+    },
+    {
+      name: "Florida",
+      abbreviation: "FL",
+    },
+    {
+      name: "Georgia",
+      abbreviation: "GA",
+    },
+    {
+      name: "Guam",
+      abbreviation: "GU",
+    },
+    {
+      name: "Hawaii",
+      abbreviation: "HI",
+    },
+    {
+      name: "Idaho",
+      abbreviation: "ID",
+    },
+    {
+      name: "Illinois",
+      abbreviation: "IL",
+    },
+    {
+      name: "Indiana",
+      abbreviation: "IN",
+    },
+    {
+      name: "Iowa",
+      abbreviation: "IA",
+    },
+    {
+      name: "Kansas",
+      abbreviation: "KS",
+    },
+    {
+      name: "Kentucky",
+      abbreviation: "KY",
+    },
+    {
+      name: "Louisiana",
+      abbreviation: "LA",
+    },
+    {
+      name: "Maine",
+      abbreviation: "ME",
+    },
+    {
+      name: "Marshall Islands",
+      abbreviation: "MH",
+    },
+    {
+      name: "Maryland",
+      abbreviation: "MD",
+    },
+    {
+      name: "Massachusetts",
+      abbreviation: "MA",
+    },
+    {
+      name: "Michigan",
+      abbreviation: "MI",
+    },
+    {
+      name: "Minnesota",
+      abbreviation: "MN",
+    },
+    {
+      name: "Mississippi",
+      abbreviation: "MS",
+    },
+    {
+      name: "Missouri",
+      abbreviation: "MO",
+    },
+    {
+      name: "Montana",
+      abbreviation: "MT",
+    },
+    {
+      name: "Nebraska",
+      abbreviation: "NE",
+    },
+    {
+      name: "Nevada",
+      abbreviation: "NV",
+    },
+    {
+      name: "New Hampshire",
+      abbreviation: "NH",
+    },
+    {
+      name: "New Jersey",
+      abbreviation: "NJ",
+    },
+    {
+      name: "New Mexico",
+      abbreviation: "NM",
+    },
+    {
+      name: "New York",
+      abbreviation: "NY",
+    },
+    {
+      name: "North Carolina",
+      abbreviation: "NC",
+    },
+    {
+      name: "North Dakota",
+      abbreviation: "ND",
+    },
+    {
+      name: "Northern Mariana Islands",
+      abbreviation: "MP",
+    },
+    {
+      name: "Ohio",
+      abbreviation: "OH",
+    },
+    {
+      name: "Oklahoma",
+      abbreviation: "OK",
+    },
+    {
+      name: "Oregon",
+      abbreviation: "OR",
+    },
+    {
+      name: "Palau",
+      abbreviation: "PW",
+    },
+    {
+      name: "Pennsylvania",
+      abbreviation: "PA",
+    },
+    {
+      name: "Puerto Rico",
+      abbreviation: "PR",
+    },
+    {
+      name: "Rhode Island",
+      abbreviation: "RI",
+    },
+    {
+      name: "South Carolina",
+      abbreviation: "SC",
+    },
+    {
+      name: "South Dakota",
+      abbreviation: "SD",
+    },
+    {
+      name: "Tennessee",
+      abbreviation: "TN",
+    },
+    {
+      name: "Texas",
+      abbreviation: "TX",
+    },
+    {
+      name: "Utah",
+      abbreviation: "UT",
+    },
+    {
+      name: "Vermont",
+      abbreviation: "VT",
+    },
+    {
+      name: "Virgin Islands",
+      abbreviation: "VI",
+    },
+    {
+      name: "Virginia",
+      abbreviation: "VA",
+    },
+    {
+      name: "Washington",
+      abbreviation: "WA",
+    },
+    {
+      name: "West Virginia",
+      abbreviation: "WV",
+    },
+    {
+      name: "Wisconsin",
+      abbreviation: "WI",
+    },
+    {
+      name: "Wyoming",
+      abbreviation: "WY",
+    },
   ];
   return (
     <Container>
@@ -153,22 +335,26 @@ function AddressForm(props) {
         </Col>
       </Row>
       <Row>
-       
         <Col className="px-0">
           <Form.Group className="mx-2 mb-3">
             <Form.Label as="h6" className="mb-0 ms-2">
               State {state === "" ? required : ""}
             </Form.Label>
-            
-            <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
-                  value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
-                    {usStates.map((state, i)=> (
-                   <option key={i}>{state.abbreviation}</option>
-                  ))}
+
+            <Form.Select
+              style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+              value={selectedState}
+              onChange={(e) => setSelectedState(e.target.value)}
+            >
+              {usStates.map((state, i) => (
+                <option value={state.abbreviation} key={i}>
+                  {state.name}
+                </option>
+              ))}
             </Form.Select>
           </Form.Group>
         </Col>
-        
+
         <Col className="px-0">
           <Form.Group className="mx-2 mb-3">
             <Form.Label as="h6" className="mb-0 ms-2">
@@ -184,26 +370,36 @@ function AddressForm(props) {
         </Col>
       </Row>
       <Row>
-       
         <Col className="px-0" />
       </Row>
-      {!hideRentingCheckbox ? 
-      (<Row>
-             <Col style={{marginLeft:"-8px"}} xs={2}  className="px-0 d-flex justify-content-end align-items-center"  >
-                <div>
-                  <Checkbox  type="BOX"  onClick={() => setUseDetailsIfRenting(!useDetailsIfRenting)}  />
-                </div>
-            </Col>
-            <Col>
-              <p  style={{ ...underline, ...small }}   className="text-primary mb-3 me-3" >
-                Add additional details (If renting)
-              </p>
+      {!hideRentingCheckbox ? (
+        <Row>
+          <Col
+            style={{ marginLeft: "-8px" }}
+            xs={2}
+            className="px-0 d-flex justify-content-end align-items-center"
+          >
+            <div>
+              <Checkbox
+                type="BOX"
+                onClick={() => setUseDetailsIfRenting(!useDetailsIfRenting)}
+              />
+            </div>
           </Col>
-      </Row>)
-      :
-      ("")}
-    { (useDetailsIfRenting || hideRentingCheckbox) ?
-     ( <div>
+          <Col>
+            <p
+              style={{ ...underline, ...small }}
+              className="text-primary mb-3 me-3"
+            >
+              Add additional details (If renting)
+            </p>
+          </Col>
+        </Row>
+      ) : (
+        ""
+      )}
+      {useDetailsIfRenting || hideRentingCheckbox ? (
+        <div>
           <h5 className="mx-2 my-3">Additional details</h5>
           <Row>
             <Col className="px-0">
@@ -278,10 +474,10 @@ function AddressForm(props) {
               </Form.Group>
             </Col>
           </Row>
-      </div>
+        </div>
       ) : (
         ""
-        )}
+      )}
     </Container>
   );
 }

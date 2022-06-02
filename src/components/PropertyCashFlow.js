@@ -7,17 +7,25 @@ import Add from "../icons/Add.svg";
 
 function PropertyCashFlow(props) {
   const { property, state } = props;
-  const { setShowCreateExpense, setShowCreateTax, setShowCreateMortgage } =
-    state;
+  const {
+    setShowCreateExpense,
+    setShowCreateTax,
+    setShowCreateMortgage,
+    setShowCreateInsurance,
+  } = state;
 
-  const [expandRevenue, setExpandRevenue] = React.useState(false);
-  const [expandExpenses, setExpandExpenses] = React.useState(false);
-  const [expandTaxes, setExpandTaxes] = React.useState(false);
-  const [expandMortgage, setExpandMortgage] = React.useState(false);
+  const [expandRevenue, setExpandRevenue] = useState(false);
+  const [expandExpenses, setExpandExpenses] = useState(false);
+  const [expandTaxes, setExpandTaxes] = useState(false);
+  const [expandMortgage, setExpandMortgage] = useState(false);
+  const [expandInsurance, setExpandInsurance] = useState(false);
   const [revenue, setRevenue] = useState("");
   const [expense, setExpense] = useState("");
+  const [yearRevenue, setYearRevenue] = useState("");
+  const [yearExpense, setYearExpense] = useState("");
   const [maintenance, setMaintenance] = useState("");
   const [mortgage, setMortgage] = useState("");
+  const [insurance, setInsurance] = useState("");
   const [tax, setTax] = useState("");
 
   console.log(property);
@@ -39,12 +47,20 @@ function PropertyCashFlow(props) {
     e.stopPropagation();
     setShowCreateMortgage(true);
   };
+  const addInsurance = (e) => {
+    e.stopPropagation();
+    setShowCreateInsurance(true);
+  };
 
   let revenueTotal = 0;
   let expenseTotal = 0;
   let mortgageTotal = 0;
   let taxTotal = 0;
+  let insuranceTotal = 0;
   let maintenanceTotal = 0;
+  let yearExpenseTotal = 0;
+  let yearRevenueTotal = 0;
+
   useEffect(() => {
     console.log("in useeffect");
     if (property.owner_revenue.length == 0) {
@@ -72,19 +88,38 @@ function PropertyCashFlow(props) {
       mortgageTotal += Number(JSON.parse(property.mortgages).amount);
     }
     if (property.taxes !== null) {
-      console.log(
-        property.property_uid,
-        typeof property.taxes,
-        JSON.parse(property.taxes)[0].amount
-      );
-      expenseTotal += Number(JSON.parse(property.taxes)[0].amount);
-      taxTotal += Number(JSON.parse(property.taxes)[0].amount);
+      for (const or of JSON.parse(property.taxes)) {
+        expenseTotal += Number(or.amount);
+        taxTotal += Number(or.amount);
+      }
+      // expenseTotal += Number(JSON.parse(property.taxes)[0].amount);
+      // taxTotal += Number(JSON.parse(property.taxes)[0].amount);
+    }
+    if (property.insurance !== null) {
+      for (const or of JSON.parse(property.insurance)) {
+        expenseTotal += Number(or.amount);
+        insuranceTotal += Number(or.amount);
+      }
+      // expenseTotal += Number(JSON.parse(property.taxes)[0].amount);
+      // taxTotal += Number(JSON.parse(property.taxes)[0].amount);
+    }
+    if (property.year_expense !== 0) {
+      console.log(property.year_expense);
+      yearExpenseTotal += property.year_expense;
+    }
+
+    if (property.year_revenue !== 0) {
+      console.log(property.year_revenue);
+      yearRevenueTotal += property.year_revenue;
     }
     console.log("in useeffect", expenseTotal);
     setExpense(expenseTotal);
     setMaintenance(maintenanceTotal);
     setMortgage(mortgageTotal);
     setTax(taxTotal);
+    setInsurance(insuranceTotal);
+    setYearExpense(yearExpenseTotal);
+    setYearRevenue(yearRevenueTotal);
   });
 
   const cashFlow = revenue - expense;
@@ -139,71 +174,76 @@ function PropertyCashFlow(props) {
                     }}
                     className="text-center m-1"
                   >
-                    MTD
+                    MTD($)
                   </p>
                 </Col>
                 <Col>
                   <p style={{ ...gray, ...small }} className="text-center m-1">
-                    YTD
+                    YTD($)
                   </p>
                 </Col>
               </Row>
-              {property.owner_revenue.length >= 1 ? (
-                <div>
-                  {property.owner_revenue.map((owr) => {
-                    return owr.purchase_type === "RENT" ? (
-                      <Row style={{}}>
-                        <Col>
-                          <p
-                            style={{ ...small, ...mediumBold }}
-                            className=" m-1"
-                          >
-                            Rent
-                          </p>
-                        </Col>
-                        <Col>
-                          <p
-                            style={{ ...small, ...green }}
-                            className="text-center m-1"
-                          >
-                            {owr.amount_paid}
-                          </p>
-                        </Col>
-                        <Col>
-                          <p
-                            style={{ ...small, ...green }}
-                            className="text-center m-1"
-                          ></p>
-                        </Col>
-                      </Row>
-                    ) : (
-                      <Row style={{}}>
-                        <Col>
-                          <p
-                            style={{ ...small, ...mediumBold }}
-                            className=" m-1"
-                          >
-                            Fees
-                          </p>
-                        </Col>
-                        <Col>
-                          <p
-                            style={{ ...small, ...green }}
-                            className="text-center m-1"
-                          >
-                            {owr.amount_paid}
-                          </p>
-                        </Col>
-                        <Col>
-                          <p
-                            style={{ ...small, ...green }}
-                            className="text-center m-1"
-                          ></p>
-                        </Col>
-                      </Row>
-                    );
-                  })}
-                </div>
+              {property.rental_revenue !== 0 ? (
+                <Row
+                // style={{
+                //   background:
+                //     i % 2 === 0
+                //       ? "#FFFFFF 0% 0% no-repeat padding-box"
+                //       : "#F3F3F3 0% 0% no-repeat padding-box",
+                // }}
+                >
+                  <Col>
+                    <p style={{ ...small, ...mediumBold }} className=" m-1">
+                      Rent
+                    </p>
+                  </Col>
+                  <Col>
+                    <p
+                      style={{ ...small, ...green }}
+                      className="text-center m-1"
+                    >
+                      {property.rental_revenue}
+                    </p>
+                  </Col>
+                  <Col>
+                    <p
+                      style={{ ...small, ...green }}
+                      className="text-center m-1"
+                    ></p>
+                  </Col>
+                </Row>
+              ) : (
+                ""
+              )}
+              {property.extraCharges_revenue !== 0 ? (
+                <Row
+                // style={{
+                //   background:
+                //     i % 2 === 0
+                //       ? "#FFFFFF 0% 0% no-repeat padding-box"
+                //       : "#F3F3F3 0% 0% no-repeat padding-box",
+                // }}
+                >
+                  <Col>
+                    <p style={{ ...small, ...mediumBold }} className=" m-1">
+                      Extra Charges
+                    </p>
+                  </Col>
+                  <Col>
+                    <p
+                      style={{ ...small, ...green }}
+                      className="text-center m-1"
+                    >
+                      {property.extraCharges_revenue}
+                    </p>
+                  </Col>
+                  <Col>
+                    <p
+                      style={{ ...small, ...green }}
+                      className="text-center m-1"
+                    ></p>
+                  </Col>
+                </Row>
               ) : (
                 ""
               )}
@@ -224,10 +264,9 @@ function PropertyCashFlow(props) {
                   </p>
                 </Col>
                 <Col>
-                  <p
-                    style={{ ...small, ...green }}
-                    className="text-center m-1"
-                  ></p>
+                  <p style={{ ...small, ...green }} className="text-center m-1">
+                    {yearRevenue}
+                  </p>
                 </Col>
               </Row>
             </Container>
@@ -286,7 +325,7 @@ function PropertyCashFlow(props) {
                       }}
                       className="text-center m-1"
                     >
-                      MTD
+                      MTD($)
                     </p>
                   </Col>
                   <Col>
@@ -294,45 +333,151 @@ function PropertyCashFlow(props) {
                       style={{ ...gray, ...small }}
                       className="text-center m-1"
                     >
-                      YTD
+                      YTD($)
                     </p>
                   </Col>
                 </Row>
 
                 <div>
-                  {property.owner_expense.length >= 1
-                    ? property.owner_expense.map((owe) => {
-                        return (
-                          <Row>
-                            <Col xs={4}>
-                              <p
-                                style={{
-                                  ...small,
-                                  ...mediumBold,
-                                }}
-                                className=" m-1"
-                              >
-                                {owe.purchase_type}
-                              </p>
-                            </Col>
-                            <Col>
-                              <p
-                                style={{ ...small, ...red }}
-                                className="text-center m-1"
-                              >
-                                {owe.amount_paid}
-                              </p>
-                            </Col>
-                            <Col>
-                              <p
-                                style={{ ...small, ...red }}
-                                className="text-center m-1"
-                              ></p>
-                            </Col>
-                          </Row>
-                        );
-                      })
-                    : ""}
+                  {property.maintenance_expenses !== 0 ? (
+                    <Row
+                      style={
+                        {
+                          // background:
+                          //   i % 2 === 0
+                          //     ? "#FFFFFF 0% 0% no-repeat padding-box"
+                          //     : "#F3F3F3 0% 0% no-repeat padding-box",
+                        }
+                      }
+                    >
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...mediumBold,
+                          }}
+                          className=" m-1"
+                        >
+                          Maintenance
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...red,
+                          }}
+                          className="text-center m-1 pt-1"
+                        >
+                          {property.maintenance_expenses}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...red,
+                          }}
+                          className="text-center m-1 pt-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                  {property.management_expenses !== 0 ? (
+                    <Row
+                      style={
+                        {
+                          // background:
+                          //   i % 2 === 0
+                          //     ? "#FFFFFF 0% 0% no-repeat padding-box"
+                          //     : "#F3F3F3 0% 0% no-repeat padding-box",
+                        }
+                      }
+                    >
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...mediumBold,
+                          }}
+                          className=" m-1"
+                        >
+                          Management
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...red,
+                          }}
+                          className="text-center m-1 pt-1"
+                        >
+                          {property.management_expenses}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...red,
+                          }}
+                          className="text-center m-1 pt-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+
+                  {property.repairs_expenses !== 0 ? (
+                    <Row
+                      style={
+                        {
+                          // background:
+                          //   i % 2 === 0
+                          //     ? "#FFFFFF 0% 0% no-repeat padding-box"
+                          //     : "#F3F3F3 0% 0% no-repeat padding-box",
+                        }
+                      }
+                    >
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...mediumBold,
+                          }}
+                          className=" m-1"
+                        >
+                          Repairs
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...red,
+                          }}
+                          className="text-center m-1 pt-1"
+                        >
+                          {property.repairs_expenses}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{
+                            ...small,
+                            ...red,
+                          }}
+                          className="text-center m-1 pt-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
                 </div>
 
                 <Row
@@ -346,15 +491,20 @@ function PropertyCashFlow(props) {
                     </p>
                   </Col>
                   <Col>
-                    <p style={{ ...small, ...red }} className="text-center m-1">
+                    <p
+                      style={{ ...small, ...red }}
+                      className="text-center m-1 pt-1"
+                    >
                       {maintenance}
                     </p>
                   </Col>
                   <Col>
                     <p
                       style={{ ...small, ...red }}
-                      className="text-center m-1"
-                    ></p>
+                      className="text-center m-1 pt-1"
+                    >
+                      {yearExpense}
+                    </p>
                   </Col>
                 </Row>
               </Container>
@@ -399,7 +549,7 @@ function PropertyCashFlow(props) {
                           }}
                           className="text-center m-1"
                         >
-                          MTD
+                          MTD($)
                         </p>
                       </Col>
                       <Col>
@@ -407,7 +557,7 @@ function PropertyCashFlow(props) {
                           style={{ ...gray, ...small }}
                           className="text-center m-1"
                         >
-                          YTD
+                          YTD($)
                         </p>
                       </Col>
                     </Row>
@@ -516,7 +666,7 @@ function PropertyCashFlow(props) {
                           }}
                           className="text-center m-1"
                         >
-                          MTD
+                          MTD($)
                         </p>
                       </Col>
                       <Col>
@@ -524,7 +674,129 @@ function PropertyCashFlow(props) {
                           style={{ ...gray, ...small }}
                           className="text-center m-1"
                         >
-                          YTD
+                          YTD($)
+                        </p>
+                      </Col>
+                    </Row>
+                    {JSON.parse(property.taxes).map((tax) => {
+                      return (
+                        <Row
+                          style={
+                            {
+                              // background:
+                              //   i % 2 === 0
+                              //     ? "#FFFFFF 0% 0% no-repeat padding-box"
+                              //     : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }
+                          }
+                        >
+                          <Col xs={4}>
+                            <p
+                              style={{
+                                ...small,
+                                ...mediumBold,
+                              }}
+                              className=" m-1"
+                            >
+                              Taxes
+                            </p>
+                          </Col>
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1"
+                            >
+                              {tax.amount}
+                            </p>
+                          </Col>
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1"
+                            ></p>
+                          </Col>
+                        </Row>
+                      );
+                    })}
+
+                    <Row
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      }}
+                    >
+                      <Col>
+                        <p style={{ ...small, ...mediumBold }} className=" m-1">
+                          Total
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        >
+                          {tax}
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...small, ...red }}
+                          className="text-center m-1"
+                        ></p>
+                      </Col>
+                    </Row>
+                  </Container>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <Row
+              onClick={() => setExpandInsurance(!expandInsurance)}
+              className="mx-2 my-2 p-3"
+              style={{
+                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                boxShadow: "0px 3px 3px #00000029",
+                borderRadius: "20px",
+              }}
+            >
+              <Col style={mediumBold}>Insurance</Col>
+              <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
+                <Col style={mediumBold}>${insurance}</Col>
+                <Col>
+                  <img
+                    style={{ width: "20px" }}
+                    src={Add}
+                    alt="Add Insurance"
+                    onClick={addInsurance}
+                  />
+                </Col>
+              </Col>
+            </Row>
+            <div>
+              {expandInsurance && property.insurance !== null ? (
+                <div>
+                  <Container
+                    style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                  >
+                    <Row>
+                      <Col />
+                      <Col>
+                        <p
+                          style={{
+                            ...gray,
+                            ...small,
+                          }}
+                          className="text-center m-1"
+                        >
+                          MTD($)
+                        </p>
+                      </Col>
+                      <Col>
+                        <p
+                          style={{ ...gray, ...small }}
+                          className="text-center m-1"
+                        >
+                          YTD($)
                         </p>
                       </Col>
                     </Row>
@@ -546,7 +818,7 @@ function PropertyCashFlow(props) {
                           }}
                           className=" m-1"
                         >
-                          Taxes
+                          Insurance
                         </p>
                       </Col>
                       <Col>
@@ -554,7 +826,7 @@ function PropertyCashFlow(props) {
                           style={{ ...small, ...red }}
                           className="text-center m-1"
                         >
-                          {JSON.parse(property.taxes)[0].amount}
+                          {JSON.parse(property.insurance).amount}
                         </p>
                       </Col>
                       <Col>
@@ -579,7 +851,7 @@ function PropertyCashFlow(props) {
                           style={{ ...small, ...red }}
                           className="text-center m-1"
                         >
-                          {tax}
+                          {insurance}
                         </p>
                       </Col>
                       <Col>

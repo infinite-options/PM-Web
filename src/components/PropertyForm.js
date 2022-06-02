@@ -18,7 +18,7 @@ import Checkbox from "./Checkbox";
 import PropertyAppliances from "./PropertyAppliances";
 import PropertyUtilities from "./PropertyUtilities";
 import PropertyImages from "./PropertyImages";
-import ArrowDown from '../icons/ArrowDown.svg';
+import ArrowDown from "../icons/ArrowDown.svg";
 
 function PropertyForm(props) {
   const { userData } = React.useContext(AppContext);
@@ -49,11 +49,12 @@ function PropertyForm(props) {
   const [numBaths, setNumBaths] = React.useState("");
   const [area, setArea] = React.useState("");
   const [rent, setRent] = React.useState("");
+  const [activeDate, setActiveDate] = React.useState("");
+
   const [deposit, setDeposit] = React.useState("");
   const [petsAllowed, setPetsAllowed] = React.useState(false);
   const [depositForRent, setDepositForRent] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
-
   const { property, edit, setEdit, hideEdit } = props;
   const loadProperty = () => {
     setAddress(property.address);
@@ -66,6 +67,7 @@ function PropertyForm(props) {
     setNumBaths(property.num_baths);
     setArea(property.area);
     setRent(property.listed_rent);
+    setActiveDate(property.active_date);
     setDeposit(property.deposit);
     setPetsAllowed(property.pets_allowed);
     setDepositForRent(property.deposit_for_rent);
@@ -73,6 +75,245 @@ function PropertyForm(props) {
     utilityState[1](JSON.parse(property.utilities));
     loadImages();
   };
+
+  const stateList = [
+    {
+      name: "Alabama",
+      abbreviation: "AL",
+    },
+    {
+      name: "Alaska",
+      abbreviation: "AK",
+    },
+    {
+      name: "American Samoa",
+      abbreviation: "AS",
+    },
+    {
+      name: "Arizona",
+      abbreviation: "AZ",
+    },
+    {
+      name: "Arkansas",
+      abbreviation: "AR",
+    },
+    {
+      name: "California",
+      abbreviation: "CA",
+    },
+    {
+      name: "Colorado",
+      abbreviation: "CO",
+    },
+    {
+      name: "Connecticut",
+      abbreviation: "CT",
+    },
+    {
+      name: "Delaware",
+      abbreviation: "DE",
+    },
+    {
+      name: "District Of Columbia",
+      abbreviation: "DC",
+    },
+    {
+      name: "Federated States Of Micronesia",
+      abbreviation: "FM",
+    },
+    {
+      name: "Florida",
+      abbreviation: "FL",
+    },
+    {
+      name: "Georgia",
+      abbreviation: "GA",
+    },
+    {
+      name: "Guam",
+      abbreviation: "GU",
+    },
+    {
+      name: "Hawaii",
+      abbreviation: "HI",
+    },
+    {
+      name: "Idaho",
+      abbreviation: "ID",
+    },
+    {
+      name: "Illinois",
+      abbreviation: "IL",
+    },
+    {
+      name: "Indiana",
+      abbreviation: "IN",
+    },
+    {
+      name: "Iowa",
+      abbreviation: "IA",
+    },
+    {
+      name: "Kansas",
+      abbreviation: "KS",
+    },
+    {
+      name: "Kentucky",
+      abbreviation: "KY",
+    },
+    {
+      name: "Louisiana",
+      abbreviation: "LA",
+    },
+    {
+      name: "Maine",
+      abbreviation: "ME",
+    },
+    {
+      name: "Marshall Islands",
+      abbreviation: "MH",
+    },
+    {
+      name: "Maryland",
+      abbreviation: "MD",
+    },
+    {
+      name: "Massachusetts",
+      abbreviation: "MA",
+    },
+    {
+      name: "Michigan",
+      abbreviation: "MI",
+    },
+    {
+      name: "Minnesota",
+      abbreviation: "MN",
+    },
+    {
+      name: "Mississippi",
+      abbreviation: "MS",
+    },
+    {
+      name: "Missouri",
+      abbreviation: "MO",
+    },
+    {
+      name: "Montana",
+      abbreviation: "MT",
+    },
+    {
+      name: "Nebraska",
+      abbreviation: "NE",
+    },
+    {
+      name: "Nevada",
+      abbreviation: "NV",
+    },
+    {
+      name: "New Hampshire",
+      abbreviation: "NH",
+    },
+    {
+      name: "New Jersey",
+      abbreviation: "NJ",
+    },
+    {
+      name: "New Mexico",
+      abbreviation: "NM",
+    },
+    {
+      name: "New York",
+      abbreviation: "NY",
+    },
+    {
+      name: "North Carolina",
+      abbreviation: "NC",
+    },
+    {
+      name: "North Dakota",
+      abbreviation: "ND",
+    },
+    {
+      name: "Northern Mariana Islands",
+      abbreviation: "MP",
+    },
+    {
+      name: "Ohio",
+      abbreviation: "OH",
+    },
+    {
+      name: "Oklahoma",
+      abbreviation: "OK",
+    },
+    {
+      name: "Oregon",
+      abbreviation: "OR",
+    },
+    {
+      name: "Palau",
+      abbreviation: "PW",
+    },
+    {
+      name: "Pennsylvania",
+      abbreviation: "PA",
+    },
+    {
+      name: "Puerto Rico",
+      abbreviation: "PR",
+    },
+    {
+      name: "Rhode Island",
+      abbreviation: "RI",
+    },
+    {
+      name: "South Carolina",
+      abbreviation: "SC",
+    },
+    {
+      name: "South Dakota",
+      abbreviation: "SD",
+    },
+    {
+      name: "Tennessee",
+      abbreviation: "TN",
+    },
+    {
+      name: "Texas",
+      abbreviation: "TX",
+    },
+    {
+      name: "Utah",
+      abbreviation: "UT",
+    },
+    {
+      name: "Vermont",
+      abbreviation: "VT",
+    },
+    {
+      name: "Virgin Islands",
+      abbreviation: "VI",
+    },
+    {
+      name: "Virginia",
+      abbreviation: "VA",
+    },
+    {
+      name: "Washington",
+      abbreviation: "WA",
+    },
+    {
+      name: "West Virginia",
+      abbreviation: "WV",
+    },
+    {
+      name: "Wisconsin",
+      abbreviation: "WI",
+    },
+    {
+      name: "Wyoming",
+      abbreviation: "WY",
+    },
+  ];
   React.useEffect(() => {
     if (property) {
       loadProperty();
@@ -93,6 +334,7 @@ function PropertyForm(props) {
       numBaths === "" ||
       area === "" ||
       rent === "" ||
+      activeDate === "" ||
       deposit === ""
     ) {
       setErrorMessage("Please fill out all fields");
@@ -101,6 +343,7 @@ function PropertyForm(props) {
     const newProperty = {
       owner_id: user.user_uid,
       manager_id: "",
+      active_date: activeDate,
       address: address,
       unit: unit,
       city: city,
@@ -175,7 +418,7 @@ function PropertyForm(props) {
         <div>
           <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Address {address === '' ? required : ''}
+              Address {address === "" ? required : ""}
             </Form.Label>
             <Form.Control
               style={squareForm}
@@ -198,7 +441,7 @@ function PropertyForm(props) {
             </Form.Group>
             <Form.Group className="mx-2">
               <Form.Label as="h6" className="mb-0 ms-2">
-                City {city === '' ? required : ''}
+                City {city === "" ? required : ""}
               </Form.Label>
               <Form.Control
                 style={squareForm}
@@ -209,37 +452,65 @@ function PropertyForm(props) {
             </Form.Group>
           </div>
           <div className="d-flex my-3">
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                State {state === '' ? required : ''}
-              </Form.Label>
-              <Form.Control
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  State {state === "" ? required : ""}
+                </Form.Label>
+                {/* <Form.Select
+                style={squareForm}
+                onChange={(e) => setState(e.target.value)}
+              >
+                {stateList.map((list) => {
+                  return <option value={list.abbreviation}>{list.name}</option>;
+                })}
+              </Form.Select> */}
+                {/* <Form.Control
                 style={squareForm}
                 placeholder="CA"
                 value={state}
                 onChange={(e) => setState(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Zip Code {zip === '' ? required : ''}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="90808"
-                value={zip}
-                onChange={(e) => setZip(e.target.value)}
-              />
-            </Form.Group>
+              /> */}
+                <Form.Select
+                  style={{
+                    ...squareForm,
+                    backgroundImage: `url(${ArrowDown})`,
+                  }}
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                >
+                  {stateList.map((state, i) => (
+                    <option value={state.abbreviation} key={i}>
+                      {state.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Zip Code {zip === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="90808"
+                  value={zip}
+                  onChange={(e) => setZip(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
           </div>
         </div>
       ) : (
         <div>
           <div className="d-flex justify-content-between">
             <h6>Property Address</h6>
-            {hideEdit ? "" :
-               (<img src={Edit} alt="Edit" onClick={() => setEdit(true)} />)
-            }
+            {hideEdit ? (
+              ""
+            ) : (
+              <img src={Edit} alt="Edit" onClick={() => setEdit(true)} />
+            )}
           </div>
           <p>
             {address}
@@ -248,12 +519,15 @@ function PropertyForm(props) {
         </div>
       )}
       {edit ? (
-        <Form.Group className='mx-2 my-3'>
-          <Form.Label as='h6' className='mb-0 ms-2'>
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
             Type
           </Form.Label>
-          <Form.Select style={{...squareForm, backgroundImage: `url(${ArrowDown})`}}
-            value={type} onChange={(e) => setType(e.target.value)}>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+          >
             <option>Apartment</option>
             <option>Condo</option>
             <option>House</option>
@@ -270,7 +544,7 @@ function PropertyForm(props) {
         <div className="d-flex my-3">
           <Form.Group className="mx-2">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Bedroom {numBeds === '' ? required : ''}
+              Bedroom {numBeds === "" ? required : ""}
             </Form.Label>
             <Form.Control
               style={squareForm}
@@ -281,7 +555,7 @@ function PropertyForm(props) {
           </Form.Group>
           <Form.Group className="mx-2">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Bath {numBaths === '' ? required : ''}
+              Bath {numBaths === "" ? required : ""}
             </Form.Label>
             <Form.Control
               style={squareForm}
@@ -292,7 +566,7 @@ function PropertyForm(props) {
           </Form.Group>
           <Form.Group className="mx-2">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Sq. Ft. {area === '' ? required : ''}
+              Sq. Ft. {area === "" ? required : ""}
             </Form.Label>
             <Form.Control
               style={squareForm}
@@ -321,7 +595,26 @@ function PropertyForm(props) {
       {edit ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Monthly Rent {rent === '' ? required : ''}
+            Active Date {activeDate === "" ? required : ""}
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            type="date"
+            // placeholder="2000"
+            value={activeDate}
+            onChange={(e) => setActiveDate(e.target.value)}
+          />
+        </Form.Group>
+      ) : (
+        <div>
+          <h6>Active Date</h6>
+          <p>{formatter.format(activeDate)}</p>
+        </div>
+      )}
+      {edit ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Monthly Rent {rent === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
@@ -339,7 +632,7 @@ function PropertyForm(props) {
       {edit ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Deposit {deposit === '' ? required : ''}
+            Deposit {deposit === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
