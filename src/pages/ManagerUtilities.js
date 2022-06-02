@@ -11,67 +11,50 @@ import {
     red,
     hidden,
     headings,
-    subText,
-    formLabel
 } from '../utils/styles';
 import ArrowDown from "../icons/ArrowDown.svg";
 import {useLocation} from "react-router-dom";
+import Checkbox from "../components/Checkbox";
 
 function ManagerUtilities(props) {
     const location = useLocation();
     const properties = location.state.properties
-    console.log(properties)
-    const [currentImg, setCurrentImg] = React.useState(0);
+
     const [utilityState, setUtilityState] = React.useState([]);
-    const [totalEstimate, setTotalEstimate] = React.useState(0)
-    const [tenants, setTenants] = React.useState([]);
-    const [propertyManager, setPropertyManager] = React.useState([]);
-    const [earliestAvailability, setEarliestAvailability] = React.useState('');
-    const [eventType, setEventType] = React.useState('1 Hour Job');
     const [newUtility, setNewUtility] = React.useState(null);
     const [editingUtility, setEditingUtility] = React.useState(null);
-    // const [totalEstimate, setTotalEstimate] = React.useState(0)
+    const [propertyState, setPropertyState] = React.useState(properties);
+
     const emptyUtility = {
         service_name: '',
         charge: '',
-        property: ''
+        properties: [],
+        split_type: 'even'
     }
     const [errorMessage, setErrorMessage] = React.useState('');
 
-    const calculateEstimate = () => {
-        // console.log('***')
-        let total = 0
-        // console.log(serviceState)
-        // console.log(eventType)
-        let hours = parseInt(eventType)
-        if (eventType.toLowerCase().includes('day')) {
-            hours = hours * 24
-        }
-        utilityState.forEach(utility => {
-            if (utility.per.toLocaleLowerCase() === "hour") {
-                total = total + parseInt(utility.charge) * hours
-            } else if (utility.per.toLocaleLowerCase() === "one-time") {
-                total = total + parseInt(utility.charge)
-            }
-        })
-        setTotalEstimate(total)
-    }
 
     React.useEffect(() => {
-        // calculateEstimate();
-    }, [utilityState, eventType]);
+        console.log(properties)
+        properties.forEach((p) => p.checked = false)
+    }, [properties]);
 
     const addUtility = () => {
-        if (newUtility.service_name === '' || newUtility.charge === '' || newUtility.property === '') {
+        if (newUtility.service_name === '' || newUtility.charge === '') {
             setErrorMessage('Please fill out all fields');
             return;
         }
+
+        if (propertyState.filter((p) => p.checked).length < 1) {
+            setErrorMessage('Select at least one property');
+            return;
+        }
+        newUtility.properties = propertyState
         const newUtilityState = [...utilityState];
         newUtilityState.push({...newUtility});
         setUtilityState(newUtilityState);
         setNewUtility(null);
         setErrorMessage('');
-        // calculateEstimate()
     }
     const cancelEdit = () => {
         setNewUtility(null);
@@ -82,27 +65,28 @@ function ManagerUtilities(props) {
             setUtilityState(newUtilityState);
         }
         setEditingUtility(null);
-        // calculateEstimate();
     }
     const editUtility = (i) => {
-        const newUtilityState = [...utilityState];
-        const utility = newUtilityState.splice(i, 1)[0];
-        setUtilityState(newUtilityState);
-        setEditingUtility(utility);
-        setNewUtility({...utility});
-        // calculateEstimate()
+        // const newUtilityState = [...utilityState];
+        // const utility = newUtilityState.splice(i, 1)[0];
+        // setUtilityState(newUtilityState);
+        // setEditingUtility(utility);
+        // setNewUtility({...utility});
     }
     const deleteUtility = (i) => {
-        const newUtilityState = [...utilityState];
-        newUtilityState.splice(i, 1);
-        setUtilityState(newUtilityState);
-        // calculateEstimate()
+        // const newUtilityState = [...utilityState];
+        // newUtilityState.splice(i, 1);
+        // setUtilityState(newUtilityState);
     }
     const changeNewUtility = (event, field) => {
         const changedUtility = {...newUtility};
         changedUtility[field] = event.target.value;
         setNewUtility(changedUtility);
-        // calculateEstimate()
+    }
+    const toggleProperty = (i) => {
+        const newPropertyState = [...propertyState];
+        newPropertyState[i].checked = !newPropertyState[i].checked;
+        setPropertyState(newPropertyState)
     }
     const required = (
         errorMessage === 'Please fill out all fields' ? (
@@ -118,7 +102,12 @@ function ManagerUtilities(props) {
                 <div key={i}>
                     <div className='d-flex'>
                         <div className='flex-grow-1'>
-                            <h6 className='mb-1'>{utility.service_name}</h6>
+                            <h6 className='mb-1'>
+                                ${utility.charge} {utility.service_name} Fee &nbsp;
+                                {utility.split_type === 'even' ? 'Split Evenly' : ''}
+                                {utility.split_type === 'tenant' ? 'Split based on Tenant Count' : ''}
+                                {utility.split_type === 'area' ? 'Split based on Square Footage' : ''}
+                            </h6>
                         </div>
                         <div>
                             <img src={EditIcon} alt='Edit' className='px-1 mx-2'
@@ -127,22 +116,29 @@ function ManagerUtilities(props) {
                                  onClick={() => deleteUtility(i)}/>
                         </div>
                     </div>
-                    <p style={gray} className='mb-1'>
-                        ${utility.charge} from {utility.property}
-                    </p>
+                    {utility.properties.map((property, j) =>
+                        <p key={j} style={gray} className='mb-1'>
+                            {property.address} {property.unit}
+                            ,&nbsp;{property.city},&nbsp;{property.state}&nbsp; {property.zip}
+                        </p>
+                    )}
                     <hr className='mt-1'/>
                 </div>
             ))}
+
             {newUtility !== null ? (
                 <div>
-                    <Form.Group className='mx-2 my-3'>
-                        <Form.Label as='h6' className='mb-0 ms-2'>
-                            Utility Name {newUtility.service_name === '' ? required : ''}
-                        </Form.Label>
-                        <Form.Control style={squareForm} placeholder='Electricity' value={newUtility.service_name}
-                                      onChange={(e) => changeNewUtility(e, 'service_name')}/>
-                    </Form.Group>
                     <Row className='mb-2'>
+                        <Col>
+                            <Form.Group className='mx-2'>
+                                <Form.Label as='h6' className='mb-0 ms-2'>
+                                    Utility Name {newUtility.service_name === '' ? required : ''}
+                                </Form.Label>
+                                <Form.Control style={squareForm} placeholder='Electricity' value={newUtility.service_name}
+                                              onChange={(e) => changeNewUtility(e, 'service_name')}/>
+                            </Form.Group>
+                        </Col>
+
                         <Col>
                             <Form.Group className='mx-2'>
                                 <Form.Label as='h6' className='mb-0 ms-2'>
@@ -152,36 +148,40 @@ function ManagerUtilities(props) {
                                               onChange={(e) => changeNewUtility(e, 'charge')}/>
                             </Form.Group>
                         </Col>
-                        <Col>
-                            <Form.Group className='mx-2'>
-                                <Form.Label as='h6' className='mb-0 ms-2'>
-                                    Property {newUtility.property === '' ? required : ''}
-                                </Form.Label>
-                                <Form.Select
-                                    style={{...squareForm, backgroundImage: `url(${ArrowDown})`,}}
-                                    value={newUtility.property}
-                                    onChange={(e) => changeNewUtility(e, 'property')}>
-                                    {properties.map((property, i) => (
-                                        <option key={i}>
-                                            {property.address} {property.unit}
-                                            ,&nbsp;
-                                            {property.city}
-                                            ,&nbsp;
-                                            {property.state}&nbsp; {property.zip}
-                                            {/*{property.property_uid}*/}
-                                        </option>
-                                    ))}
-                                </Form.Select>
-                                {/*<Form.Control style={squareForm} placeholder='Hour' value={newService.per}*/}
-                                {/*  onChange={(e) => changeNewService(e, 'per')}/>*/}
-                            </Form.Group>
-                        </Col>
                     </Row>
-                    <div className='text-center' style={errorMessage === '' ? hidden : {}}>
+
+                    <Form.Group className='mx-2 my-3'>
+                        <Form.Label as='h6' className='mb-0 ms-2'>
+                            Fee Distribution
+                        </Form.Label>
+                        <Form.Select
+                            style={{...squareForm, backgroundImage: `url(${ArrowDown})`,}}
+                            value={newUtility.split_type}
+                            onChange={(e) => changeNewUtility(e, 'split_type')}>
+                            <option value='even'>Uniform</option>
+                            <option value='tenant'>By Tenant Count</option>
+                            <option value='area'>By Square Footage</option>
+                        </Form.Select>
+                    </Form.Group>
+
+                    <Container className='my-3'>
+                        <h6>Properties</h6>
+                        {properties.map((property, i) => (
+                            <div key={i} className='d-flex ps-2 align-items-center my-2'>
+                                <Checkbox type='BOX' checked={propertyState[i].checked}
+                                          onClick={ () => toggleProperty(i)}/>
+                                <p className='ms-1 mb-1'>{property.address} {property.unit}
+                                    ,&nbsp;{property.city},&nbsp;{property.state}&nbsp; {property.zip}</p>
+                            </div>
+                        ))}
+                    </Container>
+
+                    <div className='text-center my-2' style={errorMessage === '' ? hidden : {}}>
                         <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
                     </div>
                 </div>
             ) : ''}
+
             {newUtility === null ? (
                 <Button variant='outline-primary' style={smallPillButton}
                         onClick={() => setNewUtility({...emptyUtility})}>
