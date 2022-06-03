@@ -139,7 +139,7 @@ function OwnerProperties(props) {
                 <div className="d-flex">
                   <div className="flex-grow-1 d-flex flex-column justify-content-center">
                     <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      Manager: ${property.managerInfo.manager_business_name}`
+                      Manager: {property.managerInfo.manager_business_name}`
                     </p>
                   </div>
                   <div
@@ -156,32 +156,35 @@ function OwnerProperties(props) {
                     </a>
                   </div>
                 </div>
-              ) : property.management.forwarded > 0 ? (
-                <div className="d-flex">
-                  <div className="d-flex align-items-end">
-                    <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      {property.management.forwarded} Property Manager Selected
-                    </p>
-                  </div>
-                </div>
-              ) : property.management.sent > 0 ? (
-                <div className="d-flex">
-                  <div className="d-flex align-items-end">
-                    <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      {property.management.sent} Contract in Review
-                    </p>
-                  </div>
-                </div>
-              ) : property.management.refused > 0 ? (
-                <div className="d-flex">
-                  <div className="d-flex align-items-end">
-                    <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      {property.management.refused} property manager declined
-                    </p>
-                  </div>
-                </div>
               ) : (
-                ""
+                <div className="d-flex">
+                  <div className="d-flex align-items-start flex-column">
+                    {property.management.forwarded > 0 ? (
+                      <div style={{ ...blue, ...xSmall }} className="mb-0">
+                        {property.management.forwarded} Property Manager
+                        Selected
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
+                    {property.management.sent > 0 ? (
+                      <div style={{ ...blue, ...xSmall }} className="mb-0">
+                        {property.management.sent} Contract in Review
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
+                    {property.management.refused > 0 ? (
+                      <div style={{ ...blue, ...xSmall }} className="mb-0">
+                        {property.management.sent} PM declined
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
               )}
             </Col>
           </Row>

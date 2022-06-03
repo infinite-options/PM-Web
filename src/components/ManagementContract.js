@@ -39,48 +39,7 @@ function ManagementContract(props) {
     setShowDialog(false);
   };
 
-  const addFile = (e) => {
-    const file = e.target.files[0];
-    const newFile = {
-      name: file.name,
-      description: "",
-      file: file,
-    };
-    setNewFile(newFile);
-  };
-  const updateNewFile = (field, value) => {
-    const newFileCopy = { ...newFile };
-    newFileCopy[field] = value;
-    setNewFile(newFileCopy);
-  };
-  const cancelEdit = () => {
-    setNewFile(null);
-    if (editingDoc !== null) {
-      const newFiles = [...files];
-      newFiles.push(editingDoc);
-      setFiles(newFiles);
-    }
-    setEditingDoc(null);
-  };
-  const editDocument = (i) => {
-    const newFiles = [...files];
-    const file = newFiles.splice(i, 1)[0];
-    setFiles(newFiles);
-    setEditingDoc(file);
-    setNewFile({ ...file });
-  };
-  const saveNewFile = (e) => {
-    // copied from addFile, change e.target.files to state.newFile
-    const newFiles = [...files];
-    newFiles.push(newFile);
-    setFiles(newFiles);
-    setNewFile(null);
-  };
-  const deleteDocument = (i) => {
-    const newFiles = [...files];
-    newFiles.splice(i, 1);
-    setFiles(newFiles);
-  };
+  console.log(contract);
   const loadContract = () => {
     setStartDate(contract.start_date);
     setEndDate(contract.end_date);
@@ -93,59 +52,31 @@ function ManagementContract(props) {
       loadContract();
     }
   }, [contract]);
-  const approvePropertyManager = async () => {
+
+  const approvePropertyManager = async (pID) => {
     const files = JSON.parse(property.images);
-    if (property.property_manager.length > 0) {
-      for (const prop of property.property_manager) {
-        if (prop.management_status !== "REJECTED") {
-          const updatedManagementContract = {
-            property_uid: property.property_uid,
-            management_status: "ACCEPTED",
-            manager_id: prop.manager_id,
-          };
-          // for (let i = -1; i < files.length - 1; i++) {
-          //   let key = `img_${i}`;
-          //   if (i === -1) {
-          //     key = "img_cover";
-          //   }
-          //   updatedManagementContract[key] = files[i + 1];
-          // }
-          console.log(files);
-          const response2 = await put(
-            "/properties",
-            updatedManagementContract,
-            null,
-            files
-          );
-          back();
-          reload();
-          //navigate("/tenant");
-        }
-      }
-    } else {
-      const updatedManagementContract = {
-        property_uid: property.property_uid,
-        management_status: "ACCEPTED",
-        manager_id: property.property_manager[0].manager_id,
-      };
-      // for (let i = -1; i < files.length - 1; i++) {
-      //   let key = `img_${i}`;
-      //   if (i === -1) {
-      //     key = "img_cover";
-      //   }
-      //   updatedManagementContract[key] = files[i + 1];
-      // }
-      console.log(files);
-      const response2 = await put(
-        "/properties",
-        updatedManagementContract,
-        null,
-        files
-      );
-      back();
-      reload();
-      //navigate("/tenant");
-    }
+    let pid = pID;
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "ACCEPTED",
+      manager_id: pid,
+    };
+    // for (let i = -1; i < files.length - 1; i++) {
+    //   let key = `img_${i}`;
+    //   if (i === -1) {
+    //     key = "img_cover";
+    //   }
+    //   updatedManagementContract[key] = files[i + 1];
+    // }
+    console.log(files);
+    const response2 = await put(
+      "/properties",
+      updatedManagementContract,
+      null,
+      files
+    );
+    back();
+    reload();
   };
 
   const rejectPropertyManager = async () => {
@@ -173,150 +104,58 @@ function ManagementContract(props) {
 
     reload();
   };
-  console.log(pmID);
-  const save = async () => {
-    const newContract = {
-      property_uid: property.property_uid,
-      business_uid: property.manager_id,
-      start_date: startDate,
-      end_date: endDate,
-      contract_fees: JSON.stringify(feeState),
-      assigned_contacts: JSON.stringify(contactState[0]),
-    };
-    for (let i = 0; i < files.length; i++) {
-      let key = `doc_${i}`;
-      newContract[key] = files[i].file;
-      delete files[i].file;
-    }
-    newContract.documents = JSON.stringify(files);
 
-    if (contract) {
-      newContract.contract_uid = contract.contract_uid;
-      console.log(newContract);
-      const response = await put(`/contracts`, newContract, null, files);
-    } else {
-      console.log(newContract);
-      const response = await post("/contracts", newContract, null, files);
-    }
-
-    // Updating Management Status in property to SENT
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length >= 1) {
-      management_buid = management_businesses[0].business_uid;
-    }
-    const newProperty = {
-      property_uid: property.property_uid,
-      manager_id: management_buid,
-      management_status: "SENT",
-    };
-    const images = JSON.parse(property.images);
-    // for (let i = -1; i < images.length - 1; i++) {
-    //   let key = `img_${i}`;
-    //   if (i === -1) {
-    //     key = "img_cover";
-    //   }
-    //   newProperty[key] = images[i + 1];
-    // }
-    await put("/properties", newProperty, null, images);
-    back();
-    reload();
-  };
-  const [errorMessage, setErrorMessage] = useState("");
-  const required =
-    errorMessage === "Please fill out all fields" ? (
-      <span style={red} className="ms-1">
-        *
-      </span>
-    ) : (
-      ""
-    );
   return (
     <div className="mb-5 pb-5">
       <ConfirmDialog
         title={"Are you sure you want to reject this Property Manager?"}
         isOpen={showDialog}
-        onConfirm={rejectPropertyManager()}
+        onConfirm={rejectPropertyManager}
         onCancel={onCancel}
       />
-      {pageURL[3] !== "owner" ? (
-        <Header
-          title="Management Contract"
-          leftText="< Back"
-          leftFn={back}
-          rightText="Save"
-          rightFn={save}
-        />
-      ) : (
-        <Header
-          title="Management Contract"
-          leftText="< Back"
-          leftFn={back}
-          // rightText="Save"
-          // rightFn={save}
-        />
-      )}
+
+      <Header
+        title="Management Contract"
+        leftText="< Back"
+        leftFn={back}
+        // rightText="Save"
+        // rightFn={save}
+      />
 
       <Container>
-        {pageURL[3] !== "owner" ? (
-          <div className="mb-4">
-            <h5 style={mediumBold}>PM Agreement Dates</h5>
-
+        <Row>
+          <Col>
             <Form.Group className="mx-2 my-3">
               <Form.Label as="h6" className="mb-0 ms-2">
-                Start Date {startDate === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                End Date {endDate === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </Form.Group>
-          </div>
-        ) : (
-          <div className="mb-4">
-            <h5 style={mediumBold}>PM Agreement Dates</h5>
-
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Start Date {startDate === "" ? required : ""}
+                Start Date
               </Form.Label>
               <div className="mb-0 ms-2">{startDate}</div>
             </Form.Group>
+          </Col>
+          <Col>
             <Form.Group className="mx-2 my-3">
               <Form.Label as="h6" className="mb-0 ms-2">
-                End Date {endDate === "" ? required : ""}
+                End Date
               </Form.Label>
               <div className="mb-0 ms-2">{endDate}</div>
             </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <div className="mb-4">
+            <h5 style={mediumBold}>PM Fees</h5>
+            <div className="mx-2">
+              <ManagerFees feeState={feeState} setFeeState={setFeeState} />
+            </div>
           </div>
-        )}
-        <div className="mb-4">
-          <h5 style={mediumBold}>PM Fees</h5>
-          <div className="mx-2">
-            <ManagerFees feeState={feeState} setFeeState={setFeeState} />
+        </Row>
+        <Row>
+          <div className="mb-4">
+            <h5 style={mediumBold}>Contact Details</h5>
+            <BusinessContact state={contactState} />
           </div>
-        </div>
-
-        <div className="mb-4">
-          <h5 style={mediumBold}>Contact Details</h5>
-          <BusinessContact state={contactState} />
-        </div>
-        <div className="mb-4">
+        </Row>
+        <Row>
           <h5 style={mediumBold}>Property Manager Documents</h5>
           {files.map((file, i) => (
             <div key={i}>
@@ -327,24 +166,7 @@ function ManagementContract(props) {
                     {file.description}
                   </p>
                 </div>
-                {pageURL[3] !== "owner" ? (
-                  <div>
-                    <img
-                      src={EditIcon}
-                      alt="Edit"
-                      className="px-1 mx-2"
-                      onClick={() => editDocument(i)}
-                    />
-                    <img
-                      src={DeleteIcon}
-                      alt="Delete"
-                      className="px-1 mx-2"
-                      onClick={() => deleteDocument(i)}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
+
                 <a href={file.link} target="_blank">
                   <img src={File} />
                 </a>
@@ -352,81 +174,15 @@ function ManagementContract(props) {
               <hr style={{ opacity: 1 }} />
             </div>
           ))}
-          {(newFile !== null) & (pageURL[3] !== "owner") ? (
-            <div>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Document Name
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  value={newFile.name}
-                  placeholder="Name"
-                  onChange={(e) => updateNewFile("name", e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Description
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  value={newFile.description}
-                  placeholder="Description"
-                  onChange={(e) => updateNewFile("description", e.target.value)}
-                />
-              </Form.Group>
-              <div className="text-center my-3">
-                <Button
-                  variant="outline-primary"
-                  style={smallPillButton}
-                  as="p"
-                  onClick={cancelEdit}
-                  className="mx-2"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  style={smallPillButton}
-                  as="p"
-                  onClick={saveNewFile}
-                  className="mx-2"
-                >
-                  Save Document
-                </Button>
-              </div>
-            </div>
-          ) : (newFile === null) & (pageURL[3] === "owner") ? (
-            ""
-          ) : (
-            <div>
-              <input
-                id="file"
-                type="file"
-                accept="image/*,.pdf"
-                onChange={addFile}
-                className="d-none"
-              />
-              <label htmlFor="file">
-                <Button
-                  variant="outline-primary"
-                  style={smallPillButton}
-                  as="p"
-                >
-                  Add Document
-                </Button>
-              </label>
-            </div>
-          )}
-        </div>
-        {property.property_manager.length && (pageURL[3] === "owner") == 0 ? (
+        </Row>
+
+        {property.property_manager.length == 0 ? (
           ""
-        ) : property.property_manager.length && pageURL[3] === "owner" > 1 ? (
+        ) : property.property_manager.length > 1 ? (
           property.property_manager.map((p, i) =>
             p.management_status === "REJECTED" ? (
               ""
-            ) : pageURL[3] === "owner" && p.management_status === "SENT" ? (
+            ) : p.management_status === "SENT" ? (
               <Row className="mt-4">
                 <Col
                   style={{
@@ -438,7 +194,9 @@ function ManagementContract(props) {
                 >
                   {" "}
                   <Button
-                    onClick={approvePropertyManager}
+                    onClick={() => {
+                      approvePropertyManager(p.manager_id);
+                    }}
                     variant="outline-primary"
                     style={bluePillButton}
                   >
@@ -453,7 +211,6 @@ function ManagementContract(props) {
                     marginBottom: "25px",
                   }}
                 >
-                  {" "}
                   <Button
                     // onClick={rejectPropertyManager}
                     onClick={() => {
@@ -471,8 +228,7 @@ function ManagementContract(props) {
               ""
             )
           )
-        ) : pageURL[3] === "owner" &&
-          property.property_manager[0].management_status === "SENT" ? (
+        ) : property.property_manager[0].management_status === "SENT" ? (
           <Row className="mt-4">
             <Col
               style={{
@@ -482,9 +238,12 @@ function ManagementContract(props) {
                 marginBottom: "25px",
               }}
             >
-              {" "}
               <Button
-                onClick={approvePropertyManager}
+                onClick={() => {
+                  approvePropertyManager(
+                    property.property_manager[0].manager_id
+                  );
+                }}
                 variant="outline-primary"
                 style={bluePillButton}
               >
@@ -499,7 +258,6 @@ function ManagementContract(props) {
                 marginBottom: "25px",
               }}
             >
-              {" "}
               <Button
                 // onClick={rejectPropertyManager}
                 onClick={() => setShowDialog(true)}

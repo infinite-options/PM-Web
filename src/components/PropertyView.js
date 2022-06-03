@@ -51,6 +51,7 @@ function PropertyView(props) {
   useState(() => {
     fetchProperty();
   });
+
   const [pmID, setPmID] = useState("");
   const [currentImg, setCurrentImg] = useState(0);
   const [expandDetails, setExpandDetails] = useState(false);
@@ -73,6 +74,7 @@ function PropertyView(props) {
   //   );
   //   setContracts(response.result);
   // }, []);
+  console.log("contract", contracts);
   const headerBack = () => {
     editProperty
       ? setEditProperty(false)
@@ -152,59 +154,30 @@ function PropertyView(props) {
     fetchProperty();
     setShowTenantAgreement(false);
   };
-  const approvePropertyManager = async () => {
+  const approvePropertyManager = async (pID) => {
     const files = JSON.parse(property.images);
-    if (property.property_manager.length > 0) {
-      for (const prop of property.property_manager) {
-        if (prop.management_status !== "REJECTED") {
-          const updatedManagementContract = {
-            property_uid: property.property_uid,
-            management_status: "ACCEPTED",
-            manager_id: prop.manager_id,
-          };
-          // for (let i = -1; i < files.length - 1; i++) {
-          //   let key = `img_${i}`;
-          //   if (i === -1) {
-          //     key = "img_cover";
-          //   }
-          //   updatedManagementContract[key] = files[i + 1];
-          // }
-          console.log(files);
-          const response2 = await put(
-            "/properties",
-            updatedManagementContract,
-            null,
-            files
-          );
-          setExpandManagerDocs(!expandManagerDocs);
-          reloadProperty();
-          //navigate("/tenant");
-        }
-      }
-    } else {
-      const updatedManagementContract = {
-        property_uid: property.property_uid,
-        management_status: "ACCEPTED",
-        manager_id: property.property_manager[0].manager_id,
-      };
-      // for (let i = -1; i < files.length - 1; i++) {
-      //   let key = `img_${i}`;
-      //   if (i === -1) {
-      //     key = "img_cover";
-      //   }
-      //   updatedManagementContract[key] = files[i + 1];
-      // }
-      console.log(files);
-      const response2 = await put(
-        "/properties",
-        updatedManagementContract,
-        null,
-        files
-      );
-      setExpandManagerDocs(!expandManagerDocs);
-      reloadProperty();
-      //navigate("/tenant");
-    }
+    let pid = pID;
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "ACCEPTED",
+      manager_id: pid,
+    };
+    // for (let i = -1; i < files.length - 1; i++) {
+    //   let key = `img_${i}`;
+    //   if (i === -1) {
+    //     key = "img_cover";
+    //   }
+    //   updatedManagementContract[key] = files[i + 1];
+    // }
+    console.log(files);
+    const response2 = await put(
+      "/properties",
+      updatedManagementContract,
+      null,
+      files
+    );
+    setExpandManagerDocs(!expandManagerDocs);
+    reloadProperty();
   };
 
   const rejectPropertyManager = async () => {
@@ -545,7 +518,9 @@ function PropertyView(props) {
                               onClick={() => selectContract(contract)}
                             >
                               <div className="d-flex justify-content-between align-items-end">
-                                <h6 style={mediumBold}>Contract {i + 1}</h6>
+                                <h6 style={mediumBold}>
+                                  {contract.contract_name}
+                                </h6>
                                 <img src={File} />
                               </div>
                             </div>
@@ -566,7 +541,10 @@ function PropertyView(props) {
                         >
                           {" "}
                           <Button
-                            onClick={approvePropertyManager}
+                            onClick={() => {
+                              setPmID(p.manager_id);
+                              approvePropertyManager(p.manager_id);
+                            }}
                             variant="outline-primary"
                             style={bluePillButton}
                           >
@@ -623,7 +601,7 @@ function PropertyView(props) {
                       property.property_manager[0].manager_id ? (
                         <div key={i} onClick={() => selectContract(contract)}>
                           <div className="d-flex justify-content-between align-items-end">
-                            <h6 style={mediumBold}>Contract {i + 1}</h6>
+                            <h6 style={mediumBold}>{contract.contract_name}</h6>
                             <img src={File} />
                           </div>
                         </div>
@@ -644,8 +622,12 @@ function PropertyView(props) {
                     >
                       {" "}
                       <Button
-                        onClick={approvePropertyManager}
-                        variant="outline-primary"
+                        onClick={() => {
+                          setPmID(property.property_manager[0].manager_id);
+                          approvePropertyManager(
+                            property.property_manager[0].manager_id
+                          );
+                        }}
                         style={bluePillButton}
                       >
                         Approve
