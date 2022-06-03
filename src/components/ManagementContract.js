@@ -26,6 +26,7 @@ function ManagementContract(props) {
   const { back, property, contract, reload } = props;
   console.log(property);
   let pageURL = window.location.href.split("/");
+  const [pmID, setPmID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [feeState, setFeeState] = useState([]);
@@ -149,58 +150,30 @@ function ManagementContract(props) {
 
   const rejectPropertyManager = async () => {
     const files = JSON.parse(property.images);
-    if (property.property_manager.length > 0) {
-      for (const prop of property.property_manager) {
-        if (prop.management_status !== "REJECTED") {
-          const updatedManagementContract = {
-            property_uid: property.property_uid,
-            management_status: "REJECTED",
-            manager_id: prop.manager_id,
-          };
-          // for (let i = -1; i < files.length - 1; i++) {
-          //   let key = `img_${i}`;
-          //   if (i === -1) {
-          //     key = "img_cover";
-          //   }
-          //   updatedManagementContract[key] = files[i + 1];
-          // }
-          const response2 = await put(
-            "/properties",
-            updatedManagementContract,
-            null,
-            files
-          );
+    let pid = pmID;
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "REJECTED",
+      manager_id: pid,
+    };
+    // for (let i = -1; i < files.length - 1; i++) {
+    //   let key = `img_${i}`;
+    //   if (i === -1) {
+    //     key = "img_cover";
+    //   }
+    //   updatedManagementContract[key] = files[i + 1];
+    // }
+    console.log(updatedManagementContract);
+    const response2 = await put(
+      "/properties",
+      updatedManagementContract,
+      null,
+      files
+    );
 
-          reload();
-        }
-      }
-
-      //navigate("/tenant");
-    } else {
-      const updatedManagementContract = {
-        property_uid: property.property_uid,
-        management_status: "REJECTED",
-        manager_id: property.property_manager[0].manager_id,
-      };
-      for (let i = -1; i < files.length - 1; i++) {
-        let key = `img_${i}`;
-        if (i === -1) {
-          key = "img_cover";
-        }
-        updatedManagementContract[key] = files[i + 1];
-      }
-      const response2 = await put(
-        "/properties",
-        updatedManagementContract,
-        null,
-        files
-      );
-      setShowDialog(false);
-
-      reload();
-      //navigate("/tenant");
-    }
+    reload();
   };
+  console.log(pmID);
   const save = async () => {
     const newContract = {
       property_uid: property.property_uid,
@@ -265,7 +238,7 @@ function ManagementContract(props) {
       <ConfirmDialog
         title={"Are you sure you want to reject this Property Manager?"}
         isOpen={showDialog}
-        onConfirm={rejectPropertyManager}
+        onConfirm={rejectPropertyManager()}
         onCancel={onCancel}
       />
       {pageURL[3] !== "owner" ? (
@@ -483,7 +456,10 @@ function ManagementContract(props) {
                   {" "}
                   <Button
                     // onClick={rejectPropertyManager}
-                    onClick={() => setShowDialog(true)}
+                    onClick={() => {
+                      setShowDialog(true);
+                      setPmID(p.manager_id);
+                    }}
                     variant="outline-primary"
                     style={redPillButton}
                   >

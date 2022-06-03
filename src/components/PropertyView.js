@@ -51,7 +51,7 @@ function PropertyView(props) {
   useState(() => {
     fetchProperty();
   });
-
+  const [pmID, setPmID] = useState("");
   const [currentImg, setCurrentImg] = useState(0);
   const [expandDetails, setExpandDetails] = useState(false);
   const [editProperty, setEditProperty] = useState(false);
@@ -208,65 +208,36 @@ function PropertyView(props) {
   };
 
   const rejectPropertyManager = async () => {
-    const files = JSON.parse(property.images);
-    if (property.property_manager.length > 0) {
-      for (const prop of property.property_manager) {
-        if (prop.management_status !== "REJECTED") {
-          const updatedManagementContract = {
-            property_uid: property.property_uid,
-            management_status: "REJECTED",
-            manager_id: prop.manager_id,
-          };
-          // for (let i = -1; i < files.length - 1; i++) {
-          //   let key = `img_${i}`;
-          //   if (i === -1) {
-          //     key = "img_cover";
-          //   }
-          //   updatedManagementContract[key] = files[i + 1];
-          // }
-          const response2 = await put(
-            "/properties",
-            updatedManagementContract,
-            null,
-            files
-          );
-          setShowDialog(false);
-          setExpandManagerDocs(!expandManagerDocs);
-          reloadProperty();
-        }
-      }
+    let pid = pmID;
 
-      //navigate("/tenant");
-    } else {
-      const updatedManagementContract = {
-        property_uid: property.property_uid,
-        management_status: "REJECTED",
-        manager_id: property.property_manager[0].manager_id,
-      };
-      // for (let i = -1; i < files.length - 1; i++) {
-      //   let key = `img_${i}`;
-      //   if (i === -1) {
-      //     key = "img_cover";
-      //   }
-      //   updatedManagementContract[key] = files[i + 1];
-      // }
-      const response2 = await put(
-        "/properties",
-        updatedManagementContract,
-        null,
-        files
-      );
-      setShowDialog(false);
-      setExpandManagerDocs(!expandManagerDocs);
-      reloadProperty();
-      //navigate("/tenant");
-    }
+    const files = JSON.parse(property.images);
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "REJECTED",
+      manager_id: pid,
+    };
+    // for (let i = -1; i < files.length - 1; i++) {
+    //   let key = `img_${i}`;
+    //   if (i === -1) {
+    //     key = "img_cover";
+    //   }
+    //   updatedManagementContract[key] = files[i + 1];
+    // }
+    const response2 = await put(
+      "/properties",
+      updatedManagementContract,
+      null,
+      files
+    );
+    setShowDialog(false);
+    setExpandManagerDocs(!expandManagerDocs);
+    reloadProperty();
   };
 
   const onCancel = () => {
     setShowDialog(false);
   };
-  console.log(property);
+  console.log(pmID);
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
       <ManagementContract
@@ -456,7 +427,10 @@ function PropertyView(props) {
                           {" "}
                           <Button
                             // onClick={rejectPropertyManager}
-                            onClick={() => setShowDialog(true)}
+                            onClick={() => {
+                              setShowDialog(true);
+                              setPmID(p.manager_id);
+                            }}
                             variant="outline-primary"
                             style={redPillButton}
                           >
@@ -525,7 +499,10 @@ function PropertyView(props) {
                       {" "}
                       <Button
                         // onClick={rejectPropertyManager}
-                        onClick={() => setShowDialog(true)}
+                        onClick={() => {
+                          setShowDialog(true);
+                          setPmID(property.property_manager[0].manager_id);
+                        }}
                         variant="outline-primary"
                         style={redPillButton}
                       >
@@ -607,7 +584,10 @@ function PropertyView(props) {
                           {" "}
                           <Button
                             // onClick={rejectPropertyManager}
-                            onClick={() => setShowDialog(true)}
+                            onClick={() => {
+                              setShowDialog(true);
+                              setPmID(p.manager_id);
+                            }}
                             variant="outline-primary"
                             style={redPillButton}
                           >
@@ -682,7 +662,10 @@ function PropertyView(props) {
                       {" "}
                       <Button
                         // onClick={rejectPropertyManager}
-                        onClick={() => setShowDialog(true)}
+                        onClick={() => {
+                          setShowDialog(true);
+                          setPmID(property.property_manager[0].manager_id);
+                        }}
                         variant="outline-primary"
                         style={redPillButton}
                       >

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import AppContext from "../AppContext";
@@ -32,11 +32,33 @@ function OwnerProperties(props) {
   const { userData, refresh } = React.useContext(AppContext);
   const [stage, setStage] = React.useState("LIST");
   const { access_token, user } = userData;
-
+  const [propertiesUnique, setPropertiesUnique] = useState([]);
   const selectProperty = (property) => {
     setSelectedProperty(property);
     setStage("PROPERTY");
   };
+  useEffect(() => {
+    let pu = properties;
+    pu.forEach((property) => {
+      const forwarded = property.property_manager.filter(
+        (item) => item.management_status === "FORWARDED"
+      );
+      const sent = property.property_manager.filter(
+        (item) => item.management_status === "SENT"
+      );
+      const refused = property.property_manager.filter(
+        (item) => item.management_status === "REFUSED"
+      );
+
+      property.management = {
+        forwarded: forwarded.length,
+        sent: sent.length,
+        refused: refused.length,
+      };
+    });
+    console.log(pu);
+    setPropertiesUnique(pu);
+  });
   const addProperty = () => {
     fetchProperties();
     setStage("LIST");
@@ -49,7 +71,7 @@ function OwnerProperties(props) {
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
-
+  console.log(propertiesUnique);
   return stage === "LIST" ? (
     <div className="pb-5 mb-5">
       <Header
@@ -58,7 +80,7 @@ function OwnerProperties(props) {
         leftFn={() => setStage("NEW")}
         rightText="Sort by"
       />
-      {properties.map((property, i) => (
+      {propertiesUnique.map((property, i) => (
         <Container
           key={i}
           onClick={() => selectProperty(property)}
@@ -113,143 +135,53 @@ function OwnerProperties(props) {
                 <p style={{ ...blue, ...xSmall }} className="mb-0">
                   No Manager
                 </p>
-              ) : property.property_manager.length > 1 ? (
-                property.property_manager.map((p, i) =>
-                  p.management_status === "REJECTED" ? (
-                    ""
-                  ) : p.management_status === "REFUSED" ? (
-                    ""
-                  ) : (
-                    <div className="d-flex">
-                      <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                        <p style={{ ...blue, ...xSmall }} className="mb-0">
-                          {p.management_status === "ACCEPTED"
-                            ? `Manager: ${p.manager_business_name}`
-                            : property.management_status !== "ACCEPTED"
-                            ? property.property_manager.map((pm) => {
-                                return pm.management_status !== "REJECTED" ? (
-                                  <div className="d-flex">
-                                    <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                                      {pm.management_status === "FORWARDED" ? (
-                                        <p
-                                          style={{ ...blue, ...xSmall }}
-                                          className="mb-0"
-                                        >
-                                          Property Manager Selected
-                                        </p>
-                                      ) : pm.management_status === "SENT" ? (
-                                        <p
-                                          style={{ ...blue, ...xSmall }}
-                                          className="mb-0"
-                                        >
-                                          Contract in Review
-                                        </p>
-                                      ) : pm.management_status === "REFUSED" ? (
-                                        <p
-                                          style={{ ...blue, ...xSmall }}
-                                          className="mb-0"
-                                        >
-                                          Denied by Property Manager
-                                        </p>
-                                      ) : (
-                                        <p
-                                          style={{ ...blue, ...xSmall }}
-                                          className="mb-0"
-                                        >
-                                          No Manager
-                                        </p>
-                                      )}
-                                    </div>
-                                  </div>
-                                ) : (
-                                  ""
-                                );
-                              })
-                            : ""}
-                        </p>
-                      </div>
-                      <div
-                        style={p.manager_id ? {} : hidden}
-                        onClick={stopPropagation}
-                      >
-                        <a href={`tel:${p.manager_phone_number}`}>
-                          <img src={Phone} alt="Phone" style={smallImg} />
-                        </a>
-                        <a href={`mailto:${p.manager_email}`}>
-                          <img src={Message} alt="Message" style={smallImg} />
-                        </a>
-                      </div>
-                    </div>
-                  )
-                )
-              ) : (
+              ) : property.management_status === "ACCEPTED" ? (
                 <div className="d-flex">
                   <div className="flex-grow-1 d-flex flex-column justify-content-center">
                     <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      {property.property_manager[0].management_status ===
-                      "ACCEPTED"
-                        ? `Manager: ${property.property_manager[0].manager_business_name}`
-                        : property.management_status !== "ACCEPTED"
-                        ? property.property_manager.map((pm) => {
-                            return pm.management_status !== "REJECTED" ? (
-                              <div className="d-flex">
-                                <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                                  {pm.management_status === "FORWARDED" ? (
-                                    <p
-                                      style={{ ...blue, ...xSmall }}
-                                      className="mb-0"
-                                    >
-                                      Property Manager Selected
-                                    </p>
-                                  ) : pm.management_status === "SENT" ? (
-                                    <p
-                                      style={{ ...blue, ...xSmall }}
-                                      className="mb-0"
-                                    >
-                                      Contract in Review
-                                    </p>
-                                  ) : pm.management_status === "REFUSED" ? (
-                                    <p
-                                      style={{ ...blue, ...xSmall }}
-                                      className="mb-0"
-                                    >
-                                      Denied by Property Manager
-                                    </p>
-                                  ) : (
-                                    <p
-                                      style={{ ...blue, ...xSmall }}
-                                      className="mb-0"
-                                    >
-                                      No Manager
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                            ) : (
-                              ""
-                            );
-                          })
-                        : ""}
+                      Manager: ${property.managerInfo.manager_business_name}`
                     </p>
                   </div>
                   <div
-                    style={
-                      property.property_manager[0].manager_id ? {} : hidden
-                    }
+                    style={property.managerInfo.manager_id ? {} : hidden}
                     onClick={stopPropagation}
                   >
                     <a
-                      href={`tel:${property.property_manager[0].manager_phone_number}`}
+                      href={`tel:${property.managerInfo.manager_phone_number}`}
                     >
                       <img src={Phone} alt="Phone" style={smallImg} />
                     </a>
-                    <a
-                      href={`mailto:${property.property_manager[0].manager_email}`}
-                    >
+                    <a href={`mailto:${property.managerInfo.manager_email}`}>
                       <img src={Message} alt="Message" style={smallImg} />
                     </a>
                   </div>
                 </div>
+              ) : property.management.forwarded > 0 ? (
+                <div className="d-flex">
+                  <div className="d-flex align-items-end">
+                    <p style={{ ...blue, ...xSmall }} className="mb-0">
+                      {property.management.forwarded} Property Manager Selected
+                    </p>
+                  </div>
+                </div>
+              ) : property.management.sent > 0 ? (
+                <div className="d-flex">
+                  <div className="d-flex align-items-end">
+                    <p style={{ ...blue, ...xSmall }} className="mb-0">
+                      {property.management.sent} Contract in Review
+                    </p>
+                  </div>
+                </div>
+              ) : property.management.refused > 0 ? (
+                <div className="d-flex">
+                  <div className="d-flex align-items-end">
+                    <p style={{ ...blue, ...xSmall }} className="mb-0">
+                      {property.management.refused} property manager declined
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                ""
               )}
             </Col>
           </Row>
