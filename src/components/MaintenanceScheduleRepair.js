@@ -2,10 +2,9 @@ import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { get, post, put } from "../utils/api";
+import { Row, Col, Button } from "react-bootstrap";
+import { put } from "../utils/api";
 import Grid from "@mui/material/Grid";
-import Item from "@mui/material/Grid";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import Calendar from "react-calendar";
@@ -19,44 +18,43 @@ import {
   activeTimeSlotButton,
   bluePillButton,
   subText,
-  hidden,
 } from "../utils/styles";
 
 function MaintenanceScheduleRepair(props) {
   const { userData } = useContext(AppContext);
-  const { access_token, user } = userData;
-  const navigate = useNavigate();
+  const { user } = userData;
+
   const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
   const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
   const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
-  // const API_KEY = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
+
   const location = useLocation();
   const quotes = location.state.quote;
-  //for axios.get
   const [date, setDate] = useState(new Date());
-  const [timeSelected, setTimeSelected] = useState(false);
-  const [showTimes, setShowTimes] = useState(false);
-
-  const [showButton, setShowButton] = useState(false);
   const [minDate, setMinDate] = useState(
     new Date(moment(quotes.earliest_availability))
   );
-  console.log(quotes);
   const [dateString, setDateString] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [timeSlots, setTimeSlots] = useState([]);
-  const [timeAASlots, setTimeAASlots] = useState([]);
+
+  const [timeSelected, setTimeSelected] = useState(false);
+  const [showTimes, setShowTimes] = useState(false);
+  const [buttonSelect, setButtonSelect] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+
+  const [timeSlotsTenant, setTimeSlotsTenant] = useState([]);
+  const [timeAASlotsTenant, setTimeAASlotsTenant] = useState([]);
+  const [timeSlotsMaintenance, setTimeSlotsMaintenance] = useState([]);
+  const [timeAASlotsMaintenance, setTimeAASlotsMaintenance] = useState([]);
 
   const [meetDate, setMeetDate] = useState("");
   const [meetTime, setMeetTime] = useState("");
   const [attendees, setAttendees] = useState([{ email: "" }]);
 
-  const [accessToken, setAccessToken] = useState("");
-
+  const [accessTokenTenant, setAccessTokenTenant] = useState("");
+  const [accessTokenMaintenance, setAccessTokenMaintenance] = useState("");
   const [userEmail, setUserEmail] = useState("");
-
-  const [buttonSelect, setButtonSelect] = useState(false);
 
   function convert(value) {
     var a = value.split(":"); // split it at the colons
@@ -67,21 +65,46 @@ function MaintenanceScheduleRepair(props) {
     return seconds + 1;
   }
 
+  const doubleDigitMonth = (date) => {
+    let str = "00" + (date.getMonth() + 1);
+    return str.substring(str.length - 2);
+  };
+
+  const doubleDigitDay = (date) => {
+    let str = "00" + date.getDate();
+    return str.substring(str.length - 2);
+  };
+
+  // This one is for doing the sendToDatabase Post Call
+  const dateFormat = (date) => {
+    console.log("dateFormat", date);
+    console.log(
+      "dateFormat",
+      date.getFullYear() +
+        "-" +
+        doubleDigitMonth(date) +
+        "-" +
+        doubleDigitDay(date)
+    );
+    return (
+      date.getFullYear() +
+      "-" +
+      doubleDigitMonth(date) +
+      "-" +
+      doubleDigitDay(date)
+    );
+  };
   useEffect(() => {
-    // setMinDate(moment(quotes.earliest_availability).toString());
     axios
       .get(BASE_URL + `/UserDetails/${quotes.rentalInfo[0].tenant_id}`)
       .then((response) => {
         console.log(response.data);
-        setAccessToken(response.data.result[0].google_auth_token);
-        // setSelectedUser(response.data.result[0].user_unique_id);
+        setAccessTokenTenant(response.data.result[0].google_auth_token);
         setUserEmail(response.data.result[0].email);
         setAttendees([{ email: response.data.result[0].email }]);
 
         var old_at = response.data.result[0].google_auth_token;
         var refresh_token = response.data.result[0].google_refresh_token;
-        //console.log(refresh_token);
-        //console.log('in events', old_at);
         fetch(
           `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
           {
@@ -127,7 +150,7 @@ function MaintenanceScheduleRepair(props) {
               .then((data) => {
                 //console.log(data);
                 let at = data["access_token"];
-                setAccessToken(at);
+                setAccessTokenTenant(at);
                 //console.log('in events', at);
                 let url =
                   BASE_URL +
@@ -140,13 +163,96 @@ function MaintenanceScheduleRepair(props) {
                   .catch((err) => {
                     console.log(err);
                   });
-                return accessToken;
+                return accessTokenTenant;
               })
               .catch((err) => {
                 console.log(err);
               });
           } else {
-            setAccessToken(old_at);
+            setAccessTokenTenant(old_at);
+            //console.log(old_at);
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(BASE_URL + `/UserDetails/${quotes.quote_business_uid}`)
+      .then((response) => {
+        console.log(response.data);
+        setAccessTokenMaintenance(response.data.result[0].google_auth_token);
+
+        var old_at = response.data.result[0].google_auth_token;
+        var refresh_token = response.data.result[0].google_refresh_token;
+        var maintenance_user_id = response.data.result[0].user_uid;
+        fetch(
+          `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
+          {
+            method: "GET",
+          }
+        ).then((response) => {
+          //console.log('in events', response);
+          if (response["status"] === 400) {
+            //console.log('in events if');
+            let authorization_url =
+              "https://accounts.google.com/o/oauth2/token";
+
+            var details = {
+              refresh_token: refresh_token,
+              client_id: CLIENT_ID,
+              client_secret: CLIENT_SECRET,
+              grant_type: "refresh_token",
+            };
+            //console.log(details);
+            var formBody = [];
+            for (var property in details) {
+              var encodedKey = encodeURIComponent(property);
+              var encodedValue = encodeURIComponent(details[property]);
+              formBody.push(encodedKey + "=" + encodedValue);
+            }
+            formBody = formBody.join("&");
+
+            fetch(authorization_url, {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded;charset=UTF-8",
+              },
+              body: formBody,
+            })
+              .then((response) => {
+                return response.json();
+              })
+              .then((responseData) => {
+                console.log(responseData);
+                return responseData;
+              })
+              .then((data) => {
+                //console.log(data);
+                let at = data["access_token"];
+                setAccessTokenMaintenance(at);
+                //console.log('in events', at);
+                let url =
+                  BASE_URL + `/UpdateAccessToken/${maintenance_user_id}`;
+                axios
+                  .post(url, {
+                    google_auth_token: at,
+                  })
+                  .then((response) => {})
+                  .catch((err) => {
+                    console.log(err);
+                  });
+                return accessTokenTenant;
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else {
+            setAccessTokenMaintenance(old_at);
             //console.log(old_at);
           }
         });
@@ -158,13 +264,20 @@ function MaintenanceScheduleRepair(props) {
 
   useEffect(() => {
     if (timeSelected) {
+      setTimeSlotsMaintenance([]);
+      setTimeSlotsTenant([]);
       let timeMini = dateString + "T" + "08:00:00";
       let timeMaxi = dateString + "T" + "20:00:00";
 
-      const headers = {
+      const headersTenant = {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: "Bearer " + accessToken,
+        Authorization: "Bearer " + accessTokenTenant,
+      };
+      const headersMaintenance = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + accessTokenMaintenance,
       };
       const data = {
         timeMin: moment(timeMini).format("YYYY-MM-DDTHH:mm:ssZZ"),
@@ -176,7 +289,6 @@ function MaintenanceScheduleRepair(props) {
         ],
       };
 
-      console.log("freebusy data", data);
       const timeMin = dateString + "T" + "08:00:00";
       const timeMax = dateString + "T" + "20:00:00";
 
@@ -185,12 +297,12 @@ function MaintenanceScheduleRepair(props) {
           `https://www.googleapis.com/calendar/v3/freeBusy?key=${API_KEY}`,
           data,
           {
-            headers: headers,
+            headers: headersTenant,
           }
         )
-        .then((response) => {
-          let busy = response.data.calendars.primary.busy;
-          console.log("freebusy", busy);
+        .then((res) => {
+          let busy = res.data.calendars.primary.busy;
+          // console.log("freebusy", busy);
           let start_time = Date.parse(timeMin) / 1000;
           let end_time = Date.parse(timeMax) / 1000;
           let free = [];
@@ -201,7 +313,7 @@ function MaintenanceScheduleRepair(props) {
           while (appt_start_time < end_time) {
             // Add appt duration to the appt start time so we know where the appt will end.
             let appt_end_time = appt_start_time + seconds;
-            console.log("freebusy in while");
+            // console.log("freebusy in while");
             // For each appt slot, loop through the current appts to see if it falls
             // in a slot that is already taken.
 
@@ -232,8 +344,66 @@ function MaintenanceScheduleRepair(props) {
             // + duration minutes
             appt_start_time += 60 * 30;
           }
-          console.log("freebusy", free);
-          setTimeSlots(free);
+          console.log("freebusy tenant", free);
+          setTimeSlotsTenant(free);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+      axios
+        .post(
+          `https://www.googleapis.com/calendar/v3/freeBusy?key=${API_KEY}`,
+          data,
+          {
+            headers: headersMaintenance,
+          }
+        )
+        .then((response) => {
+          let busyM = response.data.calendars.primary.busy;
+
+          let start_time = Date.parse(timeMin) / 1000;
+          let end_time = Date.parse(timeMax) / 1000;
+          let freeM = [];
+          let appt_start_time = start_time;
+          let seconds = convert(quotes.event_duration);
+
+          // Loop through each appt slot in the search range.
+          while (appt_start_time < end_time) {
+            // Add appt duration to the appt start time so we know where the appt will end.
+            let appt_end_time = appt_start_time + seconds;
+
+            // For each appt slot, loop through the current appts to see if it falls
+            // in a slot that is already taken.
+
+            let slot_availableM = true;
+            busyM.forEach((times) => {
+              let this_start = Date.parse(times["start"]) / 1000;
+              let this_end = Date.parse(times["end"]) / 1000;
+
+              // If the appt start time or appt end time falls on a current appt, slot is taken.
+
+              if (
+                (appt_start_time >= this_start && appt_start_time < this_end) ||
+                (appt_end_time > this_start && appt_end_time <= this_end) ||
+                (appt_start_time < this_start && appt_end_time > this_end) ||
+                appt_end_time > end_time
+              ) {
+                slot_availableM = false;
+                return; // No need to continue if it's taken.
+              }
+            });
+
+            // If we made it through all appts and the slot is still available, it's an open slot.
+            if (slot_availableM) {
+              freeM.push(
+                moment(new Date(appt_start_time * 1000)).format("HH:mm:ss")
+              );
+            }
+            // + duration minutes
+            appt_start_time += 60 * 30;
+          }
+          console.log("freebusy", freeM);
+          setTimeSlotsMaintenance(freeM);
         })
         .catch((error) => {
           console.log("error", error);
@@ -243,15 +413,12 @@ function MaintenanceScheduleRepair(props) {
   });
   useEffect(() => {
     if (timeSelected) {
-      console.log("here1");
-      let interval = "";
-      setTimeAASlots([]);
-
-      console.log("here2");
+      setTimeAASlotsTenant([]);
+      setTimeAASlotsMaintenance([]);
       axios
         .get(
           BASE_URL +
-            "/AvailableAppointments/" +
+            "/AvailableAppointmentsTenant/" +
             dateString +
             "/" +
             quotes.event_duration +
@@ -264,93 +431,37 @@ function MaintenanceScheduleRepair(props) {
         )
         .then((res) => {
           console.log("This is the information we got" + res);
-          // setTimeAASlots(res.data.result);
-          // console.log("Timeslots Array " + timeSlots);
 
           res.data.result.map((r) => {
-            timeAASlots.push(r["begin_time"]);
+            timeAASlotsTenant.push(r["begin_time"]);
           });
-          setTimeAASlots(timeAASlots);
+          setTimeAASlotsTenant(timeAASlotsTenant);
+        });
+      axios
+        .get(
+          BASE_URL +
+            "/AvailableAppointmentsMaintenance/" +
+            dateString +
+            "/" +
+            quotes.event_duration +
+            "/" +
+            quotes.quote_business_uid +
+            "/" +
+            "08:00" +
+            "," +
+            "20:00"
+        )
+        .then((response) => {
+          console.log("This is the information we got", response.data.result);
+          response.data.result.map((r) => {
+            timeAASlotsMaintenance.push(r["begin_time"]);
+          });
+          console.log("This is the information we got", timeAASlotsMaintenance);
+          setTimeAASlotsMaintenance(timeAASlotsMaintenance);
         });
     }
     setTimeSelected(false);
   });
-
-  const doubleDigitMonth = (date) => {
-    let str = "00" + (date.getMonth() + 1);
-    return str.substring(str.length - 2);
-  };
-
-  const doubleDigitDay = (date) => {
-    let str = "00" + date.getDate();
-    return str.substring(str.length - 2);
-  };
-  const dateFormat1 = (date) => {
-    return (
-      doubleDigitMonth(date) +
-      "/" +
-      doubleDigitDay(date) +
-      "/" +
-      date.getFullYear()
-    );
-  };
-
-  // This one is for the timeslotAPI call
-  const dateFormat2 = (date) => {
-    var months = {
-      "01": "Jan",
-      "02": "Feb",
-      "03": "Mar",
-      "04": "Apr",
-      "05": "May",
-      "06": "Jun",
-      "07": "Jul",
-      "08": "Aug",
-      "09": "Sep",
-      10: "Oct",
-      11: "Nov",
-      12: "Dec",
-      "": "",
-    };
-    console.log("dateformat2", date);
-    console.log(
-      "dateformat2",
-      months[doubleDigitMonth(date)] +
-        " " +
-        doubleDigitDay(date) +
-        ", " +
-        date.getFullYear() +
-        " "
-    );
-    return (
-      months[doubleDigitMonth(date)] +
-      " " +
-      doubleDigitDay(date) +
-      ", " +
-      date.getFullYear() +
-      " "
-    );
-  };
-
-  // This one is for doing the sendToDatabase Post Call
-  const dateFormat3 = (date) => {
-    console.log("dateformat3", date);
-    console.log(
-      "dateformat3",
-      date.getFullYear() +
-        "-" +
-        doubleDigitMonth(date) +
-        "-" +
-        doubleDigitDay(date)
-    );
-    return (
-      date.getFullYear() +
-      "-" +
-      doubleDigitMonth(date) +
-      "-" +
-      doubleDigitDay(date)
-    );
-  };
 
   const dateChange = (date) => {
     setTimeSelected(true);
@@ -366,10 +477,7 @@ function MaintenanceScheduleRepair(props) {
   };
 
   const dateStringChange = (date) => {
-    setDateString(dateFormat3(date));
-    // setApiDateString(dateFormat3(date));
-    // setDateString1(dateFormat2(date));
-    // setDateHasBeenChanged(true);
+    setDateString(dateFormat(date));
   };
   function selectApptTime(element) {
     console.log("selected time", element);
@@ -397,17 +505,38 @@ function MaintenanceScheduleRepair(props) {
     }
   }
   function renderAvailableApptsVertical() {
-    console.log("TimeSlotsAA", timeAASlots);
     let result = [];
+    let resultTenant = [];
+    let resultMaintenance = [];
     {
-      timeSlots.length === 0
-        ? (result = timeAASlots)
-        : timeAASlots.length === 0
-        ? (result = timeSlots)
-        : (result = timeSlots.filter((o1) =>
-            timeAASlots.some((o2) => o1 === o2)
+      timeSlotsTenant.length === 0
+        ? (resultTenant = timeAASlotsTenant)
+        : timeAASlotsTenant.length === 0
+        ? (resultTenant = timeSlotsTenant)
+        : (resultTenant = timeSlotsTenant.filter((o1) =>
+            timeAASlotsTenant.some((o2) => o1 === o2)
           ));
     }
+    console.log("TimeSlots Tenant", timeAASlotsTenant);
+    console.log("TimeSlots Tenant", timeSlotsTenant);
+    console.log("TimeSlots Tenant", resultTenant);
+    {
+      timeSlotsMaintenance.length === 0
+        ? (resultMaintenance = timeAASlotsMaintenance)
+        : timeAASlotsMaintenance.length === 0
+        ? (resultMaintenance = timeSlotsMaintenance)
+        : (resultMaintenance = timeSlotsMaintenance.filter((o1) =>
+            timeAASlotsMaintenance.some((o2) => o1 === o2)
+          ));
+    }
+    console.log("TimeSlots Maintenance", timeAASlotsMaintenance);
+    console.log("TimeSlots Maintenance", timeSlotsMaintenance);
+    console.log("TimeSlots Maintenance", resultMaintenance);
+
+    result = resultTenant.filter((o1) =>
+      resultMaintenance.some((o2) => o1 === o2)
+    );
+    console.log("TimeSlots joined", result);
     return (
       <div style={{ height: "10rem" }}>
         <Grid
@@ -491,7 +620,7 @@ function MaintenanceScheduleRepair(props) {
     const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",
-      Authorization: "Bearer " + accessToken,
+      Authorization: "Bearer " + accessTokenTenant,
     };
     axios
       .post(
@@ -538,6 +667,10 @@ function MaintenanceScheduleRepair(props) {
           <Calendar
             calendarType="US"
             onClickDay={(e) => {
+              setTimeAASlotsMaintenance([]);
+              setTimeAASlotsTenant([]);
+              setTimeSlotsMaintenance([]);
+              setTimeSlotsTenant([]);
               dateChange(e);
             }}
             value={date}
