@@ -224,6 +224,32 @@ function ManagerTenantAgreement(props) {
                         <ManagerTenantRentPayments feeState={feeState} setFeeState={setFeeState} property={property}/>
                     </div>
                 </div>
+
+                <div className='mb-4'>
+                    <h5 style={mediumBold}>Late Payment Details</h5>
+                    <div className='mx-2'>
+                        <Row>
+                            <Col>
+                                <Form.Group className='mx-2 my-2'>
+                                    <Form.Label as='h6' className='mb-0 ms-2'>
+                                        No. of days from due date
+                                    </Form.Label>
+                                    <Form.Control style={squareForm} placeholder='5 Days' />
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group className='mx-2 my-2'>
+                                    <Form.Label as='h6' className='mb-0 ms-2'>
+                                        Late Fee Amount
+                                    </Form.Label>
+                                    <Form.Control style={squareForm} placeholder='20' />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                    </div>
+                </div>
+
                 <div className='mb-4'>
                     <h5 style={mediumBold}>Contact Details</h5>
                     <BusinessContact state={contactState}/>

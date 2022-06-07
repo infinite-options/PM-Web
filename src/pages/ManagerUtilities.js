@@ -16,17 +16,21 @@ import ArrowDown from "../icons/ArrowDown.svg";
 import {useLocation, useNavigate} from "react-router-dom";
 import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
+import {post} from "../utils/api";
+import AppContext from "../AppContext";
 
 function ManagerUtilities(props) {
     const location = useLocation();
     const navigate = useNavigate();
+    const {userData, refresh} = React.useContext(AppContext);
+    const {access_token, user} = userData;
     const properties = location.state.properties
 
     const [utilityState, setUtilityState] = React.useState([]);
     const [newUtility, setNewUtility] = React.useState(null);
     const [editingUtility, setEditingUtility] = React.useState(null);
     const [propertyState, setPropertyState] = React.useState(properties);
-    const [dueDate, setDueDate] = React.useState("");
+    // const [dueDate, setDueDate] = React.useState("");
 
     const emptyUtility = {
         service_name: '',
@@ -36,7 +40,6 @@ function ManagerUtilities(props) {
         due_date: ""
     }
     const [errorMessage, setErrorMessage] = React.useState('');
-
 
     React.useEffect(() => {
         // console.log(properties)
@@ -53,15 +56,44 @@ function ManagerUtilities(props) {
         }
 
         if (newUtility.split_type === 'tenant') {
-
+            let count = newUtility.properties.length
+            let charge_per = charge / count
+            newUtility.properties.forEach((p) => p.charge = charge_per)
         }
 
         if (newUtility.split_type === 'area') {
-
+            let total_area = 0
+            newUtility.properties.forEach((p) => total_area = total_area + p.area)
+            console.log(total_area)
+            newUtility.properties.forEach((p) => p.charge = (p.area / total_area) * charge)
         }
     }
 
-    const addUtility = () => {
+    const addCharges = async (newUtility) => {
+
+        const management_businesses = user.businesses.filter(business => business.business_type === "MANAGEMENT")
+        let management_buid = null
+        if (management_businesses.length < 1) {
+            console.log('No associated PM Businesses')
+            return
+        } else if (management_businesses.length > 1) {
+            console.log('Multiple associated PM Businesses')
+            management_buid = management_businesses[0].business_uid
+        } else {
+            management_buid = management_businesses[0].business_uid
+        }
+
+        const bill = {
+            bill_property_id: '',
+            bill_created_by: management_buid,
+            bill_description: newUtility.service_name,
+            bill_utility_type: '',
+            bill_distribution_type: newUtility.split_type
+        }
+        const response = await post("/bills", bill, null);
+    }
+
+    const addUtility = async () => {
         if (newUtility.service_name === '' || newUtility.charge === '' || newUtility.due_date === '') {
             setErrorMessage('Please fill out all fields');
             return;
@@ -83,6 +115,7 @@ function ManagerUtilities(props) {
         splitFees(newUtility)
         console.log('after split')
         console.log(newUtility)
+        // await addCharges(newUtility)
         const newUtilityState = [...utilityState];
         newUtilityState.push({...newUtility});
         setUtilityState(newUtilityState);
@@ -206,12 +239,12 @@ function ManagerUtilities(props) {
                             <Col>
                                 <Form.Group className="mx-2 my-3">
                                     <Form.Label as="h6" className="mb-0 ms-2">
-                                        Due by Date {dueDate === "" ? required : ""}
+                                        Due by Date {newUtility.due_date === "" ? required : ""}
                                     </Form.Label>
                                     <Form.Control
                                         style={squareForm}
                                         type="date"
-                                        value={dueDate}
+                                        value={newUtility.due_date}
                                         onChange={(e) => changeNewUtility(e, 'due_date')}
                                     />
                                 </Form.Group>
