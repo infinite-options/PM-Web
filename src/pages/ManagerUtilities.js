@@ -10,7 +10,7 @@ import {
     small,
     red,
     hidden,
-    headings,
+    headings, mediumBold,
 } from '../utils/styles';
 import ArrowDown from "../icons/ArrowDown.svg";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -18,6 +18,7 @@ import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
 import {post} from "../utils/api";
 import AppContext from "../AppContext";
+import File from "../icons/File.svg";
 
 function ManagerUtilities(props) {
     const location = useLocation();
@@ -30,6 +31,10 @@ function ManagerUtilities(props) {
     const [newUtility, setNewUtility] = React.useState(null);
     const [editingUtility, setEditingUtility] = React.useState(null);
     const [propertyState, setPropertyState] = React.useState(properties);
+
+    const [files, setFiles] = React.useState([]);
+    const [newFile, setNewFile] = React.useState(null);
+    const [editingDoc, setEditingDoc] = React.useState(null);
     // const [dueDate, setDueDate] = React.useState("");
 
     const emptyUtility = {
@@ -69,7 +74,7 @@ function ManagerUtilities(props) {
         }
     }
 
-    const addCharges = async (newUtility) => {
+    const postCharges = async (newUtility) => {
 
         const management_businesses = user.businesses.filter(business => business.business_type === "MANAGEMENT")
         let management_buid = null
@@ -83,14 +88,25 @@ function ManagerUtilities(props) {
             management_buid = management_businesses[0].business_uid
         }
 
-        const bill = {
-            bill_property_id: '',
+        console.log('*&^')
+        console.log(newUtility)
+
+        const new_bill = {
             bill_created_by: management_buid,
             bill_description: newUtility.service_name,
-            bill_utility_type: '',
-            bill_distribution_type: newUtility.split_type
+            bill_utility_type: newUtility.service_name,
+            bill_algorithm: newUtility.split_type,
+            bill_docs: files
         }
-        const response = await post("/bills", bill, null);
+        for (let i = 0; i < files.length; i++) {
+            let key = `file_${i}`;
+            new_bill[key] = files[i].file;
+            delete files[i].file;
+        }
+        new_bill.bill_docs = JSON.stringify(files);
+        const response = await post("/bills", new_bill, null, files);
+        console.log(response)
+        console.log(response.result)
     }
 
     const addUtility = async () => {
@@ -112,10 +128,10 @@ function ManagerUtilities(props) {
         setErrorMessage("");
 
         newUtility.properties = propertyState.filter((p) => p.checked)
-        splitFees(newUtility)
-        console.log('after split')
-        console.log(newUtility)
-        // await addCharges(newUtility)
+        // splitFees(newUtility)
+        // console.log('after split')
+        // console.log(newUtility)
+        await postCharges(newUtility)
         const newUtilityState = [...utilityState];
         newUtilityState.push({...newUtility});
         setUtilityState(newUtilityState);
@@ -158,6 +174,56 @@ function ManagerUtilities(props) {
             <span style={red} className='ms-1'>*</span>
         ) : ''
     );
+
+    const addFile = (e) => {
+        const file = e.target.files[0];
+        const newFile = {
+            name: file.name,
+            description: '',
+            file: file
+        }
+        setNewFile(newFile);
+    }
+
+
+    const updateNewFile = (field, value) => {
+        const newFileCopy = {...newFile};
+        newFileCopy[field] = value;
+        setNewFile(newFileCopy);
+    }
+
+    const editDocument = (i) => {
+        const newFiles = [...files];
+        const file = newFiles.splice(i, 1)[0];
+        setFiles(newFiles);
+        setEditingDoc(file);
+        setNewFile({...file});
+    }
+
+    const cancelDocumentEdit = () => {
+        setNewFile(null);
+        if (editingDoc !== null) {
+            const newFiles = [...files];
+            newFiles.push(editingDoc);
+            setFiles(newFiles);
+        }
+        setEditingDoc(null);
+    }
+
+    const saveNewFile = (e) => {
+        // copied from addFile, change e.target.files to state.newFile
+        const newFiles = [...files];
+        newFiles.push(newFile);
+        setFiles(newFiles);
+        setNewFile(null);
+    }
+    const deleteDocument = (i) => {
+        const newFiles = [...files];
+        newFiles.splice(i, 1);
+        setFiles(newFiles);
+    }
+
+
     return (
         <div className="h-100">
 
@@ -263,6 +329,74 @@ function ManagerUtilities(props) {
                                 </div>
                             ))}
                         </Container>
+
+
+                        {/*Add Documents functionality*/}
+                        <div className='mb-4'>
+                            <h6 style={mediumBold}>Utility Documents</h6>
+                            {files.map((file, i) => (
+                                <div key={i}>
+                                    <div className='d-flex justify-content-between align-items-end'>
+                                        <div>
+                                            <h6 style={mediumBold}>
+                                                {file.name}
+                                            </h6>
+                                            <p style={small} className='m-0'>
+                                                {file.description}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <img src={EditIcon} alt='Edit' className='px-1 mx-2'
+                                                 onClick={() => editDocument(i)}/>
+                                            <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
+                                                 onClick={() => deleteDocument(i)}/>
+                                            <a href={file.link} target='_blank'>
+                                                <img src={File}/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <hr style={{opacity: 1}}/>
+                                </div>
+                            ))}
+                            {newFile !== null ? (
+                                <div>
+                                    <Form.Group>
+                                        <Form.Label as='h6' className='mb-0 ms-2'>
+                                            Document Name
+                                        </Form.Label>
+                                        <Form.Control style={squareForm} value={newFile.name} placeholder='Name'
+                                                      onChange={(e) => updateNewFile('name', e.target.value)}/>
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Label as='h6' className='mb-0 ms-2'>
+                                            Description
+                                        </Form.Label>
+                                        <Form.Control style={squareForm} value={newFile.description} placeholder='Description'
+                                                      onChange={(e) => updateNewFile('description', e.target.value)}/>
+                                    </Form.Group>
+                                    <div className='text-center my-3'>
+                                        <Button variant='outline-primary' style={smallPillButton} as='p'
+                                                onClick={cancelDocumentEdit} className='mx-2'>
+                                            Cancel
+                                        </Button>
+                                        <Button variant='outline-primary' style={smallPillButton} as='p'
+                                                onClick={saveNewFile} className='mx-2'>
+                                            Save Document
+                                        </Button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>
+                                    <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
+                                    <label htmlFor='file'>
+                                        <Button variant='outline-primary' style={smallPillButton} as='p'>
+                                            Add Document
+                                        </Button>
+                                    </label>
+                                </div>
+                            )}
+                        </div>
+
 
                         <div className='text-center my-2' style={errorMessage === '' ? hidden : {}}>
                             <p style={{...red, ...small}}>{errorMessage || 'error'}</p>
