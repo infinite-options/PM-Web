@@ -11,7 +11,7 @@ function CreateTax(props) {
   const [amount, setAmount] = React.useState("");
   const [frequency, setFrequency] = React.useState("Monthly");
   const [frequencyOfPayment, setFrequencyOfPayment] =
-    React.useState("Every other month");
+    React.useState("Once a month");
   const [date, setDate] = React.useState("");
   React.useEffect(() => {
     if (frequency === "Monthly") {
