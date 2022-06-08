@@ -41,7 +41,7 @@ function ManagerUtilities(props) {
         service_name: '',
         charge: '',
         properties: [],
-        split_type: 'even',
+        split_type: 'uniform',
         due_date: ""
     }
     const [errorMessage, setErrorMessage] = React.useState('');
@@ -106,7 +106,49 @@ function ManagerUtilities(props) {
         new_bill.bill_docs = JSON.stringify(files);
         const response = await post("/bills", new_bill, null, files);
         console.log(response)
-        console.log(response.result)
+        const bill_uid = response.bill_uid
+        // const bill_uid = "040-000014"
+        console.log(bill_uid)
+
+        for (const property of newUtility.properties) {
+            console.log(property)
+
+            // const new_purchase = {
+            //     linked_bill_id: bill_uid,
+            //     pur_property_id: property.property_uid,
+            //     payer: null,
+            //     receiver: management_buid,
+            //     purchase_type: "UTILITY",
+            //     description: newUtility.service_name,
+            //     amount_due: newUtility.charge,
+            //     purchase_notes: newUtility.service_name,
+            //     purchase_date: "2022-06-10 00:00:00",
+            //     purchase_frequency: "One-time"
+            // }
+
+            const new_purchase = {
+                linked_bill_id : bill_uid,
+                pur_property_id : property.property_uid,
+                payer :"100-000006",
+                receiver : management_buid,
+                purchase_type :"UTILITY",
+                description : newUtility.service_name,
+                amount_due : newUtility.charge,
+                purchase_notes : newUtility.service_name,
+                purchase_date :"2022-06-07 00:00:00",
+                purchase_frequency :"One-time",
+                next_payment :"2022-06-07 00:00:00"
+            }
+
+            if (property.rental_status === "ACTIVE") {
+                const tenants = property.applications.filter(a => a.application_status === "RENTED")
+                new_purchase.payer = [tenants[0].tenant_id]
+                console.log('new purchase')
+                console.log(new_purchase)
+                const response_p = await post("/purchases", new_purchase, null, null);
+                console.log(response_p)
+            }
+        }
     }
 
     const addUtility = async () => {
@@ -128,7 +170,7 @@ function ManagerUtilities(props) {
         setErrorMessage("");
 
         newUtility.properties = propertyState.filter((p) => p.checked)
-        // splitFees(newUtility)
+        splitFees(newUtility)
         // console.log('after split')
         // console.log(newUtility)
         await postCharges(newUtility)
@@ -240,7 +282,7 @@ function ManagerUtilities(props) {
                             <div className='flex-grow-1'>
                                 <h6 className='mb-1'>
                                     ${utility.charge} {utility.service_name} Fee &nbsp;
-                                    {utility.split_type === 'even' ? 'Split Evenly' : ''}
+                                    {utility.split_type === 'uniform' ? 'Split Uniformly' : ''}
                                     {utility.split_type === 'tenant' ? 'Split based on Tenant Count' : ''}
                                     {utility.split_type === 'area' ? 'Split based on Square Footage' : ''}
                                 </h6>
@@ -296,7 +338,7 @@ function ManagerUtilities(props) {
                                         style={{...squareForm, backgroundImage: `url(${ArrowDown})`,}}
                                         value={newUtility.split_type}
                                         onChange={(e) => changeNewUtility(e, 'split_type')}>
-                                        <option value='even'>Uniform</option>
+                                        <option value='uniform'>Uniform</option>
                                         <option value='tenant'>By Tenant Count</option>
                                         <option value='area'>By Square Footage</option>
                                     </Form.Select>

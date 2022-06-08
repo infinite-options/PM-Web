@@ -8,6 +8,8 @@ import {small, hidden, red, squareForm, mediumBold, smallPillButton, bluePillBut
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import ManagerTenantRentPayments from "../components/ManagerTenantRentPayments";
+import ArrowDown from "../icons/ArrowDown.svg";
+import tenantAgreement from "../components/TenantAgreement";
 
 function ManagerTenantAgreement(props) {
     const {back, property, agreement, acceptedTenantApplications, setAcceptedTenantApplications} = props;
@@ -21,6 +23,11 @@ function ManagerTenantAgreement(props) {
 
     const [newFile, setNewFile] = React.useState(null);
     const [editingDoc, setEditingDoc] = React.useState(null);
+
+    const [dueDate, setDueDate] = React.useState('FIRST')
+    const [lateAfter, setLateAfter] = React.useState('')
+    const [lateFee, setLateFee] = React.useState('')
+    const [lateFeePer, setLateFeePer] = React.useState('')
 
     // const addFile = (e) => {
     //     const newFiles = [...files];
@@ -80,6 +87,12 @@ function ManagerTenantAgreement(props) {
         setFeeState(JSON.parse(agreement.rent_payments));
         contactState[1](JSON.parse(agreement.assigned_contacts));
         setFiles(JSON.parse(agreement.documents));
+
+
+        setDueDate(agreement.due_by)
+        setLateAfter(agreement.late_by)
+        setLateFee(agreement.late_fee)
+        setLateFeePer(agreement.perDay_late_fee)
     }
     React.useEffect(() => {
         if (agreement) {
@@ -145,6 +158,10 @@ function ManagerTenantAgreement(props) {
             lease_end: endDate,
             rent_payments: JSON.stringify(feeState),
             assigned_contacts: JSON.stringify(contactState[0]),
+            due_by: dueDate,
+            late_by: lateAfter,
+            late_fee: lateFee,
+            perDay_late_fee: lateFeePer
         }
         for (let i = 0; i < files.length; i++) {
             let key = `doc_${i}`;
@@ -173,7 +190,6 @@ function ManagerTenantAgreement(props) {
         newAgreement.rental_status = "PROCESSING"
         console.log(newAgreement);
         const create_rental = await post('/rentals', newAgreement, null, files);
-
 
         back();
     }
@@ -226,23 +242,58 @@ function ManagerTenantAgreement(props) {
                 </div>
 
                 <div className='mb-4'>
-                    <h5 style={mediumBold}>Late Payment Details</h5>
+                    <h5 style={mediumBold}>Due date and late fees</h5>
                     <div className='mx-2'>
                         <Row>
                             <Col>
                                 <Form.Group className='mx-2 my-2'>
                                     <Form.Label as='h6' className='mb-0 ms-2'>
-                                        No. of days from due date
+                                        Rent due (day of the month)
                                     </Form.Label>
-                                    <Form.Control style={squareForm} placeholder='5 Days' />
+                                    {/*<Form.Control style={squareForm} placeholder='5 Days' />*/}
+                                    <Form.Select
+                                        style={{...squareForm, backgroundImage: `url(${ArrowDown})`,}}
+                                        value={dueDate}
+                                        onChange={(e) => setDueDate(e.target.value)}>
+                                        <option value='FIRST'>First</option>
+                                        <option value='SECOND'>Second</option>
+                                        <option value='THIRD'>Third</option>
+                                        <option value='FOURTH'>Fourth</option>
+                                        <option value='FIFTH'>Fifth</option>
+                                        <option value='Tenth'>Tenth</option>
+                                        <option value='FIFTEENTH'>Fifteenth</option>
+                                        <option value='TWENTIETH'>Twentieth</option>
+                                        <option value='LAST'>Last day</option>
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group className='mx-2 my-2'>
                                     <Form.Label as='h6' className='mb-0 ms-2'>
-                                        Late Fee Amount
+                                        Late fees after (days)
                                     </Form.Label>
-                                    <Form.Control style={squareForm} placeholder='20' />
+                                    <Form.Control value={lateAfter} style={squareForm} placeholder='5' type='number'
+                                                  onChange={(e) => setLateAfter(e.target.value)}/>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group className='mx-2 my-2'>
+                                    <Form.Label as='h6' className='mb-0 ms-2'>
+                                        Late Fee (one-time)
+                                    </Form.Label>
+                                    <Form.Control value={lateFee} type="number" style={squareForm} placeholder='50'
+                                                  onChange={(e) => setLateFee(e.target.value)}/>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group className='mx-2 my-2'>
+                                    <Form.Label as='h6' className='mb-0 ms-2'>
+                                        Late Fee (per day)
+                                    </Form.Label>
+                                    <Form.Control value={lateFeePer} type="number" style={squareForm} placeholder='10'
+                                                  onChange={(e) => setLateFeePer(e.target.value)}/>
                                 </Form.Group>
                             </Col>
                         </Row>
