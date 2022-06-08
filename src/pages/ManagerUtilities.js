@@ -137,7 +137,8 @@ function ManagerUtilities(props) {
                 purchase_notes : newUtility.service_name,
                 purchase_date :"2022-06-07 00:00:00",
                 purchase_frequency :"One-time",
-                next_payment :"2022-06-07 00:00:00"
+                // next_payment :"2022-06-07 00:00:00"
+                next_payment : newUtility.due_date
             }
 
             if (property.rental_status === "ACTIVE") {
