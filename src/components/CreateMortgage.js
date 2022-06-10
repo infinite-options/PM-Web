@@ -12,14 +12,14 @@ function CreateMortgage(props) {
   const [amount, setAmount] = React.useState("");
   const [frequency, setFrequency] = React.useState("Weekly");
   const [frequencyOfPayment, setFrequencyOfPayment] =
-    React.useState("Every other month");
+    React.useState("Once a week");
   const [date, setDate] = React.useState("");
   React.useEffect(() => {
-    if (frequency === "Monthly") {
-      const newFrequencyOfPayment = frequencyOfPayment.replace("year", "month");
+    if (frequency === "Weekly") {
+      const newFrequencyOfPayment = frequencyOfPayment.replace("month", "week");
       setFrequencyOfPayment(newFrequencyOfPayment);
-    } else {
-      const newFrequencyOfPayment = frequencyOfPayment.replace("week");
+    } else if (frequency === "Monthly") {
+      const newFrequencyOfPayment = frequencyOfPayment.replace("week", "month");
       setFrequencyOfPayment(newFrequencyOfPayment);
     }
   }, [frequency]);

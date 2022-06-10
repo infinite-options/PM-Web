@@ -11,21 +11,20 @@ function CreateExpense(props) {
   const [description, setDescription] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [frequency, setFrequency] = React.useState("Monthly");
-  const [frequencyOfPayment, setFrequencyOfPayment] =
-    React.useState("Every other month");
+  const [frequencyOfPayment, setFrequencyOfPayment] = React.useState("");
   const [date, setDate] = React.useState("");
-  React.useEffect(() => {
-    if (frequency === "Monthly") {
-      const newFrequencyOfPayment = frequencyOfPayment.replace("year", "month");
-      setFrequencyOfPayment(newFrequencyOfPayment);
-    } else if (frequency === "Annually") {
-      const newFrequencyOfPayment = frequencyOfPayment.replace("month", "year");
-      setFrequencyOfPayment(newFrequencyOfPayment);
-    } else {
-      const newFrequencyOfPayment = "One-time";
-      setFrequencyOfPayment(newFrequencyOfPayment);
-    }
-  }, [frequency]);
+  // React.useEffect(() => {
+  //   if (frequency === "Monthly") {
+  //     const newFrequencyOfPayment = frequencyOfPayment.replace("year", "month");
+  //     setFrequencyOfPayment(newFrequencyOfPayment);
+  //   } else if (frequency === "Annually") {
+  //     const newFrequencyOfPayment = frequencyOfPayment.replace("month", "year");
+  //     setFrequencyOfPayment(newFrequencyOfPayment);
+  //   } else {
+  //     const newFrequencyOfPayment = "One-time";
+  //     setFrequencyOfPayment(newFrequencyOfPayment);
+  //   }
+  // }, [frequency]);
   const submitForm = async () => {
     if (amount === "") {
       setErrorMessage("Please fill out all fields");
@@ -135,34 +134,46 @@ function CreateExpense(props) {
           >
             <option>One-time</option>
           </Form.Select>
-        ) : (
+        ) : frequency === "Monthly" ? (
           <Form.Select
             style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
             value={frequencyOfPayment}
             onChange={(e) => setFrequencyOfPayment(e.target.value)}
           >
-            <option>
-              Every other {frequency === "Monthly" ? "month" : "year"}
-            </option>
-            <option>Once a {frequency === "Monthly" ? "month" : "year"}</option>
-            <option>
-              Twice a {frequency === "Monthly" ? "month" : "year"}
-            </option>
+            <option>Every other month</option>
+            <option>Once a month</option>
+            <option>Twice a month</option>
           </Form.Select>
+        ) : frequency === "Annually" ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a year</option>
+            <option>Twice a year</option>
+          </Form.Select>
+        ) : (
+          <div></div>
         )}
       </Form.Group>
-      <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Next payment {date === "" ? required : ""}
-        </Form.Label>
-        <Form.Control
-          style={squareForm}
-          placeholder="200"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-      </Form.Group>
+      {frequency === "One-time" ? (
+        <div></div>
+      ) : (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Next payment {date === "" ? required : ""}
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            placeholder="200"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </Form.Group>
+      )}
+
       <div className="text-center" style={errorMessage === "" ? hidden : {}}>
         <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
       </div>

@@ -47,8 +47,7 @@ function TenantDashboard(props) {
   const [selectedProperty, setSelectedProperty] = useState([]);
   const [scheduled, setScheduled] = useState(0);
 
-
-  console.log(context, access_token, user);
+  console.log(context, access_token, user, selectedProperty);
 
   useEffect(() => {
     if (
@@ -63,217 +62,212 @@ function TenantDashboard(props) {
   useEffect(() => {
     setShowFooter(true);
   });
+  const fetchProfile = async () => {
+    if (access_token === null) {
+      navigate("/");
+      return;
+    }
+    let response = await get("/tenantProfileInfo", access_token);
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+      return;
+    }
+    const prof = response.result[0];
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      let response = await get("/tenantProfileInfo", access_token);
-      if (response.msg === "Token has expired") {
-        console.log("here msg");
-        refresh();
-        return;
-      }
-      const prof = response.result[0];
+    response = await get("/tenantProperties", access_token);
+    console.log("tenantProperties", response.result);
 
-      response = await get("/tenantProperties", access_token);
-      console.log("tenantProperties", response.result);
+    let payments = [];
+    let property_uid = [];
+    let purchases = [];
 
-      let payments = [];
-      let property_uid = [];
-      let purchases = [];
+    // const payments =
+    //   response.result.length > 0
+    //     ? JSON.parse(response.result[0].rent_payments)
+    //     : [];
 
-      // const payments =
-      //   response.result.length > 0
-      //     ? JSON.parse(response.result[0].rent_payments)
-      //     : [];
+    response.result.length > 0
+      ? response.result.map((payment) => {
+          payments.push(JSON.parse(payment.rent_payments));
+        })
+      : (payments = []);
 
-      response.result.length > 0
-        ? response.result.map((payment) => {
-            payments.push(JSON.parse(payment.rent_payments));
-          })
-        : (payments = []);
+    console.log("tenantProperties payments", response.result.length, payments);
 
-      console.log("tenantProperties payments", response.result.length, payments);
+    // const property_uid = response.result.length
+    //   ? response.result[0].property_uid
+    //   : null;
 
-      // const property_uid = response.result.length
-      //   ? response.result[0].property_uid
-      //   : null;
+    response.result.length > 0
+      ? response.result.map((property) => {
+          property_uid.push(property.property_uid);
+        })
+      : (property_uid = []);
+    console.log(
+      "tenantProperties property_uid",
+      response.result.length,
+      property_uid
+    );
 
-      response.result.length > 0
-        ? response.result.map((property) => {
-            property_uid.push(property.property_uid);
-          })
-        : (property_uid = []);
-      console.log("tenantProperties property_uid", response.result.length, property_uid);
+    if (property_uid) {
+      prof.property_uid = property_uid;
+    }
+    setProfile(prof);
 
-      if (property_uid) {
-        prof.property_uid = property_uid;
-      }
-      setProfile(prof);
-
-      let rentTotal = [];
-      for (const payment of payments) {
-        console.log("tenantProperties payment", payment);
-        for (const pay of payment)
-          if (pay.frequency === "Monthly" && pay.fee_type === "$") {
-            console.log(" tenantProperties payment here");
-            rentTotal.push(parseFloat(pay.charge));
-            // rentTotal += parseFloat(payment[0].charge);
-          }
-      }
-      console.log("rentTotal", rentTotal);
-      setRent(rentTotal);
-      setProperty(response.result);
-      
-      // response.result.length > 0
-      //   ? rentTotal.map((rent) => {
-      //       properties.push({ rent: rent, properties: {} });
-      //     })
-      //   : (properties = {});
-
-      // setSelectedProperty(properties[0]);
-      // const purchases = response.result.length
-      //   ? JSON.parse(response.result[0].purchases)
-      //   : [];
-      
-      // response.result.length > 0
-      //   ? response.result.map((purchase) => {
-      //       purchases.push(JSON.parse(purchase.purchases));
-      //     })
-      //   : (purchases = []);
-      // console.log(
-      //   "tenantProperties purchase",
-      //   response.result.length,
-      //   purchases
-      // );
-      
-      let lastPaidPurchase = [];
-      let firstUnpaidPurchase = [];
-      let nextUnpaidPurchase = [];
-      let lpp = null;
-      let fup = null;
-      let nup = null;
-
-      for (const purchase of purchases) {
-        console.log("tenantProperties purchase", purchase);
-        console.log(
-          "tenantProperties purchase",
-          lastPaidPurchase,
-          firstUnpaidPurchase,
-          nextUnpaidPurchase
-        );
-        for (const pur of purchase) {
-          console.log("tenantProperties pur", pur);
-          console.log(
-            "tenantProperties pur",
-            lastPaidPurchase,
-            firstUnpaidPurchase,
-            nextUnpaidPurchase
-          );
-          if (pur.purchase_status === "UNPAID" && fup === null) {
-            console.log("in if");
-            fup = pur;
-            firstUnpaidPurchase.push(fup);
-          } else if (pur.purchase_status === "UNPAID" && nup === null) {
-            console.log("in else if");
-            nup = pur;
-            nextUnpaidPurchase.push(nup);
-          } else if (pur.purchase_status === "PAID") {
-            console.log("in else if2");
-            lpp = pur;
-            lastPaidPurchase.push(lpp);
-          }
+    let rentTotal = [];
+    for (const payment of payments) {
+      console.log("tenantProperties payment", payment);
+      for (const pay of payment)
+        if (pay.frequency === "Monthly" && pay.fee_type === "$") {
+          console.log(" tenantProperties payment here");
+          rentTotal.push(parseFloat(pay.charge));
+          // rentTotal += parseFloat(payment[0].charge);
         }
-        nup = null;
-        fup = null;
-        lpp = null;
-      }
-      console.log("Hello");
-      setLastPurchase(lastPaidPurchase);
-      setCurrentPurchase(firstUnpaidPurchase);
-      setNextPurchase(nextUnpaidPurchase);
+    }
+    console.log("rentTotal", rentTotal);
+    setRent(rentTotal);
+    setProperty(response.result);
+
+    // response.result.length > 0
+    //   ? rentTotal.map((rent) => {
+    //       properties.push({ rent: rent, properties: {} });
+    //     })
+    //   : (properties = {});
+
+    // setSelectedProperty(properties[0]);
+    // const purchases = response.result.length
+    //   ? JSON.parse(response.result[0].purchases)
+    //   : [];
+
+    response.result.length > 0
+      ? response.result.map((property) => {
+          purchases.push(property.tenantExpenses);
+        })
+      : (purchases = []);
+    console.log("tenantProperties purchase", response.result.length, purchases);
+
+    let lastPaidPurchase = [];
+    let firstUnpaidPurchase = [];
+    let nextUnpaidPurchase = [];
+    let lpp = null;
+    let fup = null;
+    let nup = null;
+
+    for (const purchase of purchases) {
+      console.log("tenantProperties purchase", purchase);
       console.log(
-        "tenantProperties purchase 179",
+        "tenantProperties purchase",
         lastPaidPurchase,
         firstUnpaidPurchase,
         nextUnpaidPurchase
       );
-
-      let properties = [];
-      properties = response.result.map((id, index) => {
-        return {
-          rent: rentTotal[index],
-          property: response.result[index],
-          purchases: purchases[index],
-          lastPurchase: lastPaidPurchase[index],
-          currentPurchase: firstUnpaidPurchase[index],
-          nextPurchase: nextUnpaidPurchase[index],
-        };
-      });
-
-      console.log(
-        "tenantProperties properties",
-        response.result.length,
-        properties
-      );
-
-      let selectedProperty = properties[0];
-      setSelectedProperty(selectedProperty);
-      setProperties(properties);
-      
-    };
-    fetchProfile();
-  }, []);
-
-  useEffect(() => {
-    const fetchRepairs = async () => {
-      const response = await get(
-        `/maintenanceRequests?property_uid=${profile.property_uid}`
-      );
-      console.log(response.result.length);
-
-      setRepairs(response.result);
-      for (const repair of repairs) {
-        if (repair.request_status === "SCHEDULED") {
-          setScheduled(scheduled + 1);
+      for (const pur of purchase) {
+        console.log("tenantProperties pur", pur);
+        console.log(
+          "tenantProperties pur",
+          lastPaidPurchase,
+          firstUnpaidPurchase,
+          nextUnpaidPurchase
+        );
+        if (pur.purchase_status === "UNPAID" && fup === null) {
+          console.log("in if");
+          fup = pur;
+          firstUnpaidPurchase.push(fup);
+        } else if (pur.purchase_status === "UNPAID" && nup === null) {
+          console.log("in else if");
+          nup = pur;
+          nextUnpaidPurchase.push(nup);
+        } else if (pur.purchase_status === "PAID") {
+          console.log("in else if2");
+          lpp = pur;
+          lastPaidPurchase.push(lpp);
         }
       }
-      
-    };
-    fetchRepairs();
-  }, [profile]);
+      nup = null;
+      fup = null;
+      lpp = null;
+    }
+    console.log("Hello");
+    setLastPurchase(lastPaidPurchase);
+    setCurrentPurchase(firstUnpaidPurchase);
+    setNextPurchase(nextUnpaidPurchase);
+    console.log(
+      "tenantProperties purchase 179",
+      lastPaidPurchase,
+      firstUnpaidPurchase,
+      nextUnpaidPurchase
+    );
 
+    let properties = [];
+    properties = response.result.map((id, index) => {
+      return {
+        rent: rentTotal[index],
+        property: response.result[index],
+        purchases: purchases[index],
+        lastPurchase: lastPaidPurchase[index],
+        currentPurchase: firstUnpaidPurchase[index],
+        nextPurchase: nextUnpaidPurchase[index],
+      };
+    });
+
+    console.log(
+      "tenantProperties properties",
+      response.result.length,
+      properties
+    );
+
+    let selectedProperty = properties[0];
+    setSelectedProperty(selectedProperty);
+    setProperties(properties);
+  };
+  const fetchRepairs = async () => {
+    const response = await get(
+      `/maintenanceRequests?property_uid=${profile.property_uid}`
+    );
+    console.log(response.result.length);
+
+    setRepairs(response.result);
+    for (const repair of repairs) {
+      if (repair.request_status === "SCHEDULED") {
+        setScheduled(scheduled + 1);
+      }
+    }
+  };
+  const fetchApplications = async () => {
+    const response = await get(`/applications?tenant_id=${profile.tenant_id}`);
+
+    const appArray = response.result || [];
+    appArray.forEach((app) => {
+      app.images = app.images ? JSON.parse(app.images) : [];
+    });
+
+    // const appArray = response.result || [];
+    // if(response.result && response.result.length ){
+    //   appArray.forEach(async(app, i)=>{
+    //       const property = await get(
+    //         `/propertyInfo?property_uid=${app.property_uid}`
+    //       );
+    //       if(property && property.result.length){
+    //         app.images = JSON.parse(property.result[0].images) || [];
+    //         app.address = property.result[0].address || "";
+    //         app.city = property.result[0].city || "";
+    //         app.area = property.result[0].area || "";
+    //       }
+    //         setApplications(appArray);
+
+    //   })
+    // }
+    setApplications(appArray);
+    console.log("applications", appArray);
+  };
   useEffect(() => {
-    const fetchApplications = async () => {
-      const response = await get(
-        `/applications?tenant_id=${profile.tenant_id}`
-      );
-
-      const appArray = response.result || [];
-      appArray.forEach((app) => {
-        app.images = app.images ? JSON.parse(app.images) : [];
-      });
-
-      // const appArray = response.result || [];
-      // if(response.result && response.result.length ){
-      //   appArray.forEach(async(app, i)=>{
-      //       const property = await get(
-      //         `/propertyInfo?property_uid=${app.property_uid}`
-      //       );
-      //       if(property && property.result.length){
-      //         app.images = JSON.parse(property.result[0].images) || [];
-      //         app.address = property.result[0].address || "";
-      //         app.city = property.result[0].city || "";
-      //         app.area = property.result[0].area || "";
-      //       }
-      //         setApplications(appArray);
-
-      //   })
-      // }
-      setApplications(appArray);
-      console.log("applications", appArray);
-    };
+    fetchProfile();
+    fetchRepairs();
     fetchApplications();
-  }, [profile]);
+  }, [access_token]);
+
+  // useEffect(() => {}, [profile]);
 
   const goToRequest = () => {
     navigate(`/${selectedProperty.property.property_uid}/repairRequest`, {
@@ -305,33 +299,136 @@ function TenantDashboard(props) {
       },
     });
   };
-
+  console.log(selectedProperty.property_manager);
   return (
-    <div className="h-100" style={{backgroundColor: '#E9E9E9'}}>
-     <Header title="Tenant Dashboard" customClass={"mb-2"}/>
+    <div className="h-100" style={{ backgroundColor: "#E9E9E9" }}>
+      <Header title="Tenant Dashboard" customClass={"mb-2"} />
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
-        <Container className="mb-4" style={{minHeight: "100%", width: '98%', borderRadius: '10px 10px 0px 0px'}}>
-          <Row style={{...headings, marginBottom: '0px'}}>
-            
-              <div style={{backgroundColor: '#FFFFFF', color: '#007AFF', fontSize: '24px', padding: '10px', borderRadius: '10px 10px 0px 0px'}}>
-                {profile.tenant_first_name}'s Property
+        <Container
+          className="mb-4"
+          style={{
+            minHeight: "100%",
+            width: "98%",
+            borderRadius: "10px 10px 0px 0px",
+          }}
+        >
+          <Row style={{ ...headings, marginBottom: "0px" }}>
+            <div
+              style={{
+                backgroundColor: "#FFFFFF",
+                color: "#007AFF",
+                fontSize: "24px",
+                padding: "10px",
+                borderRadius: "10px 10px 0px 0px",
+              }}
+            >
+              {profile.tenant_first_name}'s Property
+            </div>
+            {isLoading === true || selectedProperty.length == 0 ? null : (
+              <div
+                style={{
+                  display: "flex",
+                  backgroundColor: "#F3F3F3",
+                  padding: "15px",
+                  alignItems: "center",
+                }}
+              >
+                <Col>
+                  {" "}
+                  <img
+                    src={
+                      selectedProperty.property.images.length > 0
+                        ? JSON.parse(selectedProperty.property.images)
+                        : No_Image
+                    }
+                    style={{
+                      width: "113px",
+                      height: "113px",
+                      borderRadius: "10px",
+                    }}
+                  ></img>
+                </Col>
+
+                <Col xs={6}>
+                  <div style={{ paddingLeft: "10px", fontSize: "22px" }}>
+                    ${selectedProperty.rent} / mo
+                  </div>
+                  <div
+                    style={{
+                      paddingLeft: "10px",
+                      fontSize: "16px",
+                      lineHeight: "20px",
+                      color: "#777777",
+                      padding: "10px",
+                    }}
+                  >
+                    {selectedProperty.property.address},{" "}
+                    {selectedProperty.property.city},{" "}
+                    {selectedProperty.property.zip},{" "}
+                    {selectedProperty.property.state}
+                  </div>
+                  <div
+                    style={{
+                      marginLeft: "10px",
+                      fontSize: "12px",
+                      color: "#007AFF",
+                    }}
+                  >
+                    Manager:{" "}
+                    {
+                      selectedProperty.property.property_manager[0]
+                        .manager_business_name
+                    }
+                  </div>
+                  <div
+                    style={{
+                      marginLeft: "10px",
+                    }}
+                  >
+                    {" "}
+                    <a
+                      href={`tel:${selectedProperty.property.property_manager[0].manager_phone_number}`}
+                    >
+                      <img
+                        style={{
+                          width: "25px",
+                          height: "25px",
+                          marginLeft: "10px",
+                        }}
+                        src={Phone}
+                      />
+                    </a>
+                    <a
+                      href={`mailto:${selectedProperty.property.property_manager[0].manager_email}`}
+                    >
+                      <img
+                        style={{
+                          width: "25px",
+                          height: "25px",
+                          marginLeft: "10px",
+                        }}
+                        src={Message}
+                      />
+                    </a>
+                  </div>
+                </Col>
+
+                <Col
+                  style={{
+                    backgroundColor: "yellow",
+                    borderRadius: "20px",
+                    fontSize: "13px",
+                    // width: "73px",
+                    height: "24px",
+                    textAlign: "center",
+                  }}
+                >
+                  Rent paid
+                </Col>
               </div>
-              {isLoading === true || selectedProperty.length == 0 ? null :
-                <div style={{display: 'flex', backgroundColor: '#F3F3F3', padding: '15px', alignItems: 'center'}}>
-                  <img src = {selectedProperty.property.images.length > 0 ? JSON.parse(selectedProperty.property.images) : No_Image} style={{width: '113px', height: '113px', borderRadius: '10px'}}></img>
-                    <div style={{width: '170px'}}>
-                      <div style={{paddingLeft: '10px', fontSize: '22px'}}>${selectedProperty.rent} / mo</div>                    
-                        <div style={{paddingLeft: '10px', fontSize: '16px', lineHeight: '20px', color: '#777777', padding: '10px'}}>
-                          {selectedProperty.property.address}, {selectedProperty.property.city}, {selectedProperty.property.zip}, {selectedProperty.property.state}
-                        </div>                  
-                      <div style={{marginLeft: '10px', fontSize: '12px', color: '#007AFF', backgroundColor: 'yellow'}}>Manager: Jane Doe</div>
-                    </div>
-                    {/*'#93EE9C'*/}
-                  <div style={{backgroundColor: 'yellow', borderRadius: '20px', fontSize: '13px', width: '73px', height: '24px', textAlign: 'center'}}>Rent paid</div>
-                </div>
-              }
+            )}
           </Row>
-          <Row style={{backgroundColor: '#F3F3F3'}}>
+          <Row style={{ backgroundColor: "#F3F3F3" }}>
             <Form.Group>
               <Form.Select
                 style={squareForm}
@@ -352,16 +449,21 @@ function TenantDashboard(props) {
               </Form.Select>
             </Form.Group>
           </Row>
-          
+
           {scheduled === 0 ? (
-            <Row style={{...upcoming, padding: '10px', height: 'auto', marginTop: '0px', marginBottom: '0px'}} >
+            <Row
+              style={{
+                ...upcoming,
+                padding: "10px",
+                height: "auto",
+                marginTop: "0px",
+                marginBottom: "0px",
+              }}
+            >
               <div style={upcomingHeading} className="mt-1 mb-1">
                 Upcoming:
                 <br />
-                <div style={{marginTop: '15px'}}>
-                  Nothing Scheduled
-                </div>
-                
+                <div style={{ marginTop: "15px" }}>Nothing Scheduled</div>
                 <br />
               </div>
             </Row>
@@ -398,17 +500,38 @@ function TenantDashboard(props) {
               })}
             </div>
           )}
-          
+
           <Row>
-            <div style={{backgroundColor: '#F3F3F3', color: '#007AFF', font: 'Bahnschrift bold'}}>
-              <div style={{padding: '10px'}} onClick={goToAnnouncements}>
-                <div style={{fontSize: '22px', padding: '0px', font: 'normal normal bold Bahnschrift', fontWeight: 'Bold'}}>Resident Announcements</div>
-                <div style={{fontSize: '16px', font: 'normal normal bold Bahnschrift'}}>No announcements thus far</div>
+            <div
+              style={{
+                backgroundColor: "#F3F3F3",
+                color: "#007AFF",
+                font: "Bahnschrift bold",
+              }}
+            >
+              <div style={{ padding: "10px" }} onClick={goToAnnouncements}>
+                <div
+                  style={{
+                    fontSize: "22px",
+                    padding: "0px",
+                    font: "normal normal bold Bahnschrift",
+                    fontWeight: "Bold",
+                  }}
+                >
+                  Resident Announcements
+                </div>
+                <div
+                  style={{
+                    fontSize: "16px",
+                    font: "normal normal bold Bahnschrift",
+                  }}
+                >
+                  No announcements thus far
+                </div>
               </div>
             </div>
           </Row>
-          <Row style={{backgroundColor:'#FFFFFF'}}>
-            
+          <Row style={{ backgroundColor: "#FFFFFF" }}>
             {/* {isLoading === true ? null : (
               <div>
                 {properties.map((property) => (
@@ -495,35 +618,83 @@ function TenantDashboard(props) {
                 )}
               </div>
             )} */}
-          {selectedProperty &&
-            <div style={{display: 'flex', flexDirection: 'row', textAlign: 'center', backgroundColor: '#FFFFFF'}}>
-              <div 
-                onClick = { ()=>
-                  navigate(`/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`)
-                }
-                style={{height: '120px', width: '167px', backgroundColor: '#F7FB94', borderRadius: '10px', margin: '10px'}}>
-                <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>Rent</div>
-                <div style={{fontSize: '22px', lineHeight: '35px'}}>
-                  <p style={{backgroundColor: 'yellow', margin: '0px'}}>date</p> 
-                  ${selectedProperty.rent}
+            {selectedProperty && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  textAlign: "center",
+                  backgroundColor: "#FFFFFF",
+                }}
+              >
+                <div
+                  onClick={() =>
+                    navigate(
+                      `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
+                    )
+                  }
+                  style={{
+                    height: "120px",
+                    width: "167px",
+                    backgroundColor: "#F7FB94",
+                    borderRadius: "10px",
+                    margin: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#007AFF",
+                      padding: "5px",
+                      borderRadius: "10px 10px 0px 0px",
+                      fontSize: "24px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Upcoming
+                  </div>
+                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+                    <p style={{ backgroundColor: "yellow", margin: "0px" }}>
+                      date
+                    </p>
+                    ${selectedProperty.rent}
+                  </div>
+                </div>
+                <div
+                  onClick={() => {
+                    navigate(
+                      `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
+                    );
+                  }}
+                  style={{
+                    height: "120px",
+                    width: "167px",
+                    backgroundColor: "#93EE9C",
+                    borderRadius: "10px",
+                    margin: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#007AFF",
+                      padding: "5px",
+                      borderRadius: "10px 10px 0px 0px",
+                      fontSize: "24px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Rent Paid
+                  </div>
+                  {selectedProperty ? (
+                    <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+                      <br />
+                      What goes here
+                    </div>
+                  ) : null}
                 </div>
               </div>
-              <div 
-                onClick = {()=>{
-                  navigate(`/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`)
-                }} 
-                style={{height: '120px', width: '167px', backgroundColor: '#93EE9C', borderRadius: '10px', margin: '10px'}}>
-                <div style={{backgroundColor: '#007AFF', padding: '5px', borderRadius: '10px 10px 0px 0px', fontSize: '24px', color: '#FFFFFF'}}>What here </div>
-                {selectedProperty ? 
-                <div style={{fontSize: '22px', lineHeight: '35px'}}>
-                   <br/> 
-                  What goes here
-                </div> : null}
-              </div>
-            </div>
-          }
+            )}
           </Row>
-          
+
           <Row
             style={{
               display: "flex",
@@ -532,7 +703,6 @@ function TenantDashboard(props) {
             }}
             className="mb-4"
           >
-            
             <Col xs={3} style={actions}>
               <img
                 style={{ width: "50px", height: "50px", cursor: "pointer" }}
@@ -635,7 +805,7 @@ function TenantDashboard(props) {
                               />
                             )}
                           </div>
-                          <div style={{paddingLeft:"15px"}}>
+                          <div style={{ paddingLeft: "15px" }}>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
@@ -699,7 +869,7 @@ function TenantDashboard(props) {
                               />
                             )}
                           </div>
-                          <div style={{paddingLeft:"15px"}}>
+                          <div style={{ paddingLeft: "15px" }}>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
@@ -707,13 +877,13 @@ function TenantDashboard(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            { application.application_status === "FORWARDED" ?
-                            ( <h6 style={{mediumBold,color:"blue"}}>
-                              {application.application_status}
-                              </h6>) 
-                            :
-                            ""
-                          }
+                            {application.application_status === "FORWARDED" ? (
+                              <h6 style={{ mediumBold, color: "blue" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : (
+                              ""
+                            )}
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />
@@ -734,14 +904,15 @@ function TenantDashboard(props) {
           <div style={headings} className="mt-4 mb-1">
             Application Submitted
           </div>
-          <p>Your  applications and their statuses </p>
+          <p>Your applications and their statuses </p>
 
           <div className="mb-4" style={{ margin: "20px" }}>
             <Row>
               <Col>
                 {applications ? (
                   applications.map((application, i) =>
-                    application.application_status !== "RENTED" &&  application.application_status !== "FORWARDED" ? (
+                    application.application_status !== "RENTED" &&
+                    application.application_status !== "FORWARDED" ? (
                       <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
@@ -769,7 +940,7 @@ function TenantDashboard(props) {
                               />
                             )}
                           </div>
-                          <div style={{paddingLeft:"15px"}}>
+                          <div style={{ paddingLeft: "15px" }}>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
@@ -777,23 +948,22 @@ function TenantDashboard(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "NEW" ?
-                            ( <h6 style={{mediumBold,color:"blue"}}>
-                              {application.application_status}
-                              </h6>) 
-                              : 
-                              application.application_status === "REJECTED" ? 
-                              (<h6 style={{mediumBold,color:"red"}}>
-                              {application.application_status}
-                              </h6>)
-                              :
-                              application.application_status === "REFUSED" ? 
-                              (<h6 style={{mediumBold,color:"red"}}>
-                              {application.application_status}
-                              </h6>)
-                            :
-                            ""
-                          }
+                            {application.application_status === "NEW" ? (
+                              <h6 style={{ mediumBold, color: "blue" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : application.application_status ===
+                              "REJECTED" ? (
+                              <h6 style={{ mediumBold, color: "red" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : application.application_status === "REFUSED" ? (
+                              <h6 style={{ mediumBold, color: "red" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : (
+                              ""
+                            )}
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />
