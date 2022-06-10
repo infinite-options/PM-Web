@@ -268,7 +268,9 @@ function OwnerDashboard(props) {
                               <p
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
-                              ></p>
+                              >
+                                {property.rental_year_revenue}
+                              </p>
                             </Col>
                           </Row>
                         ) : (
@@ -303,7 +305,9 @@ function OwnerDashboard(props) {
                               <p
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
-                              ></p>
+                              >
+                                {property.extraCharges_year_revenue}
+                              </p>
                             </Col>
                           </Row>
                         ) : (
@@ -464,7 +468,9 @@ function OwnerDashboard(props) {
                                   ...red,
                                 }}
                                 className="text-center m-1 pt-1"
-                              ></p>
+                              >
+                                {property.maintenance_year_expense}
+                              </p>
                             </Col>
                           </Row>
                         ) : (
@@ -508,7 +514,10 @@ function OwnerDashboard(props) {
                                   ...red,
                                 }}
                                 className="text-center m-1 pt-1"
-                              ></p>
+                              >
+                                {" "}
+                                {property.management_year_expense}
+                              </p>
                             </Col>
                           </Row>
                         ) : (
@@ -598,7 +607,9 @@ function OwnerDashboard(props) {
                                   ...red,
                                 }}
                                 className="text-center m-1 pt-1"
-                              ></p>
+                              >
+                                {property.repairs_year_expense}
+                              </p>
                             </Col>
                           </Row>
                         ) : (
