@@ -70,27 +70,30 @@ function TenantHome() {
     fetchProfile();
     fetchUserProperties();
   }, []);
-
+  console.log(properties);
   return (
     <div className="d-flex flex-column h-100">
       {isLoading === false ? (
         <div>
           <div className="flex-grow-1">
-            {footerTab === "DASHBOARD" &&
-              (properties ? (
-                <TenantDashboard
-                  setShowFooter={setShowFooter}
-                  profile={profile}
-                  setProfile={setProfile}
-                />
-              ) : (
-                // <TenantAvailableProperties hideBackButton="true"/>
-                <TenantWelcomePage
-                  setShowFooter={setShowFooter}
-                  profile={profile}
-                  setProfile={setProfile}
-                />
-              ))}
+            {footerTab === "DASHBOARD" && (
+              <div>
+                {properties !== "" ? (
+                  <TenantDashboard
+                    setShowFooter={setShowFooter}
+                    profile={profile}
+                    setProfile={setProfile}
+                  />
+                ) : (
+                  <TenantWelcomePage
+                    setShowFooter={setShowFooter}
+                    profile={profile}
+                    setProfile={setProfile}
+                  />
+                )}
+              </div>
+            )}
+
             {footerTab === "PROFILE" ? (
               <TenantProfile
                 setShowFooter={setShowFooter}

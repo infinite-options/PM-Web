@@ -102,10 +102,16 @@ function ManagerManagementContract(props) {
       return;
     }
     setErrorMessage("");
-
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
     const newContract = {
       property_uid: property.property_uid,
-      business_uid: property.manager_id,
+      business_uid: management_buid,
       contract_name: contractName,
       start_date: startDate,
       end_date: endDate,
@@ -129,13 +135,13 @@ function ManagerManagementContract(props) {
     }
 
     // Updating Management Status in property to SENT
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length >= 1) {
-      management_buid = management_businesses[0].business_uid;
-    }
+    // const management_businesses = user.businesses.filter(
+    //   (business) => business.business_type === "MANAGEMENT"
+    // );
+    // let management_buid = null;
+    // if (management_businesses.length >= 1) {
+    //   management_buid = management_businesses[0].business_uid;
+    // }
     const newProperty = {
       property_uid: property.property_uid,
       manager_id: management_buid,
