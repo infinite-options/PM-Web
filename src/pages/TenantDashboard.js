@@ -301,11 +301,11 @@ function TenantDashboard(props) {
   };
   console.log(selectedProperty.property_manager);
   return (
-    <div className="h-100" style={{ backgroundColor: "#E9E9E9" }}>
+    <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
       <Header title="Tenant Dashboard" customClass={"mb-2"} />
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
         <Container
-          className="mb-4"
+          className="px-3 pb-5 mb-5"
           style={{
             minHeight: "100%",
             width: "98%",
