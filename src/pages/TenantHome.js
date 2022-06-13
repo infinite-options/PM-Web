@@ -78,7 +78,7 @@ function TenantHome() {
           <div className="flex-grow-1">
             {footerTab === "DASHBOARD" && (
               <div>
-                {properties !== "" ? (
+                {properties !== undefined ? (
                   <TenantDashboard
                     setShowFooter={setShowFooter}
                     profile={profile}

@@ -35,9 +35,6 @@ function TenantWelcomePage(props) {
   const [rentPurchase, setRentPurchase] = React.useState({});
   console.log(context, access_token, user);
 
-
-
-
   // //Loaf Profile
   useEffect(() => {
     // if (profile != undefined && repairs.length === 0) {
@@ -56,42 +53,43 @@ function TenantWelcomePage(props) {
 
   // });
 
-
   //// Wrote code here
 
-
+  const fetchProfile = async () => {
+    const response = await get("/tenantProfileInfo", access_token);
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+      return;
+    }
+    console.log("tenantWelcome", response.result[0]);
+    setProfile(response.result[0]);
+    // const payments = response.result.length
+    //   ? JSON.parse(response.result[0].rent_payments)
+    //   : [];
+    // let rentTotal = 0;
+    // for (const payment of payments) {
+    //   if (payment.frequency === "Monthly" && payment.fee_type === "$") {
+    //     rentTotal += parseFloat(payment.charge);
+    //   }
+    // }
+    // setRent(rentTotal);
+    // const purchases = response.result.length
+    //   ? JSON.parse(response.result[0].purchases)
+    //   : [];
+    // console.log(purchases);
+    // for (const purchase of purchases) {
+    //   if (purchase.description.toLowerCase().indexOf("rent") !== -1) {
+    //     setRentPurchase(purchase);
+    //     break;
+    //   }
+    // }
+  };
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const response = await get("/tenantProfileInfo", access_token);
-      if (response.msg === "Token has expired") {
-        console.log("here msg");
-        refresh();
-        return;
-      }
-      console.log("tenantWelcome", response.result[0]);
-      setProfile(response.result[0]);
-      const payments = response.result.length
-        ? JSON.parse(response.result[0].rent_payments)
-        : [];
-      let rentTotal = 0;
-      for (const payment of payments) {
-        if (payment.frequency === "Monthly" && payment.fee_type === "$") {
-          rentTotal += parseFloat(payment.charge);
-        }
-      }
-      setRent(rentTotal);
-      const purchases = response.result.length
-        ? JSON.parse(response.result[0].purchases)
-        : [];
-      console.log(purchases);
-      for (const purchase of purchases) {
-        if (purchase.description.toLowerCase().indexOf("rent") !== -1) {
-          setRentPurchase(purchase);
-          break;
-        }
-      }
-    };
+    if (access_token === null) {
+      navigate("/");
+    }
     fetchProfile();
   }, []);
 
@@ -107,37 +105,33 @@ function TenantWelcomePage(props) {
   //   fetchRepairs();
   // }, [profile]);
 
+  const fetchApplications = async () => {
+    const response = await get(`/applications?tenant_id=${profile.tenant_id}`);
 
+    const appArray = response.result || [];
+    appArray.forEach((app) => {
+      app.images = app.images ? JSON.parse(app.images) : [];
+    });
+    // console.log(response);
+    // const appArray = response.result || [];
+    // if(response.result && response.result.length ){
+    //   appArray.forEach(async(app, i)=>{
+    //     const property = await get(
+    //       `/propertyInfo?property_uid=${app.property_uid}`
+    //     );
+    //     if(property && property.result.length){
+    //        app.images = property.result[0].images|| [];
+    //     }
+    //     if(i == appArray.length-1){
+    //         setApplications(appArray);
+    //     }
+    //   })
+    // }
 
+    setApplications(appArray);
+  };
   // Repeatedly Fetching applications the user has sent out and sets 'applications'.
   useEffect(() => {
-    const fetchApplications = async () => {
-      const response = await get(
-        `/applications?tenant_id=${profile.tenant_id}`
-      );
-
-      const appArray = response.result || [];
-      appArray.forEach((app) => {
-        app.images = app.images ? JSON.parse(app.images) : [];
-      });
-      // console.log(response);
-      // const appArray = response.result || [];
-      // if(response.result && response.result.length ){
-      //   appArray.forEach(async(app, i)=>{
-      //     const property = await get(
-      //       `/propertyInfo?property_uid=${app.property_uid}`
-      //     );
-      //     if(property && property.result.length){
-      //        app.images = property.result[0].images|| [];
-      //     }
-      //     if(i == appArray.length-1){
-      //         setApplications(appArray);
-      //     }
-      //   })
-      // }
-
-      setApplications(appArray);
-    };
     fetchApplications();
   }, [profile]);
 
@@ -177,14 +171,16 @@ function TenantWelcomePage(props) {
 
   const goToReviewPropertyLease = (application) => {
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
-      state: { application_uid: application.application_uid, application_status_1: application.application_status },
+      state: {
+        application_uid: application.application_uid,
+        application_status_1: application.application_status,
+      },
     });
   };
 
   console.log(profile);
   return (
     <div className="h-100">
-
       {/* ============================HEADER =========================== */}
       <Header title="Tenant Dashboard" />
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
@@ -278,70 +274,9 @@ function TenantWelcomePage(props) {
           <div className="mb-4" style={{ margin: "20px" }}>
             <Row>
               <Col>
-                {applications
-                  ? applications.map((application, i) => (
-                    application.application_status === 'RENTED' ?
-                      (<div
-                        key={i}
-                        onClick={() => goToReviewPropertyLease(application)}
-                      >
-                        <div className="d-flex justify-content-between align-items-end">
-                          <div
-                            className="img"
-                            style={{
-                              flex: "0 0 35%",
-                              background: "lightgrey",
-                              height: "150px",
-                              width: "100px",
-                            }}
-                          >
-                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
-                            {application.images && application.images.length ? (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={application.images[0]}
-                              />
-                            ) : (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={No_Image}
-                              />
-                            )}
-                          </div>
-                          <div>
-                            <h5 style={mediumBold}>ADDRESS</h5>
-                            <h6>{application.address}</h6>
-                            <h6>
-                              {application.city},{application.zip}
-                            </h6>
-
-                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            <h6 style={{mediumBold,color:"#41fc03"}}>
-                              {application.application_status}
-                            </h6>
-                          </div>
-                        </div>
-                        <hr style={{ opacity: 1 }} />
-                      </div>):""
-                    ))
-                  : 
-                  ( <p>You have not rented any property yet. </p>)}
-              </Col>
-            </Row>
-          </div>
-          
-          <div style={headings} className="mt-4 mb-1">
-            Application Status{" "}
-          </div>
-          <p>Your lease applications and their statuses </p>
-          {/* Mapping through applications array and creating page elements for each*/}
-          <div className="mb-4" style={{ margin: "20px" }}>
-            <Row>
-              <Col>
-                {applications
-                  ? applications.map((application, i) => (
-                    application.application_status !== 'RENTED' ?
-                      (
+                {applications ? (
+                  applications.map((application, i) =>
+                    application.application_status === "RENTED" ? (
                       <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
@@ -377,26 +312,94 @@ function TenantWelcomePage(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "NEW" || application.application_status === "FORWARDED" ?
-                            ( <h6 style={{mediumBold,color:"blue"}}>
+                            <h6 style={{ mediumBold, color: "#41fc03" }}>
                               {application.application_status}
-                              </h6>) 
-                              : 
-                              application.application_status === "REJECTED" ? 
-                              (<h6 style={{mediumBold,color:"red"}}>
-                              {application.application_status}
-                              </h6>)
-                            :
-                            ""
-                          }
+                            </h6>
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />
-                      </div>):""
-                    ))
-                  : 
-                  ( <p>You have not applied for any property yet. </p>)
-                  }
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                ) : (
+                  <p>You have not rented any property yet. </p>
+                )}
+              </Col>
+            </Row>
+          </div>
+
+          <div style={headings} className="mt-4 mb-1">
+            Application Status{" "}
+          </div>
+          <p>Your lease applications and their statuses </p>
+          {/* Mapping through applications array and creating page elements for each*/}
+          <div className="mb-4" style={{ margin: "20px" }}>
+            <Row>
+              <Col>
+                {applications ? (
+                  applications.map((application, i) =>
+                    application.application_status !== "RENTED" ? (
+                      <div
+                        key={i}
+                        onClick={() => goToReviewPropertyLease(application)}
+                      >
+                        <div className="d-flex justify-content-between align-items-end">
+                          <div
+                            className="img"
+                            style={{
+                              flex: "0 0 35%",
+                              background: "lightgrey",
+                              height: "150px",
+                              width: "100px",
+                            }}
+                          >
+                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
+                            {application.images && application.images.length ? (
+                              <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={application.images[0]}
+                              />
+                            ) : (
+                              <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={No_Image}
+                              />
+                            )}
+                          </div>
+                          <div>
+                            <h5 style={mediumBold}>ADDRESS</h5>
+                            <h6>{application.address}</h6>
+                            <h6>
+                              {application.city},{application.zip}
+                            </h6>
+
+                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
+                            {application.application_status === "NEW" ||
+                            application.application_status === "FORWARDED" ? (
+                              <h6 style={{ mediumBold, color: "blue" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : application.application_status ===
+                              "REJECTED" ? (
+                              <h6 style={{ mediumBold, color: "red" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : (
+                              ""
+                            )}
+                          </div>
+                        </div>
+                        <hr style={{ opacity: 1 }} />
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                ) : (
+                  <p>You have not applied for any property yet. </p>
+                )}
               </Col>
             </Row>
           </div>

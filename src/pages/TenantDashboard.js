@@ -299,7 +299,7 @@ function TenantDashboard(props) {
       },
     });
   };
-  console.log(selectedProperty.property_manager);
+
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
       <Header title="Tenant Dashboard" customClass={"mb-2"} />
