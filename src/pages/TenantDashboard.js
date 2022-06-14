@@ -28,6 +28,7 @@ import {
 } from "../utils/styles";
 import { color } from "@mui/system";
 import No_Image from "../icons/No_Image_Available.jpeg";
+import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
 
 function TenantDashboard(props) {
   const navigate = useNavigate();
@@ -46,8 +47,10 @@ function TenantDashboard(props) {
   const [properties, setProperties] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState([]);
   const [scheduled, setScheduled] = useState(0);
-
-  console.log(context, access_token, user, selectedProperty);
+  const [allPayments, setAllPayments] = useState([]);
+  var months = [ "January", "February", "March", "April", "May", "June", 
+           "July", "August", "September", "October", "November", "December" ];
+  // console.log(context, access_token, user, selectedProperty);
 
   useEffect(() => {
     if (
@@ -68,13 +71,15 @@ function TenantDashboard(props) {
       return;
     }
     let response = await get("/tenantProfileInfo", access_token);
+    console.log(response);
     if (response.msg === "Token has expired") {
       console.log("here msg");
       refresh();
       return;
     }
-    const prof = response.result[0];
 
+    const prof = response.result[0];
+   
     response = await get("/tenantProperties", access_token);
     console.log("tenantProperties", response.result);
 
@@ -98,7 +103,7 @@ function TenantDashboard(props) {
     // const property_uid = response.result.length
     //   ? response.result[0].property_uid
     //   : null;
-
+    
     response.result.length > 0
       ? response.result.map((property) => {
           property_uid.push(property.property_uid);
@@ -125,6 +130,7 @@ function TenantDashboard(props) {
           // rentTotal += parseFloat(payment[0].charge);
         }
     }
+    
     console.log("rentTotal", rentTotal);
     setRent(rentTotal);
     setProperty(response.result);
@@ -146,7 +152,8 @@ function TenantDashboard(props) {
         })
       : (purchases = []);
     console.log("tenantProperties purchase", response.result.length, purchases);
-
+    setAllPayments(purchases[0]);
+    console.log(allPayments);
     let lastPaidPurchase = [];
     let firstUnpaidPurchase = [];
     let nextUnpaidPurchase = [];
@@ -188,7 +195,6 @@ function TenantDashboard(props) {
       fup = null;
       lpp = null;
     }
-    console.log("Hello");
     setLastPurchase(lastPaidPurchase);
     setCurrentPurchase(firstUnpaidPurchase);
     setNextPurchase(nextUnpaidPurchase);
@@ -222,10 +228,10 @@ function TenantDashboard(props) {
     setProperties(properties);
   };
   const fetchRepairs = async () => {
+    console.log(profile);
     const response = await get(
       `/maintenanceRequests?property_uid=${profile.property_uid}`
     );
-    console.log(response.result.length);
 
     setRepairs(response.result);
     for (const repair of repairs) {
@@ -262,9 +268,9 @@ function TenantDashboard(props) {
     console.log("applications", appArray);
   };
   useEffect(() => {
-    fetchProfile();
-    fetchRepairs();
-    fetchApplications();
+      fetchProfile();
+      fetchRepairs();
+      fetchApplications();
   }, [access_token]);
 
   // useEffect(() => {}, [profile]);
@@ -299,7 +305,7 @@ function TenantDashboard(props) {
       },
     });
   };
-
+  console.log(selectedProperty);
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
       <Header title="Tenant Dashboard" customClass={"mb-2"} />
@@ -412,19 +418,31 @@ function TenantDashboard(props) {
                     </a>
                   </div>
                 </Col>
-
+                {selectedProperty.nextPurchase.payment_date === null ? 
                 <Col
                   style={{
-                    backgroundColor: "yellow",
+                    backgroundColor: "#FFBCBC",
+                    borderRadius: "20px",
+                    fontSize: "11px",
+                    width: "73px",
+                    height: "24px",
+                    textAlign: "center",
+                  }}
+                >
+                  Rent unpaid
+                </Col> : 
+                <Col
+                  style={{
+                    backgroundColor: "#93EE9C",
                     borderRadius: "20px",
                     fontSize: "13px",
                     // width: "73px",
                     height: "24px",
                     textAlign: "center",
-                  }}
-                >
-                  Rent paid
+                  }}>
+                    Rent paid
                 </Col>
+                }
               </div>
             )}
           </Row>
@@ -652,12 +670,23 @@ function TenantDashboard(props) {
                   >
                     Upcoming
                   </div>
+                  {nextPurchase === null ? null: 
                   <div style={{ fontSize: "22px", lineHeight: "35px" }}>
-                    <p style={{ backgroundColor: "yellow", margin: "0px" }}>
-                      date
+                    
+                    <p style={{ margin: "0px" }}>
+                      {selectedProperty.nextPurchase ? 
+                        <div>
+                          {months[parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[1])]} 
+                          &nbsp;
+                          {parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[2])}
+                        </div> 
+                      : "No Date"}
                     </p>
                     ${selectedProperty.rent}
-                  </div>
+
+                  </div> }
+                  
+                  
                 </div>
                 <div
                   onClick={() => {
@@ -684,10 +713,14 @@ function TenantDashboard(props) {
                   >
                     Rent Paid
                   </div>
-                  {selectedProperty ? (
+                  {selectedProperty.nextPurchase ? (
                     <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+                      {selectedProperty.nextPurchase.payment_date ? 
+                        selectedProperty.nextPurchase.payment_date :
+                        "N/A"
+                      }
                       <br />
-                      What goes here
+                        ${selectedProperty.nextPurchase.amount_paid}
                     </div>
                   ) : null}
                 </div>
