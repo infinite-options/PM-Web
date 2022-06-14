@@ -35,7 +35,7 @@ function TenantWelcomePage(props) {
   const [rentPurchase, setRentPurchase] = React.useState({});
   console.log(context, access_token, user);
 
-  // //Loaf Profile
+  // //Load Profile
   useEffect(() => {
     // if (profile != undefined && repairs.length === 0) {
     if (profile != undefined) {
@@ -106,6 +106,7 @@ function TenantWelcomePage(props) {
   // }, [profile]);
 
   const fetchApplications = async () => {
+    
     const response = await get(`/applications?tenant_id=${profile.tenant_id}`);
 
     const appArray = response.result || [];
@@ -183,7 +184,7 @@ function TenantWelcomePage(props) {
     <div className="h-100">
       {/* ============================HEADER =========================== */}
       <Header title="Tenant Dashboard" />
-      {isLoading === true || (!profile || profile.length) === 0 ? null : (
+      {isLoading === true || (!profile || profile.length === 0) ? null : (
         <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
           <div style={welcome}>
             <Row style={headings}>
