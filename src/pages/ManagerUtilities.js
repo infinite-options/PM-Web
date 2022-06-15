@@ -61,23 +61,20 @@ function ManagerUtilities(props) {
         }
 
         if (newUtility.split_type === 'tenant') {
-            let count = 0
-            // let charge_per = charge / count
-            // newUtility.properties.forEach((p) => p.charge = charge_per)
+            let total = 0
             newUtility.properties.forEach((p, i) => {
-                console.log(p)
                 if (p.rental_status === "ACTIVE") {
                     let tenants = p.applications.filter((a) => a.application_status === "RENTED")
                     let occupants =  tenants[0].adult_occupants + tenants[0].children_occupants
-                    count = count + occupants
+                    total = total + occupants
                     p.tenants = tenants
                     p.occupants = occupants
                 } else {
-                    count = count + 1
+                    total = total + 1
                     p.occupants = 1
                 }
             })
-            newUtility.properties.forEach((p) => p.charge = (p.occupants) / count)
+            newUtility.properties.forEach((p) => p.charge = (p.occupants / total) * charge)
         }
 
         if (newUtility.split_type === 'area') {
@@ -119,27 +116,12 @@ function ManagerUtilities(props) {
         }
 
         new_bill.bill_docs = JSON.stringify(files);
-        // const response = await post("/bills", new_bill, null, files);
-        // console.log(response)
-        // const bill_uid = response.bill_uid
-        const bill_uid = "040-000014"
+        const response = await post("/bills", new_bill, null, files);
+        const bill_uid = response.bill_uid
         console.log(bill_uid)
+        // const bill_uid = "040-000014"
 
         for (const property of newUtility.properties) {
-            // console.log(property)
-
-            // const new_purchase = {
-            //     linked_bill_id: bill_uid,
-            //     pur_property_id: property.property_uid,
-            //     payer: null,
-            //     receiver: management_buid,
-            //     purchase_type: "UTILITY",
-            //     description: newUtility.service_name,
-            //     amount_due: newUtility.charge,
-            //     purchase_notes: newUtility.service_name,
-            //     purchase_date: "2022-06-10 00:00:00",
-            //     purchase_frequency: "One-time"
-            // }
 
             const new_purchase = {
                 linked_bill_id : bill_uid,
@@ -157,19 +139,14 @@ function ManagerUtilities(props) {
             }
 
             if (property.rental_status === "ACTIVE") {
-                const tenants = property.applications.filter(a => a.application_status === "RENTED")
-                // new_purchase.payer = [tenants[0].tenant_id]
-                property.tenants.forEach((t) => {
-                    console.log(t)
-                })
-                // new_purchase.payer = [tenants[0].tenant_id]
-                // console.log('new purchase')
-                // console.log(new_purchase)
-                // const response_p = await post("/purchases", new_purchase, null, null);
-                // console.log(response_p)
+                let tenant_ids = property.tenants.map((t) => t.tenant_id)
+                new_purchase.payer = tenant_ids
+
             } else {
-                const owner_id = property.owner_id
+                new_purchase.payer = [property.owner_id]
             }
+            console.log('New Purchase', new_purchase)
+            const response_t = await post("/purchases", new_purchase, null, null);
         }
     }
 
@@ -191,10 +168,9 @@ function ManagerUtilities(props) {
         }
         setErrorMessage("");
 
-        newUtility.properties = propertyState.filter((p) => p.checked)
+        newUtility.properties = [...propertyState.filter((p) => p.checked)]
+        // newUtility.properties = propertyState.filter((p) => p.checked)
         splitFees(newUtility)
-        console.log('after split')
-        console.log(newUtility)
         await postCharges(newUtility)
         const newUtilityState = [...utilityState];
         newUtilityState.push({...newUtility});

@@ -218,6 +218,7 @@ function ManagerTenantAgreement(props) {
         }
 
         const response = await put('/rentals', request_body, null, files);
+        back();
     }
 
     return (
