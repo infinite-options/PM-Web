@@ -4,7 +4,16 @@ import Header from "../components/Header";
 import File from '../icons/File.svg';
 import BusinessContact from "../components/BusinessContact";
 import {put, post} from '../utils/api';
-import {small, hidden, red, squareForm, mediumBold, smallPillButton, bluePillButton} from '../utils/styles';
+import {
+    small,
+    hidden,
+    red,
+    squareForm,
+    mediumBold,
+    smallPillButton,
+    bluePillButton,
+    redPillButton, pillButton
+} from '../utils/styles';
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import ManagerTenantRentPayments from "../components/ManagerTenantRentPayments";
@@ -24,7 +33,7 @@ function ManagerTenantAgreement(props) {
     const [newFile, setNewFile] = React.useState(null);
     const [editingDoc, setEditingDoc] = React.useState(null);
 
-    const [dueDate, setDueDate] = React.useState('FIRST')
+    const [dueDate, setDueDate] = React.useState('1')
     const [lateAfter, setLateAfter] = React.useState('')
     const [lateFee, setLateFee] = React.useState('')
     const [lateFeePer, setLateFeePer] = React.useState('')
@@ -149,6 +158,11 @@ function ManagerTenantAgreement(props) {
             setErrorMessage('Select an End Date later than Start Date');
             return;
         }
+
+        if(dueDate === '' || lateAfter === '' || lateFee === '' || lateFeePer ==='') {
+            setErrorMessage('Please fill out all fields');
+            return;
+        }
         setErrorMessage('');
 
         const newAgreement = {
@@ -169,6 +183,9 @@ function ManagerTenantAgreement(props) {
             delete files[i].file;
         }
 
+        console.log(newAgreement)
+        // alert('ok')
+        // return
         newAgreement.documents = JSON.stringify(files);
 
         for (const application of acceptedTenantApplications) {
@@ -192,6 +209,15 @@ function ManagerTenantAgreement(props) {
         const create_rental = await post('/rentals', newAgreement, null, files);
 
         back();
+    }
+
+    const terminateLeaseAgreement = async () => {
+        const request_body = {
+            rental_uid: agreement.rental_uid,
+            rental_status : "END EARLY"
+        }
+
+        const response = await put('/rentals', request_body, null, files);
     }
 
     return (
@@ -248,29 +274,29 @@ function ManagerTenantAgreement(props) {
                             <Col>
                                 <Form.Group className='mx-2 my-2'>
                                     <Form.Label as='h6' className='mb-0 ms-2'>
-                                        Rent due (day of the month)
+                                        Rent due {dueDate === '' ? required : ''}
                                     </Form.Label>
                                     {/*<Form.Control style={squareForm} placeholder='5 Days' />*/}
                                     <Form.Select
                                         style={{...squareForm, backgroundImage: `url(${ArrowDown})`,}}
                                         value={dueDate}
                                         onChange={(e) => setDueDate(e.target.value)}>
-                                        <option value='FIRST'>First</option>
-                                        <option value='SECOND'>Second</option>
-                                        <option value='THIRD'>Third</option>
-                                        <option value='FOURTH'>Fourth</option>
-                                        <option value='FIFTH'>Fifth</option>
-                                        <option value='Tenth'>Tenth</option>
-                                        <option value='FIFTEENTH'>Fifteenth</option>
-                                        <option value='TWENTIETH'>Twentieth</option>
-                                        <option value='LAST'>Last day</option>
+                                        <option value='1'>1st of the month</option>
+                                        <option value='2'>2nd of the month</option>
+                                        <option value='3'>3rd of the month</option>
+                                        <option value='4'>4th of the month</option>
+                                        <option value='5'>5th of the month</option>
+                                        <option value='10'>10th of the month</option>
+                                        <option value='15'>15th of the month</option>
+                                        <option value='20'>20th of the month</option>
+                                        <option value='25'>25th of the month</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group className='mx-2 my-2'>
                                     <Form.Label as='h6' className='mb-0 ms-2'>
-                                        Late fees after (days)
+                                        Late fees after (days) {lateAfter === '' ? required : ''}
                                     </Form.Label>
                                     <Form.Control value={lateAfter} style={squareForm} placeholder='5' type='number'
                                                   onChange={(e) => setLateAfter(e.target.value)}/>
@@ -281,7 +307,7 @@ function ManagerTenantAgreement(props) {
                             <Col>
                                 <Form.Group className='mx-2 my-2'>
                                     <Form.Label as='h6' className='mb-0 ms-2'>
-                                        Late Fee (one-time)
+                                        Late Fee (one-time) {lateFee === '' ? required : ''}
                                     </Form.Label>
                                     <Form.Control value={lateFee} type="number" style={squareForm} placeholder='50'
                                                   onChange={(e) => setLateFee(e.target.value)}/>
@@ -290,7 +316,7 @@ function ManagerTenantAgreement(props) {
                             <Col>
                                 <Form.Group className='mx-2 my-2'>
                                     <Form.Label as='h6' className='mb-0 ms-2'>
-                                        Late Fee (per day)
+                                        Late Fee (per day) {lateFeePer === '' ? required : ''}
                                     </Form.Label>
                                     <Form.Control value={lateFeePer} type="number" style={squareForm} placeholder='10'
                                                   onChange={(e) => setLateFeePer(e.target.value)}/>
@@ -461,6 +487,15 @@ function ManagerTenantAgreement(props) {
                     </div>
                     <Col className='d-flex justify-content-evenly'>
                         <Button style={bluePillButton} onClick={forwardLeaseAgreement}>Send Lease Details to Tenant(s)</Button>
+                    </Col>
+                </Row>
+
+                <Row className="pt-1 mt-3 mb-2" hidden={agreement === null}>
+                    <Col className='d-flex flex-row justify-content-evenly'>
+                        <Button style={redPillButton} variant="outline-primary"
+                                onClick={() => terminateLeaseAgreement()}>
+                            Terminate Lease
+                        </Button>
                     </Col>
                 </Row>
             </Container>

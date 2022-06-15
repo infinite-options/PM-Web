@@ -61,15 +61,29 @@ function ManagerUtilities(props) {
         }
 
         if (newUtility.split_type === 'tenant') {
-            let count = newUtility.properties.length
-            let charge_per = charge / count
-            newUtility.properties.forEach((p) => p.charge = charge_per)
+            let count = 0
+            // let charge_per = charge / count
+            // newUtility.properties.forEach((p) => p.charge = charge_per)
+            newUtility.properties.forEach((p, i) => {
+                console.log(p)
+                if (p.rental_status === "ACTIVE") {
+                    let tenants = p.applications.filter((a) => a.application_status === "RENTED")
+                    let occupants =  tenants[0].adult_occupants + tenants[0].children_occupants
+                    count = count + occupants
+                    p.tenants = tenants
+                    p.occupants = occupants
+                } else {
+                    count = count + 1
+                    p.occupants = 1
+                }
+            })
+            newUtility.properties.forEach((p) => p.charge = (p.occupants) / count)
         }
 
         if (newUtility.split_type === 'area') {
             let total_area = 0
             newUtility.properties.forEach((p) => total_area = total_area + p.area)
-            console.log(total_area)
+            // console.log(total_area)
             newUtility.properties.forEach((p) => p.charge = (p.area / total_area) * charge)
         }
     }
@@ -103,15 +117,16 @@ function ManagerUtilities(props) {
             new_bill[key] = files[i].file;
             delete files[i].file;
         }
+
         new_bill.bill_docs = JSON.stringify(files);
-        const response = await post("/bills", new_bill, null, files);
-        console.log(response)
-        const bill_uid = response.bill_uid
-        // const bill_uid = "040-000014"
+        // const response = await post("/bills", new_bill, null, files);
+        // console.log(response)
+        // const bill_uid = response.bill_uid
+        const bill_uid = "040-000014"
         console.log(bill_uid)
 
         for (const property of newUtility.properties) {
-            console.log(property)
+            // console.log(property)
 
             // const new_purchase = {
             //     linked_bill_id: bill_uid,
@@ -129,7 +144,7 @@ function ManagerUtilities(props) {
             const new_purchase = {
                 linked_bill_id : bill_uid,
                 pur_property_id : property.property_uid,
-                payer :"100-000006",
+                payer :"",
                 receiver : management_buid,
                 purchase_type :"UTILITY",
                 description : newUtility.service_name,
@@ -143,11 +158,17 @@ function ManagerUtilities(props) {
 
             if (property.rental_status === "ACTIVE") {
                 const tenants = property.applications.filter(a => a.application_status === "RENTED")
-                new_purchase.payer = [tenants[0].tenant_id]
-                console.log('new purchase')
-                console.log(new_purchase)
-                const response_p = await post("/purchases", new_purchase, null, null);
-                console.log(response_p)
+                // new_purchase.payer = [tenants[0].tenant_id]
+                property.tenants.forEach((t) => {
+                    console.log(t)
+                })
+                // new_purchase.payer = [tenants[0].tenant_id]
+                // console.log('new purchase')
+                // console.log(new_purchase)
+                // const response_p = await post("/purchases", new_purchase, null, null);
+                // console.log(response_p)
+            } else {
+                const owner_id = property.owner_id
             }
         }
     }
@@ -172,8 +193,8 @@ function ManagerUtilities(props) {
 
         newUtility.properties = propertyState.filter((p) => p.checked)
         splitFees(newUtility)
-        // console.log('after split')
-        // console.log(newUtility)
+        console.log('after split')
+        console.log(newUtility)
         await postCharges(newUtility)
         const newUtilityState = [...utilityState];
         newUtilityState.push({...newUtility});
