@@ -35,6 +35,7 @@ function ManagerUtilities(props) {
     const [files, setFiles] = React.useState([]);
     const [newFile, setNewFile] = React.useState(null);
     const [editingDoc, setEditingDoc] = React.useState(null);
+    // const [addToRent, setAddToRent] = React.useState(false);
     // const [dueDate, setDueDate] = React.useState("");
 
     const emptyUtility = {
@@ -42,7 +43,8 @@ function ManagerUtilities(props) {
         charge: '',
         properties: [],
         split_type: 'uniform',
-        due_date: ""
+        due_date: "",
+        add_to_rent: false
     }
     const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -54,7 +56,7 @@ function ManagerUtilities(props) {
     const splitFees = (newUtility) => {
         let charge = parseFloat(newUtility.charge)
 
-        if (newUtility.split_type === 'even') {
+        if (newUtility.split_type === 'uniform') {
             let count = newUtility.properties.length
             let charge_per = charge / count
             newUtility.properties.forEach((p) => p.charge = charge_per)
@@ -87,6 +89,8 @@ function ManagerUtilities(props) {
 
     const postCharges = async (newUtility) => {
 
+        console.log('heree')
+        console.log(newUtility)
         const management_businesses = user.businesses.filter(business => business.business_type === "MANAGEMENT")
         let management_buid = null
         if (management_businesses.length < 1) {
@@ -130,12 +134,15 @@ function ManagerUtilities(props) {
                 receiver : management_buid,
                 purchase_type :"UTILITY",
                 description : newUtility.service_name,
-                amount_due : newUtility.charge,
+                amount_due : property.charge,
                 purchase_notes : newUtility.service_name,
                 purchase_date :"2022-06-07 00:00:00",
                 purchase_frequency :"One-time",
-                // next_payment :"2022-06-07 00:00:00"
                 next_payment : newUtility.due_date
+            }
+
+            if (newUtility.add_to_rent) {
+                new_purchase.next_payment = "0000-00-00 00:00:00"
             }
 
             if (property.rental_status === "ACTIVE") {
@@ -151,7 +158,7 @@ function ManagerUtilities(props) {
     }
 
     const addUtility = async () => {
-        if (newUtility.service_name === '' || newUtility.charge === '' || newUtility.due_date === '') {
+        if (newUtility.service_name === '' || newUtility.charge === '') {
             setErrorMessage('Please fill out all fields');
             return;
         }
@@ -160,12 +167,19 @@ function ManagerUtilities(props) {
             return;
         }
 
-        let due_date = new Date(newUtility.due_date);
-        let current_date = new Date();
-        if (current_date >= due_date) {
-            setErrorMessage("Select a Due by Date later than current date");
-            return;
+        if (!newUtility.add_to_rent) {
+            if (newUtility.due_date === '') {
+                setErrorMessage('Please fill out all fields');
+                return;
+            }
+            let due_date = new Date(newUtility.due_date);
+            let current_date = new Date();
+            if (current_date >= due_date) {
+                setErrorMessage("Select a Due by Date later than current date");
+                return;
+            }
         }
+
         setErrorMessage("");
 
         newUtility.properties = [...propertyState.filter((p) => p.checked)]
@@ -200,8 +214,17 @@ function ManagerUtilities(props) {
         // setUtilityState(newUtilityState);
     }
     const changeNewUtility = (event, field) => {
+        // console.log('as')
+        // console.log(event)
+        // console.log(field)
+        // console.log(event.target.checked)
         const changedUtility = {...newUtility};
-        changedUtility[field] = event.target.value;
+        if (event.target.type === 'checkbox') {
+            changedUtility[field] = event.target.checked;
+        } else {
+            changedUtility[field] = event.target.value;
+        }
+        // changedUtility[field] = event.target.value;
         setNewUtility(changedUtility);
     }
     const toggleProperty = (i) => {
@@ -328,7 +351,28 @@ function ManagerUtilities(props) {
 
                         <Row>
                             <Col>
-                                <Form.Group className='mx-2 my-3'>
+                                <Form.Group className="mx-2 mt-3 mb-2">
+                                    <Form.Label as="h6" className="mb-0 ms-2">
+                                        Due by Date {newUtility.due_date === "" ? required : ""}
+                                    </Form.Label>
+                                    <Form.Control
+                                        disabled={newUtility.add_to_rent}
+                                        style={squareForm}
+                                        type="date"
+                                        value={newUtility.due_date}
+                                        onChange={(e) => changeNewUtility(e, 'due_date')}
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+                                    <Form.Check type="checkbox" label="Pay with next rent"
+                                                onChange={(e) => changeNewUtility(e, 'add_to_rent')}/>
+                                </Form.Group>
+                                {/*<Checkbox type='BOX' checked={newUtility.add_to_rent ? 'checked' : ''}*/}
+                                {/*          onClick={(checked) => changeNewUtility(checked, 'add_to_rent')} />*/}
+                            </Col>
+                            <Col>
+                                <Form.Group className='mx-2 my-3'
+                                            hidden={propertyState.filter(p => p.checked).length <= 1}>
                                     <Form.Label as='h6' className='mb-0 ms-2'>
                                         Fee Distribution
                                     </Form.Label>
@@ -340,19 +384,6 @@ function ManagerUtilities(props) {
                                         <option value='tenant'>By Tenant Count</option>
                                         <option value='area'>By Square Footage</option>
                                     </Form.Select>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group className="mx-2 my-3">
-                                    <Form.Label as="h6" className="mb-0 ms-2">
-                                        Due by Date {newUtility.due_date === "" ? required : ""}
-                                    </Form.Label>
-                                    <Form.Control
-                                        style={squareForm}
-                                        type="date"
-                                        value={newUtility.due_date}
-                                        onChange={(e) => changeNewUtility(e, 'due_date')}
-                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
