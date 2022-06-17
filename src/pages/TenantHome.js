@@ -70,7 +70,7 @@ function TenantHome() {
     fetchProfile();
     fetchUserProperties();
   }, []);
-  console.log(properties);
+  
   return (
     <div className="d-flex flex-column h-100">
       {isLoading === false ? (

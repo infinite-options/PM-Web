@@ -40,8 +40,8 @@ function TenantPropertyView(props) {
                     </div> )
             }
 
-            <p style={{fontWeight:"bold",textAlign:"left",fontSize:"18px",marginLeft:"50px"}}>Review Property details</p>
-            <div style={{padding:"100px",paddingTop:"15px",paddingBottom:"15px"}}>
+            <p style={{fontWeight:"bold",textAlign:"left",fontSize:"24px",marginLeft:"25px"}}><u>Review Property Details:</u></p>
+            <div style={{padding: "40px",paddingTop:"15px",paddingBottom:"15px"}}>
                 {property?
                 (<PropertyForm property={property} hideEdit="true"/>)
                 :
@@ -56,7 +56,7 @@ function TenantPropertyView(props) {
                             style={{
                             display: "flex",
                             flexDirection: "row",
-                            justifyContent: "space-evenly",
+                            justifyent: "space-evenly",
                             marginBottom:"25px"
                             }}
                         >

@@ -20,7 +20,7 @@ function PropertyUtilities(props) {
   }
 
   return (
-    <Container className='my-4'>
+    <Container style={{paddingLeft: "0px"}} className='my-4'>
       <Row>
         <Col xs={6}>
           <h6>Utilities Paid by</h6>

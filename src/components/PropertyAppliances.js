@@ -22,7 +22,7 @@ function PropertyAppliances(props) {
   }
 
   return (
-    <Container className='my-4'>
+    <Container style={{padding: "0px"}} className='my-4'>
       <h6>Appliances</h6>
       {appliances.map((appliance, i) => (
         <div key={i} className='d-flex ps-2 align-items-center'>
