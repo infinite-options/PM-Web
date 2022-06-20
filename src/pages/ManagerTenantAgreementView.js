@@ -235,7 +235,7 @@ function ManagerTenantAgreementView(props) {
                                 <Col className='d-flex flex-row justify-content-evenly'>
                                     <Form.Group className='mx-2 my-3'>
                                         <Form.Label as='h6' className='mb-0 ms-2'>
-                                            Last Date {lastDate === '' ? required : ''}
+                                            Select the Last Date {lastDate === '' ? required : ''}
                                         </Form.Label>
                                         <Form.Control style={squareForm} type='date' value={lastDate}
                                                       onChange={(e) => setLastDate(e.target.value)}/>
@@ -247,6 +247,12 @@ function ManagerTenantAgreementView(props) {
                                     <Button style={redPillButton} variant="outline-primary"
                                             onClick={() => terminateLeaseAgreement()}>
                                         Notify intent to terminate
+                                    </Button>
+                                </Col>
+                                <Col className='d-flex flex-row justify-content-evenly'>
+                                    <Button style={bluePillButton} variant="outline-primary"
+                                            onClick={() => setTerminateLease(false)}>
+                                        Cancel
                                     </Button>
                                 </Col>
                             </Row>
