@@ -4,10 +4,21 @@ import Header from "../components/Header";
 import File from '../icons/File.svg';
 import BusinessContact from "../components/BusinessContact";
 import {put, post} from '../utils/api';
-import {small, hidden, red, squareForm, mediumBold, smallPillButton, bluePillButton} from '../utils/styles';
+import {
+    small,
+    hidden,
+    red,
+    squareForm,
+    mediumBold,
+    smallPillButton,
+    bluePillButton,
+    redPillButton, pillButton
+} from '../utils/styles';
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import ManagerTenantRentPayments from "../components/ManagerTenantRentPayments";
+import ArrowDown from "../icons/ArrowDown.svg";
+import tenantAgreement from "../components/TenantAgreement";
 
 function ManagerTenantAgreement(props) {
     const {back, property, agreement, acceptedTenantApplications, setAcceptedTenantApplications} = props;
@@ -21,6 +32,11 @@ function ManagerTenantAgreement(props) {
 
     const [newFile, setNewFile] = React.useState(null);
     const [editingDoc, setEditingDoc] = React.useState(null);
+
+    const [dueDate, setDueDate] = React.useState('1')
+    const [lateAfter, setLateAfter] = React.useState('')
+    const [lateFee, setLateFee] = React.useState('')
+    const [lateFeePer, setLateFeePer] = React.useState('')
 
     // const addFile = (e) => {
     //     const newFiles = [...files];
@@ -80,6 +96,12 @@ function ManagerTenantAgreement(props) {
         setFeeState(JSON.parse(agreement.rent_payments));
         contactState[1](JSON.parse(agreement.assigned_contacts));
         setFiles(JSON.parse(agreement.documents));
+
+
+        setDueDate(agreement.due_by)
+        setLateAfter(agreement.late_by)
+        setLateFee(agreement.late_fee)
+        setLateFeePer(agreement.perDay_late_fee)
     }
     React.useEffect(() => {
         if (agreement) {
@@ -136,6 +158,11 @@ function ManagerTenantAgreement(props) {
             setErrorMessage('Select an End Date later than Start Date');
             return;
         }
+
+        if(dueDate === '' || lateAfter === '' || lateFee === '' || lateFeePer ==='') {
+            setErrorMessage('Please fill out all fields');
+            return;
+        }
         setErrorMessage('');
 
         const newAgreement = {
@@ -145,6 +172,10 @@ function ManagerTenantAgreement(props) {
             lease_end: endDate,
             rent_payments: JSON.stringify(feeState),
             assigned_contacts: JSON.stringify(contactState[0]),
+            due_by: dueDate,
+            late_by: lateAfter,
+            late_fee: lateFee,
+            perDay_late_fee: lateFeePer
         }
         for (let i = 0; i < files.length; i++) {
             let key = `doc_${i}`;
@@ -152,6 +183,9 @@ function ManagerTenantAgreement(props) {
             delete files[i].file;
         }
 
+        console.log(newAgreement)
+        // alert('ok')
+        // return
         newAgreement.documents = JSON.stringify(files);
 
         for (const application of acceptedTenantApplications) {
@@ -174,14 +208,58 @@ function ManagerTenantAgreement(props) {
         console.log(newAgreement);
         const create_rental = await post('/rentals', newAgreement, null, files);
 
+        back();
+    }
 
+    const renewLease = async () => {
+        if (startDate === '' || endDate === '') {
+            setErrorMessage('Please fill out all fields');
+            return;
+        }
+
+        let start_date = new Date(startDate)
+        let end_date = new Date(endDate)
+        if (start_date >= end_date) {
+            setErrorMessage('Select an End Date later than Start Date');
+            return;
+        }
+
+        if(dueDate === '' || lateAfter === '' || lateFee === '' || lateFeePer ==='') {
+            setErrorMessage('Please fill out all fields');
+            return;
+        }
+        setErrorMessage('');
+
+        const newAgreement = {
+            rental_property_id: property.property_uid,
+            tenant_id: null,
+            lease_start: startDate,
+            lease_end: endDate,
+            rent_payments: JSON.stringify(feeState),
+            assigned_contacts: JSON.stringify(contactState[0]),
+            rental_status :"PENDING",
+            due_by: dueDate,
+            late_by: lateAfter,
+            late_fee: lateFee,
+            perDay_late_fee: lateFeePer
+        }
+        for (let i = 0; i < files.length; i++) {
+            let key = `doc_${i}`;
+            newAgreement[key] = files[i].file;
+            delete files[i].file;
+        }
+
+        newAgreement.documents = JSON.stringify(files);
+        newAgreement.tenant_id = JSON.stringify(acceptedTenantApplications.map(application => application.tenant_id))
+        console.log(newAgreement);
+        const create_rental = await post('/extendLease', newAgreement, null, files);
         back();
     }
 
     return (
         <div className='mb-5 pb-5'>
             <Header title='Tenant Agreement' leftText='< Back' leftFn={back}
-                    rightText='Save' rightFn={save}/>
+                    rightText=''/>
             <Container>
                 <div className='mb-4'>
                     <h5 style={mediumBold}>Tenant(s)</h5>
@@ -224,6 +302,67 @@ function ManagerTenantAgreement(props) {
                         <ManagerTenantRentPayments feeState={feeState} setFeeState={setFeeState} property={property}/>
                     </div>
                 </div>
+
+                <div className='mb-4'>
+                    <h5 style={mediumBold}>Due date and late fees</h5>
+                    <div className='mx-2'>
+                        <Row>
+                            <Col>
+                                <Form.Group className='mx-2 my-2'>
+                                    <Form.Label as='h6' className='mb-0 ms-2'>
+                                        Rent due {dueDate === '' ? required : ''}
+                                    </Form.Label>
+                                    {/*<Form.Control style={squareForm} placeholder='5 Days' />*/}
+                                    <Form.Select
+                                        style={{...squareForm, backgroundImage: `url(${ArrowDown})`,}}
+                                        value={dueDate}
+                                        onChange={(e) => setDueDate(e.target.value)}>
+                                        <option value='1'>1st of the month</option>
+                                        <option value='2'>2nd of the month</option>
+                                        <option value='3'>3rd of the month</option>
+                                        <option value='4'>4th of the month</option>
+                                        <option value='5'>5th of the month</option>
+                                        <option value='10'>10th of the month</option>
+                                        <option value='15'>15th of the month</option>
+                                        <option value='20'>20th of the month</option>
+                                        <option value='25'>25th of the month</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group className='mx-2 my-2'>
+                                    <Form.Label as='h6' className='mb-0 ms-2'>
+                                        Late fees after (days) {lateAfter === '' ? required : ''}
+                                    </Form.Label>
+                                    <Form.Control value={lateAfter} style={squareForm} placeholder='5' type='number'
+                                                  onChange={(e) => setLateAfter(e.target.value)}/>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group className='mx-2 my-2'>
+                                    <Form.Label as='h6' className='mb-0 ms-2'>
+                                        Late Fee (one-time) {lateFee === '' ? required : ''}
+                                    </Form.Label>
+                                    <Form.Control value={lateFee} type="number" style={squareForm} placeholder='50'
+                                                  onChange={(e) => setLateFee(e.target.value)}/>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group className='mx-2 my-2'>
+                                    <Form.Label as='h6' className='mb-0 ms-2'>
+                                        Late Fee (per day) {lateFeePer === '' ? required : ''}
+                                    </Form.Label>
+                                    <Form.Control value={lateFeePer} type="number" style={squareForm} placeholder='10'
+                                                  onChange={(e) => setLateFeePer(e.target.value)}/>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                    </div>
+                </div>
+
                 <div className='mb-4'>
                     <h5 style={mediumBold}>Contact Details</h5>
                     <BusinessContact state={contactState}/>
@@ -384,6 +523,24 @@ function ManagerTenantAgreement(props) {
                     </div>
                     <Col className='d-flex justify-content-evenly'>
                         <Button style={bluePillButton} onClick={forwardLeaseAgreement}>Send Lease Details to Tenant(s)</Button>
+                    </Col>
+                </Row>
+
+                {/*<Row className="pt-1 mt-3 mb-2" hidden={agreement === null}>*/}
+                {/*    <Col className='d-flex flex-row justify-content-evenly'>*/}
+                {/*        <Button style={redPillButton} variant="outline-primary"*/}
+                {/*                onClick={() => terminateLeaseAgreement()}>*/}
+                {/*            Terminate Lease*/}
+                {/*        </Button>*/}
+                {/*    </Col>*/}
+                {/*</Row>*/}
+
+                <Row className="pt-1 mt-3 mb-2" hidden={agreement === null}>
+                    <Col className='d-flex flex-row justify-content-evenly'>
+                        <Button style={bluePillButton} variant="outline-primary"
+                                onClick={() => renewLease()}>
+                            Forward New Lease Agreement
+                        </Button>
                     </Col>
                 </Row>
             </Container>
