@@ -35,6 +35,9 @@ function ManagerTenantAgreementView(props) {
     const [tenantEndEarly, setTenantEndEarly] = React.useState(false);
 
     const loadAgreement = () => {
+        // console.log(agreement)
+        // console.log(contactState)
+        // console.log(typeof contactState)
         setTenantID(agreement.tenant_id);
         setStartDate(agreement.lease_start);
         setEndDate(agreement.lease_end);
@@ -270,7 +273,7 @@ function ManagerTenantAgreementView(props) {
 
                     {tenantEndEarly ?
                         <div className='my-4'>
-                            <h5 style={mediumBold}>Tenant Requests to end lease early</h5>
+                            <h5 style={mediumBold}>Tenant Requests to end lease early on {agreement.early_end_date}</h5>
                             <Row className='my-4'>
                                 <Col className='d-flex flex-row justify-content-evenly'>
                                     <Button style={bluePillButton} variant="outline-primary"
