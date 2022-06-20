@@ -95,6 +95,10 @@ function ManagerProperties(props) {
       property.new_tenant_applications = property.applications.filter(
         (a) => a.application_status === "NEW"
       );
+
+      property.end_early_applications = property.applications.filter(
+          (a) => a.application_status === "TENANT END EARLY"
+      );
     });
 
     console.log(properties_unique);
@@ -206,6 +210,16 @@ function ManagerProperties(props) {
                     {property.new_tenant_applications.length > 0
                       ? `${property.new_tenant_applications.length} new tenant application(s) to review`
                       : ""}
+                  </p>
+                </div>
+              </div>
+
+              <div className="d-flex">
+                <div className="d-flex align-items-end">
+                  <p style={{ ...blue, ...xSmall }} className="mb-0">
+                    {property.end_early_applications.length > 0
+                        ? "Tenant(s) requested to end the lease early"
+                        : ""}
                   </p>
                 </div>
               </div>

@@ -23,6 +23,7 @@ import ManagerTenantProfileView from "./ManagerTenantProfileView";
 import PropertyManagerDocs from "../components/PropertyManagerDocs";
 import AppContext from "../AppContext";
 import ManagerManagementContract from "../components/ManagerManagementContract";
+import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
 
 function ManagerPropertyView(props) {
 
@@ -37,7 +38,8 @@ function ManagerPropertyView(props) {
     const [property, setProperty] = React.useState({images: '[]'});
 
     const fetchProperty = async () => {
-        const response = await get(`/propertiesOwnerDetail?property_uid=${property_uid}`);
+        // const response = await get(`/propertiesOwnerDetail?property_uid=${property_uid}`);
+        const response = await get(`/propertiesManagerDetail?property_uid=${property_uid}`);
         const property_details = response.result[0]
 
         property_details.tenants = property_details.rentalInfo.filter(r => r.rental_status === "ACTIVE")
@@ -166,7 +168,10 @@ function ManagerPropertyView(props) {
         showManagementContract ? (
             <ManagerManagementContract back={closeContract} property={property} contract={selectedContract} reload={reloadProperty}/>
         ) : showTenantAgreement ? (
-            <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
+            // <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
+            //                         acceptedTenantApplications={acceptedTenantApplications}
+            //                         setAcceptedTenantApplications={setAcceptedTenantApplications}/>
+            <ManagerTenantAgreementView back={closeAgreement} property={property} agreement={selectedAgreement}
                                     acceptedTenantApplications={acceptedTenantApplications}
                                     setAcceptedTenantApplications={setAcceptedTenantApplications}/>
         ) : showTenantProfile ? (

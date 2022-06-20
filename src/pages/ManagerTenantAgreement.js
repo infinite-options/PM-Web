@@ -211,20 +211,55 @@ function ManagerTenantAgreement(props) {
         back();
     }
 
-    const terminateLeaseAgreement = async () => {
-        const request_body = {
-            rental_uid: agreement.rental_uid,
-            rental_status : "END EARLY"
+    const renewLease = async () => {
+        if (startDate === '' || endDate === '') {
+            setErrorMessage('Please fill out all fields');
+            return;
         }
 
-        const response = await put('/rentals', request_body, null, files);
+        let start_date = new Date(startDate)
+        let end_date = new Date(endDate)
+        if (start_date >= end_date) {
+            setErrorMessage('Select an End Date later than Start Date');
+            return;
+        }
+
+        if(dueDate === '' || lateAfter === '' || lateFee === '' || lateFeePer ==='') {
+            setErrorMessage('Please fill out all fields');
+            return;
+        }
+        setErrorMessage('');
+
+        const newAgreement = {
+            rental_property_id: property.property_uid,
+            tenant_id: null,
+            lease_start: startDate,
+            lease_end: endDate,
+            rent_payments: JSON.stringify(feeState),
+            assigned_contacts: JSON.stringify(contactState[0]),
+            rental_status :"PENDING",
+            due_by: dueDate,
+            late_by: lateAfter,
+            late_fee: lateFee,
+            perDay_late_fee: lateFeePer
+        }
+        for (let i = 0; i < files.length; i++) {
+            let key = `doc_${i}`;
+            newAgreement[key] = files[i].file;
+            delete files[i].file;
+        }
+
+        newAgreement.documents = JSON.stringify(files);
+        newAgreement.tenant_id = JSON.stringify(acceptedTenantApplications.map(application => application.tenant_id))
+        console.log(newAgreement);
+        const create_rental = await post('/extendLease', newAgreement, null, files);
         back();
     }
 
     return (
         <div className='mb-5 pb-5'>
             <Header title='Tenant Agreement' leftText='< Back' leftFn={back}
-                    rightText='Save' rightFn={save}/>
+                    rightText=''/>
             <Container>
                 <div className='mb-4'>
                     <h5 style={mediumBold}>Tenant(s)</h5>
@@ -491,11 +526,20 @@ function ManagerTenantAgreement(props) {
                     </Col>
                 </Row>
 
+                {/*<Row className="pt-1 mt-3 mb-2" hidden={agreement === null}>*/}
+                {/*    <Col className='d-flex flex-row justify-content-evenly'>*/}
+                {/*        <Button style={redPillButton} variant="outline-primary"*/}
+                {/*                onClick={() => terminateLeaseAgreement()}>*/}
+                {/*            Terminate Lease*/}
+                {/*        </Button>*/}
+                {/*    </Col>*/}
+                {/*</Row>*/}
+
                 <Row className="pt-1 mt-3 mb-2" hidden={agreement === null}>
                     <Col className='d-flex flex-row justify-content-evenly'>
-                        <Button style={redPillButton} variant="outline-primary"
-                                onClick={() => terminateLeaseAgreement()}>
-                            Terminate Lease
+                        <Button style={bluePillButton} variant="outline-primary"
+                                onClick={() => renewLease()}>
+                            Forward New Lease Agreement
                         </Button>
                     </Col>
                 </Row>
