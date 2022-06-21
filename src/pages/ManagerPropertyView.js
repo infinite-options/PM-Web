@@ -168,12 +168,15 @@ function ManagerPropertyView(props) {
         showManagementContract ? (
             <ManagerManagementContract back={closeContract} property={property} contract={selectedContract} reload={reloadProperty}/>
         ) : showTenantAgreement ? (
-            // <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
-            //                         acceptedTenantApplications={acceptedTenantApplications}
-            //                         setAcceptedTenantApplications={setAcceptedTenantApplications}/>
-            <ManagerTenantAgreementView back={closeAgreement} property={property} agreement={selectedAgreement}
-                                    acceptedTenantApplications={acceptedTenantApplications}
-                                    setAcceptedTenantApplications={setAcceptedTenantApplications}/>
+            selectedAgreement ? (
+                <ManagerTenantAgreementView back={closeAgreement} property={property} agreement={selectedAgreement}
+                                            acceptedTenantApplications={acceptedTenantApplications}
+                                            setAcceptedTenantApplications={setAcceptedTenantApplications}/>
+                ) :
+                <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
+                                        acceptedTenantApplications={acceptedTenantApplications}
+                                        setAcceptedTenantApplications={setAcceptedTenantApplications}/>
+
         ) : showTenantProfile ? (
             <ManagerTenantProfileView back={closeTenantApplication} application={selectedTenantApplication}/>
         ) : (
