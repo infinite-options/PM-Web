@@ -530,11 +530,11 @@ function TenantDashboard(props) {
                     fontSize: "14px",
                     // width: "73px",
                     // height: "24px",
-                    padding: '5px',
+                    // padding: '5px',
                     textAlign: "center",
                   }}
                 >
-                  Unpaid Fees
+                  Unpaid
                 </Col> : 
                 <Col
                   style={{
@@ -877,6 +877,42 @@ function TenantDashboard(props) {
                   backgroundColor: "#FFFFFF",
                 }}
               >
+                {/* ============== Due Button ===================*/}
+                <div
+                  onClick={
+                    goToDuePayments
+                  }
+                  style={{
+                    height: "90px",
+                    width: "167px",
+                    backgroundColor: "#93EE9C",
+                    borderRadius: "10px",
+                    margin: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#007AFF",
+                      padding: "5px",
+                      borderRadius: "10px 10px 0px 0px",
+                      fontSize: "21px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Due
+                  </div>
+                    <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+                      {/* {selectedProperty.nextPurchase.payment_date ? 
+                      <div>
+                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
+                        &nbsp;
+                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
+                      </div>
+                        : "N/A\n"
+                      } */}
+                        ${due}
+                    </div>
+                </div>
                 {/* ============== Upcoming Button ===================*/}
                 <div
                   onClick={goToDuePayments}
@@ -915,43 +951,6 @@ function TenantDashboard(props) {
 
                   </div> }
                   
-                  
-                </div>
-                {/* ============== Due Button ===================*/}
-                <div
-                  onClick={
-                    goToDuePayments
-                  }
-                  style={{
-                    height: "90px",
-                    width: "167px",
-                    backgroundColor: "#93EE9C",
-                    borderRadius: "10px",
-                    margin: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#007AFF",
-                      padding: "5px",
-                      borderRadius: "10px 10px 0px 0px",
-                      fontSize: "21px",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Due
-                  </div>
-                    <div style={{ fontSize: "22px", lineHeight: "35px" }}>
-                      {/* {selectedProperty.nextPurchase.payment_date ? 
-                      <div>
-                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
-                        &nbsp;
-                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
-                      </div>
-                        : "N/A\n"
-                      } */}
-                        ${due}
-                    </div>
                 </div>
                 {/* ============== Paid Button ===================*/}
                 <div

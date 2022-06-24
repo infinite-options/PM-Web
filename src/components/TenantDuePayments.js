@@ -230,13 +230,14 @@ function TenantDuePayments(props) {
                     </button> 
                     : 
                     <Row>
-                        <div style={{width: '80%', margin: '5% 10%', fontSize: '20px', color: 'red'}}>Total must be greater than $0</div>
+                        <div style={{width: '80%', margin: '5% 13.2%', fontSize: '20px', color: 'red', textAlign: 'center'}}>Total must be greater than $0</div>     
                         <button 
-                            style={{...payNowButton}}
+                            style={payNowButton}
                             disabled
                         >
                             Pay Now
-                        </button>                        
+                        </button>
+                                                
                     </Row>
 
                     

@@ -161,7 +161,7 @@ const upcomingText = {
 };
 const payNowButton ={
   width: '40%', 
-  margin: '5% 30%', 
+  margin: '5% 33.2%', 
   borderRadius: '30px', 
   fontSize: '24px', 
   border: 'none', 
