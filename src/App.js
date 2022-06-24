@@ -16,6 +16,7 @@ import Emergency from "./components/TenantEmergency";
 import RepairStatus from "./components/RepairStatus";
 import TenantDocuments from "./components/TenantDocuments";
 import RentPayment from "./components/RentPayment";
+import PaymentPage from "./components/PaymentPage";
 import PaymentHistory from "./components/PaymentHistory";
 import ScheduleRepairs from "./components/ScheduleRepairs";
 import { get } from "./utils/api";
@@ -53,6 +54,8 @@ import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
 import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./pages/ManagerUtilities";
+import TenantDuePayments from "./components/TenantDuePayments";
+import TenantPastPaidPayments from "./components/TenantPastPaidPayments"
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -159,12 +162,27 @@ function App() {
               path="/:property_uid/repairStatus"
               element={<RepairStatus />}
             />
+            <Route
+              path="tenantDuePayments"
+              element={<TenantDuePayments />}
+            />
+            <Route
+                path="tenantPastPaidPayments"
+                element={<TenantPastPaidPayments />}
+            />
+              
+            
             <Route path="tenantDocuments" element={<TenantDocuments />} />
             <Route
               path="/rentPayment/:purchase_uid"
               element={<RentPayment />}
             />
+            <Route
+              path="/paymentPage/:purchase_uid"
+              element={<PaymentPage />}
+            />
             <Route path="rentPayment" element={<RentPayment />} />
+            <Route path="PaymentPage" element={<PaymentPage />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />
             <Route path="scheduleRepairs" element={<ScheduleRepairs />} />
             <Route path="rescheduleRepair" element={<RescheduleRepair />} />

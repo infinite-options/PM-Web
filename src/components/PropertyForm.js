@@ -75,7 +75,6 @@ function PropertyForm(props) {
     utilityState[1](JSON.parse(property.utilities));
     loadImages();
   };
-
   const stateList = [
     {
       name: "Alabama",

@@ -19,3 +19,21 @@
   src: local("SFProText-SemiBold"),
     url(./fonts/SFProText-SemiBold.ttf) format("truetype");
 }
+
+
+ .carousel-control-next-icon, .carousel-control-prev-icon /*, .carousel-indicators */ {
+    filter: invert(100%) ;
+}
+
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+  width: 100%;
+}
+.carousel-indicators{
+  filter: invert(100%) ;
+  color: black !important;
+}
+.carousel-control-prev{ 
+  opacity:1 !important;
+  /* width: 5% !important; */
+}
+.carousel-control-next{ opacity:1 !important;}

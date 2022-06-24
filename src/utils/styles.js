@@ -13,7 +13,7 @@ const small = {
 };
 const mediumBold = {
   fontWeight: "600",
-  font: "normal normal bold 20px/28px Bahnschrift;",
+  font: "normal normal bold 20px/28px Bahnschrift",
 };
 const bold = {
   fontWeight: "bold",
@@ -159,6 +159,16 @@ const upcomingText = {
   letterSpacing: "0px",
   color: "#F5F5F5",
 };
+const payNowButton ={
+  width: '40%', 
+  margin: '5% 30%', 
+  borderRadius: '30px', 
+  fontSize: '24px', 
+  border: 'none', 
+  backgroundColor: '#007AFF', 
+  color: '#FFFFFF', 
+  height: '45px',
+}
 const bluePill = {
   background: "#007AFF 0% 0% no-repeat padding-box",
   borderRadius: "30px",
@@ -345,6 +355,7 @@ export {
   //Wrote Code here
   newHeading,
   editButton,
+  payNowButton,
   //Wrote Code here
   pillButton,
   boldSmall,

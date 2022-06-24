@@ -52,8 +52,9 @@ function TenantDashboard(props) {
   const [upcomingFees, setUpcoming] = useState(0);
   const [coverImageIndex, setCoverImageIndex] = useState(0);
   const [propertyIndex, setPropertyIndex] = useState(0);
-  console.log(user);
+
   
+  let includedUIDs = [];
   var months = [ "January", "February", "March", "April", "May", "June", 
            "July", "August", "September", "October", "November", "December" ];
   // console.log(context, access_token, user, selectedProperty);
@@ -76,8 +77,10 @@ function TenantDashboard(props) {
       navigate("/");
       return;
     }
+    
     let response = await get("/tenantProfileInfo", access_token);
     console.log(response);
+
     if (response.msg === "Token has expired") {
       console.log("here msg");
       refresh();
@@ -134,10 +137,8 @@ function TenantDashboard(props) {
 
     let rentTotal = [];
     for (const payment of payments) {
-      console.log("tenantProperties payment", payment);
       for (const pay of payment)
         if (pay.frequency === "Monthly" && pay.fee_type === "$") {
-          console.log(" tenantProperties payment here");
           rentTotal.push(parseFloat(pay.charge));
         }
     }
@@ -152,7 +153,7 @@ function TenantDashboard(props) {
         })
       : (purchases = []);
 
-    console.log("tenantProperties purchase", response.result.length, purchases);
+    // console.log("tenantProperties purchase", response.result.length, purchases);
     
     let lastPaidPurchase = [];
     let firstUnpaidPurchase = [];
@@ -162,13 +163,13 @@ function TenantDashboard(props) {
     let nup = null;
     
     for (const purchase of purchases) {
-      console.log("tenantProperties purchase", purchase);
-      console.log(
-        "tenantProperties purchase",
-        lastPaidPurchase,
-        firstUnpaidPurchase,
-        nextUnpaidPurchase
-      );
+      // console.log("tenantProperties purchase", purchase);
+      // console.log(
+      //   "tenantProperties purchase",
+      //   lastPaidPurchase,
+      //   firstUnpaidPurchase,
+      //   nextUnpaidPurchase
+      // );
       for (const pur of purchase) {
         // console.log("tenantProperties pur", pur);
         // console.log(
@@ -178,15 +179,15 @@ function TenantDashboard(props) {
         //   nextUnpaidPurchase
         // );
         if (pur.purchase_status === "UNPAID" && fup === null) {
-          console.log("in if");
+          // console.log("in if");
           fup = pur;
           firstUnpaidPurchase.push(fup);
         } else if (pur.purchase_status === "UNPAID" && nup === null) {
-          console.log("in else if");
+          // console.log("in else if");
           nup = pur;
           nextUnpaidPurchase.push(nup);
         } else if (pur.purchase_status === "PAID") {
-          console.log("in else if2");
+          // console.log("in else if2");
           lpp = pur;
           lastPaidPurchase.push(lpp);
         }
@@ -222,18 +223,8 @@ function TenantDashboard(props) {
       response.result.length,
       properties
     );
-
-    let selectedProperty = properties[0];
-    parseExpenses(selectedProperty);
-    setSelectedProperty(selectedProperty);
-    console.log(selectedProperty.property.images);
-    for (let index in selectedProperty.property.images) {
-      if (selectedProperty.property.images[index].includes("img_cover")) {
-        setCoverImageIndex(index);
-      }
-    }
     setProperties(properties);
-    
+    setSelectedProperty(properties[propertyIndex]);
   };
 
   const parseExpenses = (parameter) => {
@@ -244,9 +235,11 @@ function TenantDashboard(props) {
     let tempUpcoming = 0;
     let tempDue = 0;
     let tempRentPaid = 0;
+
     const currentMonth = new Date().getMonth();
     const currentDay = new Date().getDate();
     const currentYear = new Date().getFullYear();
+    
     for (let expense of parameter.property.tenantExpenses) {
       let dueDate;
       let currentDate;
@@ -258,28 +251,39 @@ function TenantDashboard(props) {
         tempYear = parseInt(date[0]);
         dueDate = new Date(tempYear, tempMonth - 1, tempDate);
         currentDate = new Date(currentYear, currentMonth, currentDay);
-        
       }
-      console.log(currentDate, dueDate);
-      if (expense.purchase_status === "UNPAID" && dueDate > currentDate) {
+      if (expense.purchase_status === "UNPAID" && dueDate > currentDate && !includedUIDs.includes(expense.purchase_uid)) {
+        includedUIDs.push(expense.purchase_uid);
         tempUpcoming += expense.amount_due - expense.amount_paid;  
       }
-      if ((expense.purchase_status === "PAID" || expense.amount_paid > 0)) {
-        tempRentPaid += expense.amount_paid;
+      if ((expense.purchase_status === "PAID" || expense.amount > 0)) {
+        includedUIDs.push(expense.purchase_uid);
+        tempRentPaid += expense.amount;
       }
       if (expense.purchase_status === "UNPAID" && dueDate <= currentDate){
-        tempDue += expense.amount_due - expense.amount_paid;
+        includedUIDs.push(expense.purchase_uid);
+        console.log(expense.purchase_uid);
+        tempDue += expense.amount_due - expense.amount;
       }
     }
+    console.log(includedUIDs);
+    console.log(parameter.property.tenantExpenses);
     setPaid(tempRentPaid);
     setDue(tempDue);
     setUpcoming(tempUpcoming);
   }
-
-  const callerFunction = (parameter) => {
-    setSelectedProperty(parameter);
-    parseExpenses(parameter);
-  }
+  
+  useEffect(()=>{
+    if(Object.keys(selectedProperty).length > 0) {
+      console.log("Selected Property: ", selectedProperty);
+      for (let index in selectedProperty.property.images) {
+        if (selectedProperty.property.images[index].includes("img_cover")) {
+          setCoverImageIndex(index);
+        }
+      }
+      parseExpenses(selectedProperty);
+    }
+  }, [selectedProperty]);
   
   const fetchRepairs = async () => {
     console.log(profile);
@@ -294,6 +298,21 @@ function TenantDashboard(props) {
       }
     }
   };
+  const calculatePropertyIndex = (addSubtract) => {
+    let newIndex = propertyIndex;
+    newIndex += addSubtract ? 1 : -1;
+    if (newIndex === properties.length) {
+      newIndex = 0;
+    }
+    else if (newIndex === -1) {
+      newIndex = properties.length - 1;
+    }
+    console.log(newIndex);
+    setPropertyIndex(newIndex);
+    console.log(properties);
+    console.log("selected property", properties[newIndex]);
+    setSelectedProperty(properties[newIndex]);
+  }
   const fetchApplications = async () => {
     console.log("profile", profile);
     const response = await get(`/applications?tenant_id=${profile.tenant_id}`);
@@ -302,31 +321,15 @@ function TenantDashboard(props) {
     appArray.forEach((app) => {
       app.images = app.images ? JSON.parse(app.images) : [];
     });
-
-    // const appArray = response.result || [];
-    // if(response.result && response.result.length ){
-    //   appArray.forEach(async(app, i)=>{
-    //       const property = await get(
-    //         `/propertyInfo?property_uid=${app.property_uid}`
-    //       );
-    //       if(property && property.result.length){
-    //         app.images = JSON.parse(property.result[0].images) || [];
-    //         app.address = property.result[0].address || "";
-    //         app.city = property.result[0].city || "";
-    //         app.area = property.result[0].area || "";
-    //       }
-    //         setApplications(appArray);
-
-    //   })
-    // }
     setApplications(appArray);
     console.log("applications", appArray);
   };
+
   const fetchRentals = async () => {
-    console.log("Hello");
     const response = await get( `/leaseTenants?linked_tenant_id=${user.user_uid}` );
     console.log("rentals", response.result);
   }
+
   useEffect(() => {
       fetchProfile();
       fetchRepairs();
@@ -365,6 +368,27 @@ function TenantDashboard(props) {
       },
     });
   };
+  const goToPastPaidPayments = () => {
+    console.log("Going to past paid payments page.");
+    navigate(
+      // `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
+      `/tenantPastPaidPayments`,{
+        state: {
+          selectedProperty: selectedProperty,
+          
+        }
+    })
+  }
+  const goToDuePayments = () => {
+    console.log("Going to past payments page");
+    navigate(
+      // `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
+      `/tenantDuePayments`,{
+        state: {
+          selectedProperty: selectedProperty,
+        }
+      })
+  };
   // console.log(selectedProperty.property.images);
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
@@ -388,9 +412,149 @@ function TenantDashboard(props) {
                 borderRadius: "10px 10px 0px 0px",
               }}
             >
-              {profile.tenant_first_name}'s Property
+              {profile.tenant_first_name}'s Property Dashboard
             </div>
-            {isLoading === true || selectedProperty.length == 0 ? null : (
+            {property.length > 0 && !isLoading && selectedProperty.length !== 0 ? 
+              <Carousel 
+                interval={null} 
+                prevIcon={<span aria-hidden="true" className="carousel-control-prev-icon" style={{color:'black', opacity: '1'}} onClick={()=>{
+                  calculatePropertyIndex(false);
+                }}/>}	
+                nextIcon={<span aria-hidden="true" style={{color:'black'}} className="carousel-control-next-icon"  onClick={()=>{
+                  calculatePropertyIndex(true);
+                }}/>}	
+                style={{width: "100%", padding: '0px'}}
+              >
+              {property.map((property, i) => {
+                  return <Carousel.Item key={i}>
+                    <div
+                style={{
+                  display: "flex",
+                  backgroundColor: "#F3F3F3",
+                  padding: "15px",
+                  alignItems: "center",
+                }}
+                onClick={()=>
+                  applications.map((application, i) => {
+                    if (selectedProperty.property.property_uid === application.property_uid) {
+                      goToReviewPropertyLease(application);
+                    }
+                  })
+                }
+              >
+                <Col>
+                  {" "}
+                  <img
+                    src={
+                      selectedProperty && selectedProperty.property.images.length > 0
+                        ? JSON.parse(selectedProperty.property.images)[coverImageIndex]
+                        : No_Image
+                    }
+                    style={{
+                      width: "113px",
+                      height: "113px",
+                      borderRadius: "10px",
+                    }}
+                  ></img>
+                </Col>
+
+                <Col xs={6}>
+                  <div style={{ paddingLeft: "10px", fontSize: "22px" }}>
+                    ${selectedProperty.rent} / mo
+                  </div>
+                  <div
+                    style={{
+                      paddingLeft: "10px",
+                      fontSize: "16px",
+                      lineHeight: "20px",
+                      color: "#777777",
+                      padding: "10px",
+                    }}
+                  >
+                    {selectedProperty.property.address},{" "}
+                    {selectedProperty.property.city},{" "}
+                    {selectedProperty.property.zip},{" "}
+                    {selectedProperty.property.state}
+                  </div>
+                  <div
+                    style={{
+                      marginLeft: "10px",
+                      fontSize: "12px",
+                      color: "#007AFF",
+                      lineHeight: '17px'
+                    }}
+                  >
+                    Manager:{" "}
+                    {
+                      selectedProperty.property.property_manager[0]
+                        .manager_business_name
+                    }
+                  </div>
+                  <div
+                    style={{
+                      marginLeft: "10px",
+                    }}
+                  >
+                    {" "}
+                    <a
+                      href={`tel:${selectedProperty.property.property_manager[0].manager_phone_number}`}
+                    >
+                      <img
+                        style={{
+                          width: "25px",
+                          height: "25px",
+                          marginLeft: "10px",
+                        }}
+                        src={Phone}
+                      />
+                    </a>
+                    <a
+                      href={`mailto:${selectedProperty.property.property_manager[0].manager_email}`}
+                    >
+                      <img
+                        style={{
+                          width: "25px",
+                          height: "25px",
+                          marginLeft: "10px",
+                        }}
+                        src={Message}
+                      />
+                    </a>
+                  </div>
+                </Col>
+                {upcomingFees !== 0 || due !== 0 ? 
+                <Col
+                  style={{
+                    backgroundColor: "#FFBCBC",
+                    borderRadius: "20px",
+                    fontSize: "14px",
+                    // width: "73px",
+                    // height: "24px",
+                    padding: '5px',
+                    textAlign: "center",
+                  }}
+                >
+                  Unpaid Fees
+                </Col> : 
+                <Col
+                  style={{
+                    backgroundColor: "#93EE9C",
+                    borderRadius: "20px",
+                    fontSize: "14px",
+                    // width: "73px",
+                    height: "24px",
+                    // padding: '5px',
+                    textAlign: "center",
+                  }}>
+                    Fees Paid
+                </Col>
+                }
+              </div>
+                  </Carousel.Item>;
+                })
+              }
+            </Carousel> : ""}
+            {/* {isLoading === true || selectedProperty.length == 0 ? null : (
               <div
                 style={{
                   display: "flex",
@@ -410,7 +574,7 @@ function TenantDashboard(props) {
                   {" "}
                   <img
                     src={
-                      selectedProperty.property.images.length > 0
+                      selectedProperty && selectedProperty.property.images.length > 0
                         ? JSON.parse(selectedProperty.property.images)[coverImageIndex]
                         : No_Image
                     }
@@ -511,15 +675,15 @@ function TenantDashboard(props) {
                 </Col>
                 }
               </div>
-            )}
+            )} */}
           </Row>
-          <Row style={{ backgroundColor: "#F3F3F3" }}>
+          {/* <Row style={{ backgroundColor: "#F3F3F3" }}>
             <Form.Group>
               <Form.Select
                 style={squareForm}
                 value={JSON.stringify(selectedProperty)}
                 onChange={(e) =>
-                  callerFunction(JSON.parse(e.target.value))
+                  setSelectedProperty(JSON.parse(e.target.value))
                   // setSelectedProperty(JSON.parse(e.target.value))
                 }
               >
@@ -534,7 +698,7 @@ function TenantDashboard(props) {
                 ))}
               </Form.Select>
             </Form.Group>
-          </Row>
+          </Row> */}
 
           {scheduled === 0 ? (
             <Row
@@ -713,13 +877,9 @@ function TenantDashboard(props) {
                   backgroundColor: "#FFFFFF",
                 }}
               >
-                {/* ============== BUTTON #1 ===================*/}
+                {/* ============== Upcoming Button ===================*/}
                 <div
-                  onClick={() =>
-                    navigate(
-                      `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
-                    )
-                  }
+                  onClick={goToDuePayments}
                   style={{
                     height: "90px",
                     width: "167px",
@@ -757,13 +917,11 @@ function TenantDashboard(props) {
                   
                   
                 </div>
-                {/* ============== BUTTON # 2 ===================*/}
+                {/* ============== Due Button ===================*/}
                 <div
-                  onClick={() => {
-                    navigate(
-                      `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
-                    );
-                  }}
+                  onClick={
+                    goToDuePayments
+                  }
                   style={{
                     height: "90px",
                     width: "167px",
@@ -783,7 +941,6 @@ function TenantDashboard(props) {
                   >
                     Due
                   </div>
-                  {selectedProperty.nextPurchase ? (
                     <div style={{ fontSize: "22px", lineHeight: "35px" }}>
                       {/* {selectedProperty.nextPurchase.payment_date ? 
                       <div>
@@ -795,15 +952,15 @@ function TenantDashboard(props) {
                       } */}
                         ${due}
                     </div>
-                  ) : null}
                 </div>
-                {/* ============== BUTTON # 3 ===================*/}
+                {/* ============== Paid Button ===================*/}
                 <div
-                  onClick={() => {
-                    navigate(
-                      `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
-                    );
-                  }}
+                  onClick={
+                    goToPastPaidPayments
+                    // navigate(
+                    //   `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
+                    // );
+                  }
                   style={{
                     height: "90px",
                     width: "167px",
@@ -823,7 +980,6 @@ function TenantDashboard(props) {
                   >
                     Paid
                   </div>
-                  {selectedProperty.nextPurchase ? (
                     <div style={{ fontSize: "22px", lineHeight: "35px" }}>
                       {/* {selectedProperty.nextPurchase.payment_date ? 
                       <div>
@@ -835,7 +991,6 @@ function TenantDashboard(props) {
                       } */}
                         ${paidFees}
                     </div>
-                  ) : null}
                 </div>
               </div>
             )}
@@ -914,6 +1069,7 @@ function TenantDashboard(props) {
               </div>
             </Col>
           </Row>
+
           {/* ============================RENTED Properties =========================== */}
           <div style={headings} className="mt-4 mb-1">
             Properties Rented
@@ -962,9 +1118,17 @@ function TenantDashboard(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            <h6 style={{ mediumBold, color: "#41fc03" }}>
-                              {application.application_status}
-                            </h6>
+                            {application.application_status !== "TENANT ENDED" || application.application_status !== "PM ENDED" ? 
+                              <h6 style={{ mediumBold, color: "#41fc03" }}>
+                                {application.application_status}
+                              </h6>
+                            : 
+                              <h6 style={{ mediumBold, color: "#f55742" }}>
+                                {application.application_status}
+                              </h6>
+                            }
+
+
                           </div>
                         </div>
                         <hr style={{ opacity: 1 }} />
@@ -979,72 +1143,7 @@ function TenantDashboard(props) {
               </Col>
             </Row>
           </div>
-          {/* ============================ PM End early properties =========================== */}
-          <div style={headings} className="mt-4 mb-1">
-            End early requests
-          </div>
-          <p> Properties that have been requested to end early </p>
-          <hr style={{ opacity: 1 }} />
-
-          <div className="mb-4" style={{ margin: "10px" }}>
-            <Row>
-              <Col>
-                {applications ? (
-                  applications.map((application, i) =>
-                    // console.log(application)
-                    application.rental_status === "PM END EARLY" ? (
-                      <div
-                        key={i}
-                        onClick={() => goToReviewPropertyLease(application)}
-                      >
-                        <div className="d-flex justify-content-between align-items-end">
-                          <div
-                            className="img"
-                            style={{
-                              flex: "0 0 35%",
-                              background: "lightgrey",
-                              height: "150px",
-                              width: "100px",
-                            }}
-                          >
-                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
-                            {application.images && application.images.length ? (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={application.images[0]}
-                              />
-                            ) : (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={No_Image}
-                              />
-                            )}
-                          </div>
-                          <div style={{ paddingLeft: "15px" }}>
-                            <h5 style={mediumBold}>ADDRESS</h5>
-                            <h6>{application.address}</h6>
-                            <h6>
-                              {application.city},{application.zip}
-                            </h6>
-
-                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            <h6 style={{ mediumBold, color: "#41fc03" }}>
-                              {application.application_status}
-                            </h6>
-                          </div>
-                        </div>
-                        <hr style={{ opacity: 1 }} />
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  )
-                ) : (
-                  <p> There are no requests to end leases early. </p>
-                )}
-              </Col>
-            </Row>
-          </div>
+          
           {/* ============================ LEASE RECEIVED =========================== */}
           <div style={headings} className="mt-4 mb-1">
             Lease Received

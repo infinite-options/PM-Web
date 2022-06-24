@@ -107,15 +107,40 @@ function ReviewPropertyLease(props) {
 
   const endLeaseEarly = async () => {
     console.log("ending lease early");
-    console.log("rentals", rentals);
+    const currentMonth = new Date().getMonth() + 1;
+    const currentDay = new Date().getDate();
+    const currentYear = new Date().getFullYear();
+    let endDate = `${currentYear}-${currentMonth}-${currentDay}`
     const updatedRental = {
       "application_uid":application_uid,
       "application_status":"TENANT END EARLY",
       "property_uid": rentals[0].rental_property_id,
+      "early_end_date": endDate,
     }
     console.log(updatedRental);
-    const response = await put("/endEarly", updatedRental, access_token);
-    console.log(response.result);
+    const response3 = await put("/endEarly", updatedRental, access_token);
+    console.log(response3.result);
+    navigate("/tenant");
+  }
+  const approveEndEarly = async () => {
+    console.log("Approved end lease early.");
+    const updatedApprove = {
+      "application_uid":application_uid,
+      "application_status":"TENANT ENDED",
+      "property_uid": rentals[0].rental_property_id,
+    }
+    const response4 = await put("/endEarly", updatedApprove, access_token);
+    console.log(response4.result);
+    navigate("/tenant");
+  }
+  const denyEndEarly = async() => {
+    console.log("Deny end lease early.");
+    const updatedApprove = {
+      "application_status":"REFUSED",
+      "property_uid": rentals[0].rental_property_id,
+    }
+    const response5 = await put("/endEarly", updatedApprove, access_token);
+    console.log(response5.result);
     navigate("/tenant");
   }
   const rejectLease = async () => {
@@ -125,7 +150,6 @@ function ReviewPropertyLease(props) {
     //   rental_status: "REFUSED",
     // };
     // const response = await put("/rentals", updatedRental, null, []);
-
     const updatedApplication = {
       application_uid: application_uid,
       application_status: "REFUSED",
@@ -639,10 +663,101 @@ function ReviewPropertyLease(props) {
             onClick={endLeaseEarly}
           >End Lease</Button>
         </Col> : null
-        
-      
       }
-      
+      {/* ========== Property Manager requests lease end early ========== */}
+      {application_status_1 === "PM END EARLY" ? 
+        <Row>
+          <Row
+            className="my-3 mx-2"
+            style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+          >
+            <b>Action Needed: Approve/Deny</b>
+            <p style={{fontSize: '16px'}}>The Property Manager has requested to terminate this lease early</p>
+          </Row>
+          <Row
+            style={{
+              margin: "0px",
+              padding: "0px 0px 25px 0px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              paddingBottom: '20px'
+            }}
+            >
+            <Button 
+              style={{...bluePillButton, width: "90px", textAlign: 'center'}}
+              onClick={approveEndEarly}
+            >
+              Approve
+            </Button>
+            <Button
+              style={{...redPillButton, width: "90px", textAlign: 'center'}}
+              onClick={denyEndEarly}
+            >
+              Deny
+            </Button>
+          </Row>
+        </Row>: null
+      }
+      {/* ========== Tenant has requested to end the lease early ==========
+      {application_status_1 === "TENANT END EARLY" ? 
+        <Row>
+          <Row
+            className="my-3 mx-2"
+            style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+          >
+            <b>Action Needed: Approve/Deny</b>
+            <p style={{fontSize: '16px'}}>The Property Manager has requested to terminate this lease early</p>
+          </Row>
+          <Row
+            style={{
+              margin: "0px",
+              padding: "0px 0px 25px 0px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              paddingBottom: '20px'
+            }}
+            >
+            <Button 
+              style={{...bluePillButton, width: "90px", textAlign: 'center'}}
+              onClick={approveEndEarly}
+            >
+              Approve
+            </Button>
+            <Button
+              style={{...redPillButton, width: "90px", textAlign: 'center'}}
+              onClick={denyEndEarly}
+            >
+              Deny
+            </Button>
+          </Row>
+        </Row>: null
+      } */}
+
+      {rentals.length > 0 && rentals[0].rental_status !== "ACTIVE" && rentals[0].early_end_date !== null ? 
+        <Row>
+            <Row
+              className="my-3 mx-2"
+              style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+            >
+              <b>Announcement:</b>
+              <p style={{fontSize: '16px'}}>This property is set to have its lease ended on {rentals[0].early_end_date}</p>
+            </Row>
+        </Row>: null
+      }
+
+      {rentals.length > 0 && rentals[0].rental_status === "ACTIVE" && rentals[0].early_end_date !== null ? 
+        <Row>
+            <Row
+              className="my-3 mx-2"
+              style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+            >
+              <b>Announcement:</b>
+              <p style={{fontSize: '16px'}}>The tenant has requested a lease termination effective on {rentals[0].early_end_date}</p>
+            </Row>
+        </Row>: null
+      }
 
       {/* ==================< Approval|Disapprove buttons >=======================================  */}
       <Row className="mt-4">

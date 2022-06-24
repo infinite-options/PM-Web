@@ -25,6 +25,7 @@ function PaymentHistory(props) {
 
   React.useState(async () => {
     const response = await get('/userPayments', access_token);
+
     setUserPayments(response.result);
   }, [])
 
@@ -32,11 +33,11 @@ function PaymentHistory(props) {
   for (const payment of userPayments) {
     const month = moment(payment.payment_date).format("MMMM YYYY");
     if (month in paymentsByMonth) {
-      paymentsByMonth[month].total += payment.amount_due;
+      paymentsByMonth[month].total += payment.amount;
       paymentsByMonth[month].payments.push(payment);
     } else {
       paymentsByMonth[month] = {
-        total: payment.amount_due,
+        total: payment.amount,
         payments: [payment]
       }
     }

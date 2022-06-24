@@ -9,7 +9,7 @@ import {
 import { post } from '../utils/api';
 
 function StripePayment(props) {
-  const {purchases, message, amount} = props;
+  const {purchase, message, amount} = props;
   const {userData} = React.useContext(AppContext);
   const {user} = userData;
   const elements = useElements();
@@ -46,42 +46,14 @@ function StripePayment(props) {
     console.log(confirmedCardPayment);
     const paymentIntentID = confirmedCardPayment.paymentIntent.id;
     console.log(paymentIntentID);
-    let newPayment = {};
-    if (purchases.length === 1) {
-      console.log(purchases[0]);
-      newPayment = {
-        pay_purchase_id: purchases[0].purchase_uid,
-        //Need to make change here
-        amount: parseFloat(amount),
-        payment_notes: message,
-        charge_id: paymentIntentID,
-        payment_type: 'STRIPE'
-      }
-      await post('/payments', newPayment);
+    const newPayment = {
+      pay_purchase_id: purchase.purchase_uid,
+      amount: parseFloat(amount),
+      payment_notes: message,
+      charge_id: paymentIntentID,
+      payment_type: 'STRIPE'
     }
-    else {
-      for (let purchase of purchases) {
-        console.log(purchase);
-        newPayment = {
-          pay_purchase_id: purchase.purchase_uid,
-          //Need to make change here
-          amount: parseFloat(purchase.amount_due - purchase.amount_paid),
-          payment_notes: message,
-          charge_id: paymentIntentID,
-          payment_type: 'STRIPE'
-        }
-        await post('/payments', newPayment);
-      }
-    }
-    
-    // const newPayment = {
-    //   pay_purchase_id: purchase.purchase_uid,
-    //   amount: parseFloat(amount),
-    //   payment_notes: message,
-    //   charge_id: paymentIntentID,
-    //   payment_type: 'STRIPE'
-    // }
-    // await post('/payments', newPayment);
+    await post('/payments', newPayment);
     props.submit();
   }
 
