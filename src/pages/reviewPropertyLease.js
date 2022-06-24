@@ -4,7 +4,7 @@ import AppContext from "../AppContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import TenantPropertyView from "./TenantPropertyView";
-import { Row, Col, Button, Container } from "react-bootstrap";
+import { Row, Col, Button, Container, Carousel, Image} from "react-bootstrap";
 import { bluePillButton, redPillButton } from "../utils/styles";
 import { get, put } from "../utils/api";
 import No_Image from "../icons/No_Image_Available.jpeg";
@@ -33,15 +33,16 @@ function ReviewPropertyLease(props) {
   useEffect(() => {
     const fetchRentals = async () => {
       const response = await get( `/leaseTenants?linked_tenant_id=${user.user_uid}` );
-      console.log(response);
+      console.log("rentals", response);
 
       const filteredRentals = [];
       for (let i = 0; i < response.result.length; i++) {
         if (response.result[i].rental_property_id === property_uid) {
+          //Should always be no larger than size of 1
           filteredRentals.push(response.result[i]);
         }
       }
-         console.log("required1", filteredRentals);
+      console.log("required1", filteredRentals);
 
       if (filteredRentals && filteredRentals.length) {
         const leaseDoc = filteredRentals[0].documents
@@ -104,7 +105,44 @@ function ReviewPropertyLease(props) {
       window.location.href = path;
   }
 
-
+  const endLeaseEarly = async () => {
+    console.log("ending lease early");
+    const currentMonth = new Date().getMonth() + 1;
+    const currentDay = new Date().getDate();
+    const currentYear = new Date().getFullYear();
+    let endDate = `${currentYear}-${currentMonth}-${currentDay}`
+    const updatedRental = {
+      "application_uid":application_uid,
+      "application_status":"TENANT END EARLY",
+      "property_uid": rentals[0].rental_property_id,
+      "early_end_date": endDate,
+    }
+    console.log(updatedRental);
+    const response3 = await put("/endEarly", updatedRental, access_token);
+    console.log(response3.result);
+    navigate("/tenant");
+  }
+  const approveEndEarly = async () => {
+    console.log("Approved end lease early.");
+    const updatedApprove = {
+      "application_uid":application_uid,
+      "application_status":"TENANT ENDED",
+      "property_uid": rentals[0].rental_property_id,
+    }
+    const response4 = await put("/endEarly", updatedApprove, access_token);
+    console.log(response4.result);
+    navigate("/tenant");
+  }
+  const denyEndEarly = async() => {
+    console.log("Deny end lease early.");
+    const updatedApprove = {
+      "application_status":"REFUSED",
+      "property_uid": rentals[0].rental_property_id,
+    }
+    const response5 = await put("/endEarly", updatedApprove, access_token);
+    console.log(response5.result);
+    navigate("/tenant");
+  }
   const rejectLease = async () => {
     // const updatedRental = {
     //   // rental_uid: filteredRentals[0].rental_uid,
@@ -112,7 +150,6 @@ function ReviewPropertyLease(props) {
     //   rental_status: "REFUSED",
     // };
     // const response = await put("/rentals", updatedRental, null, []);
-
     const updatedApplication = {
       application_uid: application_uid,
       application_status: "REFUSED",
@@ -142,7 +179,25 @@ function ReviewPropertyLease(props) {
       />
       {/* ==================< Images properties >=======================================  */}
       {images && images.length ? (
-        <img style={{ margin: "20px", padding: "10px" }} src={images[0]} />
+        // <img style={{ margin: "20px", padding: "10px" }} src={images[0]} />
+        <Carousel interval={null}>
+          {images.map((img, i) => {
+              return <Carousel.Item key={i}>
+              <Image
+                src={img}
+                style={{
+                  margin: '0px 5% 0px 5%',
+                  objectFit: "cover",
+                  width: "90%",
+                  height: " 198px",
+                  border: "1px solid #C4C4C4",
+                  borderRadius: "5px",
+                }}
+                alt="repair"
+              />
+            </Carousel.Item>;
+          })}
+        </Carousel>
       ) : (
         <img style={{ margin: "20px", padding: "10px" }} src={No_Image} />
       )}
@@ -150,25 +205,25 @@ function ReviewPropertyLease(props) {
       <TenantPropertyView forPropertyLease="true" />
       {/* ==================< Lease Details >=======================================  */}
       {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ?
-          (<div style={{ marginLeft: "50px" }}>
-            <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "18px" }}>
-              Lease Details
+          (<div style={{ marginLeft: "20px" }}>
+            <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "24px" }}>
+              <u>Lease Details:</u>
             </p>
             <Row style={{ marginLeft: "10px" }}>
               <Col>
-                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                <Row style={{ paddingLeft: "15px", fontWeight: "bold" }}>
                   Lease Start Date{" "}
                 </Row>
-                <Row style={{ paddingLeft: "20px" }}>
+                <Row style={{ paddingLeft: "15px" }}>
                   {" "}
                   {rentals && rentals.length ? rentals[0].lease_start : ""}{" "}
                 </Row>
               </Col>
               <Col>
-                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                <Row style={{ paddingLeft: "15px", fontWeight: "bold" }}>
                   Lease End Date{" "}
                 </Row>
-                <Row style={{ paddingLeft: "20px" }}>
+                <Row style={{ paddingLeft: "15px" }}>
                   {" "}
                   {rentals && rentals.length ? rentals[0].lease_end : ""}
                 </Row>
@@ -277,15 +332,15 @@ function ReviewPropertyLease(props) {
                 fontWeight: "bold",
                 textAlign: "left",
                 fontSize: "18px",
-                paddingLeft: "20px",
+                paddingLeft: "25px",
                 marginTop: "20px",
               }}
             >
-              Charges
+              <u>Charges:</u>
             </div>
           <Row style={{ marginLeft: "10px" }}>
             <Col>
-              <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+              <Row style={{ paddingLeft: "15px", fontWeight: "bold" }}>
               Fee Name{" "}
               </Row>
               <Row style={{ paddingLeft: "20px" }}>
@@ -458,27 +513,27 @@ function ReviewPropertyLease(props) {
       {/* ===============Manager Contact =================================== */}
       { (application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ?
       (
-        <div style={{ marginLeft: "50px",marginTop:"25px", paddingBottom:"20px"  }}>
+        <div style={{ marginLeft: "45px", marginTop:"25px", paddingBottom:"20px"  }}>
             <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "18px" }}>
-              Contact
+              <u>Contact:</u>
             </p>
-            <Row style={{ marginLeft: "10px" }}>
+            <Row style={{ marginLeft: "0px" }}>
               <Col>
-                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                <Row style={{ paddingLeft: "0px", fontWeight: "bold" }}>
                   Management Name{" "}
                 </Row>
-                <Row style={{ paddingLeft: "20px" }}>
+                <Row style={{ paddingLeft: "0px" }}>
                   {" "}
                   {properties && properties.length ? properties[0].manager_business_name : ""}{" "}
                 </Row>
               </Col>
             </Row>
-            <Row style={{ marginLeft: "10px",paddingTop: "10px" }}>
+            <Row style={{ marginLeft: "0px",paddingTop: "10px" }}>
               <Col>
-                <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                <Row style={{ paddingLeft: "0px", fontWeight: "bold" }}>
                   Email{" "}
                 </Row>
-                <Row style={{ paddingLeft: "20px" }}>
+                <Row style={{ paddingLeft: "0px" }}>
                   {" "}
                   {properties && properties.length ? properties[0].manager_email : ""}{" "}
                 </Row>
@@ -575,13 +630,13 @@ function ReviewPropertyLease(props) {
                       fontWeight: "bold",
                       textAlign: "left",
                       fontSize: "18px",
-                      marginLeft: "50px",
+                      marginLeft: "45px",
                       marginTop: "20px"
                     }}
                   >
-                    Lease Documents
+                    <u>Lease Documents:</u>
                   </p>
-                  <h6 style={{ paddingLeft: "70px",paddingBottom:"40px" }}> Property Manager is yet to upload the lease document. Please contact him </h6>
+                  <h6 style={{ paddingLeft: "45px",paddingBottom:"30px" }}> Property Manager is yet to upload the lease document. Please contact him </h6>
                  
               </>
           )
@@ -590,7 +645,119 @@ function ReviewPropertyLease(props) {
         ""
         :
         ""
-       }
+      }
+
+
+      {/* ========== End Lease Early Button ========== */}
+      {application_status_1 === "RENTED" ? 
+        <Col
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            paddingBottom: '15px'
+        }}
+        >
+          <Button 
+            style={redPillButton}
+            onClick={endLeaseEarly}
+          >End Lease</Button>
+        </Col> : null
+      }
+      {/* ========== Property Manager requests lease end early ========== */}
+      {application_status_1 === "PM END EARLY" ? 
+        <Row>
+          <Row
+            className="my-3 mx-2"
+            style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+          >
+            <b>Action Needed: Approve/Deny</b>
+            <p style={{fontSize: '16px'}}>The Property Manager has requested to terminate this lease early</p>
+          </Row>
+          <Row
+            style={{
+              margin: "0px",
+              padding: "0px 0px 25px 0px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              paddingBottom: '20px'
+            }}
+            >
+            <Button 
+              style={{...bluePillButton, width: "90px", textAlign: 'center'}}
+              onClick={approveEndEarly}
+            >
+              Approve
+            </Button>
+            <Button
+              style={{...redPillButton, width: "90px", textAlign: 'center'}}
+              onClick={denyEndEarly}
+            >
+              Deny
+            </Button>
+          </Row>
+        </Row>: null
+      }
+      {/* ========== Tenant has requested to end the lease early ==========
+      {application_status_1 === "TENANT END EARLY" ? 
+        <Row>
+          <Row
+            className="my-3 mx-2"
+            style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+          >
+            <b>Action Needed: Approve/Deny</b>
+            <p style={{fontSize: '16px'}}>The Property Manager has requested to terminate this lease early</p>
+          </Row>
+          <Row
+            style={{
+              margin: "0px",
+              padding: "0px 0px 25px 0px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              paddingBottom: '20px'
+            }}
+            >
+            <Button 
+              style={{...bluePillButton, width: "90px", textAlign: 'center'}}
+              onClick={approveEndEarly}
+            >
+              Approve
+            </Button>
+            <Button
+              style={{...redPillButton, width: "90px", textAlign: 'center'}}
+              onClick={denyEndEarly}
+            >
+              Deny
+            </Button>
+          </Row>
+        </Row>: null
+      } */}
+
+      {rentals.length > 0 && rentals[0].rental_status !== "ACTIVE" && rentals[0].early_end_date !== null ? 
+        <Row>
+            <Row
+              className="my-3 mx-2"
+              style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+            >
+              <b>Announcement:</b>
+              <p style={{fontSize: '16px'}}>This property is set to have its lease ended on {rentals[0].early_end_date}</p>
+            </Row>
+        </Row>: null
+      }
+
+      {rentals.length > 0 && rentals[0].rental_status === "ACTIVE" && rentals[0].early_end_date !== null ? 
+        <Row>
+            <Row
+              className="my-3 mx-2"
+              style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+            >
+              <b>Announcement:</b>
+              <p style={{fontSize: '16px'}}>The tenant has requested a lease termination effective on {rentals[0].early_end_date}</p>
+            </Row>
+        </Row>: null
+      }
 
       {/* ==================< Approval|Disapprove buttons >=======================================  */}
       <Row className="mt-4">

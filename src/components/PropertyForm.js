@@ -75,7 +75,6 @@ function PropertyForm(props) {
     utilityState[1](JSON.parse(property.utilities));
     loadImages();
   };
-
   const stateList = [
     {
       name: "Alabama",
@@ -649,7 +648,7 @@ function PropertyForm(props) {
       )}
       <PropertyAppliances state={applianceState} edit={edit} />
       <PropertyUtilities state={utilityState} edit={edit} />
-      <Container className="my-3">
+      <Container style={{paddingLeft: "0px"}} className="my-3">
         <h6>Pets Allowed</h6>
         <Row>
           <Col className="d-flex ps-4">
@@ -670,7 +669,7 @@ function PropertyForm(props) {
           </Col>
         </Row>
       </Container>
-      <Container className="my-3">
+      <Container style={{paddingLeft: "0px"}} className="my-3">
         <h6>Deposit can be used for last month's rent</h6>
         <Row>
           <Col className="d-flex ps-4">

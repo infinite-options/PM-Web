@@ -19,3 +19,19 @@
   src: local("SFProText-SemiBold"),
     url(./fonts/SFProText-SemiBold.ttf) format("truetype");
 }
+
+
+.carousel-control-next-icon, .carousel-control-prev-icon /*, .carousel-indicators */ {
+    filter: invert(100%);
+}
+
+.carousel-indicators{
+  filter: invert(100%);
+}
+.carousel-control-prev{ 
+  opacity:1 !important;
+}
+
+.carousel-control-next{ 
+  opacity:1 !important;
+}
