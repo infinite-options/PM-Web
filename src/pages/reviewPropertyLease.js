@@ -182,7 +182,7 @@ function ReviewPropertyLease(props) {
     // navigate(`/tenantPropertyView/${property_uid}`,{ state: {from: "homePage"}})
     navigate(`/tenantPropertyView/${property_uid}`,{state:{fromPage: fromPage}})
   }
-
+  console.log('reviewPropertyLease');
   return (
     <div className="h-100 d-flex flex-column">
       {/* ==================< Header >=======================================  */}
@@ -192,35 +192,7 @@ function ReviewPropertyLease(props) {
         leftText="< Back"
         leftFn={() => navigate("/tenant")}
       />
-      {/* ==================< Images properties >=======================================  */}
-      {images && images.length ? (
-        // <img style={{ margin: "20px", padding: "10px" }} src={images[0]} />
-        <Carousel 
-          interval={null}
-          prevIcon={<span aria-hidden="true" className="carousel-control-prev-icon" style={{ color: 'black', opacity: '1' }} />}
-          nextIcon={<span aria-hidden="true" style={{ color: 'black' }} className="carousel-control-next-icon" />}
-          style={{ width: "100%", padding: '0px' }}
-        >
-          {images.map((img, i) => {
-              return <Carousel.Item key={i}>
-              <Image
-                src={img}
-                style={{
-                  margin: '0px 5% 0px 5%',
-                  objectFit: "cover",
-                  width: "90%",
-                  height: " 198px",
-                  border: "1px solid #C4C4C4",
-                  borderRadius: "5px",
-                }}
-                alt="repair"
-              />
-            </Carousel.Item>;
-          })}
-        </Carousel>
-      ) : (
-        <img style={{ margin: "20px", padding: "10px" }} src={No_Image} />
-      )}
+      
       {/* ==================< Property Details >=======================================  */}
       <TenantPropertyView forPropertyLease="true" />
       {/* ==================< Lease Details >=======================================  */}

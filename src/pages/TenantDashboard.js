@@ -80,7 +80,7 @@ function TenantDashboard(props) {
     }
 
     let response = await get("/tenantProfileInfo", access_token);
-    console.log(response);
+    console.log("fetch profile", response);
 
     if (response.msg === "Token has expired") {
       console.log("here msg");
@@ -288,7 +288,6 @@ function TenantDashboard(props) {
   }, [selectedProperty]);
 
   const fetchRepairs = async () => {
-    console.log(profile);
     const response = await get(
       `/maintenanceRequests?property_uid=${profile.property_uid}`
     );
@@ -317,7 +316,9 @@ function TenantDashboard(props) {
   }
   const fetchApplications = async () => {
     console.log("profile", profile);
-    const response = await get(`/applications?tenant_id=${profile.tenant_id}`);
+    console.log("user", user);
+    // const response = await get(`/applications?tenant_id=${profile.tenant_id}`);
+    const response = await get(`/applications?tenant_id=${user.user_uid}`);
     console.log("applications: ", response)
     const appArray = response.result || [];
     appArray.forEach((app) => {
@@ -393,7 +394,6 @@ function TenantDashboard(props) {
       }
     })
   };
-  console.log(selectedProperty);
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
       <Header title="Tenant Dashboard" customClass={"mb-2"} />
