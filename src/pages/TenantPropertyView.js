@@ -25,6 +25,7 @@ function TenantPropertyView(props) {
          fetchProperty();
 
     }, []);
+    console.log("tenantPropertyView");
     return(
         <div className=" d-flex flex-column">
             {forPropertyLease ?
