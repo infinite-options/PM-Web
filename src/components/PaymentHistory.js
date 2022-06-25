@@ -20,7 +20,7 @@ function PaymentHistory(props) {
   const navigate = useNavigate();
   const {userData} = React.useContext(AppContext);
   const {access_token, user} = userData;
-
+  console.log("Hello");
   const [userPayments, setUserPayments] = React.useState([]);
 
   React.useState(async () => {
@@ -68,7 +68,7 @@ function PaymentHistory(props) {
     <div className="h-100 d-flex flex-column pb-5">
       <Header
         title="Payment"
-        leftText="< Back"
+        leftText="< Home"
         leftFn={() => navigate("/tenant")}
       />
       <Container>
