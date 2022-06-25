@@ -1,0 +1,11 @@
+
+
+.carousel-indicators button {
+    background-color: #007AFF !important;
+    border: 2px solid #007AFF !important;
+    border-radius: 100% !important;
+    width: 10px !important;
+    height: 10px !important;
+}
+
+

@@ -73,123 +73,150 @@ function OwnerProperties(props) {
   };
   console.log(propertiesUnique);
   return stage === "LIST" ? (
-    <div className="pb-5 mb-5">
+    <div
+      className="pb-5 mb-5"
+      style={{
+        background: "#E9E9E9 0% 0% no-repeat padding-box",
+        borderRadius: "10px",
+        opacity: 1,
+      }}
+    >
       <Header
         title="Properties"
         leftText="+ New"
         leftFn={() => setStage("NEW")}
         rightText="Sort by"
       />
-      {propertiesUnique.map((property, i) => (
-        <Container
-          key={i}
-          onClick={() => selectProperty(property)}
-          className="pt-1 mb-4"
-          style={{ height: "100px" }}
-        >
-          <Row className="h-100">
-            <Col xs={4} className="h-100">
-              <div style={tileImg}>
-                {JSON.parse(property.images).length > 0 ? (
-                  <img
-                    src={JSON.parse(property.images)[0]}
-                    alt="Property"
-                    className="w-100 h-100"
-                    style={{ borderRadius: "4px", objectFit: "cover" }}
-                  />
-                ) : (
-                  ""
-                )}
-              </div>
-            </Col>
-            <Col className="ps-0">
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                  ${property.listed_rent}/mo
-                </h5>
-                {property.management_status !== "ACCEPTED" ? (
-                  <p style={redPill} className="mb-0">
-                    New
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        {propertiesUnique.map((property, i) => (
+          <Container
+            key={i}
+            onClick={() => selectProperty(property)}
+            className="pt-1 mb-4"
+            style={{ height: "100px" }}
+          >
+            <div
+              className="px-2 p-2"
+              style={{
+                background: "#FFFFFF 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="h-100">
+                <Col xs={4} className="h-100">
+                  <div style={tileImg}>
+                    {JSON.parse(property.images).length > 0 ? (
+                      <img
+                        src={JSON.parse(property.images)[0]}
+                        alt="Property"
+                        className="w-100 h-100"
+                        style={{ borderRadius: "4px", objectFit: "cover" }}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </Col>
+                <Col className="ps-0">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h5 className="mb-0" style={{ fontWeight: "600" }}>
+                      ${property.listed_rent}/mo
+                    </h5>
+                    {property.management_status !== "ACCEPTED" ? (
+                      <p style={redPill} className="mb-0">
+                        New
+                      </p>
+                    ) : property.rental_status === "ACTIVE" ? (
+                      <p style={greenPill} className="mb-0">
+                        Rented
+                      </p>
+                    ) : property.rental_status === "PROCESSING" ? (
+                      <p style={greenPill} className="mb-0">
+                        Processing
+                      </p>
+                    ) : (
+                      <p style={orangePill} className="mb-0">
+                        Not Rented
+                      </p>
+                    )}
+                  </div>
+                  <p style={gray} className="mt-2 mb-0">
+                    {property.address}
+                    {property.unit !== "" ? " " + property.unit : ""},{" "}
+                    {property.city}, {property.state} <br />
+                    {property.zip}
                   </p>
-                ) : property.rental_status === "ACTIVE" ? (
-                  <p style={greenPill} className="mb-0">
-                    Rented
-                  </p>
-                ) : property.rental_status === "PROCESSING" ? (
-                  <p style={greenPill} className="mb-0">
-                    Processing
-                  </p>
-                ) : (
-                  <p style={orangePill} className="mb-0">
-                    Not Rented
-                  </p>
-                )}
-              </div>
-              <p style={gray} className="mt-2 mb-0">
-                {property.address}
-                {property.unit !== "" ? " " + property.unit : ""},{" "}
-                {property.city}, {property.state} <br />
-                {property.zip}
-              </p>
-              {property.property_manager.length == 0 ? (
-                <p style={{ ...blue, ...xSmall }} className="mb-0">
-                  No Manager
-                </p>
-              ) : property.management_status === "ACCEPTED" ? (
-                <div className="d-flex">
-                  <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                  {property.property_manager.length == 0 ? (
                     <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      Manager: {property.managerInfo.manager_business_name}`
+                      No Manager
                     </p>
-                  </div>
-                  <div
-                    style={property.managerInfo.manager_id ? {} : hidden}
-                    onClick={stopPropagation}
-                  >
-                    <a
-                      href={`tel:${property.managerInfo.manager_phone_number}`}
-                    >
-                      <img src={Phone} alt="Phone" style={smallImg} />
-                    </a>
-                    <a href={`mailto:${property.managerInfo.manager_email}`}>
-                      <img src={Message} alt="Message" style={smallImg} />
-                    </a>
-                  </div>
-                </div>
-              ) : (
-                <div className="d-flex">
-                  <div className="d-flex align-items-start flex-column">
-                    {property.management.forwarded > 0 ? (
-                      <div style={{ ...blue, ...xSmall }} className="mb-0">
-                        {property.management.forwarded} Property Manager
-                        Selected
+                  ) : property.management_status === "ACCEPTED" ? (
+                    <div className="d-flex">
+                      <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                        <p style={{ ...blue, ...xSmall }} className="mb-0">
+                          Manager: {property.managerInfo.manager_business_name}
+                        </p>
                       </div>
-                    ) : (
-                      ""
-                    )}
+                      <div
+                        style={property.managerInfo.manager_id ? {} : hidden}
+                        onClick={stopPropagation}
+                      >
+                        <a
+                          href={`tel:${property.managerInfo.manager_phone_number}`}
+                        >
+                          <img src={Phone} alt="Phone" style={smallImg} />
+                        </a>
+                        <a
+                          href={`mailto:${property.managerInfo.manager_email}`}
+                        >
+                          <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="d-flex">
+                      <div className="d-flex align-items-start flex-column">
+                        {property.management.forwarded > 0 ? (
+                          <div style={{ ...blue, ...xSmall }} className="mb-0">
+                            {property.management.forwarded} Property Manager
+                            Selected
+                          </div>
+                        ) : (
+                          ""
+                        )}
 
-                    {property.management.sent > 0 ? (
-                      <div style={{ ...blue, ...xSmall }} className="mb-0">
-                        {property.management.sent} Contract in Review
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                        {property.management.sent > 0 ? (
+                          <div style={{ ...blue, ...xSmall }} className="mb-0">
+                            {property.management.sent} Contract in Review
+                          </div>
+                        ) : (
+                          ""
+                        )}
 
-                    {property.management.refused > 0 ? (
-                      <div style={{ ...blue, ...xSmall }} className="mb-0">
-                        {property.management.sent} PM declined
+                        {property.management.refused > 0 ? (
+                          <div style={{ ...blue, ...xSmall }} className="mb-0">
+                            {property.management.sent} PM declined
+                          </div>
+                        ) : (
+                          ""
+                        )}
                       </div>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </div>
-              )}
-            </Col>
-          </Row>
-        </Container>
-      ))}
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </div>
+          </Container>
+        ))}
+      </div>
     </div>
   ) : stage === "NEW" ? (
     <div className="flex-grow-1">

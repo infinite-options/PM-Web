@@ -1,5 +1,5 @@
-import {Container, Row, Col, Button} from 'react-bootstrap';
-import {mediumBold} from '../utils/styles';
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { mediumBold } from "../utils/styles";
 
 function Header(props) {
   const headerContainer = {
@@ -7,7 +7,7 @@ function Header(props) {
   };
   let className = props.customClass;
   if (!className) {
-    className = "mb-4"
+    className = "mb-4";
   }
   const textButton = {
     background: "none",
@@ -27,7 +27,7 @@ function Header(props) {
           <Col />
         )}
         <Col
-          xs={5}
+          xs={6}
           className="text-center d-flex flex-column justify-content-end"
         >
           <h6

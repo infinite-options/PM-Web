@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { get } from "../utils/api";
-import Footer from "../components/Footer";
+import OwnerFooter from "../components/OwnerFooter";
 import AppContext from "../AppContext";
 import OwnerProperties from "./OwnerProperties";
 import OwnerDashboard from "./OwnerDashboard";
 import OwnerProfile from "./OwnerProfile";
 import SwitchRole from "../components/SwitchRole";
+import SearchPM from "./SearchPM";
 
 function OwnerHome() {
   const navigate = useNavigate();
@@ -74,12 +75,17 @@ function OwnerHome() {
         ) : (
           ""
         )}
+        {footerTab === "CONTACTS" ? (
+          <SearchPM setShowFooter={setShowFooter} setTab={setFooterTab} />
+        ) : (
+          ""
+        )}
         {footerTab === "PROFILE" ? (
           <OwnerProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
         )}
-        {footerTab === "ROLES" ? (
+        {footerTab === "REPAIRS" ? (
           <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
@@ -101,7 +107,7 @@ function OwnerHome() {
         className="flex-grow-1"
         style={{ height: "90%", overflow: "auto" }}
       ></div> */}
-      {showFooter ? <Footer tab={footerTab} setTab={setTab} /> : ""}
+      {showFooter ? <OwnerFooter tab={footerTab} setTab={setTab} /> : ""}
     </div>
   );
 }

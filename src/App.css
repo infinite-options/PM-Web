@@ -19,3 +19,15 @@
   src: local("SFProText-SemiBold"),
     url(./fonts/SFProText-SemiBold.ttf) format("truetype");
 }
+
+@font-face {
+  font-family: "Bahnschrift-Bold";
+  src: local("Bahnschrift-Bold"),
+    url(./fonts/Bahnschrift-Bold.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Bahnschrift-Regular";
+  src: local("Bahnschrift-Regular"),
+    url(./fonts/Bahnschrift-Regular.ttf) format("truetype");
+}
