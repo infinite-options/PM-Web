@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import TenantPropertyView from "./TenantPropertyView";
 import { Row, Col, Button, Container, Carousel, Image} from "react-bootstrap";
-import { bluePillButton, redPillButton } from "../utils/styles";
+import { bluePillButton, greenPill, redPillButton } from "../utils/styles";
 import { get, put } from "../utils/api";
 import No_Image from "../icons/No_Image_Available.jpeg";
 
@@ -29,6 +29,8 @@ function ReviewPropertyLease(props) {
   const [properties, setProperties] = useState([]);
   const [images, setImages] = useState({});
   const [showLease, setShowLease] = useState("True");
+  const [endLeaseMessage, setEndLeaseMessage] = useState("No message has been set by Tenant.");
+  const pmMessage = location.state.message;
 
   useEffect(() => {
     const fetchRentals = async () => {
@@ -105,6 +107,18 @@ function ReviewPropertyLease(props) {
       window.location.href = path;
   }
 
+  const extendLease = async () => {
+    console.log("Extending Lease");
+    const extendObject = {
+      "application_uid":application_uid,
+      "application_status": "LEASE EXTENSION",
+      "property_uid": rentals[0].rental_property_id, 
+      "message": "requesting EXTENSION",
+    }
+    const response6 = await put("/extendLease", extendObject, access_token);
+    console.log(response6.result);
+    navigate("/tenant");
+  }
   const endLeaseEarly = async () => {
     console.log("ending lease early");
     const currentMonth = new Date().getMonth() + 1;
@@ -116,6 +130,7 @@ function ReviewPropertyLease(props) {
       "application_status":"TENANT END EARLY",
       "property_uid": rentals[0].rental_property_id,
       "early_end_date": endDate,
+      "message": endLeaseMessage,
     }
     console.log(updatedRental);
     const response3 = await put("/endEarly", updatedRental, access_token);
@@ -647,8 +662,85 @@ function ReviewPropertyLease(props) {
         ""
       }
 
-
+      {/* ========= Extend Lease Stuff ========= */}
+      <Col>
+        <p
+          style={{
+            fontWeight: "bold",
+            textAlign: "left",
+            fontSize: "24px",
+            marginLeft: "20px",
+          }}
+        >
+          <u>Extend Lease:</u>
+        </p>
+        <p
+        style={{
+          fontWeight: "bold",
+          textAlign: "left",
+          fontSize: "14px",
+          marginLeft: "40px",
+          marginRight: '20px'
+        }}>
+          Option to extend your current lease. Will require approval from your property manager.
+        </p>
+        <Col
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            paddingBottom: '15px'
+        }}
+        >
+          <Button 
+            style={{
+              backgroundColor: "#3DB727",
+              borderColor: "#3DB727",
+              color: "white",
+              fontSize: "large",
+              borderRadius: "50px",
+              padding: "2px 7px",
+            }}
+            onClick={extendLease}
+          >Extend Lease</Button>
+        </Col>
+        
+      </Col>
+      
       {/* ========== End Lease Early Button ========== */}
+      {application_status_1 === "RENTED" ? 
+      <Col>
+        <p
+          style={{
+            fontWeight: "bold",
+            textAlign: "left",
+            fontSize: "24px",
+            marginLeft: "20px",
+          }}
+        >
+          <u>End Lease Early:</u>
+        </p>
+        <p
+        style={{
+          fontWeight: "bold",
+          textAlign: "left",
+          fontSize: "14px",
+          marginLeft: "40px",
+          marginRight: '20px'
+        }}>
+          Please leave a short message dicussing why you wish to end the lease early.
+        </p>
+        <input 
+          type="text" 
+          style={{width: '80%', margin: '0% 10% 5% 10%'}} 
+          onChange={(e)=>{
+            setEndLeaseMessage(e.target.value);
+          }}
+          >
+
+        </input>
+      </Col> : null
+      }
       {application_status_1 === "RENTED" ? 
         <Col
           style={{
@@ -667,12 +759,18 @@ function ReviewPropertyLease(props) {
       {/* ========== Property Manager requests lease end early ========== */}
       {application_status_1 === "PM END EARLY" ? 
         <Row>
+          <b
+            style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}>
+              <u>Action Needed: Approve/Deny</u>
+          </b>
           <Row
             className="my-3 mx-2"
             style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
           >
-            <b>Action Needed: Approve/Deny</b>
-            <p style={{fontSize: '16px'}}>The Property Manager has requested to terminate this lease early</p>
+            
+            <p style={{fontSize: '16px'}}>The Property Manager has requested to terminate this lease early and has left a message:</p>
+            <p style={{fontSize: '16px'}}>{pmMessage}</p>
+            
           </Row>
           <Row
             style={{

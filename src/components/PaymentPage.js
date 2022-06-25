@@ -96,8 +96,9 @@ function PaymentPage(props) {
     <div className="h-100 d-flex flex-column">
       <Header 
         title="Payment" 
-        leftText={`< Back`}
+        leftText={paymentConfirm === false ? `< Back` : ''}
         leftFn={() => 
+          {paymentConfirm === false ? 
           navigate(
           // `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
           `/tenantDuePayments`,{
@@ -105,7 +106,8 @@ function PaymentPage(props) {
               selectedProperty: selectedProperty,
             }
           })
-        }
+        : console.log("")}
+      }
       />
       <Row 
         style={{ 
