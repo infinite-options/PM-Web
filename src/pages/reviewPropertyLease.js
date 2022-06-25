@@ -195,7 +195,12 @@ function ReviewPropertyLease(props) {
       {/* ==================< Images properties >=======================================  */}
       {images && images.length ? (
         // <img style={{ margin: "20px", padding: "10px" }} src={images[0]} />
-        <Carousel interval={null}>
+        <Carousel 
+          interval={null}
+          prevIcon={<span aria-hidden="true" className="carousel-control-prev-icon" style={{ color: 'black', opacity: '1' }} />}
+          nextIcon={<span aria-hidden="true" style={{ color: 'black' }} className="carousel-control-next-icon" />}
+          style={{ width: "100%", padding: '0px' }}
+        >
           {images.map((img, i) => {
               return <Carousel.Item key={i}>
               <Image
@@ -663,6 +668,7 @@ function ReviewPropertyLease(props) {
       }
 
       {/* ========= Extend Lease Stuff ========= */}
+      {application_status_1 === "RENTED" ? 
       <Col>
         <p
           style={{
@@ -706,7 +712,7 @@ function ReviewPropertyLease(props) {
         </Col>
         
       </Col>
-      
+      : null}
       {/* ========== End Lease Early Button ========== */}
       {application_status_1 === "RENTED" ? 
       <Col>
