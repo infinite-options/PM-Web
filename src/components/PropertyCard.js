@@ -25,10 +25,11 @@ function PropertyCard(props) {
         e.stopPropagation();
         e.preventDefault();
     }
+    console.log(property);
     return (
         <div style={{border:"1px solid lightblue", cursor: "pointer", display: "flex"}} >
             <div className="img" style={{ flex: "0 0 35%", background:"lightgrey" }}>
-                {property.images && property.images.length ? (<img style={{width:"100%", height:"100%"}} src={property.images[0]}/>) : (<img style={{width:"100%", height:"100%"}} src={No_Image}/>) }
+                {property.images && property.images.length > 0 ? (<img style={{width:"100%", height:"100%"}} src={property.images[0]}/>) : (<img style={{width:"100%", height:"100%"}} src={No_Image}/>) }
             </div>
 
             <div className="details"style={{ width:"100%", padding:"10px", display:"flex",flexDirection:"column" }} >

@@ -147,6 +147,7 @@ function TenantDashboard(props) {
     console.log("rentTotal", rentTotal);
     setRent(rentTotal);
     setProperty(response.result);
+    console.log(property);
 
     response.result.length > 0
       ? response.result.map((property) => {
@@ -392,7 +393,7 @@ function TenantDashboard(props) {
       }
     })
   };
-  // console.log(selectedProperty.property.images);
+  console.log(selectedProperty);
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
       <Header title="Tenant Dashboard" customClass={"mb-2"} />
@@ -559,7 +560,8 @@ function TenantDashboard(props) {
                   </Carousel.Item>;
                 })
                 }
-              </Carousel> : property.length === 1 ?
+              </Carousel> 
+              : property.length === 1 && selectedProperty.length !== 0 ?
               <div
                 style={{
                   display: "flex",
@@ -1214,7 +1216,10 @@ function TenantDashboard(props) {
                 {applications ? (
                   applications.map((application, i) =>
                     // console.log(application)
-                    application.rental_status === "ACTIVE" ? (
+                    // application.rental_status === "ACTIVE" ? (
+                    application.application_status === "RENTED" || 
+                    application.application_status === "PM END EARLY" || 
+                    application.application_status === "TENANT END EARLY" ? (
                       <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}

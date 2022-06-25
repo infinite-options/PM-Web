@@ -179,7 +179,7 @@ function TenantWelcomePage(props) {
     });
   };
 
-  console.log(profile);
+  console.log(applications[0]);
   return (
     <div className="h-100">
       {/* ============================HEADER =========================== */}
@@ -352,7 +352,7 @@ function TenantWelcomePage(props) {
                             style={{
                               flex: "0 0 35%",
                               background: "lightgrey",
-                              height: "150px",
+                              height: "175px",
                               width: "100px",
                             }}
                           >
@@ -369,7 +369,7 @@ function TenantWelcomePage(props) {
                               />
                             )}
                           </div>
-                          <div>
+                          <div style={{backgroundColor: 'red'}}>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
@@ -379,7 +379,7 @@ function TenantWelcomePage(props) {
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
                             {application.application_status === "NEW" ||
                             application.application_status === "FORWARDED" ? (
-                              <h6 style={{ mediumBold, color: "blue" }}>
+                              <h6 style={{ mediumBold, color: "blue", height: '50px'}}>
                                 {application.application_status}
                               </h6>
                             ) : application.application_status ===
@@ -388,7 +388,7 @@ function TenantWelcomePage(props) {
                                 {application.application_status}
                               </h6>
                             ) : (
-                              ""
+                              <div>hello</div>
                             )}
                           </div>
                         </div>
