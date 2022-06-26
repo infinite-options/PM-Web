@@ -110,7 +110,7 @@ function ManagerOverview(props) {
                             boxShadow: "0px 3px 3px #00000029",
                             borderRadius: "20px",
                         }}>
-                        <Col xs={8} style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>Unique Clients</Col>
+                        <Col xs={8} style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>Clients</Col>
                         <Col style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>{unique_clients}</Col>
                     </Row>
 

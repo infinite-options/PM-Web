@@ -2,7 +2,7 @@ import React from 'react';
 import {Container, Row, Col, Form, Button} from 'react-bootstrap';
 import Header from "../components/Header";
 import File from '../icons/File.svg';
-import {put, post} from '../utils/api';
+import {put, post, get} from '../utils/api';
 import {
     small,
     hidden,
@@ -16,25 +16,27 @@ import {
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
 
 function ManagerTenantAgreementView(props) {
-    const {back, property, agreement, acceptedTenantApplications, setAcceptedTenantApplications} = props;
+    const {back, property, renewLease, acceptedTenantApplications, setAcceptedTenantApplications} = props;
 
     const [tenantID, setTenantID] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
     const [endDate, setEndDate] = React.useState('');
     const [feeState, setFeeState] = React.useState([]);
-    const contactState = React.useState([]);
+    const [contactState, setContactState] = React.useState([]);
     const [files, setFiles] = React.useState([]);
 
     const [dueDate, setDueDate] = React.useState('1')
     const [lateAfter, setLateAfter] = React.useState('')
     const [lateFee, setLateFee] = React.useState('')
     const [lateFeePer, setLateFeePer] = React.useState('')
-    const [renewLease, setRenewLease] = React.useState(false)
+    // const [renewLease, setRenewLease] = React.useState(false)
     const [terminateLease, setTerminateLease] = React.useState(false)
     const [lastDate, setLastDate] = React.useState('');
     const [tenantEndEarly, setTenantEndEarly] = React.useState(false);
+    const [agreements, setAgreements] = React.useState([]);
+    const [agreement, setAgreement] = React.useState(null);
 
-    const loadAgreement = () => {
+    const loadAgreement = (agreement) => {
         // console.log(agreement)
         // console.log(contactState)
         // console.log(typeof contactState)
@@ -42,7 +44,8 @@ function ManagerTenantAgreementView(props) {
         setStartDate(agreement.lease_start);
         setEndDate(agreement.lease_end);
         setFeeState(JSON.parse(agreement.rent_payments));
-        contactState[1](JSON.parse(agreement.assigned_contacts));
+        // contactState[1](JSON.parse(agreement.assigned_contacts));
+        setContactState(JSON.parse(agreement.assigned_contacts))
         setFiles(JSON.parse(agreement.documents));
 
         setDueDate(agreement.due_by)
@@ -55,11 +58,17 @@ function ManagerTenantAgreementView(props) {
             setTenantEndEarly(true)
         }
     }
-    React.useEffect(() => {
-        if (agreement) {
-            loadAgreement();
-        }
-    }, [agreement]);
+    React.useEffect(async () => {
+        // if (agreement) {
+        //     loadAgreement();
+        // }
+        const response = await get(`/rentals?rental_property_id=${property.property_uid}`);
+        setAgreements(response.result);
+        let agreement = response.result[0]
+        console.log(agreement)
+        setAgreement(agreement)
+        loadAgreement(agreement)
+    }, []);
 
     const [errorMessage, setErrorMessage] = React.useState('');
     const required = (
@@ -106,57 +115,60 @@ function ManagerTenantAgreementView(props) {
     }
 
     return (
-        renewLease ? (
-            <ManagerTenantAgreement back={() => setRenewLease(false)} property={property} agreement={agreement}
-                                    acceptedTenantApplications={acceptedTenantApplications}
-                                    setAcceptedTenantApplications={setAcceptedTenantApplications}/>
-        ) : (
-            <div className='mb-5 pb-5'>
-                <Header title='Tenant Agreement' leftText='< Back' leftFn={back}
-                        rightText=''/>
-                <Container>
-                    <div className='mb-4'>
-                        <h5 style={mediumBold}>Tenant(s)</h5>
-                        {acceptedTenantApplications && acceptedTenantApplications.length > 0 && acceptedTenantApplications.map((application, i) =>
-                            <Form.Group className='mx-2 my-3' key={i}>
-                                <Form.Label as='h6' className='mb-0 ms-2'>
-                                    Tenant ID {application.tenant_id === '' ? required : ''}
-                                </Form.Label>
-                                <Form.Control style={squareForm} value={application.tenant_id} readOnly={true}/>
-                            </Form.Group>
-                        )}
-                    </div>
+        <div className='mb-2 pb-2'>
+                {agreement ?
+                    <Container>
+                    {/*<div className='mb-4'>*/}
+                    {/*    <h5 style={mediumBold}>Tenant(s)</h5>*/}
+                    {/*    {acceptedTenantApplications && acceptedTenantApplications.length > 0 && acceptedTenantApplications.map((application, i) =>*/}
+                    {/*        <Form.Group className='mx-2 my-3' key={i}>*/}
+                    {/*            <Form.Label as='h6' className='mb-0 ms-2'>*/}
+                    {/*                Tenant ID {application.tenant_id === '' ? required : ''}*/}
+                    {/*            </Form.Label>*/}
+                    {/*            <Form.Control style={squareForm} value={application.tenant_id} readOnly={true}/>*/}
+                    {/*        </Form.Group>*/}
+                    {/*    )}*/}
+                    {/*</div>*/}
 
                     <div className='mb-4'>
-                        <h5 style={mediumBold}>Lease Dates</h5>
-                        <Row className="ms-2">
+                        {/*<h5 style={mediumBold}>Lease Dates</h5>*/}
+                        <Row>
                             <Col>
-                                <h6>Start Date</h6>
+                                <h6>Lease Start Date</h6>
                                 <p style={gray}>{agreement.lease_start}</p>
                             </Col>
                             <Col>
-                                <h6>End Date</h6>
+                                <h6>Lease End Date</h6>
                                 <p style={gray}>{agreement.lease_end}</p>
                             </Col>
                         </Row>
                     </div>
 
-                    <div className='mb-4'>
-                        <h5 style={mediumBold}>Rent Payments</h5>
+                    <div className='my-4'>
+                        <h6>Rent Payments</h6>
                         {feeState.map((fee, i) => (
-                            <Row className='mx-2' key={i}>
-                                <h6 className='mb-1'>{fee.fee_name}</h6>
-                                <p style={gray} className='mb-1'>
-                                    {fee.fee_type === '%' ? `${fee.charge}% of ${fee.of}` : `$${fee.charge}`} {fee.frequency}
-                                </p>
-                                <hr className='mt-1'/>
-                            </Row>
+                            <div key={i}>
+                                <Row>
+                                    <Col>
+                                        <p className="mb-1">{fee.fee_name}</p>
+                                    </Col>
+                                    <Col>
+                                        <p style={gray} className="mb-1">
+                                            {fee.fee_type === "%"
+                                                ? `${fee.charge}% of ${fee.of}`
+                                                : `$${fee.charge}`}{" "}
+                                            {fee.frequency}
+                                        </p>
+                                    </Col>
+                                </Row>
+                                {/*<hr className="mt-1" />*/}
+                            </div>
                         ))}
                     </div>
 
-                    <div className='mb-4'>
-                        <h5 style={mediumBold}>Due date and late fees</h5>
-                        <Row className='ms-2'>
+                    <div className='my-4'>
+                        {/*<h6>Due date and late fees</h6>*/}
+                        <Row>
                             <Col>
                                 <h6>Rent due</h6>
                                 <p style={gray}>{`No. ${dueDate} day of the month`}</p>
@@ -166,7 +178,7 @@ function ManagerTenantAgreementView(props) {
                                 <p style={gray}>{lateAfter}</p>
                             </Col>
                         </Row>
-                        <Row className='ms-2'>
+                        <Row>
                             <Col>
                                 <h6>Late Fee (one-time)</h6>
                                 <p style={gray}>{lateFee}</p>
@@ -220,7 +232,7 @@ function ManagerTenantAgreementView(props) {
                     <Row className="pt-4 my-4" hidden={agreement === null || tenantEndEarly}>
                         <Col className='d-flex flex-row justify-content-evenly'>
                             <Button style={bluePillButton} variant="outline-primary"
-                                    onClick={() => setRenewLease(true)}>
+                                    onClick={() => renewLease(agreement)}>
                                 Renew Lease
                             </Button>
                         </Col>
@@ -291,11 +303,10 @@ function ManagerTenantAgreementView(props) {
                         </div>
                         : ''}
 
-
-
                 </Container>
+                    : 'No Active Lease Agreements'
+                }
             </div>
-        )
     );
 
 }

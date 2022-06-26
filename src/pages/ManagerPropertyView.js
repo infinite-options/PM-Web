@@ -165,19 +165,18 @@ function ManagerPropertyView(props) {
         setShowTenantProfile(false);
     }
 
+    const renewLease = (agreement) => {
+        setShowTenantAgreement(true)
+        setSelectedAgreement(agreement)
+    }
+
     return(
         showManagementContract ? (
             <ManagerManagementContract back={closeContract} property={property} contract={selectedContract} reload={reloadProperty}/>
         ) : showTenantAgreement ? (
-            selectedAgreement ? (
-                <ManagerTenantAgreementView back={closeAgreement} property={property} agreement={selectedAgreement}
-                                            acceptedTenantApplications={acceptedTenantApplications}
-                                            setAcceptedTenantApplications={setAcceptedTenantApplications}/>
-                ) :
-                <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
-                                        acceptedTenantApplications={acceptedTenantApplications}
-                                        setAcceptedTenantApplications={setAcceptedTenantApplications}/>
-
+            <ManagerTenantAgreement back={closeAgreement} property={property} agreement={selectedAgreement}
+                                    acceptedTenantApplications={acceptedTenantApplications}
+                                    setAcceptedTenantApplications={setAcceptedTenantApplications}/>
         ) : showTenantProfile ? (
             <ManagerTenantProfileView back={closeTenantApplication} application={selectedTenantApplication}/>
         ) : (
@@ -254,7 +253,11 @@ function ManagerPropertyView(props) {
                             <hr style={{opacity: 1}} className='mt-1'/>
                         </div>
                         {expandLeaseDocs ? (
-                            <ManagerLeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
+                            // <ManagerLeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
+                            <ManagerTenantAgreementView back={closeAgreement} property={property} agreement={selectedAgreement}
+                                                        renewLease={renewLease}
+                                                        acceptedTenantApplications={acceptedTenantApplications}
+                                                        setAcceptedTenantApplications={setAcceptedTenantApplications}/>
                         ) : ''}
                     </div>
 
@@ -484,7 +487,6 @@ function ManagerPropertyView(props) {
                             ))
                         }
                     </div>
-
 
                 </div>
             </Container>
