@@ -33,12 +33,12 @@ function RepairRequest(props) {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { property_uid } = useParams();
-  console.log(property_uid, useParams(), state);
   const imageState = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
   const submitForm = async () => {
     if (title === "" || description === "" || priority === "") {
       setErrorMessage("Please fill out all fields");
@@ -62,7 +62,8 @@ function RepairRequest(props) {
     }
     console.log(files);
     await post("/maintenanceRequests", newRequest, null, files);
-    navigate(`/${property_uid}/repairStatus`);
+    // navigate(`/${property_uid}/repairStatus`);
+    navigate("/tenant");
     //props.onSubmit();
   };
 
@@ -148,7 +149,7 @@ function RepairRequest(props) {
                       ? `${classes.priorityActive}`
                       : `${classes.priorityInactive}`
                   }
-                  //style={{ opacity: "0.5" }}
+                //style={{ opacity: "0.5" }}
                 />
               </Col>
               <Col xs={4}>
@@ -160,7 +161,7 @@ function RepairRequest(props) {
                       ? `${classes.priorityActive}`
                       : `${classes.priorityInactive}`
                   }
-                  //style={{ opacity: "0.5" }}
+                //style={{ opacity: "0.5" }}
                 />
               </Col>
               <Col xs={4}>
@@ -172,7 +173,7 @@ function RepairRequest(props) {
                       ? `${classes.priorityActive}`
                       : `${classes.priorityInactive}`
                   }
-                  //style={{ opacity: "0.5" }}
+                //style={{ opacity: "0.5" }}
                 />
               </Col>
             </Row>

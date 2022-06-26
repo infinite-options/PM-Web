@@ -17,6 +17,11 @@ function RepairStatus(props) {
   const { property_uid } = useParams();
   const [repairs, setRepairs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  let moreInfoCount = 0;
+  let scheduledCount = 0;
+  let requestedCount = 0;
+
   var sortedRepairs = [];
 
 
@@ -33,22 +38,19 @@ function RepairStatus(props) {
     let medCount = 0;
     let lowCount = 0;
     for (const repair of repairs1) {
-      if(repair.priority == "High")
-      {
+      if (repair.priority == "High") {
         sortedRepairs.push(repair);
         highCount++;
       }
     }
     for (const repair of repairs1) {
-      if(repair.priority == "Medium")
-      {
+      if (repair.priority == "Medium") {
         sortedRepairs.push(repair);
         medCount++;
       }
     }
     for (const repair of repairs1) {
-      if(repair.priority == "Low")
-      {
+      if (repair.priority == "Low") {
         sortedRepairs.push(repair);
         lowCount++;
       }
@@ -59,20 +61,30 @@ function RepairStatus(props) {
       const response = await get(
         `/maintenanceRequests?property_uid=${property_uid}`
       );
-      console.log(response.result); 
-      if(response.result.length !== 0)
-      {
+      console.log(response.result);
+      if (response.result.length !== 0) {
         sortRepairs(response.result);
         setRepairs(sortedRepairs);
       }
+      for (let repair of response.result) {
+        console.log(repair);
+        if (repair.request_status === "SCHEDULED") {
+          scheduledCount++;
+        }
+        if (repair.request_status === "INFO") {
+          moreInfoCount++;
+        }
+        if (repair.request_status === "NEW" || repair.request_status === "PROCESSING") {
+          requestedCount++;
+        }
+      }
+      console.log(scheduledCount, moreInfoCount, requestedCount);
+
     };
     fetchRepairs();
   }, []);
 
   return (
-
-    
-
 
     <div className="h-100 d-flex flex-column">
       <Header
@@ -83,14 +95,14 @@ function RepairStatus(props) {
       />
       <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
         {/* Container for NEW repair status*/}
-      <Container className="pt-1 mb-4">
-          <Row style={headings}>
-            <div>URGENT: More information needed</div>
-          </Row>
-          {repairs.length === 0 || isLoading === true ? (
-            <Row className="mt-2 mb-2">
-              <div style={blue}>No Active Request</div>
+        <Container className="pt-1 mb-4">
+          {moreInfoCount > 0 ?
+            <Row style={headings}>
+              <div>URGENT: More information needed</div>
             </Row>
+            : null}
+          {repairs.length === 0 || isLoading === true ? (
+            null
           ) : (
             repairs.map((repair, i) => {
               return (
@@ -100,6 +112,7 @@ function RepairStatus(props) {
                       <Col style={{ padding: "5px" }}>
                         {JSON.parse(repair.images).length > 0 ? (
                           <img
+                            key={i}
                             src={JSON.parse(repair.images)[0]}
                             //className="w-100 h-100"
                             style={{
@@ -149,11 +162,11 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img style={{width: '100px', height: '25px'}} src={HighPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={HighPriority} />
                               ) : repair.priority === "Medium" ? (
-                                <img style={{width: '100px', height: '25px'}} src={MediumPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={MediumPriority} />
                               ) : (
-                                <img style={{width: '100px', height: '25px'}} src={LowPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={LowPriority} />
                               )}
                             </Col>
                           </Row>
@@ -162,7 +175,7 @@ function RepairStatus(props) {
                             <hr />
                           </Row>
                           <Row style={blue} className="mt=0 pt=0">
-                            Request Sent to <br /> property manager
+                            Property manager has <br /> requested additional information
                           </Row>
                         </div>
                       </Col>
@@ -182,7 +195,7 @@ function RepairStatus(props) {
               <div style={blue}>No Scheduled Repairs</div>
             </Row>
           ) : (
-              
+
             repairs.map((repair, i) => {
               return (
                 <div>
@@ -240,11 +253,11 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img style={{width: '100px', height: '25px'}} src={HighPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={HighPriority} />
                               ) : repair.priority === "Medium" ? (
-                                <img style={{width: '100px', height: '25px'}} src={MediumPriority}/>
+                                <img style={{ width: '100px', height: '25px' }} src={MediumPriority} />
                               ) : (
-                                <img style={{width: '100px', height: '25px'}} src={LowPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={LowPriority} />
                               )}
                             </Col>
                           </Row>
@@ -253,7 +266,7 @@ function RepairStatus(props) {
                             <hr />
                           </Row>
                           <Row style={blue} className="mt=0 pt=0">
-                            Request Sent to <br /> property manager
+                            Repair Approved:  <br /> Date set for {repair.scheduled_date}
                           </Row>
                         </div>
                       </Col>
@@ -276,7 +289,7 @@ function RepairStatus(props) {
             repairs.map((repair, i) => {
               return (
                 <div>
-                  {repair.request_status === "NEW" || "PROCESSING" ? (
+                  {repair.request_status === "NEW" || repair.request_status === "PROCESSING" ? (
                     <Row className="mt-2 mb-2">
                       <Col style={{ padding: "5px" }}>
                         {JSON.parse(repair.images).length > 0 ? (
@@ -330,11 +343,11 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img style={{width: '100px', height: '25px'}} src={HighPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={HighPriority} />
                               ) : repair.priority === "Medium" ? (
-                                <img style={{width: '100px', height: '25px'}} src={MediumPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={MediumPriority} />
                               ) : (
-                                <img style={{width: '100px', height: '25px'}} src={LowPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={LowPriority} />
                               )}
                             </Col>
                           </Row>
@@ -420,11 +433,11 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img style={{width: '100px', height: '25px'}} src={HighPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={HighPriority} />
                               ) : repair.priority === "Medium" ? (
-                                <img style={{width: '100px', height: '25px'}} src={MediumPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={MediumPriority} />
                               ) : (
-                                <img style={{width: '100px', height: '25px'}} src={LowPriority} />
+                                <img style={{ width: '100px', height: '25px' }} src={LowPriority} />
                               )}
                             </Col>
                           </Row>
@@ -433,7 +446,7 @@ function RepairStatus(props) {
                             <hr />
                           </Row>
                           <Row style={blue} className="mt=0 pt=0">
-                            Request Sent to <br /> property manager
+                            This repair request <br /> has been completed.
                           </Row>
                         </div>
                       </Col>

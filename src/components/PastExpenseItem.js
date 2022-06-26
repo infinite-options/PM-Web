@@ -37,7 +37,7 @@ function PastExpenseItem(props) {
         <div 
             style={{marginRight: '0px', width: '95px', textAlign: 'right', textAlign: 'center'}}
         >
-            ${amount}
+            ${amount.toFixed(2)}
         </div>
         <div 
             style={{marginRight: '0px', width: '155px', textAlign:'center'}}

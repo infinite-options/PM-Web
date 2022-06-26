@@ -93,7 +93,10 @@ function TenantDuePayments(props) {
         parseExpenses();
         setDuePayments(tempDuePayments);
         setUpcomingPayments(tempUpcomingPayments);
+        console.log("Upcoming payments",upcomingPayments);
     }, [tenantExpenses]);
+
+
     useEffect(()=> {
         console.log("Due payments", duePayments);
         console.log("Upcoming payments",upcomingPayments);
