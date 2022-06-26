@@ -98,7 +98,12 @@ function ManagerOverview(props) {
         <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
             <Header title='PM Dashboard' rightText='Sort by'/>
             <Container className='px-3 pb-5 mb-5'>
-                <div>
+                <div className="p-2 my-3"
+                     style={{
+                        background: "#FFFFFF 0% 0% no-repeat padding-box",
+                        borderRadius: "10px",
+                        opacity: 1,
+                     }}>
                     <Row className="mx-2 my-3 p-2"
                         style={{
                             background: "#007AFF 0% 0% no-repeat padding-box",
@@ -181,7 +186,9 @@ function ManagerOverview(props) {
                         <Col style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>$9,500</Col>
                     </Row>
 
+                </div>
 
+                <div>
 
                     {/*<h6 style={bolder} className='mb-1'>Total No. of Unique Clients</h6>*/}
                     {/*<h6 style={{...bolder, ...green}} className='mb-1'>{unique_clients}</h6>*/}
