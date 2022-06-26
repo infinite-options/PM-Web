@@ -24,6 +24,7 @@ import PropertyManagerDocs from "../components/PropertyManagerDocs";
 import AppContext from "../AppContext";
 import ManagerManagementContract from "../components/ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
+import Property from "../icons/Property.svg";
 
 function ManagerPropertyView(props) {
 
@@ -180,7 +181,7 @@ function ManagerPropertyView(props) {
         ) : showTenantProfile ? (
             <ManagerTenantProfileView back={closeTenantApplication} application={selectedTenantApplication}/>
         ) : (
-            <div>
+            <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
             <Header title='Properties' leftText='< Back' leftFn={headerBack}/>
             <Container className='pb-5 mb-5'>
                 <div>
@@ -251,60 +252,175 @@ function ManagerPropertyView(props) {
                         <ManagerLeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
                     ) : ''}
 
-
-                    <Row className='px-2'>
+                    <Row className="px-2">
                         <Col onClick={() => {navigate('./repairs', { state: {property: property }})}}
-                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Repair} alt='Repair Requests' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Repair Requests
-                            </p>
+                             className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                             style={{
+                                 height: "87px",
+                                 background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                 boxShadow: "0px 3px 3px #00000029",
+                                 borderRadius: "20px",
+                                 cursor: "pointer",
+                             }}>
+                            <Col>
+                                <img src={Repair} alt="Repair" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Repair <br /> Requests
+                                </p>
+                            </Col>
                         </Col>
-                        <Col onClick={() => ''}
-                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Repair} alt='Maintenance' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Maintenance
-                            </p>
-                        </Col>
-                        <Col onClick={() => ''}
-                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Document} alt='Document' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Tenant Documents
-                            </p>
+
+                        <Col
+                             className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                             style={{
+                                 height: "87px",
+                                 background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                 boxShadow: "0px 3px 3px #00000029",
+                                 borderRadius: "20px",
+                                 cursor: "pointer",
+                             }}>
+                            <Col>
+                                <img src={Repair} alt="Document" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                   Maintenance
+                                </p>
+                            </Col>
                         </Col>
                     </Row>
 
-                    <Row className='px-2'>
-                        <Col onClick={() => {navigate("./resident-announcements", { state: {property_uid: property.property_uid}})}}
-                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Announcements} alt='ResidentAnnouncements' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Resident Announcements
-                            </p>
+                    <Row className="px-2">
+                        <Col className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                             style={{
+                                 height: "87px",
+                                 background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                 boxShadow: "0px 3px 3px #00000029",
+                                 borderRadius: "20px",
+                                 cursor: "pointer",
+                             }}>
+                            <Col>
+                                <img src={Document} alt="Repair" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Tenant <br /> Documents
+                                </p>
+                            </Col>
                         </Col>
-                        <Col onClick={() => {navigate("./emergency", { state: {property_uid: property.property_uid}})}}
-                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Emergency} alt='Emergency' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Emergency
-                            </p>
-                        </Col>
-                        <Col onClick={() => ''}
-                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Announcements} alt='EmployeesAssociated' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Employees Associated
-                            </p>
+
+                        <Col className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                            style={{
+                                height: "87px",
+                                background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                boxShadow: "0px 3px 3px #00000029",
+                                borderRadius: "20px",
+                                cursor: "pointer",
+                            }}>
+                            <Col>
+                                <img src={Announcements} alt="Document" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Associated <br /> Employees
+                                </p>
+                            </Col>
                         </Col>
                     </Row>
+
+                    <Row className="px-2">
+                        <Col className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                             style={{
+                                 height: "87px",
+                                 background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                 boxShadow: "0px 3px 3px #00000029",
+                                 borderRadius: "20px",
+                                 cursor: "pointer",
+                             }}>
+                            <Col>
+                                <img src={Announcements} alt="Announcements" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Resident <br /> Announcements
+                                </p>
+                            </Col>
+                        </Col>
+
+                        <Col className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                             style={{
+                                 height: "87px",
+                                 background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                 boxShadow: "0px 3px 3px #00000029",
+                                 borderRadius: "20px",
+                                 cursor: "pointer",
+                             }}>
+                            <Col>
+                                <img src={Emergency} alt="Emergency" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Emergency
+                                </p>
+                            </Col>
+                        </Col>
+                    </Row>
+
+                    {/*<Row className='px-2'>*/}
+                    {/*    <Col onClick={() => {navigate('./repairs', { state: {property: property }})}}*/}
+                    {/*         className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Repair} alt='Repair Requests' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Repair Requests*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*    <Col onClick={() => ''}*/}
+                    {/*         className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Repair} alt='Maintenance' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Maintenance*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*    <Col onClick={() => ''}*/}
+                    {/*         className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Document} alt='Document' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Tenant Documents*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*</Row>*/}
+
+                    {/*<Row className='px-2'>*/}
+                    {/*    <Col onClick={() => {navigate("./resident-announcements", { state: {property_uid: property.property_uid}})}}*/}
+                    {/*         className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Announcements} alt='ResidentAnnouncements' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Resident Announcements*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*    <Col onClick={() => {navigate("./emergency", { state: {property_uid: property.property_uid}})}}*/}
+                    {/*         className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Emergency} alt='Emergency' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Emergency*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*    <Col onClick={() => ''}*/}
+                    {/*         className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Announcements} alt='EmployeesAssociated' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Employees Associated*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*</Row>*/}
 
 
                     {property.owner && (property.owner.length > 0) ? (

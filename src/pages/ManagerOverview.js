@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Button, Col, Container, Row} from 'react-bootstrap';
 import Header from '../components/Header';
-import {green, bolder, red, xSmall, smallLine, mediumBold, redPillButton, small} from '../utils/styles';
+import {green, bolder, red, xSmall, smallLine, mediumBold, redPillButton, small, underline} from '../utils/styles';
 import Repair from '../icons/Repair.svg';
 import Property from '../icons/Property.svg';
 import Emergency from '../icons/Emergency.svg';
@@ -95,22 +95,30 @@ function ManagerOverview(props) {
     // }
 
     return (
-        <div>
+        <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
             <Header title='PM Dashboard' rightText='Sort by'/>
             <Container className='px-3 pb-5 mb-5'>
                 <div>
+                    <Row className="mx-2 my-3 p-2"
+                        style={{
+                            background: "#007AFF 0% 0% no-repeat padding-box",
+                            boxShadow: "0px 3px 3px #00000029",
+                            borderRadius: "20px",
+                        }}>
+                        <Col xs={8} style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>Unique Clients</Col>
+                        <Col style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>{unique_clients}</Col>
+                    </Row>
 
-                    <h6 style={bolder} className='mb-1'>Total No. of Unique Clients</h6>
-
-                        <h6 style={{...bolder, ...green}} className='mb-1'>{unique_clients}</h6>
-
-
-                    <hr style={{opacity: 1}} className='mt-1 mb-3'/>
-
-                    <h6 style={bolder} className='mb-1'>Total No. of Properties</h6>
-                    <div onClick={() => setExpandProperties(!expandProperties)}>
-                        <h6 style={{...bolder, ...green}} className='mb-1'>{property_count}</h6>
-                    </div>
+                    <Row className="mx-2 my-3 p-2"
+                         style={{
+                             background: "#007AFF 0% 0% no-repeat padding-box",
+                             boxShadow: "0px 3px 3px #00000029",
+                             borderRadius: "20px",
+                         }}
+                        onClick={() => setExpandProperties(!expandProperties)}>
+                        <Col xs={8} style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>Properties</Col>
+                        <Col style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>{property_count}</Col>
+                    </Row>
 
                     {expandProperties ? (
                         <div>
@@ -143,22 +151,64 @@ function ManagerOverview(props) {
                         ""
                     )}
 
-                    <hr style={{opacity: 1}} className='mt-1 mb-3'/>
+                    <Row className="mx-2 my-3 p-2"
+                         style={{
+                             background: "#3DB727 0% 0% no-repeat padding-box",
+                             boxShadow: "0px 3px 3px #00000029",
+                             borderRadius: "20px",
+                         }}>
+                        <Col xs={8} style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>Estimated Monthly Revenue</Col>
+                        <Col style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>$10,000</Col>
+                    </Row>
 
-                    <h6 style={bolder} className='mb-1'>Estimated Monthly Revenue</h6>
-                    <h6 style={{...bolder, ...green}} className='mb-1'>$16,500</h6>
-                    <hr style={{opacity: 1}} className='mt-1 mb-3'/>
+                    <Row className="mx-2 my-3 p-2"
+                         style={{
+                             background: "#3DB727 0% 0% no-repeat padding-box",
+                             boxShadow: "0px 3px 3px #00000029",
+                             borderRadius: "20px",
+                         }}>
+                        <Col xs={8} style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>MTD Revenue</Col>
+                        <Col style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>$16,500</Col>
+                    </Row>
 
-                    <h6 style={bolder} className='mb-1'>MTD Revenue</h6>
-                    <div className='d-flex justify-content-between'>
-                        <h6 style={{...bolder, ...green}} className='mb-1'>$14,500</h6>
-                        <h6 style={{...bolder, ...green}} className='mb-1'>80%</h6>
-                    </div>
-                    <hr style={{opacity: 1}} className='mt-1 mb-3'/>
+                    <Row className="mx-2 my-3 p-2"
+                         style={{
+                             background: "#E3441F 0% 0% no-repeat padding-box",
+                             boxShadow: "0px 3px 3px #00000029",
+                             borderRadius: "20px",
+                         }}>
+                        <Col xs={8} style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>MTD Maintenance Cost</Col>
+                        <Col style={{ ...mediumBold, ...{color: "#FFFFFF"} }}>$9,500</Col>
+                    </Row>
 
-                    <h6 style={bolder} className='mb-1'>MTD Maintenance Cost</h6>
-                    <h6 style={{...bolder, ...red}} className='mb-1'>$9,000</h6>
-                    <hr style={{opacity: 1}} className='mt-1 mb-3'/>
+
+
+                    {/*<h6 style={bolder} className='mb-1'>Total No. of Unique Clients</h6>*/}
+                    {/*<h6 style={{...bolder, ...green}} className='mb-1'>{unique_clients}</h6>*/}
+
+                    {/*<hr style={{opacity: 1}} className='mt-1 mb-3'/>*/}
+
+                    {/*<h6 style={bolder} className='mb-1'>Total No. of Properties</h6>*/}
+                    {/*<div onClick={() => setExpandProperties(!expandProperties)}>*/}
+                    {/*    <h6 style={{...bolder, ...green}} className='mb-1'>{property_count}</h6>*/}
+                    {/*</div>*/}
+
+                    {/*<hr style={{opacity: 1}} className='mt-1 mb-3'/>*/}
+
+                    {/*<h6 style={bolder} className='mb-1'>Estimated Monthly Revenue</h6>*/}
+                    {/*<h6 style={{...bolder, ...green}} className='mb-1'>$16,500</h6>*/}
+                    {/*<hr style={{opacity: 1}} className='mt-1 mb-3'/>*/}
+
+                    {/*<h6 style={bolder} className='mb-1'>MTD Revenue</h6>*/}
+                    {/*<div className='d-flex justify-content-between'>*/}
+                    {/*    <h6 style={{...bolder, ...green}} className='mb-1'>$14,500</h6>*/}
+                    {/*    <h6 style={{...bolder, ...green}} className='mb-1'>80%</h6>*/}
+                    {/*</div>*/}
+                    {/*<hr style={{opacity: 1}} className='mt-1 mb-3'/>*/}
+
+                    {/*<h6 style={bolder} className='mb-1'>MTD Maintenance Cost</h6>*/}
+                    {/*<h6 style={{...bolder, ...red}} className='mb-1'>$9,000</h6>*/}
+                    {/*<hr style={{opacity: 1}} className='mt-1 mb-3'/>*/}
 
                     {/*Sample Notifications for the first property*/}
                     {/*{*/}
@@ -176,61 +226,181 @@ function ManagerOverview(props) {
                     {/*        </div>*/}
                     {/*}*/}
 
-                    <Row className='px-2'>
+                    <Row className="px-2">
                         <Col onClick={() => navigate('/manager-properties')}
-                             className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Property} alt='Properties' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Properties
-                            </p>
+                            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                            style={{
+                                height: "87px",
+                                background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                boxShadow: "0px 3px 3px #00000029",
+                                borderRadius: "20px",
+                                cursor: "pointer",
+                            }}>
+                            <Col>
+                                <img src={Property} alt="Property" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Properties
+                                </p>
+                            </Col>
                         </Col>
 
                         <Col onClick={() => {navigate('/manager-repairs', { state: {properties: properties }})}}
-                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Repair} alt='Repair Requests' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Repair Requests
-                            </p>
+                            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                            style={{
+                                height: "87px",
+                                background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                boxShadow: "0px 3px 3px #00000029",
+                                borderRadius: "20px",
+                                cursor: "pointer",
+                            }}>
+                            <Col>
+                                <img src={Repair} alt="Document" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Repair <br />  Requests
+                                </p>
+                            </Col>
                         </Col>
+                    </Row>
 
+                    <Row className="px-2">
                         <Col onClick={() => {navigate('/manager-utilities', { state: {properties: properties }})}}
-                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Repair} alt='Maintenance' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Maintenance
-                            </p>
+                             className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                             style={{
+                                 height: "87px",
+                                 background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                 boxShadow: "0px 3px 3px #00000029",
+                                 borderRadius: "20px",
+                                 cursor: "pointer",
+                             }}>
+                            <Col>
+                                <img src={Repair} alt="Property" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Utilities
+                                </p>
+                            </Col>
+                        </Col>
+
+                        <Col
+                             className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                             style={{
+                                 height: "87px",
+                                 background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                 boxShadow: "0px 3px 3px #00000029",
+                                 borderRadius: "20px",
+                                 cursor: "pointer",
+                             }}>
+                            <Col>
+                                <img src={Repair} alt="Document" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Maintenance
+                                </p>
+                            </Col>
                         </Col>
                     </Row>
 
-                    <Row className='px-2'>
-                        <Col onClick={() => ''}
-                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Document} alt='Document' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Tenant Documents
-                            </p>
+                    <Row className="px-2">
+                        <Col onClick={() => {navigate('/manager-utilities', { state: {properties: properties }})}}
+                             className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                             style={{
+                                 height: "87px",
+                                 background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                 boxShadow: "0px 3px 3px #00000029",
+                                 borderRadius: "20px",
+                                 cursor: "pointer",
+                             }}>
+                            <Col>
+                                <img src={Document} alt="Property" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Documents
+                                </p>
+                            </Col>
                         </Col>
-                        <Col onClick={() => ''}
-                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Document} alt='Document' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Manager Documents
-                            </p>
-                        </Col>
-                        <Col onClick={() => ''}
-                            className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'
-                             style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>
-                            <img src={Emergency} alt='Emergency' style={{width: '50px'}}/>
-                            <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>
-                                Emergency
-                            </p>
+
+                        <Col
+                            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
+                            style={{
+                                height: "87px",
+                                background: "#FFFFFF 0% 0% no-repeat padding-box",
+                                boxShadow: "0px 3px 3px #00000029",
+                                borderRadius: "20px",
+                                cursor: "pointer",
+                            }}>
+                            <Col>
+                                <img src={Emergency} alt="Document" style={{ width: "50px" }} />
+                            </Col>
+                            <Col>
+                                <p style={{ ...xSmall, ...smallLine, ...mediumBold }} className="mb-0">
+                                    Emergency
+                                </p>
+                            </Col>
                         </Col>
                     </Row>
+
+                    {/*<Row className='px-2'>*/}
+                    {/*    <Col onClick={() => navigate('/manager-properties')}*/}
+                    {/*         className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Property} alt='Properties' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Properties*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+
+                    {/*    <Col onClick={() => {navigate('/manager-repairs', { state: {properties: properties }})}}*/}
+                    {/*        className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Repair} alt='Repair Requests' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Repair Requests*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+
+                    {/*    <Col onClick={() => {navigate('/manager-utilities', { state: {properties: properties }})}}*/}
+                    {/*        className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Repair} alt='Maintenance' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Maintenance*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*</Row>*/}
+
+                    {/*<Row className='px-2'>*/}
+                    {/*    <Col onClick={() => ''}*/}
+                    {/*        className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Document} alt='Document' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Tenant Documents*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*    <Col onClick={() => ''}*/}
+                    {/*        className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Document} alt='Document' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Manager Documents*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*    <Col onClick={() => ''}*/}
+                    {/*        className='text-center m-1 p-2 d-flex flex-column justify-content-between align-items-center'*/}
+                    {/*         style={{border: '1px solid black', borderRadius: '5px', height: '100px'}}>*/}
+                    {/*        <img src={Emergency} alt='Emergency' style={{width: '50px'}}/>*/}
+                    {/*        <p style={{...xSmall, ...smallLine, ...mediumBold}} className='mb-0'>*/}
+                    {/*            Emergency*/}
+                    {/*        </p>*/}
+                    {/*    </Col>*/}
+                    {/*</Row>*/}
 
                     {/*<h6 style={bolder} className='mt-4 mb-1'>New Maintenance Requests</h6>*/}
 
