@@ -369,7 +369,7 @@ function TenantWelcomePage(props) {
                               />
                             )}
                           </div>
-                          <div style={{backgroundColor: 'red'}}>
+                          <div>
                             <h5 style={mediumBold}>ADDRESS</h5>
                             <h6>{application.address}</h6>
                             <h6>
@@ -384,7 +384,7 @@ function TenantWelcomePage(props) {
                               </h6>
                             ) : application.application_status ===
                               "REJECTED" ? (
-                              <h6 style={{ mediumBold, color: "red" }}>
+                              <h6 style={{ mediumBold, color: "red", height: '50px' }}>
                                 {application.application_status}
                               </h6>
                             ) : (

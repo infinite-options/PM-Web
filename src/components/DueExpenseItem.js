@@ -44,7 +44,7 @@ function DueExpenseItem(props) {
             }}
         >
         </input>
-        <div style={{marginRight: '0px', width: '96px', textAlign: 'right', textAlign: 'center'}}>${amountPaid}</div>
+        <div style={{marginRight: '0px', width: '96px', textAlign: 'right', textAlign: 'center'}}>${amountPaid.toFixed(2)}</div>
         <div style={{marginRight: '0px', width: '95px', textAlign:'center'}}>{currentMonth}/{currentDate}/{currentYear}</div>
         <div style={{marginRight: '0px', width: '138px', textAlign: 'center'}}> {expense.description}</div>
     </li>

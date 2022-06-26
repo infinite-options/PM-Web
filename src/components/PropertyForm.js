@@ -411,6 +411,8 @@ function PropertyForm(props) {
     currency: "USD",
   });
 
+
+  console.log(activeDate);
   return (
     <div className="mx-2">
       {edit ? (
@@ -591,7 +593,7 @@ function PropertyForm(props) {
           </Col>
         </Row>
       )}
-      {edit ? (
+      {/* {edit ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
             Active Date {activeDate === "" ? required : ""}
@@ -609,7 +611,7 @@ function PropertyForm(props) {
           <h6>Active Date</h6>
           <p>{formatter.format(activeDate)}</p>
         </div>
-      )}
+      )} */}
       {edit ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">

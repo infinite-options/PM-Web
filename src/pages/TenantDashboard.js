@@ -270,9 +270,9 @@ function TenantDashboard(props) {
     }
     console.log(includedUIDs);
     console.log(parameter.property.tenantExpenses);
-    setPaid(tempRentPaid);
-    setDue(tempDue);
-    setUpcoming(tempUpcoming);
+    setPaid(tempRentPaid.toFixed(2));
+    setDue(tempDue.toFixed(2));
+    setUpcoming(tempUpcoming.toFixed(2));
   }
 
   useEffect(() => {
@@ -1363,12 +1363,7 @@ function TenantDashboard(props) {
               <Col>
                 {applications ? (
                   applications.map((application, i) =>
-                    application.application_status !== "RENTED" &&
-                      application.application_status !== "FORWARDED" &&
-                      application.application_status !== "PM END EARLY" &&
-                      application.application_status !== "TENANT END EARLY" &&
-                      application.application_status !== "PM ENDED" && 
-                      application.application_status !== "TENANT ENDED" ? (
+                    application.application_status === "NEW" ? (
                       <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
@@ -1432,6 +1427,78 @@ function TenantDashboard(props) {
                   <p>You have not applied for any property yet. </p>
 
                 )}
+
+              </Col>
+            </Row>
+          </div>
+
+          {/* ============================ ENDED STATUS =========================== */}
+          <div style={headings} className="mt-4 mb-1">
+                  Terminated Leases
+          </div>
+          <p>Leases that have been terminated. </p>
+          <hr style={{ opacity: 1 }} />
+          <div className="mb-4" style={{ margin: "20px" }}>
+            <Row>
+              <Col>
+                {applications ? (
+                  applications.map((application, i) =>
+                      application.application_status === "ENDED" || application.application_status === "REFUSED" ? (
+                      <div
+                        key={i}
+                        onClick={() => goToReviewPropertyLease(application)}
+                      >
+                        <div className="d-flex justify-content-between align-items-end">
+                          <div
+                            className="img"
+                            style={{
+                              flex: "0 0 35%",
+                              background: "lightgrey",
+                              height: "150px",
+                              width: "100px",
+                            }}
+                          >
+                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
+                            {application.images && application.images.length ? (
+                              <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={application.images[0]}
+                              />
+                            ) : (
+                              <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={No_Image}
+                              />
+                            )}
+                          </div>
+                          <div style={{ paddingLeft: "15px" }}>
+                            <h5 style={mediumBold}>ADDRESS</h5>
+                            <h6>{application.address}</h6>
+                            <h6>
+                              {application.city},{application.zip}
+                            </h6>
+
+                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
+                            {application.application_status === "ENDED" || 
+                            application.application_status === "REFUSED" ? (
+                              <h6 style={{ mediumBold, color: "red" }}>
+                                {application.application_status}
+                              </h6>
+                            ) : null
+                            }
+                          </div>
+                        </div>
+                        <hr style={{ opacity: 1 }} />
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                ) : (
+                  <p>You have not applied for any property yet. </p>
+
+                )}
+
               </Col>
             </Row>
           </div>
