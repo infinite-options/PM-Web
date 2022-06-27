@@ -4,7 +4,7 @@ import AppContext from "../AppContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import TenantPropertyView from "./TenantPropertyView";
-import { Row, Col, Button, Container, Carousel, Image } from "react-bootstrap";
+import { Row, Col, Button, Container, Image } from "react-bootstrap";
 import { bluePillButton, greenPill, redPillButton } from "../utils/styles";
 import { get, put } from "../utils/api";
 import No_Image from "../icons/No_Image_Available.jpeg";
@@ -33,7 +33,8 @@ function ReviewPropertyLease(props) {
   const [endEarlyDate, setEndEarlyDate] = useState("");
   const pmMessage = location.state.message;
   const [disableEndLease, setDisable] = useState(false);
-  let within60 = false;
+  const [within60, setWithin60] = useState(false);
+  // let within60 = false;
 
   useEffect(() => {
     const fetchRentals = async () => {
@@ -214,13 +215,16 @@ function ReviewPropertyLease(props) {
     let endDate = new Date(parseInt(tempEndDate[0]), parseInt(tempEndDate[1]) - 1, parseInt(tempEndDate[2]));
     let difference = Math.abs(currentDate - endDate);
     console.log(difference);
-    if (difference < 2592000000 * 2) {
-      within60 = true;
+    if (difference <= 5184000000) {
+      // within60 = true;
+      setWithin60(true);
+      console.log(true);
     }
     else {
-      within60 = false;
+      // within60 = false;
+      setWithin60(false);
+      console.log(false);
     }
-    console.log(within60);
 
   }
 
@@ -248,7 +252,8 @@ function ReviewPropertyLease(props) {
       {/* ==================< Property Details >=======================================  */}
       <TenantPropertyView forPropertyLease="true" />
       {/* ==================< Lease Details >=======================================  */}
-      {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ?
+      {/* {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ? */}
+      {(true) ?
         (<div style={{ marginLeft: "20px" }}>
           <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "24px" }}>
             <u>Lease Details:</u>
@@ -736,7 +741,28 @@ function ReviewPropertyLease(props) {
           </Col>
 
         </Col>
-        : null}
+        : <Col>
+          <p
+            style={{
+              fontWeight: "bold",
+              textAlign: "left",
+              fontSize: "24px",
+              marginLeft: "20px",
+            }}
+          >
+            <u>Extend Lease:</u>
+          </p>
+          <p
+            style={{
+              fontWeight: "bold",
+              textAlign: "left",
+              fontSize: "14px",
+              marginLeft: "40px",
+              marginRight: '20px'
+            }}>
+            You may not extend your lease until your lease is within 60 days of the end lease.
+          </p>
+        </Col>}
       {/* ========== End Lease Early Button ========== */}
       {application_status_1 === "RENTED" ?
         <Col>
