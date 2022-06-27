@@ -32,7 +32,7 @@ function ReviewPropertyLease(props) {
   const [endLeaseMessage, setEndLeaseMessage] = useState("No message has been set by Tenant.");
   const [endEarlyDate, setEndEarlyDate] = useState("");
   const pmMessage = location.state.message;
-  let disableEndLease = false;
+  const [disableEndLease, setDisable] = useState(false);
   let within60 = false;
 
   useEffect(() => {
@@ -70,6 +70,7 @@ function ReviewPropertyLease(props) {
     }
     fetchRentals();
   }, [user]);
+
   useEffect(() => {
     const currentMonth = new Date().getMonth();
     const currentDay = new Date().getDate();
@@ -82,14 +83,15 @@ function ReviewPropertyLease(props) {
     let difference = newEndEarlyDate - currentDate;
     console.log(difference);
     if (difference < 864000000) {
-      disableEndLease = true;
+      setDisable(true);
       console.log("disabled");
     }
     else {
       console.log("enabled");
-      disableEndLease = false;
+      setDisable(false);
     }
   }, [endEarlyDate]);
+
   useEffect(() => {
     const fetchProperties = async () => {
       const response = await get(`/propertyInfo?property_uid=${property_uid}`);
@@ -756,7 +758,7 @@ function ReviewPropertyLease(props) {
               marginLeft: "40px",
               marginRight: '20px'
             }}>
-            Please Select an end early date.
+            Please Select an end early date. (Minimum: 10 days)
           </p>
           <input
             type="date" style={{ width: '80%', margin: '2% 10%' }}
@@ -798,15 +800,15 @@ function ReviewPropertyLease(props) {
           }}
         >
           {disableEndLease ?
-            <Button
+            <button
               disabled
               style={redPillButton}
               onClick={endLeaseEarly}
-            >End Lease</Button> :
-            <Button
-              style={redPillButton}
+            >End Lease</button> :
+            <button
+              style={greenPill}
               onClick={endLeaseEarly}
-            >End Lease</Button>
+            >End Lease</button>
           }
         </Col> : null
       }

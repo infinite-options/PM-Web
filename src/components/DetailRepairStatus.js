@@ -85,7 +85,9 @@ function DetailRepairStatus(props) {
         return;
       }
       setRepairsDetail(response.result);
+      console.log(response.result);
       setPMNotes(response.result[0].notes);
+      console.log(response.result[0].notes)
       console.log(response.result[0]);
       setRepairsImages(JSON.parse(response.result[0].images));
       console.log(response.result);
@@ -445,8 +447,7 @@ function DetailRepairStatus(props) {
           })}
         </div>
       )}
-
-      {repairsDetail.length > 0 && repairsDetail.notes !== null ?
+      {repairsDetail && pmNotes ?
         <div>
           <div style={{ ...headings, marginLeft: '10px' }}>Property Manager Notes:</div>
           <div style={{ ...subHeading, marginLeft: '20px' }}>{pmNotes}</div>
