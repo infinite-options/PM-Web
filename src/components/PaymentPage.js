@@ -84,7 +84,7 @@ function PaymentPage(props) {
     else {
       setDisabled(false);
     }
-  }, [amount])
+  }, [amount]);
 
   const cancel = () => setStripePayment(false);
   const submit = () => {

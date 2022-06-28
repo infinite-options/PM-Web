@@ -560,135 +560,135 @@ function TenantDashboard(props) {
                   </Carousel.Item>;
                 })
                 }
-              </Carousel> 
+              </Carousel>
               : property.length === 1 && selectedProperty.length !== 0 ?
-              <div
-                style={{
-                  display: "flex",
-                  backgroundColor: "#F3F3F3",
-                  padding: "15px 15px 35px 15px",
-                  alignItems: "center",
+                <div
+                  style={{
+                    display: "flex",
+                    backgroundColor: "#F3F3F3",
+                    padding: "15px 15px 35px 15px",
+                    alignItems: "center",
 
-                }}
-                onClick={() =>
-                  applications.map((application, i) => {
-                    if (selectedProperty.property.property_uid === application.property_uid) {
-                      goToReviewPropertyLease(application);
-                    }
-                  })
-                }
-              >
-                <Col>
-                  {" "}
-                  <img
-                    src={
-                      selectedProperty && selectedProperty.property.images.length > 0
-                        ? JSON.parse(selectedProperty.property.images)[coverImageIndex]
-                        : No_Image
-                    }
-                    style={{
-                      width: "113px",
-                      height: "113px",
-                      borderRadius: "10px",
-                    }}
-                  ></img>
-                </Col>
-
-                <Col xs={6}>
-                  <div style={{ paddingLeft: "10px", fontSize: "22px" }}>
-                    ${selectedProperty.rent} / mo
-                  </div>
-                  <div
-                    style={{
-                      paddingLeft: "10px",
-                      fontSize: "16px",
-                      lineHeight: "20px",
-                      color: "#777777",
-                      padding: "10px",
-                    }}
-                  >
-                    {selectedProperty.property.address},{" "}
-                    {selectedProperty.property.city},{" "}
-                    {selectedProperty.property.zip},{" "}
-                    {selectedProperty.property.state}
-                  </div>
-                  <div
-                    style={{
-                      marginLeft: "10px",
-                      fontSize: "12px",
-                      color: "#007AFF",
-                      lineHeight: '17px'
-                    }}
-                  >
-                    Manager:{" "}
-                    {
-                      selectedProperty.property.property_manager[0]
-                        .manager_business_name
-                    }
-                  </div>
-                  <div
-                    style={{
-                      marginLeft: "10px",
-                    }}
-                  >
+                  }}
+                  onClick={() =>
+                    applications.map((application, i) => {
+                      if (selectedProperty.property.property_uid === application.property_uid) {
+                        goToReviewPropertyLease(application);
+                      }
+                    })
+                  }
+                >
+                  <Col>
                     {" "}
-                    <a
-                      href={`tel:${selectedProperty.property.property_manager[0].manager_phone_number}`}
-                    >
-                      <img
-                        style={{
-                          width: "25px",
-                          height: "25px",
-                          marginLeft: "10px",
-                        }}
-                        src={Phone}
-                      />
-                    </a>
-                    <a
-                      href={`mailto:${selectedProperty.property.property_manager[0].manager_email}`}
-                    >
-                      <img
-                        style={{
-                          width: "25px",
-                          height: "25px",
-                          marginLeft: "10px",
-                        }}
-                        src={Message}
-                      />
-                    </a>
-                  </div>
-                </Col>
-                {upcomingFees !== 0 || due !== 0 ?
-                  <Col
-                    style={{
-                      backgroundColor: "#FFBCBC",
-                      borderRadius: "20px",
-                      fontSize: "14px",
-                      // width: "73px",
-                      // height: "24px",
-                      // padding: '5px',
-                      textAlign: "center",
-                    }}
-                  >
-                    Unpaid
-                  </Col> :
-                  <Col
-                    style={{
-                      backgroundColor: "#3DB727",
-                      borderRadius: "20px",
-                      fontSize: "13px",
-                      // width: "73px",
-                      height: "24px",
-                      // padding: '5px',
-                      textAlign: "center",
-                      color: 'white',
-                    }}
-                  >
-                    Fees Paid
+                    <img
+                      src={
+                        selectedProperty && selectedProperty.property.images.length > 0
+                          ? JSON.parse(selectedProperty.property.images)[coverImageIndex]
+                          : No_Image
+                      }
+                      style={{
+                        width: "113px",
+                        height: "113px",
+                        borderRadius: "10px",
+                      }}
+                    ></img>
                   </Col>
-                }
-              </div> : ""}
-            
+
+                  <Col xs={6}>
+                    <div style={{ paddingLeft: "10px", fontSize: "22px" }}>
+                      ${selectedProperty.rent} / mo
+                    </div>
+                    <div
+                      style={{
+                        paddingLeft: "10px",
+                        fontSize: "16px",
+                        lineHeight: "20px",
+                        color: "#777777",
+                        padding: "10px",
+                      }}
+                    >
+                      {selectedProperty.property.address},{" "}
+                      {selectedProperty.property.city},{" "}
+                      {selectedProperty.property.zip},{" "}
+                      {selectedProperty.property.state}
+                    </div>
+                    <div
+                      style={{
+                        marginLeft: "10px",
+                        fontSize: "12px",
+                        color: "#007AFF",
+                        lineHeight: '17px'
+                      }}
+                    >
+                      Manager:{" "}
+                      {
+                        selectedProperty.property.property_manager[0]
+                          .manager_business_name
+                      }
+                    </div>
+                    <div
+                      style={{
+                        marginLeft: "10px",
+                      }}
+                    >
+                      {" "}
+                      <a
+                        href={`tel:${selectedProperty.property.property_manager[0].manager_phone_number}`}
+                      >
+                        <img
+                          style={{
+                            width: "25px",
+                            height: "25px",
+                            marginLeft: "10px",
+                          }}
+                          src={Phone}
+                        />
+                      </a>
+                      <a
+                        href={`mailto:${selectedProperty.property.property_manager[0].manager_email}`}
+                      >
+                        <img
+                          style={{
+                            width: "25px",
+                            height: "25px",
+                            marginLeft: "10px",
+                          }}
+                          src={Message}
+                        />
+                      </a>
+                    </div>
+                  </Col>
+                  {upcomingFees !== 0 || due !== 0 ?
+                    <Col
+                      style={{
+                        backgroundColor: "#FFBCBC",
+                        borderRadius: "20px",
+                        fontSize: "14px",
+                        // width: "73px",
+                        // height: "24px",
+                        // padding: '5px',
+                        textAlign: "center",
+                      }}
+                    >
+                      Unpaid
+                    </Col> :
+                    <Col
+                      style={{
+                        backgroundColor: "#3DB727",
+                        borderRadius: "20px",
+                        fontSize: "13px",
+                        // width: "73px",
+                        height: "24px",
+                        // padding: '5px',
+                        textAlign: "center",
+                        color: 'white',
+                      }}
+                    >
+                      Fees Paid
+                    </Col>
+                  }
+                </div> : ""}
+
             {/* {isLoading === true || selectedProperty.length == 0 ? null : (
               <div
                 style={{
@@ -1217,9 +1217,9 @@ function TenantDashboard(props) {
                   applications.map((application, i) =>
                     // console.log(application)
                     // application.rental_status === "ACTIVE" ? (
-                    application.application_status === "RENTED" || 
-                    application.application_status === "PM END EARLY" || 
-                    application.application_status === "TENANT END EARLY" ? (
+                    application.application_status === "RENTED" ||
+                      application.application_status === "PM END EARLY" ||
+                      application.application_status === "TENANT END EARLY" ? (
                       <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
@@ -1434,7 +1434,7 @@ function TenantDashboard(props) {
 
           {/* ============================ ENDED STATUS =========================== */}
           <div style={headings} className="mt-4 mb-1">
-                  Terminated Leases
+            Terminated Leases
           </div>
           <p>Leases that have been terminated. </p>
           <hr style={{ opacity: 1 }} />
@@ -1443,7 +1443,7 @@ function TenantDashboard(props) {
               <Col>
                 {applications ? (
                   applications.map((application, i) =>
-                      application.application_status === "ENDED" || application.application_status === "REFUSED" ? (
+                    application.application_status === "ENDED" || application.application_status === "REFUSED" ? (
                       <div
                         key={i}
                         onClick={() => goToReviewPropertyLease(application)}
@@ -1479,8 +1479,8 @@ function TenantDashboard(props) {
                             </h6>
 
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "ENDED" || 
-                            application.application_status === "REFUSED" ? (
+                            {application.application_status === "ENDED" ||
+                              application.application_status === "REFUSED" ? (
                               <h6 style={{ mediumBold, color: "red" }}>
                                 {application.application_status}
                               </h6>

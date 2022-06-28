@@ -150,6 +150,7 @@ function ReviewPropertyLease(props) {
     const currentDay = new Date().getDate();
     const currentYear = new Date().getFullYear();
     let endDate = `${currentYear}-${currentMonth}-${currentDay}`
+
     const updatedRental = {
       "application_uid": application_uid,
       "application_status": "TENANT END EARLY",
@@ -789,7 +790,8 @@ function ReviewPropertyLease(props) {
           <input
             type="date" style={{ width: '80%', margin: '2% 10%' }}
             onChange={(e) => {
-
+              
+              console.log(e.target.value);
               setEndEarlyDate(e.target.value);
             }}
           >
