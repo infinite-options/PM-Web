@@ -21,7 +21,7 @@ import LowPriority from "../icons/lowPriority.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import RepairImg from "../icons/RepairImg.svg";
-import { get , put} from "../utils/api";
+import { get, put } from "../utils/api";
 import RepairImages from "./RepairImages";
 import {
   headings,
@@ -84,7 +84,7 @@ function DetailRepairStatus(props) {
       }
       setRepairsDetail(response.result);
       setRepairsImages(JSON.parse(response.result[0].images));
-      
+
       setPriority(response.result[0].priority);
       setDescription(response.result[0].description);
       setTitle(response.result[0].title);
@@ -111,40 +111,47 @@ function DetailRepairStatus(props) {
   //   fetchBusinessAssigned();
   // }, []);
 
-  function editRepair(){
-      console.log("Editing repair");
-      setIsEditing(true);
-  } 
-  const updateRepair = async () => {
-      console.log("Putting changes to database");
-      console.log("repairsDetails\n", repairsDetail);
-      console.log("repairsImages\n", repairsImages);
-      console.log(imageState);
-      const files = JSON.parse(repairsDetail[0].images);
-      console.log(files);
-      const newRepair = {
-        maintenance_request_uid: maintenance_request_uid,
-        title: title,
-        priority: priority,
-        can_reschedule: true,
-        assigned_business: repairsDetail[0].assigned_business,
-        notes: repairsDetail[0].notes,
-        request_status: repairsDetail[0].request_status === "INFO" ? "PROCESSING" : repairsDetail[0].request_status,
-        description: description,
-        scheduled_date: repairsDetail[0].scheduled_date,
-        assigned_worker: repairsDetail[0].assigned_worker,
-        
-      }
-      console.log(newRepair);
-      for (let i = 0; i < imageState.length; i++) {
-        // let key = `img_${i}`;
-        
-      }
-      const res = await put("/maintenanceRequests", newRepair, null, files);
-      console.log(res);
-      setIsEditing(false);
+  function editRepair() {
+    console.log("Editing repair");
+    setIsEditing(true);
   }
-
+  const updateRepair = async () => {
+    console.log("Putting changes to database");
+    console.log("repairsDetails\n", repairsDetail);
+    console.log("repairsImages\n", repairsImages);
+    console.log(imageState);
+    const files = JSON.parse(repairsDetail[0].images);
+    console.log(files);
+    const newRepair = {
+      maintenance_request_uid: maintenance_request_uid,
+      title: title,
+      priority: priority,
+      can_reschedule: true,
+      assigned_business: repairsDetail[0].assigned_business,
+      notes: repairsDetail[0].notes,
+      request_status:
+        repairsDetail[0].request_status === "INFO"
+          ? "PROCESSING"
+          : repairsDetail[0].request_status,
+      description: description,
+      scheduled_date: repairsDetail[0].scheduled_date,
+      assigned_worker: repairsDetail[0].assigned_worker,
+    };
+    console.log(newRepair);
+    // const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
+    const res = await put("/maintenanceRequests", newRepair, null, files);
+    console.log(res);
+    setIsEditing(false);
+  };
 
   return (
     <div className="h-100 d-flex flex-column" style={{ minHeight: "100%" }}>
@@ -161,7 +168,6 @@ function DetailRepairStatus(props) {
         </Row>
       ) : (
         <div>
-          
           {repairsDetail.map((repair) => {
             return (
               <Container className="pt-1 mb-4">
@@ -173,9 +179,7 @@ function DetailRepairStatus(props) {
                       alignItems: "center",
                     }}
                   >
-                    
                     {JSON.parse(repair.images).length === 0 ? (
-                      
                       <img
                         src={RepairImg}
                         //className="w-100 h-100"
@@ -188,48 +192,52 @@ function DetailRepairStatus(props) {
                         }}
                         alt="repair"
                       />
-                      
                     ) : JSON.parse(repair.images).length > 1 ? (
                       // <div>
 
                       // {console.log(repairsImages.length)}
                       // {repairsImages.map((img) => {
                       //    return <img src = {img} style = {{width: "350px", height: "198px", borderRadius: "5px", objectFit: "cover"}}></img>
-                        
+
                       // })}
                       // </div>
                       <Carousel>
                         {repairsImages.map((img) => {
-                           return <Carousel.Item>
-                            <Image
-                              src={img}
-                              style={{
-                                objectFit: "cover",
-                                width: "350px",
-                                height: " 198px",
-                                border: "1px solid #C4C4C4",
-                                borderRadius: "5px",
-                              }}
-                              alt="repair"
-                            />
-                          </Carousel.Item>;
+                          return (
+                            <Carousel.Item>
+                              <Image
+                                src={img}
+                                style={{
+                                  objectFit: "cover",
+                                  width: "350px",
+                                  height: " 198px",
+                                  border: "1px solid #C4C4C4",
+                                  borderRadius: "5px",
+                                }}
+                                alt="repair"
+                              />
+                            </Carousel.Item>
+                          );
                         })}
-                        {imageState[0].length > 0 ? 
-                        imageState[0].map((img) => {
-                          return <Carousel.Item>
-                            <Image
-                              src={JSON.parse(img.image)}
-                              style={{
-                                objectFit: "cover",
-                                width: "350px",
-                                height: " 198px",
-                                border: "1px solid #C4C4C4",
-                                borderRadius: "5px",
-                              }}
-                              alt="repair"
-                            />
-                          </Carousel.Item>;
-                        }) : null}
+                        {imageState[0].length > 0
+                          ? imageState[0].map((img) => {
+                              return (
+                                <Carousel.Item>
+                                  <Image
+                                    src={JSON.parse(img.image)}
+                                    style={{
+                                      objectFit: "cover",
+                                      width: "350px",
+                                      height: " 198px",
+                                      border: "1px solid #C4C4C4",
+                                      borderRadius: "5px",
+                                    }}
+                                    alt="repair"
+                                  />
+                                </Carousel.Item>
+                              );
+                            })
+                          : null}
                       </Carousel>
                     ) : (
                       <img
@@ -247,29 +255,29 @@ function DetailRepairStatus(props) {
                     )}
                   </Col>
                 </Row>
-                {isEditing ? 
+                {isEditing ? (
                   <Row>
                     <RepairImages state={imageState} />
-                  </Row> :
-                  null
-                }
-                        
+                  </Row>
+                ) : null}
+
                 <Row className="mt-4">
                   <Col>
-                        {isEditing ?
-                        (<RepairImages  />,
-                      <input
-                        style={{margin: '10px 0px'}}
-                        defaultValue={title}
-                        onChange={(e) =>{
-                          setTitle(e.target.value);
-                        }}
-                      >
-                      </input>)
-                  : <div style={headings}>{title}</div>                 
-                  }
+                    {isEditing ? (
+                      ((<RepairImages />),
+                      (
+                        <input
+                          style={{ margin: "10px 0px" }}
+                          defaultValue={title}
+                          onChange={(e) => {
+                            setTitle(e.target.value);
+                          }}
+                        ></input>
+                      ))
+                    ) : (
+                      <div style={headings}>{title}</div>
+                    )}
                   </Col>
-                  
                 </Row>
 
                 <Row>
@@ -281,20 +289,18 @@ function DetailRepairStatus(props) {
                   </div>
                 </Row>
 
-                <Row className="mt-2" style={{padding: '7px 0px'}}>
+                <Row className="mt-2" style={{ padding: "7px 0px" }}>
                   {isEditing ? (
                     <Form.Group>
-                    <Form.Select
-                      style={squareForm}
-                      value={priority}
-                      onChange={(e) =>
-                        setPriority(e.target.value)
-                      }
-                    >
+                      <Form.Select
+                        style={squareForm}
+                        value={priority}
+                        onChange={(e) => setPriority(e.target.value)}
+                      >
                         <option value="High">High Priority</option>
                         <option value="Medium">Medium Priority</option>
                         <option value="Low">Low Priority</option>
-                      {/* {properties.map((property, i) => (
+                        {/* {properties.map((property, i) => (
                         <option key={i} value={JSON.stringify(property)}>
                           {property.property.address} {property.property.unit}
                           ,&nbsp;
@@ -303,35 +309,35 @@ function DetailRepairStatus(props) {
                           {property.property.state}&nbsp; {property.property.zip}
                         </option>
                       ))} */}
-                    </Form.Select>
-                  </Form.Group>
-                  ) : 
-                  <Col>
-                    {priority === "High" ? (
-                      <img src={HighPriority} />
-                    ) : priority === "Medium" ? (
-                      <img src={MediumPriority} />
-                    ) : (
-                      <img src={LowPriority} />
-                    )}
-                  </Col>
-                  }
-                  
+                      </Form.Select>
+                    </Form.Group>
+                  ) : (
+                    <Col>
+                      {priority === "High" ? (
+                        <img src={HighPriority} />
+                      ) : priority === "Medium" ? (
+                        <img src={MediumPriority} />
+                      ) : (
+                        <img src={LowPriority} />
+                      )}
+                    </Col>
+                  )}
                 </Row>
-                {isEditing ?
-                  <input 
-                    defaultValue = {description} 
-                    style={{width: '80vw'}}
+                {isEditing ? (
+                  <input
+                    defaultValue={description}
+                    style={{ width: "80vw" }}
                     onChange={(e) => {
                       console.log(e);
                       setDescription(e.target.value);
                     }}
-                  ></input> : 
+                  ></input>
+                ) : (
                   <Row className="mt-2">
-                      <div style={subText}>{description}</div>
+                    <div style={subText}>{description}</div>
                   </Row>
-                }
-                
+                )}
+
                 {repair.status === "NEW" ? (
                   <Row></Row>
                 ) : repair.status === "SCHEDULED" ? (
@@ -399,10 +405,14 @@ function DetailRepairStatus(props) {
                     <Row>
                       <Col>
                         <div style={headings}>
-                          {busineesAssigned.business_name ? busineesAssigned.business_name : "hi"}
+                          {busineesAssigned.business_name
+                            ? busineesAssigned.business_name
+                            : "hi"}
                         </div>
                         <div style={subText}>
-                          {busineesAssigned.business_name? busineesAssigned.business_name : "hi"}
+                          {busineesAssigned.business_name
+                            ? busineesAssigned.business_name
+                            : "hi"}
                         </div>
                       </Col>
                       <Col xs={2} className="mt-1 mb-1">
@@ -424,22 +434,19 @@ function DetailRepairStatus(props) {
                       <hr />
                     </Row>
                   ) : (
-                    <Row></Row>)
-                  }
+                    <Row></Row>
+                  )}
                 </div>
               </Container>
             );
           })}
         </div>
       )}
-      {isEditing ? 
-      <button 
-        style={editButton} 
-        onClick={()=>updateRepair()}
-      >
+      {isEditing ? (
+        <button style={editButton} onClick={() => updateRepair()}>
           Done
-      </button> : null
-      } 
+        </button>
+      ) : null}
     </div>
   );
 }

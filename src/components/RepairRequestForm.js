@@ -53,7 +53,7 @@ function RepairRequest(props) {
     const files = imageState[0];
     let i = 0;
     for (const file of imageState[0]) {
-      let key = file.coverPhoto ? `img_${i++}` : `img_${i++}`;
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
       if (file.file !== null) {
         newRequest[key] = file.file;
       } else {
