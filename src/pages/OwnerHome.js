@@ -17,6 +17,7 @@ function OwnerHome() {
   const [showFooter, setShowFooter] = React.useState(true);
   const [stage, setStage] = React.useState("DASHBOARD");
   const [properties, setProperties] = React.useState([]);
+  const [bills, setBills] = React.useState([]);
 
   const [selectedProperty, setSelectedProperty] = React.useState(null);
   const fetchProperties = async () => {
@@ -34,11 +35,31 @@ function OwnerHome() {
 
     setProperties(response.result);
   };
+  const fetchBills = async () => {
+    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+      navigate("/");
+      return;
+    }
+    const response = await get(`/ownerPropertyBills?owner_id=${user.user_uid}`);
+    if (stage === "PROPERTY") {
+      const bill = response.result.filter(
+        (item) => item.property_uid === selectedProperty.property_uid
+      )[0];
+    }
+
+    setBills(response.result);
+  };
   React.useEffect(() => {
     if (access_token === null) {
       navigate("/");
     }
     fetchProperties();
+  }, [access_token]);
+  React.useEffect(() => {
+    if (access_token === null) {
+      navigate("/");
+    }
+    fetchBills();
   }, [access_token]);
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,6 +80,7 @@ function OwnerHome() {
                 setShowFooter={setShowFooter}
                 setStage={setStage}
                 properties={properties}
+                bills={bills}
               />
             ) : stage === "PROPERTIES" ? (
               <OwnerProperties

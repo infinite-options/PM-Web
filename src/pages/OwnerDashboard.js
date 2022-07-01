@@ -15,7 +15,7 @@ import {
 import "./owner.css";
 
 function OwnerDashboard(props) {
-  const { setStage, properties } = props;
+  const { setStage, properties, bills } = props;
   const navigate = useNavigate();
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
@@ -112,7 +112,7 @@ function OwnerDashboard(props) {
             <Col
               style={
                 (mediumBold,
-                { font: "normal normal bold 20px Bahnschrift-Bold" })
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
               Properties
@@ -120,7 +120,7 @@ function OwnerDashboard(props) {
             <Col
               style={
                 (mediumBold,
-                { font: "normal normal bold 20px Bahnschrift-Bold" })
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
               {properties.length}
@@ -143,7 +143,7 @@ function OwnerDashboard(props) {
             <Col
               style={
                 (mediumBold,
-                { font: "normal normal bold 20px Bahnschrift-Bold" })
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
               Cash Flow
@@ -151,7 +151,7 @@ function OwnerDashboard(props) {
             <Col
               style={
                 (mediumBold,
-                { font: "normal normal bold 20px Bahnschrift-Bold" })
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
               ${cashFlow}
@@ -171,7 +171,7 @@ function OwnerDashboard(props) {
             <Col
               style={
                 (mediumBold,
-                { font: "normal normal bold 20px Bahnschrift-Bold" })
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
               Revenue
@@ -179,7 +179,7 @@ function OwnerDashboard(props) {
             <Col
               style={
                 (mediumBold,
-                { font: "normal normal bold 20px Bahnschrift-Bold" })
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
               ${revenueTotal}
@@ -395,7 +395,7 @@ function OwnerDashboard(props) {
             <Col
               style={
                 (mediumBold,
-                { font: "normal normal bold 20px Bahnschrift-Bold" })
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
               Expenses
@@ -403,7 +403,7 @@ function OwnerDashboard(props) {
             <Col
               style={
                 (mediumBold,
-                { font: "normal normal bold 20px Bahnschrift-Bold" })
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
               ${expenseTotal}
@@ -852,44 +852,57 @@ function OwnerDashboard(props) {
               borderRadius: "0px 0px 10px 10px",
             }}
           >
-            <Carousel.Item>
-              <div
-                style={{
-                  font: "normal normal bold 22px Bahnschrift-Bold",
-                  color: "#ffffff",
-                }}
-              >
-                Owner Bills
-              </div>
-
-              <Row className="text-center">
-                <Col
-                  xs={7}
-                  style={{
-                    font: "normal normal 16px Bahnschrift-Regular",
-                    color: "#ffffff",
-                    textAlign: "left",
-                  }}
-                >
-                  <div>Bill amount</div>
-
-                  <div>Address</div>
-                </Col>
-                <Col className="text-center">
+            {bills.map((bill) => {
+              return (
+                <Carousel.Item>
                   <div
+                    className="text-center mb-1 mx-2"
                     style={{
-                      backgroundColor: "white",
-                      color: "#007AFF",
-                      border: "1px solid #007AFF",
-                      borderRadius: "50px",
-                      width: "92px",
+                      font: "normal normal bold 22px Bahnschrift-Bold",
+                      color: "#ffffff",
+                      textAlign: "left",
                     }}
                   >
-                    Pay Bill
+                    Owner Bills
                   </div>
-                </Col>
-              </Row>
-            </Carousel.Item>
+
+                  <Row className="text-center mb-1 mx-2">
+                    <Col
+                      xs={7}
+                      style={{
+                        font: "normal normal 16px Bahnschrift-Regular",
+                        color: "#ffffff",
+                        textAlign: "left",
+                      }}
+                    >
+                      <div>
+                        $ {bill.amount_due} - {bill.description}
+                      </div>
+
+                      <div className="mb-3">
+                        {bill.address}
+                        {bill.unit !== "" ? " " + bill.unit : ""}, <br />
+                        {bill.city}, {bill.state} {bill.zip}
+                      </div>
+                    </Col>
+                    <Col className="text-center">
+                      <div
+                        className="mb-3"
+                        style={{
+                          backgroundColor: "white",
+                          color: "#007AFF",
+                          border: "1px solid #007AFF",
+                          borderRadius: "50px",
+                          width: "92px",
+                        }}
+                      >
+                        Pay Bill
+                      </div>
+                    </Col>
+                  </Row>
+                </Carousel.Item>
+              );
+            })}
           </Carousel>
         </div>
       </Container>

@@ -411,7 +411,6 @@ function PropertyForm(props) {
     currency: "USD",
   });
 
-
   console.log(activeDate);
   return (
     <div className="mx-2">
@@ -593,7 +592,7 @@ function PropertyForm(props) {
           </Col>
         </Row>
       )}
-      {/* {edit ? (
+      {edit ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
             Active Date {activeDate === "" ? required : ""}
@@ -611,7 +610,7 @@ function PropertyForm(props) {
           <h6>Active Date</h6>
           <p>{formatter.format(activeDate)}</p>
         </div>
-      )} */}
+      )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
@@ -650,7 +649,7 @@ function PropertyForm(props) {
       )}
       <PropertyAppliances state={applianceState} edit={edit} />
       <PropertyUtilities state={utilityState} edit={edit} />
-      <Container style={{paddingLeft: "0px"}} className="my-3">
+      <Container style={{ paddingLeft: "0px" }} className="my-3">
         <h6>Pets Allowed</h6>
         <Row>
           <Col className="d-flex ps-4">
@@ -671,7 +670,7 @@ function PropertyForm(props) {
           </Col>
         </Row>
       </Container>
-      <Container style={{paddingLeft: "0px"}} className="my-3">
+      <Container style={{ paddingLeft: "0px" }} className="my-3">
         <h6>Deposit can be used for last month's rent</h6>
         <Row>
           <Col className="d-flex ps-4">
