@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Carousel } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import Emergency from "../icons/Emergency.svg";
-import Document from "../icons/Document.svg";
-import Property from "../icons/Property.svg";
-import Repair from "../icons/Repair.svg";
-import UserSearch from "../icons/UserSearch.svg";
 import {
   tileImg,
   xSmall,
@@ -17,9 +12,10 @@ import {
   gray,
   small,
 } from "../utils/styles";
+import "./owner.css";
 
 function OwnerDashboard(props) {
-  const { setStage, properties } = props;
+  const { setStage, properties, bills } = props;
   const navigate = useNavigate();
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
@@ -83,9 +79,12 @@ function OwnerDashboard(props) {
   });
 
   return (
-    <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
+    <div
+      className="h-100"
+      style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
+    >
       <Header title="Owner Dashboard" />
-      <Container className="px-3 pb-5 mb-5">
+      <Container className="px-3 pb-5 mb-5 ">
         <div
           className="px-2 p-2"
           style={{
@@ -94,84 +93,100 @@ function OwnerDashboard(props) {
             opacity: 1,
           }}
         >
-          <h5 style={mediumBold}>Overview</h5>
+          <h5
+            style={
+              (mediumBold, { font: "normal normal bold 20px Helvetica-Bold" })
+            }
+          >
+            Overview
+          </h5>
           <Row
-            className="mx-2 my-2 p-3"
+            className="mx-2 mt-4 p-3"
             style={{
-              background: "#93EE9C 0% 0% no-repeat padding-box",
+              background: "#007AFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              color: "white",
+              cursor: "pointer",
             }}
-            onClick={() => setExpandProperties(!expandProperties)}
+            onClick={() => setStage("PROPERTIES")}
+            // onClick={() => setExpandProperties(!expandProperties)}
           >
-            <Col style={mediumBold}>Properties</Col>
-            <Col style={mediumBold}>{properties.length}</Col>
+            <Col
+              style={
+                (mediumBold,
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
+              }
+            >
+              Properties
+            </Col>
+            <Col
+              style={
+                (mediumBold,
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
+              }
+            >
+              {properties.length}
+            </Col>
           </Row>
-          {expandProperties ? (
-            <div>
-              <Container
-                style={{ border: "1px solid #707070", borderRadius: "5px" }}
-              >
-                <Row>
-                  <Col>
-                    <p style={{ ...small }} className=" m-1">
-                      Properties
-                    </p>
-                  </Col>
-                </Row>
 
-                {properties.map((property, i) => {
-                  return (
-                    <Row
-                      onClick={() => setStage("PROPERTIES")}
-                      style={{
-                        cursor: "pointer",
-                        background:
-                          i % 2 === 0
-                            ? "#FFFFFF 0% 0% no-repeat padding-box"
-                            : "#F3F3F3 0% 0% no-repeat padding-box",
-                      }}
-                    >
-                      <Col>
-                        <p style={{ ...small, ...mediumBold }} className=" m-1">
-                          {property.address} {property.unit}, {property.city},{" "}
-                          {property.state} {property.zip}
-                        </p>
-                      </Col>
-                    </Row>
-                  );
-                })}
-              </Container>
-            </div>
-          ) : (
-            ""
-          )}
           <Row
-            className="mx-2 my-2 p-3"
+            className="mx-2 mt-4 p-3"
             style={{
               background:
                 revenueTotal > expenseTotal
-                  ? "#93EE9C 0% 0% no-repeat padding-box"
-                  : "#FFBCBC 0% 0% no-repeat padding-box",
+                  ? "#3DB727 0% 0% no-repeat padding-box"
+                  : "#E3441F 0% 0% no-repeat padding-box",
               // background: "#93EE9C 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              color: "white",
             }}
           >
-            <Col style={mediumBold}>Cash Flow</Col>
-            <Col style={mediumBold}>${cashFlow}</Col>
+            <Col
+              style={
+                (mediumBold,
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
+              }
+            >
+              Cash Flow
+            </Col>
+            <Col
+              style={
+                (mediumBold,
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
+              }
+            >
+              ${cashFlow}
+            </Col>
           </Row>
           <Row
-            className="mx-2 my-2 p-3"
+            className="mx-2  mt-4 p-3"
             style={{
-              background: "#93EE9C 0% 0% no-repeat padding-box",
+              background: "#3DB727 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              color: "white",
+              cursor: "pointer",
             }}
             onClick={() => setExpandRevenue(!expandRevenue)}
           >
-            <Col style={mediumBold}>Revenue</Col>
-            <Col style={mediumBold}>${revenueTotal}</Col>
+            <Col
+              style={
+                (mediumBold,
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
+              }
+            >
+              Revenue
+            </Col>
+            <Col
+              style={
+                (mediumBold,
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
+              }
+            >
+              ${revenueTotal}
+            </Col>
           </Row>
           <div>
             {expandRevenue ? (
@@ -216,7 +231,11 @@ function OwnerDashboard(props) {
                           >
                             <Col>
                               <p
-                                style={{ ...small, ...mediumBold }}
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
                                 className=" m-1"
                               >
                                 {property.address}
@@ -250,7 +269,11 @@ function OwnerDashboard(props) {
                           >
                             <Col>
                               <p
-                                style={{ ...small, ...mediumBold }}
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
                                 className=" m-1"
                               >
                                 Rent
@@ -287,7 +310,11 @@ function OwnerDashboard(props) {
                           >
                             <Col>
                               <p
-                                style={{ ...small, ...mediumBold }}
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
                                 className=" m-1"
                               >
                                 Extra Charges
@@ -323,7 +350,14 @@ function OwnerDashboard(props) {
                     }}
                   >
                     <Col>
-                      <p style={{ ...small, ...mediumBold }} className=" m-1">
+                      <p
+                        style={{
+                          ...small,
+                          ...mediumBold,
+                          font: "normal normal bold 12x Helvetica-Bold",
+                        }}
+                        className=" m-1"
+                      >
                         Total
                       </p>
                     </Col>
@@ -351,16 +385,32 @@ function OwnerDashboard(props) {
             )}
           </div>
           <Row
-            className="mx-2 my-2 p-3"
+            className="mx-2  mt-4 p-3"
             style={{
-              background: "#FFBCBC 0% 0% no-repeat padding-box",
+              background: "#E3441F 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
+              color: "white",
+              cursor: "pointer",
             }}
             onClick={() => setExpandExpenses(!expandExpenses)}
           >
-            <Col style={mediumBold}>Expenses</Col>
-            <Col style={mediumBold}>${expenseTotal}</Col>
+            <Col
+              style={
+                (mediumBold,
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
+              }
+            >
+              Expenses
+            </Col>
+            <Col
+              style={
+                (mediumBold,
+                { font: "normal normal normal 20px Bahnschrift-Regular" })
+              }
+            >
+              ${expenseTotal}
+            </Col>
           </Row>
           <div>
             {expandExpenses ? (
@@ -408,7 +458,11 @@ function OwnerDashboard(props) {
                         >
                           <Col xs={6}>
                             <p
-                              style={{ ...small, ...mediumBold }}
+                              style={{
+                                ...small,
+                                ...mediumBold,
+                                font: "normal normal bold 12px Helvetica-Bold",
+                              }}
                               className="m-1"
                             >
                               {property.address}
@@ -444,6 +498,7 @@ function OwnerDashboard(props) {
                                 style={{
                                   ...small,
                                   ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
                                 }}
                                 className=" m-1"
                               >
@@ -490,6 +545,7 @@ function OwnerDashboard(props) {
                                 style={{
                                   ...small,
                                   ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
                                 }}
                                 className=" m-1"
                               >
@@ -537,6 +593,7 @@ function OwnerDashboard(props) {
                                 style={{
                                   ...small,
                                   ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
                                 }}
                                 className=" m-1"
                               >
@@ -583,6 +640,7 @@ function OwnerDashboard(props) {
                                 style={{
                                   ...small,
                                   ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
                                 }}
                                 className=" m-1"
                               >
@@ -629,6 +687,7 @@ function OwnerDashboard(props) {
                                 style={{
                                   ...small,
                                   ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
                                 }}
                                 className=" m-1"
                               >
@@ -675,6 +734,7 @@ function OwnerDashboard(props) {
                                 style={{
                                   ...small,
                                   ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
                                 }}
                                 className=" m-1"
                               >
@@ -719,7 +779,14 @@ function OwnerDashboard(props) {
                     }}
                   >
                     <Col>
-                      <p style={{ ...small, ...mediumBold }} className=" m-1">
+                      <p
+                        style={{
+                          ...small,
+                          ...mediumBold,
+                          font: "normal normal bold 12px Helvetica-Bold",
+                        }}
+                        className=" m-1"
+                      >
                         Total
                       </p>
                     </Col>
@@ -746,150 +813,101 @@ function OwnerDashboard(props) {
               ""
             )}
           </div>
-        </div>
+          <Carousel
+            interval={null}
+            className="mx-2 mt-4 p-3 "
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+            }}
+          >
+            <Carousel.Item>
+              <div
+                style={{
+                  textAlign: "center",
+                  font: "normal normal bold 22px Bahnschrift-Bold",
+                  color: "#007AFF",
+                }}
+              >
+                Resident Announcements
+              </div>
+              <div className="mx-2 mt-4 mb-4 p-3 ">No Announcements</div>
+            </Carousel.Item>
+            <Carousel.Item>
+              <div
+                style={{
+                  textAlign: "center",
+                  font: "normal normal bold 22px Bahnschrift-Bold",
+                  color: "#007AFF",
+                }}
+              >
+                Resident Announcements
+              </div>
+              <div className="mx-2 mt-4 mb-4 p-3 ">No Announcements</div>
+            </Carousel.Item>
+          </Carousel>
+          <Carousel
+            interval={null}
+            controls={false}
+            id="owner-bills"
+            className="mx-2 px-1 py-3 justify-content-center"
+            style={{
+              background: "#007AFF 0% 0% no-repeat padding-box",
+              borderRadius: "0px 0px 10px 10px",
+            }}
+          >
+            {bills.map((bill) => {
+              return (
+                <Carousel.Item>
+                  <div
+                    className="text-center mb-1 mx-2"
+                    style={{
+                      font: "normal normal bold 22px Bahnschrift-Bold",
+                      color: "#ffffff",
+                      textAlign: "left",
+                    }}
+                  >
+                    Owner Bills
+                  </div>
 
-        <Row className="px-2">
-          <Col
-            onClick={() => setStage("PROPERTIES")}
-            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
-            style={{
-              height: "87px",
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              boxShadow: "0px 3px 3px #00000029",
-              borderRadius: "20px",
-              cursor: "pointer",
-            }}
-          >
-            <Col>
-              <img src={Property} alt="Property" style={{ width: "50px" }} />
-            </Col>
-            <Col>
-              <p
-                style={{ ...xSmall, ...smallLine, ...mediumBold }}
-                className="mb-0"
-              >
-                {"    "}
-                Properties
-              </p>
-            </Col>
-          </Col>
-          <Col
-            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
-            style={{
-              height: "87px",
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              boxShadow: "0px 3px 3px #00000029",
-              borderRadius: "20px",
-              cursor: "pointer",
-            }}
-          >
-            <Col>
-              <img src={Document} alt="Document" style={{ width: "50px" }} />
-            </Col>
-            <Col>
-              <p
-                style={{ ...xSmall, ...smallLine, ...mediumBold }}
-                className="mb-0"
-              >
-                Lease <br /> Documents
-              </p>
-            </Col>
-          </Col>
-        </Row>
-        <Row className="px-2">
-          <Col
-            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
-            style={{
-              height: "87px",
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              boxShadow: "0px 3px 3px #00000029",
-              borderRadius: "20px",
-              cursor: "pointer",
-            }}
-          >
-            <Col>
-              <img src={Document} alt="Document" style={{ width: "50px" }} />
-            </Col>
-            <Col>
-              {" "}
-              <p
-                style={{ ...xSmall, ...smallLine, ...mediumBold }}
-                className="mb-0"
-              >
-                Manager <br /> Documents
-              </p>
-            </Col>
-          </Col>
-          <Col
-            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
-            style={{
-              height: "87px",
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              boxShadow: "0px 3px 3px #00000029",
-              borderRadius: "20px",
-              cursor: "pointer",
-            }}
-          >
-            <Col>
-              <img src={Repair} alt="Repair" style={{ width: "50px" }} />
-            </Col>
-            <Col>
-              <p
-                style={{ ...xSmall, ...smallLine, ...mediumBold }}
-                className="mb-0"
-              >
-                Request a <br /> Repair
-              </p>
-            </Col>
-          </Col>
-        </Row>
-        <Row className="px-2">
-          <Col
-            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
-            style={{
-              height: "87px",
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              boxShadow: "0px 3px 3px #00000029",
-              borderRadius: "20px",
-              cursor: "pointer",
-            }}
-          >
-            <Col>
-              <img src={Emergency} alt="Emergency" style={{ width: "50px" }} />
-            </Col>
-            <Col>
-              <p
-                style={{ ...xSmall, ...smallLine, ...mediumBold }}
-                className="mb-0"
-              >
-                Emergency
-              </p>
-            </Col>
-          </Col>
-          <Col
-            onClick={() => navigate("/search-pm")}
-            className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
-            style={{
-              height: "87px",
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              boxShadow: "0px 3px 3px #00000029",
-              borderRadius: "20px",
-              cursor: "pointer",
-            }}
-          >
-            <Col>
-              <img src={UserSearch} alt="Search" style={{ width: "50px" }} />
-            </Col>
-            <Col>
-              <p
-                style={{ ...xSmall, ...smallLine, ...mediumBold }}
-                className="mb-0"
-              >
-                Search <br /> Property <br /> Managers
-              </p>
-            </Col>
-          </Col>
-        </Row>
+                  <Row className="text-center mb-1 mx-2">
+                    <Col
+                      xs={7}
+                      style={{
+                        font: "normal normal 16px Bahnschrift-Regular",
+                        color: "#ffffff",
+                        textAlign: "left",
+                      }}
+                    >
+                      <div>
+                        $ {bill.amount_due} - {bill.description}
+                      </div>
+
+                      <div className="mb-3">
+                        {bill.address}
+                        {bill.unit !== "" ? " " + bill.unit : ""}, <br />
+                        {bill.city}, {bill.state} {bill.zip}
+                      </div>
+                    </Col>
+                    <Col className="text-center">
+                      <div
+                        className="mb-3"
+                        style={{
+                          backgroundColor: "white",
+                          color: "#007AFF",
+                          border: "1px solid #007AFF",
+                          borderRadius: "50px",
+                          width: "92px",
+                        }}
+                      >
+                        Pay Bill
+                      </div>
+                    </Col>
+                  </Row>
+                </Carousel.Item>
+              );
+            })}
+          </Carousel>
+        </div>
       </Container>
     </div>
   );

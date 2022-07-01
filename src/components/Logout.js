@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { bluePillButton } from "../utils/styles";
+import { redPillButton } from "../utils/styles";
 import AppContext from "../AppContext";
 
 function Logout(props) {
@@ -9,10 +9,10 @@ function Logout(props) {
   const { logout } = React.useContext(AppContext);
 
   return (
-    <div className="text-center d-flex flex-column justify-content-end">
+    <div className="text-center d-flex flex-column justify-content-end ">
       <Col>
         <Button
-          style={bluePillButton}
+          style={redPillButton}
           onClick={() => {
             logout();
             navigate("/");

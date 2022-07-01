@@ -12,8 +12,8 @@ import ManagementContract from "./ManagementContract";
 import TenantAgreement from "./TenantAgreement";
 import ConfirmDialog from "./ConfirmDialog";
 import File from "../icons/File.svg";
-import ArrowUp from "../icons/ArrowUp.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
+import BlueArrowUp from "../icons/BlueArrowUp.svg";
+import BlueArrowDown from "../icons/BlueArrowDown.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import { get, put } from "../utils/api";
@@ -28,6 +28,7 @@ import {
   mediumImg,
   bluePillButton,
   redPillButton,
+  smallImg,
 } from "../utils/styles";
 import CreateInsurance from "./CreateInsurance";
 function PropertyView(props) {
@@ -35,6 +36,9 @@ function PropertyView(props) {
   const [property, setProperty] = useState({
     images: "[]",
   });
+
+  const [tenantInfo, setTenantInfo] = useState([]);
+  const [rentalInfo, setRentalInfo] = useState([]);
   const fetchProperty = async () => {
     // const response = await get(`/propertyInfo?property_uid=${property_uid}`);
     const response = await get(
@@ -47,6 +51,39 @@ function PropertyView(props) {
     );
 
     setContracts(res.result);
+    setRentalInfo(response.result[0].rentalInfo);
+    let tenant = [];
+    let ti = {};
+    response.result[0].rentalInfo.map((rentalInfo) => {
+      if (rentalInfo.tenant_first_name.includes(",")) {
+        let tenant_fns = rentalInfo.tenant_first_name.split(",");
+        let tenant_lns = rentalInfo.tenant_last_name.split(",");
+        let tenant_emails = rentalInfo.tenant_email.split(",");
+        let tenant_phones = rentalInfo.tenant_phone_number.split(",");
+        console.log("tennat", tenant_fns);
+        for (let i = 0; i < tenant_fns.length; i++) {
+          ti["tenantFirstName"] = tenant_fns[i];
+          ti["tenantLastName"] = tenant_lns[i];
+          ti["tenantEmail"] = tenant_emails[i];
+          ti["tenantPhoneNumber"] = tenant_phones[i];
+          console.log("tennat", ti);
+          tenant.push(ti);
+          ti = {};
+        }
+        console.log("tennat", tenant);
+      } else {
+        ti = {
+          tenantFirstName: rentalInfo.tenant_first_name,
+          tenantLastName: rentalInfo.tenant_last_name,
+          tenantEmail: rentalInfo.tenant_email,
+          tenantPhoneNumber: rentalInfo.tenant_phone_number,
+        };
+        console.log("tennat", ti);
+        tenant.push(ti);
+      }
+    });
+    console.log("tennat", tenant);
+    setTenantInfo(tenant);
   };
   useState(() => {
     fetchProperty();
@@ -62,6 +99,7 @@ function PropertyView(props) {
   const [showCreateMortgage, setShowCreateMortgage] = useState(false);
   const [showCreateInsurance, setShowCreateInsurance] = useState(false);
   const [expandManagerDocs, setExpandManagerDocs] = useState(false);
+  const [expandAddManagerDocs, setExpandAddManagerDocs] = useState(false);
   const [expandLeaseDocs, setExpandLeaseDocs] = useState(false);
   const [showManagementContract, setShowManagementContract] = useState(false);
   const [showTenantAgreement, setShowTenantAgreement] = useState(false);
@@ -235,7 +273,14 @@ function PropertyView(props) {
         />
 
         <Header title="Properties" leftText="< Back" leftFn={headerBack} />
-        <Container className="pb-5 mb-5">
+        <Container
+          className="pb-5 mb-5"
+          style={{
+            background: "#E9E9E9 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
+          }}
+        >
           {editProperty ? (
             <PropertyForm
               property={property}
@@ -295,78 +340,292 @@ function PropertyView(props) {
                   {">"}
                 </div>
               </div>
-              <h5 className="mt-2 mb-0" style={mediumBold}>
-                ${property.listed_rent}/mo
-              </h5>
-              <p style={gray} className="mt-1 mb-2">
-                {property.address}
-                {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-                {property.city}, {property.state} {property.zip}
-              </p>
-              <div className="d-flex">
-                {property.management_status !== "ACCEPTED" ? (
-                  <p style={redPill} className="mb-0">
-                    New
-                  </p>
-                ) : property.rental_status === "ACTIVE" ? (
-                  <p style={greenPill} className="mb-0">
-                    Rented
-                  </p>
-                ) : property.rental_status === "PROCESSING" ? (
-                  <p style={greenPill} className="mb-0">
-                    Processing
-                  </p>
-                ) : (
-                  <p style={orangePill} className="mb-0">
-                    Not Rented
-                  </p>
-                )}
-              </div>
-              <PropertyCashFlow property={property} state={cashFlowState} />
+              <div
+                className="mx-2 my-2 p-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row>
+                  <Col>
+                    <h5
+                      className="mt-2 mb-0"
+                      style={{
+                        font: "normal normal normal 20px Bahnschrift-Regular",
+                        letterSpacing: "0px",
+                        color: "#000000",
+                      }}
+                    >
+                      ${property.listed_rent}/mo
+                    </h5>
+                  </Col>
+                  <Col>
+                    <div className="d-flex mt-2 mb-0 justify-content-end">
+                      {property.management_status !== "ACCEPTED" ? (
+                        <p style={redPill} className="mb-0">
+                          New
+                        </p>
+                      ) : property.rental_status === "ACTIVE" ? (
+                        <p style={greenPill} className="mb-0">
+                          Rented
+                        </p>
+                      ) : property.rental_status === "PROCESSING" ? (
+                        <p style={greenPill} className="mb-0">
+                          Processing
+                        </p>
+                      ) : (
+                        <p style={orangePill} className="mb-0">
+                          Not Rented
+                        </p>
+                      )}
+                    </div>
+                  </Col>
+                </Row>
 
-              <div onClick={() => setExpandDetails(!expandDetails)}>
-                <div className="d-flex justify-content-between mt-3">
-                  <h6 style={mediumBold} className="mb-1">
-                    Details
-                  </h6>
-                  <img src={expandDetails ? ArrowUp : ArrowDown} alt="Expand" />
-                </div>
-                <hr style={{ opacity: 1 }} className="mt-1" />
+                <p
+                  style={{
+                    font: "normal normal normal 20px Bahnschrift-Regular",
+                    letterSpacing: "0px",
+                    color: "#000000",
+                  }}
+                  className="mt-1 mb-2"
+                >
+                  {property.address}
+                  {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+                  {property.city}, {property.state} {property.zip}
+                </p>
+
+                <PropertyCashFlow property={property} state={cashFlowState} />
               </div>
-              {expandDetails ? (
-                <PropertyForm
-                  property={property}
-                  edit={editProperty}
-                  setEdit={setEditProperty}
-                />
-              ) : (
-                ""
-              )}
-              <div onClick={() => setExpandManagerDocs(!expandManagerDocs)}>
-                <div className="d-flex justify-content-between mt-3">
-                  <h6 style={mediumBold} className="mb-1">
-                    Management Contract
-                  </h6>
-                  <img
-                    src={expandManagerDocs ? ArrowUp : ArrowDown}
-                    alt="Expand"
-                  />
-                </div>
-                <hr style={{ opacity: 1 }} className="mt-1" />
-              </div>
-              {property.property_manager.length == 0 ? (
-                ""
-              ) : property.property_manager.length > 1 ? (
-                property.property_manager.map((p, i) =>
-                  p.management_status === "REJECTED" ? (
+              <div
+                className="mx-2 my-2 p-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <div
+                  style={mediumBold}
+                  // className=" d-flex flex-column justify-content-center align-items-center"
+                  onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}
+                >
+                  <div className="d-flex mt-1 flex-column justify-content-center align-items-center">
+                    <h6 style={mediumBold} className="mb-1">
+                      Tenant Info
+                    </h6>
+                  </div>
+                  {expandLeaseDocs ? (
+                    <div>
+                      <div>
+                        {tenantInfo.map((tf) => {
+                          return (
+                            <Row>
+                              <Col
+                                className=" d-flex align-items-left"
+                                style={{
+                                  font: "normal normal 600 18px Bahnschrift-Regular",
+                                }}
+                              >
+                                Tenant: {tf.tenantFirstName} {tf.tenantLastName}
+                              </Col>
+                              <Col className=" d-flex justify-content-end">
+                                <a href={`tel:${tf.tenantPhoneNumber}`}>
+                                  <img
+                                    src={Phone}
+                                    alt="Phone"
+                                    style={smallImg}
+                                  />
+                                </a>
+                                <a href={`mailto:${tf.tenantEmail}`}>
+                                  <img
+                                    src={Message}
+                                    alt="Message"
+                                    style={smallImg}
+                                  />
+                                </a>
+                              </Col>
+                            </Row>
+                          );
+                        })}
+                      </div>
+                      <div>
+                        {rentalInfo.map((rf) => {
+                          return (
+                            <Row>
+                              {JSON.parse(rf.rent_payments).map((rp) => {
+                                return (
+                                  <Row className="mt-1">
+                                    <Col
+                                      className=" d-flex align-items-left"
+                                      style={{
+                                        font: "normal normal 600 18px Bahnschrift-Regular",
+                                      }}
+                                    >
+                                      {rp.fee_name}:
+                                    </Col>
+                                    <Col className=" d-flex justify-content-end">
+                                      ${rp.charge}
+                                    </Col>
+                                  </Row>
+                                );
+                              })}
+
+                              <Row className="mt-1">
+                                <Col
+                                  style={{
+                                    font: "normal normal 600 18px Bahnschrift-Regular",
+                                  }}
+                                >
+                                  Lease Length
+                                </Col>
+                              </Row>
+                              <Row className="mt-1">
+                                <Col
+                                  className=" d-flex align-items-left"
+                                  style={{
+                                    font: "normal normal 600 18px Bahnschrift-Regular",
+                                  }}
+                                >
+                                  Start Date:
+                                </Col>
+                                <Col className=" d-flex justify-content-end">
+                                  {rf.lease_start}
+                                </Col>
+                              </Row>
+                              <Row className="mt-1">
+                                <Col
+                                  className=" d-flex align-items-left"
+                                  style={{
+                                    font: "normal normal 600 18px Bahnschrift-Regular",
+                                  }}
+                                >
+                                  End Date:
+                                </Col>
+                                <Col className=" d-flex justify-content-end">
+                                  {rf.lease_end}
+                                </Col>
+                              </Row>
+                            </Row>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
                     ""
+                  )}
+                  <div className="d-flex mt-1 flex-column justify-content-center align-items-center">
+                    <img
+                      src={expandLeaseDocs ? BlueArrowUp : BlueArrowDown}
+                      alt="Expand"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {Object.keys(property.managerInfo).length !== 0 ? (
+                <div
+                  className="mx-2 my-2 p-3"
+                  style={{
+                    background: "#FFFFFF 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <div
+                    style={mediumBold}
+                    className=" d-flex flex-column justify-content-center align-items-center"
+                    onClick={() => setExpandManagerDocs(!expandManagerDocs)}
+                  >
+                    <div className="d-flex mt-1">
+                      <h6 style={mediumBold} className="mb-1">
+                        Property Management Agreement
+                      </h6>
+                    </div>
+                    <div className="d-flex mt-1">
+                      <img
+                        src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
+                        alt="Expand"
+                      />
+                    </div>
+                  </div>
+                  {property.property_manager.length == 0 ? (
+                    ""
+                  ) : property.property_manager.length > 1 ? (
+                    property.property_manager.map((p, i) =>
+                      p.management_status === "REJECTED" ? (
+                        ""
+                      ) : expandManagerDocs &&
+                        p.management_status === "FORWARDED" ? (
+                        <div>
+                          <div className="d-flex justify-content-between mt-3">
+                            <div>
+                              <h6 style={mediumBold} className="mb-1">
+                                {p.manager_business_name}
+                              </h6>
+                              <p
+                                style={{ mediumBold, color: "blue" }}
+                                className="mb-1"
+                              >
+                                Property Manager Selected
+                              </p>
+                            </div>
+                            <div>
+                              <a href={`tel:${p.manager_phone_number}`}>
+                                <img
+                                  src={Phone}
+                                  alt="Phone"
+                                  style={mediumImg}
+                                />
+                              </a>
+                              <a href={`mailto:${p.manager_email}`}>
+                                <img
+                                  src={Message}
+                                  alt="Message"
+                                  style={mediumImg}
+                                />
+                              </a>
+                            </div>
+                          </div>
+                          <Row className="mt-4">
+                            <Col
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                                marginBottom: "25px",
+                              }}
+                            >
+                              {" "}
+                              <Button
+                                // onClick={rejectPropertyManager}
+                                onClick={() => {
+                                  setShowDialog(true);
+                                  setPmID(p.manager_id);
+                                }}
+                                variant="outline-primary"
+                                style={redPillButton}
+                              >
+                                Reject
+                              </Button>
+                            </Col>
+                          </Row>
+                          <hr style={{ opacity: 1 }} className="mt-1" />
+                        </div>
+                      ) : (
+                        ""
+                      )
+                    )
                   ) : expandManagerDocs &&
-                    p.management_status === "FORWARDED" ? (
+                    property.property_manager[0].management_status ===
+                      "FORWARDED" ? (
                     <div>
                       <div className="d-flex justify-content-between mt-3">
                         <div>
                           <h6 style={mediumBold} className="mb-1">
-                            {p.manager_business_name}
+                            {property.property_manager[0].manager_business_name}
                           </h6>
                           <p
                             style={{ mediumBold, color: "blue" }}
@@ -376,10 +635,14 @@ function PropertyView(props) {
                           </p>
                         </div>
                         <div>
-                          <a href={`tel:${p.manager_phone_number}`}>
+                          <a
+                            href={`tel:${property.property_manager[0].manager_phone_number}`}
+                          >
                             <img src={Phone} alt="Phone" style={mediumImg} />
                           </a>
-                          <a href={`mailto:${p.manager_email}`}>
+                          <a
+                            href={`mailto:${property.property_manager[0].manager_email}`}
+                          >
                             <img
                               src={Message}
                               alt="Message"
@@ -389,62 +652,7 @@ function PropertyView(props) {
                         </div>
                       </div>
                       <Row className="mt-4">
-                        <Col
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                            marginBottom: "25px",
-                          }}
-                        >
-                          {" "}
-                          <Button
-                            // onClick={rejectPropertyManager}
-                            onClick={() => {
-                              setShowDialog(true);
-                              setPmID(p.manager_id);
-                            }}
-                            variant="outline-primary"
-                            style={redPillButton}
-                          >
-                            Reject
-                          </Button>
-                        </Col>
-                      </Row>
-                      <hr style={{ opacity: 1 }} className="mt-1" />
-                    </div>
-                  ) : (
-                    ""
-                  )
-                )
-              ) : expandManagerDocs &&
-                property.property_manager[0].management_status ===
-                  "FORWARDED" ? (
-                <div>
-                  <div className="d-flex justify-content-between mt-3">
-                    <div>
-                      <h6 style={mediumBold} className="mb-1">
-                        {property.property_manager[0].manager_business_name}
-                      </h6>
-                      <p style={{ mediumBold, color: "blue" }} className="mb-1">
-                        Property Manager Selected
-                      </p>
-                    </div>
-                    <div>
-                      <a
-                        href={`tel:${property.property_manager[0].manager_phone_number}`}
-                      >
-                        <img src={Phone} alt="Phone" style={mediumImg} />
-                      </a>
-                      <a
-                        href={`mailto:${property.property_manager[0].manager_email}`}
-                      >
-                        <img src={Message} alt="Message" style={mediumImg} />
-                      </a>
-                    </div>
-                  </div>
-                  <Row className="mt-4">
-                    {/* <Col
+                        {/* <Col
                     style={{
                       display: "flex",
                       flexDirection: "row",
@@ -461,45 +669,133 @@ function PropertyView(props) {
                       Approve
                     </Button>
                   </Col> */}
-                    <Col
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-evenly",
-                        marginBottom: "25px",
-                      }}
-                    >
-                      {" "}
-                      <Button
-                        // onClick={rejectPropertyManager}
-                        onClick={() => {
-                          setShowDialog(true);
-                          setPmID(property.property_manager[0].manager_id);
-                        }}
-                        variant="outline-primary"
-                        style={redPillButton}
-                      >
-                        Reject
-                      </Button>
-                    </Col>
-                  </Row>
-                  <hr style={{ opacity: 1 }} className="mt-1" />
-                </div>
-              ) : (
-                ""
-              )}
-              {property.property_manager.length == 0 ? (
-                ""
-              ) : property.property_manager.length > 1 ? (
-                property.property_manager.map((p, i) =>
-                  p.management_status === "REJECTED" ? (
+                        <Col
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          {" "}
+                          <Button
+                            // onClick={rejectPropertyManager}
+                            onClick={() => {
+                              setShowDialog(true);
+                              setPmID(property.property_manager[0].manager_id);
+                            }}
+                            variant="outline-primary"
+                            style={redPillButton}
+                          >
+                            Reject
+                          </Button>
+                        </Col>
+                      </Row>
+                      <hr style={{ opacity: 1 }} className="mt-1" />
+                    </div>
+                  ) : (
                     ""
-                  ) : expandManagerDocs && p.management_status === "SENT" ? (
+                  )}
+                  {property.property_manager.length == 0 ? (
+                    ""
+                  ) : property.property_manager.length > 1 ? (
+                    property.property_manager.map((p, i) =>
+                      p.management_status === "REJECTED" ? (
+                        ""
+                      ) : expandManagerDocs &&
+                        p.management_status === "SENT" ? (
+                        <div>
+                          <div className="d-flex justify-content-between mt-3">
+                            <div>
+                              <h6 style={mediumBold} className="mb-1">
+                                {p.manager_business_name}
+                              </h6>
+                              <p
+                                style={{ mediumBold, color: "#41fc03" }}
+                                className="mb-1"
+                              >
+                                Contract in Review
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="d-flex flex-column gap-2">
+                            {contracts.map((contract, i) =>
+                              contract.business_uid === p.manager_id ? (
+                                <div
+                                  key={i}
+                                  onClick={() => selectContract(contract)}
+                                >
+                                  <div className="d-flex justify-content-between align-items-end">
+                                    <h6 style={mediumBold}>
+                                      {contract.contract_name}
+                                    </h6>
+                                    <img src={File} />
+                                  </div>
+                                </div>
+                              ) : (
+                                ""
+                              )
+                            )}
+                          </div>
+
+                          <Row className="mt-4">
+                            <Col
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                                marginBottom: "25px",
+                              }}
+                            >
+                              {" "}
+                              <Button
+                                onClick={() => {
+                                  setPmID(p.manager_id);
+                                  approvePropertyManager(p.manager_id);
+                                }}
+                                variant="outline-primary"
+                                style={bluePillButton}
+                              >
+                                Approve
+                              </Button>
+                            </Col>
+                            <Col
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                                marginBottom: "25px",
+                              }}
+                            >
+                              {" "}
+                              <Button
+                                // onClick={rejectPropertyManager}
+                                onClick={() => {
+                                  setShowDialog(true);
+                                  setPmID(p.manager_id);
+                                }}
+                                variant="outline-primary"
+                                style={redPillButton}
+                              >
+                                Reject
+                              </Button>
+                            </Col>
+                          </Row>
+                          <hr style={{ opacity: 1 }} className="mt-1" />
+                        </div>
+                      ) : (
+                        ""
+                      )
+                    )
+                  ) : expandManagerDocs &&
+                    property.property_manager[0].management_status ===
+                      "SENT" ? (
                     <div>
                       <div className="d-flex justify-content-between mt-3">
                         <div>
                           <h6 style={mediumBold} className="mb-1">
-                            {p.manager_business_name}
+                            {property.property_manager[0].manager_business_name}
                           </h6>
                           <p
                             style={{ mediumBold, color: "#41fc03" }}
@@ -509,10 +805,10 @@ function PropertyView(props) {
                           </p>
                         </div>
                       </div>
-
                       <div className="d-flex flex-column gap-2">
                         {contracts.map((contract, i) =>
-                          contract.business_uid === p.manager_id ? (
+                          contract.business_uid ===
+                          property.property_manager[0].manager_id ? (
                             <div
                               key={i}
                               onClick={() => selectContract(contract)}
@@ -542,10 +838,11 @@ function PropertyView(props) {
                           {" "}
                           <Button
                             onClick={() => {
-                              setPmID(p.manager_id);
-                              approvePropertyManager(p.manager_id);
+                              setPmID(property.property_manager[0].manager_id);
+                              approvePropertyManager(
+                                property.property_manager[0].manager_id
+                              );
                             }}
-                            variant="outline-primary"
                             style={bluePillButton}
                           >
                             Approve
@@ -564,7 +861,7 @@ function PropertyView(props) {
                             // onClick={rejectPropertyManager}
                             onClick={() => {
                               setShowDialog(true);
-                              setPmID(p.manager_id);
+                              setPmID(property.property_manager[0].manager_id);
                             }}
                             variant="outline-primary"
                             style={redPillButton}
@@ -577,103 +874,64 @@ function PropertyView(props) {
                     </div>
                   ) : (
                     ""
-                  )
-                )
-              ) : expandManagerDocs &&
-                property.property_manager[0].management_status === "SENT" ? (
-                <div>
-                  <div className="d-flex justify-content-between mt-3">
-                    <div>
-                      <h6 style={mediumBold} className="mb-1">
-                        {property.property_manager[0].manager_business_name}
-                      </h6>
-                      <p
-                        style={{ mediumBold, color: "#41fc03" }}
-                        className="mb-1"
-                      >
-                        Contract in Review
-                      </p>
-                    </div>
-                  </div>
-                  <div className="d-flex flex-column gap-2">
-                    {contracts.map((contract, i) =>
-                      contract.business_uid ===
-                      property.property_manager[0].manager_id ? (
-                        <div key={i} onClick={() => selectContract(contract)}>
-                          <div className="d-flex justify-content-between align-items-end">
-                            <h6 style={mediumBold}>{contract.contract_name}</h6>
-                            <img src={File} />
+                  )}
+                  {expandManagerDocs &&
+                  property.management_status !== "ACCEPTED" ? (
+                    ""
+                  ) : expandManagerDocs &&
+                    property.property_manager.length > 1 ? (
+                    property.property_manager.map((p, i) =>
+                      p.management_status === "REJECTED" ? (
+                        ""
+                      ) : p.manager_business_name !== null &&
+                        p.management_status === "ACCEPTED" ? (
+                        <div>
+                          <div className="d-flex justify-content-between mt-3">
+                            <div>
+                              <h6 style={mediumBold} className="mb-1">
+                                {p.manager_business_name}
+                              </h6>
+                              <p
+                                style={{ ...gray, ...mediumBold }}
+                                className="mb-1"
+                              >
+                                Property Manager
+                              </p>
+                            </div>
+                            <div>
+                              <a href={`tel:${p.manager_phone_number}`}>
+                                <img
+                                  src={Phone}
+                                  alt="Phone"
+                                  style={mediumImg}
+                                />
+                              </a>
+                              <a href={`mailto:${p.manager_email}`}>
+                                <img
+                                  src={Message}
+                                  alt="Message"
+                                  style={mediumImg}
+                                />
+                              </a>
+                            </div>
                           </div>
+
+                          <hr style={{ opacity: 1 }} className="mt-1" />
                         </div>
                       ) : (
                         ""
                       )
-                    )}
-                  </div>
-
-                  <Row className="mt-4">
-                    <Col
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-evenly",
-                        marginBottom: "25px",
-                      }}
-                    >
-                      {" "}
-                      <Button
-                        onClick={() => {
-                          setPmID(property.property_manager[0].manager_id);
-                          approvePropertyManager(
-                            property.property_manager[0].manager_id
-                          );
-                        }}
-                        style={bluePillButton}
-                      >
-                        Approve
-                      </Button>
-                    </Col>
-                    <Col
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-evenly",
-                        marginBottom: "25px",
-                      }}
-                    >
-                      {" "}
-                      <Button
-                        // onClick={rejectPropertyManager}
-                        onClick={() => {
-                          setShowDialog(true);
-                          setPmID(property.property_manager[0].manager_id);
-                        }}
-                        variant="outline-primary"
-                        style={redPillButton}
-                      >
-                        Reject
-                      </Button>
-                    </Col>
-                  </Row>
-                  <hr style={{ opacity: 1 }} className="mt-1" />
-                </div>
-              ) : (
-                ""
-              )}
-              {expandManagerDocs &&
-              property.management_status !== "ACCEPTED" ? (
-                ""
-              ) : expandManagerDocs && property.property_manager.length > 1 ? (
-                property.property_manager.map((p, i) =>
-                  p.management_status === "REJECTED" ? (
-                    ""
-                  ) : p.manager_business_name !== null &&
-                    p.management_status === "ACCEPTED" ? (
+                    )
+                  ) : expandManagerDocs &&
+                    property.property_manager[0].manager_business_name !==
+                      null &&
+                    property.property_manager[0].management_status ===
+                      "ACCEPTED" ? (
                     <div>
                       <div className="d-flex justify-content-between mt-3">
                         <div>
                           <h6 style={mediumBold} className="mb-1">
-                            {p.manager_business_name}
+                            {property.property_manager[0].manager_business_name}
                           </h6>
                           <p
                             style={{ ...gray, ...mediumBold }}
@@ -683,10 +941,14 @@ function PropertyView(props) {
                           </p>
                         </div>
                         <div>
-                          <a href={`tel:${p.manager_phone_number}`}>
+                          <a
+                            href={`tel:${property.property_manager[0].manager_phone_number}`}
+                          >
                             <img src={Phone} alt="Phone" style={mediumImg} />
                           </a>
-                          <a href={`mailto:${p.manager_email}`}>
+                          <a
+                            href={`mailto:${property.property_manager[0].manager_email}`}
+                          >
                             <img
                               src={Message}
                               alt="Message"
@@ -700,74 +962,85 @@ function PropertyView(props) {
                     </div>
                   ) : (
                     ""
-                  )
-                )
-              ) : expandManagerDocs &&
-                property.property_manager[0].manager_business_name !== null &&
-                property.property_manager[0].management_status ===
-                  "ACCEPTED" ? (
-                <div>
-                  <div className="d-flex justify-content-between mt-3">
-                    <div>
-                      <h6 style={mediumBold} className="mb-1">
-                        {property.property_manager[0].manager_business_name}
-                      </h6>
-                      <p style={{ ...gray, ...mediumBold }} className="mb-1">
-                        Property Manager
-                      </p>
-                    </div>
-                    <div>
-                      <a
-                        href={`tel:${property.property_manager[0].manager_phone_number}`}
-                      >
-                        <img src={Phone} alt="Phone" style={mediumImg} />
-                      </a>
-                      <a
-                        href={`mailto:${property.property_manager[0].manager_email}`}
-                      >
-                        <img src={Message} alt="Message" style={mediumImg} />
-                      </a>
-                    </div>
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
+              <div
+                className="mx-2 my-2 p-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <div
+                  style={mediumBold}
+                  className=" d-flex flex-column justify-content-center align-items-center"
+                  onClick={() => setExpandAddManagerDocs(!expandAddManagerDocs)}
+                >
+                  <div className="d-flex mt-1">
+                    <h6 style={mediumBold} className="mb-1">
+                      {Object.keys(property.managerInfo).length == 0
+                        ? "Select a Property Manager"
+                        : "Change Property Manager"}
+                    </h6>
                   </div>
-
-                  <hr style={{ opacity: 1 }} className="mt-1" />
+                  {expandAddManagerDocs ? (
+                    <ManagerDocs
+                      property={property}
+                      addDocument={addContract}
+                      selectContract={selectContract}
+                      reload={reloadProperty}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <div className="d-flex mt-1">
+                    <img
+                      src={expandAddManagerDocs ? BlueArrowUp : BlueArrowDown}
+                      alt="Expand"
+                    />
+                  </div>
                 </div>
-              ) : (
-                ""
-              )}
-
-              {expandManagerDocs ? (
-                <ManagerDocs
-                  property={property}
-                  addDocument={addContract}
-                  selectContract={selectContract}
-                  reload={reloadProperty}
-                />
-              ) : (
-                ""
-              )}
-
-              <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
-                <div className="d-flex justify-content-between mt-3">
-                  <h6 style={mediumBold} className="mb-1">
-                    Tenant Agreement
-                  </h6>
-                  <img
-                    src={expandLeaseDocs ? ArrowUp : ArrowDown}
-                    alt="Expand"
-                  />
-                </div>
-                <hr style={{ opacity: 1 }} className="mt-1" />
               </div>
-              {expandLeaseDocs ? (
-                <LeaseDocs
-                  property={property}
-                  addDocument={addAgreement}
-                  selectAgreement={selectAgreement}
-                />
-              ) : (
-                ""
-              )}
+
+              <div
+                className="mx-2 my-2 p-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <div
+                  style={mediumBold}
+                  onClick={() => setExpandDetails(!expandDetails)}
+                  className=" d-flex flex-column justify-content-center align-items-center"
+                >
+                  <div className="d-flex mt-1">
+                    <h6 style={mediumBold} className="mb-1">
+                      Property Details
+                    </h6>
+                  </div>
+                  {expandDetails ? (
+                    <PropertyForm
+                      property={property}
+                      edit={editProperty}
+                      setEdit={setEditProperty}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <div className="d-flex mt-1">
+                    <img
+                      src={expandDetails ? BlueArrowUp : BlueArrowDown}
+                      alt="Expand"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </Container>

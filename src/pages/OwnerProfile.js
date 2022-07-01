@@ -13,7 +13,7 @@ function OwnerProfile(props) {
   const { userData, refresh } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
-  const { errorMessage, setShowFooter, setFooterTab } = props;
+  const { errorMessage, setShowFooter, setFooterTab, setStage } = props;
   const [profileInfo, setProfileInfo] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -122,7 +122,7 @@ function OwnerProfile(props) {
         title="Profile"
         leftText={editProfile ? "Cancel" : "< Back"}
         leftFn={() =>
-          editProfile ? setEditProfile(false) : setFooterTab("DASHBOARD")
+          editProfile ? setEditProfile(false) : setStage("DASHBOARD")
         }
         rightText={editProfile ? "Save" : "Edit"}
         rightFn={() => (editProfile ? submitInfo() : setEditProfile(true))}

@@ -18,6 +18,7 @@ import {
   xSmall,
   hidden,
   redPill,
+  mediumBold,
 } from "../utils/styles";
 
 function OwnerProperties(props) {
@@ -73,123 +74,159 @@ function OwnerProperties(props) {
   };
   console.log(propertiesUnique);
   return stage === "LIST" ? (
-    <div className="pb-5 mb-5">
+    <div
+      className="pb-5 mb-5"
+      style={{
+        background: "#E9E9E9 0% 0% no-repeat padding-box",
+        borderRadius: "10px",
+        opacity: 1,
+      }}
+    >
       <Header
         title="Properties"
-        leftText="+ New"
-        leftFn={() => setStage("NEW")}
-        rightText="Sort by"
+        rightText="+ New"
+        rightFn={() => setStage("NEW")}
+        // leftText="< Back"
+        // leftFn={() => setStage("DASHBOARD")}
+        // leftFn={() => {
+        //   navigate("/owner");
+        // }}
       />
-      {propertiesUnique.map((property, i) => (
-        <Container
-          key={i}
-          onClick={() => selectProperty(property)}
-          className="pt-1 mb-4"
-          style={{ height: "100px" }}
-        >
-          <Row className="h-100">
-            <Col xs={4} className="h-100">
-              <div style={tileImg}>
-                {JSON.parse(property.images).length > 0 ? (
-                  <img
-                    src={JSON.parse(property.images)[0]}
-                    alt="Property"
-                    className="w-100 h-100"
-                    style={{ borderRadius: "4px", objectFit: "cover" }}
-                  />
-                ) : (
-                  ""
-                )}
-              </div>
-            </Col>
-            <Col className="ps-0">
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                  ${property.listed_rent}/mo
-                </h5>
-                {property.management_status !== "ACCEPTED" ? (
-                  <p style={redPill} className="mb-0">
-                    New
-                  </p>
-                ) : property.rental_status === "ACTIVE" ? (
-                  <p style={greenPill} className="mb-0">
-                    Rented
-                  </p>
-                ) : property.rental_status === "PROCESSING" ? (
-                  <p style={greenPill} className="mb-0">
-                    Processing
-                  </p>
-                ) : (
-                  <p style={orangePill} className="mb-0">
-                    Not Rented
-                  </p>
-                )}
-              </div>
-              <p style={gray} className="mt-2 mb-0">
-                {property.address}
-                {property.unit !== "" ? " " + property.unit : ""},{" "}
-                {property.city}, {property.state} <br />
-                {property.zip}
-              </p>
-              {property.property_manager.length == 0 ? (
-                <p style={{ ...blue, ...xSmall }} className="mb-0">
-                  No Manager
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        {propertiesUnique.map((property, i) => (
+          <Container
+            key={i}
+            onClick={() => selectProperty(property)}
+            className="pt-1 mb-4"
+            style={{ height: "100px" }}
+          >
+            <Row className="h-100">
+              <Col xs={4} className="h-100">
+                <div style={tileImg} className="mt-1">
+                  {JSON.parse(property.images).length > 0 ? (
+                    <img
+                      src={JSON.parse(property.images)[0]}
+                      alt="Property"
+                      className="w-100 h-100"
+                      style={{ borderRadius: "4px", objectFit: "cover" }}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </Col>
+              <Col className="ps-0">
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0" style={mediumBold}>
+                    ${property.listed_rent}/mo
+                  </h5>
+                  <div className="d-flex justify-content-end">
+                    {property.management_status !== "ACCEPTED" ? (
+                      <p style={redPill} className="mb-0">
+                        New
+                      </p>
+                    ) : property.rental_status === "ACTIVE" ? (
+                      <p style={greenPill} className="mb-0">
+                        Rented
+                      </p>
+                    ) : property.rental_status === "PROCESSING" ? (
+                      <p style={greenPill} className="mb-0">
+                        Processing
+                      </p>
+                    ) : (
+                      <p style={orangePill} className="mb-0">
+                        Not Rented
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <p
+                  style={{
+                    color: "#777777",
+                    font: "normal normal normal 14px Bahnschrift-Regular",
+                  }}
+                  className="mt-0 mb-0"
+                >
+                  {property.address}
+                  {property.unit !== "" ? " " + property.unit : ""}, <br />
+                  {property.city}, {property.state} {property.zip}
                 </p>
-              ) : property.management_status === "ACCEPTED" ? (
-                <div className="d-flex">
-                  <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                    <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      Manager: {property.managerInfo.manager_business_name}`
-                    </p>
-                  </div>
-                  <div
-                    style={property.managerInfo.manager_id ? {} : hidden}
-                    onClick={stopPropagation}
-                  >
-                    <a
-                      href={`tel:${property.managerInfo.manager_phone_number}`}
+                {property.property_manager.length == 0 ? (
+                  <p style={{ ...blue, ...xSmall }} className="mb-0">
+                    No Manager
+                  </p>
+                ) : property.management_status === "ACCEPTED" ? (
+                  <div className="d-flex flex-column">
+                    <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                      <p
+                        style={{
+                          ...blue,
+                          ...xSmall,
+                          font: "normal normal normal 12px/12px Bahnschrift-Regular",
+                        }}
+                        className="mb-1"
+                      >
+                        Manager: {property.managerInfo.manager_business_name}
+                      </p>
+                    </div>
+                    <div
+                      className="mb-1"
+                      style={property.managerInfo.manager_id ? {} : hidden}
+                      onClick={stopPropagation}
                     >
-                      <img src={Phone} alt="Phone" style={smallImg} />
-                    </a>
-                    <a href={`mailto:${property.managerInfo.manager_email}`}>
-                      <img src={Message} alt="Message" style={smallImg} />
-                    </a>
+                      <a
+                        href={`tel:${property.managerInfo.manager_phone_number}`}
+                      >
+                        <img src={Phone} alt="Phone" style={smallImg} />
+                      </a>
+                      <a href={`mailto:${property.managerInfo.manager_email}`}>
+                        <img src={Message} alt="Message" style={smallImg} />
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="d-flex">
-                  <div className="d-flex align-items-start flex-column">
-                    {property.management.forwarded > 0 ? (
-                      <div style={{ ...blue, ...xSmall }} className="mb-0">
-                        {property.management.forwarded} Property Manager
-                        Selected
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                ) : (
+                  <div className="d-flex">
+                    <div className="d-flex align-items-start flex-column">
+                      {property.management.forwarded > 0 ? (
+                        <div style={{ ...blue, ...xSmall }} className="mb-0">
+                          {property.management.forwarded} Property Manager
+                          Selected
+                        </div>
+                      ) : (
+                        ""
+                      )}
 
-                    {property.management.sent > 0 ? (
-                      <div style={{ ...blue, ...xSmall }} className="mb-0">
-                        {property.management.sent} Contract in Review
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                      {property.management.sent > 0 ? (
+                        <div style={{ ...blue, ...xSmall }} className="mb-0">
+                          {property.management.sent} Contract in Review
+                        </div>
+                      ) : (
+                        ""
+                      )}
 
-                    {property.management.refused > 0 ? (
-                      <div style={{ ...blue, ...xSmall }} className="mb-0">
-                        {property.management.sent} PM declined
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                      {property.management.refused > 0 ? (
+                        <div style={{ ...blue, ...xSmall }} className="mb-0">
+                          {property.management.sent} PM declined
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
-            </Col>
-          </Row>
-        </Container>
-      ))}
+                )}
+              </Col>
+            </Row>
+            <hr className="mt-4" />
+          </Container>
+        ))}
+      </div>
     </div>
   ) : stage === "NEW" ? (
     <div className="flex-grow-1">

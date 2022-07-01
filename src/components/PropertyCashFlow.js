@@ -131,15 +131,29 @@ function PropertyCashFlow(props) {
         style={{
           background:
             revenue > expense
-              ? "#93EE9C 0% 0% no-repeat padding-box"
-              : "#FFBCBC 0% 0% no-repeat padding-box",
+              ? "#3DB727 0% 0% no-repeat padding-box"
+              : "#E3441F 0% 0% no-repeat padding-box",
           boxShadow: "0px 3px 3px #00000029",
           borderRadius: "20px",
         }}
       >
-        <Col style={mediumBold}>Cash Flow</Col>
+        <Col
+          style={{
+            font: "normal normal normal 20px Bahnschrift-Regular",
+            color: "#ffffff",
+          }}
+        >
+          Cash Flow
+        </Col>
         <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
-          <Col style={mediumBold}>${cashFlow}</Col>
+          <Col
+            style={{
+              font: "normal normal normal 20px Bahnschrift-Regular",
+              color: "#ffffff",
+            }}
+          >
+            ${cashFlow}
+          </Col>
           <Col></Col>
         </Col>
       </Row>
@@ -147,14 +161,28 @@ function PropertyCashFlow(props) {
         onClick={() => setExpandRevenue(!expandRevenue)}
         className="mx-2 my-2 p-3"
         style={{
-          background: "#93EE9C 0% 0% no-repeat padding-box",
+          background: "#3DB727 0% 0% no-repeat padding-box",
           boxShadow: "0px 3px 3px #00000029",
           borderRadius: "20px",
         }}
       >
-        <Col style={mediumBold}>Revenue</Col>
+        <Col
+          style={{
+            font: "normal normal normal 20px Bahnschrift-Regular",
+            color: "#ffffff",
+          }}
+        >
+          Revenue
+        </Col>
         <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
-          <Col style={mediumBold}>${revenue}</Col>
+          <Col
+            style={{
+              font: "normal normal normal 20px Bahnschrift-Regular",
+              color: "#ffffff",
+            }}
+          >
+            ${revenue}
+          </Col>
           <Col></Col>
         </Col>
       </Row>
@@ -279,14 +307,28 @@ function PropertyCashFlow(props) {
         onClick={() => setExpandExpenses(!expandExpenses)}
         className="mx-2 my-2 p-3"
         style={{
-          background: "#FFBCBC 0% 0% no-repeat padding-box",
+          background: "#E3441F 0% 0% no-repeat padding-box",
           boxShadow: "0px 3px 3px #00000029",
           borderRadius: "20px",
         }}
       >
-        <Col style={mediumBold}>Expenses</Col>
+        <Col
+          style={{
+            font: "normal normal normal 20px Bahnschrift-Regular",
+            color: "#ffffff",
+          }}
+        >
+          Expenses
+        </Col>
         <Col className="text-center  d-flex flex-row justify-content-between align-items-center">
-          <Col style={mediumBold}>${expense}</Col>
+          <Col
+            style={{
+              font: "normal normal normal 20px Bahnschrift-Regular",
+              color: "#ffffff",
+            }}
+          >
+            ${expense}
+          </Col>
           <Col>
             <img
               style={{ width: "20px" }}

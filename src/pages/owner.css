@@ -1,0 +1,14 @@
+.carousel-indicators button {
+    background-color: #ff8500 !important;
+    border: 2px solid #ff8500 !important;
+    border-radius: 100% !important;
+    width: 10px !important;
+    height: 10px !important;
+}
+#owner-bills .carousel-indicators button{
+    background-color: #000000 !important;
+    border: 2px solid #000000 !important;
+    border-radius: 100% !important;
+    width: 10px !important;
+    height: 10px !important;
+}
