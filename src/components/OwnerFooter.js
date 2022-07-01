@@ -48,7 +48,7 @@ function Footer(props) {
       <Col className="text-center" onClick={() => setTab("REPAIRS")}>
         <img
           src={tab === "REPAIRS" ? Repairs_Blue : Repairs_Gray}
-          alt="Roles"
+          alt="Repairs"
         />
         <p style={tab === "REPAIRS" ? smallBlue : smallGray} className="mb-0">
           Repairs

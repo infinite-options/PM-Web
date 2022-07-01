@@ -9,8 +9,10 @@ import OwnerProfileTab from "./OwnerProfileTab";
 import OwnerProfile from "./OwnerProfile";
 import OwnerSwitchRole from "../components/OwnerSwitchRole";
 import SearchPM from "./SearchPM";
+import OwnerRepairList from "../components/OwnerRepairList";
+import OwnerRepairRequest from "../components/OwnerRepairRequest";
 
-function OwnerHome() {
+function OwnerHome(props) {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
@@ -19,7 +21,7 @@ function OwnerHome() {
   const [stage, setStage] = useState("DASHBOARD");
   const [properties, setProperties] = useState([]);
   const [bills, setBills] = useState([]);
-
+  const [ownerID, setOwnerID] = useState([]);
   const [profileInfo, setProfileInfo] = useState([]);
 
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -28,6 +30,7 @@ function OwnerHome() {
       navigate("/");
       return;
     }
+    setOwnerID(user.user_uid);
     const response = await get(`/propertiesOwner?owner_id=${user.user_uid}`);
     if (stage === "PROPERTY") {
       const property = response.result.filter(
@@ -52,13 +55,21 @@ function OwnerHome() {
 
     setBills(response.result);
   };
+
   const fetchProfile = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
       navigate("/");
       return;
     }
+
     const response = await get("/ownerProfileInfo", access_token);
     console.log(response);
+
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+      return;
+    }
     setProfileInfo(response.result[0]);
   };
   useEffect(() => {
@@ -151,10 +162,26 @@ function OwnerHome() {
           ""
         )}
         {footerTab === "REPAIRS" ? (
-          <OwnerSwitchRole
-            setShowFooter={setShowFooter}
-            setTab={setFooterTab}
-          />
+          <div>
+            {stage === "DASHBOARD" ? (
+              <OwnerRepairList
+                ownerID={ownerID}
+                properties={properties}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+                setStage={setStage}
+              />
+            ) : stage === "REPAIRSREQUEST" ? (
+              <OwnerRepairRequest
+                setStage={setStage}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+                properties={properties}
+              />
+            ) : (
+              ""
+            )}
+          </div>
         ) : (
           ""
         )}
