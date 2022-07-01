@@ -608,7 +608,7 @@ function PropertyForm(props) {
       ) : (
         <div>
           <h6>Active Date</h6>
-          <p>{formatter.format(activeDate)}</p>
+          <p>{activeDate}</p>
         </div>
       )}
       {edit ? (

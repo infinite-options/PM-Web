@@ -18,6 +18,7 @@ import {
   xSmall,
   hidden,
   redPill,
+  mediumBold,
 } from "../utils/styles";
 
 function OwnerProperties(props) {
@@ -123,13 +124,7 @@ function OwnerProperties(props) {
               </Col>
               <Col className="ps-0">
                 <div className="d-flex justify-content-between align-items-center">
-                  <h5
-                    className="mb-0"
-                    style={{
-                      fontWeight: "600",
-                      font: " normal normal normal 22px Bahnschrift-Regular",
-                    }}
-                  >
+                  <h5 className="mb-0" style={mediumBold}>
                     ${property.listed_rent}/mo
                   </h5>
                   <div className="d-flex justify-content-end">

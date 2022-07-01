@@ -79,9 +79,12 @@ function OwnerDashboard(props) {
   });
 
   return (
-    <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
+    <div
+      className="h-100"
+      style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
+    >
       <Header title="Owner Dashboard" />
-      <Container className="px-3 pb-5 mb-5">
+      <Container className="px-3 pb-5 mb-5 ">
         <div
           className="px-2 p-2"
           style={{
@@ -98,7 +101,7 @@ function OwnerDashboard(props) {
             Overview
           </h5>
           <Row
-            className="mx-2 my-2 p-3"
+            className="mx-2 mt-4 p-3"
             style={{
               background: "#007AFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
@@ -128,7 +131,7 @@ function OwnerDashboard(props) {
           </Row>
 
           <Row
-            className="mx-2 my-2 p-3"
+            className="mx-2 mt-4 p-3"
             style={{
               background:
                 revenueTotal > expenseTotal
@@ -158,7 +161,7 @@ function OwnerDashboard(props) {
             </Col>
           </Row>
           <Row
-            className="mx-2 my-2 p-3"
+            className="mx-2  mt-4 p-3"
             style={{
               background: "#3DB727 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
@@ -382,7 +385,7 @@ function OwnerDashboard(props) {
             )}
           </div>
           <Row
-            className="mx-2 my-2 p-3"
+            className="mx-2  mt-4 p-3"
             style={{
               background: "#E3441F 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
@@ -812,7 +815,7 @@ function OwnerDashboard(props) {
           </div>
           <Carousel
             interval={null}
-            className="mx-2 my-2 p-3 "
+            className="mx-2 mt-4 p-3 "
             style={{
               background: "#F3F3F3 0% 0% no-repeat padding-box",
             }}
@@ -827,7 +830,7 @@ function OwnerDashboard(props) {
               >
                 Resident Announcements
               </div>
-              <div className="pb-3">No Announcements</div>
+              <div className="mx-2 mt-4 mb-4 p-3 ">No Announcements</div>
             </Carousel.Item>
             <Carousel.Item>
               <div
@@ -839,7 +842,7 @@ function OwnerDashboard(props) {
               >
                 Resident Announcements
               </div>
-              <div className="pb-3">No Announcements</div>
+              <div className="mx-2 mt-4 mb-4 p-3 ">No Announcements</div>
             </Carousel.Item>
           </Carousel>
           <Carousel

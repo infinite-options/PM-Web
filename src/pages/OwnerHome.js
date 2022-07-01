@@ -1,25 +1,28 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { get } from "../utils/api";
 import OwnerFooter from "../components/OwnerFooter";
 import AppContext from "../AppContext";
 import OwnerProperties from "./OwnerProperties";
 import OwnerDashboard from "./OwnerDashboard";
+import OwnerProfileTab from "./OwnerProfileTab";
 import OwnerProfile from "./OwnerProfile";
-import SwitchRole from "../components/SwitchRole";
+import OwnerSwitchRole from "../components/OwnerSwitchRole";
 import SearchPM from "./SearchPM";
 
 function OwnerHome() {
   const navigate = useNavigate();
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const [footerTab, setFooterTab] = React.useState("DASHBOARD");
-  const [showFooter, setShowFooter] = React.useState(true);
-  const [stage, setStage] = React.useState("DASHBOARD");
-  const [properties, setProperties] = React.useState([]);
-  const [bills, setBills] = React.useState([]);
+  const [footerTab, setFooterTab] = useState("DASHBOARD");
+  const [showFooter, setShowFooter] = useState(true);
+  const [stage, setStage] = useState("DASHBOARD");
+  const [properties, setProperties] = useState([]);
+  const [bills, setBills] = useState([]);
 
-  const [selectedProperty, setSelectedProperty] = React.useState(null);
+  const [profileInfo, setProfileInfo] = useState([]);
+
+  const [selectedProperty, setSelectedProperty] = useState(null);
   const fetchProperties = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
       navigate("/");
@@ -49,21 +52,38 @@ function OwnerHome() {
 
     setBills(response.result);
   };
-  React.useEffect(() => {
+  const fetchProfile = async () => {
+    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+      navigate("/");
+      return;
+    }
+    const response = await get("/ownerProfileInfo", access_token);
+    console.log(response);
+    setProfileInfo(response.result[0]);
+  };
+  useEffect(() => {
     if (access_token === null) {
       navigate("/");
     }
     fetchProperties();
   }, [access_token]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (access_token === null) {
       navigate("/");
     }
     fetchBills();
   }, [access_token]);
-  React.useEffect(() => {
+  useEffect(() => {
+    if (access_token === null) {
+      navigate("/");
+    }
+    fetchProfile();
+  }, [access_token]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [stage, footerTab]);
+
   const setTab = (tab) => {
     if (footerTab === "DASHBOARD" && tab === "DASHBOARD") {
       setStage("DASHBOARD");
@@ -103,19 +123,45 @@ function OwnerHome() {
           ""
         )}
         {footerTab === "PROFILE" ? (
-          <OwnerProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
+          <div>
+            {stage === "DASHBOARD" ? (
+              <OwnerProfileTab
+                profileInfo={profileInfo}
+                setStage={setStage}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
+            ) : stage === "ROLES" ? (
+              <OwnerSwitchRole
+                setStage={setStage}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
+            ) : stage === "PROFILE" ? (
+              <OwnerProfile
+                setStage={setStage}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
+            ) : (
+              ""
+            )}
+          </div>
         ) : (
           ""
         )}
         {footerTab === "REPAIRS" ? (
-          <SwitchRole setShowFooter={setShowFooter} setTab={setFooterTab} />
+          <OwnerSwitchRole
+            setShowFooter={setShowFooter}
+            setTab={setFooterTab}
+          />
         ) : (
           ""
         )}
       </div>
       {/* <div className="flex-grow-1">
         {footerTab === "PROFILE" ? (
-          <OwnerProfile setShowFooter={setShowFooter} setTab={setFooterTab} />
+          <OwnerProfileTab setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
         )}

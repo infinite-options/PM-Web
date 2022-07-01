@@ -41,7 +41,7 @@ function OwnerDashboard() {
 
   return (
     <div
-      className="pb-5 mb-5"
+      className="pb-5 mb-5 h-100"
       style={{
         background: "#E9E9E9 0% 0% no-repeat padding-box",
         borderRadius: "10px",

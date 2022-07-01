@@ -12,8 +12,8 @@ import ManagementContract from "./ManagementContract";
 import TenantAgreement from "./TenantAgreement";
 import ConfirmDialog from "./ConfirmDialog";
 import File from "../icons/File.svg";
-import ArrowUp from "../icons/ArrowUp.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
+import BlueArrowUp from "../icons/BlueArrowUp.svg";
+import BlueArrowDown from "../icons/BlueArrowDown.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import { get, put } from "../utils/api";
@@ -369,27 +369,34 @@ function PropertyView(props) {
                   opacity: 1,
                 }}
               >
-                <div onClick={() => setExpandDetails(!expandDetails)}>
-                  <div className="d-flex justify-content-between mt-3">
+                <div
+                  style={mediumBold}
+                  className=" d-flex flex-column justify-content-center align-items-center"
+                  onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}
+                >
+                  <div className="d-flex mt-1">
                     <h6 style={mediumBold} className="mb-1">
-                      Details
+                      Tenant Info
                     </h6>
+                  </div>
+                  {expandLeaseDocs ? (
+                    <LeaseDocs
+                      property={property}
+                      addDocument={addAgreement}
+                      selectAgreement={selectAgreement}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <div className="d-flex mt-1">
                     <img
-                      src={expandDetails ? ArrowUp : ArrowDown}
+                      src={expandLeaseDocs ? BlueArrowUp : BlueArrowDown}
                       alt="Expand"
                     />
                   </div>
                 </div>
-                {expandDetails ? (
-                  <PropertyForm
-                    property={property}
-                    edit={editProperty}
-                    setEdit={setEditProperty}
-                  />
-                ) : (
-                  ""
-                )}
               </div>
+
               <div
                 className="mx-2 my-2 p-3"
                 style={{
@@ -398,13 +405,19 @@ function PropertyView(props) {
                   opacity: 1,
                 }}
               >
-                <div onClick={() => setExpandManagerDocs(!expandManagerDocs)}>
-                  <div className="d-flex justify-content-between mt-3">
+                <div
+                  style={mediumBold}
+                  className=" d-flex flex-column justify-content-center align-items-center"
+                  onClick={() => setExpandManagerDocs(!expandManagerDocs)}
+                >
+                  <div className="d-flex mt-1">
                     <h6 style={mediumBold} className="mb-1">
                       Management Contract
                     </h6>
+                  </div>
+                  <div className="d-flex mt-1">
                     <img
-                      src={expandManagerDocs ? ArrowUp : ArrowDown}
+                      src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
                       alt="Expand"
                     />
                   </div>
@@ -816,27 +829,32 @@ function PropertyView(props) {
                   opacity: 1,
                 }}
               >
-                {" "}
-                <div onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}>
-                  <div className="d-flex justify-content-between mt-3">
+                <div
+                  style={mediumBold}
+                  onClick={() => setExpandDetails(!expandDetails)}
+                  className=" d-flex flex-column justify-content-center align-items-center"
+                >
+                  <div className="d-flex mt-1">
                     <h6 style={mediumBold} className="mb-1">
-                      Tenant Info
+                      Property Details
                     </h6>
+                  </div>
+                  {expandDetails ? (
+                    <PropertyForm
+                      property={property}
+                      edit={editProperty}
+                      setEdit={setEditProperty}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <div className="d-flex mt-1">
                     <img
-                      src={expandLeaseDocs ? ArrowUp : ArrowDown}
+                      src={expandDetails ? BlueArrowUp : BlueArrowDown}
                       alt="Expand"
                     />
                   </div>
                 </div>
-                {expandLeaseDocs ? (
-                  <LeaseDocs
-                    property={property}
-                    addDocument={addAgreement}
-                    selectAgreement={selectAgreement}
-                  />
-                ) : (
-                  ""
-                )}
               </div>
             </div>
           )}

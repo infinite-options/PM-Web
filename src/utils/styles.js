@@ -13,7 +13,7 @@ const small = {
 };
 const mediumBold = {
   fontWeight: "600",
-  font: "normal normal bold 20px/28px Bahnschrift",
+  font: "normal normal normal 20px/28px Bahnschrift-Regular",
 };
 const bold = {
   fontWeight: "bold",
@@ -139,7 +139,7 @@ const welcome = {
   textAlign: "center",
   margin: "30px",
   padding: "50px",
-  backgroundColor: 'teal'
+  backgroundColor: "teal",
 };
 const upcoming = {
   background: " #007AFF 0% 0% no-repeat padding-box",
@@ -159,16 +159,16 @@ const upcomingText = {
   letterSpacing: "0px",
   color: "#F5F5F5",
 };
-const payNowButton ={
-  width: '40%', 
-  margin: '5% 33.2%', 
-  borderRadius: '30px', 
-  fontSize: '24px', 
-  border: 'none', 
-  backgroundColor: '#007AFF', 
-  color: '#FFFFFF', 
-  height: '45px',
-}
+const payNowButton = {
+  width: "40%",
+  margin: "5% 33.2%",
+  borderRadius: "30px",
+  fontSize: "24px",
+  border: "none",
+  backgroundColor: "#007AFF",
+  color: "#FFFFFF",
+  height: "45px",
+};
 const bluePill = {
   background: "#007AFF 0% 0% no-repeat padding-box",
   borderRadius: "30px",
@@ -341,17 +341,16 @@ const blueLarge = {
 //Wrote code here
 const newHeading = {
   backgroundColor: "blue",
-}
+};
 
 const editButton = {
-  color: '#007AFF',
+  color: "#007AFF",
   border: "2px solid #007AFF",
-  borderRadius: '20px',
-  width: '50vw'
-}
+  borderRadius: "20px",
+  width: "50vw",
+};
 //Wrote code here
 export {
-
   //Wrote Code here
   newHeading,
   editButton,
