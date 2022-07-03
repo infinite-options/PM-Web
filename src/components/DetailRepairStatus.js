@@ -74,46 +74,46 @@ function DetailRepairStatus(props) {
     fetchProfile();
   }, []);
 
-  useEffect(() => {
-    const fetchRepairsDetail = async () => {
-      const response = await get(
-        `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`
+  const fetchRepairsDetail = async () => {
+    const response = await get(
+      `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`
+    );
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+      return;
+    }
+    setRepairsDetail(response.result);
+    console.log(response.result);
+    setPMNotes(response.result[0].notes);
+    console.log(response.result[0].notes);
+    console.log(response.result[0]);
+    setRepairsImages(JSON.parse(response.result[0].images));
+    console.log(response.result);
+    setPriority(response.result[0].priority);
+    setDescription(response.result[0].description);
+    setTitle(response.result[0].title);
+    const files = [];
+    const images = JSON.parse(response.result[0].images);
+    for (let i = 0; i < images.length; i++) {
+      files.push({
+        index: i,
+        image: images[i],
+        file: null,
+        coverPhoto: i === 0,
+      });
+    }
+    imageState[1](files);
+    const fetchBusinessAssigned = async () => {
+      const res = await get(
+        `/businesses?business_uid=${response.result[0].assigned_business}`
       );
-      if (response.msg === "Token has expired") {
-        console.log("here msg");
-        refresh();
-        return;
-      }
-      setRepairsDetail(response.result);
-      console.log(response.result);
-      setPMNotes(response.result[0].notes);
-      console.log(response.result[0].notes);
-      console.log(response.result[0]);
-      setRepairsImages(JSON.parse(response.result[0].images));
-      console.log(response.result);
-      setPriority(response.result[0].priority);
-      setDescription(response.result[0].description);
-      setTitle(response.result[0].title);
-      const files = [];
-      const images = JSON.parse(response.result[0].images);
-      for (let i = 0; i < images.length; i++) {
-        files.push({
-          index: i,
-          image: images[i],
-          file: null,
-          coverPhoto: i === 0,
-        });
-      }
-      imageState[1](files);
-      const fetchBusinessAssigned = async () => {
-        const res = await get(
-          `/businesses?business_uid=${response.result[0].assigned_business}`
-        );
 
-        setBusineesAssigned(res.result[0]);
-      };
-      fetchBusinessAssigned();
+      setBusineesAssigned(res.result[0]);
     };
+    fetchBusinessAssigned();
+  };
+  useEffect(() => {
     fetchRepairsDetail();
   }, []);
 
@@ -136,7 +136,10 @@ function DetailRepairStatus(props) {
     console.log("Editing repair");
     setIsEditing(true);
   }
-
+  const reload = () => {
+    setIsEditing(false);
+    fetchRepairsDetail();
+  };
   const updateRepair = async () => {
     console.log("Putting changes to database");
     // let files = JSON.parse(repairsDetail[0].images);
@@ -171,7 +174,8 @@ function DetailRepairStatus(props) {
     console.log(newRepair);
     const res = await put("/maintenanceRequests", newRepair, null, files);
     console.log(res);
-    setIsEditing(false);
+    reload();
+    // setIsEditing(false);
   };
 
   return (
