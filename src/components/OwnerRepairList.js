@@ -116,44 +116,44 @@ function OwnerRepairList(props) {
       (item) => item.request_status === "COMPLETE"
     );
 
-    new_repairs = new_repairs.reduce((newSoFar, { address, new_repairs }) => {
-      if (!newSoFar[address]) newSoFar[address] = [];
-      newSoFar[address].push(newSoFar);
-      return newSoFar;
-    }, {});
+    // new_repairs = new_repairs.reduce((newSoFar, { address, new_repairs }) => {
+    //   if (!newSoFar[address]) newSoFar[address] = [];
+    //   newSoFar[address].push(newSoFar);
+    //   return newSoFar;
+    // }, {});
 
-    info_repairs = info_repairs.reduce(
-      (infoSoFar, { address, info_repairs }) => {
-        if (!infoSoFar[address]) infoSoFar[address] = [];
-        infoSoFar[address].push(infoSoFar);
-        return infoSoFar;
-      },
-      {}
-    );
-    processing_repairs = processing_repairs.reduce(
-      (processingSoFar, { address, processing_repairs }) => {
-        if (!processingSoFar[address]) processingSoFar[address] = [];
-        processingSoFar[address].push(processingSoFar);
-        return processingSoFar;
-      },
-      {}
-    );
-    scheduled_repairs = scheduled_repairs.reduce(
-      (scheduledSoFar, { address, scheduled_repairs }) => {
-        if (!scheduledSoFar[address]) scheduledSoFar[address] = [];
-        scheduledSoFar[address].push(scheduledSoFar);
-        return scheduledSoFar;
-      },
-      {}
-    );
-    completed_repairs = completed_repairs.reduce(
-      (completedSoFar, { address, completed_repairs }) => {
-        if (!completedSoFar[address]) completedSoFar[address] = [];
-        completedSoFar[address].push(completedSoFar);
-        return completedSoFar;
-      },
-      {}
-    );
+    // info_repairs = info_repairs.reduce(
+    //   (infoSoFar, { address, info_repairs }) => {
+    //     if (!infoSoFar[address]) infoSoFar[address] = [];
+    //     infoSoFar[address].push(infoSoFar);
+    //     return infoSoFar;
+    //   },
+    //   {}
+    // );
+    // processing_repairs = processing_repairs.reduce(
+    //   (processingSoFar, { address, processing_repairs }) => {
+    //     if (!processingSoFar[address]) processingSoFar[address] = [];
+    //     processingSoFar[address].push(processingSoFar);
+    //     return processingSoFar;
+    //   },
+    //   {}
+    // );
+    // scheduled_repairs = scheduled_repairs.reduce(
+    //   (scheduledSoFar, { address, scheduled_repairs }) => {
+    //     if (!scheduledSoFar[address]) scheduledSoFar[address] = [];
+    //     scheduledSoFar[address].push(scheduledSoFar);
+    //     return scheduledSoFar;
+    //   },
+    //   {}
+    // );
+    // completed_repairs = completed_repairs.reduce(
+    //   (completedSoFar, { address, completed_repairs }) => {
+    //     if (!completedSoFar[address]) completedSoFar[address] = [];
+    //     completedSoFar[address].push(completedSoFar);
+    //     return completedSoFar;
+    //   },
+    //   {}
+    // );
     console.log(
       new_repairs,
       info_repairs,
@@ -191,7 +191,7 @@ function OwnerRepairList(props) {
       <Header
         title="Repairs"
         rightText="+ New"
-        rightFn={() => setStage("REPAIRREQUEST")}
+        rightFn={() => setStage("REPAIRSREQUEST")}
       />
       <div
         className="mx-2 my-2 p-3"

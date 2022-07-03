@@ -31,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
 function OwnerRepairRequest(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const { property_uid } = useParams();
+  const { properties } = props;
   const imageState = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -45,7 +44,7 @@ function OwnerRepairRequest(props) {
       return;
     }
     const newRequest = {
-      property_uid: property_uid,
+      // property_uid: property_uid,
       title: title,
       description: description,
       priority: priority,
@@ -91,13 +90,13 @@ function OwnerRepairRequest(props) {
         <Row style={headings}>
           <div>New Repair Request</div>
         </Row>
-        <Row style={formLabel} as="h5" className="ms-1 mb-0">
+        {/* <Row style={formLabel} as="h5" className="ms-1 mb-0">
           {state.property.address} {state.property.unit}
           ,&nbsp;
           {state.property.city}
           ,&nbsp;
           {state.property.state}&nbsp; {state.property.zip}
-        </Row>
+        </Row> */}
         <Form>
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
