@@ -18,6 +18,7 @@ import {
   red,
   hidden,
   small,
+  squareForm,
 } from "../utils/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,23 +32,28 @@ const useStyles = makeStyles((theme) => ({
 function OwnerRepairRequest(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { properties } = props;
+  const { properties, setStage } = props;
   const imageState = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const submitForm = async () => {
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
+  const submitForm = async (sp) => {
     if (title === "" || description === "" || priority === "") {
       setErrorMessage("Please fill out all fields");
       return;
     }
+    let selectedProperty = JSON.parse(sp);
+    console.log(typeof JSON.parse(sp));
     const newRequest = {
-      // property_uid: property_uid,
+      property_uid: selectedProperty.property_uid,
       title: title,
       description: description,
       priority: priority,
+      request_created_by: selectedProperty.owner_id,
     };
     const files = imageState[0];
     let i = 0;
@@ -67,10 +73,10 @@ function OwnerRepairRequest(props) {
     //     newRequest[key] = file.image;
     //   }
     // }
-    console.log(files);
+    console.log(newRequest);
     await post("/maintenanceRequests", newRequest, null, files);
     // navigate(`/${property_uid}/repairStatus`);
-    navigate("/tenant");
+    setStage("DASHBOARD");
     //props.onSubmit();
   };
 
@@ -90,13 +96,21 @@ function OwnerRepairRequest(props) {
         <Row style={headings}>
           <div>New Repair Request</div>
         </Row>
-        {/* <Row style={formLabel} as="h5" className="ms-1 mb-0">
-          {state.property.address} {state.property.unit}
-          ,&nbsp;
-          {state.property.city}
-          ,&nbsp;
-          {state.property.state}&nbsp; {state.property.zip}
-        </Row> */}
+        <Form.Group>
+          <Form.Select
+            style={squareForm}
+            value={selectedProperty}
+            onChange={(e) => setSelectedProperty(e.target.value)}
+          >
+            {properties.map((property, i) => (
+              <option key={i} value={JSON.stringify(property)}>
+                {property.address}
+                {property.unit !== "" ? " " + property.unit : ""},&nbsp;
+                {property.city},&nbsp;{property.state} {property.zip}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
         <Form>
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
@@ -125,10 +139,6 @@ function OwnerRepairRequest(props) {
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
               Take pictures
             </Form.Label>
-            {/* <Form.Control
-              type="file"
-              onChange={(e) => console.log(e.target.files)}
-            /> */}
           </Form.Group>
           <RepairImages state={imageState} />
           <Form.Group className="mt-3 mb-4">
@@ -208,7 +218,7 @@ function OwnerRepairRequest(props) {
             <Col>
               <Button
                 variant="outline-primary"
-                onClick={submitForm}
+                onClick={() => submitForm(selectedProperty)}
                 style={bluePillButton}
               >
                 Add Request
