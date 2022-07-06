@@ -10,6 +10,7 @@ import {
   hidden,
   red,
   small,
+  mediumBold,
 } from "../utils/styles";
 import { post, put } from "../utils/api";
 import Heart from "../icons/Heart.svg";
@@ -413,11 +414,18 @@ function PropertyForm(props) {
 
   console.log(activeDate);
   return (
-    <div className="mx-2">
+    <div
+      className="mx-2"
+      style={{
+        background: "#E9E9E9 0% 0% no-repeat padding-box",
+        borderRadius: "10px",
+        opacity: 1,
+      }}
+    >
       {edit ? (
         <div>
           <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Address {address === "" ? required : ""}
             </Form.Label>
             <Form.Control
@@ -429,7 +437,7 @@ function PropertyForm(props) {
           </Form.Group>
           <div className="d-flex my-3">
             <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                 Unit
               </Form.Label>
               <Form.Control
@@ -440,7 +448,7 @@ function PropertyForm(props) {
               />
             </Form.Group>
             <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                 City {city === "" ? required : ""}
               </Form.Label>
               <Form.Control
@@ -454,7 +462,7 @@ function PropertyForm(props) {
           <div className="d-flex my-3">
             <Col>
               <Form.Group className="mx-2">
-                <Form.Label as="h6" className="mb-0 ms-2">
+                <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                   State {state === "" ? required : ""}
                 </Form.Label>
                 {/* <Form.Select
@@ -489,7 +497,7 @@ function PropertyForm(props) {
             </Col>
             <Col>
               <Form.Group className="mx-2">
-                <Form.Label as="h6" className="mb-0 ms-2">
+                <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                   Zip Code {zip === "" ? required : ""}
                 </Form.Label>
                 <Form.Control
@@ -520,7 +528,7 @@ function PropertyForm(props) {
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
+          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Type
           </Form.Label>
           <Form.Select
@@ -543,7 +551,7 @@ function PropertyForm(props) {
       {edit ? (
         <div className="d-flex my-3">
           <Form.Group className="mx-2">
-            <Form.Label as="h6" className="mb-0 ms-2">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Bedroom {numBeds === "" ? required : ""}
             </Form.Label>
             <Form.Control
@@ -554,7 +562,7 @@ function PropertyForm(props) {
             />
           </Form.Group>
           <Form.Group className="mx-2">
-            <Form.Label as="h6" className="mb-0 ms-2">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Bath {numBaths === "" ? required : ""}
             </Form.Label>
             <Form.Control
@@ -565,7 +573,7 @@ function PropertyForm(props) {
             />
           </Form.Group>
           <Form.Group className="mx-2">
-            <Form.Label as="h6" className="mb-0 ms-2">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Sq. Ft. {area === "" ? required : ""}
             </Form.Label>
             <Form.Control
@@ -594,7 +602,7 @@ function PropertyForm(props) {
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
+          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Active Date {activeDate === "" ? required : ""}
           </Form.Label>
           <Form.Control
@@ -613,7 +621,7 @@ function PropertyForm(props) {
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
+          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Monthly Rent {rent === "" ? required : ""}
           </Form.Label>
           <Form.Control
@@ -631,7 +639,7 @@ function PropertyForm(props) {
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
+          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Deposit {deposit === "" ? required : ""}
           </Form.Label>
           <Form.Control
@@ -649,7 +657,7 @@ function PropertyForm(props) {
       )}
       <PropertyAppliances state={applianceState} edit={edit} />
       <PropertyUtilities state={utilityState} edit={edit} />
-      <Container style={{ paddingLeft: "0px" }} className="my-3">
+      <Container style={({ paddingLeft: "0px" }, mediumBold)} className="my-3">
         <h6>Pets Allowed</h6>
         <Row>
           <Col className="d-flex ps-4">
@@ -670,7 +678,7 @@ function PropertyForm(props) {
           </Col>
         </Row>
       </Container>
-      <Container style={{ paddingLeft: "0px" }} className="my-3">
+      <Container style={({ paddingLeft: "0px" }, mediumBold)} className="my-3">
         <h6>Deposit can be used for last month's rent</h6>
         <Row>
           <Col className="d-flex ps-4">

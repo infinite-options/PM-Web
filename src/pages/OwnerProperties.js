@@ -5,6 +5,7 @@ import AppContext from "../AppContext";
 import Header from "../components/Header";
 import PropertyForm from "../components/PropertyForm";
 import PropertyView from "../components/PropertyView";
+import OwnerContacts from "./OwnerContacts";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import { get } from "../utils/api";
@@ -20,6 +21,7 @@ import {
   redPill,
   mediumBold,
 } from "../utils/styles";
+import PropertyManagersList from "../components/PropertyManagersList";
 
 function OwnerProperties(props) {
   const navigate = useNavigate();
@@ -92,6 +94,7 @@ function OwnerProperties(props) {
         //   navigate("/owner");
         // }}
       />
+      {console.log(stage)}
       <div
         className="mx-2 my-2 p-3"
         style={{
@@ -244,8 +247,19 @@ function OwnerProperties(props) {
   ) : stage === "PROPERTY" ? (
     <div className="flex-grow-1">
       <PropertyView
+        stage={stage}
+        setStage={setStage}
         property_uid={selectedProperty.property_uid}
         back={() => setStage("LIST")}
+        reload={fetchProperties}
+      />
+    </div>
+  ) : stage === "PROPERTYMANAGERLISTS" ? (
+    <div className="flex-grow-1">
+      <PropertyManagersList
+        property={selectedProperty}
+        property_uid={selectedProperty.property_uid}
+        back={() => setStage("PROPERTY")}
         reload={fetchProperties}
       />
     </div>

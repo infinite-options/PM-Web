@@ -91,17 +91,27 @@ function OwnerRepairRequest(props) {
 
   return (
     <div className="h-100 d-flex flex-column">
-      <Header title="Repairs" leftText="< Back" />
+      <Header
+        title="Repairs"
+        leftText="< Back"
+        leftFn={() => setStage("DASHBOARD")}
+      />
       <Container className="pt-1 mb-4">
         <Row style={headings}>
           <div>New Repair Request</div>
         </Row>
         <Form.Group>
+          <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+            Property {required}
+          </Form.Label>
           <Form.Select
             style={squareForm}
             value={selectedProperty}
             onChange={(e) => setSelectedProperty(e.target.value)}
           >
+            <option key="blankChoice" hidden value>
+              Search Your Properties
+            </option>
             {properties.map((property, i) => (
               <option key={i} value={JSON.stringify(property)}>
                 {property.address}
@@ -114,36 +124,18 @@ function OwnerRepairRequest(props) {
         <Form>
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Title (character limit: 15) {required}
+              Title {required}
             </Form.Label>
             <Form.Control
               style={{ borderRadius: 0 }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ex: Paint"
+              placeholder="Enter Title"
             />
           </Form.Group>
-          <Form.Group className="mt-3 mb-4">
-            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Description {required}
-            </Form.Label>
-            <Form.Control
-              style={{ borderRadius: 0 }}
-              as="textarea"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Ex: Kitchen wall needs repaint. It’s been chipping."
-            />
-          </Form.Group>
-          <Form.Group className="mt-3 mb-4">
-            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Take pictures
-            </Form.Label>
-          </Form.Group>
-          <RepairImages state={imageState} />
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="mt-2 mb-1">
-              Tag Priority (Select one) {required}
+              Tags {required}
             </Form.Label>
             <Row
               className="mt-2 mb-2"
@@ -191,6 +183,24 @@ function OwnerRepairRequest(props) {
               </Col>
             </Row>
           </Form.Group>
+          <Form.Group className="mt-3 mb-4">
+            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+              Description {required}
+            </Form.Label>
+            <Form.Control
+              style={{ borderRadius: 0 }}
+              as="textarea"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter Description"
+            />
+          </Form.Group>
+          <Form.Group className="mt-3 mb-4">
+            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+              Add images
+            </Form.Label>
+          </Form.Group>
+          <RepairImages state={imageState} />
         </Form>
         <div className="text-center mt-5">
           <div
@@ -209,19 +219,19 @@ function OwnerRepairRequest(props) {
             <Col>
               <Button
                 variant="outline-primary"
-                onClick={() => navigate("/tenant")}
-                style={pillButton}
+                onClick={() => submitForm(selectedProperty)}
+                style={bluePillButton}
               >
-                Cancel
+                Send Repair Request
               </Button>
             </Col>
             <Col>
               <Button
                 variant="outline-primary"
-                onClick={() => submitForm(selectedProperty)}
-                style={bluePillButton}
+                onClick={() => navigate("/tenant")}
+                style={pillButton}
               >
-                Add Request
+                Cancel
               </Button>
             </Col>
           </Row>

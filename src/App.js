@@ -40,7 +40,7 @@ import ReviewTenantProfile from "./pages/ReviewTenantprofile";
 import TenantPropertyView from "./pages/TenantPropertyView";
 import ReviewPropertyLease from "./pages/reviewPropertyLease";
 import LeaseApplicationStatus from "./pages/LeaseApplicationStatus";
-import SearchPM from "./pages/SearchPM";
+import OwnerContacts from "./pages/OwnerContacts";
 import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
 import ManagerPropertyView from "./pages/ManagerPropertyView";
@@ -55,7 +55,7 @@ import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./pages/ManagerUtilities";
 import TenantDuePayments from "./components/TenantDuePayments";
-import TenantPastPaidPayments from "./components/TenantPastPaidPayments"
+import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -100,7 +100,7 @@ function App() {
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
-            <Route path="search-pm" element={<SearchPM />} />
+            <Route path="search-pm" element={<OwnerContacts />} />
             <Route
               path="detailQuoteRequest/:quote_id"
               element={<DetailQuoteRequest />}
@@ -162,16 +162,12 @@ function App() {
               path="/:property_uid/repairStatus"
               element={<RepairStatus />}
             />
+            <Route path="tenantDuePayments" element={<TenantDuePayments />} />
             <Route
-              path="tenantDuePayments"
-              element={<TenantDuePayments />}
+              path="tenantPastPaidPayments"
+              element={<TenantPastPaidPayments />}
             />
-            <Route
-                path="tenantPastPaidPayments"
-                element={<TenantPastPaidPayments />}
-            />
-              
-            
+
             <Route path="tenantDocuments" element={<TenantDocuments />} />
             <Route
               path="/rentPayment/:purchase_uid"
@@ -238,10 +234,7 @@ function App() {
               path="quotes-scheduled"
               element={<MaintenanceQuotesScheduled />}
             />
-            <Route
-                path="manager-utilities"
-                element={<ManagerUtilities />}
-            />
+            <Route path="manager-utilities" element={<ManagerUtilities />} />
           </Route>
         </Routes>
       </BrowserRouter>

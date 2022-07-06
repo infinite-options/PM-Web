@@ -10,7 +10,7 @@ import Message from "../icons/Message.svg";
 import Mail from "../icons/Mail.svg";
 import { tileImg, xSmall, blue, smallImg, hidden, gray } from "../utils/styles";
 
-function OwnerDashboard() {
+function OwnerContacts() {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
@@ -48,13 +48,7 @@ function OwnerDashboard() {
         opacity: 1,
       }}
     >
-      <Header
-        title="Property Managers"
-        leftText="< Back"
-        leftFn={() => {
-          navigate("/owner");
-        }}
-      />
+      <Header title="Contacts" />
       <div
         className="mx-2 my-2 p-3"
         style={{
@@ -105,4 +99,4 @@ function OwnerDashboard() {
   );
 }
 
-export default OwnerDashboard;
+export default OwnerContacts;

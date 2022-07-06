@@ -13,6 +13,7 @@ import {
   small,
   hidden,
   mediumImg,
+  smallImg,
 } from "../utils/styles";
 
 function BusinessContact(props) {
@@ -84,6 +85,7 @@ function BusinessContact(props) {
     <div>
       {contactState.map((contact, i) => (
         <div key={i}>
+          {console.log("businesscontact", contactState)}
           <div className="d-flex">
             <div className="flex-grow-1">
               <h6 className="mb-1">
@@ -109,10 +111,10 @@ function BusinessContact(props) {
             ) : (
               <div>
                 <a href={`tel:${contact.phone_number}`}>
-                  <img src={Phone} alt="Phone" style={mediumImg} />
+                  <img src={Phone} alt="Phone" style={smallImg} />
                 </a>
                 <a href={`mailto:${contact.email}`}>
-                  <img src={Message} alt="Message" style={mediumImg} />
+                  <img src={Message} alt="Message" style={smallImg} />
                 </a>
               </div>
             )}
@@ -129,7 +131,6 @@ function BusinessContact(props) {
               </p>
             </div>
           </div>
-          <hr className="mt-1" />
         </div>
       ))}
       {newContact !== null ? (

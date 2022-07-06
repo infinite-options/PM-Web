@@ -17,8 +17,36 @@ function OwnerProfileTab(props) {
   const { userData, refresh } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
-  const { errorMessage, setShowFooter, setFooterTab, profileInfo, setStage } =
-    props;
+  const { stage, setStage, setShowFooter } = props;
+
+  const [profileInfo, setProfileInfo] = useState([]);
+
+  useEffect(() => {
+    setShowFooter(stage !== "NEW");
+  }, [stage, setShowFooter]);
+
+  const fetchProfile = async () => {
+    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+      navigate("/");
+      return;
+    }
+
+    const response = await get("/ownerProfileInfo", access_token);
+    console.log(response);
+
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+      return;
+    }
+    setProfileInfo(response.result[0]);
+  };
+  useEffect(() => {
+    if (access_token === null) {
+      navigate("/");
+    }
+    fetchProfile();
+  }, [access_token]);
 
   return (
     <div

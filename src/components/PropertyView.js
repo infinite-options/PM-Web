@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import Header from "../components/Header";
 import PropertyCashFlow from "./PropertyCashFlow";
 import PropertyForm from "./PropertyForm";
@@ -14,8 +14,12 @@ import ConfirmDialog from "./ConfirmDialog";
 import File from "../icons/File.svg";
 import BlueArrowUp from "../icons/BlueArrowUp.svg";
 import BlueArrowDown from "../icons/BlueArrowDown.svg";
+import OpenDoc from "../icons/OpenDoc.svg";
+
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
+import BusinessContact from "./BusinessContact";
+import ManagerFees from "./ManagerFees";
 import { get, put } from "../utils/api";
 import {
   tileImg,
@@ -32,13 +36,15 @@ import {
 } from "../utils/styles";
 import CreateInsurance from "./CreateInsurance";
 function PropertyView(props) {
-  const { property_uid, back, reload, hideEdit } = props;
+  const { property_uid, back, reload, hideEdit, setStage } = props;
   const [property, setProperty] = useState({
     images: "[]",
   });
-
+  const contactState = useState([]);
+  const [feeState, setFeeState] = useState([]);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [rentalInfo, setRentalInfo] = useState([]);
+
   const fetchProperty = async () => {
     // const response = await get(`/propertyInfo?property_uid=${property_uid}`);
     const response = await get(
@@ -52,6 +58,7 @@ function PropertyView(props) {
 
     setContracts(res.result);
     setRentalInfo(response.result[0].rentalInfo);
+    contactState[1](JSON.parse(res.result[0].assigned_contacts));
     let tenant = [];
     let ti = {};
     response.result[0].rentalInfo.map((rentalInfo) => {
@@ -100,6 +107,8 @@ function PropertyView(props) {
   const [showCreateInsurance, setShowCreateInsurance] = useState(false);
   const [expandManagerDocs, setExpandManagerDocs] = useState(false);
   const [expandAddManagerDocs, setExpandAddManagerDocs] = useState(false);
+
+  const [expandTenantInfo, setExpandTenantInfo] = useState(false);
   const [expandLeaseDocs, setExpandLeaseDocs] = useState(false);
   const [showManagementContract, setShowManagementContract] = useState(false);
   const [showTenantAgreement, setShowTenantAgreement] = useState(false);
@@ -214,7 +223,7 @@ function PropertyView(props) {
       null,
       files
     );
-    setExpandManagerDocs(!expandManagerDocs);
+    setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
 
@@ -241,7 +250,7 @@ function PropertyView(props) {
       files
     );
     setShowDialog(false);
-    setExpandManagerDocs(!expandManagerDocs);
+    setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
 
@@ -410,14 +419,14 @@ function PropertyView(props) {
                 <div
                   style={mediumBold}
                   // className=" d-flex flex-column justify-content-center align-items-center"
-                  onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}
+                  onClick={() => setExpandTenantInfo(!expandTenantInfo)}
                 >
                   <div className="d-flex mt-1 flex-column justify-content-center align-items-center">
                     <h6 style={mediumBold} className="mb-1">
                       Tenant Info
                     </h6>
                   </div>
-                  {expandLeaseDocs ? (
+                  {expandTenantInfo ? (
                     <div>
                       <div>
                         {tenantInfo.map((tf) => {
@@ -431,7 +440,7 @@ function PropertyView(props) {
                               >
                                 Tenant: {tf.tenantFirstName} {tf.tenantLastName}
                               </Col>
-                              <Col className=" d-flex justify-content-end">
+                              <Col className="d-flex justify-content-end">
                                 <a href={`tel:${tf.tenantPhoneNumber}`}>
                                   <img
                                     src={Phone}
@@ -518,12 +527,91 @@ function PropertyView(props) {
                   )}
                   <div className="d-flex mt-1 flex-column justify-content-center align-items-center">
                     <img
-                      src={expandLeaseDocs ? BlueArrowUp : BlueArrowDown}
+                      src={expandTenantInfo ? BlueArrowUp : BlueArrowDown}
                       alt="Expand"
                     />
                   </div>
                 </div>
               </div>
+              {rentalInfo.map((rf) => {
+                return (
+                  JSON.parse(rf.documents).length > 0 && (
+                    <div
+                      className="mx-2 my-2 p-3"
+                      style={{
+                        background: "#FFFFFF 0% 0% no-repeat padding-box",
+                        borderRadius: "10px",
+                        opacity: 1,
+                      }}
+                    >
+                      {console.log(
+                        "rf.documents.length",
+                        rf.documents.length,
+                        rf.documents
+                      )}
+                      <div
+                        style={mediumBold}
+                        // className=" d-flex flex-column justify-content-center align-items-center"
+                        onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}
+                      >
+                        <div className="d-flex mt-1 flex-column justify-content-center align-items-center">
+                          <h6 style={mediumBold} className="mb-1">
+                            Lease Documents
+                          </h6>
+                        </div>
+                        {expandLeaseDocs ? (
+                          <div>
+                            <div>
+                              {rentalInfo.map((rf) => {
+                                return (
+                                  rf.documents.length > 0 && (
+                                    <Row className="d-flex justify-content-center m-2">
+                                      {JSON.parse(rf.documents).map((rp) => {
+                                        return (
+                                          <Row
+                                            className="d-flex align-items-center p-2"
+                                            style={{
+                                              boxShadow:
+                                                "0px 1px 6px #00000029",
+                                              borderRadius: "5px",
+                                            }}
+                                          >
+                                            <Col
+                                              className=" d-flex align-items-left"
+                                              style={{
+                                                font: "normal normal 600 18px Bahnschrift-Regular",
+                                                color: "#007AFF",
+                                                textDecoration: "underline",
+                                              }}
+                                            >
+                                              {rp.description}
+                                            </Col>
+                                            <Col className=" d-flex justify-content-end">
+                                              <img src={OpenDoc} />
+                                            </Col>
+                                          </Row>
+                                        );
+                                      })}
+                                    </Row>
+                                  )
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        <div className="d-flex mt-1 flex-column justify-content-center align-items-center">
+                          <img
+                            src={expandLeaseDocs ? BlueArrowUp : BlueArrowDown}
+                            alt="Expand"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                );
+              })}
 
               {Object.keys(property.managerInfo).length !== 0 ? (
                 <div
@@ -544,12 +632,444 @@ function PropertyView(props) {
                         Property Management Agreement
                       </h6>
                     </div>
-                    <div className="d-flex mt-1">
+
+                    {expandManagerDocs &&
+                    property.management_status !== "ACCEPTED" ? (
+                      ""
+                    ) : expandManagerDocs &&
+                      property.property_manager.length > 1 ? (
+                      property.property_manager.map((p, i) =>
+                        p.management_status === "REJECTED" ? (
+                          ""
+                        ) : p.manager_business_name !== null &&
+                          p.management_status === "ACCEPTED" ? (
+                          <Row>
+                            <Row className="d-flex justify-content-between mt-3">
+                              <Col>
+                                <h6 style={mediumBold} className="mb-1">
+                                  {p.manager_business_name}
+                                </h6>
+                                {/* <p
+                                  style={{ ...gray, ...mediumBold }}
+                                  className="mb-1"
+                                >
+                                  Property Manager
+                                </p> */}
+                              </Col>
+                              <Col xs={2}>
+                                <a href={`tel:${p.manager_phone_number}`}>
+                                  <img
+                                    src={Phone}
+                                    alt="Phone"
+                                    style={smallImg}
+                                  />
+                                </a>
+                                <a href={`mailto:${p.manager_email}`}>
+                                  <img
+                                    src={Message}
+                                    alt="Message"
+                                    style={smallImg}
+                                  />
+                                </a>
+                              </Col>
+                            </Row>
+                            <div>
+                              {contracts.map((contract, i) =>
+                                contract.business_uid === p.manager_id ? (
+                                  <Row key={i}>
+                                    <Row className="mt-1 align-items-center">
+                                      <Col className="d-flex  align-items-left">
+                                        {contract.contract_name != null ? (
+                                          <p
+                                            style={{
+                                              font: "normal normal 600 18px Bahnschrift-Regular",
+                                            }}
+                                          >
+                                            {contract.contract_name}{" "}
+                                          </p>
+                                        ) : (
+                                          <p
+                                            style={{
+                                              font: "normal normal 600 18px Bahnschrift-Regular",
+                                            }}
+                                          >
+                                            Contract {i + 1}{" "}
+                                          </p>
+                                        )}
+                                      </Col>
+
+                                      <Col
+                                        xs={2}
+                                        className="d-flex justify-content-end"
+                                      >
+                                        {JSON.parse(contract.documents)
+                                          .length === 0
+                                          ? ""
+                                          : JSON.parse(contract.documents).map(
+                                              (file) => {
+                                                return (
+                                                  <a
+                                                    href={file.link}
+                                                    target="_blank"
+                                                  >
+                                                    <img src={File} />
+                                                  </a>
+                                                );
+                                              }
+                                            )}
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col
+                                        className="d-flex align-items-left"
+                                        style={{
+                                          font: "normal normal 600 18px Bahnschrift-Regular",
+                                        }}
+                                      >
+                                        Contract Length
+                                      </Col>
+                                      <Col xs={2}></Col>
+                                    </Row>
+                                    <Row>
+                                      <Col style={mediumBold}>
+                                        <Form.Group className="mx-2 my-3">
+                                          <Form.Label className="mb-0 ms-2">
+                                            Start Date
+                                          </Form.Label>
+                                          <Row
+                                            className="mb-0 ms-2 p-1"
+                                            style={{
+                                              background:
+                                                "#F8F8F8 0% 0% no-repeat padding-box",
+                                              border: "1px solid #EBEBEB",
+                                              borderRadius: " 5px",
+                                            }}
+                                          >
+                                            {contract.start_date}
+                                          </Row>
+                                        </Form.Group>
+                                      </Col>
+                                      <Col style={mediumBold}>
+                                        <Form.Group className="mx-2 my-3">
+                                          <Form.Label className="mb-0 ms-2">
+                                            End Date
+                                          </Form.Label>
+                                          <Row
+                                            className="mb-0 ms-2 p-1"
+                                            style={{
+                                              background:
+                                                "#F8F8F8 0% 0% no-repeat padding-box",
+                                              border: "1px solid #EBEBEB",
+                                              borderRadius: " 5px",
+                                            }}
+                                          >
+                                            {contract.end_date}
+                                          </Row>
+                                        </Form.Group>
+                                      </Col>
+                                    </Row>
+                                    <Row
+                                      style={{
+                                        font: "normal normal 600 18px Bahnschrift-Regular",
+                                      }}
+                                    >
+                                      <Form.Group>
+                                        <Form.Label>PM Fees</Form.Label>
+                                        <Row className="mb-2 ms-2">
+                                          <ManagerFees
+                                            feeState={JSON.parse(
+                                              contract.contract_fees
+                                            )}
+                                            setFeeState={setFeeState}
+                                          />
+                                        </Row>
+                                      </Form.Group>
+                                    </Row>
+                                    {JSON.parse(contract.assigned_contacts)
+                                      .length === 0 ? (
+                                      ""
+                                    ) : (
+                                      <Row
+                                        style={{
+                                          font: "normal normal 600 18px Bahnschrift-Regular",
+                                        }}
+                                      >
+                                        <Form.Group>
+                                          <Form.Label>
+                                            Contact Details
+                                          </Form.Label>
+                                          <Row className="mb-2 ms-2">
+                                            <BusinessContact
+                                              state={contactState}
+                                            />
+                                          </Row>
+                                        </Form.Group>
+                                      </Row>
+                                    )}
+                                  </Row>
+                                ) : (
+                                  ""
+                                )
+                              )}
+                            </div>
+                            <Row className="mt-4">
+                              <Col
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "row",
+                                  justifyContent: "space-evenly",
+                                  marginBottom: "25px",
+                                }}
+                              >
+                                <Button
+                                  // onClick={rejectPropertyManager}
+                                  onClick={() => {
+                                    setShowDialog(true);
+                                    setPmID(p.manager_id);
+                                  }}
+                                  variant="outline-primary"
+                                  style={redPillButton}
+                                >
+                                  Cancel Agreement
+                                </Button>
+                              </Col>
+                            </Row>
+                          </Row>
+                        ) : (
+                          ""
+                        )
+                      )
+                    ) : expandManagerDocs &&
+                      property.property_manager[0].manager_business_name !==
+                        null &&
+                      property.property_manager[0].management_status ===
+                        "ACCEPTED" ? (
+                      <Row>
+                        <Row className="d-flex justify-content-between mt-3">
+                          <Col className="justify-content-start">
+                            <h6 style={mediumBold} className="mb-1">
+                              {
+                                property.property_manager[0]
+                                  .manager_business_name
+                              }
+                            </h6>
+                            {/* <p
+                              style={{ ...gray, ...mediumBold }}
+                              className="mb-1"
+                            >
+                              Property Manager
+                            </p> */}
+                          </Col>
+                          <Col xs={2} className="d-flex justify-content-end">
+                            <a
+                              href={`tel:${property.property_manager[0].manager_phone_number}`}
+                            >
+                              <img src={Phone} alt="Phone" style={smallImg} />
+                            </a>
+                            <a
+                              href={`mailto:${property.property_manager[0].manager_email}`}
+                            >
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
+                          </Col>
+                        </Row>
+                        <div>
+                          {contracts.map((contract, i) =>
+                            contract.business_uid ===
+                            property.property_manager[0].manager_id ? (
+                              <Row key={i}>
+                                <Row className="mt-1 align-items-center">
+                                  <Col className="d-flex  align-items-left">
+                                    {contract.contract_name != null ? (
+                                      <p
+                                        style={{
+                                          font: "normal normal 600 18px Bahnschrift-Regular",
+                                        }}
+                                      >
+                                        {contract.contract_name}
+                                      </p>
+                                    ) : (
+                                      <p
+                                        style={{
+                                          font: "normal normal 600 18px Bahnschrift-Regular",
+                                        }}
+                                      >
+                                        Contract {i + 1}
+                                      </p>
+                                    )}
+                                  </Col>
+
+                                  <Col
+                                    xs={2}
+                                    className="d-flex justify-content-end"
+                                  >
+                                    {JSON.parse(contract.documents).length === 0
+                                      ? ""
+                                      : JSON.parse(contract.documents).map(
+                                          (file) => {
+                                            return (
+                                              <a
+                                                href={file.link}
+                                                target="_blank"
+                                              >
+                                                <img src={File} />
+                                              </a>
+                                            );
+                                          }
+                                        )}
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col
+                                    className="d-flex align-items-left"
+                                    style={{
+                                      font: "normal normal 600 18px Bahnschrift-Regular",
+                                    }}
+                                  >
+                                    Contract Length
+                                  </Col>
+                                  <Col xs={2}></Col>
+                                </Row>
+                                <Row>
+                                  <Col style={mediumBold}>
+                                    <Form.Group className="mx-2 my-3">
+                                      <Form.Label className="mb-0 ms-2">
+                                        Start Date
+                                      </Form.Label>
+                                      <Row
+                                        className="mb-0 ms-2 p-1"
+                                        style={{
+                                          background:
+                                            "#F8F8F8 0% 0% no-repeat padding-box",
+                                          border: "1px solid #EBEBEB",
+                                          borderRadius: " 5px",
+                                        }}
+                                      >
+                                        {contract.start_date}
+                                      </Row>
+                                    </Form.Group>
+                                  </Col>
+                                  <Col style={mediumBold}>
+                                    <Form.Group className="mx-2 my-3">
+                                      <Form.Label className="mb-0 ms-2">
+                                        End Date
+                                      </Form.Label>
+                                      <Row
+                                        className="mb-0 ms-2 p-1"
+                                        style={{
+                                          background:
+                                            "#F8F8F8 0% 0% no-repeat padding-box",
+                                          border: "1px solid #EBEBEB",
+                                          borderRadius: " 5px",
+                                        }}
+                                      >
+                                        {contract.end_date}
+                                      </Row>
+                                    </Form.Group>
+                                  </Col>
+                                </Row>
+                                <Row
+                                  style={{
+                                    font: "normal normal 600 18px Bahnschrift-Regular",
+                                  }}
+                                >
+                                  <Form.Group>
+                                    <Form.Label>PM Fees</Form.Label>
+                                    <Row className="mb-2 ms-2">
+                                      <ManagerFees
+                                        feeState={JSON.parse(
+                                          contract.contract_fees
+                                        )}
+                                        setFeeState={setFeeState}
+                                      />
+                                    </Row>
+                                  </Form.Group>
+                                </Row>
+                                {JSON.parse(contract.assigned_contacts)
+                                  .length === 0 ? (
+                                  ""
+                                ) : (
+                                  <Row
+                                    style={{
+                                      font: "normal normal 600 18px Bahnschrift-Regular",
+                                    }}
+                                  >
+                                    <Form.Group>
+                                      <Form.Label>Contact Details</Form.Label>
+                                      <Row className="mb-2 ms-2">
+                                        <BusinessContact state={contactState} />
+                                      </Row>
+                                    </Form.Group>
+                                  </Row>
+                                )}
+                              </Row>
+                            ) : (
+                              ""
+                            )
+                          )}
+                        </div>
+                        <Row className="mt-4">
+                          <Col
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "space-evenly",
+                              marginBottom: "25px",
+                            }}
+                          >
+                            <Button
+                              // onClick={rejectPropertyManager}
+                              onClick={() => {
+                                setShowDialog(true);
+                                setPmID(
+                                  property.property_manager[0].manager_id
+                                );
+                              }}
+                              variant="outline-primary"
+                              style={redPillButton}
+                            >
+                              Cancel Agreement
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Row>
+                    ) : (
+                      ""
+                    )}
+                    <Row className="d-flex mt-1">
                       <img
                         src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
                         alt="Expand"
                       />
-                    </div>
+                    </Row>
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+              <div
+                className="mx-2 my-2 p-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <div
+                  style={mediumBold}
+                  className=" d-flex flex-column justify-content-center align-items-center"
+                  onClick={() => setExpandAddManagerDocs(!expandAddManagerDocs)}
+                >
+                  <div className="d-flex mt-1">
+                    <h6 style={mediumBold} className="mb-1">
+                      {Object.keys(property.managerInfo).length == 0
+                        ? "Select a Property Manager"
+                        : "Change Property Manager"}
+                    </h6>
                   </div>
                   {property.property_manager.length == 0 ? (
                     ""
@@ -557,7 +1077,7 @@ function PropertyView(props) {
                     property.property_manager.map((p, i) =>
                       p.management_status === "REJECTED" ? (
                         ""
-                      ) : expandManagerDocs &&
+                      ) : expandAddManagerDocs &&
                         p.management_status === "FORWARDED" ? (
                         <div>
                           <div className="d-flex justify-content-between mt-3">
@@ -598,7 +1118,6 @@ function PropertyView(props) {
                                 marginBottom: "25px",
                               }}
                             >
-                              {" "}
                               <Button
                                 // onClick={rejectPropertyManager}
                                 onClick={() => {
@@ -612,29 +1131,38 @@ function PropertyView(props) {
                               </Button>
                             </Col>
                           </Row>
-                          <hr style={{ opacity: 1 }} className="mt-1" />
                         </div>
                       ) : (
                         ""
                       )
                     )
-                  ) : expandManagerDocs &&
+                  ) : expandAddManagerDocs &&
                     property.property_manager[0].management_status ===
                       "FORWARDED" ? (
-                    <div>
-                      <div className="d-flex justify-content-between mt-3">
-                        <div>
-                          <h6 style={mediumBold} className="mb-1">
-                            {property.property_manager[0].manager_business_name}
-                          </h6>
-                          <p
-                            style={{ mediumBold, color: "blue" }}
-                            className="mb-1"
-                          >
-                            Property Manager Selected
-                          </p>
-                        </div>
-                        <div>
+                    <Row className="p-0 m-0">
+                      <Row className="d-flex justify-content-between mt-3">
+                        <Col
+                          xs={8}
+                          className="d-flex flex-column justify-content-start p-0"
+                        >
+                          <Row>
+                            <h6 style={mediumBold} className="mb-1">
+                              {
+                                property.property_manager[0]
+                                  .manager_business_name
+                              }
+                            </h6>
+                          </Row>
+                          {/* <Row>
+                            <p
+                              style={{ mediumBold, color: "blue" }}
+                              className="mb-1"
+                            >
+                              Property Manager Selected
+                            </p>
+                          </Row> */}
+                        </Col>
+                        <Col className="d-flex justify-content-end">
                           <a
                             href={`tel:${property.property_manager[0].manager_phone_number}`}
                           >
@@ -649,26 +1177,9 @@ function PropertyView(props) {
                               style={mediumImg}
                             />
                           </a>
-                        </div>
-                      </div>
+                        </Col>
+                      </Row>
                       <Row className="mt-4">
-                        {/* <Col
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-evenly",
-                      marginBottom: "25px",
-                    }}
-                  >
-                    {" "}
-                    <Button
-                      // onClick={approvePropertyManager}
-                      variant="outline-primary"
-                      style={bluePillButton}
-                    >
-                      Approve
-                    </Button>
-                  </Col> */}
                         <Col
                           style={{
                             display: "flex",
@@ -677,7 +1188,6 @@ function PropertyView(props) {
                             marginBottom: "25px",
                           }}
                         >
-                          {" "}
                           <Button
                             // onClick={rejectPropertyManager}
                             onClick={() => {
@@ -691,8 +1201,7 @@ function PropertyView(props) {
                           </Button>
                         </Col>
                       </Row>
-                      <hr style={{ opacity: 1 }} className="mt-1" />
-                    </div>
+                    </Row>
                   ) : (
                     ""
                   )}
@@ -702,11 +1211,11 @@ function PropertyView(props) {
                     property.property_manager.map((p, i) =>
                       p.management_status === "REJECTED" ? (
                         ""
-                      ) : expandManagerDocs &&
+                      ) : expandAddManagerDocs &&
                         p.management_status === "SENT" ? (
-                        <div>
-                          <div className="d-flex justify-content-between mt-3">
-                            <div>
+                        <Row>
+                          <Row className="d-flex justify-content-between mt-3">
+                            <Row>
                               <h6 style={mediumBold} className="mb-1">
                                 {p.manager_business_name}
                               </h6>
@@ -716,23 +1225,140 @@ function PropertyView(props) {
                               >
                                 Contract in Review
                               </p>
-                            </div>
-                          </div>
+                            </Row>
+                          </Row>
 
-                          <div className="d-flex flex-column gap-2">
+                          <div>
                             {contracts.map((contract, i) =>
                               contract.business_uid === p.manager_id ? (
-                                <div
-                                  key={i}
-                                  onClick={() => selectContract(contract)}
-                                >
-                                  <div className="d-flex justify-content-between align-items-end">
-                                    <h6 style={mediumBold}>
-                                      {contract.contract_name}
-                                    </h6>
-                                    <img src={File} />
-                                  </div>
-                                </div>
+                                <Row key={i}>
+                                  <Row className="mt-1 align-items-center">
+                                    <Col className="d-flex  align-items-left">
+                                      {contract.contract_name != null ? (
+                                        <p
+                                          style={{
+                                            font: "normal normal 600 18px Bahnschrift-Regular",
+                                          }}
+                                        >
+                                          {contract.contract_name}{" "}
+                                        </p>
+                                      ) : (
+                                        <p
+                                          style={{
+                                            font: "normal normal 600 18px Bahnschrift-Regular",
+                                          }}
+                                        >
+                                          Contract {i + 1}{" "}
+                                        </p>
+                                      )}
+                                    </Col>
+                                    <Col
+                                      xs={2}
+                                      className="d-flex justify-content-end"
+                                    >
+                                      {JSON.parse(contract.documents).length ===
+                                      0
+                                        ? ""
+                                        : JSON.parse(contract.documents).map(
+                                            (file) => {
+                                              return (
+                                                <a
+                                                  href={file.link}
+                                                  target="_blank"
+                                                >
+                                                  <img src={File} />
+                                                </a>
+                                              );
+                                            }
+                                          )}
+                                    </Col>
+                                  </Row>
+                                  <Row>
+                                    <Col
+                                      className="d-flex align-items-left"
+                                      style={{
+                                        font: "normal normal 600 18px Bahnschrift-Regular",
+                                      }}
+                                    >
+                                      Contract Length
+                                    </Col>
+                                    <Col xs={2}></Col>
+                                  </Row>
+                                  <Row>
+                                    <Col style={mediumBold}>
+                                      <Form.Group className="mx-2 my-3">
+                                        <Form.Label className="mb-0 ms-2">
+                                          Start Date
+                                        </Form.Label>
+                                        <Row
+                                          className="mb-0 ms-2 p-1"
+                                          style={{
+                                            background:
+                                              "#F8F8F8 0% 0% no-repeat padding-box",
+                                            border: "1px solid #EBEBEB",
+                                            borderRadius: " 5px",
+                                          }}
+                                        >
+                                          {contract.start_date}
+                                        </Row>
+                                      </Form.Group>
+                                    </Col>
+                                    <Col style={mediumBold}>
+                                      <Form.Group className="mx-2 my-3">
+                                        <Form.Label className="mb-0 ms-2">
+                                          End Date
+                                        </Form.Label>
+                                        <Row
+                                          className="mb-0 ms-2 p-1"
+                                          style={{
+                                            background:
+                                              "#F8F8F8 0% 0% no-repeat padding-box",
+                                            border: "1px solid #EBEBEB",
+                                            borderRadius: " 5px",
+                                          }}
+                                        >
+                                          {contract.end_date}
+                                        </Row>
+                                      </Form.Group>
+                                    </Col>
+                                  </Row>
+                                  <Row
+                                    style={{
+                                      font: "normal normal 600 18px Bahnschrift-Regular",
+                                    }}
+                                  >
+                                    <Form.Group>
+                                      <Form.Label>PM Fees</Form.Label>
+                                      <Row className="mb-2 ms-2">
+                                        <ManagerFees
+                                          feeState={JSON.parse(
+                                            contract.contract_fees
+                                          )}
+                                          setFeeState={setFeeState}
+                                        />
+                                      </Row>
+                                    </Form.Group>
+                                  </Row>
+                                  {JSON.parse(contract.assigned_contacts)
+                                    .length === 0 ? (
+                                    ""
+                                  ) : (
+                                    <Row
+                                      style={{
+                                        font: "normal normal 600 18px Bahnschrift-Regular",
+                                      }}
+                                    >
+                                      <Form.Group>
+                                        <Form.Label>Contact Details</Form.Label>
+                                        <Row className="mb-2 ms-2">
+                                          <BusinessContact
+                                            state={contactState}
+                                          />
+                                        </Row>
+                                      </Form.Group>
+                                    </Row>
+                                  )}
+                                </Row>
                               ) : (
                                 ""
                               )
@@ -748,7 +1374,6 @@ function PropertyView(props) {
                                 marginBottom: "25px",
                               }}
                             >
-                              {" "}
                               <Button
                                 onClick={() => {
                                   setPmID(p.manager_id);
@@ -768,7 +1393,6 @@ function PropertyView(props) {
                                 marginBottom: "25px",
                               }}
                             >
-                              {" "}
                               <Button
                                 // onClick={rejectPropertyManager}
                                 onClick={() => {
@@ -782,18 +1406,17 @@ function PropertyView(props) {
                               </Button>
                             </Col>
                           </Row>
-                          <hr style={{ opacity: 1 }} className="mt-1" />
-                        </div>
+                        </Row>
                       ) : (
                         ""
                       )
                     )
-                  ) : expandManagerDocs &&
+                  ) : expandAddManagerDocs &&
                     property.property_manager[0].management_status ===
                       "SENT" ? (
-                    <div>
-                      <div className="d-flex justify-content-between mt-3">
-                        <div>
+                    <Row>
+                      <Row className="d-flex justify-content-between mt-3">
+                        <Row>
                           <h6 style={mediumBold} className="mb-1">
                             {property.property_manager[0].manager_business_name}
                           </h6>
@@ -803,23 +1426,134 @@ function PropertyView(props) {
                           >
                             Contract in Review
                           </p>
-                        </div>
-                      </div>
-                      <div className="d-flex flex-column gap-2">
+                        </Row>
+                      </Row>
+                      <div>
                         {contracts.map((contract, i) =>
                           contract.business_uid ===
                           property.property_manager[0].manager_id ? (
-                            <div
-                              key={i}
-                              onClick={() => selectContract(contract)}
-                            >
-                              <div className="d-flex justify-content-between align-items-end">
-                                <h6 style={mediumBold}>
-                                  {contract.contract_name}
-                                </h6>
-                                <img src={File} />
-                              </div>
-                            </div>
+                            <Row key={i}>
+                              <Row className="mt-1 align-items-center">
+                                <Col className=" d-flex align-items-left">
+                                  {contract.contract_name != null ? (
+                                    <p
+                                      style={{
+                                        font: "normal normal 600 18px Bahnschrift-Regular",
+                                      }}
+                                    >
+                                      {contract.contract_name}
+                                    </p>
+                                  ) : (
+                                    <p
+                                      style={{
+                                        font: "normal normal 600 18px Bahnschrift-Regular",
+                                      }}
+                                    >
+                                      Contract {i + 1}
+                                    </p>
+                                  )}
+                                </Col>
+                                <Col
+                                  xs={2}
+                                  className="d-flex justify-content-end"
+                                >
+                                  {JSON.parse(contract.documents).length === 0
+                                    ? ""
+                                    : JSON.parse(contract.documents).map(
+                                        (file) => {
+                                          return (
+                                            <a href={file.link} target="_blank">
+                                              <img src={File} />
+                                            </a>
+                                          );
+                                        }
+                                      )}
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col
+                                  className="d-flex align-items-left"
+                                  style={{
+                                    font: "normal normal 600 18px Bahnschrift-Regular",
+                                  }}
+                                >
+                                  Contract Length
+                                </Col>
+                                <Col xs={2}></Col>
+                              </Row>
+                              <Row>
+                                <Col style={mediumBold}>
+                                  <Form.Group className="mx-2 my-3">
+                                    <Form.Label className="mb-0 ms-2">
+                                      Start Date
+                                    </Form.Label>
+                                    <Row
+                                      className="mb-0 ms-2 p-1"
+                                      style={{
+                                        background:
+                                          "#F8F8F8 0% 0% no-repeat padding-box",
+                                        border: "1px solid #EBEBEB",
+                                        borderRadius: " 5px",
+                                      }}
+                                    >
+                                      {contract.start_date}
+                                    </Row>
+                                  </Form.Group>
+                                </Col>
+                                <Col style={mediumBold}>
+                                  <Form.Group className="mx-2 my-3">
+                                    <Form.Label className="mb-0 ms-2">
+                                      End Date
+                                    </Form.Label>
+                                    <Row
+                                      className="mb-0 ms-2 p-1"
+                                      style={{
+                                        background:
+                                          "#F8F8F8 0% 0% no-repeat padding-box",
+                                        border: "1px solid #EBEBEB",
+                                        borderRadius: " 5px",
+                                      }}
+                                    >
+                                      {contract.end_date}
+                                    </Row>
+                                  </Form.Group>
+                                </Col>
+                              </Row>
+                              <Row
+                                style={{
+                                  font: "normal normal 600 18px Bahnschrift-Regular",
+                                }}
+                              >
+                                <Form.Group>
+                                  <Form.Label>PM Fees</Form.Label>
+                                  <Row className="mb-2 ms-2">
+                                    <ManagerFees
+                                      feeState={JSON.parse(
+                                        contract.contract_fees
+                                      )}
+                                      setFeeState={setFeeState}
+                                    />
+                                  </Row>
+                                </Form.Group>
+                              </Row>
+                              {JSON.parse(contract.assigned_contacts).length ===
+                              0 ? (
+                                ""
+                              ) : (
+                                <Row
+                                  style={{
+                                    font: "normal normal 600 18px Bahnschrift-Regular",
+                                  }}
+                                >
+                                  <Form.Group>
+                                    <Form.Label>Contact Details</Form.Label>
+                                    <Row className="mb-2 ms-2">
+                                      <BusinessContact state={contactState} />
+                                    </Row>
+                                  </Form.Group>
+                                </Row>
+                              )}
+                            </Row>
                           ) : (
                             ""
                           )
@@ -835,7 +1569,6 @@ function PropertyView(props) {
                             marginBottom: "25px",
                           }}
                         >
-                          {" "}
                           <Button
                             onClick={() => {
                               setPmID(property.property_manager[0].manager_id);
@@ -856,7 +1589,6 @@ function PropertyView(props) {
                             marginBottom: "25px",
                           }}
                         >
-                          {" "}
                           <Button
                             // onClick={rejectPropertyManager}
                             onClick={() => {
@@ -870,129 +1602,18 @@ function PropertyView(props) {
                           </Button>
                         </Col>
                       </Row>
-                      <hr style={{ opacity: 1 }} className="mt-1" />
-                    </div>
+                    </Row>
                   ) : (
                     ""
                   )}
-                  {expandManagerDocs &&
-                  property.management_status !== "ACCEPTED" ? (
-                    ""
-                  ) : expandManagerDocs &&
-                    property.property_manager.length > 1 ? (
-                    property.property_manager.map((p, i) =>
-                      p.management_status === "REJECTED" ? (
-                        ""
-                      ) : p.manager_business_name !== null &&
-                        p.management_status === "ACCEPTED" ? (
-                        <div>
-                          <div className="d-flex justify-content-between mt-3">
-                            <div>
-                              <h6 style={mediumBold} className="mb-1">
-                                {p.manager_business_name}
-                              </h6>
-                              <p
-                                style={{ ...gray, ...mediumBold }}
-                                className="mb-1"
-                              >
-                                Property Manager
-                              </p>
-                            </div>
-                            <div>
-                              <a href={`tel:${p.manager_phone_number}`}>
-                                <img
-                                  src={Phone}
-                                  alt="Phone"
-                                  style={mediumImg}
-                                />
-                              </a>
-                              <a href={`mailto:${p.manager_email}`}>
-                                <img
-                                  src={Message}
-                                  alt="Message"
-                                  style={mediumImg}
-                                />
-                              </a>
-                            </div>
-                          </div>
 
-                          <hr style={{ opacity: 1 }} className="mt-1" />
-                        </div>
-                      ) : (
-                        ""
-                      )
-                    )
-                  ) : expandManagerDocs &&
-                    property.property_manager[0].manager_business_name !==
-                      null &&
-                    property.property_manager[0].management_status ===
-                      "ACCEPTED" ? (
-                    <div>
-                      <div className="d-flex justify-content-between mt-3">
-                        <div>
-                          <h6 style={mediumBold} className="mb-1">
-                            {property.property_manager[0].manager_business_name}
-                          </h6>
-                          <p
-                            style={{ ...gray, ...mediumBold }}
-                            className="mb-1"
-                          >
-                            Property Manager
-                          </p>
-                        </div>
-                        <div>
-                          <a
-                            href={`tel:${property.property_manager[0].manager_phone_number}`}
-                          >
-                            <img src={Phone} alt="Phone" style={mediumImg} />
-                          </a>
-                          <a
-                            href={`mailto:${property.property_manager[0].manager_email}`}
-                          >
-                            <img
-                              src={Message}
-                              alt="Message"
-                              style={mediumImg}
-                            />
-                          </a>
-                        </div>
-                      </div>
-
-                      <hr style={{ opacity: 1 }} className="mt-1" />
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              ) : (
-                ""
-              )}
-              <div
-                className="mx-2 my-2 p-3"
-                style={{
-                  background: "#FFFFFF 0% 0% no-repeat padding-box",
-                  borderRadius: "10px",
-                  opacity: 1,
-                }}
-              >
-                <div
-                  style={mediumBold}
-                  className=" d-flex flex-column justify-content-center align-items-center"
-                  onClick={() => setExpandAddManagerDocs(!expandAddManagerDocs)}
-                >
-                  <div className="d-flex mt-1">
-                    <h6 style={mediumBold} className="mb-1">
-                      {Object.keys(property.managerInfo).length == 0
-                        ? "Select a Property Manager"
-                        : "Change Property Manager"}
-                    </h6>
-                  </div>
                   {expandAddManagerDocs ? (
                     <ManagerDocs
                       property={property}
                       addDocument={addContract}
                       selectContract={selectContract}
                       reload={reloadProperty}
+                      setStage={setStage}
                     />
                   ) : (
                     ""
