@@ -25,12 +25,60 @@ function PropertyForm(props) {
   const { userData } = React.useContext(AppContext);
   const { user } = userData;
   const applianceState = React.useState({
-    Microwave: false,
-    Dishwasher: false,
-    Refrigerator: false,
-    Washer: false,
-    Dryer: false,
-    Range: false,
+    Microwave: {
+      available: false,
+      name: "",
+      purchased: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+    },
+    Dishwasher: {
+      available: false,
+      name: "",
+      purchased: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+    },
+    Refrigerator: {
+      available: false,
+      name: "",
+      purchased: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+    },
+    Washer: {
+      available: false,
+      name: "",
+      purchased: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+    },
+    Dryer: {
+      available: false,
+      name: "",
+      purchased: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+    },
+    Range: {
+      available: false,
+      name: "",
+      purchased: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+    },
   });
   const utilityState = React.useState({
     Electricity: false,
@@ -415,7 +463,7 @@ function PropertyForm(props) {
   console.log(activeDate);
   return (
     <div
-      className="mx-2"
+      className="mx-2 p-2"
       style={{
         background: "#E9E9E9 0% 0% no-repeat padding-box",
         borderRadius: "10px",
@@ -513,7 +561,7 @@ function PropertyForm(props) {
       ) : (
         <div>
           <div className="d-flex justify-content-between">
-            <h6>Property Address</h6>
+            <h6 style={mediumBold}>Property Address</h6>
             {hideEdit ? (
               ""
             ) : (

@@ -90,7 +90,7 @@ function OwnerRepairRequest(props) {
     );
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="h-100 d-flex flex-column pb-5 mb-5">
       <Header
         title="Repairs"
         leftText="< Back"
@@ -100,7 +100,13 @@ function OwnerRepairRequest(props) {
         <Row style={headings}>
           <div>New Repair Request</div>
         </Row>
-        <Form.Group>
+        <Form.Group
+          className="p-2"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+          }}
+        >
           <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
             Property {required}
           </Form.Label>
@@ -122,7 +128,13 @@ function OwnerRepairRequest(props) {
           </Form.Select>
         </Form.Group>
         <Form>
-          <Form.Group className="mt-3 mb-4">
+          <Form.Group
+            className="mt-3 mb-4 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
               Title {required}
             </Form.Label>
@@ -133,7 +145,13 @@ function OwnerRepairRequest(props) {
               placeholder="Enter Title"
             />
           </Form.Group>
-          <Form.Group className="mt-3 mb-4">
+          <Form.Group
+            className="mt-3 mb-4 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
             <Form.Label style={formLabel} as="h5" className="mt-2 mb-1">
               Tags {required}
             </Form.Label>
@@ -183,7 +201,13 @@ function OwnerRepairRequest(props) {
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group className="mt-3 mb-4">
+          <Form.Group
+            className="mt-3 mb-4 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
               Description {required}
             </Form.Label>
@@ -195,12 +219,18 @@ function OwnerRepairRequest(props) {
               placeholder="Enter Description"
             />
           </Form.Group>
-          <Form.Group className="mt-3 mb-4">
-            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+          <Form.Group
+            className="mt-3 mb-4 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
+            <Form.Label style={formLabel} as="h5" className="ms-1 mb-3">
               Add images
             </Form.Label>
+            <RepairImages state={imageState} />
           </Form.Group>
-          <RepairImages state={imageState} />
         </Form>
         <div className="text-center mt-5">
           <div
@@ -225,7 +255,7 @@ function OwnerRepairRequest(props) {
                 Send Repair Request
               </Button>
             </Col>
-            <Col>
+            <Col xs={4}>
               <Button
                 variant="outline-primary"
                 onClick={() => navigate("/tenant")}

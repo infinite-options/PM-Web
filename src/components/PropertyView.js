@@ -7,19 +7,20 @@ import CreateExpense from "./CreateExpense";
 import CreateTax from "./CreateTax";
 import CreateMortgage from "./CreateMortgage";
 import ManagerDocs from "./ManagerDocs";
-import LeaseDocs from "./LeaseDocs";
 import ManagementContract from "./ManagementContract";
 import TenantAgreement from "./TenantAgreement";
+import CreateInsurance from "./CreateInsurance";
 import ConfirmDialog from "./ConfirmDialog";
+import BusinessContact from "./BusinessContact";
+import ManagerFees from "./ManagerFees";
 import File from "../icons/File.svg";
 import BlueArrowUp from "../icons/BlueArrowUp.svg";
 import BlueArrowDown from "../icons/BlueArrowDown.svg";
-import OpenDoc from "../icons/OpenDoc.svg";
 
+import BlueArrowRight from "../icons/BlueArrowRight.svg";
+import OpenDoc from "../icons/OpenDoc.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
-import BusinessContact from "./BusinessContact";
-import ManagerFees from "./ManagerFees";
 import { get, put } from "../utils/api";
 import {
   tileImg,
@@ -34,7 +35,6 @@ import {
   redPillButton,
   smallImg,
 } from "../utils/styles";
-import CreateInsurance from "./CreateInsurance";
 function PropertyView(props) {
   const { property_uid, back, reload, hideEdit, setStage } = props;
   const [property, setProperty] = useState({
@@ -1659,6 +1659,31 @@ function PropertyView(props) {
                       src={expandDetails ? BlueArrowUp : BlueArrowDown}
                       alt="Expand"
                     />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="mx-2 my-2 p-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  border: " 1px solid #007AFF",
+                  borderRadius: "5px",
+                  opacity: 1,
+                }}
+              >
+                <div
+                  style={(mediumBold, { color: "#007AFF" })}
+                  onClick={() => setStage("APPLIANCELISTS")}
+                  className=" d-flex flex-row justify-content-center align-items-center"
+                >
+                  <div className="d-flex mt-1  align-items-center">
+                    <h6 style={mediumBold} className="mb-1">
+                      List of Appliances
+                    </h6>
+                    &nbsp; &nbsp;
+                    <div className="d-flex align-items-center">
+                      <img src={BlueArrowRight} alt="Expand" />
+                    </div>
                   </div>
                 </div>
               </div>
