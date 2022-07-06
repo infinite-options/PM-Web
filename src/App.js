@@ -17,6 +17,8 @@ import RepairStatus from "./components/RepairStatus";
 import TenantDocuments from "./components/TenantDocuments";
 import RentPayment from "./components/RentPayment";
 import PaymentPage from "./components/PaymentPage";
+
+import OwnerPaymentPage from "./components/OwnerPaymentPage";
 import PaymentHistory from "./components/PaymentHistory";
 import ScheduleRepairs from "./components/ScheduleRepairs";
 import { get } from "./utils/api";
@@ -117,7 +119,6 @@ function App() {
             <Route path="jobsCompleted" element={<JobsCompleted />} />
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
-
             <Route path="tenant" element={<TenantHome />} />
             <Route
               path="tenantAvailableProperties"
@@ -167,7 +168,6 @@ function App() {
               path="tenantPastPaidPayments"
               element={<TenantPastPaidPayments />}
             />
-
             <Route path="tenantDocuments" element={<TenantDocuments />} />
             <Route
               path="/rentPayment/:purchase_uid"
@@ -177,6 +177,11 @@ function App() {
               path="/paymentPage/:purchase_uid"
               element={<PaymentPage />}
             />
+            <Route
+              path="/ownerPaymentPage/:purchase_uid"
+              element={<OwnerPaymentPage />}
+            />
+
             <Route path="rentPayment" element={<RentPayment />} />
             <Route path="PaymentPage" element={<PaymentPage />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />
@@ -190,7 +195,6 @@ function App() {
               path="/:property_uid/:maintenance_request_uid/detailRepairStatus"
               element={<DetailRepairStatus />}
             />
-
             <Route
               path="pmRepairRequestDetail"
               element={<PMRepairRequestDetail />}

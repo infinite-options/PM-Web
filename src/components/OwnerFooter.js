@@ -11,8 +11,8 @@ import Profile_Blue from "../icons/Profile_Blue.svg";
 import Profile_Gray from "../icons/Profile_Gray.svg";
 import AppContext from "../AppContext";
 
-function Footer(props) {
-  const { tab, setTab } = props;
+function OwnerFooter(props) {
+  const { setStage, tab, setTab } = props;
   const { logout } = React.useContext(AppContext);
 
   const footerContainer = {
@@ -27,7 +27,12 @@ function Footer(props) {
       style={footerContainer}
       className="d-flex align-items-center fixed-bottom"
     >
-      <Col className="text-center" onClick={() => setTab("DASHBOARD")}>
+      <Col
+        className="text-center"
+        onClick={() => {
+          setTab("DASHBOARD");
+        }}
+      >
         <img
           src={tab === "DASHBOARD" ? Dashboard_Blue : Dashboard_Gray}
           alt="Dashboard"
@@ -67,4 +72,4 @@ function Footer(props) {
   );
 }
 
-export default Footer;
+export default OwnerFooter;

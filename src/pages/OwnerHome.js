@@ -109,17 +109,11 @@ function OwnerHome(props) {
             {stage === "DASHBOARD" ? (
               <OwnerDashboard
                 setShowFooter={setShowFooter}
+                stage={stage}
                 setStage={setStage}
                 properties={properties}
                 bills={bills}
-              />
-            ) : stage === "PROPERTIES" ? (
-              <OwnerProperties
-                setShowFooter={setShowFooter}
-                properties={properties}
                 fetchProperties={fetchProperties}
-                selectedProperty={selectedProperty}
-                setSelectedProperty={setSelectedProperty}
               />
             ) : (
               ""
