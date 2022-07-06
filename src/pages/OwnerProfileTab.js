@@ -88,7 +88,7 @@ function OwnerProfileTab(props) {
         <div style={{ font: "normal normal bold 24px/34px Bahnschrift-Bold" }}>
           Account
         </div>
-        <Row className="p-2">
+        <Row className="p-2" onClick={() => setStage("PROFILE")}>
           <Col xs={1}>
             <img src={Personal} alt="Personal" />
           </Col>
@@ -99,14 +99,13 @@ function OwnerProfileTab(props) {
           <Col xs={1}>
             <img
               src={GreyArrowRight}
-              onClick={() => setStage("PROFILE")}
               style={{ cursor: "pointer" }}
               alt="Arrow Right"
             />
           </Col>
         </Row>
         <hr />
-        <Row className="p-2">
+        <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
           <Col xs={1}>
             <img src={LeaseIcon} alt="Lease Icon" />
           </Col>
@@ -118,7 +117,7 @@ function OwnerProfileTab(props) {
           </Col>
         </Row>
         <hr />
-        <Row className="p-2">
+        <Row className="p-2" onClick={() => setStage("ROLES")}>
           <Col xs={1}>
             <img src={Contacts_Blue} alt="Change Role" />
           </Col>
@@ -128,7 +127,6 @@ function OwnerProfileTab(props) {
           <Col xs={1}>
             <img
               src={GreyArrowRight}
-              onClick={() => setStage("ROLES")}
               style={{ cursor: "pointer" }}
               alt="Arrow Right"
             />

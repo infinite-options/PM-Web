@@ -587,7 +587,9 @@ function PropertyView(props) {
                                               {rp.description}
                                             </Col>
                                             <Col className=" d-flex justify-content-end">
-                                              <img src={OpenDoc} />
+                                              <a href={rp.link} target="_blank">
+                                                <img src={OpenDoc} />
+                                              </a>
                                             </Col>
                                           </Row>
                                         );
