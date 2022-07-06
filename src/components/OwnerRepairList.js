@@ -23,11 +23,6 @@ function OwnerRepairList(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [repairs, setRepairs] = useState([]);
-  const [newRepairs, setNewRepairs] = useState([]);
-  const [infoRepairs, setInfoRepairs] = useState([]);
-  const [processingRepairs, setProcessingRepairs] = useState([]);
-  const [scheduledRepairs, setScheduledRepairs] = useState([]);
-  const [completedRepairs, setCompletedRepairs] = useState([]);
   const [repairIter, setRepairIter] = useState([]);
 
   const sort_repairs = (repairs) => {
@@ -48,7 +43,7 @@ function OwnerRepairList(props) {
 
   const sort_repairs_address = (repairs) => {
     repairs.forEach((repair, i) => {
-      console.log(repair.address);
+      console.log("");
     });
   };
 
@@ -107,32 +102,38 @@ function OwnerRepairList(props) {
       // console.log("repairs sorted", repairs_sorted);
       setRepairs(repairs_sorted);
       repairs_sorted.forEach((repair_sorted, i) => {
-        console.log("repairs sorted in for each ", i, repair_sorted);
+        // console.log("repairs sorted in for each ", i, repair_sorted);
+
         if (repair_sorted.request_status === "NEW") {
           newrepairs = repair_sorted;
+          new_repairs.push(newrepairs);
         } else if (repair_sorted.request_status === "INFO") {
           inforepairs = repair_sorted;
+          info_repairs.push(inforepairs);
         } else if (repair_sorted.request_status === "PROCESSING") {
           processingrepairs = repair_sorted;
+          processing_repairs.push(processingrepairs);
         } else if (repair_sorted.request_status === "SCHEDULED") {
           scheduledrepairs = repair_sorted;
+          scheduled_repairs.push(scheduledrepairs);
         } else {
           completedrepairs = repair_sorted;
+          completed_repairs.push(completedrepairs);
         }
 
-        if (newrepairs !== "") {
-          new_repairs.push(newrepairs);
-        } else if (inforepairs !== "") {
-          info_repairs.push(inforepairs);
-        } else if (processingrepairs !== "") {
-          processing_repairs.push(processingrepairs);
-        } else if (scheduledrepairs !== "") {
-          scheduled_repairs.push(scheduledrepairs);
-        } else if (completedrepairs !== "") {
-          completed_repairs.push(completedrepairs);
-        } else {
-          console.log("idk");
-        }
+        // if (newrepairs !== "") {
+        //   new_repairs.push(newrepairs);
+        // } else if (inforepairs !== "") {
+        //   info_repairs.push(inforepairs);
+        // } else if (processingrepairs !== "") {
+        //   processing_repairs.push(processingrepairs);
+        // } else if (scheduledrepairs !== "") {
+        //   scheduled_repairs.push(scheduledrepairs);
+        // } else if (completedrepairs !== "") {
+        //   completed_repairs.push(completedrepairs);
+        // } else {
+        //   console.log("idk");
+        // }
         // setNewRepairs(new_repairs);
         // setInfoRepairs(info_repairs);
         // setProcessingRepairs(processing_repairs);
@@ -167,12 +168,12 @@ function OwnerRepairList(props) {
       repairIT.push(repairI);
       // setRepairIter(repairI.push(repairI));
     }
-    // console.log(repairIT);
+    console.log("repairs_sorted", repairIT);
     setRepairIter(repairIT);
   };
 
   useEffect(fetchRepairs, [access_token]);
-  console.log(repairIter);
+  // console.log(repairIter);
   return (
     <div
       className="h-100 pb-5 mb-5"
