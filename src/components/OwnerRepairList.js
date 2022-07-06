@@ -174,6 +174,13 @@ function OwnerRepairList(props) {
 
   useEffect(fetchRepairs, [access_token]);
   // console.log(repairIter);
+  const days = (date_1, date_2) => {
+    let difference = date_2.getTime() - date_1.getTime();
+    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+    return TotalDays;
+  };
+
+  console.log(days(new Date("2022-06-02"), new Date()));
   return (
     <div
       className="h-100 pb-5 mb-5"
@@ -209,14 +216,14 @@ function OwnerRepairList(props) {
                 <Container className="mb-2" key={i}>
                   {rows.repairs_list.length > 0 ? (
                     <div>
-                      <Container className="mb-0" key={i}>
+                      <Container className="mb-0 p-0" key={i}>
                         <h4 className="mt-0 mb-3" style={mediumBold}>
                           {rows.title}
                         </h4>
 
                         {rows.repairs_list.map((repair, j) => (
                           <Row
-                            className="mb-4"
+                            className="mb-4 p-0"
                             key={j}
                             onClick={() =>
                               navigate(`./${repair.maintenance_request_uid}`, {
@@ -247,33 +254,85 @@ function OwnerRepairList(props) {
                               </div>
                             </Col>
                             <Col className="ps-0">
-                              <div className="d-flex justify-content-between align-items-center">
-                                <h5
-                                  className="mb-0"
-                                  style={{
-                                    font: "normal normal normal 16px/22px Bahnschrift-Regular",
-                                  }}
-                                >
-                                  {repair.title}
-                                </h5>
-                                {repair.priority === "Low" ? (
-                                  <p style={greenPill} className="mb-0">
-                                    Low Priority
-                                  </p>
-                                ) : repair.priority === "Medium" ? (
-                                  <p style={orangePill} className="mb-0">
-                                    Medium Priority
-                                  </p>
-                                ) : repair.priority === "High" ? (
-                                  <p style={redPill} className="mb-0">
-                                    High Priority
-                                  </p>
-                                ) : (
-                                  <p style={greenPill} className="mb-0">
-                                    No Priority
-                                  </p>
-                                )}
-                              </div>
+                              <Row className="d-flex justify-content-between align-items-center">
+                                <Col>
+                                  <h5
+                                    className="mb-0"
+                                    style={{
+                                      font: "normal normal normal 16px/22px Bahnschrift-Regular",
+                                    }}
+                                  >
+                                    {repair.title}
+                                  </h5>
+                                </Col>
+                                <Col>
+                                  {repair.priority === "Low" ? (
+                                    <p
+                                      // style={greenPill}
+                                      style={{
+                                        backgroundColor: "#3DB727",
+                                        borderRadius: "20px",
+                                        fontSize: "13px",
+                                        height: "24px",
+                                        padding: "2px",
+                                        textAlign: "center",
+                                        color: "white",
+                                      }}
+                                      className="mb-0"
+                                    >
+                                      Low Priority
+                                    </p>
+                                  ) : repair.priority === "Medium" ? (
+                                    <p
+                                      // style={orangePill}
+                                      style={{
+                                        backgroundColor: "#F89A03",
+                                        borderRadius: "20px",
+                                        fontSize: "13px",
+                                        height: "24px",
+                                        padding: "2px",
+                                        textAlign: "center",
+                                        color: "white",
+                                      }}
+                                      className="mb-0"
+                                    >
+                                      Medium Priority
+                                    </p>
+                                  ) : repair.priority === "High" ? (
+                                    <p
+                                      // style={redPill}
+                                      style={{
+                                        backgroundColor: "#E3441F",
+                                        borderRadius: "20px",
+                                        fontSize: "13px",
+                                        height: "24px",
+                                        padding: "2px",
+                                        textAlign: "center",
+                                        color: "white",
+                                      }}
+                                      className="mb-0"
+                                    >
+                                      High Priority
+                                    </p>
+                                  ) : (
+                                    <p
+                                      // style={greenPill}
+                                      style={{
+                                        backgroundColor: "#3DB727",
+                                        borderRadius: "20px",
+                                        fontSize: "13px",
+                                        height: "24px",
+                                        padding: "2px",
+                                        textAlign: "center",
+                                        color: "white",
+                                      }}
+                                      className="mb-0"
+                                    >
+                                      No Priority
+                                    </p>
+                                  )}
+                                </Col>
+                              </Row>
 
                               <div className="d-flex">
                                 <div className="flex-grow-1 d-flex flex-column justify-content-center">
@@ -281,7 +340,16 @@ function OwnerRepairList(props) {
                                     style={{ ...blue, ...xSmall }}
                                     className="mb-0"
                                   >
-                                    Requested {repair.days_since} days ago
+                                    Requested &nbsp;
+                                    {days(
+                                      new Date(
+                                        repair.request_created_date.split(
+                                          " "
+                                        )[0]
+                                      ),
+                                      new Date()
+                                    )}
+                                    &nbsp; days ago
                                   </p>
                                 </div>
                               </div>
