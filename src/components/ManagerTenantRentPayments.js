@@ -37,10 +37,10 @@ function ManagerTenantRentPayments(props) {
     of: "Gross Rent",
     frequency: "Weekly",
     available: "",
-    due_date: "",
-    late_after: "",
+    due_by: "",
+    late_by: "",
     late_fee: "",
-    lateFee_perDay: "",
+    perDay_late_fee: "",
   };
 
   React.useEffect(() => {
@@ -52,10 +52,10 @@ function ManagerTenantRentPayments(props) {
         of: "Gross Rent",
         frequency: "One-time",
         available: available,
-        due_date: startDate,
-        late_after: lateAfter,
+        due_by: startDate,
+        late_by: lateAfter,
         late_fee: lateFee,
-        lateFee_perDay: lateFeePer,
+        perDay_late_fee: lateFeePer,
       };
       const rentFee = {
         fee_name: "Rent",
@@ -64,10 +64,10 @@ function ManagerTenantRentPayments(props) {
         of: "Gross Rent",
         frequency: "Monthly",
         available: available,
-        due_date: dueDate,
-        late_after: lateAfter,
+        due_by: dueDate,
+        late_by: lateAfter,
         late_fee: lateFee,
-        lateFee_perDay: lateFeePer,
+        perDay_late_fee: lateFeePer,
       };
 
       const newFeeState = [...feeState];
@@ -273,8 +273,8 @@ function ManagerTenantRentPayments(props) {
                 </Form.Label>
                 {newFee.frequency === "Weekly" ? (
                   <Form.Select
-                    value={newFee.due_date}
-                    onChange={(e) => changeNewFee(e, "due_date")}
+                    value={newFee.due_by}
+                    onChange={(e) => changeNewFee(e, "due_by")}
                     style={{
                       ...squareForm,
                       backgroundImage: `url(${ArrowDown})`,
@@ -290,8 +290,8 @@ function ManagerTenantRentPayments(props) {
                   </Form.Select>
                 ) : newFee.frequency === "Biweekly" ? (
                   <Form.Select
-                    value={newFee.due_date}
-                    onChange={(e) => changeNewFee(e, "due_date")}
+                    value={newFee.due_by}
+                    onChange={(e) => changeNewFee(e, "due_by")}
                     style={{
                       ...squareForm,
                       backgroundImage: `url(${ArrowDown})`,
@@ -307,8 +307,8 @@ function ManagerTenantRentPayments(props) {
                   </Form.Select>
                 ) : newFee.frequency === "Monthly" ? (
                   <Form.Select
-                    value={newFee.due_date}
-                    onChange={(e) => changeNewFee(e, "due_date")}
+                    value={newFee.due_by}
+                    onChange={(e) => changeNewFee(e, "due_by")}
                     style={{
                       ...squareForm,
                       backgroundImage: `url(${ArrowDown})`,
@@ -326,8 +326,8 @@ function ManagerTenantRentPayments(props) {
                   </Form.Select>
                 ) : newFee.frequency === "Annually" ? (
                   <Form.Select
-                    value={newFee.due_date}
-                    onChange={(e) => changeNewFee(e, "due_date")}
+                    value={newFee.due_by}
+                    onChange={(e) => changeNewFee(e, "due_by")}
                     style={{
                       ...squareForm,
                       backgroundImage: `url(${ArrowDown})`,
@@ -345,8 +345,8 @@ function ManagerTenantRentPayments(props) {
                   </Form.Select>
                 ) : newFee.frequency === "Move-Out Charge" ? (
                   <Form.Select
-                    value={newFee.due_date}
-                    onChange={(e) => changeNewFee(e, "due_date")}
+                    value={newFee.due_by}
+                    onChange={(e) => changeNewFee(e, "due_by")}
                     style={{
                       ...squareForm,
                       backgroundImage: `url(${ArrowDown})`,
@@ -356,8 +356,8 @@ function ManagerTenantRentPayments(props) {
                   </Form.Select>
                 ) : newFee.frequency === "Move-In Charge" ? (
                   <Form.Select
-                    value={newFee.due_date}
-                    onChange={(e) => changeNewFee(e, "due_date")}
+                    value={newFee.due_by}
+                    onChange={(e) => changeNewFee(e, "due_by")}
                     style={{
                       ...squareForm,
                       backgroundImage: `url(${ArrowDown})`,
@@ -367,8 +367,8 @@ function ManagerTenantRentPayments(props) {
                   </Form.Select>
                 ) : (
                   <Form.Select
-                    value={newFee.due_date}
-                    onChange={(e) => changeNewFee(e, "due_date")}
+                    value={newFee.due_by}
+                    onChange={(e) => changeNewFee(e, "due_by")}
                     style={{
                       ...squareForm,
                       backgroundImage: `url(${ArrowDown})`,
@@ -390,8 +390,8 @@ function ManagerTenantRentPayments(props) {
                   type="number"
                   style={squareForm}
                   placeholder="10"
-                  value={newFee.late_after}
-                  onChange={(e) => changeNewFee(e, "late_after")}
+                  value={newFee.late_by}
+                  onChange={(e) => changeNewFee(e, "late_by")}
                 />
               </Form.Group>
             </Col>
@@ -418,8 +418,8 @@ function ManagerTenantRentPayments(props) {
                   type="number"
                   style={squareForm}
                   placeholder="10"
-                  value={newFee.lateFee_perDay}
-                  onChange={(e) => changeNewFee(e, "lateFee_perDay")}
+                  value={newFee.perDay_late_fee}
+                  onChange={(e) => changeNewFee(e, "perDay_late_fee")}
                 />
               </Form.Group>
             </Col>
