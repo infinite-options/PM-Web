@@ -185,10 +185,12 @@ const smallLine = {
 const bluePillButton = {
   background: "#007AFF 0% 0% no-repeat padding-box",
   borderRadius: "50px",
-  textAlign: "left",
+  textAlign: "center",
   font: "normal normal normal 18px/21px SFProDisplay-Regular",
   letterSpacing: "0px",
   color: " #FFFFFF",
+  height: "35px",
+  width: "200px",
 };
 const redPillButton = {
   background: "#E3441F 0% 0% no-repeat padding-box",
@@ -271,9 +273,11 @@ const actionsNoColor = {
 
 const formLabel = {
   textAlign: "left",
-  font: "normal normal 600 16px/19px SFProDisplay-Regular",
+  font: "normal normal 600 16px/19px Bahnschrift-Regular",
   letterSpacing: "0px",
   color: "#000000",
+  position: "relative",
+  left: "35px",
 };
 const subHeading = {
   textAlign: "left",

@@ -396,7 +396,7 @@ function TenantDashboard(props) {
   };
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
-      <Header title="Tenant Dashboard" customClass={"mb-2"} />
+      <Header title="Home" customClass={"mb-2"} />
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
         <Container
           className="px-3 pb-5 mb-5"
@@ -886,6 +886,135 @@ function TenantDashboard(props) {
             </div>
           )}
 
+          {selectedProperty && (
+
+              <div
+                  style={{
+                    margin: "-12px",
+                    display: "flex",
+                    flexDirection: "row",
+                    textAlign: "center",
+                    backgroundColor: "#FFFFFF",
+                    height: "120px",
+                  }}
+              >
+                {/* ============== Due Button ===================*/}
+                <div
+                    onClick={
+                      goToDuePayments
+                    }
+                    style={{
+                      height: "90px",
+                      width: "167px",
+                      backgroundColor: "#93EE9C",
+                      borderRadius: "10px",
+                      margin: "10px",
+                    }}
+                >
+                  <div
+                      style={{
+                        backgroundColor: "#007AFF",
+                        padding: "5px",
+                        borderRadius: "10px 10px 0px 0px",
+                        fontSize: "21px",
+                        color: "#FFFFFF",
+                      }}
+                  >
+                    Due
+                  </div>
+                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+                    {/* {selectedProperty.nextPurchase.payment_date ?
+                      <div>
+                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
+                        &nbsp;
+                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
+                      </div>
+                        : "N/A\n"
+                      } */}
+                    ${due}
+                  </div>
+                </div>
+                {/* ============== Upcoming Button ===================*/}
+                <div
+                    onClick={goToDuePayments}
+                    style={{
+                      height: "90px",
+                      width: "167px",
+                      backgroundColor: "#93EE9C",
+                      borderRadius: "10px",
+                      margin: "10px",
+                    }}
+                >
+                  <div
+                      style={{
+                        backgroundColor: "#007AFF",
+                        padding: "5px",
+                        borderRadius: "10px 10px 0px 0px",
+                        fontSize: "21px",
+                        color: "#FFFFFF",
+                      }}
+                  >
+                    Upcoming
+                  </div>
+                  {nextPurchase === null ? null :
+                      <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+
+                        {/* <p style={{ margin: "0px" }}>
+                      {selectedProperty.nextPurchase ?
+                        <div>
+                          {months[parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[1])]}
+                          &nbsp;
+                          {parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[2])}
+                        </div>
+                      : "No Date"}
+                    </p> */}
+                        ${upcomingFees}
+
+                      </div>}
+
+                </div>
+                {/* ============== Paid Button ===================*/}
+                <div
+                    onClick={
+                      goToPastPaidPayments
+                      // navigate(
+                      //   `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
+                      // );
+                    }
+                    style={{
+                      height: "90px",
+                      width: "167px",
+                      backgroundColor: "#93EE9C",
+                      borderRadius: "10px",
+                      margin: "10px",
+                    }}
+                >
+                  <div
+                      style={{
+                        backgroundColor: "#007AFF",
+                        padding: "5px",
+                        borderRadius: "10px 10px 0px 0px",
+                        fontSize: "21px",
+                        color: "#FFFFFF",
+                      }}
+                  >
+                    Paid
+                  </div>
+                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+                    {/* {selectedProperty.nextPurchase.payment_date ?
+                      <div>
+                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
+                        &nbsp;
+                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
+                      </div>
+                        : "N/A\n"
+                      } */}
+                    ${paidFees}
+                  </div>
+                </div>
+              </div>
+          )}
+
           <Row>
             <div
               style={{
@@ -915,219 +1044,6 @@ function TenantDashboard(props) {
                 </div>
               </div>
             </div>
-          </Row>
-          <Row style={{ backgroundColor: "#FFFFFF" }}>
-            {/* {isLoading === true ? null : (
-              <div>
-                {properties.map((property) => (
-                  <div>
-                    <div style={headings} className="mt-4 mb-1">
-                      ${property.rent} / mo
-                    </div>
-
-                    <div style={address} className="mt-1 mb-1">
-                      {property.property.address} {property.property.unit}
-                      ,&nbsp;
-                      {property.property.city}
-                      ,&nbsp;
-                      {property.property.state}&nbsp; {property.property.zip}
-                    </div>
-                  </div>
-                ))}
-
-              
-              </div>
-            )} */}
-            {/* {isLoading === true || selectedProperty.length == 0 ? null : (
-              <div>
-                <div style={headings} className="mt-4 mb-1">
-                  ${selectedProperty.rent} / mo
-                </div>
-
-                <div style={address} className="mt-1 mb-1">
-                  {selectedProperty.property.address}{" "}
-                  {selectedProperty.property.unit}
-                  ,&nbsp;
-                  {selectedProperty.property.city}
-                  ,&nbsp;
-                  {selectedProperty.property.state}&nbsp;{" "}
-                  {selectedProperty.property.zip}
-                </div>
-                {selectedProperty.lastPurchase && (
-                  <div
-                    style={blue}
-                    className="mt-1 mb-1"
-                    onClick={() => navigate("/paymentHistory")}
-                  >
-                    Rent paid for {selectedProperty.lastPurchase.purchase_notes}
-                    : ${selectedProperty.lastPurchase.amount_paid}
-                  </div>
-                )}
-                {selectedProperty.currentPurchase && (
-                  <div>
-                    <Col xs={7} className="mt-1 mb-1">
-                      <div
-                        style={bluePill}
-                        onClick={() =>
-                          navigate(
-                            `/rentPayment/${selectedProperty.currentPurchase.purchase_uid}`
-                          )
-                        }
-                      >
-                        Rent due for{" "}
-                        {selectedProperty.currentPurchase.purchase_notes}: $
-                        {selectedProperty.currentPurchase.amount_due -
-                          selectedProperty.currentPurchase.amount_paid}
-                      </div>
-                    </Col>
-                  </div>
-                )}
-                {selectedProperty.nextPurchase && (
-                  <div>
-                    <Col xs={8} className="mt-1 mb-1">
-                      <div
-                        style={greenBorderPill}
-                        onClick={() =>
-                          navigate(
-                            `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
-                          )
-                        }
-                      >
-                        Upcoming rent for{" "}
-                        {selectedProperty.nextPurchase.purchase_notes}: $
-                        {selectedProperty.nextPurchase.amount_due -
-                          selectedProperty.nextPurchase.amount_paid}
-                      </div>
-                    </Col>
-                  </div>
-                )}
-              </div>
-            )} */}
-            {selectedProperty && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  textAlign: "center",
-                  backgroundColor: "#FFFFFF",
-                }}
-              >
-                {/* ============== Due Button ===================*/}
-                <div
-                  onClick={
-                    goToDuePayments
-                  }
-                  style={{
-                    height: "90px",
-                    width: "167px",
-                    backgroundColor: "#93EE9C",
-                    borderRadius: "10px",
-                    margin: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#007AFF",
-                      padding: "5px",
-                      borderRadius: "10px 10px 0px 0px",
-                      fontSize: "21px",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Due
-                  </div>
-                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
-                    {/* {selectedProperty.nextPurchase.payment_date ? 
-                      <div>
-                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
-                        &nbsp;
-                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
-                      </div>
-                        : "N/A\n"
-                      } */}
-                    ${due}
-                  </div>
-                </div>
-                {/* ============== Upcoming Button ===================*/}
-                <div
-                  onClick={goToDuePayments}
-                  style={{
-                    height: "90px",
-                    width: "167px",
-                    backgroundColor: "#93EE9C",
-                    borderRadius: "10px",
-                    margin: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#007AFF",
-                      padding: "5px",
-                      borderRadius: "10px 10px 0px 0px",
-                      fontSize: "21px",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Upcoming
-                  </div>
-                  {nextPurchase === null ? null :
-                    <div style={{ fontSize: "22px", lineHeight: "35px" }}>
-
-                      {/* <p style={{ margin: "0px" }}>
-                      {selectedProperty.nextPurchase ? 
-                        <div>
-                          {months[parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[1])]} 
-                          &nbsp;
-                          {parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[2])}
-                        </div> 
-                      : "No Date"}
-                    </p> */}
-                      ${upcomingFees}
-
-                    </div>}
-
-                </div>
-                {/* ============== Paid Button ===================*/}
-                <div
-                  onClick={
-                    goToPastPaidPayments
-                    // navigate(
-                    //   `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
-                    // );
-                  }
-                  style={{
-                    height: "90px",
-                    width: "167px",
-                    backgroundColor: "#93EE9C",
-                    borderRadius: "10px",
-                    margin: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#007AFF",
-                      padding: "5px",
-                      borderRadius: "10px 10px 0px 0px",
-                      fontSize: "21px",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Paid
-                  </div>
-                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
-                    {/* {selectedProperty.nextPurchase.payment_date ? 
-                      <div>
-                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
-                        &nbsp;
-                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
-                      </div>
-                        : "N/A\n"
-                      } */}
-                    ${paidFees}
-                  </div>
-                </div>
-              </div>
-            )}
           </Row>
 
           <Row
