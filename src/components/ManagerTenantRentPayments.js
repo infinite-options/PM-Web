@@ -15,7 +15,19 @@ import {
 
 function ManagerTenantRentPayments(props) {
   // const [feeState, setFeeState] = props.state;
-  const { feeState, setFeeState, property } = props;
+  const {
+    feeState,
+    setFeeState,
+    property,
+    endDate,
+    startDate,
+    dueDate,
+    lateAfter,
+    lateFee,
+    lateFeePer,
+    available,
+  } = props;
+  console.log(startDate);
   const [newFee, setNewFee] = React.useState(null);
   const [editingFee, setEditingFee] = React.useState(null);
   const emptyFee = {
@@ -24,6 +36,11 @@ function ManagerTenantRentPayments(props) {
     charge: "",
     of: "Gross Rent",
     frequency: "Weekly",
+    available: "",
+    due_date: "",
+    late_after: "",
+    late_fee: "",
+    lateFee_perDay: "",
   };
 
   React.useEffect(() => {
@@ -34,6 +51,11 @@ function ManagerTenantRentPayments(props) {
         charge: property.deposit.toString(),
         of: "Gross Rent",
         frequency: "One-time",
+        available: available,
+        due_date: startDate,
+        late_after: lateAfter,
+        late_fee: lateFee,
+        lateFee_perDay: lateFeePer,
       };
       const rentFee = {
         fee_name: "Rent",
@@ -41,6 +63,11 @@ function ManagerTenantRentPayments(props) {
         charge: property.listed_rent.toString(),
         of: "Gross Rent",
         frequency: "Monthly",
+        available: available,
+        due_date: dueDate,
+        late_after: lateAfter,
+        late_fee: lateFee,
+        lateFee_perDay: lateFeePer,
       };
 
       const newFeeState = [...feeState];
@@ -221,6 +248,179 @@ function ManagerTenantRentPayments(props) {
                   <option>Move-In Charge</option>
                   <option>One-time</option>
                 </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="my-3">
+            <Col className="ps-0">
+              <Form.Group>
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Available to pay(days before due)
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  style={squareForm}
+                  placeholder="10"
+                  value={newFee.available}
+                  onChange={(e) => changeNewFee(e, "available")}
+                />
+              </Form.Group>
+            </Col>
+            <Col className="px-0">
+              <Form.Group>
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Due Date
+                </Form.Label>
+                {newFee.frequency === "Weekly" ? (
+                  <Form.Select
+                    value={newFee.due_date}
+                    onChange={(e) => changeNewFee(e, "due_date")}
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                  >
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                  </Form.Select>
+                ) : newFee.frequency === "Biweekly" ? (
+                  <Form.Select
+                    value={newFee.due_date}
+                    onChange={(e) => changeNewFee(e, "due_date")}
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                  >
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                  </Form.Select>
+                ) : newFee.frequency === "Monthly" ? (
+                  <Form.Select
+                    value={newFee.due_date}
+                    onChange={(e) => changeNewFee(e, "due_date")}
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                  >
+                    <option value="1">1st of the month</option>
+                    <option value="2">2nd of the month</option>
+                    <option value="3">3rd of the month</option>
+                    <option value="4">4th of the month</option>
+                    <option value="5">5th of the month</option>
+                    <option value="10">10th of the month</option>
+                    <option value="15">15th of the month</option>
+                    <option value="20">20th of the month</option>
+                    <option value="25">25th of the month</option>
+                  </Form.Select>
+                ) : newFee.frequency === "Annually" ? (
+                  <Form.Select
+                    value={newFee.due_date}
+                    onChange={(e) => changeNewFee(e, "due_date")}
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                  >
+                    <option value="1">1st of the month</option>
+                    <option value="2">2nd of the month</option>
+                    <option value="3">3rd of the month</option>
+                    <option value="4">4th of the month</option>
+                    <option value="5">5th of the month</option>
+                    <option value="10">10th of the month</option>
+                    <option value="15">15th of the month</option>
+                    <option value="20">20th of the month</option>
+                    <option value="25">25th of the month</option>
+                  </Form.Select>
+                ) : newFee.frequency === "Move-Out Charge" ? (
+                  <Form.Select
+                    value={newFee.due_date}
+                    onChange={(e) => changeNewFee(e, "due_date")}
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                  >
+                    <option>{endDate}</option>
+                  </Form.Select>
+                ) : newFee.frequency === "Move-In Charge" ? (
+                  <Form.Select
+                    value={newFee.due_date}
+                    onChange={(e) => changeNewFee(e, "due_date")}
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                  >
+                    <option>{startDate}</option>
+                  </Form.Select>
+                ) : (
+                  <Form.Select
+                    value={newFee.due_date}
+                    onChange={(e) => changeNewFee(e, "due_date")}
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                  >
+                    <option>{startDate}</option>
+                  </Form.Select>
+                )}
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="my-3">
+            <Col className="ps-0">
+              <Form.Group>
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Late fees after(days)
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  style={squareForm}
+                  placeholder="10"
+                  value={newFee.late_after}
+                  onChange={(e) => changeNewFee(e, "late_after")}
+                />
+              </Form.Group>
+            </Col>
+            <Col className="ps-0">
+              <Form.Group>
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Late Fee (one-time)
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  style={squareForm}
+                  placeholder="10"
+                  value={newFee.late_fee}
+                  onChange={(e) => changeNewFee(e, "late_fee")}
+                />
+              </Form.Group>
+            </Col>
+            <Col className="px-0">
+              <Form.Group>
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Late Fee (per day)
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  style={squareForm}
+                  placeholder="10"
+                  value={newFee.lateFee_perDay}
+                  onChange={(e) => changeNewFee(e, "lateFee_perDay")}
+                />
               </Form.Group>
             </Col>
           </Row>
