@@ -18,7 +18,7 @@ import ManagerFees from "./ManagerFees";
 import BusinessContact from "./BusinessContact";
 
 function ManagerDocs(props) {
-  const { addDocument, property, selectContract, reload } = props;
+  const { addDocument, property, selectContract, reload, setStage } = props;
   const [contracts, setContracts] = useState([]);
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -111,17 +111,17 @@ function ManagerDocs(props) {
     }
   };
 
-  useEffect(async () => {
-    const response = await get(
-      `/contracts?property_uid=${property.property_uid}`
-    );
-    setContracts(response.result);
-    setFeeState(JSON.parse(response.result[0].contract_fees));
+  // useEffect(async () => {
+  //   const response = await get(
+  //     `/contracts?property_uid=${property.property_uid}`
+  //   );
+  //   setContracts(response.result);
+  //   setFeeState(JSON.parse(response.result[0].contract_fees));
 
-    setFiles(JSON.parse(response.result[0].documents));
+  //   setFiles(JSON.parse(response.result[0].documents));
 
-    contactState[1](JSON.parse(response.result[0].assigned_contacts));
-  }, []);
+  //   contactState[1](JSON.parse(response.result[0].assigned_contacts));
+  // }, []);
   useEffect(async () => {
     const response = await get(`/businesses?business_type=MANAGEMENT`);
     setBusinesses(response.result);
@@ -151,94 +151,31 @@ function ManagerDocs(props) {
       </Dialog>
 
       {property.management_status === "ACCEPTED" ? (
-        <div className="d-flex flex-column gap-2">
-          {contracts.map((contract, i) => (
-            <div key={i}>
-              <div className="d-flex justify-content-between align-items-end">
-                {contract.contract_name != null ? (
-                  <h6 style={mediumBold}> {contract.contract_name} </h6>
-                ) : (
-                  <h6 style={mediumBold}> Contract {i + 1} </h6>
-                )}
-                {JSON.parse(contract.documents).length === 0
-                  ? ""
-                  : JSON.parse(contract.documents).map((file) => {
-                      return (
-                        <a href={file.link} target="_blank">
-                          <img src={File} />
-                        </a>
-                      );
-                    })}
-
-                {/* <a href={JSON.parse(contract.documents).link} target="_blank">
-                  <img src={File} />
-                </a> */}
-              </div>
-              <Row>
-                <Col>
-                  <Form.Group className="mx-2 my-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Start Date
-                    </Form.Label>
-                    <div className="mb-0 ms-2">{contract.start_date}</div>
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group className="mx-2 my-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      End Date
-                    </Form.Label>
-                    <div className="mb-0 ms-2">{contract.end_date}</div>
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Form.Group className="mx-2 my-3">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    PM Fees
-                  </Form.Label>
-                  <div className="mb-0 ms-2">
-                    <ManagerFees
-                      feeState={JSON.parse(contract.contract_fees)}
-                      setFeeState={setFeeState}
-                    />
-                  </div>
-                </Form.Group>
-              </Row>
-              {JSON.parse(contract.assigned_contacts).length === 0 ? (
-                ""
-              ) : (
-                <Row>
-                  <Form.Group className="mx-2 my-3">
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Contact Details
-                    </Form.Label>
-                    <div className="mb-0 ms-2">
-                      <BusinessContact state={contactState} />
-                    </div>
-                  </Form.Group>
-                </Row>
-              )}
-            </div>
-          ))}
-          <div>
-            <Button
-              variant="outline-primary"
-              style={smallPillButton}
-              onClick={addDocument}
-            >
-              Add Document
-            </Button>
-          </div>
+        <div className="mt-2 mb-4">
+          <Button
+            variant="outline-primary"
+            style={smallPillButton}
+            // onClick={() => setAddPropertyManager(true)}
+            onClick={() => {
+              console.log(addPropertyManager);
+              setAddPropertyManager(true);
+              console.log(addPropertyManager);
+              setStage("PROPERTYMANAGERLISTS");
+            }}
+          >
+            Change Property Manager
+          </Button>
         </div>
       ) : addPropertyManager ? (
-        <div>
+        <div className="mt-2 mb-4">
+          {console.log("here")}
           <Form.Group>
             <Form.Select
               style={squareForm}
               value={selectedBusiness}
               onChange={(e) => setSelectedBusiness(e.target.value)}
             >
+              {console.log("here")}
               {businesses.map((business, i) => (
                 <option key={i} value={JSON.stringify(business)}>
                   {business.business_name}
@@ -266,16 +203,23 @@ function ManagerDocs(props) {
           </div>
         </div>
       ) : property.management_status !== "ACCEPTED" ? (
-        <div>
+        <div className="mt-2 mb-4">
           <Button
             variant="outline-primary"
             style={smallPillButton}
-            onClick={() => setAddPropertyManager(true)}
+            onClick={() => {
+              console.log(addPropertyManager);
+              setAddPropertyManager(true);
+              console.log(addPropertyManager);
+              setStage("PROPERTYMANAGERLISTS");
+            }}
           >
-            Add Property Manager
+            Search Property Managers
           </Button>
         </div>
-      ) : null}
+      ) : (
+        console.log("ere")
+      )}
     </div>
   );
 }

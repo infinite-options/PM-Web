@@ -11,6 +11,7 @@ import {
   red,
   hidden,
   small,
+  mediumBold,
 } from "../utils/styles";
 
 function ManagerFees(props) {
@@ -79,7 +80,9 @@ function ManagerFees(props) {
         <div key={i}>
           <div className="d-flex">
             <div className="flex-grow-1">
-              <h6 className="mb-1">{fee.fee_name}</h6>
+              <h6 className="mb-1" style={mediumBold}>
+                {fee.fee_name}
+              </h6>
             </div>
             {pageURL[3] !== "owner" ? (
               <div>
@@ -100,13 +103,17 @@ function ManagerFees(props) {
               ""
             )}
           </div>
-          <p style={gray} className="mb-1">
+          <p
+            style={{
+              font: "normal normal normal 16px Bahnschrift-Regular",
+            }}
+            className="mb-1"
+          >
             {fee.fee_type === "%"
               ? `${fee.charge}% of ${fee.of}`
               : `$${fee.charge}`}{" "}
             {fee.frequency}
           </p>
-          <hr className="mt-1" />
         </div>
       ))}
       {newFee !== null ? (

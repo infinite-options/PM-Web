@@ -17,8 +17,36 @@ function OwnerProfileTab(props) {
   const { userData, refresh } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
-  const { errorMessage, setShowFooter, setFooterTab, profileInfo, setStage } =
-    props;
+  const { stage, setStage, setShowFooter } = props;
+
+  const [profileInfo, setProfileInfo] = useState([]);
+
+  useEffect(() => {
+    setShowFooter(stage !== "NEW");
+  }, [stage, setShowFooter]);
+
+  const fetchProfile = async () => {
+    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+      navigate("/");
+      return;
+    }
+
+    const response = await get("/ownerProfileInfo", access_token);
+    console.log(response);
+
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+      return;
+    }
+    setProfileInfo(response.result[0]);
+  };
+  useEffect(() => {
+    if (access_token === null) {
+      navigate("/");
+    }
+    fetchProfile();
+  }, [access_token]);
 
   return (
     <div
@@ -60,7 +88,7 @@ function OwnerProfileTab(props) {
         <div style={{ font: "normal normal bold 24px/34px Bahnschrift-Bold" }}>
           Account
         </div>
-        <Row className="p-2">
+        <Row className="p-2" onClick={() => setStage("PROFILE")}>
           <Col xs={1}>
             <img src={Personal} alt="Personal" />
           </Col>
@@ -71,14 +99,13 @@ function OwnerProfileTab(props) {
           <Col xs={1}>
             <img
               src={GreyArrowRight}
-              onClick={() => setStage("PROFILE")}
               style={{ cursor: "pointer" }}
               alt="Arrow Right"
             />
           </Col>
         </Row>
         <hr />
-        <Row className="p-2">
+        <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
           <Col xs={1}>
             <img src={LeaseIcon} alt="Lease Icon" />
           </Col>
@@ -90,7 +117,7 @@ function OwnerProfileTab(props) {
           </Col>
         </Row>
         <hr />
-        <Row className="p-2">
+        <Row className="p-2" onClick={() => setStage("ROLES")}>
           <Col xs={1}>
             <img src={Contacts_Blue} alt="Change Role" />
           </Col>
@@ -100,7 +127,6 @@ function OwnerProfileTab(props) {
           <Col xs={1}>
             <img
               src={GreyArrowRight}
-              onClick={() => setStage("ROLES")}
               style={{ cursor: "pointer" }}
               alt="Arrow Right"
             />

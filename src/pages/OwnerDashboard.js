@@ -13,13 +13,20 @@ import {
   small,
 } from "../utils/styles";
 import "./owner.css";
-
+import OwnerPaymentPage from "../components/OwnerPaymentPage";
+import OwnerProperties from "./OwnerProperties";
 function OwnerDashboard(props) {
-  const { setStage, properties, bills } = props;
+  const { properties, bills, setShowFooter, fetchProperties } = props;
   const navigate = useNavigate();
+
+  const [stage, setStage] = React.useState("DASHBOARD");
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
   const [expandProperties, setExpandProperties] = useState(false);
+
+  const [totalSum, setTotalSum] = useState("");
+  const [selectedProperty, setSelectedProperty] = useState("");
+  const [purchaseUID, setPurchaseUID] = useState("");
 
   let revenueTotal = 0;
   for (const item of properties) {
@@ -78,7 +85,7 @@ function OwnerDashboard(props) {
     currency: "USD",
   });
 
-  return (
+  return stage === "DASHBOARD" ? (
     <div
       className="h-100"
       style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
@@ -891,12 +898,19 @@ function OwnerDashboard(props) {
                     <Col className="text-center">
                       <div
                         className="mb-3"
+                        onClick={() => {
+                          setStage("PAYBILL");
+                          setTotalSum(bill.amount_due);
+                          setSelectedProperty(bill);
+                          setPurchaseUID(bill.purchase_uid);
+                        }}
                         style={{
                           backgroundColor: "white",
                           color: "#007AFF",
                           border: "1px solid #007AFF",
                           borderRadius: "50px",
                           width: "92px",
+                          cursor: "pointer",
                         }}
                       >
                         Pay Bill
@@ -909,7 +923,25 @@ function OwnerDashboard(props) {
           </Carousel>
         </div>
       </Container>
+      {console.log("stage", stage)}
     </div>
+  ) : stage === "PAYBILL" ? (
+    <OwnerPaymentPage
+      setStage={setStage}
+      totalSum={totalSum}
+      selectedProperty={selectedProperty}
+      purchaseUID={purchaseUID}
+    />
+  ) : stage === "PROPERTIES" ? (
+    <OwnerProperties
+      setShowFooter={setShowFooter}
+      properties={properties}
+      fetchProperties={fetchProperties}
+      selectedProperty={selectedProperty}
+      setSelectedProperty={setSelectedProperty}
+    />
+  ) : (
+    ""
   );
 }
 
