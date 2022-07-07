@@ -21,6 +21,8 @@ import BlueArrowRight from "../icons/BlueArrowRight.svg";
 import OpenDoc from "../icons/OpenDoc.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
+
+import No_Image from "../icons/No_Image_Available.jpeg";
 import { get, put } from "../utils/api";
 import {
   tileImg,
@@ -99,6 +101,8 @@ function PropertyView(props) {
   const [pmID, setPmID] = useState("");
   const [currentImg, setCurrentImg] = useState(0);
   const [expandDetails, setExpandDetails] = useState(false);
+
+  const [expandMaintenanceR, setExpandMaintenanceR] = useState(false);
   const [editProperty, setEditProperty] = useState(false);
   const [contracts, setContracts] = useState([]);
   const [showCreateExpense, setShowCreateExpense] = useState(false);
@@ -273,7 +277,14 @@ function PropertyView(props) {
         agreement={selectedAgreement}
       />
     ) : (
-      <div className="pb-5 mb-5">
+      <div
+        className="pb-5 mb-5"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
         <ConfirmDialog
           title={"Are you sure you want to reject this Property Manager?"}
           isOpen={showDialog}
@@ -282,14 +293,7 @@ function PropertyView(props) {
         />
 
         <Header title="Properties" leftText="< Back" leftFn={headerBack} />
-        <Container
-          className="pb-5 mb-5"
-          style={{
-            background: "#E9E9E9 0% 0% no-repeat padding-box",
-            borderRadius: "10px",
-            opacity: 1,
-          }}
-        >
+        <Container>
           {editProperty ? (
             <PropertyForm
               property={property}
@@ -1630,7 +1634,7 @@ function PropertyView(props) {
               </div>
 
               <div
-                className="mx-2 my-2 p-3"
+                className="mx-2 my-2 py-3"
                 style={{
                   background: "#FFFFFF 0% 0% no-repeat padding-box",
                   borderRadius: "10px",
@@ -1664,6 +1668,144 @@ function PropertyView(props) {
                   </div>
                 </div>
               </div>
+              {property.maintenanceRequests.length > 0 ? (
+                <div
+                  className="mx-2 my-2 py-3"
+                  style={{
+                    background: "#FFFFFF 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <div
+                    style={mediumBold}
+                    onClick={() => setExpandMaintenanceR(!expandMaintenanceR)}
+                    className=" d-flex flex-column justify-content-center align-items-center"
+                  >
+                    <div className="d-flex mt-1">
+                      <h6 style={mediumBold} className="mb-1">
+                        Maintenance Requests
+                      </h6>
+                    </div>
+                    {expandMaintenanceR ? (
+                      <div>
+                        {property.maintenanceRequests.map((mr) => {
+                          return (
+                            <Row className="mx-2 mb-4">
+                              <Col xs={4}>
+                                <div style={tileImg}>
+                                  {JSON.parse(mr.images).length > 0 ? (
+                                    <img
+                                      src={JSON.parse(mr.images)[0]}
+                                      alt="Repair Image"
+                                      className="h-100 w-100"
+                                      style={{
+                                        objectFit: "cover",
+                                        height: "50px",
+                                        width: "50px",
+                                      }}
+                                    />
+                                  ) : (
+                                    <img
+                                      src={No_Image}
+                                      alt="No Repair Image"
+                                      className="h-100 w-100"
+                                      style={{
+                                        borderRadius: "4px",
+                                        objectFit: "cover",
+                                        height: "50px",
+                                        width: "50px",
+                                      }}
+                                    />
+                                  )}
+                                </div>
+                              </Col>
+                              <Col>
+                                <Row
+                                  style={{
+                                    font: "normal normal normal 14px Bahnschrift-Regular",
+                                  }}
+                                >
+                                  {mr.title}
+                                </Row>
+                                <Row
+                                  className="mb-2"
+                                  style={{
+                                    font: "normal normal normal 12px Bahnschrift-Regular",
+                                  }}
+                                >
+                                  {mr.description}
+                                </Row>
+                                <Row>
+                                  <hr opacity={1} />
+                                </Row>
+
+                                {mr.repair_status === "COMPLETED" ? (
+                                  <Row
+                                    style={{
+                                      font: "normal normal normal 12px Bahnschrift-Regular",
+                                      color: "#007AFF",
+                                    }}
+                                  >
+                                    Completed on:{" "}
+                                    {new Date(
+                                      mr.scheduled_date
+                                    ).toLocaleDateString("en-us", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
+                                  </Row>
+                                ) : mr.repair_status === "SCHEDULED" ? (
+                                  <Row
+                                    style={{
+                                      font: "normal normal normal 12px Bahnschrift-Regular",
+                                      color: "#E3441F",
+                                    }}
+                                  >
+                                    Scheduled for:{" "}
+                                    {new Date(
+                                      mr.scheduled_date
+                                    ).toLocaleDateString("en-us", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
+                                  </Row>
+                                ) : (
+                                  <Row
+                                    style={{
+                                      font: "normal normal normal 12px Bahnschrift-Regular",
+                                      color: "#007AFF",
+                                    }}
+                                  >
+                                    Requested on:{" "}
+                                    {new Date(
+                                      mr.request_created_date.split(" ")[0]
+                                    ).toLocaleDateString("en-us", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
+                                  </Row>
+                                )}
+                              </Col>
+                            </Row>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div className="d-flex mt-1">
+                      <img
+                        src={expandMaintenanceR ? BlueArrowUp : BlueArrowDown}
+                        alt="Expand"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
               <div
                 className="mx-2 my-2 p-3"
                 style={{

@@ -58,6 +58,7 @@ import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./pages/ManagerUtilities";
 import TenantDuePayments from "./components/TenantDuePayments";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
+import OwnerPaymentHistory from "./components/OwnerPaymentHistory";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -181,10 +182,14 @@ function App() {
               path="/ownerPaymentPage/:purchase_uid"
               element={<OwnerPaymentPage />}
             />
-
             <Route path="rentPayment" element={<RentPayment />} />
             <Route path="PaymentPage" element={<PaymentPage />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />
+            <Route
+              path="ownerPaymentHistory"
+              element={<OwnerPaymentHistory />}
+            />
+
             <Route path="scheduleRepairs" element={<ScheduleRepairs />} />
             <Route path="rescheduleRepair" element={<RescheduleRepair />} />
             <Route

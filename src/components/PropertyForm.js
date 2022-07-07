@@ -463,7 +463,7 @@ function PropertyForm(props) {
   console.log(activeDate);
   return (
     <div
-      className="mx-2 p-2"
+      className="mx-2 p-2 m-0"
       style={{
         background: "#E9E9E9 0% 0% no-repeat padding-box",
         borderRadius: "10px",

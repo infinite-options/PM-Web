@@ -24,6 +24,7 @@ import {
   pillButton,
   subHeading,
   squareForm,
+  mediumBold,
 } from "../utils/styles";
 
 function OwnerPaymentPage(props) {
@@ -39,7 +40,6 @@ function OwnerPaymentPage(props) {
   const [purchase, setPurchase] = useState({});
   const useLiveStripeKey = false;
   const [message, setMessage] = useState("");
-  const [allPurchases, setAllPurchases] = useState([]);
   const [disabled, setDisabled] = useState(false);
 
   const [amount, setAmount] = useState(totalSum);
@@ -59,16 +59,13 @@ function OwnerPaymentPage(props) {
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
     let tempAllPurchases = [];
+    console.log(purchaseUID);
+
     response = await get(`/purchases?purchase_uid=${purchaseUID}`);
     console.log("Print 1", response);
-    setPurchase(response.result[0]);
+    setPurchase(response.result);
     // setAmount(response.result[0].amount_due - response.result[0].amount_paid);
-    setAllPurchases(tempAllPurchases);
   }, []);
-
-  useEffect(() => {
-    console.log("allPurchases", allPurchases);
-  }, [allPurchases]);
 
   const cancel = () => setStripePayment(false);
   const submit = () => {
@@ -77,7 +74,7 @@ function OwnerPaymentPage(props) {
   };
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="h-100 d-flex flex-column pb-5">
       <Header
         title="Payment"
         leftText={paymentConfirm === false ? `< Back` : ""}
@@ -85,39 +82,48 @@ function OwnerPaymentPage(props) {
           setStage("DASHBOARD");
         }}
       />
-      <Row
+      <div
+        className="mb-4 p-2 m-2"
         style={{
-          height: "40px",
-          fontFamily: "bahnschrift",
-          marginBottom: "30px",
+          background: "#F3F3F3 0% 0% no-repeat padding-box",
+          borderRadius: "5px",
         }}
       >
+        <div style={(mediumBold, { textAlign: "center" })}>
+          {selectedProperty.address}
+          {selectedProperty.unit !== "" ? " " + selectedProperty.unit : ""},
+          {selectedProperty.city}, {selectedProperty.state}{" "}
+          {selectedProperty.zip}
+        </div>
+      </div>
+      {paymentConfirm ? (
         <div
+          className="mx-2 my-2 p-3"
           style={{
-            textAlign: "center",
-            fontSize: "28px",
-            padding: "10px",
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
           }}
         >
-          {selectedProperty.address}
-        </div>
-      </Row>
-      {paymentConfirm ? (
-        <Container className="pt-1 mb-4">
           <div
+            className="mx-2 my-2 p-3"
             style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+              opacity: 1,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <Row style={headings} className="mt-2 mb-2">
+            {console.log(purchase)}
+            <Row style={mediumBold} className="mt-2 mb-2">
               Payment Received{" "}
-              {purchase.purchase_notes && `(${purchase.purchase_notes})`}
+              {purchase[0].purchase_notes && `(${purchase[0].purchase_notes})`}
             </Row>
-            <Row style={subHeading} className="mt-2 mb-2">
-              {purchase.description}: ${amount}
+            <Row style={mediumBold} className="mt-2 mb-2">
+              {purchase[0].description}: ${amount}
             </Row>
             <Row className="mt-2 mb-2">
               <img
@@ -129,7 +135,7 @@ function OwnerPaymentPage(props) {
               className="mt-8 mb-2"
               variant="outline-primary"
               onClick={() => {
-                navigate("/paymentHistory");
+                navigate("/ownerPaymentHistory");
                 //setStripePayment(true);
               }}
               style={bluePillButton}
@@ -137,44 +143,37 @@ function OwnerPaymentPage(props) {
               Go to payment history
             </Button>
           </div>
-        </Container>
+        </div>
       ) : (
-        <Container className="pt-1 mb-4">
+        <div
+          className="mx-2 my-2 p-3"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+            opacity: 1,
+          }}
+        >
           <Row>
-            {allPurchases.length > 1 ? (
-              <div style={headings}>
-                Pay Fees {purchase.description && `(Multiple Fees)`}
-              </div>
-            ) : (
-              <div style={headings}>
-                Pay Fees {purchase.description && `(${purchase.description})`}
-              </div>
-            )}
+            <div style={mediumBold}>
+              Pay Fees
+              {purchase[0].description && `(${purchase[0].description})`}
+            </div>
 
             {stripePayment ? (
-              <div style={subHeading}>Amount to be paid: ${amount}</div>
+              <div style={mediumBold}>Amount to be paid: ${amount}</div>
             ) : null}
           </Row>
 
           <div className="mt-5" hidden={stripePayment}>
             <Form.Group>
               <Form.Label>Amount</Form.Label>
-              {purchaseUID.length === 1 ? (
-                <Form.Control
-                  placeholder={purchase.amount_due - purchase.amount_paid}
-                  style={squareForm}
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              ) : (
-                <Form.Control
-                  disabled
-                  placeholder={purchase.amount_due - purchase.amount_paid}
-                  style={squareForm}
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              )}
+
+              <Form.Control
+                placeholder={purchase[0].amount_due - purchase[0].amount_paid}
+                style={squareForm}
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
             </Form.Group>
 
             <Form.Group>
@@ -201,12 +200,7 @@ function OwnerPaymentPage(props) {
                   equal total:
                 </Row>
               ) : null}
-              {purchaseUID.length > 1 ? (
-                <Row style={{ width: "80%", margin: " 10%" }}>
-                  Note: You may not change the payment amount if you have
-                  selected 2 or more bills to pay
-                </Row>
-              ) : null}
+
               {disabled ? (
                 <Col>
                   <Button
@@ -264,13 +258,14 @@ function OwnerPaymentPage(props) {
               <StripePayment
                 cancel={cancel}
                 submit={submit}
-                purchases={allPurchases}
+                purchases={purchase}
                 message={message}
                 amount={amount}
               />
             </Elements>
+            {console.log(purchase, amount, message)}
           </div>
-        </Container>
+        </div>
       )}
     </div>
   );

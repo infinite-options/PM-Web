@@ -12,7 +12,7 @@ import MediumPriority from "../icons/mediumPriority.svg";
 import LowPriority from "../icons/lowPriority.svg";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
-import { get, put } from '../utils/api';
+import { get, put } from "../utils/api";
 import {
   headings,
   subHeading,
@@ -23,9 +23,9 @@ import {
   bluePillButton,
   redPillButton,
   tileImg,
-  squareForm
+  squareForm,
 } from "../utils/styles";
-import ServicesProvided from '../components/ServicesProvided';
+import ServicesProvided from "../components/ServicesProvided";
 import ServicesProvidedQuotes from "./ServicesProvidedQuotes";
 
 function DetailQuote(props) {
@@ -44,40 +44,44 @@ function DetailQuote(props) {
   const [property, setProperty] = React.useState({});
   const [currentImg, setCurrentImg] = React.useState(0);
   const [serviceState, setServiceState] = React.useState([]);
-  const [totalEstimate, setTotalEstimate] = React.useState(0)
-  const [earliestAvailability, setEarliestAvailability] = React.useState('');
-  const [eventType, setEventType] = React.useState('1 Hour Job');
+  const [totalEstimate, setTotalEstimate] = React.useState(0);
+  const [earliestAvailability, setEarliestAvailability] = React.useState("");
+  const [eventType, setEventType] = React.useState("1 Hour Job");
 
   const nextImg = () => {
     if (currentImg === JSON.parse(property.images).length - 1) {
       setCurrentImg(0);
     } else {
-      setCurrentImg(currentImg+1);
+      setCurrentImg(currentImg + 1);
     }
-  }
+  };
   const previousImg = () => {
     if (currentImg === 0) {
       setCurrentImg(JSON.parse(property.images).length - 1);
     } else {
-      setCurrentImg(currentImg-1);
+      setCurrentImg(currentImg - 1);
     }
-  }
+  };
 
   const loadQuote = async () => {
-    const response = await get(`/maintenanceQuotes?maintenance_quote_uid=${quote_id}`);
+    const response = await get(
+      `/maintenanceQuotes?maintenance_quote_uid=${quote_id}`
+    );
     if (response.result.length === 0) {
-      console.log('quote not found');
-      navigate('/ScheduledJobs');
+      console.log("quote not found");
+      navigate("/ScheduledJobs");
       return;
     }
     setQuote(response.result[0]);
     const property_uid = response.result[0].property_uid;
-    const propertyResponse = await get(`/properties?property_uid=${property_uid}`);
+    const propertyResponse = await get(
+      `/properties?property_uid=${property_uid}`
+    );
     // if (!quote.event_type) {
     //   setEventType(quote.event_type)
     // }
     setProperty(propertyResponse.result[0]);
-  }
+  };
   React.useEffect(loadQuote, []);
 
   const sendQuote = async () => {
@@ -86,22 +90,21 @@ function DetailQuote(props) {
       services_expenses: serviceState,
       total_estimate: totalEstimate,
       earliest_availability: earliestAvailability,
-      quote_status: 'SENT',
+      quote_status: "SENT",
       event_type: eventType,
-
-    }
-    const response = await put('/maintenanceQuotes', updatedQuote);
-    navigate('/ScheduledJobs');
-  }
+    };
+    const response = await put("/maintenanceQuotes", updatedQuote);
+    navigate("/ScheduledJobs");
+  };
 
   const rejectQuote = async () => {
     const updatedQuote = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
-      quote_status: 'REFUSED'
-    }
-    const response = await put('/maintenanceQuotes', updatedQuote);
-    navigate('/ScheduledJobs');
-  }
+      quote_status: "REFUSED",
+    };
+    const response = await put("/maintenanceQuotes", updatedQuote);
+    navigate("/ScheduledJobs");
+  };
 
   // console.log(addService, showAddService);
   return (
@@ -120,18 +123,28 @@ function DetailQuote(props) {
               alignItems: "center",
             }}
           >
-            <div style={{...tileImg, height: '200px', position: 'relative'}}>
+            <div style={{ ...tileImg, height: "200px", position: "relative" }}>
               {quote.images && JSON.parse(quote.images).length > 0 ? (
-                <img src={JSON.parse(quote.images)[currentImg]} className='w-100 h-100'
-                  style={{borderRadius: '4px', objectFit: 'contain'}} alt='Quote'/>
-              ) : ''}
-              <div style={{position: 'absolute', left: '5px', top: '90px'}}
-                onClick={previousImg}>
-                {'<'}
+                <img
+                  src={JSON.parse(quote.images)[currentImg]}
+                  className="w-100 h-100"
+                  style={{ borderRadius: "4px", objectFit: "contain" }}
+                  alt="Quote"
+                />
+              ) : (
+                ""
+              )}
+              <div
+                style={{ position: "absolute", left: "5px", top: "90px" }}
+                onClick={previousImg}
+              >
+                {"<"}
               </div>
-              <div style={{position: 'absolute', right: '5px', top: '90px'}}
-                onClick={nextImg}>
-                {'>'}
+              <div
+                style={{ position: "absolute", right: "5px", top: "90px" }}
+                onClick={nextImg}
+              >
+                {">"}
               </div>
             </div>
           </Col>
@@ -140,29 +153,39 @@ function DetailQuote(props) {
           <div style={headings}>{quote.title}</div>
         </Row>
         <Row>
-          <div style={subText}>{property.address}, {property.city}, {property.state} {property.zip}</div>
+          <div style={subText}>
+            {property.address}, {property.city}, {property.state} {property.zip}
+          </div>
         </Row>
         <Row className="mt-2">
           <Col>
-            {quote.priority === 'Low' ? <img src={LowPriority} />
-            : quote.priority === 'Medium' ? <img src={MediumPriority} />
-            : quote.priority === 'High' ? <img src={HighPriority} />
-            : ''}
+            {quote.priority === "Low" ? (
+              <img src={LowPriority} />
+            ) : quote.priority === "Medium" ? (
+              <img src={MediumPriority} />
+            ) : quote.priority === "High" ? (
+              <img src={HighPriority} />
+            ) : (
+              ""
+            )}
           </Col>
         </Row>
         <Row className="mt-2">
-          <div style={subText}>
-            {quote.description}
-          </div>
+          <div style={subText}>{quote.description}</div>
         </Row>
 
-        <div className='mt-5'>
+        <div className="mt-5">
           <Row>
             <div style={headings}>Services</div>
           </Row>
-          <ServicesProvidedQuotes serviceState={serviceState} setServiceState={setServiceState}
-                            eventType={eventType} setEventType={setEventType}
-                            totalEstimate={totalEstimate} setTotalEstimate={setTotalEstimate}/>
+          <ServicesProvidedQuotes
+            serviceState={serviceState}
+            setServiceState={setServiceState}
+            eventType={eventType}
+            setEventType={setEventType}
+            totalEstimate={totalEstimate}
+            setTotalEstimate={setTotalEstimate}
+          />
         </div>
 
         <div className="mt-2 mx-2 mb-4">
@@ -174,8 +197,12 @@ function DetailQuote(props) {
               <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
                 Date
               </Form.Label>
-              <Form.Control type='date' style={squareForm} value={earliestAvailability}
-                onChange={(e) => setEarliestAvailability(e.target.value)}/>
+              <Form.Control
+                type="date"
+                style={squareForm}
+                value={earliestAvailability}
+                onChange={(e) => setEarliestAvailability(e.target.value)}
+              />
             </Form.Group>
           </div>
         </div>

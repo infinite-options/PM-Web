@@ -3,6 +3,7 @@ const pillButton = {
   padding: "5px 20px",
   color: "#007AFF",
   border: "1px solid #007AFF",
+  backgroundColor: "#FFFFFF",
 };
 const boldSmall = {
   fontWeight: "bolder",
