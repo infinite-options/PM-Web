@@ -128,7 +128,14 @@ function OwnerProfile(props) {
         rightFn={() => (editProfile ? submitInfo() : setEditProfile(true))}
       />
       {editProfile ? (
-        <div className="mx-3 my-3">
+        <div
+          className="mx-3 my-3 p-2"
+          style={{
+            background: "#E9E9E9 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
+          }}
+        >
           <div className="my-3">
             <Row className="mb-4" style={headings}>
               <div>Personal Details</div>
@@ -225,7 +232,14 @@ function OwnerProfile(props) {
           </div>
         </div>
       ) : (
-        <div className="mx-3 my-3">
+        <div
+          className="mx-3 my-3 p-2"
+          style={{
+            background: "#E9E9E9 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
+          }}
+        >
           <Row className="mb-4" style={headings}>
             <div>Personal Details</div>
           </Row>
