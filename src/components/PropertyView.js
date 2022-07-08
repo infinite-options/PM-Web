@@ -119,6 +119,7 @@ function PropertyView(props) {
   const [selectedContract, setSelectedContract] = useState(null);
   const [selectedAgreement, setSelectedAgreement] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [showDialog2, setShowDialog2] = useState(false);
   // React.useEffect(async () => {
   //   const response = await get(
   //     `/contracts?property_uid=${property.property_uid}`
@@ -258,8 +259,38 @@ function PropertyView(props) {
     reloadProperty();
   };
 
+  const cancelAgreement = async () => {
+    let pid = pmID;
+
+    const files = JSON.parse(property.images);
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "TERMINATED",
+      manager_id: pid,
+    };
+    // for (let i = -1; i < files.length - 1; i++) {
+    //   let key = `img_${i}`;
+    //   if (i === -1) {
+    //     key = "img_cover";
+    //   }
+    //   updatedManagementContract[key] = files[i + 1];
+    // }
+    const response2 = await put(
+      "/properties",
+      updatedManagementContract,
+      null,
+      files
+    );
+    setShowDialog2(false);
+    setExpandAddManagerDocs(!expandAddManagerDocs);
+    reloadProperty();
+  };
+
   const onCancel = () => {
     setShowDialog(false);
+  };
+  const onCancel2 = () => {
+    setShowDialog2(false);
   };
   console.log(pmID);
   return Object.keys(property).length > 1 ? (
@@ -290,6 +321,14 @@ function PropertyView(props) {
           isOpen={showDialog}
           onConfirm={rejectPropertyManager}
           onCancel={onCancel}
+        />
+        <ConfirmDialog
+          title={
+            "Are you sure you want to cancel the Agreement with this Property Management?"
+          }
+          isOpen={showDialog2}
+          onConfirm={cancelAgreement}
+          onCancel={onCancel2}
         />
 
         <Header title="Properties" leftText="< Back" leftFn={headerBack} />
@@ -828,9 +867,9 @@ function PropertyView(props) {
                                 }}
                               >
                                 <Button
-                                  // onClick={rejectPropertyManager}
+                                  // onClick={cancelAgreement}
                                   onClick={() => {
-                                    setShowDialog(true);
+                                    setShowDialog2(true);
                                     setPmID(p.manager_id);
                                   }}
                                   variant="outline-primary"
@@ -1028,9 +1067,9 @@ function PropertyView(props) {
                             }}
                           >
                             <Button
-                              // onClick={rejectPropertyManager}
+                              // onClick={cancelAgreement}
                               onClick={() => {
-                                setShowDialog(true);
+                                setShowDialog2(true);
                                 setPmID(
                                   property.property_manager[0].manager_id
                                 );
