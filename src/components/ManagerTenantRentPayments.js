@@ -36,7 +36,7 @@ function ManagerTenantRentPayments(props) {
     charge: "",
     of: "Gross Rent",
     frequency: "Weekly",
-    available: "",
+    available_topay: "",
     due_by: "",
     late_by: "",
     late_fee: "",
@@ -51,7 +51,7 @@ function ManagerTenantRentPayments(props) {
         charge: property.deposit.toString(),
         of: "Gross Rent",
         frequency: "One-time",
-        available: available,
+        available_topay: available,
         due_by: startDate,
         late_by: lateAfter,
         late_fee: lateFee,
@@ -63,7 +63,7 @@ function ManagerTenantRentPayments(props) {
         charge: property.listed_rent.toString(),
         of: "Gross Rent",
         frequency: "Monthly",
-        available: available,
+        available_topay: available,
         due_by: dueDate,
         late_by: lateAfter,
         late_fee: lateFee,
@@ -261,8 +261,8 @@ function ManagerTenantRentPayments(props) {
                   type="number"
                   style={squareForm}
                   placeholder="10"
-                  value={newFee.available}
-                  onChange={(e) => changeNewFee(e, "available")}
+                  value={newFee.available_topay}
+                  onChange={(e) => changeNewFee(e, "available_topay")}
                 />
               </Form.Group>
             </Col>

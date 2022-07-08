@@ -44,7 +44,6 @@ function ManagerTenantAgreement(props) {
   const [lateAfter, setLateAfter] = React.useState("");
   const [lateFee, setLateFee] = React.useState("");
   const [lateFeePer, setLateFeePer] = React.useState("");
-
   const [available, setAvailable] = React.useState("");
   // const addFile = (e) => {
   //     const newFiles = [...files];
@@ -103,7 +102,7 @@ function ManagerTenantAgreement(props) {
     setFeeState(JSON.parse(agreement.rent_payments));
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
-
+    setAvailable(agreement.available_topay);
     setDueDate(agreement.due_by);
     setLateAfter(agreement.late_by);
     setLateFee(agreement.late_fee);
@@ -191,6 +190,7 @@ function ManagerTenantAgreement(props) {
       lease_end: endDate,
       rent_payments: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
+      available_topay: available,
       due_by: dueDate,
       late_by: lateAfter,
       late_fee: lateFee,
@@ -268,6 +268,7 @@ function ManagerTenantAgreement(props) {
       rent_payments: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
       rental_status: "PENDING",
+      available_topay: available,
       due_by: dueDate,
       late_by: lateAfter,
       late_fee: lateFee,

@@ -2,39 +2,22 @@ import React, { useState } from "react";
 import { Container, Row, Col, Carousel } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import {
-  tileImg,
-  xSmall,
-  smallLine,
-  mediumBold,
-  green,
-  red,
-  gray,
-  small,
-} from "../utils/styles";
+import { mediumBold, green, red, gray, small } from "../utils/styles";
 import "./owner.css";
-import OwnerPaymentPage from "../components/OwnerPaymentPage";
-import OwnerProperties from "./OwnerProperties";
 function OwnerDashboard(props) {
   const { properties, bills, setStage } = props;
   const navigate = useNavigate();
-
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
-  const [expandProperties, setExpandProperties] = useState(false);
-
-  const [totalSum, setTotalSum] = useState("");
-  const [selectedProperty, setSelectedProperty] = useState("");
-  const [purchaseUID, setPurchaseUID] = useState("");
 
   let revenueTotal = 0;
   for (const item of properties) {
     if (item.owner_revenue.length == 0) {
     } else if (item.owner_revenue.length == 1) {
-      revenueTotal += item.owner_revenue[0].amount_paid;
+      revenueTotal += item.owner_revenue[0].amount_due;
     } else {
       for (const or of item.owner_revenue) {
-        revenueTotal += or.amount_paid;
+        revenueTotal += or.amount_due;
       }
     }
   }
@@ -43,10 +26,10 @@ function OwnerDashboard(props) {
   for (const item of properties) {
     if (item.owner_expense.length == 0) {
     } else if (item.owner_expense.length == 1) {
-      expenseTotal += item.owner_expense[0].amount_paid;
+      expenseTotal += item.owner_expense[0].amount_due;
     } else {
       for (const or of item.owner_expense) {
-        expenseTotal += or.amount_paid;
+        expenseTotal += or.amount_due;
       }
     }
     if (item.mortgages !== null) {
@@ -77,7 +60,7 @@ function OwnerDashboard(props) {
     }
   }
 
-  const cashFlow = revenueTotal - expenseTotal;
+  const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
 
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -447,13 +430,27 @@ function OwnerDashboard(props) {
                     </Col>
                   </Row>
                   {properties.map((property, i) => {
-                    return property.maintenance_expenses !== 0 ||
-                      property.management_expenses !== 0 ||
-                      property.insurance_expenses !== 0 ||
-                      property.repairs_expenses !== 0 ||
-                      property.mortgage_expenses !== 0 ||
-                      property.taxes_expenses !== 0 ? (
+                    return (property.maintenance_expenses !== undefined &&
+                      property.maintenance_expenses) ||
+                      (property.management_expenses !== undefined &&
+                        property.management_expenses !== 0) ||
+                      (property.insurance_expenses !== undefined &&
+                        property.insurance_expenses !== 0) ||
+                      (property.repairs_expenses !== undefined &&
+                        property.repairs_expenses !== 0) ||
+                      (property.mortgage_expenses !== undefined &&
+                        property.mortgage_expenses !== 0) ||
+                      (property.taxes_expenses !== undefined &&
+                        property.taxes_expenses !== 0) ? (
                       <div>
+                        {console.log(
+                          property.maintenance_expenses,
+                          property.management_expenses,
+                          property.insurance_expenses,
+                          property.repairs_expenses,
+                          property.mortgage_expenses,
+                          property.taxes_expenses
+                        )}
                         <Row
                           style={{
                             background:
@@ -490,7 +487,8 @@ function OwnerDashboard(props) {
                             ></p>
                           </Col>
                         </Row>
-                        {property.maintenance_expenses !== 0 ? (
+                        {property.maintenance_expenses !== 0 &&
+                        property.maintenance_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
@@ -537,7 +535,8 @@ function OwnerDashboard(props) {
                         ) : (
                           ""
                         )}
-                        {property.management_expenses !== 0 ? (
+                        {property.management_expenses !== 0 &&
+                        property.management_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
@@ -585,7 +584,8 @@ function OwnerDashboard(props) {
                         ) : (
                           ""
                         )}
-                        {property.insurance_expenses !== 0 ? (
+                        {property.insurance_expenses !== 0 &&
+                        property.insurance_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
@@ -632,7 +632,8 @@ function OwnerDashboard(props) {
                         ) : (
                           ""
                         )}
-                        {property.repairs_expenses !== 0 ? (
+                        {property.repairs_expenses !== 0 &&
+                        property.repairs_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
@@ -679,7 +680,8 @@ function OwnerDashboard(props) {
                         ) : (
                           ""
                         )}
-                        {property.mortgage_expenses !== 0 ? (
+                        {property.mortgage_expenses !== 0 &&
+                        property.mortgage_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
@@ -726,7 +728,8 @@ function OwnerDashboard(props) {
                         ) : (
                           ""
                         )}
-                        {property.taxes_expenses !== 0 ? (
+                        {property.taxes_expenses !== 0 &&
+                        property.taxes_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
