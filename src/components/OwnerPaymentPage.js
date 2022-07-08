@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+
+import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -18,8 +20,13 @@ import {
 
 function OwnerPaymentPage(props) {
   const navigate = useNavigate();
+  // const location = useLocation();
+  // const { totalSum, selectedProperty, purchaseUID, setStage } = props;
+  const { purchase_uid } = useParams();
   const location = useLocation();
-  const { totalSum, selectedProperty, purchaseUID, setStage } = props;
+  const [totalSum, setTotalSum] = useState(location.state.amount);
+  const selectedProperty = location.state.selectedProperty;
+  const purchaseUID = location.state.purchaseUID;
   const [stripePayment, setStripePayment] = useState(false);
   const [paymentConfirm, setPaymentConfirm] = useState(false);
   const requestTitleRef = React.createRef();
@@ -78,7 +85,7 @@ function OwnerPaymentPage(props) {
         title="Payment"
         leftText={paymentConfirm === false ? `< Back` : ""}
         leftFn={() => {
-          setStage("DASHBOARD");
+          navigate("/owner");
         }}
       />
       <div
@@ -160,9 +167,7 @@ function OwnerPaymentPage(props) {
         >
           <Row>
             {allPurchases.length > 1 ? (
-              <div style={mediumBold}>
-                Pay Fees {purchase.description && `(Multiple Fees)`}
-              </div>
+              <div style={mediumBold}>Pay Fees ({purchase.description})</div>
             ) : (
               <div style={mediumBold}>
                 Pay Fees {purchase.description && `(${purchase.description})`}

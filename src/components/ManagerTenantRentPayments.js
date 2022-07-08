@@ -27,7 +27,7 @@ function ManagerTenantRentPayments(props) {
     lateFeePer,
     available,
   } = props;
-  console.log(startDate);
+  console.log(props);
   const [newFee, setNewFee] = React.useState(null);
   const [editingFee, setEditingFee] = React.useState(null);
   const emptyFee = {
@@ -75,7 +75,7 @@ function ManagerTenantRentPayments(props) {
       newFeeState.push({ ...rentFee });
       setFeeState(newFeeState);
     }
-  }, []);
+  }, [available, dueDate, lateAfter, lateFee, lateFeePer]);
 
   const addFee = () => {
     if (newFee.fee_name === "" || newFee.charge === "") {

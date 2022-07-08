@@ -557,7 +557,7 @@ function PropertyCashFlow(props) {
               onClick={() => setExpandMortgage(!expandMortgage)}
               className="mx-2 my-2 p-3"
               style={{
-                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                background: "#E3441F 0% 0% no-repeat padding-box",
                 boxShadow: "0px 3px 3px #00000029",
                 borderRadius: "20px",
               }}
@@ -674,7 +674,7 @@ function PropertyCashFlow(props) {
               onClick={() => setExpandTaxes(!expandTaxes)}
               className="mx-2 my-2 p-3"
               style={{
-                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                background: "#E3441F 0% 0% no-repeat padding-box",
                 boxShadow: "0px 3px 3px #00000029",
                 borderRadius: "20px",
               }}
@@ -796,7 +796,7 @@ function PropertyCashFlow(props) {
               onClick={() => setExpandInsurance(!expandInsurance)}
               className="mx-2 my-2 p-3"
               style={{
-                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                background: "#E3441F 0% 0% no-repeat padding-box",
                 boxShadow: "0px 3px 3px #00000029",
                 borderRadius: "20px",
               }}

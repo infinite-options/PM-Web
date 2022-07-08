@@ -16,10 +16,9 @@ import "./owner.css";
 import OwnerPaymentPage from "../components/OwnerPaymentPage";
 import OwnerProperties from "./OwnerProperties";
 function OwnerDashboard(props) {
-  const { properties, bills, setShowFooter, fetchProperties } = props;
+  const { properties, bills, setStage } = props;
   const navigate = useNavigate();
 
-  const [stage, setStage] = React.useState("DASHBOARD");
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
   const [expandProperties, setExpandProperties] = useState(false);
@@ -85,7 +84,7 @@ function OwnerDashboard(props) {
     currency: "USD",
   });
 
-  return stage === "DASHBOARD" ? (
+  return (
     <div
       className="h-100"
       style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
@@ -898,11 +897,20 @@ function OwnerDashboard(props) {
                     <Col className="text-center">
                       <div
                         className="mb-3"
+                        // onClick={() => {
+                        //   setStage("PAYBILL");
+                        //   setTotalSum(bill.amount_due);
+                        //   setSelectedProperty(bill);
+                        //   setPurchaseUID(bill.purchase_uid);
+                        // }}
                         onClick={() => {
-                          setStage("PAYBILL");
-                          setTotalSum(bill.amount_due);
-                          setSelectedProperty(bill);
-                          setPurchaseUID(bill.purchase_uid);
+                          navigate(`/ownerPaymentPage/${bill.purchase_uid}`, {
+                            state: {
+                              amount: bill.amount_due,
+                              selectedProperty: bill,
+                              purchaseUID: bill.purchase_uid,
+                            },
+                          });
                         }}
                         style={{
                           backgroundColor: "white",
@@ -923,25 +931,7 @@ function OwnerDashboard(props) {
           </Carousel>
         </div>
       </Container>
-      {console.log("stage", stage)}
     </div>
-  ) : stage === "PAYBILL" ? (
-    <OwnerPaymentPage
-      setStage={setStage}
-      totalSum={totalSum}
-      selectedProperty={selectedProperty}
-      purchaseUID={purchaseUID}
-    />
-  ) : stage === "PROPERTIES" ? (
-    <OwnerProperties
-      setShowFooter={setShowFooter}
-      properties={properties}
-      fetchProperties={fetchProperties}
-      selectedProperty={selectedProperty}
-      setSelectedProperty={setSelectedProperty}
-    />
-  ) : (
-    ""
   );
 }
 
