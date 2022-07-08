@@ -182,7 +182,22 @@ function ManagerTenantAgreement(props) {
       return;
     }
     setErrorMessage("");
-
+    for (let i = 0; i < feeState.length; i++) {
+      if (feeState[i]["fee_name"] === "Deposit") {
+        feeState[i]["available_topay"] = available;
+        feeState[i]["due_by"] = "";
+        feeState[i]["late_by"] = lateAfter;
+        feeState[i]["late_fee"] = lateFee;
+        feeState[i]["perDay_late_fee"] = lateFeePer;
+      } else if (feeState[i]["fee_name"] === "Rent") {
+        feeState[i]["available_topay"] = available;
+        feeState[i]["due_by"] = dueDate;
+        feeState[i]["late_by"] = lateAfter;
+        feeState[i]["late_fee"] = lateFee;
+        feeState[i]["perDay_late_fee"] = lateFeePer;
+      } else {
+      }
+    }
     const newAgreement = {
       rental_property_id: property.property_uid,
       tenant_id: null,
