@@ -22,9 +22,7 @@ import {
 function PropertyManagersList(props) {
   const navigate = useNavigate();
   const { back, property_uid, property, reload } = props;
-  const headerBack = () => {
-    back();
-  };
+
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [propertyManagers, setPropertyManagers] = useState([]);

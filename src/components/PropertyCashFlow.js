@@ -63,24 +63,25 @@ function PropertyCashFlow(props) {
 
   useEffect(() => {
     console.log("in useeffect");
+    console.log("in useeffect", property.owner_revenue);
     if (property.owner_revenue.length == 0) {
     } else if (property.owner_revenue.length == 1) {
-      revenueTotal += property.owner_revenue[0].amount_paid;
+      revenueTotal += property.owner_revenue[0].amount_due;
     } else {
       for (const or of property.owner_revenue) {
-        revenueTotal += or.amount_paid;
+        revenueTotal += or.amount_due;
       }
     }
-    setRevenue(revenueTotal);
+
     console.log("in useeffect", revenueTotal);
     if (property.owner_expense.length == 0) {
     } else if (property.owner_expense.length == 1) {
-      expenseTotal += property.owner_expense[0].amount_paid;
-      maintenanceTotal += property.owner_expense[0].amount_paid;
+      expenseTotal += property.owner_expense[0].amount_due;
+      maintenanceTotal += property.owner_expense[0].amount_due;
     } else {
       for (const or of property.owner_expense) {
-        expenseTotal += or.amount_paid;
-        maintenanceTotal += or.amount_paid;
+        expenseTotal += or.amount_due;
+        maintenanceTotal += or.amount_due;
       }
     }
     if (property.mortgages !== null) {
@@ -113,6 +114,7 @@ function PropertyCashFlow(props) {
       yearRevenueTotal += property.year_revenue;
     }
     console.log("in useeffect", expenseTotal);
+    setRevenue(revenueTotal);
     setExpense(expenseTotal);
     setMaintenance(maintenanceTotal);
     setMortgage(mortgageTotal);
@@ -237,7 +239,9 @@ function PropertyCashFlow(props) {
                     <p
                       style={{ ...small, ...green }}
                       className="text-center m-1"
-                    ></p>
+                    >
+                      {property.rental_year_revenue}
+                    </p>
                   </Col>
                 </Row>
               ) : (
@@ -269,7 +273,9 @@ function PropertyCashFlow(props) {
                     <p
                       style={{ ...small, ...green }}
                       className="text-center m-1"
-                    ></p>
+                    >
+                      {property.extraCharges_year_revenue}
+                    </p>
                   </Col>
                 </Row>
               ) : (
@@ -557,7 +563,7 @@ function PropertyCashFlow(props) {
               onClick={() => setExpandMortgage(!expandMortgage)}
               className="mx-2 my-2 p-3"
               style={{
-                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                background: "#E3441F 0% 0% no-repeat padding-box",
                 boxShadow: "0px 3px 3px #00000029",
                 borderRadius: "20px",
               }}
@@ -674,7 +680,7 @@ function PropertyCashFlow(props) {
               onClick={() => setExpandTaxes(!expandTaxes)}
               className="mx-2 my-2 p-3"
               style={{
-                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                background: "#E3441F 0% 0% no-repeat padding-box",
                 boxShadow: "0px 3px 3px #00000029",
                 borderRadius: "20px",
               }}
@@ -796,7 +802,7 @@ function PropertyCashFlow(props) {
               onClick={() => setExpandInsurance(!expandInsurance)}
               className="mx-2 my-2 p-3"
               style={{
-                background: "#FFBCBC 0% 0% no-repeat padding-box",
+                background: "#E3441F 0% 0% no-repeat padding-box",
                 boxShadow: "0px 3px 3px #00000029",
                 borderRadius: "20px",
               }}

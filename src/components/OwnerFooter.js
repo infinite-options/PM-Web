@@ -12,7 +12,7 @@ import Profile_Gray from "../icons/Profile_Gray.svg";
 import AppContext from "../AppContext";
 
 function OwnerFooter(props) {
-  const { setStage, tab, setTab } = props;
+  const { tab, setTab } = props;
   const { logout } = React.useContext(AppContext);
 
   const footerContainer = {

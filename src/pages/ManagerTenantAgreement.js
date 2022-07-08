@@ -44,7 +44,7 @@ function ManagerTenantAgreement(props) {
   const [lateAfter, setLateAfter] = React.useState("");
   const [lateFee, setLateFee] = React.useState("");
   const [lateFeePer, setLateFeePer] = React.useState("");
-
+  const [available, setAvailable] = React.useState("");
   // const addFile = (e) => {
   //     const newFiles = [...files];
   //     newFiles.push(e.target.files[0]);
@@ -102,7 +102,7 @@ function ManagerTenantAgreement(props) {
     setFeeState(JSON.parse(agreement.rent_payments));
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
-
+    setAvailable(agreement.available_topay);
     setDueDate(agreement.due_by);
     setLateAfter(agreement.late_by);
     setLateFee(agreement.late_fee);
@@ -182,7 +182,22 @@ function ManagerTenantAgreement(props) {
       return;
     }
     setErrorMessage("");
-
+    for (let i = 0; i < feeState.length; i++) {
+      if (feeState[i]["fee_name"] === "Deposit") {
+        feeState[i]["available_topay"] = available;
+        feeState[i]["due_by"] = "";
+        feeState[i]["late_by"] = lateAfter;
+        feeState[i]["late_fee"] = lateFee;
+        feeState[i]["perDay_late_fee"] = lateFeePer;
+      } else if (feeState[i]["fee_name"] === "Rent") {
+        feeState[i]["available_topay"] = available;
+        feeState[i]["due_by"] = dueDate;
+        feeState[i]["late_by"] = lateAfter;
+        feeState[i]["late_fee"] = lateFee;
+        feeState[i]["perDay_late_fee"] = lateFeePer;
+      } else {
+      }
+    }
     const newAgreement = {
       rental_property_id: property.property_uid,
       tenant_id: null,
@@ -190,6 +205,7 @@ function ManagerTenantAgreement(props) {
       lease_end: endDate,
       rent_payments: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
+      available_topay: available,
       due_by: dueDate,
       late_by: lateAfter,
       late_fee: lateFee,
@@ -267,6 +283,7 @@ function ManagerTenantAgreement(props) {
       rent_payments: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
       rental_status: "PENDING",
+      available_topay: available,
       due_by: dueDate,
       late_by: lateAfter,
       late_fee: lateFee,
@@ -298,13 +315,6 @@ function ManagerTenantAgreement(props) {
       <Container>
         <div className="mb-4">
           <h5 style={mediumBold}>Tenant(s)</h5>
-          {/*<Form.Group className='mx-2 my-3'>*/}
-          {/*  <Form.Label as='h6' className='mb-0 ms-2'>*/}
-          {/*    Tenant ID {tenantID === '' ? required : ''}*/}
-          {/*  </Form.Label>*/}
-          {/*  <Form.Control style={squareForm} value={tenantID} placeholder='100-000001'*/}
-          {/*    onChange={(e) => setTenantID(e.target.value)}/>*/}
-          {/*</Form.Group>*/}
           {acceptedTenantApplications &&
             acceptedTenantApplications.length > 0 &&
             acceptedTenantApplications.map((application, i) => (
@@ -346,22 +356,25 @@ function ManagerTenantAgreement(props) {
           </Form.Group>
         </div>
         <div className="mb-4">
-          <h5 style={mediumBold}>Rent Payments</h5>
-          <div className="mx-2">
-            <ManagerTenantRentPayments
-              feeState={feeState}
-              setFeeState={setFeeState}
-              property={property}
-            />
-          </div>
-        </div>
-
-        <div className="mb-4">
           <h5 style={mediumBold}>Due date and late fees</h5>
           <div className="mx-2">
-            <Row>
-              <Col>
-                <Form.Group className="mx-2 my-2">
+            <Row className="my-3">
+              <Col className="ps-0">
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Available to pay(days before due)
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    style={squareForm}
+                    placeholder="10"
+                    value={available}
+                    onChange={(e) => setAvailable(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col className="px-0">
+                <Form.Group>
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Rent due {dueDate === "" ? required : ""}
                   </Form.Label>
@@ -386,10 +399,12 @@ function ManagerTenantAgreement(props) {
                   </Form.Select>
                 </Form.Group>
               </Col>
-              <Col>
-                <Form.Group className="mx-2 my-2">
+            </Row>
+            <Row className="my-3">
+              <Col className="ps-0">
+                <Form.Group>
                   <Form.Label as="h6" className="mb-0 ms-2">
-                    Late fees after (days) {lateAfter === "" ? required : ""}
+                    Late fees after(days) {lateAfter === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
                     value={lateAfter}
@@ -400,10 +415,8 @@ function ManagerTenantAgreement(props) {
                   />
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group className="mx-2 my-2">
+              <Col className="ps-0">
+                <Form.Group>
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Late Fee (one-time) {lateFee === "" ? required : ""}
                   </Form.Label>
@@ -416,8 +429,8 @@ function ManagerTenantAgreement(props) {
                   />
                 </Form.Group>
               </Col>
-              <Col>
-                <Form.Group className="mx-2 my-2">
+              <Col className="px-0">
+                <Form.Group>
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Late Fee (per day) {lateFeePer === "" ? required : ""}
                   </Form.Label>
@@ -431,6 +444,23 @@ function ManagerTenantAgreement(props) {
                 </Form.Group>
               </Col>
             </Row>
+          </div>
+        </div>
+        <div className="mb-4">
+          <h5 style={mediumBold}>Rent Payments</h5>
+          <div className="mx-2">
+            <ManagerTenantRentPayments
+              feeState={feeState}
+              setFeeState={setFeeState}
+              property={property}
+              startDate={startDate}
+              endDate={endDate}
+              dueDate={dueDate}
+              lateAfter={lateAfter}
+              lateFee={lateFee}
+              lateFeePer={lateFeePer}
+              available={available}
+            />
           </div>
         </div>
 
