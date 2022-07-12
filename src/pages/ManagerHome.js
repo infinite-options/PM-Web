@@ -11,6 +11,7 @@ import { get } from "../utils/api";
 import ManagerUtilities from "./ManagerUtilities";
 import ManagerProfileTab from "./ManagerProfileTab";
 import OwnerSwitchRole from "../components/OwnerSwitchRole";
+import ManagerDocuments from "../components/ManagerDocuments";
 function ManagerHome() {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
@@ -133,6 +134,12 @@ function ManagerHome() {
               />
             ) : stage === "PROFILE" ? (
               <ManagerProfile
+                setStage={setStage}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
+            ) : stage === "DOCUMENTS" ? (
+              <ManagerDocuments
                 setStage={setStage}
                 setShowFooter={setShowFooter}
                 setTab={setFooterTab}

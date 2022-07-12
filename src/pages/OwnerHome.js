@@ -11,7 +11,7 @@ import OwnerSwitchRole from "../components/OwnerSwitchRole";
 import OwnerContacts from "./OwnerContacts";
 import OwnerRepairList from "../components/OwnerRepairList";
 import OwnerRepairRequest from "../components/OwnerRepairRequest";
-
+import OwnerDocuments from "../components/OwnerDocuments";
 function OwnerHome(props) {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
@@ -151,6 +151,12 @@ function OwnerHome(props) {
               />
             ) : stage === "PROFILE" ? (
               <OwnerProfile
+                setStage={setStage}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
+            ) : stage === "DOCUMENTS" ? (
+              <OwnerDocuments
                 setStage={setStage}
                 setShowFooter={setShowFooter}
                 setTab={setFooterTab}

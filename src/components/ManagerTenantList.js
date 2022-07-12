@@ -281,17 +281,24 @@ function ManagerTenantList(props) {
                     cursor: "pointer",
                   }}
                 >
-                  <Row style={mediumBold} className="mx-2">
-                    <Col>
-                      {payment.description}{" "}
-                      {payment.purchase_notes && `(${payment.purchase_notes})`}
-                    </Col>
-                  </Row>
                   <Row className="mx-2">
                     <Col style={subText}>
                       {moment(payment.payment_date).format("MMM D, YYYY")}
                     </Col>
-                    <Col style={blueRight} className="mt-2">
+                  </Row>
+                  <Row style={mediumBold} className="d-flex mx-2">
+                    <Col>
+                      {payment.description}{" "}
+                      {payment.purchase_notes && `(${payment.purchase_notes})`}
+                    </Col>
+                    <Col
+                      style={{
+                        fontWeight: "600",
+                        font: "normal normal normal 20px/28px Bahnschrift-Regular",
+                        color: "#007Aff",
+                      }}
+                      className="d-flex mx-2 justify-content-end"
+                    >
                       {formatter.format(payment.amount)}
                     </Col>
                   </Row>
