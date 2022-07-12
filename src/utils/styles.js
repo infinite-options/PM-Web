@@ -28,6 +28,7 @@ const underline = {
 const gray = {
   color: "gray",
   fontSize: "small",
+  font: "normal normal normal 14px Bahnschrift-Regular",
 };
 const blue = {
   color: "#007AFF",
@@ -56,7 +57,7 @@ const smallPillButton = {
   padding: "2px 7px",
 };
 const squareForm = {
-  borderRadius: 0,
+  borderRadius: "5px",
   border: "1px solid #707070",
 };
 const hidden = {
@@ -124,7 +125,7 @@ const smallGray = {
 };
 
 const headings = {
-  font: "normal normal 600 22px/26px SFProDisplay-Semibold",
+  font: "normal normal bold 22px/26px Bahnschrift-Bold",
   letterSpacing: "0px",
   color: "#000000",
   marginBottom: "0.5rem",
@@ -284,7 +285,7 @@ const subHeading = {
 };
 const subText = {
   textAlign: "left",
-  font: "normal normal normal 16px/26px SFProDisplay-Regular",
+  font: "normal normal normal 16px/26px Bahnschrift-Regular",
   letterSpacing: "0px",
   color: "#777777",
 };

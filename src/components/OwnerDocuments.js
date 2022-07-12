@@ -132,7 +132,6 @@ function OwnerDocuments(props) {
                       style={{
                         font: "normal normal 600 18px Bahnschrift-Regular",
                         color: "#007AFF",
-                        textDecoration: "underline",
                       }}
                     >
                       {ald[0].description != "" ? (
@@ -157,7 +156,6 @@ function OwnerDocuments(props) {
                   style={{
                     font: "normal normal 600 18px Bahnschrift-Regular",
                     color: "#007AFF",
-                    textDecoration: "underline",
                   }}
                 >
                   <p>No documents</p>
@@ -196,7 +194,6 @@ function OwnerDocuments(props) {
                       style={{
                         font: "normal normal 600 18px Bahnschrift-Regular",
                         color: "#007AFF",
-                        textDecoration: "underline",
                       }}
                     >
                       {amd[0].description != "" ? (
@@ -221,7 +218,6 @@ function OwnerDocuments(props) {
                   style={{
                     font: "normal normal 600 18px Bahnschrift-Regular",
                     color: "#007AFF",
-                    textDecoration: "underline",
                   }}
                 >
                   <p>No documents</p>
@@ -260,7 +256,6 @@ function OwnerDocuments(props) {
                       style={{
                         font: "normal normal 600 18px Bahnschrift-Regular",
                         color: "#007AFF",
-                        textDecoration: "underline",
                       }}
                     >
                       {pld[0].description != "" ? (
@@ -285,7 +280,6 @@ function OwnerDocuments(props) {
                   style={{
                     font: "normal normal 600 18px Bahnschrift-Regular",
                     color: "#007AFF",
-                    textDecoration: "underline",
                   }}
                 >
                   <p>No documents</p>
@@ -324,7 +318,6 @@ function OwnerDocuments(props) {
                       style={{
                         font: "normal normal 600 18px Bahnschrift-Regular",
                         color: "#007AFF",
-                        textDecoration: "underline",
                       }}
                     >
                       {pmd[0].description != "" ? (
@@ -349,7 +342,6 @@ function OwnerDocuments(props) {
                   style={{
                     font: "normal normal 600 18px Bahnschrift-Regular",
                     color: "#007AFF",
-                    textDecoration: "underline",
                   }}
                 >
                   <p>No documents</p>

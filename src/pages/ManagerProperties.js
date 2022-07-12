@@ -1,10 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
+import Phone from "../icons/Phone.svg";
+import Message from "../icons/Message.svg";
 import {
   blue,
   bluePill,
   gray,
+  smallImg,
+  hidden,
   greenPill,
+  mediumBold,
   orangePill,
   redPill,
   tileImg,
@@ -12,7 +18,6 @@ import {
 } from "../utils/styles";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
-import { useNavigate } from "react-router-dom";
 import { get } from "../utils/api";
 
 function ManagerProperties(props) {
@@ -97,7 +102,7 @@ function ManagerProperties(props) {
       );
 
       property.end_early_applications = property.applications.filter(
-          (a) => a.application_status === "TENANT END EARLY"
+        (a) => a.application_status === "TENANT END EARLY"
       );
     });
 
@@ -111,122 +116,166 @@ function ManagerProperties(props) {
   //     setSelectedProperty(property);
   //     setStage('PROPERTY');
   // }
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
 
   return (
-    <div className="h-100">
+    <div
+      className="pb-5 mb-5"
+      style={{
+        background: "#E9E9E9 0% 0% no-repeat padding-box",
+        borderRadius: "10px",
+        opacity: 1,
+      }}
+    >
       <Header
         title="Properties"
-        leftText="< Back"
+        leftText="<Back"
         leftFn={() => {
           navigate("/manager");
         }}
-        rightText="Sort by"
+        // rightText="Sort by"
       />
-      {properties.map((property, i) => (
-        <Container
-          key={i}
-          className="pt-1 mb-4"
-          onClick={() => {
-            navigate(`./${property.property_uid}`, {
-              state: {
-                property: property,
-                property_uid: property.property_uid,
-              },
-            });
-          }}
-        >
-          <Row>
-            <Col xs={4}>
-              <div style={tileImg}>
-                {JSON.parse(property.images).length > 0 ? (
-                  <img
-                    src={JSON.parse(property.images)[0]}
-                    alt="Property"
-                    className="h-100 w-100"
-                    style={{ borderRadius: "4px", objectFit: "cover" }}
-                  />
-                ) : (
-                  ""
-                )}
-              </div>
-            </Col>
-            <Col className="ps-0">
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                  ${property.listed_rent}/mo
-                </h5>
-
-                {property.rental_status === "ACTIVE" ? (
-                  <p style={greenPill} className="mb-0">
-                    Rented
-                  </p>
-                ) : property.rental_status === "PROCESSING" ? (
-                  <p style={bluePill} className="mb-0">
-                    Processing
-                  </p>
-                ) : property.management_status === "FORWARDED" ? (
-                  <p style={redPill} className="mb-0">
-                    New
-                  </p>
-                ) : property.management_status === "SENT" ? (
-                  <p style={orangePill} className="mb-0">
-                    Processing
-                  </p>
-                ) : (
-                  <p style={orangePill} className="mb-0">
-                    Not Rented
-                  </p>
-                )}
-              </div>
-              <p style={gray} className="mt-2 mb-0">
-                {property.address}
-                {property.unit !== "" ? " " + property.unit : ""},{" "}
-                {property.city}, {property.state} <br />
-                {property.zip}
-              </p>
-              {/*<div className='d-flex'>*/}
-              {/*    <div className='flex-grow-1 d-flex flex-column justify-content-center'>*/}
-              {/*        <p style={{...blue, ...xSmall}} className='mb-0'>*/}
-              {/*            {property.owner_id ?*/}
-              {/*                `Owner: ${property.owner_first_name} ${property.owner_last_name}`*/}
-              {/*                : 'No Owner'}*/}
-              {/*        </p>*/}
-              {/*    </div>*/}
-              {/*</div>*/}
-
-              <div className="d-flex">
-                <div className="d-flex align-items-end">
-                  <p style={{ ...blue, ...xSmall }} className="mb-0">
-                    {property.repairs.new > 0
-                      ? `${property.repairs.new} new repair requests to review`
-                      : ""}
-                  </p>
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        {properties.map((property, i) => (
+          <Container
+            key={i}
+            className="pt-1 mb-4"
+            onClick={() => {
+              navigate(`./${property.property_uid}`, {
+                state: {
+                  property: property,
+                  property_uid: property.property_uid,
+                },
+              });
+            }}
+          >
+            <Row>
+              <Col xs={4}>
+                <div style={tileImg}>
+                  {JSON.parse(property.images).length > 0 ? (
+                    <img
+                      src={JSON.parse(property.images)[0]}
+                      alt="Property"
+                      className="h-100 w-100"
+                      style={{ borderRadius: "4px", objectFit: "cover" }}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </div>
-              </div>
+              </Col>
+              <Col className="ps-0">
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0" style={mediumBold}>
+                    ${property.listed_rent}/mo
+                  </h5>
 
-              <div className="d-flex">
-                <div className="d-flex align-items-end">
-                  <p style={{ ...blue, ...xSmall }} className="mb-0">
-                    {property.new_tenant_applications.length > 0
-                      ? `${property.new_tenant_applications.length} new tenant application(s) to review`
-                      : ""}
-                  </p>
+                  {property.rental_status === "ACTIVE" ? (
+                    <p style={greenPill} className="mb-0">
+                      Rented
+                    </p>
+                  ) : property.rental_status === "PROCESSING" ? (
+                    <p style={bluePill} className="mb-0">
+                      Processing
+                    </p>
+                  ) : property.management_status === "FORWARDED" ? (
+                    <p style={redPill} className="mb-0">
+                      New
+                    </p>
+                  ) : property.management_status === "SENT" ? (
+                    <p style={orangePill} className="mb-0">
+                      Processing
+                    </p>
+                  ) : (
+                    <p style={orangePill} className="mb-0">
+                      Not Rented
+                    </p>
+                  )}
                 </div>
-              </div>
+                <p
+                  style={{
+                    color: "#777777",
+                    font: "normal normal normal 14px Bahnschrift-Regular",
+                  }}
+                  className="mt-0 mb-0"
+                >
+                  {property.address}
+                  {property.unit !== "" ? " " + property.unit : ""}, <br />
+                  {property.city}, {property.state}
+                  {property.zip}
+                </p>
 
-              <div className="d-flex">
-                <div className="d-flex align-items-end">
-                  <p style={{ ...blue, ...xSmall }} className="mb-0">
-                    {property.end_early_applications.length > 0
+                <div className="d-flex">
+                  <div className="d-flex align-items-end">
+                    <p style={{ ...blue, ...xSmall }} className="mb-0">
+                      {property.repairs.new > 0
+                        ? `${property.repairs.new} new repair requests to review`
+                        : ""}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="d-flex">
+                  <div className="d-flex align-items-end">
+                    <p style={{ ...blue, ...xSmall }} className="mb-0">
+                      {property.new_tenant_applications.length > 0
+                        ? `${property.new_tenant_applications.length} new tenant application(s) to review`
+                        : ""}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="d-flex">
+                  <div className="d-flex align-items-end">
+                    <p style={{ ...blue, ...xSmall }} className="mb-0">
+                      {property.end_early_applications.length > 0
                         ? "Tenant(s) requested to end the lease early"
                         : ""}
-                  </p>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      ))}
+                <div className="d-flex flex-column">
+                  <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                    <p
+                      style={{
+                        ...blue,
+                        ...xSmall,
+                        font: "normal normal normal 12px/12px Bahnschrift-Regular",
+                      }}
+                      className="mb-1"
+                    >
+                      Owner: {property.owner_first_name}{" "}
+                      {property.owner_last_name}
+                    </p>
+                  </div>
+                  <div
+                    className="mb-1"
+                    style={property.owner_id ? {} : hidden}
+                    onClick={stopPropagation}
+                  >
+                    <a href={`tel:${property.owner_phone_number}`}>
+                      <img src={Phone} alt="Phone" style={smallImg} />
+                    </a>
+                    <a href={`mailto:${property.owner_email}`}>
+                      <img src={Message} alt="Message" style={smallImg} />
+                    </a>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+            <hr className="mt-4" />
+          </Container>
+        ))}
+      </div>
     </div>
   );
 }

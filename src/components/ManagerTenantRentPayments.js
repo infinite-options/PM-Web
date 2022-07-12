@@ -127,7 +127,11 @@ function ManagerTenantRentPayments(props) {
   return (
     <div>
       {feeState.map((fee, i) => (
-        <div key={i}>
+        <div
+          key={i}
+          className="p-1 mb-2"
+          style={{ boxShadow: " 0px 1px 6px #00000029", borderRadius: "5px" }}
+        >
           <div className="d-flex">
             <div className="flex-grow-1">
               <h6 className="mb-1">{fee.fee_name}</h6>
@@ -153,7 +157,6 @@ function ManagerTenantRentPayments(props) {
               : `$${fee.charge}`}{" "}
             {fee.frequency}
           </p>
-          <hr className="mt-1" />
         </div>
       ))}
       {newFee !== null ? (

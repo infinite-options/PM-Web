@@ -23,7 +23,7 @@ function ManagerOverview(props) {
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
 
-  const [properties, setProperties] = useState([]);
+  const { properties, maintenanceRequests } = props;
   const [alerts, setAlerts] = useState({
     repairs: [],
     applications: [],
@@ -38,75 +38,9 @@ function ManagerOverview(props) {
     }
   }, []);
 
-  const fetchProperties = async () => {
-    if (access_token === null) {
-      navigate("/");
-      return;
-    }
-
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
-      return;
-    } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
-      management_buid = management_businesses[0].business_uid;
-    } else {
-      management_buid = management_businesses[0].business_uid;
-    }
-
-    // const response =  await get(`/businesses?business_uid=${management_buid}`);
-    const response = await get(`/propertyInfo?manager_id=${management_buid}`);
-    if (response.msg === "Token has expired") {
-      refresh();
-      return;
-    }
-
-    // const properties = response.result
-    const properties = response.result.filter(
-      (property) => property.management_status !== "REJECTED"
-    );
-
-    const properties_unique = [];
-    const pids = new Set();
-    properties.forEach((property) => {
-      if (pids.has(property.property_uid)) {
-        // properties_unique[properties_unique.length-1].tenants.push(property)
-        const index = properties_unique.findIndex(
-          (item) => item.property_uid === property.property_uid
-        );
-        properties_unique[index].tenants.push(property);
-      } else {
-        pids.add(property.property_uid);
-        properties_unique.push(property);
-        properties_unique[properties_unique.length - 1].tenants = [property];
-      }
-    });
-    console.log(properties_unique);
-    setProperties(properties_unique);
-
-    // await getAlerts(properties_unique)
-  };
-
-  React.useEffect(fetchProperties, [access_token]);
-
   const unique_clients = [...new Set(properties.map((item) => item.owner_id))]
     .length;
   const property_count = properties.length;
-
-  // const getAlerts = async (properties_unique) => {
-  //     const property = properties_unique[0]
-  //     const repairs_response = await get(`/maintenanceRequests`, access_token);
-  //     const repairs = repairs_response.result.filter(item => item.property_uid === property.property_uid);
-  //     const applications_response = await get(`/applications?property_uid=${property.property_uid}`);
-  //     const applications = applications_response.result.map(application => ({...application, application_selected: false}))
-  //     const count = repairs.length + applications.length
-  //
-  //     setAlerts({repairs: repairs, applications: applications, count: count})
-  // }
 
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
@@ -127,6 +61,7 @@ function ManagerOverview(props) {
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
+            onClick={() => navigate("/owner-list")}
           >
             <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
               Owners
@@ -143,7 +78,8 @@ function ManagerOverview(props) {
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
-            onClick={() => setExpandProperties(!expandProperties)}
+            // onClick={() => setExpandProperties(!expandProperties)}
+            onClick={() => navigate("/manager-properties")}
           >
             <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
               Properties
@@ -246,41 +182,82 @@ function ManagerOverview(props) {
           </Row>
         </div>
         <Carousel
+          id="owner-bills"
           interval={null}
+          controls={false}
+          className="mx-2 p-3 "
+          style={{
+            background: "#007AFF 0% 0% no-repeat padding-box",
+          }}
+        >
+          {maintenanceRequests.map((request) => {
+            return request.request_status === "SCHEDULED" ? (
+              <Carousel.Item className="px-2 pb-3 ">
+                <div
+                  style={{
+                    textAlign: "left",
+                    font: "normal normal bold 22px Bahnschrift-Bold",
+                    color: "#ffffff",
+                  }}
+                >
+                  Upcoming Repairs:
+                </div>
+                <div
+                  style={{
+                    textAlign: "left",
+                    font: "normal normal normal 16px Bahnschrift-Regular",
+                    color: "#ffffff",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {request.title} is scheduled for{" "}
+                  {new Date(request.scheduled_date).toLocaleDateString(
+                    "en-us",
+                    {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    }
+                  )}
+                </div>
+
+                {properties.map((property) => {
+                  return property.property_uid === request.property_uid ? (
+                    <div
+                      style={{
+                        textAlign: "left",
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                        color: "#ffffff",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {" "}
+                      {property.address}
+                      {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+                      {property.city}, {property.state} {property.zip}{" "}
+                    </div>
+                  ) : null;
+                })}
+              </Carousel.Item>
+            ) : null;
+          })}
+        </Carousel>
+        <div
           className="mx-2 p-3 "
           style={{
             background: "#F3F3F3 0% 0% no-repeat padding-box",
           }}
         >
-          <Carousel.Item>
-            <div
-              style={{
-                textAlign: "center",
-                font: "normal normal bold 22px Bahnschrift-Bold",
-                color: "#007AFF",
-              }}
-            >
-              Resident Announcements
-            </div>
-            <div className="mx-2 mt-3 mb-2 px-3 pb-3 ">
-              <p className="d-flex">No Announcements</p>
-            </div>
-          </Carousel.Item>
-          <Carousel.Item>
-            <div
-              style={{
-                textAlign: "center",
-                font: "normal normal bold 22px Bahnschrift-Bold",
-                color: "#007AFF",
-              }}
-            >
-              Resident Announcements
-            </div>
-            <div className="mx-2 mt-3 mb-2 px-3 pb-3 ">
-              <p className="d-flex">No Announcements</p>
-            </div>
-          </Carousel.Item>
-        </Carousel>
+          <div
+            style={{
+              textAlign: "left",
+              font: "normal normal bold 22px Bahnschrift-Bold",
+              color: "#007AFF",
+            }}
+          >
+            Resident Announcements {">"}
+          </div>
+        </div>
         <div>
           <Row className="mx-1 mt-2 px-2">
             <Col
@@ -313,9 +290,7 @@ function ManagerOverview(props) {
 
             <Col
               onClick={() => {
-                navigate("/manager-repairs", {
-                  state: { properties: properties },
-                });
+                navigate("/tenant-list");
               }}
               className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
               style={{

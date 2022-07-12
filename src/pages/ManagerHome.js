@@ -19,6 +19,7 @@ function ManagerHome() {
   const [stage, setStage] = useState("DASHBOARD");
   const [showFooter, setShowFooter] = useState(true);
   const [properties, setProperties] = useState([]);
+  const [maintenanceRequests, setMaintenanceRequests] = useState([]);
 
   useEffect(() => {
     if (userData.access_token === null) {
@@ -60,6 +61,7 @@ function ManagerHome() {
 
     const properties_unique = [];
     const pids = new Set();
+    const mr = [];
     properties.forEach((property) => {
       if (pids.has(property.property_uid)) {
         // properties_unique[properties_unique.length-1].tenants.push(property)
@@ -73,7 +75,17 @@ function ManagerHome() {
         properties_unique[properties_unique.length - 1].tenants = [property];
       }
     });
+    properties_unique.forEach((property) => {
+      if (property.maintenanceRequests.length > 0) {
+        console.log("has maintenanceRequests");
+        property.maintenanceRequests.forEach((request) => {
+          mr.push(request);
+        });
+      }
+    });
+    console.log(mr);
     console.log(properties_unique);
+    setMaintenanceRequests(mr);
     setProperties(properties_unique);
 
     // await getAlerts(properties_unique)
@@ -85,7 +97,11 @@ function ManagerHome() {
     <div className="d-flex flex-column h-100">
       <div className="flex-grow-1">
         {footerTab === "DASHBOARD" ? (
-          <ManagerOverview setShowFooter={setShowFooter} />
+          <ManagerOverview
+            properties={properties}
+            maintenanceRequests={maintenanceRequests}
+            setShowFooter={setShowFooter}
+          />
         ) : (
           ""
         )}
