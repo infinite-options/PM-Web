@@ -226,9 +226,12 @@ function OwnerRepairList(props) {
                             className="mb-4 p-0"
                             key={j}
                             onClick={() =>
-                              navigate(`./${repair.maintenance_request_uid}`, {
-                                state: { repair: repair },
-                              })
+                              navigate(
+                                `/owner-repairs/${repair.maintenance_request_uid}`,
+                                {
+                                  state: { repair: repair },
+                                }
+                              )
                             }
                           >
                             <Col xs={4}>

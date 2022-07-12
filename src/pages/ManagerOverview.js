@@ -261,7 +261,7 @@ function ManagerOverview(props) {
         <div>
           <Row className="mx-1 mt-2 px-2">
             <Col
-              onClick={() => navigate("/manager-properties")}
+              onClick={() => navigate("/properties")}
               className="text-center m-1 p-2 d-flex flex-row justify-content-between align-items-center"
               style={{
                 height: "87px",

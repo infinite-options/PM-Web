@@ -560,7 +560,7 @@ function ManagerPropertyView(props) {
                             <hr opacity={1} />
                           </Row>
 
-                          {mr.repair_status === "COMPLETED" ? (
+                          {mr.request_status === "COMPLETED" ? (
                             <Row
                               style={{
                                 font: "normal normal normal 12px Bahnschrift-Regular",
@@ -577,7 +577,7 @@ function ManagerPropertyView(props) {
                                 }
                               )}
                             </Row>
-                          ) : mr.repair_status === "SCHEDULED" ? (
+                          ) : mr.request_status === "SCHEDULED" ? (
                             <Row
                               style={{
                                 font: "normal normal normal 12px Bahnschrift-Regular",

@@ -25,10 +25,8 @@ function ManagerOwnerList(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [owners, setOwners] = useState([]);
-
-  const [showDialog, setShowDialog] = useState(false);
-  const [selectedOwners, setSelectedOwners] = useState(null);
-  const [stage, setStage] = React.useState("LIST");
+  const [selectedOwner, setSelectedOwner] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
   const fetchProperties = async () => {
     if (access_token === null) {
       navigate("/");
@@ -58,8 +56,8 @@ function ManagerOwnerList(props) {
 
     // console.log(response.result);
     setOwners(response.result);
-    setSelectedOwners(response.result[0]);
-    console.log(selectedOwners);
+    setSelectedOwner(response.result[0]);
+    console.log(selectedOwner);
     // await getAlerts(properties_unique)
   };
 
@@ -90,42 +88,74 @@ function ManagerOwnerList(props) {
           opacity: 1,
         }}
       >
-        {owners.map((property, i) => (
-          <Container key={i} className="pt-1" style={{ height: "100px" }}>
+        {owners.map((owner, i) => (
+          <Container
+            key={i}
+            className="p-3 mb-2"
+            style={{
+              boxShadow: " 0px 1px 6px #00000029",
+              borderRadius: "5px",
+            }}
+          >
             <Row
               onClick={() => {
-                setStage("PMDETAILS");
-                setSelectedOwners(property);
-              }}
-              className="p-3 mb-2"
-              style={{
-                boxShadow: " 0px 1px 6px #00000029",
-                borderRadius: "5px",
+                setShowDetails(!showDetails);
+                setSelectedOwner(owner);
               }}
             >
               <Col className="ps-0" xs={8}>
                 <div className="d-flex justify-content-between align-items-center">
                   <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                    {property.owner_first_name} {property.owner_last_name}
+                    {owner.owner_first_name} {owner.owner_last_name}
                   </h5>
                 </div>
               </Col>
               <Col>
                 <div className="d-flex  justify-content-end ">
                   <div
-                    style={property.owner_id ? {} : hidden}
+                    style={owner.owner_id ? {} : hidden}
                     onClick={stopPropagation}
                   >
-                    <a href={`tel:${property.owner_phone_number}`}>
+                    <a href={`tel:${owner.owner_phone_number}`}>
                       <img src={Phone} alt="Phone" style={smallImg} />
                     </a>
-                    <a href={`mailto:${property.owner_email}`}>
+                    <a href={`mailto:${owner.owner_email}`}>
                       <img src={Message} alt="Message" style={smallImg} />
                     </a>
                   </div>
                 </div>
               </Col>
             </Row>
+            <Row
+              style={{
+                font: "normal normal 600 16px/22px Bahnschrift-Regular",
+                color: "#007AFF",
+              }}
+            >
+              {owner.properties.length} Properties
+            </Row>
+            {showDetails && selectedOwner.owner_id === owner.owner_id ? (
+              <Row className="mx-2">
+                {selectedOwner.properties.map((property, i) => {
+                  return (
+                    <Row
+                      className="p-1"
+                      style={{
+                        background:
+                          i % 2 === 0
+                            ? "#FFFFFF 0% 0% no-repeat padding-box"
+                            : "#F3F3F3 0% 0% no-repeat padding-box",
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {property.address}
+                      {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+                      {property.city}, {property.state} {property.zip}
+                    </Row>
+                  );
+                })}
+              </Row>
+            ) : null}
           </Container>
         ))}
       </div>

@@ -17,7 +17,7 @@ import RepairStatus from "./components/RepairStatus";
 import TenantDocuments from "./components/TenantDocuments";
 import RentPayment from "./components/RentPayment";
 import PaymentPage from "./components/PaymentPage";
-
+import OwnerRepairDetails from "./components/OwnerRepairDetails";
 import OwnerPaymentPage from "./components/OwnerPaymentPage";
 import PaymentHistory from "./components/PaymentHistory";
 import ScheduleRepairs from "./components/ScheduleRepairs";
@@ -63,6 +63,7 @@ import ManagerOwnerList from "./components/ManagerOwnerList";
 import ManagerTenantList from "./components/ManagerTenantList";
 import ManagerApplianceList from "./components/ManagerApplianceList";
 import ManagerRepairInfo from "./pages/ManagerRepairInfo";
+import NotManagedProperties from "./components/NotManagedProperties";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -193,7 +194,6 @@ function App() {
               path="ownerPaymentHistory"
               element={<OwnerPaymentHistory />}
             />
-
             <Route path="scheduleRepairs" element={<ScheduleRepairs />} />
             <Route path="rescheduleRepair" element={<RescheduleRepair />} />
             <Route
@@ -209,7 +209,6 @@ function App() {
               element={<PMRepairRequestDetail />}
             />
             <Route path="pmRepairRequest" element={<PMRepairRequest />} />
-
             <Route path="manager-properties" element={<ManagerProperties />} />
             <Route path="/owner-list" element={<ManagerOwnerList />} />
             <Route path="/tenant-list" element={<ManagerTenantList />} />
@@ -245,6 +244,12 @@ function App() {
               path="manager-repairs/:rr_id"
               element={<ManagerRepairDetail />}
             />
+            <Route
+              path="/owner-repairs/:rr_id"
+              element={<OwnerRepairDetails />}
+            />
+            <Route path="/properties" element={<NotManagedProperties />} />
+
             <Route path="quotes-sent" element={<MaintenanceQuotesSent />} />
             <Route
               path="quotes-sent/:q_id"
