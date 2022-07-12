@@ -84,7 +84,11 @@ function BusinessContact(props) {
   return (
     <div>
       {contactState.map((contact, i) => (
-        <div key={i}>
+        <div
+          className="p-1 mb-2"
+          style={{ boxShadow: " 0px 1px 6px #00000029", borderRadius: "5px" }}
+          key={i}
+        >
           {console.log("businesscontact", contactState)}
           <div className="d-flex">
             <div className="flex-grow-1">

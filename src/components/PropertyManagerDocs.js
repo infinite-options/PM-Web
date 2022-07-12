@@ -6,7 +6,7 @@ import {
   pillButton,
   smallPillButton,
   mediumBold,
-  squareForm,
+  smallImg,
   redPillButton,
   bluePillButton,
   mediumImg,
@@ -111,46 +111,112 @@ function PropertyManagerDocs(props) {
       {(property.management_status === "ACCEPTED" ||
         property.management_status === "SENT") &&
       activeContract ? (
-        <div>
-          <div className="d-flex">
-            <div className="flex-grow-1">
-              <h6>Contract Name</h6>
+        <Row className="mx-2">
+          <Row className="flex-grow-1 my-2">
+            <Col
+              className=" d-flex align-items-left"
+              style={{
+                font: "normal normal 600 18px Bahnschrift-Regular",
+              }}
+            >
+              Owner: {property.owner[0].owner_first_name}{" "}
+              {property.owner[0].owner_last_name}
+            </Col>
+            <Col className="d-flex justify-content-end">
+              <a href={`tel:${property.owner_phone_number}`}>
+                <img src={Phone} alt="Phone" style={smallImg} />
+              </a>
+              <a href={`mailto:${property.owner_email}`}>
+                <img src={Message} alt="Message" style={smallImg} />
+              </a>
+            </Col>
+          </Row>
+
+          <Row className="flex-grow-1">
+            <Col className=" d-flex align-items-left">
               <p>
                 {activeContract.contract_name
                   ? activeContract.contract_name
-                  : "Unnamed Contract"}{" "}
-                ({activeContract.contract_uid})
+                  : "Unnamed Contract"}
               </p>
-            </div>
-            <div>
+            </Col>
+            <Col className="d-flex justify-content-end">
               <img
                 src={Edit}
                 alt="Edit"
                 onClick={() => selectContract(activeContract)}
               />
-            </div>
-          </div>
-
-          <Row className="my-3">
-            <Col>
-              <h6>Start Date</h6>
-              <p>{activeContract.start_date}</p>
             </Col>
-            <Col>
-              <h6>End Date</h6>
-              <p>{activeContract.end_date}</p>
+          </Row>
+          <Row className="mt-1">
+            <Col
+              style={{
+                font: "normal normal 600 18px Bahnschrift-Regular",
+              }}
+            >
+              Contract Length
+            </Col>
+          </Row>
+          <Row className="mt-1">
+            <Col
+              className=" d-flex align-items-left"
+              style={{
+                font: "normal normal 600 18px Bahnschrift-Regular",
+              }}
+            >
+              Start Date
+            </Col>
+            <Col className=" d-flex justify-content-end">
+              <h6
+                style={{
+                  font: "normal normal normal 16px Bahnschrift-Regular",
+                }}
+              >
+                {activeContract.start_date}
+              </h6>
+            </Col>
+          </Row>
+          <Row className="mb-1">
+            <Col
+              className=" d-flex align-items-left"
+              style={{
+                font: "normal normal 600 18px Bahnschrift-Regular",
+              }}
+            >
+              End Date
+            </Col>
+            <Col className=" d-flex justify-content-end">
+              <h6
+                style={{
+                  font: "normal normal normal 16px Bahnschrift-Regular",
+                }}
+              >
+                {activeContract.end_date}
+              </h6>
             </Col>
           </Row>
 
-          <Row className="my-2">
-            <h6>Fees Charged</h6>
+          <Row className="my-1">
+            <Row className="mt-1">
+              <Col
+                style={{
+                  font: "normal normal 600 18px Bahnschrift-Regular",
+                }}
+              >
+                Fees Charged
+              </Col>
+            </Row>
             {activeContract.fees.map((fee, i) => (
               <div key={i}>
-                <Row>
-                  <Col>
-                    <p className="mb-1">{fee.fee_name}</p>
+                <Row className="mt-1">
+                  <Col
+                    style={{
+                      font: "normal normal normal 16px Bahnschrift-Regular",
+                    }}
+                  >
+                    {fee.fee_name}
                   </Col>
-                  <Col>
+                  <Col className="d-flex justify-content-end">
                     <p style={gray} className="mb-1">
                       {fee.fee_type === "%"
                         ? `${fee.charge}% of ${fee.of}`
@@ -163,96 +229,66 @@ function PropertyManagerDocs(props) {
               </div>
             ))}
           </Row>
-
-          <Row className="my-4">
-            <h6>Contact Details</h6>
-            {activeContract.contacts.map((contact, i) => (
-              <div key={i}>
-                <Row>
-                  <Col>
-                    <p className="mb-1">
-                      {contact.first_name} {contact.last_name} (
-                      {contact.company_role})
-                    </p>
-                  </Col>
-                  <Col>
-                    <p style={gray} className="mb-1">
-                      {contact.phone_number}
-                    </p>
-                  </Col>
-                  <Col>
-                    <p style={gray} className="mb-1">
-                      {contact.email}
-                    </p>
-                  </Col>
-                </Row>
-                {/*<hr className="mt-1" />*/}
-              </div>
-            ))}
-          </Row>
-
-          <Row className="my-3">
-            <h6>Contract Documents</h6>
-            {activeContract.docs.map((file, i) => (
-              <div key={i}>
-                <div className="d-flex justify-content-between align-items-end">
-                  <div>
-                    <p className="mb-1">{file.name}</p>
-                    <p style={small} className="m-0">
-                      {file.description}
-                    </p>
-                  </div>
-                  <div>
-                    <a href={file.link} target="_blank">
-                      <img src={File} />
-                    </a>
+          {activeContract.contacts.length === 0 ? (
+            ""
+          ) : (
+            <Row className="my-4">
+              <h6>Contact Details</h6>
+              {activeContract.contacts.map((contact, i) => (
+                <div key={i}>
+                  <Row>
+                    <Col>
+                      <p className="mb-1">
+                        {contact.first_name} {contact.last_name} (
+                        {contact.company_role})
+                      </p>
+                    </Col>
+                    <Col>
+                      <p style={gray} className="mb-1">
+                        {contact.phone_number}
+                      </p>
+                    </Col>
+                    <Col>
+                      <p style={gray} className="mb-1">
+                        {contact.email}
+                      </p>
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+            </Row>
+          )}
+          {activeContract.docs.length === 0 ? (
+            ""
+          ) : (
+            <Row className="my-3">
+              <h6>Contract Documents</h6>
+              {activeContract.docs.map((file, i) => (
+                <div key={i}>
+                  <div className="d-flex justify-content-between align-items-end">
+                    <div>
+                      <p className="mb-1">{file.name}</p>
+                      <p style={small} className="m-0">
+                        {file.description}
+                      </p>
+                    </div>
+                    <div>
+                      <a href={file.link} target="_blank">
+                        <img src={File} />
+                      </a>
+                    </div>
                   </div>
                 </div>
-                {/*<hr style={{ opacity: 1 }} />*/}
-              </div>
-            ))}
-          </Row>
-        </div>
+              ))}
+            </Row>
+          )}
+        </Row>
       ) : (
         ""
       )}
 
       <div className="md-flex flex-column gap-2">
-        {/*{contracts.map((contract, i) => (*/}
-        {/*  <div key={i} onClick={() => selectContract(contract)}>*/}
-        {/*    <div className="d-flex justify-content-between align-items-end">*/}
-        {/*      <h6 style={mediumBold}>*/}
-        {/*        {contract.contract_name*/}
-        {/*          ? contract.contract_name*/}
-        {/*          : "Unnamed Contract"}{" "}*/}
-        {/*        ({contract.contract_uid})*/}
-        {/*      </h6>*/}
-        {/*      <img src={File} />*/}
-        {/*    </div>*/}
-        {/*    <hr style={{ opacity: 1 }} className="mb-0 mt-2" />*/}
-        {/*  </div>*/}
-        {/*))}*/}
         <div>
-          <div className="my-3">
-            <div className="d-flex">
-              <div className="flex-grow-1">
-                <h6>Owner</h6>
-                <p>
-                  {property.owner[0].owner_first_name}{" "}
-                  {property.owner[0].owner_last_name}
-                </p>
-              </div>
-              <div>
-                <a href={`tel:${property.owner_phone_number}`}>
-                  <img src={Phone} alt="Phone" style={mediumImg} />
-                </a>
-                <a href={`mailto:${property.owner_email}`}>
-                  <img src={Message} alt="Message" style={mediumImg} />
-                </a>
-              </div>
-            </div>
-          </div>
-
           {property.management_status === "FORWARDED" ? (
             <Row className="mt-3 mb-4">
               <Col className="d-flex flex-row justify-content-evenly mb-1">

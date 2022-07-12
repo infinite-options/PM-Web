@@ -16,12 +16,10 @@ import ManagerFees from "./ManagerFees";
 import File from "../icons/File.svg";
 import BlueArrowUp from "../icons/BlueArrowUp.svg";
 import BlueArrowDown from "../icons/BlueArrowDown.svg";
-
 import BlueArrowRight from "../icons/BlueArrowRight.svg";
 import OpenDoc from "../icons/OpenDoc.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
-
 import No_Image from "../icons/No_Image_Available.jpeg";
 import { get, put } from "../utils/api";
 import {
@@ -1718,7 +1716,6 @@ function PropertyView(props) {
                 >
                   <div
                     style={mediumBold}
-                    onClick={() => setExpandMaintenanceR(!expandMaintenanceR)}
                     className=" d-flex flex-column justify-content-center align-items-center"
                   >
                     <div className="d-flex mt-1">
@@ -1727,11 +1724,11 @@ function PropertyView(props) {
                       </h6>
                     </div>
                     {expandMaintenanceR ? (
-                      <div>
+                      <div style={{ maxHeight: "220px", overflow: "scroll" }}>
                         {property.maintenanceRequests.map((mr) => {
                           return (
-                            <Row className="mx-2 mb-4">
-                              <Col xs={4}>
+                            <Row className="mx-2 mb-4 h-50">
+                              <Col xs={3}>
                                 <div style={tileImg}>
                                   {JSON.parse(mr.images).length > 0 ? (
                                     <img
@@ -1779,7 +1776,7 @@ function PropertyView(props) {
                                   <hr opacity={1} />
                                 </Row>
 
-                                {mr.repair_status === "COMPLETED" ? (
+                                {mr.request_status === "COMPLETED" ? (
                                   <Row
                                     style={{
                                       font: "normal normal normal 12px Bahnschrift-Regular",
@@ -1795,7 +1792,7 @@ function PropertyView(props) {
                                       day: "numeric",
                                     })}
                                   </Row>
-                                ) : mr.repair_status === "SCHEDULED" ? (
+                                ) : mr.request_status === "SCHEDULED" ? (
                                   <Row
                                     style={{
                                       font: "normal normal normal 12px Bahnschrift-Regular",
@@ -1838,6 +1835,9 @@ function PropertyView(props) {
                     )}
                     <div className="d-flex mt-1">
                       <img
+                        onClick={() =>
+                          setExpandMaintenanceR(!expandMaintenanceR)
+                        }
                         src={expandMaintenanceR ? BlueArrowUp : BlueArrowDown}
                         alt="Expand"
                       />

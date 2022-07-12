@@ -465,7 +465,7 @@ function PropertyForm(props) {
     <div
       className="mx-2 p-2 m-0"
       style={{
-        background: "#E9E9E9 0% 0% no-repeat padding-box",
+        background: "#ffffff 0% 0% no-repeat padding-box",
         borderRadius: "10px",
         opacity: 1,
       }}
@@ -559,20 +559,24 @@ function PropertyForm(props) {
           </div>
         </div>
       ) : (
-        <div>
-          <div className="d-flex justify-content-between">
-            <h6 style={mediumBold}>Property Address</h6>
-            {hideEdit ? (
-              ""
-            ) : (
-              <img src={Edit} alt="Edit" onClick={() => setEdit(true)} />
-            )}
-          </div>
-          <p>
+        <Row className="mx-2">
+          <Row className="d-flex justify-content-between">
+            <Col>
+              <h6 style={mediumBold}>Property Address</h6>
+            </Col>
+            <Col className="d-flex justify-content-end">
+              {hideEdit ? (
+                ""
+              ) : (
+                <img src={Edit} alt="Edit" onClick={() => setEdit(true)} />
+              )}
+            </Col>
+          </Row>
+          <p style={mediumBold}>
             {address}
             {unit === "" ? "," : ` ${unit},`} {city}, {state}, {zip}
           </p>
-        </div>
+        </Row>
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
@@ -591,10 +595,10 @@ function PropertyForm(props) {
           </Form.Select>
         </Form.Group>
       ) : (
-        <div>
+        <Row className="mx-2">
           <h6>Type</h6>
           <p>{type}</p>
-        </div>
+        </Row>
       )}
       {edit ? (
         <div className="d-flex my-3">
@@ -633,7 +637,7 @@ function PropertyForm(props) {
           </Form.Group>
         </div>
       ) : (
-        <Row>
+        <Row className="mx-2">
           <Col>
             <h6>Bedroom</h6>
             <p>{numBeds}</p>
@@ -662,10 +666,10 @@ function PropertyForm(props) {
           />
         </Form.Group>
       ) : (
-        <div>
+        <Row className="mx-2">
           <h6>Active Date</h6>
           <p>{activeDate}</p>
-        </div>
+        </Row>
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
@@ -680,10 +684,10 @@ function PropertyForm(props) {
           />
         </Form.Group>
       ) : (
-        <div>
+        <Row className="mx-2">
           <h6>Monthly Rent</h6>
           <p>{formatter.format(rent)}</p>
-        </div>
+        </Row>
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
@@ -698,10 +702,10 @@ function PropertyForm(props) {
           />
         </Form.Group>
       ) : (
-        <div>
+        <Row className="mx-2">
           <h6>Deposit</h6>
           <p>{formatter.format(deposit)}</p>
-        </div>
+        </Row>
       )}
       <PropertyAppliances state={applianceState} edit={edit} />
       <PropertyUtilities state={utilityState} edit={edit} />

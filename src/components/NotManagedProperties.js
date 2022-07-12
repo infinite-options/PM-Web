@@ -20,7 +20,7 @@ import Header from "../components/Header";
 import AppContext from "../AppContext";
 import { get } from "../utils/api";
 
-function ManagerProperties(props) {
+function NotManagedProperties(props) {
   const navigate = useNavigate();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
@@ -49,7 +49,9 @@ function ManagerProperties(props) {
       management_buid = management_businesses[0].business_uid;
     }
 
-    const response = await get(`/propertyInfo?manager_id=${management_buid}`);
+    const response = await get(
+      `/notManagedProperties?manager_id=${management_buid}`
+    );
 
     if (response.msg === "Token has expired") {
       refresh();
@@ -77,34 +79,34 @@ function ManagerProperties(props) {
       }
     });
 
-    properties_unique.forEach((property) => {
-      const new_repairs = property.maintenanceRequests.filter(
-        (item) => item.request_status === "NEW"
-      );
-      const processing_repairs = property.maintenanceRequests.filter(
-        (item) => item.request_status === "PROCESSING"
-      );
-      const scheduled_repairs = property.maintenanceRequests.filter(
-        (item) => item.request_status === "SCHEDULED"
-      );
-      const completed_repairs = property.maintenanceRequests.filter(
-        (item) => item.request_status === "COMPLETE"
-      );
-      property.repairs = {
-        new: new_repairs.length,
-        processing: processing_repairs.length,
-        scheduled: scheduled_repairs.length,
-        complete: completed_repairs.length,
-      };
+    // properties_unique.forEach((property) => {
+    //   const new_repairs = property.maintenanceRequests.filter(
+    //     (item) => item.request_status === "NEW"
+    //   );
+    //   const processing_repairs = property.maintenanceRequests.filter(
+    //     (item) => item.request_status === "PROCESSING"
+    //   );
+    //   const scheduled_repairs = property.maintenanceRequests.filter(
+    //     (item) => item.request_status === "SCHEDULED"
+    //   );
+    //   const completed_repairs = property.maintenanceRequests.filter(
+    //     (item) => item.request_status === "COMPLETE"
+    //   );
+    //   property.repairs = {
+    //     new: new_repairs.length,
+    //     processing: processing_repairs.length,
+    //     scheduled: scheduled_repairs.length,
+    //     complete: completed_repairs.length,
+    //   };
 
-      property.new_tenant_applications = property.applications.filter(
-        (a) => a.application_status === "NEW"
-      );
+    //   property.new_tenant_applications = property.applications.filter(
+    //     (a) => a.application_status === "NEW"
+    //   );
 
-      property.end_early_applications = property.applications.filter(
-        (a) => a.application_status === "TENANT END EARLY"
-      );
-    });
+    //   property.end_early_applications = property.applications.filter(
+    //     (a) => a.application_status === "TENANT END EARLY"
+    //   );
+    // });
 
     console.log(properties_unique);
     setProperties(properties_unique);
@@ -130,7 +132,7 @@ function ManagerProperties(props) {
       }}
     >
       <Header
-        title="Managed Properties"
+        title="Property Search"
         leftText="<Back"
         leftFn={() => {
           navigate("/manager");
@@ -174,33 +176,6 @@ function ManagerProperties(props) {
                 </div>
               </Col>
               <Col className="ps-0">
-                <div className="d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0" style={mediumBold}>
-                    ${property.listed_rent}/mo
-                  </h5>
-
-                  {property.rental_status === "ACTIVE" ? (
-                    <p style={greenPill} className="mb-0">
-                      Rented
-                    </p>
-                  ) : property.rental_status === "PROCESSING" ? (
-                    <p style={bluePill} className="mb-0">
-                      Processing
-                    </p>
-                  ) : property.management_status === "FORWARDED" ? (
-                    <p style={redPill} className="mb-0">
-                      New
-                    </p>
-                  ) : property.management_status === "SENT" ? (
-                    <p style={orangePill} className="mb-0">
-                      Processing
-                    </p>
-                  ) : (
-                    <p style={orangePill} className="mb-0">
-                      Not Rented
-                    </p>
-                  )}
-                </div>
                 <p
                   style={{
                     color: "#777777",
@@ -214,35 +189,6 @@ function ManagerProperties(props) {
                   {property.zip}
                 </p>
 
-                <div className="d-flex">
-                  <div className="d-flex align-items-end">
-                    <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      {property.repairs.new > 0
-                        ? `${property.repairs.new} new repair requests to review`
-                        : ""}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="d-flex">
-                  <div className="d-flex align-items-end">
-                    <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      {property.new_tenant_applications.length > 0
-                        ? `${property.new_tenant_applications.length} new tenant application(s) to review`
-                        : ""}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="d-flex">
-                  <div className="d-flex align-items-end">
-                    <p style={{ ...blue, ...xSmall }} className="mb-0">
-                      {property.end_early_applications.length > 0
-                        ? "Tenant(s) requested to end the lease early"
-                        : ""}
-                    </p>
-                  </div>
-                </div>
                 <div className="d-flex flex-column">
                   <div className="flex-grow-1 d-flex flex-column justify-content-center">
                     <p
@@ -280,4 +226,4 @@ function ManagerProperties(props) {
   );
 }
 
-export default ManagerProperties;
+export default NotManagedProperties;
