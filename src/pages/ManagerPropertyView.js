@@ -430,6 +430,7 @@ function ManagerPropertyView(props) {
                 {expandManagerDocs ? (
                   <PropertyManagerDocs
                     property={property}
+                    fetchProperty={fetchProperty}
                     addDocument={addContract}
                     selectContract={selectContract}
                     setExpandManagerDocs={setExpandManagerDocs}
