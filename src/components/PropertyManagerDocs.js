@@ -29,9 +29,10 @@ function PropertyManagerDocs(props) {
     reload,
     setExpandManagerDocs,
     fetchProperty,
+    setShowDialog,
   } = props;
   const [contracts, setContracts] = useState([]);
-  const [showDialog, setShowDialog] = useState(false);
+  // const [showDialog, setShowDialog] = useState(false);
   const [activeContract, setActiveContract] = useState(null);
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -48,9 +49,6 @@ function PropertyManagerDocs(props) {
     const response = await put("/properties", newProperty, null, files);
     setAddPropertyManager(false);
     reload();
-  };
-  const onCancel = () => {
-    setShowDialog(false);
   };
 
   const rejectManagement = async () => {
@@ -70,24 +68,28 @@ function PropertyManagerDocs(props) {
     await put("/properties", newProperty, null, files);
     setExpandManagerDocs(false);
   };
-  const cancelAgreement = async () => {
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length >= 1) {
-      management_buid = management_businesses[0].business_uid;
-    }
-    const updatedManagementContract = {
-      property_uid: property.property_uid,
-      management_status: "PM END EARLY",
-      manager_id: management_buid,
-    };
+  // const cancelAgreement = async () => {
+  //   const management_businesses = user.businesses.filter(
+  //     (business) => business.business_type === "MANAGEMENT"
+  //   );
+  //   let management_buid = null;
+  //   if (management_businesses.length >= 1) {
+  //     management_buid = management_businesses[0].business_uid;
+  //   }
+  //   const updatedManagementContract = {
+  //     property_uid: property.property_uid,
+  //     management_status: "PM END EARLY",
+  //     manager_id: management_buid,
+  //   };
 
-    await put("/cancelAgreement", updatedManagementContract);
-    setExpandManagerDocs(false);
-    fetchProperty();
-  };
+  //   await put("/cancelAgreement", updatedManagementContract);
+  //   setExpandManagerDocs(false);
+  //   setShowDialog(false);
+  //   fetchProperty();
+  // };
+  // const onCancel = () => {
+  //   setShowDialog(false);
+  // };
 
   const acceptCancelAgreement = async () => {
     const management_businesses = user.businesses.filter(
@@ -136,7 +138,7 @@ function PropertyManagerDocs(props) {
     ac.fees = JSON.parse(ac.contract_fees);
     ac.contacts = JSON.parse(ac.assigned_contacts);
     ac.docs = JSON.parse(ac.documents);
-    console.log("134", ac);
+
     setActiveContract(ac);
     setContracts(response.result);
   }, []);
@@ -148,15 +150,13 @@ function PropertyManagerDocs(props) {
 
   return (
     <div className="d-flex flex-column flex-grow-1 w-100 justify-content-center">
-      {/*<Row className="mb-2" style={{...headings}}>*/}
-      {/*  <div>Active Contract</div>*/}
-      {/*</Row>*/}
-      <ConfirmDialog
+      {/* <ConfirmDialog
         title={"Are you sure you want to cancel the agreement?"}
         isOpen={showDialog}
         onConfirm={cancelAgreement}
         onCancel={onCancel}
-      />
+      /> */}
+
       {(property.management_status === "ACCEPTED" ||
         property.management_status === "SENT" ||
         property.management_status === "OWNER END EARLY" ||
@@ -386,9 +386,7 @@ function PropertyManagerDocs(props) {
               variant="outline-primary"
               style={redPillButton}
               // onClick={cancelAgreement}
-              onClick={() => {
-                setShowDialog(true);
-              }}
+              onClick={() => setShowDialog(true)}
             >
               Cancel Agreement
             </Button>

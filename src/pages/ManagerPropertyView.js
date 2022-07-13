@@ -12,6 +12,7 @@ import PropertyManagerDocs from "../components/PropertyManagerDocs";
 import AppContext from "../AppContext";
 import ManagerManagementContract from "../components/ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
+import ConfirmDialog from "../components/ConfirmDialog";
 import PropertyCashFlow from "../components/PropertyCashFlow";
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
@@ -32,7 +33,7 @@ import {
   orangePill,
   bluePill,
 } from "../utils/styles";
-import { get } from "../utils/api";
+import { get, put } from "../utils/api";
 
 function ManagerPropertyView(props) {
   const navigate = useNavigate();
@@ -49,10 +50,34 @@ function ManagerPropertyView(props) {
     []
   );
   const [pastMaintenanceRequests, setPastMaintenanceRequests] = useState([]);
+
+  const [showDialog, setShowDialog] = useState(false);
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
+  };
+  const cancelAgreement = async () => {
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "PM END EARLY",
+      manager_id: management_buid,
+    };
+
+    await put("/cancelAgreement", updatedManagementContract);
+    setExpandManagerDocs(false);
+    setShowDialog(false);
+    fetchProperty();
+  };
+  const onCancel = () => {
+    setShowDialog(false);
   };
   const fetchProperty = async () => {
     // const response = await get(`/propertiesOwnerDetail?property_uid=${property_uid}`);
@@ -277,6 +302,12 @@ function ManagerPropertyView(props) {
     />
   ) : (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
+      <ConfirmDialog
+        title={"Are you sure you want to cancel the agreement?"}
+        isOpen={showDialog}
+        onConfirm={cancelAgreement}
+        onCancel={onCancel}
+      />
       <Header title="Properties" leftText="<Back" leftFn={headerBack} />
       <Container className="pb-5 mb-5">
         <div>
@@ -434,6 +465,7 @@ function ManagerPropertyView(props) {
                     addDocument={addContract}
                     selectContract={selectContract}
                     setExpandManagerDocs={setExpandManagerDocs}
+                    setShowDialog={setShowDialog}
                     reload={""}
                   />
                 ) : (
