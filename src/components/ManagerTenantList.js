@@ -18,6 +18,8 @@ import {
   hidden,
   gray,
   pillButton,
+  redPill,
+  greenPill,
 } from "../utils/styles";
 
 function ManagerTenantList(props) {
@@ -270,6 +272,8 @@ function ManagerTenantList(props) {
                 boxShadow: "0px 3px 6px #00000029",
                 border: "0.5px solid #707070",
                 borderRadius: "5px",
+                maxHeight: "500px",
+                overflow: "scroll",
               }}
             >
               {userPayments.map((payment) => (
@@ -292,14 +296,23 @@ function ManagerTenantList(props) {
                       {payment.purchase_notes && `(${payment.purchase_notes})`}
                     </Col>
                     <Col
+                      xs={2}
                       style={{
                         fontWeight: "600",
                         font: "normal normal normal 20px/28px Bahnschrift-Regular",
                         color: "#007Aff",
                       }}
-                      className="d-flex mx-2 justify-content-end"
+                      className="d-flex justify-content-end"
                     >
                       {formatter.format(payment.amount)}
+                    </Col>
+                    <Col xs={3} className="d-flex justify-content-center">
+                      {payment.payment_date > payment.next_payment ? (
+                        <div style={redPill}>Late</div>
+                      ) : (
+                        <div style={greenPill}>On-time</div>
+                      )}
+                      {console.log(payment.payment_date > payment.next_payment)}
                     </Col>
                   </Row>
                 </div>
@@ -310,26 +323,22 @@ function ManagerTenantList(props) {
           )}
 
           <Row
-            className="px-1 my-3"
-            style={{
-              font: "normal normal normal 16px Bahnschrift-Regular",
-            }}
-          >
-            <Col>Rent due:</Col>
-            <Col>
-              <h6 className="d-flex justify-content-end">
-                {`${ordinal_suffix_of(selectedTenant.due_by)} of the month`}
-              </h6>
-            </Col>
-          </Row>
-          <Row
             className="d-flex justify-content-center my-2"
             style={mediumBold}
           >
             Repair Requests
           </Row>
           {maintenanceRequests.length > 0 ? (
-            <Container>
+            <Container
+              style={{
+                background: "#FFFFFF 0% 0% no-repeat padding-box",
+                boxShadow: "0px 3px 6px #00000029",
+                border: "0.5px solid #707070",
+                borderRadius: "5px",
+                maxHeight: "500px",
+                overflow: "scroll",
+              }}
+            >
               {maintenanceRequests.map((request) => (
                 <div
                   className="my-3 p-2"
