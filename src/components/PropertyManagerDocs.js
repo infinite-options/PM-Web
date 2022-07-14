@@ -14,6 +14,7 @@ import {
   redPillButton,
   bluePillButton,
   gray,
+  squareForm,
   small,
 } from "../utils/styles";
 
@@ -30,6 +31,10 @@ function PropertyManagerDocs(props) {
     setExpandManagerDocs,
     fetchProperty,
     setShowDialog,
+    endEarlyDate,
+    setEndEarlyDate,
+    cancel,
+    setCancel,
   } = props;
   const [contracts, setContracts] = useState([]);
   // const [showDialog, setShowDialog] = useState(false);
@@ -68,30 +73,9 @@ function PropertyManagerDocs(props) {
     await put("/properties", newProperty, null, files);
     setExpandManagerDocs(false);
   };
-  // const cancelAgreement = async () => {
-  //   const management_businesses = user.businesses.filter(
-  //     (business) => business.business_type === "MANAGEMENT"
-  //   );
-  //   let management_buid = null;
-  //   if (management_businesses.length >= 1) {
-  //     management_buid = management_businesses[0].business_uid;
-  //   }
-  //   const updatedManagementContract = {
-  //     property_uid: property.property_uid,
-  //     management_status: "PM END EARLY",
-  //     manager_id: management_buid,
-  //   };
-
-  //   await put("/cancelAgreement", updatedManagementContract);
-  //   setExpandManagerDocs(false);
-  //   setShowDialog(false);
-  //   fetchProperty();
-  // };
-  // const onCancel = () => {
-  //   setShowDialog(false);
-  // };
 
   const acceptCancelAgreement = async () => {
+    const files = JSON.parse(property.images);
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );
@@ -105,12 +89,13 @@ function PropertyManagerDocs(props) {
       manager_id: management_buid,
     };
 
-    await put("/cancelAgreement", updatedManagementContract);
+    await put("/cancelAgreement", updatedManagementContract, null, files);
     setExpandManagerDocs(false);
     navigate("/manager-properties");
   };
 
   const rejectCancelAgreement = async () => {
+    const files = JSON.parse(property.images);
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );
@@ -124,7 +109,7 @@ function PropertyManagerDocs(props) {
       manager_id: management_buid,
     };
 
-    await put("/cancelAgreement", updatedManagementContract);
+    await put("/cancelAgreement", updatedManagementContract, null, files);
     setExpandManagerDocs(false);
     fetchProperty();
   };
@@ -160,7 +145,8 @@ function PropertyManagerDocs(props) {
       {(property.management_status === "ACCEPTED" ||
         property.management_status === "SENT" ||
         property.management_status === "OWNER END EARLY" ||
-        property.management_status === "PM END EARLY") &&
+        property.management_status === "PM END EARLY" ||
+        property.management_status === "END EARLY") &&
       activeContract ? (
         <Row className="mx-2">
           <Row className="flex-grow-1 my-2">
@@ -379,14 +365,15 @@ function PropertyManagerDocs(props) {
         ""
       )}
 
-      {property.management_status === "ACCEPTED" ? (
+      {property.management_status === "ACCEPTED" && !cancel ? (
         <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
           <Col className="d-flex justify-content-center mb-1">
             <Button
               variant="outline-primary"
               style={redPillButton}
               // onClick={cancelAgreement}
-              onClick={() => setShowDialog(true)}
+              // onClick={() => setShowDialog(true)}
+              onClick={() => setCancel(true)}
             >
               Cancel Agreement
             </Button>
@@ -395,10 +382,42 @@ function PropertyManagerDocs(props) {
       ) : (
         ""
       )}
+      {property.management_status === "ACCEPTED" && cancel ? (
+        <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
+          <Col></Col>
+          <Col
+            xs={6}
+            className="d-flex flex-column justify-content-center mb-1"
+          >
+            <Form.Group className="mx-2 mb-3">
+              <Form.Label as="h6">Early End Date</Form.Label>
+              <Form.Control
+                style={squareForm}
+                type="date"
+                value={endEarlyDate}
+                onChange={(e) => setEndEarlyDate(e.target.value)}
+              />
+            </Form.Group>
+            <Button
+              variant="outline-primary"
+              style={redPillButton}
+              // onClick={cancelAgreement}
+              onClick={() => setShowDialog(true)}
+              // onClick={() => setCancel(true)}
+            >
+              Cancel Agreement
+            </Button>
+          </Col>
+          <Col></Col>
+        </Row>
+      ) : (
+        ""
+      )}
       {property.management_status === "PM END EARLY" ? (
         <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
           <h6 className="d-flex justify-content-center" style={mediumBold}>
-            You have requested to end the agreement early
+            You have requested to end the agreement early on{" "}
+            {activeContract.early_end_date}
           </h6>
         </Row>
       ) : (
@@ -408,7 +427,8 @@ function PropertyManagerDocs(props) {
       {property.management_status === "OWNER END EARLY" ? (
         <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
           <h6 className="d-flex justify-content-center" style={mediumBold}>
-            Owner requested to end the agreement early
+            Owner requested to end the agreement <br /> early on{" "}
+            {activeContract.early_end_date}
           </h6>
           <Col className="d-flex justify-content-center">
             <Button

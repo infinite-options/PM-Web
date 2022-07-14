@@ -202,7 +202,7 @@ const bluePillButton = {
 const redPillButton = {
   background: "#E3441F 0% 0% no-repeat padding-box",
   borderRadius: "50px",
-  textAlign: "left",
+  textAlign: "center",
   font: "normal normal normal 18px/21px SFProDisplay-Regular",
   letterSpacing: "0px",
   color: " #FFFFFF",

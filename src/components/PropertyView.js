@@ -25,6 +25,7 @@ import { get, put } from "../utils/api";
 import {
   tileImg,
   gray,
+  squareForm,
   bPill,
   redPill,
   orangePill,
@@ -44,7 +45,8 @@ function PropertyView(props) {
   const [feeState, setFeeState] = useState([]);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [rentalInfo, setRentalInfo] = useState([]);
-
+  const [cancel, setCancel] = useState(false);
+  const [endEarlyDate, setEndEarlyDate] = useState("");
   const fetchProperty = async () => {
     // const response = await get(`/propertyInfo?property_uid=${property_uid}`);
     const response = await get(
@@ -253,37 +255,46 @@ function PropertyView(props) {
 
   const cancelAgreement = async () => {
     let pid = pmID;
+    const files = JSON.parse(property.images);
     const updatedManagementContract = {
       property_uid: property.property_uid,
       management_status: "OWNER END EARLY",
       manager_id: pid,
+      early_end_date: endEarlyDate,
     };
 
-    const response2 = await put("/cancelAgreement", updatedManagementContract);
+    const response2 = await put(
+      "/cancelAgreement",
+      updatedManagementContract,
+      null,
+      files
+    );
     setShowDialog2(false);
     setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
   const acceptCancelAgreement = async () => {
+    const files = JSON.parse(property.images);
     const updatedManagementContract = {
       property_uid: property.property_uid,
       management_status: "OWNER ACCEPTED",
       manager_id: property.managerInfo.manager_id,
     };
 
-    await put("/cancelAgreement", updatedManagementContract);
+    await put("/cancelAgreement", updatedManagementContract, null, files);
     setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
 
   const rejectCancelAgreement = async () => {
+    const files = JSON.parse(property.images);
     const updatedManagementContract = {
       property_uid: property.property_uid,
       management_status: "OWNER REJECTED",
       manager_id: property.managerInfo.manager_id,
     };
 
-    await put("/cancelAgreement", updatedManagementContract);
+    await put("/cancelAgreement", updatedManagementContract, null, files);
     setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
@@ -672,7 +683,6 @@ function PropertyView(props) {
                   <div
                     style={mediumBold}
                     className=" d-flex flex-column justify-content-center align-items-center"
-                    onClick={() => setExpandManagerDocs(!expandManagerDocs)}
                   >
                     <div className="d-flex mt-1">
                       <h6 style={mediumBold} className="mb-1">
@@ -876,9 +886,40 @@ function PropertyView(props) {
                       ""
                     )}
                     {expandManagerDocs &&
-                    property.management_status === "ACCEPTED" ? (
+                    property.management_status === "ACCEPTED" &&
+                    !cancel ? (
                       <Row className="mt-4">
                         <Col className="d-flex justify-content-center mb-1">
+                          <Button
+                            variant="outline-primary"
+                            style={redPillButton}
+                            // onClick={() => {
+                            //   setShowDialog2(true);
+                            //   setPmID(property.managerInfo.manager_id);
+                            // }}
+                            onClick={() => setCancel(true)}
+                          >
+                            Cancel Agreement
+                          </Button>
+                        </Col>
+                      </Row>
+                    ) : (
+                      ""
+                    )}
+                    {expandManagerDocs &&
+                    property.management_status === "ACCEPTED" &&
+                    cancel ? (
+                      <Row className="mt-4">
+                        <Col className="d-flex flex-column justify-content-center mb-1">
+                          <Form.Group className="mx-2 mb-3">
+                            <Form.Label as="h6">Early End Date</Form.Label>
+                            <Form.Control
+                              style={squareForm}
+                              type="date"
+                              value={endEarlyDate}
+                              onChange={(e) => setEndEarlyDate(e.target.value)}
+                            />
+                          </Form.Group>
                           <Button
                             variant="outline-primary"
                             style={redPillButton}
@@ -901,7 +942,8 @@ function PropertyView(props) {
                           className="d-flex justify-content-center"
                           style={mediumBold}
                         >
-                          You have requested to end the agreement early
+                          You have requested to end the agreement early on{" "}
+                          {contracts[0].early_end_date}
                         </h6>
                       </Row>
                     ) : (
@@ -916,6 +958,7 @@ function PropertyView(props) {
                           style={mediumBold}
                         >
                           Property Manager requested to end the agreement early
+                          on {contracts[0].early_end_date}
                         </h6>
                         <Col className="d-flex justify-content-center">
                           <Button
@@ -942,6 +985,7 @@ function PropertyView(props) {
 
                     <Row className="d-flex mt-1">
                       <img
+                        onClick={() => setExpandManagerDocs(!expandManagerDocs)}
                         src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
                         alt="Expand"
                       />

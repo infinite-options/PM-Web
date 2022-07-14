@@ -52,12 +52,16 @@ function ManagerPropertyView(props) {
   const [pastMaintenanceRequests, setPastMaintenanceRequests] = useState([]);
 
   const [showDialog, setShowDialog] = useState(false);
+
+  const [cancel, setCancel] = useState(false);
+  const [endEarlyDate, setEndEarlyDate] = useState("");
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
   };
   const cancelAgreement = async () => {
+    const files = JSON.parse(property.images);
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );
@@ -69,9 +73,10 @@ function ManagerPropertyView(props) {
       property_uid: property.property_uid,
       management_status: "PM END EARLY",
       manager_id: management_buid,
+      early_end_date: endEarlyDate,
     };
 
-    await put("/cancelAgreement", updatedManagementContract);
+    await put("/cancelAgreement", updatedManagementContract, null, files);
     setExpandManagerDocs(false);
     setShowDialog(false);
     fetchProperty();
@@ -112,7 +117,12 @@ function ManagerPropertyView(props) {
     }
     console.log(property_details);
     setProperty(property_details);
-    if (property_details.management_status === "ACCEPTED") {
+    if (
+      property_details.management_status === "ACCEPTED" ||
+      property_details.management_status === "END EARLY" ||
+      property_details.management_status === "PM END EARLY" ||
+      property_details.management_status === "OWNER END EARLY"
+    ) {
       setHideEdit(false);
     }
     // setSelectedAgreement(property_details.rentalInfo);
@@ -451,7 +461,6 @@ function ManagerPropertyView(props) {
               <div
                 style={mediumBold}
                 className="d-flex flex-column justify-content-center align-items-center"
-                onClick={() => setExpandManagerDocs(!expandManagerDocs)}
               >
                 <div className="d-flex mt-1">
                   <h6 style={mediumBold} className="mb-1">
@@ -466,6 +475,10 @@ function ManagerPropertyView(props) {
                     selectContract={selectContract}
                     setExpandManagerDocs={setExpandManagerDocs}
                     setShowDialog={setShowDialog}
+                    endEarlyDate={endEarlyDate}
+                    setEndEarlyDate={setEndEarlyDate}
+                    cancel={cancel}
+                    setCancel={setCancel}
                     reload={""}
                   />
                 ) : (
@@ -473,6 +486,7 @@ function ManagerPropertyView(props) {
                 )}
                 <div className="d-flex mt-1">
                   <img
+                    onClick={() => setExpandManagerDocs(!expandManagerDocs)}
                     src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
                     alt="Expand"
                   />
