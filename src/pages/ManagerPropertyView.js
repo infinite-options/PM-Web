@@ -12,6 +12,7 @@ import PropertyManagerDocs from "../components/PropertyManagerDocs";
 import AppContext from "../AppContext";
 import ManagerManagementContract from "../components/ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
+import ConfirmDialog from "../components/ConfirmDialog";
 import PropertyCashFlow from "../components/PropertyCashFlow";
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
@@ -32,7 +33,7 @@ import {
   orangePill,
   bluePill,
 } from "../utils/styles";
-import { get } from "../utils/api";
+import { get, put } from "../utils/api";
 
 function ManagerPropertyView(props) {
   const navigate = useNavigate();
@@ -49,10 +50,39 @@ function ManagerPropertyView(props) {
     []
   );
   const [pastMaintenanceRequests, setPastMaintenanceRequests] = useState([]);
+
+  const [showDialog, setShowDialog] = useState(false);
+
+  const [cancel, setCancel] = useState(false);
+  const [endEarlyDate, setEndEarlyDate] = useState("");
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
+  };
+  const cancelAgreement = async () => {
+    const files = JSON.parse(property.images);
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "PM END EARLY",
+      manager_id: management_buid,
+      early_end_date: endEarlyDate,
+    };
+
+    await put("/cancelAgreement", updatedManagementContract, null, files);
+    setExpandManagerDocs(false);
+    setShowDialog(false);
+    fetchProperty();
+  };
+  const onCancel = () => {
+    setShowDialog(false);
   };
   const fetchProperty = async () => {
     // const response = await get(`/propertiesOwnerDetail?property_uid=${property_uid}`);
@@ -87,7 +117,12 @@ function ManagerPropertyView(props) {
     }
     console.log(property_details);
     setProperty(property_details);
-    if (property_details.management_status === "ACCEPTED") {
+    if (
+      property_details.management_status === "ACCEPTED" ||
+      property_details.management_status === "END EARLY" ||
+      property_details.management_status === "PM END EARLY" ||
+      property_details.management_status === "OWNER END EARLY"
+    ) {
       setHideEdit(false);
     }
     // setSelectedAgreement(property_details.rentalInfo);
@@ -277,6 +312,12 @@ function ManagerPropertyView(props) {
     />
   ) : (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
+      <ConfirmDialog
+        title={"Are you sure you want to cancel the agreement?"}
+        isOpen={showDialog}
+        onConfirm={cancelAgreement}
+        onCancel={onCancel}
+      />
       <Header title="Properties" leftText="<Back" leftFn={headerBack} />
       <Container className="pb-5 mb-5">
         <div>
@@ -420,7 +461,6 @@ function ManagerPropertyView(props) {
               <div
                 style={mediumBold}
                 className="d-flex flex-column justify-content-center align-items-center"
-                onClick={() => setExpandManagerDocs(!expandManagerDocs)}
               >
                 <div className="d-flex mt-1">
                   <h6 style={mediumBold} className="mb-1">
@@ -430,9 +470,15 @@ function ManagerPropertyView(props) {
                 {expandManagerDocs ? (
                   <PropertyManagerDocs
                     property={property}
+                    fetchProperty={fetchProperty}
                     addDocument={addContract}
                     selectContract={selectContract}
                     setExpandManagerDocs={setExpandManagerDocs}
+                    setShowDialog={setShowDialog}
+                    endEarlyDate={endEarlyDate}
+                    setEndEarlyDate={setEndEarlyDate}
+                    cancel={cancel}
+                    setCancel={setCancel}
                     reload={""}
                   />
                 ) : (
@@ -440,6 +486,7 @@ function ManagerPropertyView(props) {
                 )}
                 <div className="d-flex mt-1">
                   <img
+                    onClick={() => setExpandManagerDocs(!expandManagerDocs)}
                     src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
                     alt="Expand"
                   />

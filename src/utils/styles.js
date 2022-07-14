@@ -69,8 +69,15 @@ const none = {
 const greenPill = {
   ...smallPillButton,
   backgroundColor: "#3DB727",
-  borderColor: "#3DB727",
   color: "white",
+  border: "1px solid #3DB727",
+  maxWidth: "80%",
+  textAlign: "center",
+  textDecoration: "none",
+  borderRadius: "50px",
+  display: "block",
+  margin: "6px 6px",
+  font: "normal normal normal 14px SFProDisplay-Regular",
 };
 const bPill = {
   ...smallPillButton,
@@ -195,7 +202,7 @@ const bluePillButton = {
 const redPillButton = {
   background: "#E3441F 0% 0% no-repeat padding-box",
   borderRadius: "50px",
-  textAlign: "left",
+  textAlign: "center",
   font: "normal normal normal 18px/21px SFProDisplay-Regular",
   letterSpacing: "0px",
   color: " #FFFFFF",

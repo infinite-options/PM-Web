@@ -1,42 +1,47 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import ConfirmDialog from "./ConfirmDialog";
 import File from "../icons/File.svg";
+import Phone from "../icons/Phone.svg";
+import Message from "../icons/Message.svg";
+import AppContext from "../AppContext";
+import Edit from "../icons/Edit.svg";
 import { get, put } from "../utils/api";
 import {
-  pillButton,
-  smallPillButton,
   mediumBold,
   smallImg,
   redPillButton,
   bluePillButton,
-  mediumImg,
   gray,
-  headings,
+  squareForm,
   small,
 } from "../utils/styles";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import AppContext from "../AppContext";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
-import Edit from "../icons/Edit.svg";
 
 function PropertyManagerDocs(props) {
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
 
+  const navigate = useNavigate();
   const {
     addDocument,
     property,
     selectContract,
     reload,
     setExpandManagerDocs,
+    fetchProperty,
+    setShowDialog,
+    endEarlyDate,
+    setEndEarlyDate,
+    cancel,
+    setCancel,
   } = props;
-  const [contracts, setContracts] = React.useState([]);
-  const [activeContract, setActiveContract] = React.useState(null);
-  const [businesses, setBusinesses] = React.useState([]);
-  const [selectedBusiness, setSelectedBusiness] = React.useState(null);
-  const [addPropertyManager, setAddPropertyManager] = React.useState(false);
+  const [contracts, setContracts] = useState([]);
+  // const [showDialog, setShowDialog] = useState(false);
+  const [activeContract, setActiveContract] = useState(null);
+  const [businesses, setBusinesses] = useState([]);
+  const [selectedBusiness, setSelectedBusiness] = useState(null);
+  const [addPropertyManager, setAddPropertyManager] = useState(false);
 
   const updateBusiness = async () => {
     const files = JSON.parse(property.images);
@@ -46,13 +51,6 @@ function PropertyManagerDocs(props) {
       manager_id: business_uid,
       management_status: "FORWARDED",
     };
-    // for (let i = -1; i < files.length-1; i++) {
-    //     let key = `img_${i}`;
-    //     if (i === -1) {
-    //         key = 'img_cover';
-    //     }
-    //     newProperty[key] = files[i+1];
-    // }
     const response = await put("/properties", newProperty, null, files);
     setAddPropertyManager(false);
     reload();
@@ -68,22 +66,55 @@ function PropertyManagerDocs(props) {
     }
     const newProperty = {
       property_uid: property.property_uid,
-      // manager_id: management_buid,
       management_status: "REJECTED",
     };
     const files = JSON.parse(property.images);
-    // for (let i = -1; i < files.length-1; i++) {
-    //     let key = `img_${i}`;
-    //     if (i === -1) {
-    //         key = 'img_cover';
-    //     }
-    //     newProperty[key] = files[i+1];
-    // }
+
     await put("/properties", newProperty, null, files);
     setExpandManagerDocs(false);
   };
 
-  React.useEffect(async () => {
+  const acceptCancelAgreement = async () => {
+    const files = JSON.parse(property.images);
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "PM ACCEPTED",
+      manager_id: management_buid,
+    };
+
+    await put("/cancelAgreement", updatedManagementContract, null, files);
+    setExpandManagerDocs(false);
+    navigate("/manager-properties");
+  };
+
+  const rejectCancelAgreement = async () => {
+    const files = JSON.parse(property.images);
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
+    const updatedManagementContract = {
+      property_uid: property.property_uid,
+      management_status: "PM REJECTED",
+      manager_id: management_buid,
+    };
+
+    await put("/cancelAgreement", updatedManagementContract, null, files);
+    setExpandManagerDocs(false);
+    fetchProperty();
+  };
+
+  useEffect(async () => {
     const response = await get(
       `/contracts?property_uid=${property.property_uid}`
     );
@@ -92,24 +123,30 @@ function PropertyManagerDocs(props) {
     ac.fees = JSON.parse(ac.contract_fees);
     ac.contacts = JSON.parse(ac.assigned_contacts);
     ac.docs = JSON.parse(ac.documents);
-    console.log("134", ac);
+
     setActiveContract(ac);
     setContracts(response.result);
   }, []);
-  React.useEffect(async () => {
+  useEffect(async () => {
     const response = await get(`/businesses?business_type=MANAGEMENT`);
     setBusinesses(response.result);
     setSelectedBusiness(JSON.stringify(response.result[0]));
   }, []);
 
   return (
-    <div className="d-flex flex-column gap-2">
-      {/*<Row className="mb-2" style={{...headings}}>*/}
-      {/*  <div>Active Contract</div>*/}
-      {/*</Row>*/}
+    <div className="d-flex flex-column flex-grow-1 w-100 justify-content-center">
+      {/* <ConfirmDialog
+        title={"Are you sure you want to cancel the agreement?"}
+        isOpen={showDialog}
+        onConfirm={cancelAgreement}
+        onCancel={onCancel}
+      /> */}
 
       {(property.management_status === "ACCEPTED" ||
-        property.management_status === "SENT") &&
+        property.management_status === "SENT" ||
+        property.management_status === "OWNER END EARLY" ||
+        property.management_status === "PM END EARLY" ||
+        property.management_status === "END EARLY") &&
       activeContract ? (
         <Row className="mx-2">
           <Row className="flex-grow-1 my-2">
@@ -287,52 +324,136 @@ function PropertyManagerDocs(props) {
         ""
       )}
 
-      <div className="md-flex flex-column gap-2">
-        <div>
-          {property.management_status === "FORWARDED" ? (
-            <Row className="mt-3 mb-4">
-              <Col className="d-flex flex-row justify-content-evenly mb-1">
-                <Button
-                  variant="outline-primary"
-                  style={bluePillButton}
-                  onClick={addDocument}
-                >
-                  Create Contract
-                </Button>
-              </Col>
-              <Col className="d-flex flex-row justify-content-evenly mb-1">
-                <Button
-                  variant="outline-primary"
-                  style={redPillButton}
-                  onClick={rejectManagement}
-                >
-                  Reject
-                </Button>
-              </Col>
-            </Row>
-          ) : (
-            ""
-          )}
+      {property.management_status === "FORWARDED" ? (
+        <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
+          <Col className="d-flex justify-content-center">
+            <Button
+              variant="outline-primary"
+              style={bluePillButton}
+              onClick={addDocument}
+            >
+              Create Contract
+            </Button>
+          </Col>
+          <Col className="d-flex justify-content-center">
+            <Button
+              variant="outline-primary"
+              style={redPillButton}
+              onClick={rejectManagement}
+            >
+              Reject
+            </Button>
+          </Col>
+        </Row>
+      ) : (
+        ""
+      )}
 
-          {property.management_status === "SENT" ? (
-            <Row className="mt-3 mb-4">
-              <Col className="d-flex flex-row justify-content-evenly mb-1">
-                <Button
-                  variant="outline-primary"
-                  style={redPillButton}
-                  onClick={rejectManagement}
-                >
-                  Withdraw
-                </Button>
-              </Col>
-            </Row>
-          ) : (
-            ""
-          )}
+      {property.management_status === "SENT" ? (
+        <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
+          <Col className="d-flex justify-content-center mb-1">
+            <Button
+              variant="outline-primary"
+              style={redPillButton}
+              onClick={rejectManagement}
+            >
+              Withdraw
+            </Button>
+          </Col>
+        </Row>
+      ) : (
+        ""
+      )}
 
-          {/*<hr style={{ opacity: 1 }} className="mt-1" />*/}
-        </div>
-      </div>
+      {property.management_status === "ACCEPTED" && !cancel ? (
+        <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
+          <Col className="d-flex justify-content-center mb-1">
+            <Button
+              variant="outline-primary"
+              style={redPillButton}
+              // onClick={cancelAgreement}
+              // onClick={() => setShowDialog(true)}
+              onClick={() => setCancel(true)}
+            >
+              Cancel Agreement
+            </Button>
+          </Col>
+        </Row>
+      ) : (
+        ""
+      )}
+      {property.management_status === "ACCEPTED" && cancel ? (
+        <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
+          <Col></Col>
+          <Col
+            xs={6}
+            className="d-flex flex-column justify-content-center mb-1"
+          >
+            <Form.Group className="mx-2 mb-3">
+              <Form.Label as="h6">Early End Date</Form.Label>
+              <Form.Control
+                style={squareForm}
+                type="date"
+                value={endEarlyDate}
+                onChange={(e) => setEndEarlyDate(e.target.value)}
+              />
+            </Form.Group>
+            <Button
+              variant="outline-primary"
+              style={redPillButton}
+              // onClick={cancelAgreement}
+              onClick={() => setShowDialog(true)}
+              // onClick={() => setCancel(true)}
+            >
+              Cancel Agreement
+            </Button>
+          </Col>
+          <Col></Col>
+        </Row>
+      ) : (
+        ""
+      )}
+      {property.management_status === "PM END EARLY" ? (
+        <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
+          <h6 className="d-flex justify-content-center" style={mediumBold}>
+            You have requested to end the agreement early on{" "}
+            {activeContract.early_end_date}
+          </h6>
+        </Row>
+      ) : (
+        ""
+      )}
+
+      {property.management_status === "OWNER END EARLY" ? (
+        <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
+          <h6 className="d-flex justify-content-center" style={mediumBold}>
+            Owner requested to end the agreement <br /> early on{" "}
+            {activeContract.early_end_date}
+          </h6>
+          <Col className="d-flex justify-content-center">
+            <Button
+              variant="outline-primary"
+              style={bluePillButton}
+              onClick={acceptCancelAgreement}
+            >
+              Accept
+            </Button>
+          </Col>
+          <Col className="d-flex justify-content-center">
+            <Button
+              variant="outline-primary"
+              style={redPillButton}
+              onClick={rejectCancelAgreement}
+            >
+              Reject
+            </Button>
+          </Col>
+        </Row>
+      ) : (
+        ""
+      )}
+
+      {/*<hr style={{ opacity: 1 }} className="mt-1" />*/}
     </div>
   );
 }
