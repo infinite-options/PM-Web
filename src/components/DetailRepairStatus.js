@@ -117,21 +117,6 @@ function DetailRepairStatus(props) {
     fetchRepairsDetail();
   }, []);
 
-  // useEffect(() => {
-  //   console.log("image state", imageState);
-  // }, [imageState]);
-  // useEffect(() => {
-  //   const fetchBusinessAssigned = async () => {
-  //     const response = await get(
-  //       `/businesses?business_uid=${repairsDetail.assigned_business}`
-  //     );
-  //     console.log(response.result[0]);
-
-  //     setBusineesAssigned(response.result);
-  //   };
-  //   fetchBusinessAssigned();
-  // }, []);
-
   function editRepair() {
     console.log("Editing repair");
     setIsEditing(true);

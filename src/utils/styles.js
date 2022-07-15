@@ -14,7 +14,7 @@ const small = {
 };
 const mediumBold = {
   fontWeight: "600",
-  font: "normal normal normal 20px/28px Bahnschrift-Regular",
+  font: "normal normal normal 20px Bahnschrift-Regular",
 };
 const bold = {
   fontWeight: "bold",
@@ -132,7 +132,8 @@ const smallGray = {
 };
 
 const headings = {
-  font: "normal normal bold 22px/26px Bahnschrift-Bold",
+  fontWeight: "600",
+  font: "normal normal normal 24px Bahnschrift-Regular",
   letterSpacing: "0px",
   color: "#000000",
   marginBottom: "0.5rem",
@@ -286,7 +287,8 @@ const formLabel = {
 };
 const subHeading = {
   textAlign: "left",
-  font: "normal normal 600 17px/20px SFProDisplay-Semibold",
+  fontWeight: "600",
+  font: "normal normal normal 16px/26px Bahnschrift-Regular",
   letterSpacing: "0px",
   color: "#000000",
 };

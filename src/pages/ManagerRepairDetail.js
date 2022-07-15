@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form, Button } from "react-bootstrap";
 import Checkbox from "../components/Checkbox";
 import HighPriority from "../icons/highPriority.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
@@ -21,6 +21,7 @@ import {
   tileImg,
   squareForm,
   orangePill,
+  mediumBold,
 } from "../utils/styles";
 import { useParams } from "react-router";
 import { get, post, put } from "../utils/api";
@@ -39,7 +40,7 @@ function ManagerRepairDetail(props) {
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [quotes, setQuotes] = useState([]);
-
+  const imageState = useState([]);
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -77,7 +78,17 @@ function ManagerRepairDetail(props) {
     setDescription(repair.description);
     setPriority(repair.priority);
     setCanReschedule(repair.can_reschedule === 1);
-
+    const files = [];
+    const images = JSON.parse(repair.images);
+    for (let i = 0; i < images.length; i++) {
+      files.push({
+        index: i,
+        image: images[i],
+        file: null,
+        coverPhoto: i === 0,
+      });
+    }
+    imageState[1](files);
     // const quotes_request = await get(`/maintenanceQuotes`);
     // if (quotes_request.msg === 'Token has expired') {
     //     refresh();
@@ -107,16 +118,6 @@ function ManagerRepairDetail(props) {
       alert("No businesses Selected");
       return;
     }
-    // for (const id of business_ids){
-    //     const quote_details = {
-    //         maintenance_request_uid: repair.maintenance_request_uid,
-    //         business_uid: id
-    //     }
-    //     // console.log(quote_details)
-    //     const response = await post("/maintenanceQuotes", quote_details);
-    //     const result = response.result
-    //     // console.log(result)
-    // }
 
     console.log("Quotes Requested from", business_ids);
     const quote_details = {
@@ -126,6 +127,8 @@ function ManagerRepairDetail(props) {
     const response = await post("/maintenanceQuotes", quote_details);
     const result = response.result;
     setRequestQuote(false);
+
+    fetchBusinesses();
   };
 
   const updateRepair = async () => {
@@ -137,14 +140,25 @@ function ManagerRepairDetail(props) {
       can_reschedule: canReschedule ? 1 : 0,
       request_status: repair.request_status,
     };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
 
     console.log("Repair Object to be updated", newRepair);
-    const response = await post(
-      "/maintenanceRequests",
-      newRepair,
-      access_token
-    );
+
+    const response = await put("/maintenanceRequests", newRepair, null, files);
     console.log(response.result);
+    setTitle(title);
+    setDescription(description);
+    setPriority(priority);
+    setCanReschedule(canReschedule ? 1 : 0);
     setEdit(false);
     fetchBusinesses();
   };
@@ -187,105 +201,172 @@ function ManagerRepairDetail(props) {
   };
 
   return (
-    <div className="h-100">
+    <div className="h-100 pb-5 mb-5">
       <Header
         title="Repairs"
         leftText={
-          scheduleMaintenance || requestQuote
-            ? null
-            : edit
-            ? "Cancel"
-            : "< Back"
+          scheduleMaintenance || requestQuote ? null : edit ? null : "< Back"
         }
         leftFn={() => (edit ? setEdit(false) : back())}
         rightText={
-          scheduleMaintenance || requestQuote ? null : edit ? "Save" : "Edit"
+          scheduleMaintenance || requestQuote ? null : edit ? null : "Edit"
         }
         rightFn={() => (edit ? updateRepair() : setEdit(true))}
       />
 
-      <Container
-        className="pt-1 mb-4"
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
         hidden={scheduleMaintenance || requestQuote}
       >
         <Row style={headings}>
-          <div>New Repair Request</div>
+          <Col>{title}</Col>
+          <Col xs={4}>
+            {priority === "High" ? (
+              <img src={HighPriority} />
+            ) : priority === "Medium" ? (
+              <img src={MediumPriority} />
+            ) : (
+              <img src={LowPriority} />
+            )}
+          </Col>
+          <Row>
+            <p style={subHeading} className="mt-2 mb-0">
+              {repair.address}
+              {repair.unit !== "" ? " " + repair.unit : ""}, {repair.city},{" "}
+              {repair.state} {repair.zip}
+            </p>
+          </Row>
         </Row>
         {edit ? (
           <div className="mx-1 pt-2">
-            <Form.Group className="mx-2 my-3">
-              <Form.Label style={subHeading} className="mb-0 ms-2">
-                Title (character limit: 15)
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder={title}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label style={subHeading} className="mb-0 ms-2">
-                Description
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder={description}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Form.Group>
-
-            <Row className="my-4 pt-1 mx-1">
-              <div style={subHeading} className="pt-1 mb-2">
-                Tag Priority
-              </div>
-              <Col xs={4}>
-                <img
-                  src={HighPriority}
-                  style={{ opacity: priority === "High" ? "1" : 0.5 }}
-                  onClick={() => setPriority("High")}
+            <Row
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+              className="my-4 p-2"
+            >
+              <Form.Group className="mx-2 my-3">
+                <Form.Label style={subHeading} className="mb-0 ms-2">
+                  Title (character limit: 15)
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder={title}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
-              </Col>
-              <Col xs={4}>
-                <img
-                  src={MediumPriority}
-                  style={{ opacity: priority === "Medium" ? "1" : 0.5 }}
-                  onClick={() => setPriority("Medium")}
-                />
-              </Col>
-              <Col xs={4}>
-                <img
-                  src={LowPriority}
-                  style={{ opacity: priority === "Low" ? "1" : 0.5 }}
-                  onClick={() => setPriority("Low")}
-                />
-              </Col>
+              </Form.Group>
             </Row>
-
-            <Row className="my-4 pt-1 mx-1">
-              <div style={subHeading} className="pt-1 mb-2">
-                Tenant can reschedule this job as needed
-              </div>
-              <Col className="pt-1 mx-2">
-                <Row>
-                  <Checkbox
-                    type="CIRCLE"
-                    checked={canReschedule}
-                    onClick={() => setCanReschedule(true)}
+            <Row
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+              className="my-4 p-2"
+            >
+              <Form.Group className="mx-2 my-3">
+                <Form.Label style={subHeading} className="mb-0 ms-2">
+                  Description
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder={description}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </Form.Group>
+            </Row>
+            <Row
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+              className="my-4 p-2"
+            >
+              <Row className="my-4 pt-1 mx-1">
+                <div style={subHeading} className="pt-1 mb-2">
+                  Tag Priority
+                </div>
+                <Col xs={4}>
+                  <img
+                    src={HighPriority}
+                    style={{ opacity: priority === "High" ? "1" : 0.5 }}
+                    onClick={() => setPriority("High")}
                   />
-                  Yes
-                </Row>
+                </Col>
+                <Col xs={4}>
+                  <img
+                    src={MediumPriority}
+                    style={{ opacity: priority === "Medium" ? "1" : 0.5 }}
+                    onClick={() => setPriority("Medium")}
+                  />
+                </Col>
+                <Col xs={4}>
+                  <img
+                    src={LowPriority}
+                    style={{ opacity: priority === "Low" ? "1" : 0.5 }}
+                    onClick={() => setPriority("Low")}
+                  />
+                </Col>
+              </Row>
+            </Row>
+            <Row
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+              className="my-4  p-2"
+            >
+              <Row className="my-4 pt-1 mx-1">
+                <div style={subHeading} className="pt-1 mb-2">
+                  Tenant can reschedule this job as needed
+                </div>
+                <Col className="pt-1 mx-2">
+                  <Row>
+                    <Checkbox
+                      type="CIRCLE"
+                      checked={canReschedule}
+                      onClick={() => setCanReschedule(true)}
+                    />
+                    Yes
+                  </Row>
+                </Col>
+                <Col className="pt-1 mx-2">
+                  <Row>
+                    <Checkbox
+                      type="CIRCLE"
+                      checked={!canReschedule}
+                      onClick={() => setCanReschedule(false)}
+                    />
+                    No
+                  </Row>
+                </Col>
+              </Row>
+            </Row>
+            <Row className="pt-1 mb-2">
+              <Col className="d-flex flex-row justify-content-evenly">
+                <Button style={bluePillButton} onClick={() => updateRepair()}>
+                  Save
+                </Button>
               </Col>
-              <Col className="pt-1 mx-2">
-                <Row>
-                  <Checkbox
-                    type="CIRCLE"
-                    checked={!canReschedule}
-                    onClick={() => setCanReschedule(false)}
-                  />
-                  No
-                </Row>
+              <Col className="d-flex flex-row justify-content-evenly">
+                <Button
+                  style={pillButton}
+                  variant="outline-primary"
+                  onClick={() => setEdit(false)}
+                >
+                  Cancel
+                </Button>
               </Col>
             </Row>
           </div>
@@ -294,16 +375,26 @@ function ManagerRepairDetail(props) {
         )}
 
         {!edit ? (
-          <Container className="mx-1 pt-2">
-            <Row className="pt-1 mb-4">
-              <div style={subHeading}>Title (character limit: 15)</div>
-              <div style={subText}>{repair.title}</div>
-            </Row>
-            <Row className="pt-1 mb-4">
+          <div className="mx-1 pt-2">
+            <Row
+              className="pt-1 mb-4"
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <div style={subHeading}>Description</div>
               <div style={subText}>{repair.description}</div>
             </Row>
-            <Row className="pt-1 mb-4">
+            <Row
+              className="pt-1 mb-4"
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <div className="pt-1 mb-2" style={subHeading}>
                 Pictures from tenant
               </div>
@@ -348,7 +439,13 @@ function ManagerRepairDetail(props) {
                 ""
               )}
             </Row>
-            <Row>
+            <Row
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="pt-1 mb-4" hidden={!morePictures}>
                 <div className="pt-1 mb-2" style={subHeading}>
                   Request more pictures
@@ -388,21 +485,15 @@ function ManagerRepairDetail(props) {
                 </Row>
               </Row>
             </Row>
-            <Row className="pt-1 mb-3">
-              <div style={subHeading} className="pt-1 mb-2">
-                Tag Priority
-              </div>
-              <Col xs={4}>
-                <img src={HighPriority} style={{ opacity: "1" }} />
-              </Col>
-              <Col xs={4}>
-                <img src={MediumPriority} style={{ opacity: "0.5" }} />
-              </Col>
-              <Col xs={4}>
-                <img src={LowPriority} style={{ opacity: "0.5" }} />
-              </Col>
-            </Row>
-            <Row className="pt-1 mb-3">
+
+            <Row
+              className="pt-1 mb-4"
+              style={{
+                background: "#F3F3F3 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <div style={subHeading} className="pt-1 mb-2">
                 Tenant can reschedule this job as needed
               </div>
@@ -438,21 +529,52 @@ function ManagerRepairDetail(props) {
                 </Button>
               </Col>
             </Row>
-          </Container>
+          </div>
         ) : (
           ""
         )}
-      </Container>
+      </div>
 
-      <Container hidden={!requestQuote}>
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+        hidden={!requestQuote}
+      >
         <Row style={headings}>
+          <Col>{repair.title}</Col>
+          <Col xs={4}>
+            {repair.priority === "High" ? (
+              <img src={HighPriority} />
+            ) : repair.priority === "Medium" ? (
+              <img src={MediumPriority} />
+            ) : (
+              <img src={LowPriority} />
+            )}
+          </Col>
+        </Row>
+        <Row style={subHeading}>
           <div>Select businesses to request a quote:</div>
         </Row>
 
         <div>
           {businesses.length > 0 &&
             businesses.map((business, i) => (
-              <Row className="mt-2" key={i}>
+              <Row
+                className="my-3 p-2"
+                key={i}
+                style={{
+                  background: "#F3F3F3 0% 0% no-repeat padding-box",
+                  boxShadow: business.quote_requested
+                    ? "0px 3px 6px #00000029"
+                    : "none",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
                 <Col xs={2} className="mt-2">
                   <Row>
                     <Checkbox
@@ -463,21 +585,26 @@ function ManagerRepairDetail(props) {
                   </Row>
                 </Col>
                 <Col>
-                  <Row style={headings}>{business.business_name}</Row>
+                  <Row style={mediumBold}>{business.business_name}</Row>
                   <Row style={subText}>
                     Services: Toilet repair, Plumbing, Kitchen repair
                   </Row>
                   <Row className="d-flex flex-row align-items-center justify-content-evenly">
                     <Col style={blue}> Manager: Jane Doe</Col>
-                    <Col className="d-flex flex-row align-items-center justify-content-evenly">
-                      <img
-                        src={Phone}
-                        style={{ width: "30px", height: "30px" }}
-                      />
-                      <img
-                        src={Message}
-                        style={{ width: "30px", height: "30px" }}
-                      />
+                    <Col className="d-flex flex-row align-items-center justify-content-end">
+                      <a href={`tel:${businesses.business_phone_number}`}>
+                        <img
+                          src={Phone}
+                          className="mx-1"
+                          style={{ width: "30px", height: "30px" }}
+                        />
+                      </a>
+                      <a href={`mailto:${businesses.business_email}`}>
+                        <img
+                          src={Message}
+                          style={{ width: "30px", height: "30px" }}
+                        />
+                      </a>
                     </Col>
                   </Row>
                 </Col>
@@ -487,7 +614,7 @@ function ManagerRepairDetail(props) {
         <Row className="mt-4">
           <Col className="d-flex justify-content-evenly">
             <Button style={bluePillButton} onClick={sendQuotesRequest}>
-              Request Quotes
+              Send Quote Request to Maintenace
             </Button>
           </Col>
         </Row>
@@ -501,9 +628,9 @@ function ManagerRepairDetail(props) {
             </Button>
           </Col>
         </Row>
-      </Container>
+      </div>
 
-      <Container hidden={!scheduleMaintenance}>
+      <div hidden={!scheduleMaintenance}>
         <Row>
           <div style={headings}>Schedule Maintenace</div>
         </Row>
@@ -534,70 +661,167 @@ function ManagerRepairDetail(props) {
             </Button>
           </Col>
         </Row>
-      </Container>
+      </div>
 
       {!edit &&
         !scheduleMaintenance &&
         !requestQuote &&
         quotes &&
         quotes.length > 0 && (
-          <Container className="pb-4">
-            <hr
-              style={{
-                border: "1px dashed #000000",
-                borderStyle: "none none dashed",
-                backgroundColor: "white",
-              }}
-            />
-
+          <div className="pb-4">
             {quotes &&
               quotes.length > 0 &&
               quotes.map((quote, i) => (
-                <Container className="my-4 pt-3" key={i}>
-                  <Row style={headings}>
+                <div key={i}>
+                  <hr
+                    style={{
+                      border: "1px dashed #000000",
+                      borderStyle: "none none dashed",
+                      backgroundColor: "white",
+                    }}
+                  />
+                  <Row className="mx-2 my-2" style={headings}>
                     <div>{quote.business_name}</div>
                   </Row>
-
-                  <Row
-                    hidden={
-                      quote.quote_status !== "SENT" &&
-                      quote.quote_status !== "REJECTED"
-                    }
-                  >
-                    <Row className="mt-4 mb-2">
-                      <div style={headings}>Fess Included:</div>
+                  <div className="mx-2 my-2 p-3">
+                    <Row
+                      hidden={
+                        quote.quote_status !== "SENT" &&
+                        quote.quote_status !== "REJECTED"
+                      }
+                    >
+                      <div
+                        className="my-2 p-3"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                      >
+                        <Row>
+                          <div style={mediumBold}>Service Charges</div>
+                        </Row>
+                        <Row className="mx-2">
+                          {quote.services_expenses &&
+                            quote.services_expenses.length > 0 &&
+                            JSON.parse(quote.services_expenses).map(
+                              (service, j) => (
+                                <div
+                                  key={j}
+                                  style={{
+                                    background:
+                                      "#FFFFFF 0% 0% no-repeat padding-box",
+                                    boxShadow: "0px 3px 6px #00000029",
+                                    borderRadius: "5px",
+                                    opacity: 1,
+                                  }}
+                                >
+                                  <Row className="pt-1 mb-2">
+                                    <div style={subHeading}>
+                                      {service.service_name}
+                                    </div>
+                                    <div style={subText}>
+                                      ${service.charge}{" "}
+                                      {service.per === "Hour"
+                                        ? `/${service.per}`
+                                        : "One-Time Fee"}
+                                    </div>
+                                  </Row>
+                                </div>
+                              )
+                            )}
+                        </Row>
+                      </div>
+                      <div
+                        className="my-2 p-3"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                      >
+                        <Row>
+                          <div style={mediumBold}>Event Type</div>
+                        </Row>
+                        <Row className="mx-2">
+                          <div
+                            style={
+                              (subText,
+                              {
+                                background:
+                                  "#FFFFFF 0% 0% no-repeat padding-box",
+                                boxShadow: "0px 3px 6px #00000029",
+                                borderRadius: "5px",
+                                opacity: 1,
+                              })
+                            }
+                          >
+                            {quote.event_type}
+                          </div>
+                        </Row>
+                      </div>
+                      <div
+                        className="my-2 p-3"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                      >
+                        <Row>
+                          <div style={mediumBold}>Total Estimate</div>
+                        </Row>
+                        <Row className="mx-2">
+                          {" "}
+                          <div
+                            style={
+                              (subText,
+                              {
+                                background:
+                                  "#FFFFFF 0% 0% no-repeat padding-box",
+                                boxShadow: "0px 3px 6px #00000029",
+                                borderRadius: "5px",
+                                opacity: 1,
+                              })
+                            }
+                          >
+                            $ {quote.total_estimate}
+                          </div>
+                        </Row>
+                      </div>
+                      <div
+                        className="my-2 p-3"
+                        style={{
+                          background: "#F3F3F3 0% 0% no-repeat padding-box",
+                          borderRadius: "10px",
+                          opacity: 1,
+                        }}
+                      >
+                        <Row>
+                          <div style={mediumBold}>Earliest Availability</div>
+                        </Row>
+                        <Row className="mx-2">
+                          {" "}
+                          <div
+                            style={
+                              (subText,
+                              {
+                                background:
+                                  "#FFFFFF 0% 0% no-repeat padding-box",
+                                boxShadow: "0px 3px 6px #00000029",
+                                borderRadius: "5px",
+                                opacity: 1,
+                              })
+                            }
+                          >
+                            {new Date(
+                              String(quote.earliest_availability).split(" ")[0]
+                            ).toLocaleDateString()}
+                          </div>
+                        </Row>
+                      </div>
                     </Row>
-                    {quote.services_expenses &&
-                      quote.services_expenses.length > 0 &&
-                      JSON.parse(quote.services_expenses).map((service, j) => (
-                        <Container key={j}>
-                          <Row className="pt-1 mb-2 mx-3">
-                            <div style={subHeading}>{service.service_name}</div>
-                            <div style={subText}>
-                              ${service.charge}{" "}
-                              {service.per === "Hour"
-                                ? `per ${service.per}`
-                                : "One-Time Fee"}
-                            </div>
-                          </Row>
-                        </Container>
-                      ))}
-
-                    <Row className="mt-4 mb-4">
-                      <div style={headings}>Event Type</div>
-                      <div style={subText}>{quote.event_type}</div>
-                    </Row>
-
-                    <Row className="mb-4">
-                      <div style={headings}>Total Estimate</div>
-                      <div style={subText}>$ {quote.total_estimate}</div>
-                    </Row>
-
-                    <Row className="mb-4">
-                      <div style={headings}>Earliest Availability</div>
-                      <div style={subText}>{quote.earliest_availability}</div>
-                    </Row>
-                  </Row>
+                  </div>
 
                   <Row
                     hidden={quote.quote_status !== "SENT"}
@@ -623,7 +847,7 @@ function ManagerRepairDetail(props) {
 
                   <Row
                     hidden={quote.quote_status === "SENT"}
-                    className="pt-4 mb-4"
+                    className="pt-1 mb-4"
                   >
                     <Col className="d-flex flex-row justify-content-evenly">
                       <Button style={orangePill}>
@@ -640,9 +864,9 @@ function ManagerRepairDetail(props) {
                     </Col>
                   </Row>
                   <hr />
-                </Container>
+                </div>
               ))}
-          </Container>
+          </div>
         )}
     </div>
   );

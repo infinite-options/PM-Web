@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import React, { useState, useContext, useEffect } from "react";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import {
   blue,
   gray,
@@ -18,15 +18,15 @@ import No_Image from "../icons/No_Image_Available.jpeg";
 function ManagerRepairsList(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh } = useContext(AppContext);
   const { access_token } = userData;
-  const [repairs, setRepairs] = React.useState([]);
-  const [newRepairs, setNewRepairs] = React.useState([]);
-  const [infoRepairs, setInfoRepairs] = React.useState([]);
-  const [processingRepairs, setProcessingRepairs] = React.useState([]);
-  const [scheduledRepairs, setScheduledRepairs] = React.useState([]);
-  const [completedRepairs, setCompletedRepairs] = React.useState([]);
-  const [repairIter, setRepairIter] = React.useState([]);
+  const [repairs, setRepairs] = useState([]);
+  const [newRepairs, setNewRepairs] = useState([]);
+  const [infoRepairs, setInfoRepairs] = useState([]);
+  const [processingRepairs, setProcessingRepairs] = useState([]);
+  const [scheduledRepairs, setScheduledRepairs] = useState([]);
+  const [completedRepairs, setCompletedRepairs] = useState([]);
+  const [repairIter, setRepairIter] = useState([]);
 
   const property = location.state.property;
 
@@ -122,7 +122,7 @@ function ManagerRepairsList(props) {
     ]);
   };
 
-  React.useEffect(fetchRepairs, [access_token]);
+  useEffect(fetchRepairs, [access_token]);
 
   return (
     <div
@@ -161,7 +161,7 @@ function ManagerRepairsList(props) {
                     key={j}
                     onClick={() =>
                       navigate(`./${repair.maintenance_request_uid}`, {
-                        state: { repair: repair },
+                        state: { repair: repair, property: property },
                       })
                     }
                   >

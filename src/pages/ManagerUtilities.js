@@ -40,6 +40,7 @@ function ManagerUtilities(props) {
   // const [dueDate, setDueDate] = React.useState("");
 
   const emptyUtility = {
+    provider: "",
     service_name: "",
     charge: "",
     properties: [],
@@ -117,7 +118,7 @@ function ManagerUtilities(props) {
 
     const new_bill = {
       bill_created_by: management_buid,
-      bill_description: newUtility.service_name,
+      bill_description: newUtility.provider,
       bill_utility_type: newUtility.service_name,
       bill_algorithm: newUtility.split_type,
       bill_docs: files,
@@ -296,7 +297,10 @@ function ManagerUtilities(props) {
   };
 
   return (
-    <div className="h-100">
+    <div
+      className="h-100 pb-5 mb-5"
+      style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
+    >
       <Header
         title="Utilities"
         leftText="< Back"
@@ -307,9 +311,16 @@ function ManagerUtilities(props) {
         rightFn={() => setNewUtility({ ...emptyUtility })}
       />
 
-      <Container className="px-2">
-        <Row className="my-4">
-          <div style={headings}>Utilities</div>
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <Row className="my-4 text-center">
+          <div style={headings}>New Utility Payment</div>
         </Row>
 
         {utilityState.length > 0 &&
@@ -351,8 +362,8 @@ function ManagerUtilities(props) {
             <Row className="mb-2">
               <Col>
                 <Form.Group className="mx-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Utility Name{" "}
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Utility Type{" "}
                     {newUtility.service_name === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
@@ -366,8 +377,8 @@ function ManagerUtilities(props) {
 
               <Col>
                 <Form.Group className="mx-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Charge {newUtility.charge === "" ? required : ""}
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Amount {newUtility.charge === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
@@ -379,11 +390,25 @@ function ManagerUtilities(props) {
                 </Form.Group>
               </Col>
             </Row>
-
-            <Row>
+            <Row className="mb-2">
               <Col>
+                <Form.Group className="mx-2">
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Provider {newUtility.provider === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="Electricity"
+                    value={newUtility.provider}
+                    onChange={(e) => changeNewUtility(e, "provider")}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={6}>
                 <Form.Group className="mx-2 mt-3 mb-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
                     Due by Date {newUtility.due_date === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
@@ -397,6 +422,7 @@ function ManagerUtilities(props) {
                 <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
                   <Form.Check
                     type="checkbox"
+                    style={mediumBold}
                     label="Pay with next rent"
                     onChange={(e) => changeNewUtility(e, "add_to_rent")}
                   />
@@ -404,34 +430,18 @@ function ManagerUtilities(props) {
                 {/*<Checkbox type='BOX' checked={newUtility.add_to_rent ? 'checked' : ''}*/}
                 {/*          onClick={(checked) => changeNewUtility(checked, 'add_to_rent')} />*/}
               </Col>
-              <Col>
-                <Form.Group
-                  className="mx-2 my-3"
-                  hidden={propertyState.filter((p) => p.checked).length <= 1}
-                >
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Fee Distribution
-                  </Form.Label>
-                  <Form.Select
-                    style={{
-                      ...squareForm,
-                      backgroundImage: `url(${ArrowDown})`,
-                    }}
-                    value={newUtility.split_type}
-                    onChange={(e) => changeNewUtility(e, "split_type")}
-                  >
-                    <option value="uniform">Uniform</option>
-                    <option value="tenant">By Tenant Count</option>
-                    <option value="area">By Square Footage</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
             </Row>
 
-            <Container className="my-3">
-              <h6>Properties</h6>
+            <Row className="mx-1 mt-3 mb-2">
+              <h6 style={mediumBold}>Properties</h6>
               {properties.map((property, i) => (
-                <div key={i} className="d-flex ps-2 align-items-center my-2">
+                <div
+                  key={i}
+                  className="d-flex mx-2 ps-2 align-items-center my-2"
+                  style={{
+                    font: "normal normal normal 18px Bahnschrift-Regular",
+                  }}
+                >
                   <Checkbox
                     type="BOX"
                     checked={propertyState[i].checked}
@@ -444,10 +454,10 @@ function ManagerUtilities(props) {
                   </p>
                 </div>
               ))}
-            </Container>
+            </Row>
 
             {/*Add Documents functionality*/}
-            <div className="mb-4">
+            <Row className="mx-1 mt-3 mb-2">
               <h6 style={mediumBold}>Utility Documents</h6>
               {files.map((file, i) => (
                 <div key={i}>
@@ -482,7 +492,7 @@ function ManagerUtilities(props) {
               {newFile !== null ? (
                 <div>
                   <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
+                    <Form.Label style={mediumBold} className="mb-0 ms-2">
                       Document Name
                     </Form.Label>
                     <Form.Control
@@ -493,7 +503,7 @@ function ManagerUtilities(props) {
                     />
                   </Form.Group>
                   <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
+                    <Form.Label style={mediumBold} className="mb-0 ms-2">
                       Description
                     </Form.Label>
                     <Form.Control
@@ -546,7 +556,31 @@ function ManagerUtilities(props) {
                   </label>
                 </div>
               )}
-            </div>
+              <Row>
+                <Col>
+                  <Form.Group
+                    className="mx-2 my-3"
+                    hidden={propertyState.filter((p) => p.checked).length <= 1}
+                  >
+                    <Form.Label style={mediumBold} className="mb-0 ms-2">
+                      Split Method
+                    </Form.Label>
+                    <Form.Select
+                      style={{
+                        ...squareForm,
+                        backgroundImage: `url(${ArrowDown})`,
+                      }}
+                      value={newUtility.split_type}
+                      onChange={(e) => changeNewUtility(e, "split_type")}
+                    >
+                      <option value="uniform">Uniform</option>
+                      <option value="tenant">By Tenant Count</option>
+                      <option value="area">By Square Footage</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Row>
 
             <div
               className="text-center my-2"
@@ -587,7 +621,7 @@ function ManagerUtilities(props) {
             </Button>
           </div>
         )}
-      </Container>
+      </div>
     </div>
   );
 }
