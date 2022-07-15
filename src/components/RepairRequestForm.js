@@ -11,14 +11,15 @@ import LowPriority from "../icons/lowPriority.svg";
 import RepairImages from "./RepairImages";
 import { get, post } from "../utils/api";
 import {
-  headings,
-  formLabel,
-  bluePillButton,
-  pillButton,
-  red,
-  hidden,
-  small,
+    headings,
+    formLabel,
+    bluePillButton,
+    pillButton,
+    red,
+    hidden,
+    small, payNowButton,
 } from "../utils/styles";
+import Calendar from "react-calendar";
 
 const useStyles = makeStyles((theme) => ({
   priorityInactive: {
@@ -87,14 +88,14 @@ function RepairRequest(props) {
   return (
     <div className="h-100 d-flex flex-column">
       <Header
-        title="Repairs"
+        title="New Repair"
         leftText="< Back"
         leftFn={() => navigate("/tenant")}
       />
       <Container className="pt-1 mb-4">
-        <Row style={headings}>
-          <div>New Repair Request</div>
-        </Row>
+        {/*<Row style={headings}>*/}
+        {/*  <div>New Repair Request</div>*/}
+        {/*</Row>*/}
         <Row style={formLabel} as="h5" className="ms-1 mb-0">
           {state.property.address} {state.property.unit}
           ,&nbsp;
@@ -102,33 +103,131 @@ function RepairRequest(props) {
           ,&nbsp;
           {state.property.state}&nbsp; {state.property.zip}
         </Row>
+
         <Form>
+          <div
+              style={{
+                position: "relative",
+                backgroundColor: "#F3F3F3",
+                height: "80px",
+                borderRadius: "5px",
+              }}
+          >
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Title (character limit: 15) {required}
+              {/*Title (character limit: 15) {required}*/}
+              Title
             </Form.Label>
             <Form.Control
-              style={{ borderRadius: 0 }}
+              style={{
+                position: "relative",
+                borderRadius: 0,
+                left: "35px",
+                width:"300px",
+              }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Ex: Paint"
             />
           </Form.Group>
+          </div>
+          <div
+              style={{
+                position: "relative",
+                backgroundColor: "#F3F3F3",
+                height: "70px",
+                  borderRadius: "5px",
+              }}
+          >
+            <Form.Group className="mt-3 mb-4">
+              <Form.Label style={formLabel} as="h5" className="mt-2 mb-1">
+                {/*Tag Priority (Select one) {required}*/}
+                Tags
+              </Form.Label>
+              <Row
+                  className="mt-2 mb-2"
+                  style={{
+                    display: "text",
+                    flexDirection: "row",
+                    textAlign: "center",
+                    }}
+                >
+                <Col xs={4}>
+                  <img
+                      src={HighPriority}
+                      onClick={() => setPriority("High")}
+                      className={
+                        priority === "High"
+                            ? `${classes.priorityActive}`
+                            : `${classes.priorityInactive}`
+                      }
+                      //style={{ opacity: "0.5" }}
+                  />
+                </Col>
+                <Col xs={4}>
+                  <img
+                      src={MediumPriority}
+                      onClick={() => setPriority("Medium")}
+                      className={
+                        priority === "Medium"
+                            ? `${classes.priorityActive}`
+                            : `${classes.priorityInactive}`
+                      }
+                      //style={{ opacity: "0.5" }}
+                  />
+                </Col>
+                <Col xs={4}>
+                  <img
+                      src={LowPriority}
+                      onClick={() => setPriority("Low")}
+                      className={
+                        priority === "Low"
+                            ? `${classes.priorityActive}`
+                            : `${classes.priorityInactive}`
+                      }
+                      //style={{ opacity: "0.5" }}
+                  />
+                </Col>
+              </Row>
+            </Form.Group>
+          </div>
+          <div
+              style={{
+                position: "relative",
+                backgroundColor: "#F3F3F3",
+                height: "100px",
+                  borderRadius: "5px",
+              }}
+          >
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
               Description {required}
             </Form.Label>
             <Form.Control
-              style={{ borderRadius: 0 }}
+              style={{
+                borderRadius: 0 ,
+                position: "relative",
+                left: "35px",
+                width:"300px",
+              }}
               as="textarea"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Ex: Kitchen wall needs repaint. It’s been chipping."
             />
           </Form.Group>
+          </div>
+          <div
+              style={{
+                position: "relative",
+                backgroundColor: "#F3F3F3",
+                height: "150px",
+                  borderRadius: "5px",
+              }}
+          >
           <Form.Group className="mt-3 mb-4">
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Take pictures
+              Add Images
             </Form.Label>
             {/* <Form.Control
               type="file"
@@ -136,56 +235,28 @@ function RepairRequest(props) {
             /> */}
           </Form.Group>
           <RepairImages state={imageState} />
-          <Form.Group className="mt-3 mb-4">
-            <Form.Label style={formLabel} as="h5" className="mt-2 mb-1">
-              Tag Priority (Select one) {required}
-            </Form.Label>
-            <Row
-              className="mt-2 mb-2"
-              style={{
-                display: "text",
-                flexDirection: "row",
-                textAlign: "center",
-              }}
+          </div>
+            <div
+                style={{
+                    position: "relative",
+                    backgroundColor: "#F3F3F3",
+                    height: "500px",
+                    borderRadius: "5px",
+                }}
             >
-              <Col xs={4}>
-                <img
-                  src={HighPriority}
-                  onClick={() => setPriority("High")}
-                  className={
-                    priority === "High"
-                      ? `${classes.priorityActive}`
-                      : `${classes.priorityInactive}`
-                  }
-                //style={{ opacity: "0.5" }}
-                />
-              </Col>
-              <Col xs={4}>
-                <img
-                  src={MediumPriority}
-                  onClick={() => setPriority("Medium")}
-                  className={
-                    priority === "Medium"
-                      ? `${classes.priorityActive}`
-                      : `${classes.priorityInactive}`
-                  }
-                //style={{ opacity: "0.5" }}
-                />
-              </Col>
-              <Col xs={4}>
-                <img
-                  src={LowPriority}
-                  onClick={() => setPriority("Low")}
-                  className={
-                    priority === "Low"
-                      ? `${classes.priorityActive}`
-                      : `${classes.priorityInactive}`
-                  }
-                //style={{ opacity: "0.5" }}
-                />
-              </Col>
-            </Row>
-          </Form.Group>
+
+                {/*<Calendar*/}
+                {/*    calendarType="US"*/}
+                {/*    // onClickDay={(e) => {*/}
+                {/*    //     setTimeAASlots([]);*/}
+                {/*    //     dateChange(e);*/}
+                {/*    // }}*/}
+                {/*    // value={date}*/}
+                {/*    // minDate={minDate}*/}
+                {/*    // next2Label={null}*/}
+                {/*    // prev2Label={null}*/}
+                {/*/>*/}
+            </div>
         </Form>
         <div className="text-center mt-5">
           <div
@@ -194,6 +265,8 @@ function RepairRequest(props) {
           >
             <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
+
+
           <Row
             style={{
               display: "text",
@@ -201,22 +274,25 @@ function RepairRequest(props) {
               textAlign: "center",
             }}
           >
-            <Col>
-              <Button
-                variant="outline-primary"
-                onClick={() => navigate("/tenant")}
-                style={pillButton}
-              >
-                Cancel
-              </Button>
-            </Col>
-            <Col>
+            <Col
+            style={{
+                position: "relative",
+                left: "25px"}}>
               <Button
                 variant="outline-primary"
                 onClick={submitForm}
                 style={bluePillButton}
               >
-                Add Request
+                Send Repair Request
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                  variant="outline-primary"
+                  onClick={() => navigate("/tenant")}
+                  style={pillButton}
+              >
+                Cancel
               </Button>
             </Col>
           </Row>

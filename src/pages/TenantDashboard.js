@@ -396,7 +396,7 @@ function TenantDashboard(props) {
   };
   return (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
-      <Header title="Tenant Dashboard" customClass={"mb-2"} />
+      <Header title="Home" customClass={"mb-2"} />
       {isLoading === true || (!profile || profile.length) === 0 ? null : (
         <Container
           className="px-3 pb-5 mb-5"
@@ -886,6 +886,135 @@ function TenantDashboard(props) {
             </div>
           )}
 
+          {selectedProperty && (
+
+              <div
+                  style={{
+                    margin: "-12px",
+                    display: "flex",
+                    flexDirection: "row",
+                    textAlign: "center",
+                    backgroundColor: "#FFFFFF",
+                    height: "120px",
+                  }}
+              >
+                {/* ============== Due Button ===================*/}
+                <div
+                    onClick={
+                      goToDuePayments
+                    }
+                    style={{
+                      height: "90px",
+                      width: "167px",
+                      backgroundColor: "#93EE9C",
+                      borderRadius: "10px",
+                      margin: "10px",
+                    }}
+                >
+                  <div
+                      style={{
+                        backgroundColor: "#007AFF",
+                        padding: "5px",
+                        borderRadius: "10px 10px 0px 0px",
+                        fontSize: "21px",
+                        color: "#FFFFFF",
+                      }}
+                  >
+                    Due
+                  </div>
+                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+                    {/* {selectedProperty.nextPurchase.payment_date ?
+                      <div>
+                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
+                        &nbsp;
+                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
+                      </div>
+                        : "N/A\n"
+                      } */}
+                    ${due}
+                  </div>
+                </div>
+                {/* ============== Upcoming Button ===================*/}
+                <div
+                    onClick={goToDuePayments}
+                    style={{
+                      height: "90px",
+                      width: "167px",
+                      backgroundColor: "#93EE9C",
+                      borderRadius: "10px",
+                      margin: "10px",
+                    }}
+                >
+                  <div
+                      style={{
+                        backgroundColor: "#007AFF",
+                        padding: "5px",
+                        borderRadius: "10px 10px 0px 0px",
+                        fontSize: "21px",
+                        color: "#FFFFFF",
+                      }}
+                  >
+                    Upcoming
+                  </div>
+                  {nextPurchase === null ? null :
+                      <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+
+                        {/* <p style={{ margin: "0px" }}>
+                      {selectedProperty.nextPurchase ?
+                        <div>
+                          {months[parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[1])]}
+                          &nbsp;
+                          {parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[2])}
+                        </div>
+                      : "No Date"}
+                    </p> */}
+                        ${upcomingFees}
+
+                      </div>}
+
+                </div>
+                {/* ============== Paid Button ===================*/}
+                <div
+                    onClick={
+                      goToPastPaidPayments
+                      // navigate(
+                      //   `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
+                      // );
+                    }
+                    style={{
+                      height: "90px",
+                      width: "167px",
+                      backgroundColor: "#93EE9C",
+                      borderRadius: "10px",
+                      margin: "10px",
+                    }}
+                >
+                  <div
+                      style={{
+                        backgroundColor: "#007AFF",
+                        padding: "5px",
+                        borderRadius: "10px 10px 0px 0px",
+                        fontSize: "21px",
+                        color: "#FFFFFF",
+                      }}
+                  >
+                    Paid
+                  </div>
+                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
+                    {/* {selectedProperty.nextPurchase.payment_date ?
+                      <div>
+                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
+                        &nbsp;
+                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
+                      </div>
+                        : "N/A\n"
+                      } */}
+                    ${paidFees}
+                  </div>
+                </div>
+              </div>
+          )}
+
           <Row>
             <div
               style={{
@@ -916,592 +1045,379 @@ function TenantDashboard(props) {
               </div>
             </div>
           </Row>
-          <Row style={{ backgroundColor: "#FFFFFF" }}>
-            {/* {isLoading === true ? null : (
-              <div>
-                {properties.map((property) => (
-                  <div>
-                    <div style={headings} className="mt-4 mb-1">
-                      ${property.rent} / mo
-                    </div>
 
-                    <div style={address} className="mt-1 mb-1">
-                      {property.property.address} {property.property.unit}
-                      ,&nbsp;
-                      {property.property.city}
-                      ,&nbsp;
-                      {property.property.state}&nbsp; {property.property.zip}
-                    </div>
-                  </div>
-                ))}
+          {/*<Row*/}
+          {/*  style={{*/}
+          {/*    display: "flex",*/}
+          {/*    flexDirection: "row",*/}
+          {/*    justifyContent: "space-evenly",*/}
+          {/*  }}*/}
+          {/*  className="mb-4"*/}
+          {/*>*/}
+          {/*  <Col xs={3} style={actions}>*/}
+          {/*    <img*/}
+          {/*      style={{ width: "50px", height: "50px", cursor: "pointer" }}*/}
+          {/*      src={RepairRequest}*/}
+          {/*      onClick={goToRequest}*/}
+          {/*    />*/}
+          {/*    <div>Request Repair</div>*/}
+          {/*  </Col>*/}
+          {/*  <Col xs={3} style={actions}>*/}
+          {/*    <img*/}
+          {/*      style={{ width: "50px", height: "50px", cursor: "pointer" }}*/}
+          {/*      src={RepairStatus}*/}
+          {/*      onClick={goToStatus}*/}
+          {/*    />*/}
+          {/*    <div>Repair Status</div>*/}
+          {/*  </Col>*/}
+          {/*  <Col xs={3} style={actions}>*/}
+          {/*    <img*/}
+          {/*      style={{ width: "50px", height: "50px", cursor: "pointer" }}*/}
+          {/*      src={Documents}*/}
+          {/*      onClick={goToDocuments}*/}
+          {/*    />*/}
+          {/*    <div>*/}
+          {/*      Your <br /> Documents*/}
+          {/*    </div>*/}
+          {/*  </Col>*/}
+          {/*</Row>*/}
+          {/*<Row*/}
+          {/*  style={{*/}
+          {/*    display: "flex",*/}
+          {/*    flexDirection: "row",*/}
+          {/*    justifyContent: "space-evenly",*/}
+          {/*  }}*/}
+          {/*  className="mt-1 mb-1"*/}
+          {/*>*/}
+          {/*  <Col xs={3} style={actions}>*/}
+          {/*    <img*/}
+          {/*      style={{ width: "50px", height: "50px", cursor: "pointer" }}*/}
+          {/*      src={Announcements}*/}
+          {/*      onClick={goToAnnouncements}*/}
+          {/*    />*/}
+          {/*    <div>*/}
+          {/*      Resident <br />*/}
+          {/*      Announcements*/}
+          {/*    </div>*/}
+          {/*  </Col>*/}
+          {/*  <Col xs={3} style={actions}>*/}
+          {/*    <img*/}
+          {/*      style={{ width: "50px", height: "50px", cursor: "pointer" }}*/}
+          {/*      src={Emergency}*/}
+          {/*      onClick={goToEmergency}*/}
+          {/*    />*/}
+          {/*    <div>Emergency</div>*/}
+          {/*  </Col>*/}
+          {/*  <Col xs={3} style={actions}>*/}
+          {/*    <div>*/}
+          {/*      <img*/}
+          {/*        style={{ width: "50px", height: "50px", cursor: "pointer" }}*/}
+          {/*        src={SearchPM}*/}
+          {/*        onClick={goToSearchPM}*/}
+          {/*      />*/}
+          {/*      <div>Search Properties </div>*/}
+          {/*    </div>*/}
+          {/*  </Col>*/}
+          {/*</Row>*/}
 
-              
-              </div>
-            )} */}
-            {/* {isLoading === true || selectedProperty.length == 0 ? null : (
-              <div>
-                <div style={headings} className="mt-4 mb-1">
-                  ${selectedProperty.rent} / mo
-                </div>
+          {/*/!* ============================RENTED Properties =========================== *!/*/}
+          {/*<div style={headings} className="mt-4 mb-1">*/}
+          {/*  Properties Rented*/}
+          {/*</div>*/}
+          {/*<p> Your rented properties </p>*/}
+          {/*<hr style={{ opacity: 1 }} />*/}
+          {/*<div className="mb-4" style={{ margin: "10px" }}>*/}
+          {/*  <Row>*/}
+          {/*    <Col>*/}
+          {/*      {applications ? (*/}
+          {/*        applications.map((application, i) =>*/}
+          {/*          // console.log(application)*/}
+          {/*          // application.rental_status === "ACTIVE" ? (*/}
+          {/*          application.application_status === "RENTED" ||*/}
+          {/*            application.application_status === "PM END EARLY" ||*/}
+          {/*            application.application_status === "TENANT END EARLY" ? (*/}
+          {/*            <div*/}
+          {/*              key={i}*/}
+          {/*              onClick={() => goToReviewPropertyLease(application)}*/}
+          {/*            >*/}
+          {/*              <div className="d-flex justify-content-between align-items-end">*/}
+          {/*                <div*/}
+          {/*                  className="img"*/}
+          {/*                  style={{*/}
+          {/*                    flex: "0 0 35%",*/}
+          {/*                    background: "lightgrey",*/}
+          {/*                    height: "150px",*/}
+          {/*                    width: "100px",*/}
+          {/*                  }}*/}
+          {/*                >*/}
+          {/*                  /!* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } *!/*/}
+          {/*                  {application.images && application.images.length ? (*/}
+          {/*                    <img*/}
+          {/*                      style={{ width: "100%", height: "100%" }}*/}
+          {/*                      src={application.images[0]}*/}
+          {/*                    />*/}
+          {/*                  ) : (*/}
+          {/*                    <img*/}
+          {/*                      style={{ width: "100%", height: "100%" }}*/}
+          {/*                      src={No_Image}*/}
+          {/*                    />*/}
+          {/*                  )}*/}
+          {/*                </div>*/}
+          {/*                <div style={{ paddingLeft: "15px" }}>*/}
+          {/*                  <h5 style={mediumBold}>ADDRESS</h5>*/}
+          {/*                  <h6>{application.address}</h6>*/}
+          {/*                  <h6>*/}
+          {/*                    {application.city},{application.zip}*/}
+          {/*                  </h6>*/}
 
-                <div style={address} className="mt-1 mb-1">
-                  {selectedProperty.property.address}{" "}
-                  {selectedProperty.property.unit}
-                  ,&nbsp;
-                  {selectedProperty.property.city}
-                  ,&nbsp;
-                  {selectedProperty.property.state}&nbsp;{" "}
-                  {selectedProperty.property.zip}
-                </div>
-                {selectedProperty.lastPurchase && (
-                  <div
-                    style={blue}
-                    className="mt-1 mb-1"
-                    onClick={() => navigate("/paymentHistory")}
-                  >
-                    Rent paid for {selectedProperty.lastPurchase.purchase_notes}
-                    : ${selectedProperty.lastPurchase.amount_paid}
-                  </div>
-                )}
-                {selectedProperty.currentPurchase && (
-                  <div>
-                    <Col xs={7} className="mt-1 mb-1">
-                      <div
-                        style={bluePill}
-                        onClick={() =>
-                          navigate(
-                            `/rentPayment/${selectedProperty.currentPurchase.purchase_uid}`
-                          )
-                        }
-                      >
-                        Rent due for{" "}
-                        {selectedProperty.currentPurchase.purchase_notes}: $
-                        {selectedProperty.currentPurchase.amount_due -
-                          selectedProperty.currentPurchase.amount_paid}
-                      </div>
-                    </Col>
-                  </div>
-                )}
-                {selectedProperty.nextPurchase && (
-                  <div>
-                    <Col xs={8} className="mt-1 mb-1">
-                      <div
-                        style={greenBorderPill}
-                        onClick={() =>
-                          navigate(
-                            `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
-                          )
-                        }
-                      >
-                        Upcoming rent for{" "}
-                        {selectedProperty.nextPurchase.purchase_notes}: $
-                        {selectedProperty.nextPurchase.amount_due -
-                          selectedProperty.nextPurchase.amount_paid}
-                      </div>
-                    </Col>
-                  </div>
-                )}
-              </div>
-            )} */}
-            {selectedProperty && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  textAlign: "center",
-                  backgroundColor: "#FFFFFF",
-                }}
-              >
-                {/* ============== Due Button ===================*/}
-                <div
-                  onClick={
-                    goToDuePayments
-                  }
-                  style={{
-                    height: "90px",
-                    width: "167px",
-                    backgroundColor: "#93EE9C",
-                    borderRadius: "10px",
-                    margin: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#007AFF",
-                      padding: "5px",
-                      borderRadius: "10px 10px 0px 0px",
-                      fontSize: "21px",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Due
-                  </div>
-                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
-                    {/* {selectedProperty.nextPurchase.payment_date ? 
-                      <div>
-                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
-                        &nbsp;
-                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
-                      </div>
-                        : "N/A\n"
-                      } */}
-                    ${due}
-                  </div>
-                </div>
-                {/* ============== Upcoming Button ===================*/}
-                <div
-                  onClick={goToDuePayments}
-                  style={{
-                    height: "90px",
-                    width: "167px",
-                    backgroundColor: "#93EE9C",
-                    borderRadius: "10px",
-                    margin: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#007AFF",
-                      padding: "5px",
-                      borderRadius: "10px 10px 0px 0px",
-                      fontSize: "21px",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Upcoming
-                  </div>
-                  {nextPurchase === null ? null :
-                    <div style={{ fontSize: "22px", lineHeight: "35px" }}>
-
-                      {/* <p style={{ margin: "0px" }}>
-                      {selectedProperty.nextPurchase ? 
-                        <div>
-                          {months[parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[1])]} 
-                          &nbsp;
-                          {parseInt(selectedProperty.nextPurchase.next_payment.split(" ")[0].split("-")[2])}
-                        </div> 
-                      : "No Date"}
-                    </p> */}
-                      ${upcomingFees}
-
-                    </div>}
-
-                </div>
-                {/* ============== Paid Button ===================*/}
-                <div
-                  onClick={
-                    goToPastPaidPayments
-                    // navigate(
-                    //   `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
-                    // );
-                  }
-                  style={{
-                    height: "90px",
-                    width: "167px",
-                    backgroundColor: "#93EE9C",
-                    borderRadius: "10px",
-                    margin: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#007AFF",
-                      padding: "5px",
-                      borderRadius: "10px 10px 0px 0px",
-                      fontSize: "21px",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Paid
-                  </div>
-                  <div style={{ fontSize: "22px", lineHeight: "35px" }}>
-                    {/* {selectedProperty.nextPurchase.payment_date ? 
-                      <div>
-                        {months[parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[1])]}
-                        &nbsp;
-                        {parseInt(selectedProperty.nextPurchase.payment_date.split(" ")[0].split("-")[0])}
-                      </div>
-                        : "N/A\n"
-                      } */}
-                    ${paidFees}
-                  </div>
-                </div>
-              </div>
-            )}
-          </Row>
-
-          <Row
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}
-            className="mb-4"
-          >
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={RepairRequest}
-                onClick={goToRequest}
-              />
-              <div>Request Repair</div>
-            </Col>
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={RepairStatus}
-                onClick={goToStatus}
-              />
-              <div>Repair Status</div>
-            </Col>
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={Documents}
-                onClick={goToDocuments}
-              />
-              <div>
-                Your <br /> Documents
-              </div>
-            </Col>
-          </Row>
-          <Row
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}
-            className="mt-1 mb-1"
-          >
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={Announcements}
-                onClick={goToAnnouncements}
-              />
-              <div>
-                Resident <br />
-                Announcements
-              </div>
-            </Col>
-            <Col xs={3} style={actions}>
-              <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={Emergency}
-                onClick={goToEmergency}
-              />
-              <div>Emergency</div>
-            </Col>
-            <Col xs={3} style={actions}>
-              <div>
-                <img
-                  style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                  src={SearchPM}
-                  onClick={goToSearchPM}
-                />
-                <div>Search Properties </div>
-              </div>
-            </Col>
-          </Row>
-
-          {/* ============================RENTED Properties =========================== */}
-          <div style={headings} className="mt-4 mb-1">
-            Properties Rented
-          </div>
-          <p> Your rented properties </p>
-          <hr style={{ opacity: 1 }} />
-          <div className="mb-4" style={{ margin: "10px" }}>
-            <Row>
-              <Col>
-                {applications ? (
-                  applications.map((application, i) =>
-                    // console.log(application)
-                    // application.rental_status === "ACTIVE" ? (
-                    application.application_status === "RENTED" ||
-                      application.application_status === "PM END EARLY" ||
-                      application.application_status === "TENANT END EARLY" ? (
-                      <div
-                        key={i}
-                        onClick={() => goToReviewPropertyLease(application)}
-                      >
-                        <div className="d-flex justify-content-between align-items-end">
-                          <div
-                            className="img"
-                            style={{
-                              flex: "0 0 35%",
-                              background: "lightgrey",
-                              height: "150px",
-                              width: "100px",
-                            }}
-                          >
-                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
-                            {application.images && application.images.length ? (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={application.images[0]}
-                              />
-                            ) : (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={No_Image}
-                              />
-                            )}
-                          </div>
-                          <div style={{ paddingLeft: "15px" }}>
-                            <h5 style={mediumBold}>ADDRESS</h5>
-                            <h6>{application.address}</h6>
-                            <h6>
-                              {application.city},{application.zip}
-                            </h6>
-
-                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status !== "TENANT ENDED" || application.application_status !== "PM ENDED" ?
-                              <h6 style={{ mediumBold, color: "#41fc03" }}>
-                                {application.application_status}
-                              </h6>
-                              :
-                              <h6 style={{ mediumBold, color: "#f55742" }}>
-                                {application.application_status}
-                              </h6>
-                            }
+          {/*                  <h5 style={mediumBold}>APPLICATION STATUS</h5>*/}
+          {/*                  {application.application_status !== "TENANT ENDED" || application.application_status !== "PM ENDED" ?*/}
+          {/*                    <h6 style={{ mediumBold, color: "#41fc03" }}>*/}
+          {/*                      {application.application_status}*/}
+          {/*                    </h6>*/}
+          {/*                    :*/}
+          {/*                    <h6 style={{ mediumBold, color: "#f55742" }}>*/}
+          {/*                      {application.application_status}*/}
+          {/*                    </h6>*/}
+          {/*                  }*/}
 
 
-                          </div>
-                        </div>
-                        <hr style={{ opacity: 1 }} />
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  )
-                ) : (
-                  <p>You have not rented any property yet. </p>
-                )}
-              </Col>
-            </Row>
-          </div>
+          {/*                </div>*/}
+          {/*              </div>*/}
+          {/*              <hr style={{ opacity: 1 }} />*/}
+          {/*            </div>*/}
+          {/*          ) : (*/}
+          {/*            ""*/}
+          {/*          )*/}
+          {/*        )*/}
+          {/*      ) : (*/}
+          {/*        <p>You have not rented any property yet. </p>*/}
+          {/*      )}*/}
+          {/*    </Col>*/}
+          {/*  </Row>*/}
+          {/*</div>*/}
 
-          {/* ============================ LEASE RECEIVED =========================== */}
-          <div style={headings} className="mt-4 mb-1">
-            Lease Received
-          </div>
-          <p> The lease agreement has been created for these properties </p>
-          <hr style={{ opacity: 1 }} />
+          {/*/!* ============================ LEASE RECEIVED =========================== *!/*/}
+          {/*<div style={headings} className="mt-4 mb-1">*/}
+          {/*  Lease Received*/}
+          {/*</div>*/}
+          {/*<p> The lease agreement has been created for these properties </p>*/}
+          {/*<hr style={{ opacity: 1 }} />*/}
 
-          <div className="mb-4" style={{ margin: "20px" }}>
-            <Row>
-              <Col>
-                {applications ? (
-                  applications.map((application, i) =>
-                    application.application_status === "FORWARDED" ? (
-                      <div
-                        key={i}
-                        onClick={() => goToReviewPropertyLease(application)}
-                      >
-                        <div className="d-flex justify-content-between align-items-end">
-                          <div
-                            className="img"
-                            style={{
-                              flex: "0 0 35%",
-                              background: "lightgrey",
-                              height: "150px",
-                              width: "100px",
-                            }}
-                          >
-                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
-                            {application.images && application.images.length ? (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={application.images[0]}
-                              />
-                            ) : (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={No_Image}
-                              />
-                            )}
-                          </div>
-                          <div style={{ paddingLeft: "15px" }}>
-                            <h5 style={mediumBold}>ADDRESS</h5>
-                            <h6>{application.address}</h6>
-                            <h6>
-                              {application.city},{application.zip}
-                            </h6>
+          {/*<div className="mb-4" style={{ margin: "20px" }}>*/}
+          {/*  <Row>*/}
+          {/*    <Col>*/}
+          {/*      {applications ? (*/}
+          {/*        applications.map((application, i) =>*/}
+          {/*          application.application_status === "FORWARDED" ? (*/}
+          {/*            <div*/}
+          {/*              key={i}*/}
+          {/*              onClick={() => goToReviewPropertyLease(application)}*/}
+          {/*            >*/}
+          {/*              <div className="d-flex justify-content-between align-items-end">*/}
+          {/*                <div*/}
+          {/*                  className="img"*/}
+          {/*                  style={{*/}
+          {/*                    flex: "0 0 35%",*/}
+          {/*                    background: "lightgrey",*/}
+          {/*                    height: "150px",*/}
+          {/*                    width: "100px",*/}
+          {/*                  }}*/}
+          {/*                >*/}
+          {/*                  /!* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } *!/*/}
+          {/*                  {application.images && application.images.length ? (*/}
+          {/*                    <img*/}
+          {/*                      style={{ width: "100%", height: "100%" }}*/}
+          {/*                      src={application.images[0]}*/}
+          {/*                    />*/}
+          {/*                  ) : (*/}
+          {/*                    <img*/}
+          {/*                      style={{ width: "100%", height: "100%" }}*/}
+          {/*                      src={No_Image}*/}
+          {/*                    />*/}
+          {/*                  )}*/}
+          {/*                </div>*/}
+          {/*                <div style={{ paddingLeft: "15px" }}>*/}
+          {/*                  <h5 style={mediumBold}>ADDRESS</h5>*/}
+          {/*                  <h6>{application.address}</h6>*/}
+          {/*                  <h6>*/}
+          {/*                    {application.city},{application.zip}*/}
+          {/*                  </h6>*/}
 
-                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "FORWARDED" ? (
-                              <h6 style={{ mediumBold, color: "blue" }}>
-                                {application.application_status}
-                              </h6>
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                        </div>
-                        <hr style={{ opacity: 1 }} />
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  )
-                ) : (
-                  <p>No property with lease ready to be signed can be seen </p>
-                )}
-              </Col>
-            </Row>
-          </div>
+          {/*                  <h5 style={mediumBold}>APPLICATION STATUS</h5>*/}
+          {/*                  {application.application_status === "FORWARDED" ? (*/}
+          {/*                    <h6 style={{ mediumBold, color: "blue" }}>*/}
+          {/*                      {application.application_status}*/}
+          {/*                    </h6>*/}
+          {/*                  ) : (*/}
+          {/*                    ""*/}
+          {/*                  )}*/}
+          {/*                </div>*/}
+          {/*              </div>*/}
+          {/*              <hr style={{ opacity: 1 }} />*/}
+          {/*            </div>*/}
+          {/*          ) : (*/}
+          {/*            ""*/}
+          {/*          )*/}
+          {/*        )*/}
+          {/*      ) : (*/}
+          {/*        <p>No property with lease ready to be signed can be seen </p>*/}
+          {/*      )}*/}
+          {/*    </Col>*/}
+          {/*  </Row>*/}
+          {/*</div>*/}
 
 
-          {/* ============================ APPLICATION STATUS =========================== */}
-          <div style={headings} className="mt-4 mb-1">
-            Application Submitted
-          </div>
-          <p>Your applications and their statuses </p>
-          <hr style={{ opacity: 1 }} />
-          <div className="mb-4" style={{ margin: "20px" }}>
-            <Row>
-              <Col>
-                {applications ? (
-                  applications.map((application, i) =>
-                    application.application_status === "NEW" ? (
-                      <div
-                        key={i}
-                        onClick={() => goToReviewPropertyLease(application)}
-                      >
-                        <div className="d-flex justify-content-between align-items-end">
-                          <div
-                            className="img"
-                            style={{
-                              flex: "0 0 35%",
-                              background: "lightgrey",
-                              height: "150px",
-                              width: "100px",
-                            }}
-                          >
-                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
-                            {application.images && application.images.length ? (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={application.images[0]}
-                              />
-                            ) : (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={No_Image}
-                              />
-                            )}
-                          </div>
-                          <div style={{ paddingLeft: "15px" }}>
-                            <h5 style={mediumBold}>ADDRESS</h5>
-                            <h6>{application.address}</h6>
-                            <h6>
-                              {application.city},{application.zip}
-                            </h6>
+          {/*/!* ============================ APPLICATION STATUS =========================== *!/*/}
+          {/*<div style={headings} className="mt-4 mb-1">*/}
+          {/*  Application Submitted*/}
+          {/*</div>*/}
+          {/*<p>Your applications and their statuses </p>*/}
+          {/*<hr style={{ opacity: 1 }} />*/}
+          {/*<div className="mb-4" style={{ margin: "20px" }}>*/}
+          {/*  <Row>*/}
+          {/*    <Col>*/}
+          {/*      {applications ? (*/}
+          {/*        applications.map((application, i) =>*/}
+          {/*          application.application_status === "NEW" ? (*/}
+          {/*            <div*/}
+          {/*              key={i}*/}
+          {/*              onClick={() => goToReviewPropertyLease(application)}*/}
+          {/*            >*/}
+          {/*              <div className="d-flex justify-content-between align-items-end">*/}
+          {/*                <div*/}
+          {/*                  className="img"*/}
+          {/*                  style={{*/}
+          {/*                    flex: "0 0 35%",*/}
+          {/*                    background: "lightgrey",*/}
+          {/*                    height: "150px",*/}
+          {/*                    width: "100px",*/}
+          {/*                  }}*/}
+          {/*                >*/}
+          {/*                  /!* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } *!/*/}
+          {/*                  {application.images && application.images.length ? (*/}
+          {/*                    <img*/}
+          {/*                      style={{ width: "100%", height: "100%" }}*/}
+          {/*                      src={application.images[0]}*/}
+          {/*                    />*/}
+          {/*                  ) : (*/}
+          {/*                    <img*/}
+          {/*                      style={{ width: "100%", height: "100%" }}*/}
+          {/*                      src={No_Image}*/}
+          {/*                    />*/}
+          {/*                  )}*/}
+          {/*                </div>*/}
+          {/*                <div style={{ paddingLeft: "15px" }}>*/}
+          {/*                  <h5 style={mediumBold}>ADDRESS</h5>*/}
+          {/*                  <h6>{application.address}</h6>*/}
+          {/*                  <h6>*/}
+          {/*                    {application.city},{application.zip}*/}
+          {/*                  </h6>*/}
 
-                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "NEW" ? (
-                              <h6 style={{ mediumBold, color: "blue" }}>
-                                {application.application_status}
-                              </h6>
-                            ) : application.application_status ===
-                              "REJECTED" ? (
-                              <h6 style={{ mediumBold, color: "red" }}>
-                                {application.application_status}
-                              </h6>
-                            ) : application.application_status === "REFUSED" ? (
-                              <h6 style={{ mediumBold, color: "red" }}>
-                                {application.application_status}
-                              </h6>
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                        </div>
-                        <hr style={{ opacity: 1 }} />
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  )
-                ) : (
-                  <p>You have not applied for any property yet. </p>
+          {/*                  <h5 style={mediumBold}>APPLICATION STATUS</h5>*/}
+          {/*                  {application.application_status === "NEW" ? (*/}
+          {/*                    <h6 style={{ mediumBold, color: "blue" }}>*/}
+          {/*                      {application.application_status}*/}
+          {/*                    </h6>*/}
+          {/*                  ) : application.application_status ===*/}
+          {/*                    "REJECTED" ? (*/}
+          {/*                    <h6 style={{ mediumBold, color: "red" }}>*/}
+          {/*                      {application.application_status}*/}
+          {/*                    </h6>*/}
+          {/*                  ) : application.application_status === "REFUSED" ? (*/}
+          {/*                    <h6 style={{ mediumBold, color: "red" }}>*/}
+          {/*                      {application.application_status}*/}
+          {/*                    </h6>*/}
+          {/*                  ) : (*/}
+          {/*                    ""*/}
+          {/*                  )}*/}
+          {/*                </div>*/}
+          {/*              </div>*/}
+          {/*              <hr style={{ opacity: 1 }} />*/}
+          {/*            </div>*/}
+          {/*          ) : (*/}
+          {/*            ""*/}
+          {/*          )*/}
+          {/*        )*/}
+          {/*      ) : (*/}
+          {/*        <p>You have not applied for any property yet. </p>*/}
 
-                )}
+          {/*      )}*/}
 
-              </Col>
-            </Row>
-          </div>
+          {/*    </Col>*/}
+          {/*  </Row>*/}
+          {/*</div>*/}
 
-          {/* ============================ ENDED STATUS =========================== */}
-          <div style={headings} className="mt-4 mb-1">
-            Terminated Leases
-          </div>
-          <p>Leases that have been terminated. </p>
-          <hr style={{ opacity: 1 }} />
-          <div className="mb-4" style={{ margin: "20px" }}>
-            <Row>
-              <Col>
-                {applications ? (
-                  applications.map((application, i) =>
-                    application.application_status === "ENDED" || application.application_status === "REFUSED" ? (
-                      <div
-                        key={i}
-                        onClick={() => goToReviewPropertyLease(application)}
-                      >
-                        <div className="d-flex justify-content-between align-items-end">
-                          <div
-                            className="img"
-                            style={{
-                              flex: "0 0 35%",
-                              background: "lightgrey",
-                              height: "150px",
-                              width: "100px",
-                            }}
-                          >
-                            {/* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } */}
-                            {application.images && application.images.length ? (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={application.images[0]}
-                              />
-                            ) : (
-                              <img
-                                style={{ width: "100%", height: "100%" }}
-                                src={No_Image}
-                              />
-                            )}
-                          </div>
-                          <div style={{ paddingLeft: "15px" }}>
-                            <h5 style={mediumBold}>ADDRESS</h5>
-                            <h6>{application.address}</h6>
-                            <h6>
-                              {application.city},{application.zip}
-                            </h6>
+          {/*/!* ============================ ENDED STATUS =========================== *!/*/}
+          {/*<div style={headings} className="mt-4 mb-1">*/}
+          {/*  Terminated Leases*/}
+          {/*</div>*/}
+          {/*<p>Leases that have been terminated. </p>*/}
+          {/*<hr style={{ opacity: 1 }} />*/}
+          {/*<div className="mb-4" style={{ margin: "20px" }}>*/}
+          {/*  <Row>*/}
+          {/*    <Col>*/}
+          {/*      {applications ? (*/}
+          {/*        applications.map((application, i) =>*/}
+          {/*          application.application_status === "ENDED" || application.application_status === "REFUSED" ? (*/}
+          {/*            <div*/}
+          {/*              key={i}*/}
+          {/*              onClick={() => goToReviewPropertyLease(application)}*/}
+          {/*            >*/}
+          {/*              <div className="d-flex justify-content-between align-items-end">*/}
+          {/*                <div*/}
+          {/*                  className="img"*/}
+          {/*                  style={{*/}
+          {/*                    flex: "0 0 35%",*/}
+          {/*                    background: "lightgrey",*/}
+          {/*                    height: "150px",*/}
+          {/*                    width: "100px",*/}
+          {/*                  }}*/}
+          {/*                >*/}
+          {/*                  /!* {application.images && application.images.length ? (<img style={{width:"100%", height:"100%"}} src={application.images[0]}/>) : "" } *!/*/}
+          {/*                  {application.images && application.images.length ? (*/}
+          {/*                    <img*/}
+          {/*                      style={{ width: "100%", height: "100%" }}*/}
+          {/*                      src={application.images[0]}*/}
+          {/*                    />*/}
+          {/*                  ) : (*/}
+          {/*                    <img*/}
+          {/*                      style={{ width: "100%", height: "100%" }}*/}
+          {/*                      src={No_Image}*/}
+          {/*                    />*/}
+          {/*                  )}*/}
+          {/*                </div>*/}
+          {/*                <div style={{ paddingLeft: "15px" }}>*/}
+          {/*                  <h5 style={mediumBold}>ADDRESS</h5>*/}
+          {/*                  <h6>{application.address}</h6>*/}
+          {/*                  <h6>*/}
+          {/*                    {application.city},{application.zip}*/}
+          {/*                  </h6>*/}
 
-                            <h5 style={mediumBold}>APPLICATION STATUS</h5>
-                            {application.application_status === "ENDED" ||
-                              application.application_status === "REFUSED" ? (
-                              <h6 style={{ mediumBold, color: "red" }}>
-                                {application.application_status}
-                              </h6>
-                            ) : null
-                            }
-                          </div>
-                        </div>
-                        <hr style={{ opacity: 1 }} />
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  )
-                ) : (
-                  <p>You have not applied for any property yet. </p>
+          {/*                  <h5 style={mediumBold}>APPLICATION STATUS</h5>*/}
+          {/*                  {application.application_status === "ENDED" ||*/}
+          {/*                    application.application_status === "REFUSED" ? (*/}
+          {/*                    <h6 style={{ mediumBold, color: "red" }}>*/}
+          {/*                      {application.application_status}*/}
+          {/*                    </h6>*/}
+          {/*                  ) : null*/}
+          {/*                  }*/}
+          {/*                </div>*/}
+          {/*              </div>*/}
+          {/*              <hr style={{ opacity: 1 }} />*/}
+          {/*            </div>*/}
+          {/*          ) : (*/}
+          {/*            ""*/}
+          {/*          )*/}
+          {/*        )*/}
+          {/*      ) : (*/}
+          {/*        <p>You have not applied for any property yet. </p>*/}
 
-                )}
+          {/*      )}*/}
 
-              </Col>
-            </Row>
-          </div>
+          {/*    </Col>*/}
+          {/*  </Row>*/}
+          {/*</div>*/}
         </Container>
       )}
     </div>

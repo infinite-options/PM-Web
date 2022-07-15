@@ -7,11 +7,15 @@ import Roles_Blue from "../icons/Roles_Blue.svg";
 import Roles_Gray from "../icons/Roles_Gray.svg";
 import Profile_Blue from "../icons/Profile_Blue.svg";
 import Profile_Gray from "../icons/Profile_Gray.svg";
+import RepairRequest from "../icons/repair_request.svg";
+import SearchPM from "../icons/searchPM.svg";
 import AppContext from "../AppContext";
+import { useNavigate } from "react-router-dom";
 
 function Footer(props) {
-  const { tab, setTab } = props;
+  const { tab, setTab, profile } = props;
   const { logout } = React.useContext(AppContext);
+  const navigate = useNavigate();
 
   const footerContainer = {
     backgroundColor: "#F5F5F5",
@@ -34,6 +38,30 @@ function Footer(props) {
           Dashboard
         </p>
       </Col>
+      <Col className="text-center" onClick={() => navigate("/tenantAvailableProperties")}>
+        <img
+            //TODO: Need a grey version for this image
+            src={tab === "SEARCH" ? SearchPM : SearchPM}
+            alt="Profile"
+            height = "33px"
+        />
+        <p style={tab === "SEARCH" ? smallBlue : smallGray} className="mb-0">
+
+          Search
+        </p>
+      </Col>
+      <Col className="text-center" onClick={() => navigate(`/${profile.property_uid}/repairStatus`)}>
+        <img
+            // TODO: Need a grey version for this image
+            src={tab === "REPAIRS" ? RepairRequest : RepairRequest}
+            alt="Profile"
+            height = "33px"
+        />
+        <p style={tab === "REPAIRS" ? smallBlue : smallGray} className="mb-0">
+
+          Repairs
+        </p>
+      </Col>
       <Col className="text-center" onClick={() => setTab("ROLES")}>
         <img src={tab === "ROLES" ? Roles_Blue : Roles_Gray} alt="Roles" />
         <p style={tab === "ROLES" ? smallBlue : smallGray} className="mb-0">
@@ -42,8 +70,8 @@ function Footer(props) {
       </Col>
       <Col className="text-center" onClick={() => setTab("PROFILE")}>
         <img
-          src={tab === "PROFILE" ? Profile_Blue : Profile_Gray}
-          alt="Profile"
+            src={tab === "PROFILE" ? Profile_Blue : Profile_Gray}
+            alt="Profile"
         />
         <p style={tab === "PROFILE" ? smallBlue : smallGray} className="mb-0">
 

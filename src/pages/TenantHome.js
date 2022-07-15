@@ -8,6 +8,9 @@ import TenantAvailableProperties from "./TenantAvailableProperties";
 import SwitchRole from "../components/SwitchRole";
 import { get } from "../utils/api";
 import TenantWelcomePage from "./TenantWelcomePage";
+import OwnerProfileTab from "./OwnerProfileTab";
+import PaymentPage from "../components/PaymentPage";
+import PaymentSelection from "../components/PaymentSelection";
 
 function TenantHome() {
   const navigate = useNavigate();
@@ -95,10 +98,16 @@ function TenantHome() {
             )}
 
             {footerTab === "PROFILE" ? (
-              <TenantProfile
-                setShowFooter={setShowFooter}
-                setTab={setFooterTab}
-              />
+              // <TenantProfile
+              //   setShowFooter={setShowFooter}
+              //   setTab={setFooterTab}
+              // />
+                <OwnerProfileTab
+                    profileInfo={profile}
+                    setStage={setFooterTab}
+                    setShowFooter={setShowFooter}
+                    setTab={setFooterTab}
+                />
             ) : (
               ""
             )}
@@ -107,9 +116,20 @@ function TenantHome() {
             ) : (
               ""
             )}
+            {footerTab === "PAYMENTS" ? (
+                <PaymentSelection/>
+            ) : (
+                ""
+            )}
+            )}
+            {/*{footerTab === "PaymentMethods" ? (*/}
+            {/*    <PaymentPage/>*/}
+            {/*) : (*/}
+            {/*    ""*/}
+            {/*)}*/}
           </div>
 
-          {showFooter ? <Footer tab={footerTab} setTab={setFooterTab} /> : ""}
+          {showFooter ? <Footer tab={footerTab} setTab={setFooterTab} profile ={profile}/> : ""}
         </div>
       ) : (
         ""
