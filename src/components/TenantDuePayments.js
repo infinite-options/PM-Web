@@ -88,7 +88,7 @@ function TenantDuePayments(props) {
 
 
     useEffect(()=> {
-        console.log(selectedProperty);
+        console.log("This is the selected property", selectedProperty);
         setTenantExpenses(selectedProperty.property.tenantExpenses);
         parseExpenses();
         setDuePayments(tempDuePayments);
@@ -208,7 +208,15 @@ function TenantDuePayments(props) {
                     
                 </Row> : null
             }  
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
             <hr style={{width: '100%'}}></hr>
+
             <Row>
                 <div style={{display: 'flex', flexDirection: 'row', columnGap: '76%', marginBottom: '10px'}}>
                     <div style={{alignSelf:'right'}}>Total: </div>

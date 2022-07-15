@@ -30,9 +30,11 @@ import {
   pillButton,
   blue,
   editButton,
-  squareForm,
+  squareForm, payNowButton, bluePillButton,
 } from "../utils/styles";
 import { relativeTimeRounding } from "moment";
+import Calendar from "react-calendar";
+import axios from "axios";
 
 function DetailRepairStatus(props) {
   const imageState = useState([]);
@@ -52,6 +54,178 @@ function DetailRepairStatus(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [pmNotes, setPMNotes] = useState("");
+
+  const [calVisible, setCalVisible] = useState(false);
+  const [calDate, setCalDate] = useState(null);
+  const [dateString, setDateString] = useState("");
+  const [apiDateString, setApiDateString] = useState("");
+  const [date, setDate] = useState();
+  const [dateString1, setDateString1] = useState("");
+  const [showAccept, setShowAccept] = useState(false);
+  const [scheduledTime, setScheduledTime] = useState("");
+  const [timeArr, setTimeArr] = useState(["9:00", "10:00", "12:00", "3:00", "5:00"]);
+  const [timeAASlotsTenant, setTimeAASlotsTenant] = useState([]);
+  const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
+
+
+  function toggleCalVisible(){
+    setCalVisible(!calVisible);
+  }
+
+  const doubleDigitMonth = (date) => {
+    let str = "00" + (date.getMonth() + 1);
+    return str.substring(str.length - 2);
+  };
+
+  const doubleDigitDay = (date) => {
+    let str = "00" + date.getDate();
+    return str.substring(str.length - 2);
+  };
+
+  const dateFormat1 = (date) => {
+    return (
+        doubleDigitMonth(date) +
+        "/" +
+        doubleDigitDay(date) +
+        "/" +
+        date.getFullYear()
+    );
+  };
+
+  // This one is for the timeslotAPI call
+  const dateFormat2 = (date) => {
+    var months = {
+      "01": "Jan",
+      "02": "Feb",
+      "03": "Mar",
+      "04": "Apr",
+      "05": "May",
+      "06": "Jun",
+      "07": "Jul",
+      "08": "Aug",
+      "09": "Sep",
+      10: "Oct",
+      11: "Nov",
+      12: "Dec",
+      "": "",
+    };
+    console.log("dateformat2", date);
+    console.log(
+        "dateformat2",
+        months[doubleDigitMonth(date)] +
+        " " +
+        doubleDigitDay(date) +
+        ", " +
+        date.getFullYear() +
+        " "
+    );
+    return (
+        months[doubleDigitMonth(date)] +
+        " " +
+        doubleDigitDay(date) +
+        ", " +
+        date.getFullYear() +
+        " "
+    );
+  };
+
+  // This one is for doing the sendToDatabase Post Call
+  const dateFormat3 = (date) => {
+    console.log("dateformat3", date);
+    console.log(
+        "dateformat3",
+        date.getFullYear() +
+        "-" +
+        doubleDigitMonth(date) +
+        "-" +
+        doubleDigitDay(date)
+    );
+    return (
+        date.getFullYear() +
+        "-" +
+        doubleDigitMonth(date) +
+        "-" +
+        doubleDigitDay(date)
+    );
+  };
+  const dateStringChange = (date) => {
+    setDateString(dateFormat1(date));
+    setApiDateString(dateFormat3(date));
+    setDateString1(dateFormat2(date));
+    // setDateHasBeenChanged(true);
+  };
+
+
+  function dateChange(e){
+    setDate(e);
+    console.log("here", e);
+    dateStringChange(e);
+  }
+
+  function selectTime(e){
+    setScheduledTime(e);
+    console.log("here", e);
+  }
+
+  const putRepairAppt = async () => {
+    const payload = {
+      maintenance_request_uid: maintenance_request_uid,
+      request_status: "SCHEDULED",
+      scheduled_date: apiDateString,
+      scheduled_time: scheduledTime
+    }
+    const response = await put(`/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`, payload);
+  };
+
+  const acceptRepairAppt = async () => {
+    const payload = {
+      maintenance_request_uid: maintenance_request_uid,
+      request_status: "CONFIRMED",
+      scheduled_date: repairsDetail[0].scheduled_date,
+      scheduled_time: repairsDetail[0].scheduled_time
+    }
+    const response = await put(`/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`, payload);
+  };
+
+  function displayMessage() {
+    if(repairsDetail.length == 0) return "loading"
+    else if(apiDateString !== "" & scheduledTime !== "") {
+      if(!showAccept) setShowAccept(true);
+      return "This Repair is currently scheduled for " + apiDateString + " at " + scheduledTime;
+    }
+    else return "Repair Request is not yet scheduled."
+  }
+
+  useEffect(() => {
+
+      setTimeAASlotsTenant([]);
+    axios
+        .get(
+            BASE_URL +
+            "/AvailableAppointmentsTenant/" +
+            // dateString +
+            apiDateString +
+            "/" +
+            // quotes.event_duration +
+            "01:59:59"+
+            "/" +
+            // quotes.rentalInfo[0].tenant_id +
+            user.user_uid +
+            "/" +
+            "08:00" +
+            "," +
+            "20:00"
+        )
+          .then((res) => {
+            console.log("This is the information we got" + res);
+
+            res.data.result.map((r) => {
+              timeAASlotsTenant.push(r["begin_time"]);
+            });
+            setTimeAASlotsTenant(timeAASlotsTenant);
+          });
+          console.log("Here are teh available time slots ", timeAASlotsTenant);
+  },[apiDateString]);
 
   useEffect(() => {
     if (repairsDetail !== undefined) {
@@ -467,6 +641,44 @@ function DetailRepairStatus(props) {
           })}
         </div>
       )}
+      {calVisible ?
+          <div>
+      <Calendar
+          calendarType="US"
+          // onClickDay={(e) => {
+          //     setTimeAASlots([]);
+          //     dateChange(e);
+          // }}
+            onClickDay = {(e) => dateChange(e)}
+          // value={date}
+          // minDate={minDate}
+          // next2Label={null}
+          // prev2Label={null}
+      />
+          {/*{timeArr.map((time) =>*/}
+          {/*      <button onClick={() => setScheduledTime(time)} style = {bluePillButton}>{time}</button>)}*/}
+            {timeAASlotsTenant.map((time) =>
+                <button onClick={() => setScheduledTime(time)} style = {bluePillButton}>{time}</button>)}
+          </div>
+          : ""}
+
+
+
+
+      {displayMessage()}
+      {showAccept ? <button
+          style={payNowButton}
+          onClick={acceptRepairAppt}
+          children = "Accept"/> : ""}
+      <button
+          style={payNowButton}
+          onClick={toggleCalVisible}
+          children = "Reschedule"/>
+      {showAccept ? <button
+          style={payNowButton}
+          onClick={putRepairAppt}
+          children = "Confirm"/> : ""}
+
       {repairsDetail && pmNotes ? (
         <div>
           <div style={{ ...headings, marginLeft: "10px" }}>

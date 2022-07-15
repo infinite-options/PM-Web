@@ -11,14 +11,15 @@ import LowPriority from "../icons/lowPriority.svg";
 import RepairImages from "./RepairImages";
 import { get, post } from "../utils/api";
 import {
-  headings,
-  formLabel,
-  bluePillButton,
-  pillButton,
-  red,
-  hidden,
-  small,
+    headings,
+    formLabel,
+    bluePillButton,
+    pillButton,
+    red,
+    hidden,
+    small, payNowButton,
 } from "../utils/styles";
+import Calendar from "react-calendar";
 
 const useStyles = makeStyles((theme) => ({
   priorityInactive: {
@@ -149,8 +150,8 @@ function RepairRequest(props) {
                     display: "text",
                     flexDirection: "row",
                     textAlign: "center",
-                  }}
-              >
+                    }}
+                >
                 <Col xs={4}>
                   <img
                       src={HighPriority}
@@ -235,6 +236,27 @@ function RepairRequest(props) {
           </Form.Group>
           <RepairImages state={imageState} />
           </div>
+            <div
+                style={{
+                    position: "relative",
+                    backgroundColor: "#F3F3F3",
+                    height: "500px",
+                    borderRadius: "5px",
+                }}
+            >
+
+                {/*<Calendar*/}
+                {/*    calendarType="US"*/}
+                {/*    // onClickDay={(e) => {*/}
+                {/*    //     setTimeAASlots([]);*/}
+                {/*    //     dateChange(e);*/}
+                {/*    // }}*/}
+                {/*    // value={date}*/}
+                {/*    // minDate={minDate}*/}
+                {/*    // next2Label={null}*/}
+                {/*    // prev2Label={null}*/}
+                {/*/>*/}
+            </div>
         </Form>
         <div className="text-center mt-5">
           <div
@@ -243,6 +265,8 @@ function RepairRequest(props) {
           >
             <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
+
+
           <Row
             style={{
               display: "text",
@@ -250,7 +274,10 @@ function RepairRequest(props) {
               textAlign: "center",
             }}
           >
-            <Col>
+            <Col
+            style={{
+                position: "relative",
+                left: "25px"}}>
               <Button
                 variant="outline-primary"
                 onClick={submitForm}

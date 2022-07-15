@@ -72,8 +72,28 @@ function OwnerProfileTab(props) {
             <img
               src={GreyArrowRight}
               onClick={() => setStage("PROFILE")}
+              // onClick={() => alert("profile button clicked")}
               style={{ cursor: "pointer" }}
               alt="Arrow Right"
+            />
+          </Col>
+        </Row>
+        <hr />
+        <Row className="p-2">
+          <Col xs={1}>
+            <img src={Personal} alt="Personal" />
+          </Col>
+          <Col className="mx-2" style={mediumBold}>
+            {" "}
+            Payment Methods
+          </Col>
+          <Col xs={1}>
+            <img
+                src={GreyArrowRight}
+                onClick={() => setStage("PAYMENTS")}
+                // onClick={() => alert("profile button clicked")}
+                style={{ cursor: "pointer" }}
+                alt="Arrow Right"
             />
           </Col>
         </Row>
@@ -101,6 +121,7 @@ function OwnerProfileTab(props) {
             <img
               src={GreyArrowRight}
               onClick={() => setStage("ROLES")}
+              // onClick={() => alert("roles button clicked")}
               style={{ cursor: "pointer" }}
               alt="Arrow Right"
             />
