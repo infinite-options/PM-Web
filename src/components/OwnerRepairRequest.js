@@ -18,6 +18,7 @@ import {
   red,
   hidden,
   small,
+  squareForm,
 } from "../utils/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,23 +32,28 @@ const useStyles = makeStyles((theme) => ({
 function OwnerRepairRequest(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { properties } = props;
+  const { properties, setStage } = props;
   const imageState = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const submitForm = async () => {
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
+  const submitForm = async (sp) => {
     if (title === "" || description === "" || priority === "") {
       setErrorMessage("Please fill out all fields");
       return;
     }
+    let selectedProperty = JSON.parse(sp);
+    console.log(typeof JSON.parse(sp));
     const newRequest = {
-      // property_uid: property_uid,
+      property_uid: selectedProperty.property_uid,
       title: title,
       description: description,
       priority: priority,
+      request_created_by: selectedProperty.owner_id,
     };
     const files = imageState[0];
     let i = 0;
@@ -67,10 +73,10 @@ function OwnerRepairRequest(props) {
     //     newRequest[key] = file.image;
     //   }
     // }
-    console.log(files);
+    console.log(newRequest);
     await post("/maintenanceRequests", newRequest, null, files);
     // navigate(`/${property_uid}/repairStatus`);
-    navigate("/tenant");
+    setStage("DASHBOARD");
     //props.onSubmit();
   };
 
@@ -84,56 +90,70 @@ function OwnerRepairRequest(props) {
     );
 
   return (
-    <div className="h-100 d-flex flex-column">
-      <Header title="Repairs" leftText="< Back" />
+    <div className="h-100 d-flex flex-column pb-5 mb-5">
+      <Header
+        title="Repairs"
+        leftText="< Back"
+        leftFn={() => setStage("DASHBOARD")}
+      />
       <Container className="pt-1 mb-4">
         <Row style={headings}>
           <div>New Repair Request</div>
         </Row>
-        {/* <Row style={formLabel} as="h5" className="ms-1 mb-0">
-          {state.property.address} {state.property.unit}
-          ,&nbsp;
-          {state.property.city}
-          ,&nbsp;
-          {state.property.state}&nbsp; {state.property.zip}
-        </Row> */}
+        <Form.Group
+          className="p-2"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+          }}
+        >
+          <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+            Property {required}
+          </Form.Label>
+          <Form.Select
+            style={squareForm}
+            value={selectedProperty}
+            onChange={(e) => setSelectedProperty(e.target.value)}
+          >
+            <option key="blankChoice" hidden value>
+              Search Your Properties
+            </option>
+            {properties.map((property, i) => (
+              <option key={i} value={JSON.stringify(property)}>
+                {property.address}
+                {property.unit !== "" ? " " + property.unit : ""},&nbsp;
+                {property.city},&nbsp;{property.state} {property.zip}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
         <Form>
-          <Form.Group className="mt-3 mb-4">
+          <Form.Group
+            className="mt-3 mb-4 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
             <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Title (character limit: 15) {required}
+              Title {required}
             </Form.Label>
             <Form.Control
               style={{ borderRadius: 0 }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ex: Paint"
+              placeholder="Enter Title"
             />
           </Form.Group>
-          <Form.Group className="mt-3 mb-4">
-            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Description {required}
-            </Form.Label>
-            <Form.Control
-              style={{ borderRadius: 0 }}
-              as="textarea"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Ex: Kitchen wall needs repaint. It’s been chipping."
-            />
-          </Form.Group>
-          <Form.Group className="mt-3 mb-4">
-            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-              Take pictures
-            </Form.Label>
-            {/* <Form.Control
-              type="file"
-              onChange={(e) => console.log(e.target.files)}
-            /> */}
-          </Form.Group>
-          <RepairImages state={imageState} />
-          <Form.Group className="mt-3 mb-4">
+          <Form.Group
+            className="mt-3 mb-4 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
             <Form.Label style={formLabel} as="h5" className="mt-2 mb-1">
-              Tag Priority (Select one) {required}
+              Tags {required}
             </Form.Label>
             <Row
               className="mt-2 mb-2"
@@ -181,6 +201,36 @@ function OwnerRepairRequest(props) {
               </Col>
             </Row>
           </Form.Group>
+          <Form.Group
+            className="mt-3 mb-4 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
+            <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+              Description {required}
+            </Form.Label>
+            <Form.Control
+              style={{ borderRadius: 0 }}
+              as="textarea"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter Description"
+            />
+          </Form.Group>
+          <Form.Group
+            className="mt-3 mb-4 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
+            <Form.Label style={formLabel} as="h5" className="ms-1 mb-3">
+              Add images
+            </Form.Label>
+            <RepairImages state={imageState} />
+          </Form.Group>
         </Form>
         <div className="text-center mt-5">
           <div
@@ -199,19 +249,19 @@ function OwnerRepairRequest(props) {
             <Col>
               <Button
                 variant="outline-primary"
+                onClick={() => submitForm(selectedProperty)}
+                style={bluePillButton}
+              >
+                Send Repair Request
+              </Button>
+            </Col>
+            <Col xs={4}>
+              <Button
+                variant="outline-primary"
                 onClick={() => navigate("/tenant")}
                 style={pillButton}
               >
                 Cancel
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                variant="outline-primary"
-                onClick={submitForm}
-                style={bluePillButton}
-              >
-                Add Request
               </Button>
             </Col>
           </Row>

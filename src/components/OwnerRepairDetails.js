@@ -25,7 +25,7 @@ import {
 import { useParams } from "react-router";
 import { get, post, put } from "../utils/api";
 
-function ManagerRepairDetail(props) {
+function OwmerRepairDetails(props) {
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token } = userData;
   const location = useLocation();
@@ -46,8 +46,7 @@ function ManagerRepairDetail(props) {
   const [priority, setPriority] = useState("");
   const { mp_id, rr_id } = useParams();
 
-  // const repair = location.state.repair;
-  const { repair, back } = props;
+  const repair = location.state.repair;
 
   // console.log(repair)
   // console.log(mp_id, rr_id)
@@ -190,18 +189,8 @@ function ManagerRepairDetail(props) {
     <div className="h-100">
       <Header
         title="Repairs"
-        leftText={
-          scheduleMaintenance || requestQuote
-            ? null
-            : edit
-            ? "Cancel"
-            : "< Back"
-        }
-        leftFn={() => (edit ? setEdit(false) : back())}
-        rightText={
-          scheduleMaintenance || requestQuote ? null : edit ? "Save" : "Edit"
-        }
-        rightFn={() => (edit ? updateRepair() : setEdit(true))}
+        leftText={"< Back"}
+        leftFn={() => navigate("/owner")}
       />
 
       <Container
@@ -648,4 +637,4 @@ function ManagerRepairDetail(props) {
   );
 }
 
-export default ManagerRepairDetail;
+export default OwmerRepairDetails;

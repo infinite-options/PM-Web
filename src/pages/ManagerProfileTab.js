@@ -12,7 +12,7 @@ import GreyArrowRight from "../icons/GreyArrowRight.svg";
 
 import Logout from "../components/Logout";
 
-function OwnerProfileTab(props) {
+function ManagerProfileTab(props) {
   const context = useContext(AppContext);
   const { userData, refresh } = context;
   const { access_token, user } = userData;
@@ -25,27 +25,36 @@ function OwnerProfileTab(props) {
     setShowFooter(stage !== "NEW");
   }, [stage, setShowFooter]);
 
-  const fetchProfile = async () => {
-    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+  const fetchProfileInfo = async () => {
+    if (access_token === null) {
       navigate("/");
       return;
     }
-
-    const response = await get("/ownerProfileInfo", access_token);
-    console.log(response);
-
-    if (response.msg === "Token has expired") {
-      console.log("here msg");
-      refresh();
-      return;
+    const busi_res = await get(`/businesses?business_email=${user.email}`);
+    console.log("busi_res", busi_res);
+    if (user.role.indexOf("MANAGER") === -1 || busi_res.result.length > 0) {
+      console.log("no manager profile");
+      // props.onConfirm();
     }
-    setProfileInfo(response.result[0]);
+
+    const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
+    if (employee_response.result.length !== 0) {
+      const employee = employee_response.result[0];
+      const business_response = await get(
+        `/businesses?business_uid=${employee.business_uid}`
+      );
+      const business = business_response.result[0];
+      const profile = { ...employee, ...business };
+      console.log(profile);
+      setProfileInfo(profile);
+      //   loadProfile(profile);
+    }
   };
   useEffect(() => {
     if (access_token === null) {
       navigate("/");
     }
-    fetchProfile();
+    fetchProfileInfo();
   }, [access_token]);
 
   return (
@@ -82,7 +91,9 @@ function OwnerProfileTab(props) {
             ></span>
           </Col>
           <Col>
-            {profileInfo.owner_first_name} {profileInfo.owner_last_name}
+            {profileInfo.employee_first_name} {profileInfo.employee_last_name}{" "}
+            <br />
+            {profileInfo.business_name}
           </Col>
         </Row>
         <div style={{ font: "normal normal bold 24px/34px Bahnschrift-Bold" }}>
@@ -106,25 +117,6 @@ function OwnerProfileTab(props) {
         </Row>
         <hr />
         <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
-          <Col xs={1}>
-            <img src={Personal} alt="Personal" />
-          </Col>
-          <Col className="mx-2" style={mediumBold}>
-            {" "}
-            Payment Methods
-          </Col>
-          <Col xs={1}>
-            <img
-                src={GreyArrowRight}
-                onClick={() => setStage("PAYMENTS")}
-                // onClick={() => alert("profile button clicked")}
-                style={{ cursor: "pointer" }}
-                alt="Arrow Right"
-            />
-          </Col>
-        </Row>
-        <hr />
-        <Row className="p-2">
           <Col xs={1}>
             <img src={LeaseIcon} alt="Lease Icon" />
           </Col>
@@ -160,4 +152,4 @@ function OwnerProfileTab(props) {
   );
 }
 
-export default OwnerProfileTab;
+export default ManagerProfileTab;

@@ -8,10 +8,10 @@ import OwnerDashboard from "./OwnerDashboard";
 import OwnerProfileTab from "./OwnerProfileTab";
 import OwnerProfile from "./OwnerProfile";
 import OwnerSwitchRole from "../components/OwnerSwitchRole";
-import SearchPM from "./SearchPM";
+import OwnerContacts from "./OwnerContacts";
 import OwnerRepairList from "../components/OwnerRepairList";
 import OwnerRepairRequest from "../components/OwnerRepairRequest";
-
+import OwnerDocuments from "../components/OwnerDocuments";
 function OwnerHome(props) {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
@@ -22,7 +22,7 @@ function OwnerHome(props) {
   const [properties, setProperties] = useState([]);
   const [bills, setBills] = useState([]);
   const [ownerID, setOwnerID] = useState([]);
-  const [profileInfo, setProfileInfo] = useState([]);
+  // const [profileInfo, setProfileInfo] = useState([]);
 
   const [selectedProperty, setSelectedProperty] = useState(null);
   const fetchProperties = async () => {
@@ -56,22 +56,22 @@ function OwnerHome(props) {
     setBills(response.result);
   };
 
-  const fetchProfile = async () => {
-    if (access_token === null || user.role.indexOf("OWNER") === -1) {
-      navigate("/");
-      return;
-    }
+  // const fetchProfile = async () => {
+  //   if (access_token === null || user.role.indexOf("OWNER") === -1) {
+  //     navigate("/");
+  //     return;
+  //   }
 
-    const response = await get("/ownerProfileInfo", access_token);
-    console.log(response);
+  //   const response = await get("/ownerProfileInfo", access_token);
+  //   console.log(response);
 
-    if (response.msg === "Token has expired") {
-      console.log("here msg");
-      refresh();
-      return;
-    }
-    setProfileInfo(response.result[0]);
-  };
+  //   if (response.msg === "Token has expired") {
+  //     console.log("here msg");
+  //     refresh();
+  //     return;
+  //   }
+  //   setProfileInfo(response.result[0]);
+  // };
   useEffect(() => {
     if (access_token === null) {
       navigate("/");
@@ -84,12 +84,12 @@ function OwnerHome(props) {
     }
     fetchBills();
   }, [access_token]);
-  useEffect(() => {
-    if (access_token === null) {
-      navigate("/");
-    }
-    fetchProfile();
-  }, [access_token]);
+  // useEffect(() => {
+  //   if (access_token === null) {
+  //     navigate("/");
+  //   }
+  //   fetchProfile();
+  // }, [access_token]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -129,7 +129,7 @@ function OwnerHome(props) {
           ""
         )}
         {footerTab === "CONTACTS" ? (
-          <SearchPM setShowFooter={setShowFooter} setTab={setFooterTab} />
+          <OwnerContacts setShowFooter={setShowFooter} setTab={setFooterTab} />
         ) : (
           ""
         )}
@@ -137,7 +137,8 @@ function OwnerHome(props) {
           <div>
             {stage === "DASHBOARD" ? (
               <OwnerProfileTab
-                profileInfo={profileInfo}
+                // profileInfo={profileInfo}
+                stage={stage}
                 setStage={setStage}
                 setShowFooter={setShowFooter}
                 setTab={setFooterTab}
@@ -150,6 +151,12 @@ function OwnerHome(props) {
               />
             ) : stage === "PROFILE" ? (
               <OwnerProfile
+                setStage={setStage}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
+            ) : stage === "DOCUMENTS" ? (
+              <OwnerDocuments
                 setStage={setStage}
                 setShowFooter={setShowFooter}
                 setTab={setFooterTab}

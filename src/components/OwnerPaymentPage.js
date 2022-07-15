@@ -1,38 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  useElements,
-  useStripe,
-  CardElement,
-  Elements,
-} from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
 import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "./Header";
 import Footer from "./Footer";
 import { get } from "../utils/api";
 import StripePayment from "./StripePayment";
-
 import ConfirmCheck from "../icons/confirmCheck.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
 import {
-  headings,
   formLabel,
   bluePillButton,
   pillButton,
-  subHeading,
   squareForm,
+  mediumBold,
 } from "../utils/styles";
 
-function PaymentPage(props) {
+function OwnerPaymentPage(props) {
   const navigate = useNavigate();
+  // const location = useLocation();
+  // const { totalSum, selectedProperty, purchaseUID, setStage } = props;
   const { purchase_uid } = useParams();
   const location = useLocation();
   const [totalSum, setTotalSum] = useState(location.state.amount);
   const selectedProperty = location.state.selectedProperty;
-  const purchaseUIDs = location.state.purchaseUIDs;
+  const purchaseUID = location.state.purchaseUID;
   const [stripePayment, setStripePayment] = useState(false);
   const [paymentConfirm, setPaymentConfirm] = useState(false);
   const requestTitleRef = React.createRef();
@@ -62,20 +56,14 @@ function PaymentPage(props) {
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
     let tempAllPurchases = [];
-    for (let i in purchaseUIDs) {
-      let response1 = await get(`/purchases?purchase_uid=${purchaseUIDs[i]}`);
+    for (let i in purchaseUID) {
+      let response1 = await get(`/purchases?purchase_uid=${purchaseUID[i]}`);
       tempAllPurchases.push(response1.result[0]);
     }
-    response = await get(`/purchases?purchase_uid=${purchase_uid}`);
-    console.log("Print 1", response);
+    response = await get(`/purchases?purchase_uid=${purchaseUID}`);
     setPurchase(response.result[0]);
-    // setAmount(response.result[0].amount_due - response.result[0].amount_paid);
     setAllPurchases(tempAllPurchases);
   }, []);
-
-  useEffect(() => {
-    console.log("allPurchases", allPurchases);
-  }, [allPurchases]);
 
   useEffect(() => {
     if (amount > totalSum || amount <= 0) {
@@ -97,51 +85,56 @@ function PaymentPage(props) {
         title="Payment"
         leftText={paymentConfirm === false ? `< Back` : ""}
         leftFn={() => {
-          paymentConfirm === false
-            ? navigate(
-                // `/rentPayment/${selectedProperty.nextPurchase.purchase_uid}`
-                `/tenantDuePayments`,
-                {
-                  state: {
-                    selectedProperty: selectedProperty,
-                  },
-                }
-              )
-            : console.log("");
+          navigate("/owner");
         }}
       />
-      <Row
+      <div
+        className="mb-4 p-2 m-2"
         style={{
-          height: "40px",
-          fontFamily: "bahnschrift",
-          marginBottom: "30px",
+          background: "#F3F3F3 0% 0% no-repeat padding-box",
+          borderRadius: "5px",
         }}
       >
         <div
+          style={
+            ({
+              textAlign: "center",
+            },
+            mediumBold)
+          }
+        >
+          {selectedProperty.address}
+          {selectedProperty.unit !== "" ? " " + selectedProperty.unit : ""},
+          {selectedProperty.city}, {selectedProperty.state}{" "}
+          {selectedProperty.zip}
+        </div>
+      </div>
+      {paymentConfirm ? (
+        <div
+          className="mx-2 my-2 p-3"
           style={{
-            textAlign: "center",
-            fontSize: "28px",
-            padding: "10px",
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+            opacity: 1,
           }}
         >
-          {selectedProperty.property.address}
-        </div>
-      </Row>
-      {paymentConfirm ? (
-        <Container className="pt-1 mb-4">
           <div
+            className="mx-2 my-2 p-3"
             style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+              opacity: 1,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <Row style={headings} className="mt-2 mb-2">
+            <Row style={mediumBold} className="mt-2 mb-2">
               Payment Received{" "}
               {purchase.purchase_notes && `(${purchase.purchase_notes})`}
             </Row>
-            <Row style={subHeading} className="mt-2 mb-2">
+            <Row style={mediumBold} className="mt-2 mb-2">
               {purchase.description}: ${amount}
             </Row>
             <Row className="mt-2 mb-2">
@@ -154,7 +147,7 @@ function PaymentPage(props) {
               className="mt-8 mb-2"
               variant="outline-primary"
               onClick={() => {
-                navigate("/paymentHistory");
+                navigate("/ownerPaymentHistory");
                 //setStripePayment(true);
               }}
               style={bluePillButton}
@@ -162,49 +155,34 @@ function PaymentPage(props) {
               Go to payment history
             </Button>
           </div>
-        </Container>
+        </div>
       ) : (
-        <Container className="pt-1 mb-4">
+        <div
+          className="mx-2 my-2 p-3"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+            opacity: 1,
+          }}
+        >
           <Row>
-            {/* <div style={headings}>Pay Rent {purchase.purchase_notes && `(${purchase.purchase_notes})`}</div>
-            <div style={subHeading}>{purchase.description}: ${stripePayment ? amount : purchase.amount_due - purchase.amount_paid}</div> */}
             {allPurchases.length > 1 ? (
-              <div style={headings}>
-                Pay Fees {purchase.description && `(Multiple Fees)`}
-              </div>
+              <div style={mediumBold}>Pay Fees ({purchase.description})</div>
             ) : (
-              <div style={headings}>
+              <div style={mediumBold}>
                 Pay Fees {purchase.description && `(${purchase.description})`}
               </div>
             )}
-            <div style={subHeading}>Max Payment: ${totalSum}</div>
+            <div style={mediumBold}>Max Payment: ${totalSum}</div>
             {stripePayment ? (
-              <div style={subHeading}>Amount to be paid: ${amount}</div>
+              <div style={mediumBold}>Amount to be paid: ${amount}</div>
             ) : null}
           </Row>
-          {/*
-            <StripeElement
-                stripePromise={this.state.stripePromise}
-                customerPassword={this.state.customerPassword}
-                deliveryInstructions={this.state.instructions}
-                setPaymentType={this.setPaymentType}
-                paymentSummary={this.state.paymentSummary}
-                loggedInByPassword={loggedInByPassword}
-                latitude={this.state.latitude.toString()}
-                longitude={this.state.longitude.toString()}
-                email={this.state.email}
-                customerUid={this.state.customerUid}
-                phone={this.state.phone}
-                fetchingFees={this.state.fetchingFees}
-                displayError={this.displayError}
-                dpvCode={this.state.responseCode}
-                ambassadorCode={this.state.ambassadorCode_applied}
-              />
-          */}
+
           <div className="mt-5" hidden={stripePayment}>
-            <Form.Group>
+            <Form.Group style={mediumBold}>
               <Form.Label>Amount</Form.Label>
-              {purchaseUIDs.length === 1 ? (
+              {purchaseUID.length === 1 ? (
                 <Form.Control
                   placeholder={purchase.amount_due - purchase.amount_paid}
                   style={squareForm}
@@ -222,7 +200,7 @@ function PaymentPage(props) {
               )}
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group style={mediumBold}>
               <Form.Label>Message</Form.Label>
               <Form.Control
                 placeholder="M4METEST"
@@ -246,12 +224,7 @@ function PaymentPage(props) {
                   equal total:
                 </Row>
               ) : null}
-              {purchaseUIDs.length > 1 ? (
-                <Row style={{ width: "80%", margin: " 10%" }}>
-                  Note: You may not change the payment amount if you have
-                  selected 2 or more bills to pay
-                </Row>
-              ) : null}
+
               {disabled ? (
                 <Col>
                   <Button
@@ -304,34 +277,22 @@ function PaymentPage(props) {
             </Row>
           </div>
 
-          {/* {allPurchases.map((purchase, i) => {
-            console.log(purchase);
-            return <div hidden={!stripePayment}>
-            <Elements stripe={stripePromise}>
-              <StripePayment cancel={cancel} submit={submit} purchase={purchase}
-                message={message} amount={amount}/>
-            </Elements>
-          </div>
-          })} */}
           <div hidden={!stripePayment}>
             <Elements stripe={stripePromise}>
               <StripePayment
                 cancel={cancel}
                 submit={submit}
-                purchases={allPurchases}
+                purchases={[purchase]}
                 message={message}
                 amount={amount}
               />
-              {console.log(allPurchases, amount, message)}
-              {/* <StripePayment cancel={cancel} submit={submit} purchase={purchase}
-                message={message} amount={amount}/> */}
             </Elements>
           </div>
-        </Container>
+        </div>
       )}
       <Footer tab={"DASHBOARD"} />
     </div>
   );
 }
 
-export default PaymentPage;
+export default OwnerPaymentPage;

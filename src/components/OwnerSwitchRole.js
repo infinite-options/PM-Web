@@ -54,38 +54,54 @@ function OwnerSwitchRole(props) {
 
   React.useState(() => {}, []);
   return (
-    <div className="flex-grow-1 d-flex flex-column pb-5 mb-5">
+    <div
+      style={{
+        background: "#E9E9E9 0% 0% no-repeat padding-box",
+        borderRadius: "10px",
+        opacity: 1,
+        height: "100vh",
+      }}
+    >
       <Header
         title="Switch Roles"
         leftText="< Back"
         leftFn={() => setStage("DASHBOARD")}
       />
-      <div className="flex-grow-1 mx-3">
-        <h5 className="mb-4">Switch to one of the following roles:</h5>
-        {availableRoles.map((role, i) => (
-          <div key={i} className="d-flex px-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={
-                role === selectedRole || role === currentRole.toUpperCase()
-              }
-              onClick={() => {
-                setSelectedRole(role);
-                setCurrentRole(role);
-              }}
-            />
-            <p className="d-inline-block text-left">{longNames[role]}</p>
-          </div>
-        ))}
-      </div>
-      <div className="text-center">
-        <Button
-          variant="outline-primary"
-          style={bluePillButton}
-          onClick={selectRole}
-        >
-          Switch Roles
-        </Button>
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <div className="flex-grow-1 mx-3">
+          <h5 className="mb-4">Switch to one of the following roles:</h5>
+          {availableRoles.map((role, i) => (
+            <div key={i} className="d-flex px-4">
+              <Checkbox
+                type="CIRCLE"
+                checked={
+                  role === selectedRole || role === currentRole.toUpperCase()
+                }
+                onClick={() => {
+                  setSelectedRole(role);
+                  setCurrentRole(role);
+                }}
+              />
+              <p className="d-inline-block text-left">{longNames[role]}</p>
+            </div>
+          ))}
+        </div>
+        <div className="text-center">
+          <Button
+            variant="outline-primary"
+            style={bluePillButton}
+            onClick={selectRole}
+          >
+            Switch Roles
+          </Button>
+        </div>
       </div>
     </div>
   );

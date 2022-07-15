@@ -5,6 +5,8 @@ import AppContext from "../AppContext";
 import Header from "../components/Header";
 import PropertyForm from "../components/PropertyForm";
 import PropertyView from "../components/PropertyView";
+import OwnerContacts from "./OwnerContacts";
+import ApplianceList from "../components/ApplianceList";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import { get } from "../utils/api";
@@ -20,6 +22,7 @@ import {
   redPill,
   mediumBold,
 } from "../utils/styles";
+import PropertyManagersList from "../components/PropertyManagersList";
 
 function OwnerProperties(props) {
   const navigate = useNavigate();
@@ -51,10 +54,18 @@ function OwnerProperties(props) {
         (item) => item.management_status === "REFUSED"
       );
 
+      const pmendearly = property.property_manager.filter(
+        (item) => item.management_status === "PM END EARLY"
+      );
+      const ownerendearly = property.property_manager.filter(
+        (item) => item.management_status === "OWNER END EARLY"
+      );
       property.management = {
         forwarded: forwarded.length,
         sent: sent.length,
         refused: refused.length,
+        pmendearly: pmendearly.length,
+        ownerendearly: ownerendearly.length,
       };
     });
     console.log(pu);
@@ -65,7 +76,7 @@ function OwnerProperties(props) {
     setStage("LIST");
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setShowFooter(stage !== "NEW");
   }, [stage, setShowFooter]);
 
@@ -92,6 +103,7 @@ function OwnerProperties(props) {
         //   navigate("/owner");
         // }}
       />
+      {console.log(stage)}
       <div
         className="mx-2 my-2 p-3"
         style={{
@@ -176,6 +188,55 @@ function OwnerProperties(props) {
                         Manager: {property.managerInfo.manager_business_name}
                       </p>
                     </div>
+
+                    <div
+                      className="mb-1"
+                      style={property.managerInfo.manager_id ? {} : hidden}
+                      onClick={stopPropagation}
+                    >
+                      <a
+                        href={`tel:${property.managerInfo.manager_phone_number}`}
+                      >
+                        <img src={Phone} alt="Phone" style={smallImg} />
+                      </a>
+                      <a href={`mailto:${property.managerInfo.manager_email}`}>
+                        <img src={Message} alt="Message" style={smallImg} />
+                      </a>
+                    </div>
+                  </div>
+                ) : property.management_status === "OWNER END EARLY" ? (
+                  <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                    {property.management.ownerendearly > 0 ? (
+                      <div style={{ ...blue, ...xSmall }} className="mb-1">
+                        You requested to end agreement
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div
+                      className="mb-1"
+                      style={property.managerInfo.manager_id ? {} : hidden}
+                      onClick={stopPropagation}
+                    >
+                      <a
+                        href={`tel:${property.managerInfo.manager_phone_number}`}
+                      >
+                        <img src={Phone} alt="Phone" style={smallImg} />
+                      </a>
+                      <a href={`mailto:${property.managerInfo.manager_email}`}>
+                        <img src={Message} alt="Message" style={smallImg} />
+                      </a>
+                    </div>
+                  </div>
+                ) : property.management_status === "PM END EARLY" ? (
+                  <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                    {property.management.pmendearly > 0 ? (
+                      <div style={{ ...blue, ...xSmall }} className="mb-1">
+                        PM requested to end agreement
+                      </div>
+                    ) : (
+                      ""
+                    )}
                     <div
                       className="mb-1"
                       style={property.managerInfo.manager_id ? {} : hidden}
@@ -244,8 +305,28 @@ function OwnerProperties(props) {
   ) : stage === "PROPERTY" ? (
     <div className="flex-grow-1">
       <PropertyView
+        stage={stage}
+        setStage={setStage}
         property_uid={selectedProperty.property_uid}
         back={() => setStage("LIST")}
+        reload={fetchProperties}
+      />
+    </div>
+  ) : stage === "PROPERTYMANAGERLISTS" ? (
+    <div className="flex-grow-1">
+      <PropertyManagersList
+        property={selectedProperty}
+        property_uid={selectedProperty.property_uid}
+        back={() => setStage("PROPERTY")}
+        reload={fetchProperties}
+      />
+    </div>
+  ) : stage === "APPLIANCELISTS" ? (
+    <div className="flex-grow-1">
+      <ApplianceList
+        property={selectedProperty}
+        property_uid={selectedProperty.property_uid}
+        back={() => setStage("PROPERTY")}
         reload={fetchProperties}
       />
     </div>

@@ -117,6 +117,7 @@ function ManagerManagementContract(props) {
       end_date: endDate,
       contract_fees: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
+      contract_status: "ACTIVE",
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
@@ -196,31 +197,35 @@ function ManagerManagementContract(props) {
             />
           </Form.Group>
         </div>
-        <div className="mb-4">
+        <Row className="mb-4">
           <h5 style={mediumBold}>PM Agreement Dates</h5>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Start Date {startDate === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              End Date {endDate === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </Form.Group>
-        </div>
+          <Col>
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Start Date {startDate === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                End Date {endDate === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
         <div className="mb-4">
           <h5 style={mediumBold}>PM Fees</h5>
           <div className="mx-2">

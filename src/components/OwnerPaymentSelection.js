@@ -27,7 +27,14 @@ function OwnerPaymentSelection(props) {
   }, [paymentState]);
 
   return (
-    <div>
+    <div
+      className="mx-3 my-3 p-2"
+      style={{
+        background: "#E9E9E9 0% 0% no-repeat padding-box",
+        borderRadius: "10px",
+        opacity: 1,
+      }}
+    >
       {editProfile ? (
         <div className="mx-3 mt-5">
           <Row className="mb-4" style={headings}>

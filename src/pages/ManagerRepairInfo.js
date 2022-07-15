@@ -25,7 +25,7 @@ import {
 import { useParams } from "react-router";
 import { get, post, put } from "../utils/api";
 
-function ManagerRepairDetail(props) {
+function ManagerRepairInfo(props) {
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token } = userData;
   const location = useLocation();
@@ -46,8 +46,7 @@ function ManagerRepairDetail(props) {
   const [priority, setPriority] = useState("");
   const { mp_id, rr_id } = useParams();
 
-  // const repair = location.state.repair;
-  const { repair, back } = props;
+  const repair = location.state.repair;
 
   // console.log(repair)
   // console.log(mp_id, rr_id)
@@ -197,7 +196,7 @@ function ManagerRepairDetail(props) {
             ? "Cancel"
             : "< Back"
         }
-        leftFn={() => (edit ? setEdit(false) : back())}
+        leftFn={() => (edit ? setEdit(false) : navigate(-1))}
         rightText={
           scheduleMaintenance || requestQuote ? null : edit ? "Save" : "Edit"
         }
@@ -648,4 +647,4 @@ function ManagerRepairDetail(props) {
   );
 }
 
-export default ManagerRepairDetail;
+export default ManagerRepairInfo;
