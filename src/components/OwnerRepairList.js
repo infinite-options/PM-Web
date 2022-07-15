@@ -229,7 +229,10 @@ function OwnerRepairList(props) {
                               navigate(
                                 `/owner-repairs/${repair.maintenance_request_uid}`,
                                 {
-                                  state: { repair: repair },
+                                  state: {
+                                    repair: repair,
+                                    property: row[0][0].address,
+                                  },
                                 }
                               )
                             }
