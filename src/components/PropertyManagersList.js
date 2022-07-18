@@ -87,6 +87,7 @@ function PropertyManagersList(props) {
           const response = await put("/properties", newProperty, null, files);
           //   setAddPropertyManager(false);
           reload();
+          setStage("LIST");
         }
       }
     } else if (property.property_manager.length == 0) {
@@ -105,6 +106,7 @@ function PropertyManagersList(props) {
       const response = await put("/properties", newProperty, null, files);
       //   setAddPropertyManager(false);
       reload();
+      setStage("LIST");
     } else {
       console.log("in else");
       if (
@@ -113,6 +115,7 @@ function PropertyManagersList(props) {
       ) {
         console.log("here in if");
         setShowDialog(true);
+        setStage("LIST");
         // alert("youve already rejected this Management Company");
       } else {
         console.log("here in else");
@@ -131,7 +134,9 @@ function PropertyManagersList(props) {
         const response = await put("/properties", newProperty, null, files);
         // setAddPropertyManager(false);
         reload();
+        setStage("LIST");
       }
+      setStage("LIST");
     }
   };
 

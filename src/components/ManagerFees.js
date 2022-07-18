@@ -78,45 +78,41 @@ function ManagerFees(props) {
     <div>
       {feeState.map((fee, i) => (
         <Row key={i}>
-          <Col className="d-flex">
-            <div className="flex-grow-1">
-              <h6 className="mb-1" style={mediumBold}>
-                {fee.fee_name}
-              </h6>
-            </div>
-            {pageURL[3] !== "owner" ? (
-              <div>
-                <img
-                  src={EditIcon}
-                  style={{ width: "15px", height: "25px" }}
-                  alt="Edit"
-                  className="px-1 mx-2"
-                  onClick={() => editFee(i)}
-                />
-                <img
-                  src={DeleteIcon}
-                  alt="Delete"
-                  className="px-1 mx-2"
-                  onClick={() => deleteFee(i)}
-                />
+          <div
+            key={i}
+            className="p-1 mb-2"
+            style={{ boxShadow: " 0px 1px 6px #00000029", borderRadius: "5px" }}
+          >
+            <div className="d-flex">
+              <div className="flex-grow-1">
+                <h6 className="mb-1">{fee.fee_name}</h6>
               </div>
-            ) : (
-              ""
-            )}
-          </Col>
-          <Col>
-            <p
-              style={{
-                font: "normal normal normal 16px Bahnschrift-Regular",
-              }}
-              className="mb-1"
-            >
+              {pageURL[3] !== "owner" ? (
+                <div>
+                  <img
+                    src={EditIcon}
+                    alt="Edit"
+                    className="px-1 mx-2"
+                    onClick={() => editFee(i)}
+                  />
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete"
+                    className="px-1 mx-2"
+                    onClick={() => deleteFee(i)}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <p style={gray} className="mb-1">
               {fee.fee_type === "%"
                 ? `${fee.charge}% of ${fee.of}`
                 : `$${fee.charge}`}{" "}
               {fee.frequency}
             </p>
-          </Col>
+          </div>
         </Row>
       ))}
       {newFee !== null ? (

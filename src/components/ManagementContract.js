@@ -106,7 +106,10 @@ function ManagementContract(props) {
   };
 
   return (
-    <div className="mb-5 pb-5">
+    <div
+      className="mb-5 pb-5"
+      style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
+    >
       <ConfirmDialog
         title={"Are you sure you want to reject this Property Manager?"}
         isOpen={showDialog}
@@ -122,7 +125,14 @@ function ManagementContract(props) {
         // rightFn={save}
       />
 
-      <Container>
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
         <Row>
           <Col>
             <Form.Group className="mx-2 my-3">
@@ -271,7 +281,7 @@ function ManagementContract(props) {
         ) : (
           ""
         )}
-      </Container>
+      </div>
     </div>
   );
 }
