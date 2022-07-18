@@ -12,6 +12,7 @@ import {
   hidden,
   headings,
   mediumBold,
+  subHeading,
 } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -30,15 +31,14 @@ function ManagerUtilities(props) {
   console.log(expenses);
   const [utilityState, setUtilityState] = React.useState([]);
   const [newUtility, setNewUtility] = React.useState(null);
-  const [editingUtility, setEditingUtility] = React.useState(null);
+  const [editingUtility, setEditingUtility] = React.useState(false);
   const [propertyState, setPropertyState] = React.useState(properties);
 
   const [files, setFiles] = React.useState([]);
   const [newFile, setNewFile] = React.useState(null);
   const [editingDoc, setEditingDoc] = React.useState(null);
-  // const [addToRent, setAddToRent] = React.useState(false);
-  // const [dueDate, setDueDate] = React.useState("");
-
+  const [tenantPay, setTenantPay] = React.useState(false);
+  const [ownerPay, setOwnerPay] = React.useState(false);
   const emptyUtility = {
     provider: "",
     service_name: "",
@@ -97,8 +97,6 @@ function ManagerUtilities(props) {
   };
 
   const postCharges = async (newUtility) => {
-    console.log("heree");
-    console.log(newUtility);
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );
@@ -112,9 +110,6 @@ function ManagerUtilities(props) {
     } else {
       management_buid = management_businesses[0].business_uid;
     }
-
-    console.log("*&^");
-    console.log(newUtility);
 
     const new_bill = {
       bill_created_by: management_buid,
@@ -133,7 +128,6 @@ function ManagerUtilities(props) {
     const response = await post("/bills", new_bill, null, files);
     const bill_uid = response.bill_uid;
     console.log(bill_uid);
-    // const bill_uid = "040-000014"
 
     for (const property of newUtility.properties) {
       const new_purchase = {
@@ -153,16 +147,26 @@ function ManagerUtilities(props) {
       if (newUtility.add_to_rent) {
         new_purchase.next_payment = "0000-00-00 00:00:00";
       }
-
-      if (property.rental_status === "ACTIVE") {
-        let tenant_ids = property.tenants.map((t) => t.tenant_id);
-        new_purchase.payer = tenant_ids;
+      if (tenantPay) {
+        if (property.rental_status === "ACTIVE") {
+          let tenant_ids = property.tenants.map((t) => t.tenant_id);
+          new_purchase.payer = tenant_ids;
+        } else {
+          new_purchase.payer = [property.owner_id];
+        }
       } else {
         new_purchase.payer = [property.owner_id];
       }
+
       console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
+    setNewUtility({ ...emptyUtility });
+    propertyState.forEach((prop) => (prop.checked = false));
+    setPropertyState(propertyState);
+    setEditingUtility(false);
+    setTenantPay(false);
+    setOwnerPay(false);
   };
 
   const addUtility = async () => {
@@ -240,6 +244,7 @@ function ManagerUtilities(props) {
     newPropertyState[i].checked = !newPropertyState[i].checked;
     setPropertyState(newPropertyState);
   };
+
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -303,50 +308,29 @@ function ManagerUtilities(props) {
     >
       <Header
         title="Utilities"
-        leftText={newUtility === null ? "" : "< Back"}
+        leftText={editingUtility ? "< Back" : ""}
         leftFn={() => {
           setNewUtility(null);
+
+          propertyState.forEach((prop) => (prop.checked = false));
+          setPropertyState(propertyState);
+          setTenantPay(false);
+          setOwnerPay(false);
+          setEditingUtility(false);
         }}
-        rightText="+ New"
-        rightFn={() => setNewUtility({ ...emptyUtility })}
+        rightText={editingUtility ? "" : "+ New"}
+        rightFn={() => {
+          setNewUtility({ ...emptyUtility });
+          propertyState.forEach((prop) => (prop.checked = false));
+          setPropertyState(propertyState);
+          setTenantPay(false);
+          setOwnerPay(false);
+          setEditingUtility(true);
+        }}
       />
 
       <div>
-        {utilityState.length > 0 &&
-          utilityState.map((utility, i) => (
-            <div key={i}>
-              <div className="d-flex">
-                <div className="flex-grow-1">
-                  <h6 className="mb-1">
-                    ${utility.charge} {utility.service_name} Fee &nbsp;
-                    {utility.split_type === "uniform" ? "Split Uniformly" : ""}
-                    {utility.split_type === "tenant"
-                      ? "Split based on Tenant Count"
-                      : ""}
-                    {utility.split_type === "area"
-                      ? "Split based on Square Footage"
-                      : ""}
-                  </h6>
-                </div>
-                <div>
-                  {/*<img src={EditIcon} alt='Edit' className='px-1 mx-2'*/}
-                  {/*     onClick={() => editUtility(i)}/>*/}
-                  {/*<img src={DeleteIcon} alt='Delete' className='px-1 mx-2'*/}
-                  {/*     onClick={() => deleteUtility(i)}/>*/}
-                </div>
-              </div>
-              {utility.properties.map((property, j) => (
-                <p key={j} style={gray} className="mb-1">
-                  {property.address} {property.unit}
-                  ,&nbsp;{property.city},&nbsp;{property.state}&nbsp;{" "}
-                  {property.zip}
-                </p>
-              ))}
-              <hr className="mt-1" />
-            </div>
-          ))}
-
-        {newUtility !== null ? (
+        {newUtility !== null && editingUtility ? (
           <div
             className="mx-2 mt-2 p-3"
             style={{
@@ -421,13 +405,50 @@ function ManagerUtilities(props) {
                 <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
                   <Form.Check
                     type="checkbox"
-                    style={mediumBold}
+                    style={subHeading}
                     label="Pay with next rent"
                     onChange={(e) => changeNewUtility(e, "add_to_rent")}
                   />
                 </Form.Group>
                 {/*<Checkbox type='BOX' checked={newUtility.add_to_rent ? 'checked' : ''}*/}
                 {/*          onClick={(checked) => changeNewUtility(checked, 'add_to_rent')} />*/}
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={6}>
+                <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+                  <div
+                    className="d-flex mx-2 ps-2 align-items-center my-2"
+                    style={{
+                      font: "normal normal normal 18px Bahnschrift-Regular",
+                    }}
+                  >
+                    <Checkbox
+                      type="BOX"
+                      checked={tenantPay}
+                      onClick={() => setTenantPay(!tenantPay)}
+                    />
+                    <p className="ms-1 mb-1">Tenant</p>
+                  </div>
+                </Form.Group>
+              </Col>
+              <Col xs={6}>
+                <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+                  <div
+                    className="d-flex mx-2 ps-2 align-items-center my-2"
+                    style={{
+                      font: "normal normal normal 18px Bahnschrift-Regular",
+                    }}
+                  >
+                    {" "}
+                    <Checkbox
+                      type="BOX"
+                      checked={ownerPay}
+                      onClick={() => setOwnerPay(!ownerPay)}
+                    />
+                    <p className="ms-1 mb-1">Owner</p>
+                  </div>
+                </Form.Group>
               </Col>
             </Row>
 
@@ -559,7 +580,10 @@ function ManagerUtilities(props) {
                 <Col>
                   <Form.Group
                     className="mx-2 my-3"
-                    hidden={propertyState.filter((p) => p.checked).length <= 1}
+                    hidden={
+                      propertyState.filter((p) => p.checked).length <= 1 ||
+                      tenantPay === false
+                    }
                   >
                     <Form.Label style={mediumBold} className="mb-0 ms-2">
                       Split Method
@@ -592,7 +616,7 @@ function ManagerUtilities(props) {
           ""
         )}
 
-        {newUtility === null ? (
+        {newUtility === null && !editingUtility ? (
           <div className="mx-2 my-2 p-3">
             <div>
               <Row style={headings}>Utility Payments</Row>
