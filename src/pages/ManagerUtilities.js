@@ -26,8 +26,8 @@ function ManagerUtilities(props) {
   const navigate = useNavigate();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
-  const { properties } = props;
-
+  const { properties, expenses, setStage } = props;
+  console.log(expenses);
   const [utilityState, setUtilityState] = React.useState([]);
   const [newUtility, setNewUtility] = React.useState(null);
   const [editingUtility, setEditingUtility] = React.useState(null);
@@ -51,7 +51,7 @@ function ManagerUtilities(props) {
   const [errorMessage, setErrorMessage] = React.useState("");
 
   React.useEffect(() => {
-    // console.log(properties)
+    console.log(properties);
     properties.forEach((p) => (p.checked = false));
   }, [properties]);
 
@@ -303,26 +303,15 @@ function ManagerUtilities(props) {
     >
       <Header
         title="Utilities"
-        leftText="< Back"
+        leftText={newUtility === null ? "" : "< Back"}
         leftFn={() => {
-          navigate(-1);
+          setNewUtility(null);
         }}
         rightText="+ New"
         rightFn={() => setNewUtility({ ...emptyUtility })}
       />
 
-      <div
-        className="mx-2 my-2 p-3"
-        style={{
-          background: "#FFFFFF 0% 0% no-repeat padding-box",
-          borderRadius: "10px",
-          opacity: 1,
-        }}
-      >
-        <Row className="my-4 text-center">
-          <div style={headings}>New Utility Payment</div>
-        </Row>
-
+      <div>
         {utilityState.length > 0 &&
           utilityState.map((utility, i) => (
             <div key={i}>
@@ -358,7 +347,17 @@ function ManagerUtilities(props) {
           ))}
 
         {newUtility !== null ? (
-          <div>
+          <div
+            className="mx-2 mt-2 p-3"
+            style={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+              opacity: 1,
+            }}
+          >
+            <Row className="my-4 text-center">
+              <div style={headings}>New Utility Payment</div>
+            </Row>
             <Row className="mb-2">
               <Col>
                 <Form.Group className="mx-2">
@@ -471,6 +470,7 @@ function ManagerUtilities(props) {
                     <div>
                       <img
                         src={EditIcon}
+                        style={{ width: "15px", height: "25px" }}
                         alt="Edit"
                         className="px-1 mx-2"
                         onClick={() => editDocument(i)}
@@ -594,15 +594,102 @@ function ManagerUtilities(props) {
         )}
 
         {newUtility === null ? (
-          <Button
-            variant="outline-primary"
-            style={smallPillButton}
-            onClick={() => setNewUtility({ ...emptyUtility })}
-          >
-            Add Utility
-          </Button>
+          <div className="mx-2 my-2 p-3">
+            <div>
+              <Row style={headings}>Utility Payments</Row>
+
+              {expenses.map((expense) => {
+                return expense.purchase_type === "UTILITY" ? (
+                  <Row
+                    className="my-2 p-3"
+                    style={{
+                      background: "#FFFFFF 0% 0% no-repeat padding-box",
+                      boxShadow: "0px 3px 6px #00000029",
+                      borderRadius: "5px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Col
+                      xs={3}
+                      className="pt-4 justify-content-center align-items-center"
+                      style={
+                        (mediumBold,
+                        {
+                          color: "#007AFF",
+                          border: "4px solid #007AFF",
+                          borderRadius: "50%",
+                          height: "83px",
+                          width: "83px",
+                        })
+                      }
+                    >
+                      ${expense.amount_due}.00
+                    </Col>
+                    <Col style={mediumBold}>
+                      {expense.description} -{" "}
+                      {new Date(
+                        String(expense.purchase_date).split(" ")[0]
+                      ).toDateString()}
+                    </Col>
+                  </Row>
+                ) : (
+                  <Row></Row>
+                );
+              })}
+            </div>
+            <div>
+              <Row style={headings}> Maintenance Payments</Row>
+
+              {expenses.map((expense) => {
+                return expense.purchase_type === "MAINTENANCE" ||
+                  expense.purchase_type === "REPAIRS" ? (
+                  <Row
+                    className="my-2 p-3"
+                    style={
+                      (mediumBold,
+                      {
+                        background: "#FFFFFF 0% 0% no-repeat padding-box",
+                        boxShadow: "0px 3px 6px #00000029",
+                        borderRadius: "5px",
+                        opacity: 1,
+                      })
+                    }
+                  >
+                    <Col
+                      xs={3}
+                      className="pt-4 justify-content-center align-items-center"
+                      style={{
+                        color: "#007AFF",
+                        border: "4px solid #007AFF",
+                        borderRadius: "50%",
+                        height: "83px",
+                        width: "83px",
+                      }}
+                    >
+                      ${expense.amount_due}.00
+                    </Col>
+                    <Col style={mediumBold}>
+                      {expense.description} -{" "}
+                      {new Date(
+                        String(expense.purchase_date).split(" ")[0]
+                      ).toDateString()}
+                    </Col>
+                  </Row>
+                ) : (
+                  <div></div>
+                );
+              })}
+            </div>
+          </div>
         ) : (
-          <div className="d-flex justify-content-center mb-4">
+          <div
+            className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
+            style={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+
+              opacity: 1,
+            }}
+          >
             <Button
               variant="outline-primary"
               style={pillButton}

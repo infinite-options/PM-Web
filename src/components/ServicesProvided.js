@@ -133,6 +133,7 @@ function ServicesProvided(props) {
               <div>
                 <img
                   src={EditIcon}
+                  style={{ width: "15px", height: "25px" }}
                   alt="Edit"
                   className="px-1 mx-2"
                   onClick={() => editService(i)}

@@ -181,6 +181,7 @@ function PropertyManagerDocs(props) {
               <img
                 src={Edit}
                 alt="Edit"
+                style={{ width: "15px", height: "25px" }}
                 onClick={() => selectContract(activeContract)}
               />
             </Col>

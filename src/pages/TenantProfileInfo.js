@@ -68,7 +68,8 @@ function TenantProfileInfo(props) {
   const defaultState = "--";
   const [selectedState, setSelectedState] = React.useState(defaultState);
   const [selectedDlState, setSelectedDlState] = React.useState(defaultState);
-  const [selectedPrevState, setSelectedPrevState] = React.useState(defaultState);
+  const [selectedPrevState, setSelectedPrevState] =
+    React.useState(defaultState);
 
   const currentAddressState = React.useState({
     street: "",
@@ -437,7 +438,7 @@ function TenantProfileInfo(props) {
               <Form.Label as="h6" className="mb-0 ms-2">
                 Driver's License State {selectedDlState === "" ? required : ""}
               </Form.Label>
-              
+
               <Form.Select
                 style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
                 value={selectedDlState}
@@ -512,6 +513,7 @@ function TenantProfileInfo(props) {
                 <div>
                   <img
                     src={EditIcon}
+                    style={{ width: "15px", height: "25px" }}
                     alt="Edit"
                     className="px-1 mx-2"
                     onClick={() => editDocument(i)}

@@ -464,7 +464,7 @@ function ManagerPropertyView(props) {
               >
                 <div className="d-flex mt-1">
                   <h6 style={mediumBold} className="mb-1">
-                    Property Owner
+                    Property Owner Agreement
                   </h6>
                 </div>
                 {expandManagerDocs ? (
