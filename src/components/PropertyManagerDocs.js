@@ -115,16 +115,34 @@ function PropertyManagerDocs(props) {
   };
 
   useEffect(async () => {
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
     const response = await get(
       `/contracts?property_uid=${property.property_uid}`
     );
     console.log(response.result);
-    const ac = response.result[0];
-    ac.fees = JSON.parse(ac.contract_fees);
-    ac.contacts = JSON.parse(ac.assigned_contacts);
-    ac.docs = JSON.parse(ac.documents);
+    const ac = response.result;
 
-    setActiveContract(ac);
+    console.log(management_buid);
+    if (response.result.length > 0) {
+      ac.forEach((contract) => {
+        if (contract.business_uid === management_buid) {
+          console.log("here");
+          const aContract = contract;
+          aContract.fees = JSON.parse(contract.contract_fees);
+          aContract.contacts = JSON.parse(contract.assigned_contacts);
+          aContract.docs = JSON.parse(contract.documents);
+          console.log(aContract);
+          setActiveContract(aContract);
+        }
+      });
+    }
+
     setContracts(response.result);
   }, []);
   useEffect(async () => {
