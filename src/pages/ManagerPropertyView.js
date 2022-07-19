@@ -34,6 +34,7 @@ import {
   bluePill,
 } from "../utils/styles";
 import { get, put } from "../utils/api";
+import ManagerPropertyCashFlow from "../components/ManagerPropertyCashFlow";
 
 function ManagerPropertyView(props) {
   const navigate = useNavigate();
@@ -401,7 +402,10 @@ function ManagerPropertyView(props) {
                 {property.unit !== "" ? ` ${property.unit}, ` : ", "}
                 {property.city}, {property.state} {property.zip}
               </p>
-              {/* <PropertyCashFlow property={property} state={cashFlowState} /> */}
+              <ManagerPropertyCashFlow
+                property={property}
+                state={cashFlowState}
+              />
             </div>
 
             {property.rental_status === "ACTIVE" ? (

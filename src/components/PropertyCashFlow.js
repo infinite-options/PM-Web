@@ -124,7 +124,7 @@ function PropertyCashFlow(props) {
     setYearRevenue(yearRevenueTotal);
   });
 
-  const cashFlow = revenue - expense;
+  const cashFlow = (revenue - expense).toFixed(2);
 
   return (
     <div>

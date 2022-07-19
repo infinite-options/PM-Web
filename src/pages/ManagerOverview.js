@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Container, Carousel, Row } from "react-bootstrap";
 import Header from "../components/Header";
@@ -11,7 +11,7 @@ import {
   mediumBold,
   redPillButton,
   small,
-  underline,
+  gray,
 } from "../utils/styles";
 import SearchProperties from "../icons/SearchProperties.svg";
 import Tenants from "../icons/Tenants.svg";
@@ -20,7 +20,7 @@ import { get } from "../utils/api";
 
 function ManagerOverview(props) {
   const navigate = useNavigate();
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
 
   const { properties, maintenanceRequests } = props;
@@ -30,14 +30,53 @@ function ManagerOverview(props) {
     count: 0,
   });
 
-  const [expandProperties, setExpandProperties] = React.useState(false);
+  const [expandRevenue, setExpandRevenue] = useState(false);
+  const [expandExpenses, setExpandExpenses] = useState(false);
 
-  React.useEffect(() => {
+  let revenueTotal = 0;
+  console.log(properties);
+  for (const item of properties) {
+    console.log(item.property_uid);
+    if (item.manager_revenue !== undefined) {
+      if (item.manager_revenue.length == 0) {
+      } else if (item.manager_revenue.length == 1) {
+        revenueTotal += item.manager_revenue[0].amount_due;
+      } else {
+        for (const or of item.manager_revenue) {
+          revenueTotal += or.amount_due;
+        }
+      }
+    }
+  }
+
+  let expenseTotal = 0;
+  for (const item of properties) {
+    if (item.manager_expense !== undefined) {
+      if (item.manager_expense.length == 0) {
+      } else if (item.manager_expense.length == 1) {
+        if (item.manager_expense[0].purchase_type == "RENT") {
+          expenseTotal += item.management_expenses;
+        } else {
+          expenseTotal += item.manager_expense[0].amount_due;
+        }
+      } else {
+        for (const or of item.manager_expense) {
+          if (or.purchase_type == "RENT") {
+            expenseTotal += item.management_expenses;
+          } else {
+            expenseTotal += or.amount_due;
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
     if (userData.access_token === null) {
       navigate("/");
     }
   }, []);
-
+  const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
   const unique_clients = [...new Set(properties.map((item) => item.owner_id))]
     .length;
   const property_count = properties.length;
@@ -78,7 +117,6 @@ function ManagerOverview(props) {
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
-            // onClick={() => setExpandProperties(!expandProperties)}
             onClick={() => navigate("/manager-properties")}
           >
             <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
@@ -89,65 +127,22 @@ function ManagerOverview(props) {
             </Col>
           </Row>
 
-          {expandProperties ? (
-            <div>
-              <Container
-                style={{ border: "1px solid #707070", borderRadius: "5px" }}
-              >
-                <Row>
-                  <Col>
-                    <p style={{ ...small }} className=" m-1">
-                      Properties
-                    </p>
-                  </Col>
-                </Row>
-
-                {properties.map((property, i) => (
-                  <Row
-                    key={i}
-                    onClick={() => {
-                      navigate(`/manager-properties/${property.property_uid}`, {
-                        state: {
-                          property: property,
-                          property_uid: property.property_uid,
-                        },
-                      });
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      background:
-                        i % 2 === 0
-                          ? "#FFFFFF 0% 0% no-repeat padding-box"
-                          : "#F3F3F3 0% 0% no-repeat padding-box",
-                    }}
-                  >
-                    <Col>
-                      <p style={{ ...small, ...mediumBold }} className=" m-1">
-                        {property.address} {property.unit}, {property.city},{" "}
-                        {property.state} {property.zip}
-                      </p>
-                    </Col>
-                  </Row>
-                ))}
-              </Container>
-            </div>
-          ) : (
-            ""
-          )}
-
           <Row
             className="mx-2 mt-4 p-3"
             style={{
-              background: "#3DB727 0% 0% no-repeat padding-box",
+              background:
+                revenueTotal > expenseTotal
+                  ? "#3DB727 0% 0% no-repeat padding-box"
+                  : "#E3441F 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
           >
             <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
-              Estimated Monthly Revenue
+              MTD Cash Flow
             </Col>
             <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
-              $10,000
+              ${cashFlow}
             </Col>
           </Row>
 
@@ -158,15 +153,177 @@ function ManagerOverview(props) {
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
+            onClick={() => setExpandRevenue(!expandRevenue)}
           >
             <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
               MTD Revenue
             </Col>
             <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
-              $16,500
+              ${revenueTotal}
             </Col>
           </Row>
+          <div>
+            {expandRevenue ? (
+              <div>
+                <Container
+                  style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                >
+                  <Row>
+                    <Col />
+                    <Col>
+                      <p
+                        style={{
+                          ...gray,
+                          ...small,
+                        }}
+                        className="text-center m-1"
+                      >
+                        MTD($)
+                      </p>
+                    </Col>
+                  </Row>
+                  {properties.map((property, i) => {
+                    return (
+                      <div>
+                        {(property.rental_revenue !== undefined &&
+                          property.rental_revenue !== 0) ||
+                        (property.extraCharges_revenue !== undefined &&
+                          property.extraCharges_revenue !== 0) ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" m-1"
+                              >
+                                {property.address}
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              ></p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
 
+                        {property.rental_revenue !== undefined &&
+                        property.rental_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" m-1"
+                              >
+                                Rent
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              >
+                                {property.rental_revenue}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.extraCharges_revenue !== undefined &&
+                        property.extraCharges_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" m-1"
+                              >
+                                Extra Charges
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              >
+                                {property.extraCharges_revenue}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  <Row
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    }}
+                  >
+                    <Col>
+                      <p
+                        style={{
+                          ...small,
+                          ...mediumBold,
+                          font: "normal normal bold 12x Helvetica-Bold",
+                        }}
+                        className=" m-1"
+                      >
+                        Total
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...small, ...green }}
+                        className="text-center m-1"
+                      >
+                        {revenueTotal}
+                      </p>
+                    </Col>
+                  </Row>
+                </Container>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
           <Row
             className="mx-2 mt-4 p-3"
             style={{
@@ -174,12 +331,226 @@ function ManagerOverview(props) {
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
+            onClick={() => setExpandExpenses(!expandExpenses)}
           >
             <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
-              MTD Maintenance Cost
+              MTD Expenses
             </Col>
-            <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>$9,500</Col>
+            <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
+              {" "}
+              ${expenseTotal}
+            </Col>
           </Row>
+          <div>
+            {expandExpenses ? (
+              <div>
+                <Container
+                  style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                >
+                  <Row>
+                    <Col />
+                    <Col>
+                      <p
+                        style={{
+                          ...gray,
+                          ...small,
+                        }}
+                        className="text-center m-1"
+                      >
+                        MTD($)
+                      </p>
+                    </Col>
+                  </Row>
+                  {properties.map((property, i) => {
+                    return (property.maintenance_expenses !== undefined &&
+                      property.maintenance_expenses) ||
+                      (property.management_expenses !== undefined &&
+                        property.management_expenses !== 0) ||
+                      (property.repairs_expenses !== undefined &&
+                        property.repairs_expenses !== 0) ? (
+                      <div>
+                        {console.log(
+                          property.maintenance_expenses,
+                          property.management_expenses,
+                          property.repairs_expenses
+                        )}
+                        <Row
+                          style={{
+                            background:
+                              i % 2 === 0
+                                ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                : "#F3F3F3 0% 0% no-repeat padding-box",
+                          }}
+                        >
+                          <Col xs={6}>
+                            <p
+                              style={{
+                                ...small,
+                                ...mediumBold,
+                                font: "normal normal bold 12px Helvetica-Bold",
+                              }}
+                              className="m-1"
+                            >
+                              {property.address}
+                            </p>
+                          </Col>
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1 pt-1"
+                            ></p>
+                          </Col>
+                        </Row>
+                        {property.maintenance_expenses !== 0 &&
+                        property.maintenance_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" m-1"
+                              >
+                                Maintenance
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.maintenance_expenses}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.management_expenses !== 0 &&
+                        property.management_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" m-1"
+                              >
+                                Management
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.management_expenses}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+
+                        {property.repairs_expenses !== 0 &&
+                        property.repairs_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" m-1"
+                              >
+                                Repairs
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.repairs_expenses}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    ) : (
+                      ""
+                    );
+                  })}
+
+                  <Row
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    }}
+                  >
+                    <Col>
+                      <p
+                        style={{
+                          ...small,
+                          ...mediumBold,
+                          font: "normal normal bold 12px Helvetica-Bold",
+                        }}
+                        className=" m-1"
+                      >
+                        Total
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...small, ...red }}
+                        className="text-center m-1 pt-1"
+                      >
+                        {expenseTotal}
+                      </p>
+                    </Col>
+                  </Row>
+                </Container>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
         <Carousel
           id="owner-bills"
