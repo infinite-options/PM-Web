@@ -159,7 +159,7 @@ function ManagerOverview(props) {
               MTD Revenue
             </Col>
             <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
-              ${revenueTotal}
+              ${revenueTotal.toFixed(2)}
             </Col>
           </Row>
           <div>
@@ -314,7 +314,7 @@ function ManagerOverview(props) {
                         style={{ ...small, ...green }}
                         className="text-center m-1"
                       >
-                        {revenueTotal}
+                        {revenueTotal.toFixed(2)}
                       </p>
                     </Col>
                   </Row>
@@ -338,7 +338,7 @@ function ManagerOverview(props) {
             </Col>
             <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
               {" "}
-              ${expenseTotal}
+              ${expenseTotal.toFixed(2)}
             </Col>
           </Row>
           <div>
@@ -541,7 +541,7 @@ function ManagerOverview(props) {
                         style={{ ...small, ...red }}
                         className="text-center m-1 pt-1"
                       >
-                        {expenseTotal}
+                        {expenseTotal.toFixed(2)}
                       </p>
                     </Col>
                   </Row>
