@@ -6,19 +6,21 @@ import {
   pillButton,
   smallPillButton,
   squareForm,
-  gray,
+  redPill,
   small,
   red,
   hidden,
   headings,
   mediumBold,
   subHeading,
+  bluePillButton,
+  greenPill,
 } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
-import { post } from "../utils/api";
+import { post, get } from "../utils/api";
 import AppContext from "../AppContext";
 import File from "../icons/File.svg";
 
@@ -27,8 +29,9 @@ function ManagerUtilities(props) {
   const navigate = useNavigate();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
-  const { properties, expenses, setStage } = props;
-  console.log(expenses);
+  // const [expenses, setExpenses] = React.useState([]);
+  const { properties, setStage, expenses } = props;
+
   const [utilityState, setUtilityState] = React.useState([]);
   const [newUtility, setNewUtility] = React.useState(null);
   const [editingUtility, setEditingUtility] = React.useState(false);
@@ -39,6 +42,10 @@ function ManagerUtilities(props) {
   const [editingDoc, setEditingDoc] = React.useState(null);
   const [tenantPay, setTenantPay] = React.useState(false);
   const [ownerPay, setOwnerPay] = React.useState(false);
+  const [expenseDetail, setExpenseDetail] = React.useState(false);
+  const [maintenanceExpenseDetail, setMaintenanceExpenseDetail] =
+    React.useState(false);
+  const [payment, setPayment] = React.useState(false);
   const emptyUtility = {
     provider: "",
     service_name: "",
@@ -49,6 +56,40 @@ function ManagerUtilities(props) {
     add_to_rent: false,
   };
   const [errorMessage, setErrorMessage] = React.useState("");
+  // const fetchExpenses = async () => {
+  //   if (access_token === null) {
+  //     navigate("/");
+  //     return;
+  //   }
+
+  //   const management_businesses = user.businesses.filter(
+  //     (business) => business.business_type === "MANAGEMENT"
+  //   );
+  //   let management_buid = null;
+  //   if (management_businesses.length < 1) {
+  //     console.log("No associated PM Businesses");
+  //     return;
+  //   } else if (management_businesses.length > 1) {
+  //     console.log("Multiple associated PM Businesses");
+  //     management_buid = management_businesses[0].business_uid;
+  //   } else {
+  //     management_buid = management_businesses[0].business_uid;
+  //   }
+
+  //   // const response =  await get(`/businesses?business_uid=${management_buid}`);
+  //   const response = await get(
+  //     `/managerExpenses?manager_id=${management_buid}`
+  //   );
+  //   if (response.msg === "Token has expired") {
+  //     refresh();
+  //     return;
+  //   }
+
+  //   setExpenses(response.result);
+  // };
+  // React.useEffect(() => {
+  //   fetchExpenses();
+  // }, []);
 
   React.useEffect(() => {
     console.log(properties);
@@ -213,6 +254,9 @@ function ManagerUtilities(props) {
     }
     setEditingUtility(null);
   };
+  const Capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
   const editUtility = (i) => {
     // const newUtilityState = [...utilityState];
     // const utility = newUtilityState.splice(i, 1)[0];
@@ -308,17 +352,27 @@ function ManagerUtilities(props) {
     >
       <Header
         title="Utilities"
-        leftText={editingUtility ? "< Back" : ""}
+        leftText={
+          editingUtility || expenseDetail || maintenanceExpenseDetail
+            ? "< Back"
+            : ""
+        }
         leftFn={() => {
           setNewUtility(null);
-
+          setExpenseDetail(false);
+          setMaintenanceExpenseDetail(false);
+          setPayment(null);
           propertyState.forEach((prop) => (prop.checked = false));
           setPropertyState(propertyState);
           setTenantPay(false);
           setOwnerPay(false);
           setEditingUtility(false);
         }}
-        rightText={editingUtility ? "" : "+ New"}
+        rightText={
+          editingUtility || expenseDetail || maintenanceExpenseDetail
+            ? ""
+            : "+ New"
+        }
         rightFn={() => {
           setNewUtility({ ...emptyUtility });
           propertyState.forEach((prop) => (prop.checked = false));
@@ -330,7 +384,10 @@ function ManagerUtilities(props) {
       />
 
       <div>
-        {newUtility !== null && editingUtility ? (
+        {newUtility !== null &&
+        editingUtility &&
+        !expenseDetail &&
+        !maintenanceExpenseDetail ? (
           <div
             className="mx-2 mt-2 p-3"
             style={{
@@ -616,7 +673,10 @@ function ManagerUtilities(props) {
           ""
         )}
 
-        {newUtility === null && !editingUtility ? (
+        {newUtility === null &&
+        !editingUtility &&
+        !expenseDetail &&
+        !maintenanceExpenseDetail ? (
           <div className="mx-2 my-2 p-3">
             <div>
               <Row style={headings}>Utility Payments</Row>
@@ -630,6 +690,10 @@ function ManagerUtilities(props) {
                       boxShadow: "0px 3px 6px #00000029",
                       borderRadius: "5px",
                       opacity: 1,
+                    }}
+                    onClick={() => {
+                      setExpenseDetail(true);
+                      setPayment(expense);
                     }}
                   >
                     <Col
@@ -646,13 +710,16 @@ function ManagerUtilities(props) {
                         })
                       }
                     >
-                      ${expense.amount_due}.00
+                      ${expense.amount_due}
                     </Col>
                     <Col style={mediumBold}>
-                      {expense.description} -{" "}
-                      {new Date(
-                        String(expense.purchase_date).split(" ")[0]
-                      ).toDateString()}
+                      <div>
+                        {expense.description} -{" "}
+                        {new Date(
+                          String(expense.purchase_date).split(" ")[0]
+                        ).toDateString()}
+                      </div>
+                      <div>{expense.address}</div>
                     </Col>
                   </Row>
                 ) : (
@@ -677,6 +744,10 @@ function ManagerUtilities(props) {
                         opacity: 1,
                       })
                     }
+                    onClick={() => {
+                      setMaintenanceExpenseDetail(true);
+                      setPayment(expense);
+                    }}
                   >
                     <Col
                       xs={3}
@@ -704,7 +775,7 @@ function ManagerUtilities(props) {
               })}
             </div>
           </div>
-        ) : (
+        ) : !expenseDetail && !maintenanceExpenseDetail ? (
           <div
             className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
             style={{
@@ -730,8 +801,252 @@ function ManagerUtilities(props) {
               Add Utility
             </Button>
           </div>
+        ) : (
+          ""
         )}
       </div>
+      {expenseDetail && !maintenanceExpenseDetail ? (
+        <div
+          className="d-flex flex-column mx-2 p-3"
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            opacity: 1,
+            height: "100%",
+          }}
+        >
+          {console.log(payment)}
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={headings}
+          >
+            {payment.bill_utility_type}
+          </Row>
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={mediumBold}
+          >
+            {payment.bill_description}{" "}
+          </Row>
+          <Row className="my-2 align-items-center justify-content-center">
+            <Col
+              xs={3}
+              className="pt-4 justify-content-center align-items-center"
+              style={
+                (mediumBold,
+                {
+                  color: "#007AFF",
+                  border: "4px solid #007AFF",
+                  borderRadius: "50%",
+                  height: "83px",
+                  width: "83px",
+                })
+              }
+            >
+              ${payment.amount_due}.00
+            </Col>
+          </Row>
+          <Row className="my-2 mx-2" style={mediumBold}>
+            Properties Billed:
+          </Row>
+          <Row
+            className="my-2 mx-2 p-1"
+            style={
+              (mediumBold, { border: "1px solid #707070", borderRadius: "5px" })
+            }
+          >
+            {payment.address}
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Expense type:</Col>
+            <Col className="d-flex p-0 justify-content-end">Utility</Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Split Method:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {payment.bill_algorithm}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Bill Sent on:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {new Date(
+                String(payment.purchase_date).split(" ")[0]
+              ).toDateString()}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">
+              Payment Status:
+            </Col>
+            {payment.purchase_status === "UNPAID" ? (
+              <Col xs={3} className="mt-0" style={redPill}>
+                {payment.purchase_status}
+              </Col>
+            ) : (
+              <Col xs={3} className="mt-0" style={greenPill}>
+                {payment.purchase_status}
+              </Col>
+            )}
+          </Row>
+          <Row className="d-flex my-5 mx-2">
+            <Col></Col>
+            <Col className="d-flex p-0 justify-content-center">
+              <Button
+                style={bluePillButton}
+                onClick={() => setExpenseDetail(false)}
+              >
+                Okay
+              </Button>
+            </Col>
+            <Col></Col>
+          </Row>
+          {payment.purchase_status === "UNPAID" ? (
+            <Row className="d-flex mx-2">
+              <Col></Col>
+              <Col xs={6} className="d-flex p-0 justify-content-center">
+                <Button
+                  style={bluePillButton}
+                  onClick={() => {
+                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
+                      state: {
+                        amount: payment.amount_due,
+                        selectedProperty: payment,
+                        purchaseUID: payment.purchase_uid,
+                      },
+                    });
+                  }}
+                >
+                  Paid by Manager
+                </Button>
+              </Col>
+              <Col></Col>
+            </Row>
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        ""
+      )}
+      {!expenseDetail && maintenanceExpenseDetail ? (
+        <div
+          className="d-flex flex-column mx-2 p-3"
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            opacity: 1,
+            height: "100%",
+          }}
+        >
+          {console.log(payment)}
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={headings}
+          >
+            {payment.description}
+          </Row>
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={mediumBold}
+          >
+            {payment.business_name}{" "}
+          </Row>
+          <Row className="my-2 align-items-center justify-content-center">
+            <Col
+              xs={3}
+              className="pt-4 justify-content-center align-items-center"
+              style={
+                (mediumBold,
+                {
+                  color: "#007AFF",
+                  border: "4px solid #007AFF",
+                  borderRadius: "50%",
+                  height: "83px",
+                  width: "83px",
+                })
+              }
+            >
+              ${payment.amount_due}.00
+            </Col>
+          </Row>
+          <Row className="my-2 mx-2" style={mediumBold}>
+            Properties Billed:
+          </Row>
+          <Row
+            className="my-2 mx-2 p-1"
+            style={
+              (mediumBold, { border: "1px solid #707070", borderRadius: "5px" })
+            }
+          >
+            {payment.address}
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Expense type:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {Capitalize(payment.purchase_type)}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Bill Sent on:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {new Date(
+                String(payment.purchase_date).split(" ")[0]
+              ).toDateString()}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">
+              Payment Status:
+            </Col>
+            {payment.purchase_status === "UNPAID" ? (
+              <Col xs={3} className="mt-0" style={redPill}>
+                {payment.purchase_status}
+              </Col>
+            ) : (
+              <Col xs={3} className="mt-0" style={greenPill}>
+                {payment.purchase_status}
+              </Col>
+            )}
+          </Row>
+          <Row className="d-flex my-5 mx-2">
+            <Col></Col>
+            <Col className="d-flex p-0 justify-content-center">
+              <Button
+                style={bluePillButton}
+                onClick={() => setMaintenanceExpenseDetail(false)}
+              >
+                Okay
+              </Button>
+            </Col>
+            <Col></Col>
+          </Row>
+          {payment.purchase_status === "UNPAID" ? (
+            <Row className="d-flex mx-2">
+              <Col></Col>
+              <Col xs={6} className="d-flex p-0 justify-content-center">
+                <Button
+                  style={bluePillButton}
+                  onClick={() => {
+                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
+                      state: {
+                        amount: payment.amount_due,
+                        selectedProperty: payment,
+                        purchaseUID: payment.purchase_uid,
+                      },
+                    });
+                  }}
+                >
+                  Paid by Manager
+                </Button>
+              </Col>
+              <Col></Col>
+            </Row>
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

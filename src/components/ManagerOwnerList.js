@@ -95,6 +95,7 @@ function ManagerOwnerList(props) {
             style={{
               boxShadow: " 0px 1px 6px #00000029",
               borderRadius: "5px",
+              cursor: "pointer",
             }}
           >
             <Row

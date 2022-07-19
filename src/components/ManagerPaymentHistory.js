@@ -1,15 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import Header from "../components/Header";
-import OwnerFooter from "../components/OwnerFooter";
+import Header from "./Header";
 import { get } from "../utils/api";
 import AppContext from "../AppContext";
 import moment from "moment";
 
 import { subHeading, subText, blueRight, redRight } from "../utils/styles";
+import ManagerFooter from "./ManagerFooter";
 
-function OwnerPaymentHistory(props) {
+function ManagerPaymentHistory(props) {
   const navigate = useNavigate();
   const { userData } = React.useContext(AppContext);
   const { access_token, user } = userData;
@@ -17,7 +17,27 @@ function OwnerPaymentHistory(props) {
   const [userPayments, setUserPayments] = React.useState([]);
 
   React.useState(async () => {
-    const response = await get(`/ownerPayments?owner_id=${user.user_uid}`);
+    if (access_token === null) {
+      navigate("/");
+      return;
+    }
+
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length < 1) {
+      console.log("No associated PM Businesses");
+      return;
+    } else if (management_businesses.length > 1) {
+      console.log("Multiple associated PM Businesses");
+      management_buid = management_businesses[0].business_uid;
+    } else {
+      management_buid = management_businesses[0].business_uid;
+    }
+    const response = await get(
+      `/managerPayments?manager_id=${management_buid}`
+    );
 
     setUserPayments(response.result);
   }, []);
@@ -72,7 +92,7 @@ function OwnerPaymentHistory(props) {
       <Header
         title="Payment"
         leftText="< Back"
-        leftFn={() => navigate("/owner")}
+        leftFn={() => navigate("/manager")}
       />
       <div
         className="mx-2 my-2 p-3"
@@ -115,9 +135,9 @@ function OwnerPaymentHistory(props) {
           );
         })}
       </div>
-      <OwnerFooter tab={"DASHBOARD"} />
+      <ManagerFooter tab={"EXPENSES"} />
     </div>
   );
 }
 
-export default OwnerPaymentHistory;
+export default ManagerPaymentHistory;
