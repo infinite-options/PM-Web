@@ -694,8 +694,8 @@ function PropertyView(props) {
                     (property.management_status === "ACCEPTED" ||
                       property.management_status === "OWNER END EARLY" ||
                       property.management_status === "PM END EARLY") ? (
-                      <Row>
-                        <Row className="d-flex justify-content-between mt-3">
+                      <Row className="d-flex justify-content-center">
+                        <Row className="d-flex justify-content-center mt-3 p-0">
                           <Col>
                             <h6 style={mediumBold} className="mb-1">
                               {property.managerInfo.manager_business_name}
@@ -707,7 +707,7 @@ function PropertyView(props) {
                                   Property Manager
                                 </p> */}
                           </Col>
-                          <Col xs={2}>
+                          <Col xs={3}>
                             <a
                               href={`tel:${property.managerInfo.manager_phone_number}`}
                             >

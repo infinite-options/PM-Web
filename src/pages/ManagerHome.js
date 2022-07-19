@@ -21,6 +21,7 @@ function ManagerHome() {
   const [showFooter, setShowFooter] = useState(true);
   const [properties, setProperties] = useState([]);
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
+  const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
     if (userData.access_token === null) {
@@ -84,9 +85,21 @@ function ManagerHome() {
         });
       }
     });
+    let expense = [];
+    properties_unique.forEach((property) => {
+      if (property.expenses.length > 0) {
+        console.log("has expense");
+        property.expenses.forEach((ex) => {
+          console.log("has expense", ex);
+          expense.push(ex);
+        });
+      }
+    });
     console.log(mr);
+    console.log(expense);
     console.log(properties_unique);
     setMaintenanceRequests(mr);
+    setExpenses(expense);
     setProperties(properties_unique);
 
     // await getAlerts(properties_unique)
@@ -109,6 +122,8 @@ function ManagerHome() {
         {footerTab === "EXPENSES" ? (
           <ManagerUtilities
             properties={properties}
+            expenses={expenses}
+            setStage={setStage}
             setShowFooter={setShowFooter}
             setFooterTab={setFooterTab}
           />

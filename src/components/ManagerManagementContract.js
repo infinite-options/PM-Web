@@ -14,6 +14,8 @@ import {
   squareForm,
   mediumBold,
   smallPillButton,
+  subHeading,
+  headings,
 } from "../utils/styles";
 import AppContext from "../AppContext";
 
@@ -171,7 +173,10 @@ function ManagerManagementContract(props) {
     );
 
   return (
-    <div className="mb-5 pb-5">
+    <div
+      className="mb-5 pb-5"
+      style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
+    >
       <Header
         title="Management Contract"
         leftText="< Back"
@@ -179,14 +184,21 @@ function ManagerManagementContract(props) {
         rightText="Save"
         rightFn={save}
       />
-      <Container>
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>
           <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
         </div>
         <div className="mb-4">
-          <h5 style={mediumBold}>Contract Details</h5>
+          <h5 style={headings}>Contract Details</h5>
           <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
+            <Form.Label style={mediumBold} className="mb-0 ms-2">
               Contract Name {contractName === "" ? required : ""}
             </Form.Label>
             <Form.Control
@@ -201,7 +213,7 @@ function ManagerManagementContract(props) {
           <h5 style={mediumBold}>PM Agreement Dates</h5>
           <Col>
             <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label style={mediumBold} className="mb-0 ms-2">
                 Start Date {startDate === "" ? required : ""}
               </Form.Label>
               <Form.Control
@@ -214,7 +226,7 @@ function ManagerManagementContract(props) {
           </Col>
           <Col>
             <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label style={mediumBold} className="mb-0 ms-2">
                 End Date {endDate === "" ? required : ""}
               </Form.Label>
               <Form.Control
@@ -271,7 +283,7 @@ function ManagerManagementContract(props) {
           {newFile !== null ? (
             <div>
               <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
+                <Form.Label style={mediumBold} className="mb-0 ms-2">
                   Document Name
                 </Form.Label>
                 <Form.Control
@@ -282,7 +294,7 @@ function ManagerManagementContract(props) {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
+                <Form.Label style={mediumBold} className="mb-0 ms-2">
                   Description
                 </Form.Label>
                 <Form.Control
@@ -334,7 +346,7 @@ function ManagerManagementContract(props) {
             </div>
           )}
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

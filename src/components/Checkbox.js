@@ -1,6 +1,7 @@
 import React from "react";
 import Check from "../icons/Check.svg";
-
+import Checkbox_unfilled from "../icons/Checkbox_unfilled.svg";
+import Checkbox_filled from "../icons/Checkbox_filled.svg";
 class Checkbox extends React.Component {
   constructor(props) {
     super(props);
@@ -60,7 +61,11 @@ class Checkbox extends React.Component {
             onClick={this.onClick}
           >
             <div className="h-100 w-100 d-flex justify-content-center align-items-center">
-              {this.state.checked ? <img src={Check} alt="Check" /> : ""}
+              {this.state.checked ? (
+                <img src={Checkbox_filled} alt="Check" />
+              ) : (
+                <img src={Checkbox_unfilled} alt="Check" />
+              )}
             </div>
           </div>
         ) : (

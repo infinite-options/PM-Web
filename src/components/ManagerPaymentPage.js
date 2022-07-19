@@ -17,9 +17,9 @@ import {
   squareForm,
   mediumBold,
 } from "../utils/styles";
-import OwnerFooter from "./OwnerFooter";
+import ManagerFooter from "./ManagerFooter";
 
-function OwnerPaymentPage(props) {
+function ManagerPaymentPage(props) {
   const navigate = useNavigate();
   // const location = useLocation();
   // const { totalSum, selectedProperty, purchaseUID, setStage } = props;
@@ -86,7 +86,7 @@ function OwnerPaymentPage(props) {
         title="Payment"
         leftText={paymentConfirm === false ? `< Back` : ""}
         leftFn={() => {
-          navigate("/owner");
+          navigate(-1);
         }}
       />
       <div
@@ -105,9 +105,6 @@ function OwnerPaymentPage(props) {
           }
         >
           {selectedProperty.address}
-          {selectedProperty.unit !== "" ? " " + selectedProperty.unit : ""},
-          {selectedProperty.city}, {selectedProperty.state}{" "}
-          {selectedProperty.zip}
         </div>
       </div>
       {paymentConfirm ? (
@@ -148,7 +145,7 @@ function OwnerPaymentPage(props) {
               className="mt-8 mb-2"
               variant="outline-primary"
               onClick={() => {
-                navigate("/ownerPaymentHistory");
+                navigate("/managerPaymentHistory");
                 //setStripePayment(true);
               }}
               style={bluePillButton}
@@ -291,9 +288,9 @@ function OwnerPaymentPage(props) {
           </div>
         </div>
       )}
-      <OwnerFooter tab={"DASHBOARD"} />
+      <ManagerFooter tab={"EXPENSES"} />
     </div>
   );
 }
 
-export default OwnerPaymentPage;
+export default ManagerPaymentPage;

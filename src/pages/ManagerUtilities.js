@@ -6,18 +6,21 @@ import {
   pillButton,
   smallPillButton,
   squareForm,
-  gray,
+  redPill,
   small,
   red,
   hidden,
   headings,
   mediumBold,
+  subHeading,
+  bluePillButton,
+  greenPill,
 } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
-import { post } from "../utils/api";
+import { post, get } from "../utils/api";
 import AppContext from "../AppContext";
 import File from "../icons/File.svg";
 
@@ -26,20 +29,25 @@ function ManagerUtilities(props) {
   const navigate = useNavigate();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
-  const { properties } = props;
+  // const [expenses, setExpenses] = React.useState([]);
+  const { properties, setStage, expenses } = props;
 
   const [utilityState, setUtilityState] = React.useState([]);
   const [newUtility, setNewUtility] = React.useState(null);
-  const [editingUtility, setEditingUtility] = React.useState(null);
+  const [editingUtility, setEditingUtility] = React.useState(false);
   const [propertyState, setPropertyState] = React.useState(properties);
 
   const [files, setFiles] = React.useState([]);
   const [newFile, setNewFile] = React.useState(null);
   const [editingDoc, setEditingDoc] = React.useState(null);
-  // const [addToRent, setAddToRent] = React.useState(false);
-  // const [dueDate, setDueDate] = React.useState("");
-
+  const [tenantPay, setTenantPay] = React.useState(false);
+  const [ownerPay, setOwnerPay] = React.useState(false);
+  const [expenseDetail, setExpenseDetail] = React.useState(false);
+  const [maintenanceExpenseDetail, setMaintenanceExpenseDetail] =
+    React.useState(false);
+  const [payment, setPayment] = React.useState(false);
   const emptyUtility = {
+    provider: "",
     service_name: "",
     charge: "",
     properties: [],
@@ -48,9 +56,43 @@ function ManagerUtilities(props) {
     add_to_rent: false,
   };
   const [errorMessage, setErrorMessage] = React.useState("");
+  // const fetchExpenses = async () => {
+  //   if (access_token === null) {
+  //     navigate("/");
+  //     return;
+  //   }
+
+  //   const management_businesses = user.businesses.filter(
+  //     (business) => business.business_type === "MANAGEMENT"
+  //   );
+  //   let management_buid = null;
+  //   if (management_businesses.length < 1) {
+  //     console.log("No associated PM Businesses");
+  //     return;
+  //   } else if (management_businesses.length > 1) {
+  //     console.log("Multiple associated PM Businesses");
+  //     management_buid = management_businesses[0].business_uid;
+  //   } else {
+  //     management_buid = management_businesses[0].business_uid;
+  //   }
+
+  //   // const response =  await get(`/businesses?business_uid=${management_buid}`);
+  //   const response = await get(
+  //     `/managerExpenses?manager_id=${management_buid}`
+  //   );
+  //   if (response.msg === "Token has expired") {
+  //     refresh();
+  //     return;
+  //   }
+
+  //   setExpenses(response.result);
+  // };
+  // React.useEffect(() => {
+  //   fetchExpenses();
+  // }, []);
 
   React.useEffect(() => {
-    // console.log(properties)
+    console.log(properties);
     properties.forEach((p) => (p.checked = false));
   }, [properties]);
 
@@ -96,8 +138,6 @@ function ManagerUtilities(props) {
   };
 
   const postCharges = async (newUtility) => {
-    console.log("heree");
-    console.log(newUtility);
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );
@@ -112,12 +152,9 @@ function ManagerUtilities(props) {
       management_buid = management_businesses[0].business_uid;
     }
 
-    console.log("*&^");
-    console.log(newUtility);
-
     const new_bill = {
       bill_created_by: management_buid,
-      bill_description: newUtility.service_name,
+      bill_description: newUtility.provider,
       bill_utility_type: newUtility.service_name,
       bill_algorithm: newUtility.split_type,
       bill_docs: files,
@@ -132,7 +169,6 @@ function ManagerUtilities(props) {
     const response = await post("/bills", new_bill, null, files);
     const bill_uid = response.bill_uid;
     console.log(bill_uid);
-    // const bill_uid = "040-000014"
 
     for (const property of newUtility.properties) {
       const new_purchase = {
@@ -152,16 +188,26 @@ function ManagerUtilities(props) {
       if (newUtility.add_to_rent) {
         new_purchase.next_payment = "0000-00-00 00:00:00";
       }
-
-      if (property.rental_status === "ACTIVE") {
-        let tenant_ids = property.tenants.map((t) => t.tenant_id);
-        new_purchase.payer = tenant_ids;
+      if (tenantPay) {
+        if (property.rental_status === "ACTIVE") {
+          let tenant_ids = property.tenants.map((t) => t.tenant_id);
+          new_purchase.payer = tenant_ids;
+        } else {
+          new_purchase.payer = [property.owner_id];
+        }
       } else {
         new_purchase.payer = [property.owner_id];
       }
+
       console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
+    setNewUtility({ ...emptyUtility });
+    propertyState.forEach((prop) => (prop.checked = false));
+    setPropertyState(propertyState);
+    setEditingUtility(false);
+    setTenantPay(false);
+    setOwnerPay(false);
   };
 
   const addUtility = async () => {
@@ -208,6 +254,9 @@ function ManagerUtilities(props) {
     }
     setEditingUtility(null);
   };
+  const Capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
   const editUtility = (i) => {
     // const newUtilityState = [...utilityState];
     // const utility = newUtilityState.splice(i, 1)[0];
@@ -239,6 +288,7 @@ function ManagerUtilities(props) {
     newPropertyState[i].checked = !newPropertyState[i].checked;
     setPropertyState(newPropertyState);
   };
+
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -296,63 +346,64 @@ function ManagerUtilities(props) {
   };
 
   return (
-    <div className="h-100">
+    <div
+      className="h-100 pb-5 mb-5"
+      style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
+    >
       <Header
         title="Utilities"
-        leftText="< Back"
+        leftText={
+          editingUtility || expenseDetail || maintenanceExpenseDetail
+            ? "< Back"
+            : ""
+        }
         leftFn={() => {
-          navigate(-1);
+          setNewUtility(null);
+          setExpenseDetail(false);
+          setMaintenanceExpenseDetail(false);
+          setPayment(null);
+          propertyState.forEach((prop) => (prop.checked = false));
+          setPropertyState(propertyState);
+          setTenantPay(false);
+          setOwnerPay(false);
+          setEditingUtility(false);
         }}
-        rightText="+ New"
-        rightFn={() => setNewUtility({ ...emptyUtility })}
+        rightText={
+          editingUtility || expenseDetail || maintenanceExpenseDetail
+            ? ""
+            : "+ New"
+        }
+        rightFn={() => {
+          setNewUtility({ ...emptyUtility });
+          propertyState.forEach((prop) => (prop.checked = false));
+          setPropertyState(propertyState);
+          setTenantPay(false);
+          setOwnerPay(false);
+          setEditingUtility(true);
+        }}
       />
 
-      <Container className="px-2">
-        <Row className="my-4">
-          <div style={headings}>Utilities</div>
-        </Row>
-
-        {utilityState.length > 0 &&
-          utilityState.map((utility, i) => (
-            <div key={i}>
-              <div className="d-flex">
-                <div className="flex-grow-1">
-                  <h6 className="mb-1">
-                    ${utility.charge} {utility.service_name} Fee &nbsp;
-                    {utility.split_type === "uniform" ? "Split Uniformly" : ""}
-                    {utility.split_type === "tenant"
-                      ? "Split based on Tenant Count"
-                      : ""}
-                    {utility.split_type === "area"
-                      ? "Split based on Square Footage"
-                      : ""}
-                  </h6>
-                </div>
-                <div>
-                  {/*<img src={EditIcon} alt='Edit' className='px-1 mx-2'*/}
-                  {/*     onClick={() => editUtility(i)}/>*/}
-                  {/*<img src={DeleteIcon} alt='Delete' className='px-1 mx-2'*/}
-                  {/*     onClick={() => deleteUtility(i)}/>*/}
-                </div>
-              </div>
-              {utility.properties.map((property, j) => (
-                <p key={j} style={gray} className="mb-1">
-                  {property.address} {property.unit}
-                  ,&nbsp;{property.city},&nbsp;{property.state}&nbsp;{" "}
-                  {property.zip}
-                </p>
-              ))}
-              <hr className="mt-1" />
-            </div>
-          ))}
-
-        {newUtility !== null ? (
-          <div>
+      <div>
+        {newUtility !== null &&
+        editingUtility &&
+        !expenseDetail &&
+        !maintenanceExpenseDetail ? (
+          <div
+            className="mx-2 mt-2 p-3"
+            style={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+              opacity: 1,
+            }}
+          >
+            <Row className="my-4 text-center">
+              <div style={headings}>New Utility Payment</div>
+            </Row>
             <Row className="mb-2">
               <Col>
                 <Form.Group className="mx-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Utility Name{" "}
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Utility Type{" "}
                     {newUtility.service_name === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
@@ -366,8 +417,8 @@ function ManagerUtilities(props) {
 
               <Col>
                 <Form.Group className="mx-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Charge {newUtility.charge === "" ? required : ""}
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Amount {newUtility.charge === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
@@ -379,11 +430,25 @@ function ManagerUtilities(props) {
                 </Form.Group>
               </Col>
             </Row>
-
-            <Row>
+            <Row className="mb-2">
               <Col>
+                <Form.Group className="mx-2">
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Provider {newUtility.provider === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="Electricity"
+                    value={newUtility.provider}
+                    onChange={(e) => changeNewUtility(e, "provider")}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={6}>
                 <Form.Group className="mx-2 mt-3 mb-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
                     Due by Date {newUtility.due_date === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
@@ -397,6 +462,7 @@ function ManagerUtilities(props) {
                 <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
                   <Form.Check
                     type="checkbox"
+                    style={subHeading}
                     label="Pay with next rent"
                     onChange={(e) => changeNewUtility(e, "add_to_rent")}
                   />
@@ -404,34 +470,55 @@ function ManagerUtilities(props) {
                 {/*<Checkbox type='BOX' checked={newUtility.add_to_rent ? 'checked' : ''}*/}
                 {/*          onClick={(checked) => changeNewUtility(checked, 'add_to_rent')} />*/}
               </Col>
-              <Col>
-                <Form.Group
-                  className="mx-2 my-3"
-                  hidden={propertyState.filter((p) => p.checked).length <= 1}
-                >
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Fee Distribution
-                  </Form.Label>
-                  <Form.Select
+            </Row>
+            <Row>
+              <Col xs={6}>
+                <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+                  <div
+                    className="d-flex mx-2 ps-2 align-items-center my-2"
                     style={{
-                      ...squareForm,
-                      backgroundImage: `url(${ArrowDown})`,
+                      font: "normal normal normal 18px Bahnschrift-Regular",
                     }}
-                    value={newUtility.split_type}
-                    onChange={(e) => changeNewUtility(e, "split_type")}
                   >
-                    <option value="uniform">Uniform</option>
-                    <option value="tenant">By Tenant Count</option>
-                    <option value="area">By Square Footage</option>
-                  </Form.Select>
+                    <Checkbox
+                      type="BOX"
+                      checked={tenantPay}
+                      onClick={() => setTenantPay(!tenantPay)}
+                    />
+                    <p className="ms-1 mb-1">Tenant</p>
+                  </div>
+                </Form.Group>
+              </Col>
+              <Col xs={6}>
+                <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+                  <div
+                    className="d-flex mx-2 ps-2 align-items-center my-2"
+                    style={{
+                      font: "normal normal normal 18px Bahnschrift-Regular",
+                    }}
+                  >
+                    {" "}
+                    <Checkbox
+                      type="BOX"
+                      checked={ownerPay}
+                      onClick={() => setOwnerPay(!ownerPay)}
+                    />
+                    <p className="ms-1 mb-1">Owner</p>
+                  </div>
                 </Form.Group>
               </Col>
             </Row>
 
-            <Container className="my-3">
-              <h6>Properties</h6>
+            <Row className="mx-1 mt-3 mb-2">
+              <h6 style={mediumBold}>Properties</h6>
               {properties.map((property, i) => (
-                <div key={i} className="d-flex ps-2 align-items-center my-2">
+                <div
+                  key={i}
+                  className="d-flex mx-2 ps-2 align-items-center my-2"
+                  style={{
+                    font: "normal normal normal 18px Bahnschrift-Regular",
+                  }}
+                >
                   <Checkbox
                     type="BOX"
                     checked={propertyState[i].checked}
@@ -444,10 +531,10 @@ function ManagerUtilities(props) {
                   </p>
                 </div>
               ))}
-            </Container>
+            </Row>
 
             {/*Add Documents functionality*/}
-            <div className="mb-4">
+            <Row className="mx-1 mt-3 mb-2">
               <h6 style={mediumBold}>Utility Documents</h6>
               {files.map((file, i) => (
                 <div key={i}>
@@ -482,7 +569,7 @@ function ManagerUtilities(props) {
               {newFile !== null ? (
                 <div>
                   <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
+                    <Form.Label style={mediumBold} className="mb-0 ms-2">
                       Document Name
                     </Form.Label>
                     <Form.Control
@@ -493,7 +580,7 @@ function ManagerUtilities(props) {
                     />
                   </Form.Group>
                   <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
+                    <Form.Label style={mediumBold} className="mb-0 ms-2">
                       Description
                     </Form.Label>
                     <Form.Control
@@ -546,7 +633,34 @@ function ManagerUtilities(props) {
                   </label>
                 </div>
               )}
-            </div>
+              <Row>
+                <Col>
+                  <Form.Group
+                    className="mx-2 my-3"
+                    hidden={
+                      propertyState.filter((p) => p.checked).length <= 1 ||
+                      tenantPay === false
+                    }
+                  >
+                    <Form.Label style={mediumBold} className="mb-0 ms-2">
+                      Split Method
+                    </Form.Label>
+                    <Form.Select
+                      style={{
+                        ...squareForm,
+                        backgroundImage: `url(${ArrowDown})`,
+                      }}
+                      value={newUtility.split_type}
+                      onChange={(e) => changeNewUtility(e, "split_type")}
+                    >
+                      <option value="uniform">Uniform</option>
+                      <option value="tenant">By Tenant Count</option>
+                      <option value="area">By Square Footage</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Row>
 
             <div
               className="text-center my-2"
@@ -559,16 +673,117 @@ function ManagerUtilities(props) {
           ""
         )}
 
-        {newUtility === null ? (
-          <Button
-            variant="outline-primary"
-            style={smallPillButton}
-            onClick={() => setNewUtility({ ...emptyUtility })}
+        {newUtility === null &&
+        !editingUtility &&
+        !expenseDetail &&
+        !maintenanceExpenseDetail ? (
+          <div className="mx-2 my-2 p-3">
+            <div>
+              <Row style={headings}>Utility Payments</Row>
+
+              {expenses.map((expense) => {
+                return expense.purchase_type === "UTILITY" ? (
+                  <Row
+                    className="my-2 p-3"
+                    style={{
+                      background: "#FFFFFF 0% 0% no-repeat padding-box",
+                      boxShadow: "0px 3px 6px #00000029",
+                      borderRadius: "5px",
+                      opacity: 1,
+                    }}
+                    onClick={() => {
+                      setExpenseDetail(true);
+                      setPayment(expense);
+                    }}
+                  >
+                    <Col
+                      xs={3}
+                      className="pt-4 justify-content-center align-items-center"
+                      style={
+                        (mediumBold,
+                        {
+                          color: "#007AFF",
+                          border: "4px solid #007AFF",
+                          borderRadius: "50%",
+                          height: "83px",
+                          width: "83px",
+                        })
+                      }
+                    >
+                      ${expense.amount_due}
+                    </Col>
+                    <Col style={mediumBold}>
+                      <div>
+                        {expense.description} -{" "}
+                        {new Date(
+                          String(expense.purchase_date).split(" ")[0]
+                        ).toDateString()}
+                      </div>
+                      <div>{expense.address}</div>
+                    </Col>
+                  </Row>
+                ) : (
+                  <Row></Row>
+                );
+              })}
+            </div>
+            <div>
+              <Row style={headings}> Maintenance Payments</Row>
+
+              {expenses.map((expense) => {
+                return expense.purchase_type === "MAINTENANCE" ||
+                  expense.purchase_type === "REPAIRS" ? (
+                  <Row
+                    className="my-2 p-3"
+                    style={
+                      (mediumBold,
+                      {
+                        background: "#FFFFFF 0% 0% no-repeat padding-box",
+                        boxShadow: "0px 3px 6px #00000029",
+                        borderRadius: "5px",
+                        opacity: 1,
+                      })
+                    }
+                    onClick={() => {
+                      setMaintenanceExpenseDetail(true);
+                      setPayment(expense);
+                    }}
+                  >
+                    <Col
+                      xs={3}
+                      className="pt-4 justify-content-center align-items-center"
+                      style={{
+                        color: "#007AFF",
+                        border: "4px solid #007AFF",
+                        borderRadius: "50%",
+                        height: "83px",
+                        width: "83px",
+                      }}
+                    >
+                      ${expense.amount_due}.00
+                    </Col>
+                    <Col style={mediumBold}>
+                      {expense.description} -{" "}
+                      {new Date(
+                        String(expense.purchase_date).split(" ")[0]
+                      ).toDateString()}
+                    </Col>
+                  </Row>
+                ) : (
+                  <div></div>
+                );
+              })}
+            </div>
+          </div>
+        ) : !expenseDetail && !maintenanceExpenseDetail ? (
+          <div
+            className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
+            style={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+
+              opacity: 1,
+            }}
           >
-            Add Utility
-          </Button>
-        ) : (
-          <div className="d-flex justify-content-center mb-4">
             <Button
               variant="outline-primary"
               style={pillButton}
@@ -586,8 +801,252 @@ function ManagerUtilities(props) {
               Add Utility
             </Button>
           </div>
+        ) : (
+          ""
         )}
-      </Container>
+      </div>
+      {expenseDetail && !maintenanceExpenseDetail ? (
+        <div
+          className="d-flex flex-column mx-2 p-3"
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            opacity: 1,
+            height: "100%",
+          }}
+        >
+          {console.log(payment)}
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={headings}
+          >
+            {payment.bill_utility_type}
+          </Row>
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={mediumBold}
+          >
+            {payment.bill_description}{" "}
+          </Row>
+          <Row className="my-2 align-items-center justify-content-center">
+            <Col
+              xs={3}
+              className="pt-4 justify-content-center align-items-center"
+              style={
+                (mediumBold,
+                {
+                  color: "#007AFF",
+                  border: "4px solid #007AFF",
+                  borderRadius: "50%",
+                  height: "83px",
+                  width: "83px",
+                })
+              }
+            >
+              ${payment.amount_due}.00
+            </Col>
+          </Row>
+          <Row className="my-2 mx-2" style={mediumBold}>
+            Properties Billed:
+          </Row>
+          <Row
+            className="my-2 mx-2 p-1"
+            style={
+              (mediumBold, { border: "1px solid #707070", borderRadius: "5px" })
+            }
+          >
+            {payment.address}
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Expense type:</Col>
+            <Col className="d-flex p-0 justify-content-end">Utility</Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Split Method:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {payment.bill_algorithm}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Bill Sent on:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {new Date(
+                String(payment.purchase_date).split(" ")[0]
+              ).toDateString()}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">
+              Payment Status:
+            </Col>
+            {payment.purchase_status === "UNPAID" ? (
+              <Col xs={3} className="mt-0" style={redPill}>
+                {payment.purchase_status}
+              </Col>
+            ) : (
+              <Col xs={3} className="mt-0" style={greenPill}>
+                {payment.purchase_status}
+              </Col>
+            )}
+          </Row>
+          <Row className="d-flex my-5 mx-2">
+            <Col></Col>
+            <Col className="d-flex p-0 justify-content-center">
+              <Button
+                style={bluePillButton}
+                onClick={() => setExpenseDetail(false)}
+              >
+                Okay
+              </Button>
+            </Col>
+            <Col></Col>
+          </Row>
+          {payment.purchase_status === "UNPAID" ? (
+            <Row className="d-flex mx-2">
+              <Col></Col>
+              <Col xs={6} className="d-flex p-0 justify-content-center">
+                <Button
+                  style={bluePillButton}
+                  onClick={() => {
+                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
+                      state: {
+                        amount: payment.amount_due,
+                        selectedProperty: payment,
+                        purchaseUID: payment.purchase_uid,
+                      },
+                    });
+                  }}
+                >
+                  Paid by Manager
+                </Button>
+              </Col>
+              <Col></Col>
+            </Row>
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        ""
+      )}
+      {!expenseDetail && maintenanceExpenseDetail ? (
+        <div
+          className="d-flex flex-column mx-2 p-3"
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            opacity: 1,
+            height: "100%",
+          }}
+        >
+          {console.log(payment)}
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={headings}
+          >
+            {payment.description}
+          </Row>
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={mediumBold}
+          >
+            {payment.business_name}{" "}
+          </Row>
+          <Row className="my-2 align-items-center justify-content-center">
+            <Col
+              xs={3}
+              className="pt-4 justify-content-center align-items-center"
+              style={
+                (mediumBold,
+                {
+                  color: "#007AFF",
+                  border: "4px solid #007AFF",
+                  borderRadius: "50%",
+                  height: "83px",
+                  width: "83px",
+                })
+              }
+            >
+              ${payment.amount_due}.00
+            </Col>
+          </Row>
+          <Row className="my-2 mx-2" style={mediumBold}>
+            Properties Billed:
+          </Row>
+          <Row
+            className="my-2 mx-2 p-1"
+            style={
+              (mediumBold, { border: "1px solid #707070", borderRadius: "5px" })
+            }
+          >
+            {payment.address}
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Expense type:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {Capitalize(payment.purchase_type)}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Bill Sent on:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {new Date(
+                String(payment.purchase_date).split(" ")[0]
+              ).toDateString()}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">
+              Payment Status:
+            </Col>
+            {payment.purchase_status === "UNPAID" ? (
+              <Col xs={3} className="mt-0" style={redPill}>
+                {payment.purchase_status}
+              </Col>
+            ) : (
+              <Col xs={3} className="mt-0" style={greenPill}>
+                {payment.purchase_status}
+              </Col>
+            )}
+          </Row>
+          <Row className="d-flex my-5 mx-2">
+            <Col></Col>
+            <Col className="d-flex p-0 justify-content-center">
+              <Button
+                style={bluePillButton}
+                onClick={() => setMaintenanceExpenseDetail(false)}
+              >
+                Okay
+              </Button>
+            </Col>
+            <Col></Col>
+          </Row>
+          {payment.purchase_status === "UNPAID" ? (
+            <Row className="d-flex mx-2">
+              <Col></Col>
+              <Col xs={6} className="d-flex p-0 justify-content-center">
+                <Button
+                  style={bluePillButton}
+                  onClick={() => {
+                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
+                      state: {
+                        amount: payment.amount_due,
+                        selectedProperty: payment,
+                        purchaseUID: payment.purchase_uid,
+                      },
+                    });
+                  }}
+                >
+                  Paid by Manager
+                </Button>
+              </Col>
+              <Col></Col>
+            </Row>
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

@@ -568,7 +568,12 @@ function PropertyForm(props) {
               {hideEdit ? (
                 ""
               ) : (
-                <img src={Edit} alt="Edit" onClick={() => setEdit(true)} />
+                <img
+                  src={Edit}
+                  style={{ width: "15px", height: "25px" }}
+                  alt="Edit"
+                  onClick={() => setEdit(true)}
+                />
               )}
             </Col>
           </Row>

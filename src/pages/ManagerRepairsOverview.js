@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { get } from "../utils/api";
 import AppContext from "../AppContext";
 import No_Image from "../icons/No_Image_Available.jpeg";
-import ManagerRepairsDetail from "./ManagerRepairDetail";
+import ManagerRepairDetail from "./ManagerRepairDetail";
 function ManagerRepairsOverview(props) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -270,7 +270,7 @@ function ManagerRepairsOverview(props) {
     </div>
   ) : stage === "REPAIRDETAILS" ? (
     <div className="flex-grow-1">
-      <ManagerRepairsDetail
+      <ManagerRepairDetail
         repair={repair}
         back={() => setStage("LIST")}
         reload={fetchRepairs}

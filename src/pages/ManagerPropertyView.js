@@ -464,7 +464,7 @@ function ManagerPropertyView(props) {
               >
                 <div className="d-flex mt-1">
                   <h6 style={mediumBold} className="mb-1">
-                    Property Owner
+                    Property Owner Agreement
                   </h6>
                 </div>
                 {expandManagerDocs ? (
@@ -668,23 +668,27 @@ function ManagerPropertyView(props) {
                   </div>
                 )}
               </div>
-              <div
-                style={(mediumBold, { color: "#007AFF", cursor: "pointer" })}
-                className="d-flex mt-3"
-                onClick={() => {
-                  navigate("./repairs", { state: { property: property } });
-                }}
-              >
-                <div className="d-flex mt-1  align-items-center">
-                  <h6 style={mediumBold} className="mb-1">
-                    Past Maintenance Requests
-                  </h6>
-                  &nbsp; &nbsp;
-                  <div className="d-flex align-items-center">
-                    <img src={BlueArrowRight} alt="Expand" />
+              {pastMaintenanceRequests.length > 0 ? (
+                <div
+                  style={(mediumBold, { color: "#007AFF", cursor: "pointer" })}
+                  className="d-flex mt-3"
+                  onClick={() => {
+                    navigate("./repairs", { state: { property: property } });
+                  }}
+                >
+                  <div className="d-flex mt-1  align-items-center">
+                    <h6 style={mediumBold} className="mb-1">
+                      Past Maintenance Requests
+                    </h6>
+                    &nbsp; &nbsp;
+                    <div className="d-flex align-items-center">
+                      <img src={BlueArrowRight} alt="Expand" />
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
           <div
