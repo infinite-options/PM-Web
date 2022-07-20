@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import moment from "moment";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import {
@@ -56,40 +57,6 @@ function ManagerUtilities(props) {
     add_to_rent: false,
   };
   const [errorMessage, setErrorMessage] = React.useState("");
-  // const fetchExpenses = async () => {
-  //   if (access_token === null) {
-  //     navigate("/");
-  //     return;
-  //   }
-
-  //   const management_businesses = user.businesses.filter(
-  //     (business) => business.business_type === "MANAGEMENT"
-  //   );
-  //   let management_buid = null;
-  //   if (management_businesses.length < 1) {
-  //     console.log("No associated PM Businesses");
-  //     return;
-  //   } else if (management_businesses.length > 1) {
-  //     console.log("Multiple associated PM Businesses");
-  //     management_buid = management_businesses[0].business_uid;
-  //   } else {
-  //     management_buid = management_businesses[0].business_uid;
-  //   }
-
-  //   // const response =  await get(`/businesses?business_uid=${management_buid}`);
-  //   const response = await get(
-  //     `/managerExpenses?manager_id=${management_buid}`
-  //   );
-  //   if (response.msg === "Token has expired") {
-  //     refresh();
-  //     return;
-  //   }
-
-  //   setExpenses(response.result);
-  // };
-  // React.useEffect(() => {
-  //   fetchExpenses();
-  // }, []);
 
   React.useEffect(() => {
     console.log(properties);
@@ -171,6 +138,7 @@ function ManagerUtilities(props) {
     console.log(bill_uid);
 
     for (const property of newUtility.properties) {
+      console.log(property);
       const new_purchase = {
         linked_bill_id: bill_uid,
         pur_property_id: property.property_uid,
@@ -179,8 +147,8 @@ function ManagerUtilities(props) {
         purchase_type: "UTILITY",
         description: newUtility.service_name,
         amount_due: property.charge,
-        purchase_notes: newUtility.service_name,
-        purchase_date: "2022-06-07 00:00:00",
+        purchase_notes: moment().format("MMMM"),
+        purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
         purchase_frequency: "One-time",
         next_payment: newUtility.due_date,
       };
@@ -710,7 +678,7 @@ function ManagerUtilities(props) {
                         })
                       }
                     >
-                      ${expense.amount_due}
+                      ${expense.amount_due.toFixed(2)}
                     </Col>
                     <Col style={mediumBold}>
                       <div>
@@ -760,7 +728,7 @@ function ManagerUtilities(props) {
                         width: "83px",
                       }}
                     >
-                      ${expense.amount_due}.00
+                      ${expense.amount_due.toFixed(2)}
                     </Col>
                     <Col style={mediumBold}>
                       {expense.description} -{" "}
@@ -842,7 +810,7 @@ function ManagerUtilities(props) {
                 })
               }
             >
-              ${payment.amount_due}.00
+              ${payment.amount_due.toFixed(2)}
             </Col>
           </Row>
           <Row className="my-2 mx-2" style={mediumBold}>
@@ -900,7 +868,7 @@ function ManagerUtilities(props) {
             </Col>
             <Col></Col>
           </Row>
-          {payment.purchase_status === "UNPAID" ? (
+          {/* {payment.purchase_status === "UNPAID" ? (
             <Row className="d-flex mx-2">
               <Col></Col>
               <Col xs={6} className="d-flex p-0 justify-content-center">
@@ -923,7 +891,7 @@ function ManagerUtilities(props) {
             </Row>
           ) : (
             ""
-          )}
+          )} */}
         </div>
       ) : (
         ""
@@ -965,7 +933,7 @@ function ManagerUtilities(props) {
                 })
               }
             >
-              ${payment.amount_due}.00
+              ${payment.amount_due.toFixed(2)}
             </Col>
           </Row>
           <Row className="my-2 mx-2" style={mediumBold}>

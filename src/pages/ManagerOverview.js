@@ -237,7 +237,7 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Rent
                               </p>
@@ -271,7 +271,7 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Extra Charges
                               </p>
@@ -418,7 +418,7 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Maintenance
                               </p>
@@ -455,9 +455,9 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
-                                Management
+                                Owner Return
                               </p>
                             </Col>
                             <Col>
@@ -493,7 +493,7 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className="mx-3 my-1"
                               >
                                 Repairs
                               </p>
