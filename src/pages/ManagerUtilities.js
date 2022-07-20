@@ -605,10 +605,7 @@ function ManagerUtilities(props) {
                 <Col>
                   <Form.Group
                     className="mx-2 my-3"
-                    hidden={
-                      propertyState.filter((p) => p.checked).length <= 1 ||
-                      tenantPay === false
-                    }
+                    hidden={propertyState.filter((p) => p.checked).length <= 1}
                   >
                     <Form.Label style={mediumBold} className="mb-0 ms-2">
                       Split Method
