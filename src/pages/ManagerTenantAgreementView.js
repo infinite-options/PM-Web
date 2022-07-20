@@ -244,7 +244,7 @@ function ManagerTenantAgreementView(props) {
                     font: "normal normal normal 16px Bahnschrift-Regular",
                   }}
                 >
-                  ${lateFee}.00
+                  ${lateFee.toFixed(2)}
                 </h6>
                 <h6
                   className="d-flex justify-content-end"
@@ -252,7 +252,7 @@ function ManagerTenantAgreementView(props) {
                     font: "normal normal normal 16px Bahnschrift-Regular",
                   }}
                 >
-                  ${lateFeePer}.00
+                  ${lateFeePer.toFixed(2)}
                 </h6>
               </Col>
             </Row>

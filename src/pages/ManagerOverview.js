@@ -50,6 +50,7 @@ function ManagerOverview(props) {
   }
 
   let expenseTotal = 0;
+  let rentTotal = 0;
   for (const item of properties) {
     if (item.manager_expense !== undefined) {
       if (item.manager_expense.length == 0) {
@@ -62,11 +63,12 @@ function ManagerOverview(props) {
       } else {
         for (const or of item.manager_expense) {
           if (or.purchase_type == "RENT") {
-            expenseTotal += item.management_expenses;
+            rentTotal = item.management_expenses;
           } else {
             expenseTotal += or.amount_due;
           }
         }
+        expenseTotal = expenseTotal + rentTotal;
       }
     }
   }
@@ -237,7 +239,7 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Rent
                               </p>
@@ -271,7 +273,7 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Extra Charges
                               </p>
@@ -418,7 +420,7 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Maintenance
                               </p>
@@ -455,9 +457,9 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
-                                Management
+                                Owner Return
                               </p>
                             </Col>
                             <Col>
@@ -493,7 +495,7 @@ function ManagerOverview(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className="mx-3 my-1"
                               >
                                 Repairs
                               </p>

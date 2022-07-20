@@ -66,15 +66,29 @@ function ManagerHome() {
     const mr = [];
     properties.forEach((property) => {
       if (pids.has(property.property_uid)) {
+        console.log("here in if");
         // properties_unique[properties_unique.length-1].tenants.push(property)
         const index = properties_unique.findIndex(
           (item) => item.property_uid === property.property_uid
         );
-        properties_unique[index].tenants.push(property);
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "PROCESSING"
+        ) {
+          console.log("here", property);
+          properties_unique[index].tenants.push(property);
+        }
       } else {
+        console.log("here in else");
         pids.add(property.property_uid);
         properties_unique.push(property);
-        properties_unique[properties_unique.length - 1].tenants = [property];
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "PROCESSING"
+        ) {
+          console.log("here", property);
+          properties_unique[properties_unique.length - 1].tenants = [property];
+        }
       }
     });
     properties_unique.forEach((property) => {

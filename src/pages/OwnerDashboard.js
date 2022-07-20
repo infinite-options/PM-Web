@@ -263,7 +263,7 @@ function OwnerDashboard(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Rent
                               </p>
@@ -304,7 +304,7 @@ function OwnerDashboard(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Extra Charges
                               </p>
@@ -504,7 +504,7 @@ function OwnerDashboard(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Maintenance
                               </p>
@@ -552,7 +552,7 @@ function OwnerDashboard(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Management
                               </p>
@@ -601,7 +601,7 @@ function OwnerDashboard(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Insurance
                               </p>
@@ -649,7 +649,7 @@ function OwnerDashboard(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Repairs
                               </p>
@@ -697,7 +697,7 @@ function OwnerDashboard(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Mortgage
                               </p>
@@ -745,7 +745,7 @@ function OwnerDashboard(props) {
                                   ...mediumBold,
                                   font: "normal normal bold 12px Helvetica-Bold",
                                 }}
-                                className=" m-1"
+                                className=" mx-3 my-1"
                               >
                                 Taxes
                               </p>
@@ -794,7 +794,7 @@ function OwnerDashboard(props) {
                           ...mediumBold,
                           font: "normal normal bold 12px Helvetica-Bold",
                         }}
-                        className=" m-1"
+                        className="m-1"
                       >
                         Total
                       </p>
