@@ -42,10 +42,10 @@ function ManagerOverview(props) {
     if (item.manager_revenue !== undefined) {
       if (item.manager_revenue.length == 0) {
       } else if (item.manager_revenue.length == 1) {
-        revenueTotal += item.manager_revenue[0].amount_due;
+        revenueTotal += item.manager_revenue[0].amount_paid;
       } else {
         for (const or of item.manager_revenue) {
-          revenueTotal += or.amount_due;
+          revenueTotal += or.amount_paid;
         }
       }
     }
@@ -60,14 +60,14 @@ function ManagerOverview(props) {
         if (item.manager_expense[0].purchase_type == "RENT") {
           expenseTotal += item.management_expenses;
         } else {
-          expenseTotal += item.manager_expense[0].amount_due;
+          expenseTotal += item.manager_expense[0].amount_paid;
         }
       } else {
         for (const or of item.manager_expense) {
           if (or.purchase_type == "RENT") {
             rentTotal = item.management_expenses;
           } else {
-            expenseTotal += or.amount_due;
+            expenseTotal += or.amount_paid;
           }
         }
         expenseTotal = expenseTotal + rentTotal;
@@ -75,12 +75,56 @@ function ManagerOverview(props) {
     }
   }
 
+  let revenueExpectedTotal = 0;
+
+  for (const item of properties) {
+    console.log(item.property_uid);
+    if (item.manager_expected_revenue !== undefined) {
+      if (item.manager_expected_revenue.length == 0) {
+      } else if (item.manager_expected_revenue.length == 1) {
+        revenueExpectedTotal += item.manager_expected_revenue[0].amount_due;
+      } else {
+        for (const or of item.manager_expected_revenue) {
+          revenueExpectedTotal += or.amount_due;
+        }
+      }
+    }
+  }
+
+  let expenseExpectedTotal = 0;
+  let rentExpectedTotal = 0;
+  for (const item of properties) {
+    if (item.manager_expected_expense !== undefined) {
+      if (item.manager_expected_expense.length == 0) {
+      } else if (item.manager_expected_expense.length == 1) {
+        if (item.manager_expected_expense[0].purchase_type == "RENT") {
+          expenseExpectedTotal += item.management_expected_expenses;
+        } else {
+          expenseExpectedTotal += item.manager_expected_expense[0].amount_due;
+        }
+      } else {
+        for (const or of item.manager_expected_expense) {
+          if (or.purchase_type == "RENT") {
+            rentExpectedTotal = item.management_expected_expenses;
+          } else {
+            expenseExpectedTotal += or.amount_due;
+          }
+        }
+        expenseExpectedTotal = expenseExpectedTotal + rentExpectedTotal;
+      }
+    }
+  }
+  console.log(revenueExpectedTotal, expenseExpectedTotal);
+
   useEffect(() => {
     if (userData.access_token === null) {
       navigate("/");
     }
   }, []);
   const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
+  const cashFlowExpected = (
+    revenueExpectedTotal - expenseExpectedTotal
+  ).toFixed(2);
   const unique_clients = [...new Set(properties.map((item) => item.owner_id))]
     .length;
   const property_count = properties.length;
@@ -558,7 +602,10 @@ function ManagerOverview(props) {
           <Row
             className="mx-2 mt-4 p-3"
             style={{
-              background: "#E3441F 0% 0% no-repeat padding-box",
+              background:
+                revenueExpectedTotal > expenseExpectedTotal
+                  ? "#3DB727 0% 0% no-repeat padding-box"
+                  : "#E3441F 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
@@ -569,7 +616,7 @@ function ManagerOverview(props) {
             </Col>
             <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
               {" "}
-              ${expenseTotal.toFixed(2)}
+              ${cashFlowExpected}
             </Col>
           </Row>
           <div>
@@ -593,18 +640,18 @@ function ManagerOverview(props) {
                     </Col>
                   </Row>
                   {properties.map((property, i) => {
-                    return (property.maintenance_expenses !== undefined &&
-                      property.maintenance_expenses) ||
-                      (property.management_expenses !== undefined &&
-                        property.management_expenses !== 0) ||
-                      (property.repairs_expenses !== undefined &&
-                        property.repairs_expenses !== 0) ? (
+                    return (property.maintenance_expected_expenses !==
+                      undefined &&
+                      property.maintenance_expected_expenses) ||
+                      (property.management_expected_expenses !== undefined &&
+                        property.management_expected_expenses !== 0) ||
+                      (property.repairs_expected_expenses !== undefined &&
+                        property.repairs_expected_expenses !== 0) ||
+                      (property.rental_expected_revenue !== undefined &&
+                        property.rental_expected_revenue !== 0) ||
+                      (property.extraCharges_expected_revenue !== undefined &&
+                        property.extraCharges_expected_revenue !== 0) ? (
                       <div>
-                        {console.log(
-                          property.maintenance_expenses,
-                          property.management_expenses,
-                          property.repairs_expenses
-                        )}
                         <Row
                           style={{
                             background:
@@ -632,8 +679,79 @@ function ManagerOverview(props) {
                             ></p>
                           </Col>
                         </Row>
-                        {property.maintenance_expenses !== 0 &&
-                        property.maintenance_expenses !== undefined ? (
+                        {property.rental_expected_revenue !== undefined &&
+                        property.rental_expected_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Rent
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...green,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.rental_expected_revenue}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.extraCharges_expected_revenue !== undefined &&
+                        property.extraCharges_expected_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Extra Charges
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              >
+                                {property.extraCharges_expected_revenue}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.maintenance_expected_expenses !== 0 &&
+                        property.maintenance_expected_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
@@ -662,15 +780,15 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.maintenance_expenses}
+                                {property.maintenance_expected_expenses}
                               </p>
                             </Col>
                           </Row>
                         ) : (
                           ""
                         )}
-                        {property.management_expenses !== 0 &&
-                        property.management_expenses !== undefined ? (
+                        {property.management_expected_expenses !== 0 &&
+                        property.management_expected_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
@@ -699,7 +817,7 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.management_expenses}
+                                {property.management_expected_expenses}
                               </p>
                             </Col>
                           </Row>
@@ -707,8 +825,8 @@ function ManagerOverview(props) {
                           ""
                         )}
 
-                        {property.repairs_expenses !== 0 &&
-                        property.repairs_expenses !== undefined ? (
+                        {property.repairs_expected_expenses !== 0 &&
+                        property.repairs_expected_expenses !== undefined ? (
                           <Row
                             style={{
                               background:
@@ -737,7 +855,7 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.repairs_expenses}
+                                {property.repairs_expected_expenses}
                               </p>
                             </Col>
                           </Row>
@@ -749,33 +867,6 @@ function ManagerOverview(props) {
                       ""
                     );
                   })}
-
-                  <Row
-                    style={{
-                      background: "#F3F3F3 0% 0% no-repeat padding-box",
-                    }}
-                  >
-                    <Col>
-                      <p
-                        style={{
-                          ...small,
-                          ...mediumBold,
-                          font: "normal normal bold 12px Helvetica-Bold",
-                        }}
-                        className=" m-1"
-                      >
-                        Total
-                      </p>
-                    </Col>
-                    <Col>
-                      <p
-                        style={{ ...small, ...red }}
-                        className="text-center m-1 pt-1"
-                      >
-                        {expenseTotal.toFixed(2)}
-                      </p>
-                    </Col>
-                  </Row>
                 </Container>
               </div>
             ) : (

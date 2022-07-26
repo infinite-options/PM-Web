@@ -50,6 +50,7 @@ const red = {
 };
 const green = {
   color: "#3DB727",
+  font: "normal normal normal 11px/12px SFProDisplay-Regular",
 };
 const smallPillButton = {
   fontSize: "small",
