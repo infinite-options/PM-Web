@@ -336,6 +336,43 @@ function ManagerOverview(props) {
                         ) : (
                           ""
                         )}
+                        {property.utility_revenue !== undefined &&
+                        property.utility_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Utilities
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...green,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.utility_revenue.toFixed(2)}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     );
                   })}
@@ -746,6 +783,43 @@ function ManagerOverview(props) {
                                 {property.extraCharges_expected_revenue.toFixed(
                                   2
                                 )}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.utility_expected_revenue !== undefined &&
+                        property.utility_expected_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Utilities
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...green,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.utility_expected_revenue.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
