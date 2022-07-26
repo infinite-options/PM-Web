@@ -72,7 +72,19 @@ function OwnerHome(props) {
         }
       }
     });
+
+    let expense = [];
+    properties_unique.forEach((property) => {
+      if (property.expenses.length > 0) {
+        console.log("has expense");
+        property.expenses.forEach((ex) => {
+          console.log("has expense", ex);
+          expense.push(ex);
+        });
+      }
+    });
     setProperties(properties_unique);
+    setExpenses(expense);
   };
   const fetchBills = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {

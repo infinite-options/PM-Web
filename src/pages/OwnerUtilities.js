@@ -41,7 +41,7 @@ function OwnerUtilities(props) {
 
   const useLiveStripeKey = false;
   const [message, setMessage] = React.useState("");
-
+  console.log(expenses);
   const [utilityState, setUtilityState] = React.useState([]);
   const [newUtility, setNewUtility] = React.useState(null);
   const [editingUtility, setEditingUtility] = React.useState(false);

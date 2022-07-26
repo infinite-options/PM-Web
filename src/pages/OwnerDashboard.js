@@ -1184,84 +1184,88 @@ function OwnerDashboard(props) {
               <div className="mx-2 mt-4 mb-4 p-3 ">No Announcements</div>
             </Carousel.Item>
           </Carousel>
-          <Carousel
-            interval={null}
-            controls={false}
-            id="owner-bills"
-            className="mx-2 px-1 py-3 justify-content-center"
-            style={{
-              background: "#007AFF 0% 0% no-repeat padding-box",
-              borderRadius: "0px 0px 10px 10px",
-            }}
-          >
-            {bills.map((bill) => {
-              return (
-                <Carousel.Item>
-                  <div
-                    className="text-center mb-1 mx-2"
-                    style={{
-                      font: "normal normal bold 22px Bahnschrift-Bold",
-                      color: "#ffffff",
-                      textAlign: "left",
-                    }}
-                  >
-                    Owner Bills
-                  </div>
-
-                  <Row className="text-center mb-1 mx-2">
-                    <Col
-                      xs={7}
+          {bills.length > 0 ? (
+            <Carousel
+              interval={null}
+              controls={false}
+              id="owner-bills"
+              className="mx-2 px-1 py-3 justify-content-center"
+              style={{
+                background: "#007AFF 0% 0% no-repeat padding-box",
+                borderRadius: "0px 0px 10px 10px",
+              }}
+            >
+              {bills.map((bill) => {
+                return (
+                  <Carousel.Item>
+                    <div
+                      className="text-center mb-1 mx-2"
                       style={{
-                        font: "normal normal 16px Bahnschrift-Regular",
+                        font: "normal normal bold 22px Bahnschrift-Bold",
                         color: "#ffffff",
                         textAlign: "left",
                       }}
                     >
-                      <div>
-                        $ {bill.amount_due} - {bill.description}
-                      </div>
+                      Owner Bills
+                    </div>
 
-                      <div className="mb-3">
-                        {bill.address}
-                        {bill.unit !== "" ? " " + bill.unit : ""}, <br />
-                        {bill.city}, {bill.state} {bill.zip}
-                      </div>
-                    </Col>
-                    <Col className="text-center">
-                      <div
-                        className="mb-3"
-                        // onClick={() => {
-                        //   setStage("PAYBILL");
-                        //   setTotalSum(bill.amount_due);
-                        //   setSelectedProperty(bill);
-                        //   setPurchaseUID(bill.purchase_uid);
-                        // }}
-                        onClick={() => {
-                          navigate(`/ownerPaymentPage/${bill.purchase_uid}`, {
-                            state: {
-                              amount: bill.amount_due,
-                              selectedProperty: bill,
-                              purchaseUID: bill.purchase_uid,
-                            },
-                          });
-                        }}
+                    <Row className="text-center mb-1 mx-2">
+                      <Col
+                        xs={7}
                         style={{
-                          backgroundColor: "white",
-                          color: "#007AFF",
-                          border: "1px solid #007AFF",
-                          borderRadius: "50px",
-                          width: "92px",
-                          cursor: "pointer",
+                          font: "normal normal 16px Bahnschrift-Regular",
+                          color: "#ffffff",
+                          textAlign: "left",
                         }}
                       >
-                        Pay Bill
-                      </div>
-                    </Col>
-                  </Row>
-                </Carousel.Item>
-              );
-            })}
-          </Carousel>
+                        <div>
+                          $ {bill.amount_due} - {bill.description}
+                        </div>
+
+                        <div className="mb-3">
+                          {bill.address}
+                          {bill.unit !== "" ? " " + bill.unit : ""}, <br />
+                          {bill.city}, {bill.state} {bill.zip}
+                        </div>
+                      </Col>
+                      <Col className="text-center">
+                        <div
+                          className="mb-3"
+                          // onClick={() => {
+                          //   setStage("PAYBILL");
+                          //   setTotalSum(bill.amount_due);
+                          //   setSelectedProperty(bill);
+                          //   setPurchaseUID(bill.purchase_uid);
+                          // }}
+                          onClick={() => {
+                            navigate(`/ownerPaymentPage/${bill.purchase_uid}`, {
+                              state: {
+                                amount: bill.amount_due,
+                                selectedProperty: bill,
+                                purchaseUID: bill.purchase_uid,
+                              },
+                            });
+                          }}
+                          style={{
+                            backgroundColor: "white",
+                            color: "#007AFF",
+                            border: "1px solid #007AFF",
+                            borderRadius: "50px",
+                            width: "92px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Pay Bill
+                        </div>
+                      </Col>
+                    </Row>
+                  </Carousel.Item>
+                );
+              })}
+            </Carousel>
+          ) : (
+            ""
+          )}
         </div>
       </Container>
     </div>
