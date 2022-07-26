@@ -33,6 +33,8 @@ function ManagerOverview(props) {
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
 
+  const [expandAccountPayable, setExpandAccountPayable] = useState(false);
+
   let revenueTotal = 0;
   console.log(properties);
   for (const item of properties) {
@@ -208,7 +210,7 @@ function ManagerOverview(props) {
                                 }}
                                 className=" m-1"
                               >
-                                {property.address}
+                                {property.address}, {property.unit}
                               </p>
                             </Col>
                             <Col>
@@ -393,7 +395,234 @@ function ManagerOverview(props) {
                               }}
                               className="m-1"
                             >
-                              {property.address}
+                              {property.address}, {property.unit}
+                            </p>
+                          </Col>
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1 pt-1"
+                            ></p>
+                          </Col>
+                        </Row>
+                        {property.maintenance_expenses !== 0 &&
+                        property.maintenance_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" mx-3 my-1"
+                              >
+                                Maintenance
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.maintenance_expenses}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.management_expenses !== 0 &&
+                        property.management_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" mx-3 my-1"
+                              >
+                                Owner Return
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.management_expenses}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+
+                        {property.repairs_expenses !== 0 &&
+                        property.repairs_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Repairs
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.repairs_expenses}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    ) : (
+                      ""
+                    );
+                  })}
+
+                  <Row
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    }}
+                  >
+                    <Col>
+                      <p
+                        style={{
+                          ...small,
+                          ...mediumBold,
+                          font: "normal normal bold 12px Helvetica-Bold",
+                        }}
+                        className=" m-1"
+                      >
+                        Total
+                      </p>
+                    </Col>
+                    <Col>
+                      <p
+                        style={{ ...small, ...red }}
+                        className="text-center m-1 pt-1"
+                      >
+                        {expenseTotal.toFixed(2)}
+                      </p>
+                    </Col>
+                  </Row>
+                </Container>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+          <Row
+            className="mx-2 mt-4 p-3"
+            style={{
+              background: "#E3441F 0% 0% no-repeat padding-box",
+              boxShadow: "0px 3px 3px #00000029",
+              borderRadius: "20px",
+            }}
+            onClick={() => setExpandAccountPayable(!expandAccountPayable)}
+          >
+            <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
+              MTD Account Payable
+            </Col>
+            <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
+              {" "}
+              ${expenseTotal.toFixed(2)}
+            </Col>
+          </Row>
+          <div>
+            {expandAccountPayable ? (
+              <div>
+                <Container
+                  style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                >
+                  <Row>
+                    <Col />
+                    <Col>
+                      <p
+                        style={{
+                          ...gray,
+                          ...small,
+                        }}
+                        className="text-center m-1"
+                      >
+                        MTD($)
+                      </p>
+                    </Col>
+                  </Row>
+                  {properties.map((property, i) => {
+                    return (property.maintenance_expenses !== undefined &&
+                      property.maintenance_expenses) ||
+                      (property.management_expenses !== undefined &&
+                        property.management_expenses !== 0) ||
+                      (property.repairs_expenses !== undefined &&
+                        property.repairs_expenses !== 0) ? (
+                      <div>
+                        {console.log(
+                          property.maintenance_expenses,
+                          property.management_expenses,
+                          property.repairs_expenses
+                        )}
+                        <Row
+                          style={{
+                            background:
+                              i % 2 === 0
+                                ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                : "#F3F3F3 0% 0% no-repeat padding-box",
+                          }}
+                        >
+                          <Col xs={6}>
+                            <p
+                              style={{
+                                ...small,
+                                ...mediumBold,
+                                font: "normal normal bold 12px Helvetica-Bold",
+                              }}
+                              className="m-1"
+                            >
+                              {property.address}, {property.unit}
                             </p>
                           </Col>
                           <Col>
@@ -554,67 +783,72 @@ function ManagerOverview(props) {
             )}
           </div>
         </div>
-        <Carousel
-          id="owner-bills"
-          interval={null}
-          controls={false}
-          className="mx-2 p-3 "
-          style={{
-            background: "#007AFF 0% 0% no-repeat padding-box",
-          }}
-        >
-          {maintenanceRequests.map((request) => {
-            return request.request_status === "SCHEDULED" ? (
-              <Carousel.Item className="px-2 pb-3 ">
-                <div
-                  style={{
-                    textAlign: "left",
-                    font: "normal normal bold 22px Bahnschrift-Bold",
-                    color: "#ffffff",
-                  }}
-                >
-                  Upcoming Repairs:
-                </div>
-                <div
-                  style={{
-                    textAlign: "left",
-                    font: "normal normal normal 16px Bahnschrift-Regular",
-                    color: "#ffffff",
-                    textTransform: "capitalize",
-                  }}
-                >
-                  {request.title} is scheduled for{" "}
-                  {new Date(request.scheduled_date).toLocaleDateString(
-                    "en-us",
-                    {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    }
-                  )}
-                </div>
+        {maintenanceRequests.length > 0 ? (
+          <Carousel
+            id="owner-bills"
+            interval={null}
+            controls={false}
+            className="mx-2 p-3 "
+            style={{
+              background: "#007AFF 0% 0% no-repeat padding-box",
+            }}
+          >
+            {maintenanceRequests.map((request) => {
+              return request.request_status === "SCHEDULED" ? (
+                <Carousel.Item className="px-2 pb-3 ">
+                  <div
+                    style={{
+                      textAlign: "left",
+                      font: "normal normal bold 22px Bahnschrift-Bold",
+                      color: "#ffffff",
+                    }}
+                  >
+                    Upcoming Repairs:
+                  </div>
+                  <div
+                    style={{
+                      textAlign: "left",
+                      font: "normal normal normal 16px Bahnschrift-Regular",
+                      color: "#ffffff",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {request.title} is scheduled for{" "}
+                    {new Date(request.scheduled_date).toLocaleDateString(
+                      "en-us",
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}
+                  </div>
 
-                {properties.map((property) => {
-                  return property.property_uid === request.property_uid ? (
-                    <div
-                      style={{
-                        textAlign: "left",
-                        font: "normal normal normal 16px Bahnschrift-Regular",
-                        color: "#ffffff",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {" "}
-                      {property.address}
-                      {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-                      {property.city}, {property.state} {property.zip}{" "}
-                    </div>
-                  ) : null;
-                })}
-              </Carousel.Item>
-            ) : null;
-          })}
-        </Carousel>
+                  {properties.map((property) => {
+                    return property.property_uid === request.property_uid ? (
+                      <div
+                        style={{
+                          textAlign: "left",
+                          font: "normal normal normal 16px Bahnschrift-Regular",
+                          color: "#ffffff",
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {" "}
+                        {property.address}
+                        {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+                        {property.city}, {property.state} {property.zip}{" "}
+                      </div>
+                    ) : null;
+                  })}
+                </Carousel.Item>
+              ) : null;
+            })}
+          </Carousel>
+        ) : (
+          ""
+        )}
+
         <div
           className="mx-2 p-3 "
           style={{

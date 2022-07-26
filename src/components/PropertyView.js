@@ -1005,7 +1005,7 @@ function PropertyView(props) {
               >
                 <div
                   style={mediumBold}
-                  className=" d-flex flex-column justify-content-center align-items-center"
+                  className=" d-flex flex-column justify-content-center align-items-center "
                   onClick={() => setExpandAddManagerDocs(!expandAddManagerDocs)}
                 >
                   <div className="d-flex mt-1">
@@ -1023,9 +1023,12 @@ function PropertyView(props) {
                         ""
                       ) : expandAddManagerDocs &&
                         p.management_status === "FORWARDED" ? (
-                        <div>
-                          <div className="d-flex justify-content-between mt-3">
-                            <div>
+                        <Row className="p-0 m-0">
+                          <Row className="d-flex justify-content-between mt-3">
+                            <Col
+                              xs={8}
+                              className="d-flex justify-content-start flex-column"
+                            >
                               <h6 style={mediumBold} className="mb-1">
                                 {p.manager_business_name}
                               </h6>
@@ -1035,24 +1038,20 @@ function PropertyView(props) {
                               >
                                 Property Manager Selected
                               </p>
-                            </div>
-                            <div>
+                            </Col>
+                            <Col className="d-flex justify-content-end">
                               <a href={`tel:${p.manager_phone_number}`}>
-                                <img
-                                  src={Phone}
-                                  alt="Phone"
-                                  style={mediumImg}
-                                />
+                                <img src={Phone} alt="Phone" style={smallImg} />
                               </a>
                               <a href={`mailto:${p.manager_email}`}>
                                 <img
                                   src={Message}
                                   alt="Message"
-                                  style={mediumImg}
+                                  style={smallImg}
                                 />
                               </a>
-                            </div>
-                          </div>
+                            </Col>
+                          </Row>
                           <Row className="mt-4">
                             <Col
                               style={{
@@ -1075,7 +1074,7 @@ function PropertyView(props) {
                               </Button>
                             </Col>
                           </Row>
-                        </div>
+                        </Row>
                       ) : (
                         ""
                       )
@@ -1097,29 +1096,17 @@ function PropertyView(props) {
                               }
                             </h6>
                           </Row>
-                          {/* <Row>
-                            <p
-                              style={{ mediumBold, color: "blue" }}
-                              className="mb-1"
-                            >
-                              Property Manager Selected
-                            </p>
-                          </Row> */}
                         </Col>
                         <Col className="d-flex justify-content-end">
                           <a
                             href={`tel:${property.property_manager[0].manager_phone_number}`}
                           >
-                            <img src={Phone} alt="Phone" style={mediumImg} />
+                            <img src={Phone} alt="Phone" style={smallImg} />
                           </a>
                           <a
                             href={`mailto:${property.property_manager[0].manager_email}`}
                           >
-                            <img
-                              src={Message}
-                              alt="Message"
-                              style={mediumImg}
-                            />
+                            <img src={Message} alt="Message" style={smallImg} />
                           </a>
                         </Col>
                       </Row>
@@ -1157,7 +1144,7 @@ function PropertyView(props) {
                         ""
                       ) : expandAddManagerDocs &&
                         p.management_status === "SENT" ? (
-                        <Row>
+                        <Row className="p-0 m-0">
                           <Row className="d-flex justify-content-between mt-3">
                             <Row>
                               <h6 style={mediumBold} className="mb-1">

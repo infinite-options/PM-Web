@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import moment from "moment";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
+
+import { Elements } from "@stripe/react-stripe-js";
+
+import { loadStripe } from "@stripe/stripe-js";
+import StripePayment from "../components/StripePayment.js";
 import {
   pillButton,
   smallPillButton,
@@ -30,8 +35,12 @@ function ManagerUtilities(props) {
   const navigate = useNavigate();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
+  const [stripePromise, setStripePromise] = useState(null);
   // const [expenses, setExpenses] = React.useState([]);
   const { properties, setStage, expenses } = props;
+
+  const useLiveStripeKey = false;
+  const [message, setMessage] = React.useState("");
 
   const [utilityState, setUtilityState] = React.useState([]);
   const [newUtility, setNewUtility] = React.useState(null);
@@ -58,11 +67,34 @@ function ManagerUtilities(props) {
   };
   const [errorMessage, setErrorMessage] = React.useState("");
 
+  const [stripePayment, setStripePayment] = useState(false);
+  const [paymentConfirm, setPaymentConfirm] = useState(false);
+  React.useEffect(async () => {
+    const url = useLiveStripeKey
+      ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
+      : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
+    let response = await fetch(url);
+    const responseData = await response.json();
+    const stripePromise = loadStripe(responseData.publicKey);
+    setStripePromise(stripePromise);
+    // let tempAllPurchases = [];
+    // for (let i in purchaseUID) {
+    //   let response1 = await get(`/purchases?purchase_uid=${purchaseUID[i]}`);
+    //   tempAllPurchases.push(response1.result[0]);
+    // }
+    // response = await get(`/purchases?purchase_uid=${purchaseUID}`);
+    // setPurchase(response.result[0]);
+    // setAllPurchases(tempAllPurchases);
+  }, []);
   React.useEffect(() => {
     console.log(properties);
     properties.forEach((p) => (p.checked = false));
   }, [properties]);
-
+  const cancel = () => setStripePayment(false);
+  const submit = () => {
+    cancel();
+    setPaymentConfirm(true);
+  };
   const splitFees = (newUtility) => {
     let charge = parseFloat(newUtility.charge);
 
@@ -623,6 +655,37 @@ function ManagerUtilities(props) {
                       <option value="area">By Square Footage</option>
                     </Form.Select>
                   </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group
+                    className="mx-2 my-3"
+                    hidden={propertyState.filter((p) => p.checked).length <= 1}
+                  >
+                    <Form.Label style={mediumBold} className="mb-0 ms-2">
+                      Message
+                    </Form.Label>
+                    <Form.Control
+                      placeholder="M4METEST"
+                      style={squareForm}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  {/* <Elements stripe={stripePromise}>
+                    <StripePayment
+                      cancel={cancel}
+                      submit={submit}
+                      purchases={[purchase]}
+                      message={message}
+                      amount={amount}
+                    />
+                  </Elements> */}
                 </Col>
               </Row>
             </Row>

@@ -137,16 +137,16 @@ function ManagerTenantApplications(props) {
             </h6>
           </div>
           {expandTenantApplications ? (
-            <div>
+            <div className="d-flex w-100">
               {applications.length > 0 ? (
-                <Container>
+                <div className="d-flex w-100 flex-column justify-content-center align-items-center mx-3">
                   {/*<Row style={headings}>*/}
                   {/*    <div>Applications:</div>*/}
                   {/*</Row>*/}
 
-                  <div>
+                  <div className="d-flex w-100 flex-column">
                     {forwardedApplications.length > 0 && (
-                      <div>
+                      <div className="">
                         <h3 style={{ color: "#3DB727" }}>Forwarded</h3>
                         {forwardedApplications.map((application, i) => (
                           <Row key={i} className="mt-2">
@@ -198,7 +198,7 @@ function ManagerTenantApplications(props) {
                     )}
 
                     {newApplications.length > 0 && (
-                      <div className="mt-4">
+                      <div className="mt-4 ">
                         <h3 style={{ color: "#007AFF" }}>New</h3>
                         {newApplications.map((application, i) => (
                           <Row className="mt-2" key={i}>
@@ -252,7 +252,7 @@ function ManagerTenantApplications(props) {
                     )}
                   </div>
                   <Row
-                    className="mt-4"
+                    className="mt-4 d-flex w-100"
                     hidden={forwardedApplications.length > 0}
                   >
                     <Col className="d-flex justify-content-evenly">
@@ -264,7 +264,7 @@ function ManagerTenantApplications(props) {
                       </Button>
                     </Col>
                   </Row>
-                </Container>
+                </div>
               ) : (
                 "No New Applications"
               )}
