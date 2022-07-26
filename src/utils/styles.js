@@ -50,6 +50,7 @@ const red = {
 };
 const green = {
   color: "#3DB727",
+  font: "normal normal normal 11px/12px SFProDisplay-Regular",
 };
 const smallPillButton = {
   fontSize: "small",
@@ -200,7 +201,7 @@ const bluePillButton = {
   letterSpacing: "0px",
   color: " #FFFFFF",
   height: "35px",
-  width: "200px",
+  // width: "200px",
 };
 const redPillButton = {
   background: "#E3441F 0% 0% no-repeat padding-box",

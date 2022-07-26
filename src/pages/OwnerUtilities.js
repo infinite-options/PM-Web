@@ -30,7 +30,7 @@ import { post, get } from "../utils/api";
 import AppContext from "../AppContext";
 import File from "../icons/File.svg";
 
-function ManagerUtilities(props) {
+function OwnerUtilities(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const { userData, refresh } = React.useContext(AppContext);
@@ -41,7 +41,7 @@ function ManagerUtilities(props) {
 
   const useLiveStripeKey = false;
   const [message, setMessage] = React.useState("");
-
+  console.log(expenses);
   const [utilityState, setUtilityState] = React.useState([]);
   const [newUtility, setNewUtility] = React.useState(null);
   const [editingUtility, setEditingUtility] = React.useState(false);
@@ -137,25 +137,17 @@ function ManagerUtilities(props) {
   };
 
   const postCharges = async (newUtility) => {
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+      navigate("/");
       return;
-    } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
-      management_buid = management_businesses[0].business_uid;
-    } else {
-      management_buid = management_businesses[0].business_uid;
     }
+
     let properties_uid = [];
     newUtility.properties.forEach((prop) =>
       properties_uid.push(prop.property_uid)
     );
     const new_bill = {
-      bill_created_by: management_buid,
+      bill_created_by: user.user_uid,
       bill_description: newUtility.provider,
       bill_utility_type: newUtility.service_name,
       bill_algorithm: newUtility.split_type,
@@ -175,7 +167,7 @@ function ManagerUtilities(props) {
     const new_purchase_pm = {
       linked_bill_id: bill_uid,
       pur_property_id: properties_uid,
-      payer: [management_buid],
+      payer: [user.user_uid],
       receiver: newUtility.provider,
       purchase_type: "UTILITY",
       description: newUtility.service_name,
@@ -196,7 +188,7 @@ function ManagerUtilities(props) {
         linked_bill_id: bill_uid,
         pur_property_id: property.property_uid,
         payer: "",
-        receiver: management_buid,
+        receiver: user.user_uid,
         purchase_type: "UTILITY",
         description: newUtility.service_name,
         amount_due: property.charge,
@@ -223,9 +215,9 @@ function ManagerUtilities(props) {
       console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
-    navigate(`/managerPaymentPage/${purchase_uid}`, {
+    navigate(`/ownerPaymentPage/${purchase_uid}`, {
       state: {
-        amount: newUtility.charge,
+        amount: response_pm.amount_due,
         selectedProperty: "",
         purchaseUID: purchase_uid,
       },
@@ -1104,4 +1096,4 @@ function ManagerUtilities(props) {
   );
 }
 
-export default ManagerUtilities;
+export default OwnerUtilities;

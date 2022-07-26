@@ -73,7 +73,7 @@ function TenantHome() {
     fetchProfile();
     fetchUserProperties();
   }, []);
-  
+
   return (
     <div className="d-flex flex-column h-100">
       {isLoading === false ? (
@@ -102,12 +102,12 @@ function TenantHome() {
               //   setShowFooter={setShowFooter}
               //   setTab={setFooterTab}
               // />
-                <OwnerProfileTab
-                    profileInfo={profile}
-                    setStage={setFooterTab}
-                    setShowFooter={setShowFooter}
-                    setTab={setFooterTab}
-                />
+              <OwnerProfileTab
+                profileInfo={profile}
+                setStage={setFooterTab}
+                setShowFooter={setShowFooter}
+                setTab={setFooterTab}
+              />
             ) : (
               ""
             )}
@@ -116,12 +116,7 @@ function TenantHome() {
             ) : (
               ""
             )}
-            {footerTab === "PAYMENTS" ? (
-                <PaymentSelection/>
-            ) : (
-                ""
-            )}
-            )}
+            {footerTab === "PAYMENTS" ? <PaymentSelection /> : ""}
             {/*{footerTab === "PaymentMethods" ? (*/}
             {/*    <PaymentPage/>*/}
             {/*) : (*/}
@@ -129,7 +124,11 @@ function TenantHome() {
             {/*)}*/}
           </div>
 
-          {showFooter ? <Footer tab={footerTab} setTab={setFooterTab} profile ={profile}/> : ""}
+          {showFooter ? (
+            <Footer tab={footerTab} setTab={setFooterTab} profile={profile} />
+          ) : (
+            ""
+          )}
         </div>
       ) : (
         ""

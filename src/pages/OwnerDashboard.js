@@ -9,40 +9,43 @@ function OwnerDashboard(props) {
   const navigate = useNavigate();
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
-
+  const [expandAccountPayable, setExpandAccountPayable] = useState(false);
   let revenueTotal = 0;
   for (const item of properties) {
     if (item.owner_revenue.length == 0) {
     } else if (item.owner_revenue.length == 1) {
-      revenueTotal += item.owner_revenue[0].amount_due;
+      revenueTotal += item.owner_revenue[0].amount_paid;
     } else {
       for (const or of item.owner_revenue) {
-        revenueTotal += or.amount_due;
+        revenueTotal += or.amount_paid;
       }
     }
   }
 
   let expenseTotal = 0;
+  let rentTotal = 0;
   for (const item of properties) {
-    if (item.owner_expense.length == 0) {
-    } else if (item.owner_expense.length == 1) {
-      expenseTotal += item.owner_expense[0].amount_due;
-    } else {
-      for (const or of item.owner_expense) {
-        expenseTotal += or.amount_due;
+    if (item.owner_expense !== undefined) {
+      if (item.owner_expense.length == 0) {
+      } else if (item.owner_expense.length == 1) {
+        if (item.owner_expense[0].purchase_type == "RENT") {
+          expenseTotal += item.management_expenses;
+        } else {
+          expenseTotal += item.owner_expense[0].amount_paid;
+        }
+      } else {
+        for (const or of item.owner_expense) {
+          if (or.purchase_type == "RENT") {
+            rentTotal = item.management_expenses;
+          } else {
+            expenseTotal += or.amount_paid;
+          }
+        }
+        expenseTotal = expenseTotal + rentTotal;
       }
-    }
-    if (item.mortgages !== null) {
-      expenseTotal += Number(JSON.parse(item.mortgages).amount);
-    }
-    if (item.taxes !== null) {
-      for (const or of JSON.parse(item.taxes)) {
-        expenseTotal += Number(or.amount);
-      }
-      // expenseTotal += Number(JSON.parse(item.taxes)[0].amount);
     }
   }
-
+  console.log(expenseTotal, revenueTotal);
   let yearExpenseTotal = 0;
   for (const item of properties) {
     console.log(item);
@@ -60,8 +63,51 @@ function OwnerDashboard(props) {
     }
   }
 
-  const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
+  let revenueExpectedTotal = 0;
 
+  for (const item of properties) {
+    console.log(item.property_uid);
+    if (item.owner_expected_revenue !== undefined) {
+      if (item.owner_expected_revenue.length == 0) {
+      } else if (item.owner_expected_revenue.length == 1) {
+        revenueExpectedTotal += item.owner_expected_revenue[0].amount_due;
+      } else {
+        for (const or of item.owner_expected_revenue) {
+          revenueExpectedTotal += or.amount_due;
+        }
+      }
+    }
+  }
+
+  let expenseExpectedTotal = 0;
+  let rentExpectedTotal = 0;
+  for (const item of properties) {
+    if (item.owner_expected_expense !== undefined) {
+      if (item.owner_expected_expense.length == 0) {
+      } else if (item.owner_expected_expense.length == 1) {
+        if (item.owner_expected_expense[0].purchase_type == "RENT") {
+          expenseExpectedTotal += item.management_expected_expenses;
+        } else {
+          expenseExpectedTotal += item.owner_expected_expense[0].amount_due;
+        }
+      } else {
+        for (const or of item.owner_expected_expense) {
+          if (or.purchase_type == "RENT") {
+            rentExpectedTotal = item.management_expected_expenses;
+          } else {
+            expenseExpectedTotal += or.amount_due;
+          }
+        }
+        expenseExpectedTotal = expenseExpectedTotal + rentExpectedTotal;
+      }
+    }
+  }
+  console.log(revenueExpectedTotal, expenseExpectedTotal);
+
+  const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
+  const cashFlowExpected = (
+    revenueExpectedTotal - expenseExpectedTotal
+  ).toFixed(2);
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -102,6 +148,7 @@ function OwnerDashboard(props) {
             // onClick={() => setExpandProperties(!expandProperties)}
           >
             <Col
+              xs={8}
               style={
                 (mediumBold,
                 { font: "normal normal normal 20px Bahnschrift-Regular" })
@@ -133,6 +180,7 @@ function OwnerDashboard(props) {
             }}
           >
             <Col
+              xs={8}
               style={
                 (mediumBold,
                 { font: "normal normal normal 20px Bahnschrift-Regular" })
@@ -161,6 +209,7 @@ function OwnerDashboard(props) {
             onClick={() => setExpandRevenue(!expandRevenue)}
           >
             <Col
+              xs={8}
               style={
                 (mediumBold,
                 { font: "normal normal normal 20px Bahnschrift-Regular" })
@@ -174,7 +223,7 @@ function OwnerDashboard(props) {
                 { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
-              ${revenueTotal}
+              ${revenueTotal.toFixed(2)}
             </Col>
           </Row>
           <div>
@@ -196,14 +245,14 @@ function OwnerDashboard(props) {
                         MTD($)
                       </p>
                     </Col>
-                    <Col>
+                    {/* <Col>
                       <p
                         style={{ ...gray, ...small }}
                         className="text-center m-1"
                       >
                         YTD($)
                       </p>
-                    </Col>
+                    </Col> */}
                   </Row>
                   {properties.map((property, i) => {
                     return (
@@ -227,7 +276,7 @@ function OwnerDashboard(props) {
                                 }}
                                 className=" m-1"
                               >
-                                {property.address}
+                                {property.address}, {property.unit}
                               </p>
                             </Col>
                             <Col>
@@ -236,12 +285,12 @@ function OwnerDashboard(props) {
                                 className="text-center m-1"
                               ></p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{ ...small, ...green }}
                                 className="text-center m-1 pt-1"
                               ></p>
-                            </Col>
+                            </Col> */}
                           </Row>
                         ) : (
                           ""
@@ -273,17 +322,17 @@ function OwnerDashboard(props) {
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
                               >
-                                {property.rental_revenue}
+                                {property.rental_revenue.toFixed(2)}
                               </p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
                               >
-                                {property.rental_year_revenue}
+                                {property.rental_year_revenue.toFixed(2)}
                               </p>
-                            </Col>
+                            </Col> */}
                           </Row>
                         ) : (
                           ""
@@ -314,15 +363,52 @@ function OwnerDashboard(props) {
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
                               >
-                                {property.extraCharges_revenue}
+                                {property.extraCharges_revenue.toFixed(2)}
                               </p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
                               >
-                                {property.extraCharges_year_revenue}
+                                {property.extraCharges_year_revenue.toFixed(2)}
+                              </p>
+                            </Col> */}
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.utility_revenue !== undefined &&
+                        property.utility_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Utilities
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...green,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.utility_revenue.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
@@ -355,17 +441,17 @@ function OwnerDashboard(props) {
                         style={{ ...small, ...green }}
                         className="text-center m-1"
                       >
-                        {revenueTotal}
+                        {revenueTotal.toFixed(2)}
                       </p>
                     </Col>
-                    <Col>
+                    {/* <Col>
                       <p
                         style={{ ...small, ...green }}
                         className="text-center m-1 "
                       >
-                        {yearRevenueTotal}
+                        {yearRevenueTotal.toFixed(2)}
                       </p>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Container>
               </div>
@@ -385,6 +471,7 @@ function OwnerDashboard(props) {
             onClick={() => setExpandExpenses(!expandExpenses)}
           >
             <Col
+              xs={8}
               style={
                 (mediumBold,
                 { font: "normal normal normal 20px Bahnschrift-Regular" })
@@ -398,7 +485,7 @@ function OwnerDashboard(props) {
                 { font: "normal normal normal 20px Bahnschrift-Regular" })
               }
             >
-              ${expenseTotal}
+              ${expenseTotal.toFixed(2)}
             </Col>
           </Row>
           <div>
@@ -420,14 +507,14 @@ function OwnerDashboard(props) {
                         MTD($)
                       </p>
                     </Col>
-                    <Col>
+                    {/* <Col>
                       <p
                         style={{ ...gray, ...small }}
                         className="text-center m-1"
                       >
                         YTD($)
                       </p>
-                    </Col>
+                    </Col> */}
                   </Row>
                   {properties.map((property, i) => {
                     return (property.maintenance_expenses !== undefined &&
@@ -468,7 +555,7 @@ function OwnerDashboard(props) {
                               }}
                               className="m-1"
                             >
-                              {property.address}
+                              {property.address}, {property.unit}
                             </p>
                           </Col>
                           <Col>
@@ -477,7 +564,7 @@ function OwnerDashboard(props) {
                               className="text-center m-1 pt-1"
                             ></p>
                           </Col>
-                          <Col>
+                          {/* <Col>
                             <p
                               style={{
                                 ...small,
@@ -485,7 +572,7 @@ function OwnerDashboard(props) {
                               }}
                               className="text-center m-1 pt-1"
                             ></p>
-                          </Col>
+                          </Col> */}
                         </Row>
                         {property.maintenance_expenses !== 0 &&
                         property.maintenance_expenses !== undefined ? (
@@ -517,10 +604,10 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.maintenance_expenses}
+                                {property.maintenance_expenses.toFixed(2)}
                               </p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{
                                   ...small,
@@ -528,9 +615,9 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.maintenance_year_expense}
+                                {property.maintenance_year_expense.toFixed(2)}
                               </p>
-                            </Col>
+                            </Col> */}
                           </Row>
                         ) : (
                           ""
@@ -565,10 +652,10 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.management_expenses}
+                                {property.management_expenses.toFixed(2)}
                               </p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{
                                   ...small,
@@ -577,9 +664,9 @@ function OwnerDashboard(props) {
                                 className="text-center m-1 pt-1"
                               >
                                 {" "}
-                                {property.management_year_expense}
+                                {property.management_year_expense.toFixed(2)}
                               </p>
-                            </Col>
+                            </Col> */}
                           </Row>
                         ) : (
                           ""
@@ -614,10 +701,10 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.insurance_expenses}
+                                {property.insurance_expenses.toFixed(2)}
                               </p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{
                                   ...small,
@@ -625,9 +712,9 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.insurance_year_expense}
+                                {property.insurance_year_expense.toFixed(2)}
                               </p>
-                            </Col>
+                            </Col> */}
                           </Row>
                         ) : (
                           ""
@@ -662,10 +749,10 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.repairs_expenses}
+                                {property.repairs_expenses.toFixed(2)}
                               </p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{
                                   ...small,
@@ -673,9 +760,9 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.repairs_year_expense}
+                                {property.repairs_year_expense.toFixed(2)}
                               </p>
-                            </Col>
+                            </Col> */}
                           </Row>
                         ) : (
                           ""
@@ -710,10 +797,10 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.mortgage_expenses}
+                                {property.mortgage_expenses.toFixed(2)}
                               </p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{
                                   ...small,
@@ -721,9 +808,9 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.mortgage_year_expense}
+                                {property.mortgage_year_expense.toFixed(2)}
                               </p>
-                            </Col>
+                            </Col> */}
                           </Row>
                         ) : (
                           ""
@@ -758,10 +845,10 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.tax_expenses}
+                                {property.tax_expenses.toFixed(2)}
                               </p>
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <p
                                 style={{
                                   ...small,
@@ -769,9 +856,9 @@ function OwnerDashboard(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.tax_year_expense}
+                                {property.tax_year_expense.toFixed(2)}
                               </p>
-                            </Col>
+                            </Col> */}
                           </Row>
                         ) : (
                           ""
@@ -804,18 +891,335 @@ function OwnerDashboard(props) {
                         style={{ ...small, ...red }}
                         className="text-center m-1 pt-1"
                       >
-                        {expenseTotal}
+                        {expenseTotal.toFixed(2)}
                       </p>
                     </Col>
-                    <Col>
+                    {/* <Col>
                       <p
                         style={{ ...small, ...red }}
                         className="text-center m-1 pt-1"
                       >
-                        {yearExpenseTotal}
+                        {yearExpenseTotal.toFixed(2)}
+                      </p>
+                    </Col> */}
+                  </Row>
+                </Container>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+          <Row
+            className="mx-2 mt-4 p-3"
+            style={{
+              background:
+                revenueExpectedTotal > expenseExpectedTotal
+                  ? "#3DB727 0% 0% no-repeat padding-box"
+                  : "#E3441F 0% 0% no-repeat padding-box",
+              boxShadow: "0px 3px 3px #00000029",
+              borderRadius: "20px",
+            }}
+            onClick={() => setExpandAccountPayable(!expandAccountPayable)}
+          >
+            <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
+              Expected Cash Flow
+            </Col>
+            <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
+              {" "}
+              ${cashFlowExpected}
+            </Col>
+          </Row>
+          <div>
+            {expandAccountPayable ? (
+              <div>
+                <Container
+                  style={{ border: "1px solid #707070", borderRadius: "5px" }}
+                >
+                  <Row>
+                    <Col />
+                    <Col>
+                      <p
+                        style={{
+                          ...gray,
+                          ...small,
+                        }}
+                        className="text-center m-1"
+                      >
+                        MTD($)
                       </p>
                     </Col>
                   </Row>
+                  {properties.map((property, i) => {
+                    return (property.maintenance_expected_expenses !==
+                      undefined &&
+                      property.maintenance_expected_expenses) ||
+                      (property.management_expected_expenses !== undefined &&
+                        property.management_expected_expenses !== 0) ||
+                      (property.repairs_expected_expenses !== undefined &&
+                        property.repairs_expected_expenses !== 0) ||
+                      (property.rental_expected_revenue !== undefined &&
+                        property.rental_expected_revenue !== 0) ||
+                      (property.extraCharges_expected_revenue !== undefined &&
+                        property.extraCharges_expected_revenue !== 0) ? (
+                      <div>
+                        <Row
+                          style={{
+                            background:
+                              i % 2 === 0
+                                ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                : "#F3F3F3 0% 0% no-repeat padding-box",
+                          }}
+                        >
+                          <Col xs={6}>
+                            <p
+                              style={{
+                                ...small,
+                                ...mediumBold,
+                                font: "normal normal bold 12px Helvetica-Bold",
+                              }}
+                              className="m-1"
+                            >
+                              {property.address}, {property.unit}
+                            </p>
+                          </Col>
+                          <Col>
+                            <p
+                              style={{ ...small, ...red }}
+                              className="text-center m-1 pt-1"
+                            ></p>
+                          </Col>
+                        </Row>
+                        {property.rental_expected_revenue !== undefined &&
+                        property.rental_expected_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Rent
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...green,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.rental_expected_revenue.toFixed(2)}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.extraCharges_expected_revenue !== undefined &&
+                        property.extraCharges_expected_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Extra Charges
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{ ...small, ...green }}
+                                className="text-center m-1"
+                              >
+                                {property.extraCharges_expected_revenue.toFixed(
+                                  2
+                                )}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.utility_expected_revenue !== undefined &&
+                        property.utility_expected_revenue !== 0 ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Utilities
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...green,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.utility_expected_revenue.toFixed(2)}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.maintenance_expected_expenses !== 0 &&
+                        property.maintenance_expected_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" mx-3 my-1"
+                              >
+                                Maintenance
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.maintenance_expected_expenses.toFixed(
+                                  2
+                                )}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.management_expected_expenses !== 0 &&
+                        property.management_expected_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" mx-3 my-1"
+                              >
+                                Management
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.management_expected_expenses.toFixed(
+                                  2
+                                )}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+
+                        {property.repairs_expected_expenses !== 0 &&
+                        property.repairs_expected_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Repairs
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.repairs_expected_expenses.toFixed(2)}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    ) : (
+                      ""
+                    );
+                  })}
                 </Container>
               </div>
             ) : (
@@ -854,84 +1258,88 @@ function OwnerDashboard(props) {
               <div className="mx-2 mt-4 mb-4 p-3 ">No Announcements</div>
             </Carousel.Item>
           </Carousel>
-          <Carousel
-            interval={null}
-            controls={false}
-            id="owner-bills"
-            className="mx-2 px-1 py-3 justify-content-center"
-            style={{
-              background: "#007AFF 0% 0% no-repeat padding-box",
-              borderRadius: "0px 0px 10px 10px",
-            }}
-          >
-            {bills.map((bill) => {
-              return (
-                <Carousel.Item>
-                  <div
-                    className="text-center mb-1 mx-2"
-                    style={{
-                      font: "normal normal bold 22px Bahnschrift-Bold",
-                      color: "#ffffff",
-                      textAlign: "left",
-                    }}
-                  >
-                    Owner Bills
-                  </div>
-
-                  <Row className="text-center mb-1 mx-2">
-                    <Col
-                      xs={7}
+          {bills.length > 0 ? (
+            <Carousel
+              interval={null}
+              controls={false}
+              id="owner-bills"
+              className="mx-2 px-1 py-3 justify-content-center"
+              style={{
+                background: "#007AFF 0% 0% no-repeat padding-box",
+                borderRadius: "0px 0px 10px 10px",
+              }}
+            >
+              {bills.map((bill) => {
+                return (
+                  <Carousel.Item>
+                    <div
+                      className="text-center mb-1 mx-2"
                       style={{
-                        font: "normal normal 16px Bahnschrift-Regular",
+                        font: "normal normal bold 22px Bahnschrift-Bold",
                         color: "#ffffff",
                         textAlign: "left",
                       }}
                     >
-                      <div>
-                        $ {bill.amount_due} - {bill.description}
-                      </div>
+                      Owner Bills
+                    </div>
 
-                      <div className="mb-3">
-                        {bill.address}
-                        {bill.unit !== "" ? " " + bill.unit : ""}, <br />
-                        {bill.city}, {bill.state} {bill.zip}
-                      </div>
-                    </Col>
-                    <Col className="text-center">
-                      <div
-                        className="mb-3"
-                        // onClick={() => {
-                        //   setStage("PAYBILL");
-                        //   setTotalSum(bill.amount_due);
-                        //   setSelectedProperty(bill);
-                        //   setPurchaseUID(bill.purchase_uid);
-                        // }}
-                        onClick={() => {
-                          navigate(`/ownerPaymentPage/${bill.purchase_uid}`, {
-                            state: {
-                              amount: bill.amount_due,
-                              selectedProperty: bill,
-                              purchaseUID: bill.purchase_uid,
-                            },
-                          });
-                        }}
+                    <Row className="text-center mb-1 mx-2">
+                      <Col
+                        xs={7}
                         style={{
-                          backgroundColor: "white",
-                          color: "#007AFF",
-                          border: "1px solid #007AFF",
-                          borderRadius: "50px",
-                          width: "92px",
-                          cursor: "pointer",
+                          font: "normal normal 16px Bahnschrift-Regular",
+                          color: "#ffffff",
+                          textAlign: "left",
                         }}
                       >
-                        Pay Bill
-                      </div>
-                    </Col>
-                  </Row>
-                </Carousel.Item>
-              );
-            })}
-          </Carousel>
+                        <div>
+                          $ {bill.amount_due} - {bill.description}
+                        </div>
+
+                        <div className="mb-3">
+                          {bill.address}
+                          {bill.unit !== "" ? " " + bill.unit : ""}, <br />
+                          {bill.city}, {bill.state} {bill.zip}
+                        </div>
+                      </Col>
+                      <Col className="text-center">
+                        <div
+                          className="mb-3"
+                          // onClick={() => {
+                          //   setStage("PAYBILL");
+                          //   setTotalSum(bill.amount_due);
+                          //   setSelectedProperty(bill);
+                          //   setPurchaseUID(bill.purchase_uid);
+                          // }}
+                          onClick={() => {
+                            navigate(`/ownerPaymentPage/${bill.purchase_uid}`, {
+                              state: {
+                                amount: bill.amount_due,
+                                selectedProperty: bill,
+                                purchaseUID: bill.purchase_uid,
+                              },
+                            });
+                          }}
+                          style={{
+                            backgroundColor: "white",
+                            color: "#007AFF",
+                            border: "1px solid #007AFF",
+                            borderRadius: "50px",
+                            width: "92px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Pay Bill
+                        </div>
+                      </Col>
+                    </Row>
+                  </Carousel.Item>
+                );
+              })}
+            </Carousel>
+          ) : (
+            ""
+          )}
         </div>
       </Container>
     </div>

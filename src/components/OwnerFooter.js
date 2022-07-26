@@ -9,6 +9,9 @@ import Repairs_Blue from "../icons/Repairs_Blue.svg";
 import Repairs_Gray from "../icons/Repairs_Gray.svg";
 import Profile_Blue from "../icons/Profile_Blue.svg";
 import Profile_Gray from "../icons/Profile_Gray.svg";
+
+import Expenses_Blue from "../icons/Expenses_Blue.svg";
+import Expenses_Gray from "../icons/Expenses_Gray.svg";
 import AppContext from "../AppContext";
 
 function OwnerFooter(props) {
@@ -39,6 +42,15 @@ function OwnerFooter(props) {
         />
         <p style={tab === "DASHBOARD" ? smallBlue : smallGray} className="mb-0">
           Dashboard
+        </p>
+      </Col>
+      <Col className="text-center" onClick={() => setTab("EXPENSES")}>
+        <img
+          src={tab === "EXPENSES" ? Expenses_Blue : Expenses_Gray}
+          alt="EXPENSES"
+        />
+        <p style={tab === "EXPENSES" ? smallBlue : smallGray} className="mb-0">
+          Expenses
         </p>
       </Col>
       <Col className="text-center" onClick={() => setTab("CONTACTS")}>
