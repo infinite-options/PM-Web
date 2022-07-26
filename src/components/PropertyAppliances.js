@@ -20,10 +20,13 @@ function PropertyAppliances(props) {
   const [applianceModelNum, setApplianceModelNum] = useState(null);
   const [applianceSerialNum, setApplianceSerialNum] = useState(null);
   const [appliancePurchasedOn, setAppliancePurchasedOn] = useState(null);
+  const [appliancePurchasesOrderNumber, setAppliancePurchasesOrderNumber] =
+    useState(null);
+  const [applianceInstalledOn, setApplianceInstalledOn] = useState(null);
   const [applianceWarrantyTill, setApplianceWarrantyTill] = useState(null);
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
-
+  const [showDetails, setShowDetails] = useState(false);
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
     // console.log(newApplianceState);
@@ -31,8 +34,37 @@ function PropertyAppliances(props) {
       !newApplianceState[appliance]["available"];
     // console.log(newApplianceState);
     setAddApplianceInfo(true);
+    setShowDetails(true);
     setApplianceType(appliance);
     setApplianceState(newApplianceState);
+  };
+  const showApplianceDetail = (appliance) => {
+    setApplianceType(appliance);
+    console.log(
+      "ehere",
+      appliance,
+      showDetails,
+      applianceType,
+      applianceState[appliance]["available"],
+      addApplianceInfo,
+      applianceType == appliance,
+      applianceState
+    );
+
+    setShowDetails(true);
+    setAddApplianceInfo(true);
+    setApplianceType(appliance);
+    setApplianceState(applianceState);
+    setApplianceName(applianceState[appliance]["name"]);
+    setAppliancePurchasedOn(applianceState[appliance]["purchased"]);
+    setAppliancePurchasesOrderNumber(
+      applianceState[appliance]["purchased_order"]
+    );
+    setApplianceInstalledOn(applianceState[appliance]["installed"]);
+    setApplianceSerialNum(applianceState[appliance]["serial_num"]);
+    setApplianceModelNum(applianceState[appliance]["model_num"]);
+    setApplianceWarrantyTill(applianceState[appliance]["warranty_till"]);
+    setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
   };
 
   const updateAppliance = (appliance) => {
@@ -43,6 +75,9 @@ function PropertyAppliances(props) {
     newApplianceState[appliance]["model_num"] = applianceModelNum;
     newApplianceState[appliance]["name"] = applianceName;
     newApplianceState[appliance]["purchased"] = appliancePurchasedOn;
+    newApplianceState[appliance]["purchased_order"] =
+      appliancePurchasesOrderNumber;
+    newApplianceState[appliance]["installed"] = applianceInstalledOn;
     newApplianceState[appliance]["serial_num"] = applianceSerialNum;
     newApplianceState[appliance]["warranty_info"] = applianceWarrantyInfo;
     newApplianceState[appliance]["warranty_till"] = applianceWarrantyTill;
@@ -51,6 +86,8 @@ function PropertyAppliances(props) {
     setApplianceState(newApplianceState);
     setApplianceName("");
     setAppliancePurchasedOn("");
+    setAppliancePurchasesOrderNumber("");
+    setApplianceInstalledOn("");
     setApplianceSerialNum("");
     setApplianceModelNum("");
     setApplianceWarrantyTill("");
@@ -67,6 +104,8 @@ function PropertyAppliances(props) {
     setApplianceState(newApplianceState);
     setApplianceName("");
     setAppliancePurchasedOn("");
+    setAppliancePurchasesOrderNumber("");
+    setApplianceInstalledOn("");
     setApplianceSerialNum("");
     setApplianceModelNum("");
     setApplianceWarrantyTill("");
@@ -82,6 +121,9 @@ function PropertyAppliances(props) {
     newApplianceState[newAppliance]["model_num"] = applianceModelNum;
     newApplianceState[newAppliance]["name"] = applianceName;
     newApplianceState[newAppliance]["purchased"] = appliancePurchasedOn;
+    newApplianceState[newAppliance]["purchased_order"] =
+      appliancePurchasesOrderNumber;
+    newApplianceState[newAppliance]["installed"] = applianceInstalledOn;
     newApplianceState[newAppliance]["serial_num"] = applianceSerialNum;
     newApplianceState[newAppliance]["warranty_info"] = applianceWarrantyInfo;
     newApplianceState[newAppliance]["warranty_till"] = applianceWarrantyTill;
@@ -111,109 +153,180 @@ function PropertyAppliances(props) {
                   onClick={edit ? () => toggleAppliance(appliance) : () => {}}
                 />
               </Col>
-              <Col>
+              <Col
+                style={{ cursor: "pointer" }}
+                onClick={
+                  edit
+                    ? () => {
+                        showApplianceDetail(appliance);
+                        console.log("here");
+                      }
+                    : () => {}
+                }
+              >
                 <p className="ms-1 mb-1">{appliance}</p>
               </Col>
             </Row>
+            <Row>
+              {addApplianceInfo &&
+              showDetails &&
+              applianceState[appliance]["available"] == true &&
+              applianceType == appliance ? (
+                <Row>
+                  <Row className="mx-4 p-0">
+                    <Col>Name</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        type="text"
+                        value={
+                          applianceName || applianceState[appliance]["name"]
+                        }
+                        placeholder="Appliance Name"
+                        onChange={(e) => setApplianceName(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
 
-            {addApplianceInfo &&
-            applianceState[appliance]["available"] == true &&
-            applianceType == appliance ? (
-              <Row>
-                <Row className="mx-4 p-0">
-                  <Col>Name</Col>
-                  <Col>
-                    <Form.Control
-                      style={squareForm}
-                      type="text"
-                      value={applianceName}
-                      placeholder="Appliance Name"
-                      onChange={(e) => setApplianceName(e.target.value)}
-                    />
-                  </Col>
-                </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Purchased On</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        type="date"
+                        value={
+                          appliancePurchasedOn ||
+                          applianceState[appliance]["purchased"]
+                        }
+                        placeholder="Purchased On"
+                        onChange={(e) =>
+                          setAppliancePurchasedOn(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Purchase Order Number</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          appliancePurchasesOrderNumber ||
+                          applianceState[appliance]["purchased_order"]
+                        }
+                        placeholder="Purchase Order Number"
+                        onChange={(e) =>
+                          setAppliancePurchasesOrderNumber(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
 
-                <Row className="mx-4 mt-1 p-0">
-                  <Col>Purchased On</Col>
-                  <Col>
-                    <Form.Control
-                      style={squareForm}
-                      type="date"
-                      value={appliancePurchasedOn}
-                      placeholder="Purchased On"
-                      onChange={(e) => setAppliancePurchasedOn(e.target.value)}
-                    />
-                  </Col>
-                </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Installed On</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        type="date"
+                        value={
+                          applianceInstalledOn ||
+                          applianceState[appliance]["installed"]
+                        }
+                        placeholder="Installed On"
+                        onChange={(e) =>
+                          setApplianceInstalledOn(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
 
-                <Row className="mx-4 mt-1 p-0">
-                  <Col>Serial Number</Col>
-                  <Col>
-                    <Form.Control
-                      style={squareForm}
-                      value={applianceSerialNum}
-                      placeholder="Serial Number"
-                      onChange={(e) => setApplianceSerialNum(e.target.value)}
-                    />
-                  </Col>
-                </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Serial Number</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          applianceSerialNum ||
+                          applianceState[appliance]["serial_num"]
+                        }
+                        placeholder="Serial Number"
+                        onChange={(e) => setApplianceSerialNum(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
 
-                <Row className="mx-4 mt-1 p-0">
-                  <Col>Model Number</Col>
-                  <Col>
-                    <Form.Control
-                      style={squareForm}
-                      value={applianceModelNum}
-                      placeholder="Model Number"
-                      onChange={(e) => setApplianceModelNum(e.target.value)}
-                    />
-                  </Col>
-                </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Model Number</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          applianceModelNum ||
+                          applianceState[appliance]["model_num"]
+                        }
+                        placeholder="Model Number"
+                        onChange={(e) => setApplianceModelNum(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
 
-                <Row className="mx-4 mt-1 p-0">
-                  <Col>Warranty Till</Col>
-                  <Col>
-                    <Form.Control
-                      style={squareForm}
-                      type="date"
-                      value={applianceWarrantyTill}
-                      placeholder="Warranty Till"
-                      onChange={(e) => setApplianceWarrantyTill(e.target.value)}
-                    />
-                  </Col>
-                </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Warranty Till</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        type="date"
+                        value={
+                          applianceWarrantyTill ||
+                          applianceState[appliance]["warranty_till"]
+                        }
+                        placeholder="Warranty Till"
+                        onChange={(e) =>
+                          setApplianceWarrantyTill(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
 
-                <Row className="mx-4 mt-1 p-0">
-                  <Col>Warranty Info</Col>
-                  <Col>
-                    <Form.Control
-                      style={squareForm}
-                      value={applianceWarrantyInfo}
-                      placeholder="Warranty Info"
-                      onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
-                    />
-                  </Col>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Warranty Info</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          applianceWarrantyInfo ||
+                          applianceState[appliance]["warranty_info"]
+                        }
+                        placeholder="Warranty Info"
+                        onChange={(e) =>
+                          setApplianceWarrantyInfo(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <div className="text-center my-3">
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      className="mx-2"
+                      onClick={() => cancelAppliance(appliance)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      className="mx-2"
+                      onClick={
+                        edit ? () => updateAppliance(appliance) : () => {}
+                      }
+                    >
+                      Save
+                    </Button>
+                  </div>
                 </Row>
-                <div className="text-center my-3">
-                  <Button
-                    variant="outline-primary"
-                    style={pillButton}
-                    className="mx-2"
-                    onClick={() => cancelAppliance(appliance)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    style={pillButton}
-                    className="mx-2"
-                    onClick={edit ? () => updateAppliance(appliance) : () => {}}
-                  >
-                    Save
-                  </Button>
-                </div>
-              </Row>
-            ) : null}
+              ) : null}
+            </Row>
           </Row>
         ))}
       </Row>
@@ -269,7 +382,32 @@ function PropertyAppliances(props) {
                 />
               </Col>
             </Row>
+            <Row className="mx-1 mt-1 p-0">
+              <Col>Purchase Order Number</Col>
+              <Col>
+                <Form.Control
+                  style={squareForm}
+                  value={appliancePurchasesOrderNumber}
+                  placeholder="Purchase Order Number"
+                  onChange={(e) =>
+                    setAppliancePurchasesOrderNumber(e.target.value)
+                  }
+                />
+              </Col>
+            </Row>
 
+            <Row className="mx-1 mt-1 p-0">
+              <Col>Installed On</Col>
+              <Col>
+                <Form.Control
+                  style={squareForm}
+                  type="date"
+                  value={applianceInstalledOn}
+                  placeholder="Installed On"
+                  onChange={(e) => setApplianceInstalledOn(e.target.value)}
+                />
+              </Col>
+            </Row>
             <Row className="mx-1 mt-1 p-0">
               <Col>Serial Number</Col>
               <Col>
