@@ -12,6 +12,8 @@ import OwnerContacts from "./OwnerContacts";
 import OwnerRepairList from "../components/OwnerRepairList";
 import OwnerRepairRequest from "../components/OwnerRepairRequest";
 import OwnerDocuments from "../components/OwnerDocuments";
+
+import OwnerUtilities from "./OwnerUtilities";
 function OwnerHome(props) {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
@@ -22,6 +24,8 @@ function OwnerHome(props) {
   const [properties, setProperties] = useState([]);
   const [bills, setBills] = useState([]);
   const [ownerID, setOwnerID] = useState([]);
+
+  const [expenses, setExpenses] = useState([]);
   // const [profileInfo, setProfileInfo] = useState([]);
 
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -38,8 +42,37 @@ function OwnerHome(props) {
       )[0];
       setSelectedProperty(property);
     }
-
-    setProperties(response.result);
+    const properties = response.result;
+    const pids = new Set();
+    const properties_unique = [];
+    properties.forEach((property) => {
+      if (pids.has(property.property_uid)) {
+        console.log("here in if");
+        // properties_unique[properties_unique.length-1].tenants.push(property)
+        const index = properties_unique.findIndex(
+          (item) => item.property_uid === property.property_uid
+        );
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "PROCESSING"
+        ) {
+          console.log("here", property);
+          properties_unique[index].tenants.push(property);
+        }
+      } else {
+        console.log("here in else");
+        pids.add(property.property_uid);
+        properties_unique.push(property);
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "PROCESSING"
+        ) {
+          console.log("here", property);
+          properties_unique[properties_unique.length - 1].tenants = [property];
+        }
+      }
+    });
+    setProperties(properties_unique);
   };
   const fetchBills = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
@@ -125,6 +158,17 @@ function OwnerHome(props) {
               ""
             )}
           </div>
+        ) : (
+          ""
+        )}
+        {footerTab === "EXPENSES" ? (
+          <OwnerUtilities
+            properties={properties}
+            expenses={expenses}
+            setStage={setStage}
+            setShowFooter={setShowFooter}
+            setFooterTab={setFooterTab}
+          />
         ) : (
           ""
         )}

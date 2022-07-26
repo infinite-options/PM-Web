@@ -23,9 +23,11 @@ function ManagerPaymentPage(props) {
   const navigate = useNavigate();
   // const location = useLocation();
   // const { totalSum, selectedProperty, purchaseUID, setStage } = props;
-  const { purchase_uid } = useParams();
+  // const { purchase_uid } = useParams();
   const location = useLocation();
+
   const [totalSum, setTotalSum] = useState(location.state.amount);
+  console.log(location.state.amount);
   const selectedProperty = location.state.selectedProperty;
   const purchaseUID = location.state.purchaseUID;
   const [stripePayment, setStripePayment] = useState(false);
@@ -63,6 +65,9 @@ function ManagerPaymentPage(props) {
     }
     response = await get(`/purchases?purchase_uid=${purchaseUID}`);
     setPurchase(response.result[0]);
+
+    setTotalSum(response.result[0].amount_due);
+    setAmount(response.result[0].amount_due - response.result[0].amount_paid);
     setAllPurchases(tempAllPurchases);
   }, []);
 
@@ -89,24 +94,32 @@ function ManagerPaymentPage(props) {
           navigate(-1);
         }}
       />
-      <div
-        className="mb-4 p-2 m-2"
-        style={{
-          background: "#F3F3F3 0% 0% no-repeat padding-box",
-          borderRadius: "5px",
-        }}
-      >
+
+      {selectedProperty !== undefined && selectedProperty.length > 0 ? (
         <div
-          style={
-            ({
-              textAlign: "center",
-            },
-            mediumBold)
-          }
+          className="mb-4 p-2 m-2"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+          }}
         >
-          {selectedProperty.address}
+          <div
+            style={
+              ({
+                textAlign: "center",
+              },
+              mediumBold)
+            }
+          >
+            {selectedProperty.address}
+            {selectedProperty.unit !== "" ? " " + selectedProperty.unit : ""},
+            {selectedProperty.city}, {selectedProperty.state}{" "}
+            {selectedProperty.zip}
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
       {paymentConfirm ? (
         <div
           className="mx-2 my-2 p-3"

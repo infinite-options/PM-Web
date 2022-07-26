@@ -62,7 +62,10 @@ function OwnerPaymentPage(props) {
       tempAllPurchases.push(response1.result[0]);
     }
     response = await get(`/purchases?purchase_uid=${purchaseUID}`);
+
     setPurchase(response.result[0]);
+    setTotalSum(response.result[0].amount_due);
+    setAmount(response.result[0].amount_due - response.result[0].amount_paid);
     setAllPurchases(tempAllPurchases);
   }, []);
 
@@ -89,27 +92,32 @@ function OwnerPaymentPage(props) {
           navigate("/owner");
         }}
       />
-      <div
-        className="mb-4 p-2 m-2"
-        style={{
-          background: "#F3F3F3 0% 0% no-repeat padding-box",
-          borderRadius: "5px",
-        }}
-      >
+      {selectedProperty !== undefined && selectedProperty.length > 0 ? (
         <div
-          style={
-            ({
-              textAlign: "center",
-            },
-            mediumBold)
-          }
+          className="mb-4 p-2 m-2"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+          }}
         >
-          {selectedProperty.address}
-          {selectedProperty.unit !== "" ? " " + selectedProperty.unit : ""},
-          {selectedProperty.city}, {selectedProperty.state}{" "}
-          {selectedProperty.zip}
+          <div
+            style={
+              ({
+                textAlign: "center",
+              },
+              mediumBold)
+            }
+          >
+            {selectedProperty.address}
+            {selectedProperty.unit !== "" ? " " + selectedProperty.unit : ""},
+            {selectedProperty.city}, {selectedProperty.state}{" "}
+            {selectedProperty.zip}
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
+
       {paymentConfirm ? (
         <div
           className="mx-2 my-2 p-3"
