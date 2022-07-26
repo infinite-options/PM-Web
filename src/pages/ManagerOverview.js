@@ -612,7 +612,7 @@ function ManagerOverview(props) {
             onClick={() => setExpandAccountPayable(!expandAccountPayable)}
           >
             <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
-              MTD Expected Cash Flow
+              Expected Cash Flow
             </Col>
             <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
               {" "}

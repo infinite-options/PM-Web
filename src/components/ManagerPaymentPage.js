@@ -285,6 +285,19 @@ function ManagerPaymentPage(props) {
                   </Button>
                 </Col>
               )}
+              <Col>
+                <Button
+                  className="mt-2 mb-2"
+                  variant="outline-primary"
+                  onClick={() => {
+                    navigate("/manager");
+                    // setStripePayment(true);
+                  }}
+                  style={bluePillButton}
+                >
+                  Pay later
+                </Button>
+              </Col>
             </Row>
           </div>
 

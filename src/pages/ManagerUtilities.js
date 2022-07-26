@@ -379,7 +379,7 @@ function ManagerUtilities(props) {
       style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
     >
       <Header
-        title="Utilities"
+        title="Expenses"
         leftText={
           editingUtility || expenseDetail || maintenanceExpenseDetail
             ? "< Back"
