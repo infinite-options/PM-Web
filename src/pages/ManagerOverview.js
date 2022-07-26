@@ -295,7 +295,7 @@ function ManagerOverview(props) {
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
                               >
-                                {property.rental_revenue}
+                                {property.rental_revenue.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
@@ -329,7 +329,7 @@ function ManagerOverview(props) {
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
                               >
-                                {property.extraCharges_revenue}
+                                {property.extraCharges_revenue.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
@@ -479,7 +479,7 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.maintenance_expenses}
+                                {property.maintenance_expenses.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
@@ -516,7 +516,7 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.management_expenses}
+                                {property.management_expenses.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
@@ -554,7 +554,7 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.repairs_expenses}
+                                {property.repairs_expenses.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
@@ -612,7 +612,7 @@ function ManagerOverview(props) {
             onClick={() => setExpandAccountPayable(!expandAccountPayable)}
           >
             <Col xs={8} style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
-              MTD Account Payable
+              MTD Expected Cash Flow
             </Col>
             <Col style={{ ...mediumBold, ...{ color: "#FFFFFF" } }}>
               {" "}
@@ -709,7 +709,7 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.rental_expected_revenue}
+                                {property.rental_expected_revenue.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
@@ -743,7 +743,9 @@ function ManagerOverview(props) {
                                 style={{ ...small, ...green }}
                                 className="text-center m-1"
                               >
-                                {property.extraCharges_expected_revenue}
+                                {property.extraCharges_expected_revenue.toFixed(
+                                  2
+                                )}
                               </p>
                             </Col>
                           </Row>
@@ -780,7 +782,9 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.maintenance_expected_expenses}
+                                {property.maintenance_expected_expenses.toFixed(
+                                  2
+                                )}
                               </p>
                             </Col>
                           </Row>
@@ -817,7 +821,9 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.management_expected_expenses}
+                                {property.management_expected_expenses.toFixed(
+                                  2
+                                )}
                               </p>
                             </Col>
                           </Row>
@@ -855,7 +861,7 @@ function ManagerOverview(props) {
                                 }}
                                 className="text-center m-1 pt-1"
                               >
-                                {property.repairs_expected_expenses}
+                                {property.repairs_expected_expenses.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
