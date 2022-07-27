@@ -418,7 +418,7 @@ function ManagerUtilities(props) {
             }}
           >
             <Row className="my-4 text-center">
-              <div style={headings}>New Payment</div>
+              <div style={headings}>New Expense</div>
             </Row>
             <Row className="mb-2">
               <Col>
@@ -685,198 +685,7 @@ function ManagerUtilities(props) {
             >
               <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
             </div>
-          </div>
-        ) : (
-          ""
-        )}
-        {expenses.length > 0 ? (
-          newUtility === null &&
-          !editingUtility &&
-          !expenseDetail &&
-          !maintenanceExpenseDetail ? (
-            <div className="mx-2 my-2 p-3">
-              <div>
-                {expenses.map((expense) => {
-                  return expense.purchase_type === "UTILITY" &&
-                    expense.payer.includes(managerID) ? (
-                    <div>
-                      <Row style={headings}>Utility Payments By Manager</Row>
-                      <Row
-                        className="my-2 p-3"
-                        style={{
-                          background: "#FFFFFF 0% 0% no-repeat padding-box",
-                          boxShadow: "0px 3px 6px #00000029",
-                          borderRadius: "5px",
-                          opacity: 1,
-                        }}
-                        onClick={() => {
-                          setExpenseDetail(true);
-                          setPayment(expense);
-                        }}
-                      >
-                        <Col
-                          xs={3}
-                          className="pt-4 justify-content-center align-items-center"
-                          style={
-                            (mediumBold,
-                            {
-                              color: "#007AFF",
-                              border: "4px solid #007AFF",
-                              borderRadius: "50%",
-                              height: "83px",
-                              width: "83px",
-                            })
-                          }
-                        >
-                          ${expense.amount_due.toFixed(2)}
-                        </Col>
-                        <Col style={mediumBold}>
-                          <div>
-                            {expense.description} -{" "}
-                            {new Date(
-                              String(expense.purchase_date).split(" ")[0]
-                            ).toDateString()}
-                          </div>
-                          <div>
-                            {expense.address.split(",")[0]} <br />
-                            {expense.address.split(",")[1]},{" "}
-                            {expense.address.split(",")[2]}
-                          </div>
-                        </Col>
-                        <Col xs={3} className="pt-4 justify-content-end">
-                          {expense.purchase_status === "UNPAID" ? (
-                            <Col className="mt-0" style={redPill}>
-                              {expense.purchase_status}
-                            </Col>
-                          ) : (
-                            <Col className="mt-0" style={greenPill}>
-                              {expense.purchase_status}
-                            </Col>
-                          )}
-                        </Col>
-                      </Row>
-                    </div>
-                  ) : (
-                    <Row></Row>
-                  );
-                })}
-              </div>
-              <div>
-                {expenses.map((expense) => {
-                  return expense.purchase_type === "UTILITY" &&
-                    !expense.payer.includes(managerID) ? (
-                    <div>
-                      <Row style={headings}>Utility Payments By Tenant</Row>
-                      <Row
-                        className="my-2 p-3"
-                        style={{
-                          background: "#FFFFFF 0% 0% no-repeat padding-box",
-                          boxShadow: "0px 3px 6px #00000029",
-                          borderRadius: "5px",
-                          opacity: 1,
-                        }}
-                        onClick={() => {
-                          setExpenseDetail(true);
-                          setPayment(expense);
-                        }}
-                      >
-                        <Col
-                          xs={3}
-                          className="pt-4 justify-content-center align-items-center"
-                          style={
-                            (mediumBold,
-                            {
-                              color: "#007AFF",
-                              border: "4px solid #007AFF",
-                              borderRadius: "50%",
-                              height: "83px",
-                              width: "83px",
-                            })
-                          }
-                        >
-                          ${expense.amount_due.toFixed(2)}
-                        </Col>
-                        <Col style={mediumBold}>
-                          <div>
-                            {expense.description} -{" "}
-                            {new Date(
-                              String(expense.purchase_date).split(" ")[0]
-                            ).toDateString()}
-                          </div>
-                          <div>
-                            {expense.address.split(",")[0]} <br />
-                            {expense.address.split(",")[1]},{" "}
-                            {expense.address.split(",")[2]}
-                          </div>
-                        </Col>
-                        <Col xs={3} className="pt-4 justify-content-end">
-                          {expense.purchase_status === "UNPAID" ? (
-                            <Col className="mt-0" style={redPill}>
-                              {expense.purchase_status}
-                            </Col>
-                          ) : (
-                            <Col className="mt-0" style={greenPill}>
-                              {expense.purchase_status}
-                            </Col>
-                          )}
-                        </Col>
-                      </Row>
-                    </div>
-                  ) : (
-                    <Row></Row>
-                  );
-                })}
-              </div>
-              <div>
-                {expenses.map((expense) => {
-                  return expense.purchase_type === "MAINTENANCE" ||
-                    expense.purchase_type === "REPAIRS" ? (
-                    <div>
-                      <Row style={headings}> Maintenance Payments</Row>
-                      <Row
-                        className="my-2 p-3"
-                        style={
-                          (mediumBold,
-                          {
-                            background: "#FFFFFF 0% 0% no-repeat padding-box",
-                            boxShadow: "0px 3px 6px #00000029",
-                            borderRadius: "5px",
-                            opacity: 1,
-                          })
-                        }
-                        onClick={() => {
-                          setMaintenanceExpenseDetail(true);
-                          setPayment(expense);
-                        }}
-                      >
-                        <Col
-                          xs={3}
-                          className="pt-4 justify-content-center align-items-center"
-                          style={{
-                            color: "#007AFF",
-                            border: "4px solid #007AFF",
-                            borderRadius: "50%",
-                            height: "83px",
-                            width: "83px",
-                          }}
-                        >
-                          ${expense.amount_due.toFixed(2)}
-                        </Col>
-                        <Col style={mediumBold}>
-                          {expense.description} -{" "}
-                          {new Date(
-                            String(expense.purchase_date).split(" ")[0]
-                          ).toDateString()}
-                        </Col>
-                      </Row>
-                    </div>
-                  ) : (
-                    <div></div>
-                  );
-                })}
-              </div>
-            </div>
-          ) : !expenseDetail && !maintenanceExpenseDetail ? (
+
             <div
               className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
               style={{
@@ -899,18 +708,212 @@ function ManagerUtilities(props) {
                 onClick={addUtility}
                 className="mx-2"
               >
-                Add Utility
+                Save
               </Button>
             </div>
-          ) : (
-            ""
-          )
+          </div>
         ) : (
+          ""
+        )}
+        {expenses.length > 0 &&
+        newUtility === null &&
+        !editingUtility &&
+        !expenseDetail &&
+        !maintenanceExpenseDetail ? (
+          <div className="mx-2 my-2 p-3">
+            <div>
+              <Row style={headings}>Utility Expenses Due From Manager</Row>
+              {expenses.map((expense) => {
+                return expense.purchase_type === "UTILITY" &&
+                  expense.payer.includes(managerID) ? (
+                  <div>
+                    <Row
+                      className="my-2 p-3"
+                      style={{
+                        background: "#FFFFFF 0% 0% no-repeat padding-box",
+                        boxShadow: "0px 3px 6px #00000029",
+                        borderRadius: "5px",
+                        opacity: 1,
+                      }}
+                      onClick={() => {
+                        setExpenseDetail(true);
+                        setPayment(expense);
+                      }}
+                    >
+                      <Col
+                        xs={3}
+                        className="pt-4 justify-content-center align-items-center"
+                        style={
+                          (mediumBold,
+                          {
+                            color: "#007AFF",
+                            border: "4px solid #007AFF",
+                            borderRadius: "50%",
+                            height: "83px",
+                            width: "83px",
+                          })
+                        }
+                      >
+                        ${expense.amount_due.toFixed(2)}
+                      </Col>
+                      <Col style={mediumBold}>
+                        <div>
+                          {expense.description} -{" "}
+                          {new Date(
+                            String(expense.purchase_date).split(" ")[0]
+                          ).toDateString()}
+                        </div>
+                        <div>
+                          {expense.address.split(",")[0]} <br />
+                          {expense.address.split(",")[1]},{" "}
+                          {expense.address.split(",")[2]}
+                        </div>
+                      </Col>
+                      <Col xs={3} className="pt-4 justify-content-end">
+                        {expense.purchase_status === "UNPAID" ? (
+                          <Col className="mt-0" style={redPill}>
+                            {expense.purchase_status}
+                          </Col>
+                        ) : (
+                          <Col className="mt-0" style={greenPill}>
+                            {expense.purchase_status}
+                          </Col>
+                        )}
+                      </Col>
+                    </Row>
+                  </div>
+                ) : (
+                  <Row></Row>
+                );
+              })}
+            </div>
+            <div>
+              <Row style={headings}>Utility Expenses Due From Tenant</Row>
+              {expenses.map((expense) => {
+                return expense.purchase_type === "UTILITY" &&
+                  !expense.payer.includes(managerID) ? (
+                  <div>
+                    <Row
+                      className="my-2 p-3"
+                      style={{
+                        background: "#FFFFFF 0% 0% no-repeat padding-box",
+                        boxShadow: "0px 3px 6px #00000029",
+                        borderRadius: "5px",
+                        opacity: 1,
+                      }}
+                      onClick={() => {
+                        setExpenseDetail(true);
+                        setPayment(expense);
+                      }}
+                    >
+                      <Col
+                        xs={3}
+                        className="pt-4 justify-content-center align-items-center"
+                        style={
+                          (mediumBold,
+                          {
+                            color: "#007AFF",
+                            border: "4px solid #007AFF",
+                            borderRadius: "50%",
+                            height: "83px",
+                            width: "83px",
+                          })
+                        }
+                      >
+                        ${expense.amount_due.toFixed(2)}
+                      </Col>
+                      <Col style={mediumBold}>
+                        <div>
+                          {expense.description} -{" "}
+                          {new Date(
+                            String(expense.purchase_date).split(" ")[0]
+                          ).toDateString()}
+                        </div>
+                        <div>
+                          {expense.address.split(",")[0]} <br />
+                          {expense.address.split(",")[1]},{" "}
+                          {expense.address.split(",")[2]}
+                        </div>
+                      </Col>
+                      <Col xs={3} className="pt-4 justify-content-end">
+                        {expense.purchase_status === "UNPAID" ? (
+                          <Col className="mt-0" style={redPill}>
+                            {expense.purchase_status}
+                          </Col>
+                        ) : (
+                          <Col className="mt-0" style={greenPill}>
+                            {expense.purchase_status}
+                          </Col>
+                        )}
+                      </Col>
+                    </Row>
+                  </div>
+                ) : (
+                  <Row></Row>
+                );
+              })}
+            </div>
+            <div>
+              {expenses.map((expense) => {
+                return expense.purchase_type === "MAINTENANCE" ||
+                  expense.purchase_type === "REPAIRS" ? (
+                  <div>
+                    <Row style={headings}> Maintenance Payments</Row>
+                    <Row
+                      className="my-2 p-3"
+                      style={
+                        (mediumBold,
+                        {
+                          background: "#FFFFFF 0% 0% no-repeat padding-box",
+                          boxShadow: "0px 3px 6px #00000029",
+                          borderRadius: "5px",
+                          opacity: 1,
+                        })
+                      }
+                      onClick={() => {
+                        setMaintenanceExpenseDetail(true);
+                        setPayment(expense);
+                      }}
+                    >
+                      <Col
+                        xs={3}
+                        className="pt-4 justify-content-center align-items-center"
+                        style={{
+                          color: "#007AFF",
+                          border: "4px solid #007AFF",
+                          borderRadius: "50%",
+                          height: "83px",
+                          width: "83px",
+                        }}
+                      >
+                        ${expense.amount_due.toFixed(2)}
+                      </Col>
+                      <Col style={mediumBold}>
+                        {expense.description} -{" "}
+                        {new Date(
+                          String(expense.purchase_date).split(" ")[0]
+                        ).toDateString()}
+                      </Col>
+                    </Row>
+                  </div>
+                ) : (
+                  <div></div>
+                );
+              })}
+            </div>
+          </div>
+        ) : newUtility === null &&
+          !editingUtility &&
+          !expenseDetail &&
+          !maintenanceExpenseDetail ? (
           <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
             <Row style={headings}>No expenses</Row>
           </div>
+        ) : (
+          ""
         )}
       </div>
+
       {expenseDetail && !maintenanceExpenseDetail ? (
         <div
           className="d-flex flex-column mx-2 p-3"

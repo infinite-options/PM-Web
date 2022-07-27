@@ -46,13 +46,9 @@ function ApplianceList(props) {
         </p>
         {num_appliances} appliances
       </div>
-      {Object.values(JSON.parse(property.appliances)).map((appliance) => {
+      {Object.values(JSON.parse(property.appliances)).map((appliance, i) => {
         return appliance.available ? (
           <div
-            onClick={() => {
-              setListAppliances(!listAppliances);
-              setCurrentAppliance(appliance.name);
-            }}
             className="mx-2 my-2 p-3"
             style={{
               background: "#FFFFFF 0% 0% no-repeat padding-box",
@@ -61,14 +57,22 @@ function ApplianceList(props) {
               borderRadius: "5px",
               opacity: 1,
             }}
+            key={i}
           >
-            {console.log(Object.keys(JSON.parse(property.appliances)))}
+            {console.log(appliance)}
             <Row>
               <Col style={mediumBold}>
                 <div style={{ color: "#007AFF" }}>{appliance.name}</div>
                 <div>Purchased: {appliance.purchased}</div>
               </Col>
-              <Col xs={2} className="justify-content-end">
+              <Col
+                xs={2}
+                className="justify-content-end"
+                onClick={() => {
+                  setListAppliances(!listAppliances);
+                  setCurrentAppliance(i);
+                }}
+              >
                 <img
                   src={
                     listAppliances && currentAppliance == appliance.name
@@ -79,8 +83,19 @@ function ApplianceList(props) {
               </Col>
             </Row>
             <Row>
-              {listAppliances && currentAppliance == appliance.name ? (
+              {listAppliances && currentAppliance == i ? (
                 <div>
+                  <div>
+                    Order Number:{" "}
+                    {appliance.purchased_order
+                      ? appliance.purchased_order
+                      : "NA"}
+                  </div>
+                  <div>
+                    Installed On:{" "}
+                    {appliance.installed ? appliance.installed : "NA"}
+                  </div>
+
                   <div>
                     Serial Number:{" "}
                     {appliance.serial_num ? appliance.serial_num : "NA"}

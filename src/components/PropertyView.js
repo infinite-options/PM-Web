@@ -1568,7 +1568,6 @@ function PropertyView(props) {
               >
                 <div
                   style={mediumBold}
-                  onClick={() => setExpandDetails(!expandDetails)}
                   className=" d-flex flex-column justify-content-center align-items-center"
                 >
                   <div className="d-flex mt-1">
@@ -1587,6 +1586,7 @@ function PropertyView(props) {
                   )}
                   <div className="d-flex mt-1">
                     <img
+                      onClick={() => setExpandDetails(!expandDetails)}
                       src={expandDetails ? BlueArrowUp : BlueArrowDown}
                       alt="Expand"
                     />
