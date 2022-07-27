@@ -41,7 +41,7 @@ function OwnerUtilities(props) {
 
   const useLiveStripeKey = false;
   const [message, setMessage] = React.useState("");
-  console.log(expenses);
+  console.log(properties[0].tenants[0]);
   const [utilityState, setUtilityState] = React.useState([]);
   const [newUtility, setNewUtility] = React.useState(null);
   const [editingUtility, setEditingUtility] = React.useState(false);
@@ -203,7 +203,7 @@ function OwnerUtilities(props) {
       }
       if (tenantPay) {
         if (property.rental_status === "ACTIVE") {
-          let tenant_ids = property.tenants.map((t) => t.tenant_id);
+          let tenant_ids = property.tenants[0].map((t) => t.tenant_id);
           new_purchase.payer = tenant_ids;
         } else {
           new_purchase.payer = [property.owner_id];

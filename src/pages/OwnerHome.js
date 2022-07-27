@@ -57,7 +57,7 @@ function OwnerHome(props) {
           property.rental_status === "PROCESSING"
         ) {
           console.log("here", property);
-          properties_unique[index].tenants.push(property);
+          properties_unique[index].tenants.push(property.rentalInfo);
         }
       } else {
         console.log("here in else");
@@ -68,7 +68,9 @@ function OwnerHome(props) {
           property.rental_status === "PROCESSING"
         ) {
           console.log("here", property);
-          properties_unique[properties_unique.length - 1].tenants = [property];
+          properties_unique[properties_unique.length - 1].tenants = [
+            property.rentalInfo,
+          ];
         }
       }
     });

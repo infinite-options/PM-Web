@@ -38,7 +38,7 @@ function ManagerUtilities(props) {
   const [stripePromise, setStripePromise] = useState(null);
   // const [expenses, setExpenses] = React.useState([]);
   const { properties, setStage, expenses } = props;
-
+  console.log(properties);
   const useLiveStripeKey = false;
   const [message, setMessage] = React.useState("");
 
