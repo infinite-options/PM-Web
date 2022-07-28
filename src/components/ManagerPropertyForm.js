@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import AppContext from "../AppContext";
 import {
@@ -21,10 +21,12 @@ import PropertyAppliances from "./PropertyAppliances";
 import PropertyUtilities from "./PropertyUtilities";
 import PropertyImages from "./PropertyImages";
 
+import ConfirmDialog2 from "./ConfirmDialog2";
+
 function ManagerPropertyForm(props) {
-  const { userData } = React.useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const { user } = userData;
-  const applianceState = React.useState({
+  const applianceState = useState({
     Microwave: {
       available: false,
       name: "",
@@ -80,28 +82,29 @@ function ManagerPropertyForm(props) {
       warranty_info: "",
     },
   });
-  const utilityState = React.useState({
+  const utilityState = useState({
     Electricity: false,
     Trash: false,
     Water: false,
     Wifi: false,
     Gas: false,
   });
-  const imageState = React.useState([]);
-  const [address, setAddress] = React.useState("");
-  const [unit, setUnit] = React.useState("");
-  const [city, setCity] = React.useState("");
-  const [state, setState] = React.useState("");
-  const [zip, setZip] = React.useState("");
-  const [type, setType] = React.useState("");
-  const [numBeds, setNumBeds] = React.useState("");
-  const [numBaths, setNumBaths] = React.useState("");
-  const [area, setArea] = React.useState("");
-  const [rent, setRent] = React.useState("");
-  const [deposit, setDeposit] = React.useState("");
-  const [petsAllowed, setPetsAllowed] = React.useState(false);
-  const [depositForRent, setDepositForRent] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const imageState = useState([]);
+  const [address, setAddress] = useState("");
+  const [unit, setUnit] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zip, setZip] = useState("");
+  const [type, setType] = useState("");
+  const [numBeds, setNumBeds] = useState("");
+  const [numBaths, setNumBaths] = useState("");
+  const [area, setArea] = useState("");
+  const [rent, setRent] = useState("");
+  const [deposit, setDeposit] = useState("");
+  const [petsAllowed, setPetsAllowed] = useState(false);
+  const [depositForRent, setDepositForRent] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
 
   const { property, edit, setEdit, hideEdit } = props;
   console.log(hideEdit);
@@ -123,7 +126,12 @@ function ManagerPropertyForm(props) {
     utilityState[1](JSON.parse(property.utilities));
     loadImages();
   };
-  React.useEffect(() => {
+
+  const onConfirm = () => {
+    setShowDialog(false);
+  };
+
+  useEffect(() => {
     if (property) {
       loadProperty();
     }
@@ -225,6 +233,11 @@ function ManagerPropertyForm(props) {
 
   return (
     <div className="mx-2">
+      <ConfirmDialog2
+        title={"Can't edit here. Click on the edit icon to make any changes"}
+        isOpen={showDialog}
+        onConfirm={onConfirm}
+      />
       {edit ? (
         <div>
           <Form.Group className="mx-2 my-3">
@@ -427,7 +440,13 @@ function ManagerPropertyForm(props) {
             <Checkbox
               type="CIRCLE"
               checked={petsAllowed}
-              onClick={edit ? () => setPetsAllowed(true) : () => {}}
+              onClick={
+                edit
+                  ? () => setPetsAllowed(true)
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
             />
             <p className="ms-1 mb-1">Yes</p>
           </Col>
@@ -435,7 +454,13 @@ function ManagerPropertyForm(props) {
             <Checkbox
               type="CIRCLE"
               checked={!petsAllowed}
-              onClick={edit ? () => setPetsAllowed(false) : () => {}}
+              onClick={
+                edit
+                  ? () => setPetsAllowed(false)
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
             />
             <p className="ms-1 mb-1">No</p>
           </Col>
@@ -448,7 +473,13 @@ function ManagerPropertyForm(props) {
             <Checkbox
               type="CIRCLE"
               checked={depositForRent}
-              onClick={edit ? () => setDepositForRent(true) : () => {}}
+              onClick={
+                edit
+                  ? () => setDepositForRent(true)
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
             />
             <p className="ms-1 mb-1">Yes</p>
           </Col>
@@ -456,7 +487,13 @@ function ManagerPropertyForm(props) {
             <Checkbox
               type="CIRCLE"
               checked={!depositForRent}
-              onClick={edit ? () => setDepositForRent(false) : () => {}}
+              onClick={
+                edit
+                  ? () => setDepositForRent(false)
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
             />
             <p className="ms-1 mb-1">No</p>
           </Col>
