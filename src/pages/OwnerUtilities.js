@@ -203,7 +203,7 @@ function OwnerUtilities(props) {
       }
       if (tenantPay) {
         if (property.rental_status === "ACTIVE") {
-          let tenant_ids = property.tenants.map((t) => t.tenant_id);
+          let tenant_ids = property.tenants[0].map((t) => t.tenant_id);
           new_purchase.payer = tenant_ids;
         } else {
           new_purchase.payer = [property.owner_id];
@@ -417,14 +417,13 @@ function OwnerUtilities(props) {
             }}
           >
             <Row className="my-4 text-center">
-              <div style={headings}>New Utility Payment</div>
+              <div style={headings}>New Expense</div>
             </Row>
             <Row className="mb-2">
               <Col>
                 <Form.Group className="mx-2">
                   <Form.Label style={mediumBold} className="mb-0 ms-2">
-                    Utility Type{" "}
-                    {newUtility.service_name === "" ? required : ""}
+                    Type {newUtility.service_name === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
@@ -555,7 +554,7 @@ function OwnerUtilities(props) {
 
             {/*Add Documents functionality*/}
             <Row className="mx-1 mt-3 mb-2">
-              <h6 style={mediumBold}>Utility Documents</h6>
+              <h6 style={mediumBold}>Documents</h6>
               {files.map((file, i) => (
                 <div key={i}>
                   <div className="d-flex justify-content-between align-items-end">
@@ -713,143 +712,234 @@ function OwnerUtilities(props) {
             >
               <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
             </div>
+            <div
+              className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
+              style={{
+                background: "#FFFFFF 0% 0% no-repeat padding-box",
+
+                opacity: 1,
+              }}
+            >
+              <Button
+                variant="outline-primary"
+                style={pillButton}
+                onClick={cancelEdit}
+                className="mx-2"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="outline-primary"
+                style={pillButton}
+                onClick={addUtility}
+                className="mx-2"
+              >
+                Save
+              </Button>
+            </div>
           </div>
         ) : (
           ""
         )}
-
-        {newUtility === null &&
+        {expenses.length > 0 &&
+        newUtility === null &&
         !editingUtility &&
         !expenseDetail &&
         !maintenanceExpenseDetail ? (
           <div className="mx-2 my-2 p-3">
             <div>
-              <Row style={headings}>Utility Payments</Row>
-
+              <Row style={headings}>Utility Expenses Due From Owner</Row>
               {expenses.map((expense) => {
-                return expense.purchase_type === "UTILITY" ? (
-                  <Row
-                    className="my-2 p-3"
-                    style={{
-                      background: "#FFFFFF 0% 0% no-repeat padding-box",
-                      boxShadow: "0px 3px 6px #00000029",
-                      borderRadius: "5px",
-                      opacity: 1,
-                    }}
-                    onClick={() => {
-                      setExpenseDetail(true);
-                      setPayment(expense);
-                    }}
-                  >
-                    <Col
-                      xs={3}
-                      className="pt-4 justify-content-center align-items-center"
-                      style={
-                        (mediumBold,
-                        {
-                          color: "#007AFF",
-                          border: "4px solid #007AFF",
-                          borderRadius: "50%",
-                          height: "83px",
-                          width: "83px",
-                        })
-                      }
+                return expense.purchase_type === "UTILITY" &&
+                  expense.payer.includes(user.user_uid) ? (
+                  <div>
+                    <Row
+                      className="my-2 p-3"
+                      style={{
+                        background: "#FFFFFF 0% 0% no-repeat padding-box",
+                        boxShadow: "0px 3px 6px #00000029",
+                        borderRadius: "5px",
+                        opacity: 1,
+                      }}
+                      onClick={() => {
+                        setExpenseDetail(true);
+                        setPayment(expense);
+                      }}
                     >
-                      ${expense.amount_due.toFixed(2)}
-                    </Col>
-                    <Col style={mediumBold}>
-                      <div>
-                        {expense.description} -{" "}
-                        {new Date(
-                          String(expense.purchase_date).split(" ")[0]
-                        ).toDateString()}
-                      </div>
-                      <div>{expense.address}</div>
-                    </Col>
-                  </Row>
+                      <Col
+                        xs={3}
+                        className="pt-4 justify-content-center align-items-center"
+                        style={
+                          (mediumBold,
+                          {
+                            color: "#007AFF",
+                            border: "4px solid #007AFF",
+                            borderRadius: "50%",
+                            height: "83px",
+                            width: "83px",
+                          })
+                        }
+                      >
+                        ${expense.amount_due.toFixed(2)}
+                      </Col>
+                      <Col style={mediumBold}>
+                        <div>
+                          {expense.description} -{" "}
+                          {new Date(
+                            String(expense.purchase_date).split(" ")[0]
+                          ).toDateString()}
+                        </div>
+                        <div>
+                          {expense.address.split(",")[0]} <br />
+                          {expense.address.split(",")[1]},{" "}
+                          {expense.address.split(",")[2]}
+                        </div>
+                      </Col>
+                      <Col xs={3} className="pt-4 justify-content-end">
+                        {expense.purchase_status === "UNPAID" ? (
+                          <Col className="mt-0" style={redPill}>
+                            {expense.purchase_status}
+                          </Col>
+                        ) : (
+                          <Col className="mt-0" style={greenPill}>
+                            {expense.purchase_status}
+                          </Col>
+                        )}
+                      </Col>
+                    </Row>
+                  </div>
+                ) : (
+                  <Row style={headings}></Row>
+                );
+              })}
+            </div>
+            <div>
+              <Row style={headings}>Utility Expenses Due From Tenant</Row>
+              {expenses.map((expense) => {
+                return expense.purchase_type === "UTILITY" &&
+                  !expense.payer.includes(user.user_uid) ? (
+                  <div>
+                    <Row
+                      className="my-2 p-3"
+                      style={{
+                        background: "#FFFFFF 0% 0% no-repeat padding-box",
+                        boxShadow: "0px 3px 6px #00000029",
+                        borderRadius: "5px",
+                        opacity: 1,
+                      }}
+                      onClick={() => {
+                        setExpenseDetail(true);
+                        setPayment(expense);
+                      }}
+                    >
+                      <Col
+                        xs={3}
+                        className="pt-4 justify-content-center align-items-center"
+                        style={
+                          (mediumBold,
+                          {
+                            color: "#007AFF",
+                            border: "4px solid #007AFF",
+                            borderRadius: "50%",
+                            height: "83px",
+                            width: "83px",
+                          })
+                        }
+                      >
+                        ${expense.amount_due.toFixed(2)}
+                      </Col>
+                      <Col style={mediumBold}>
+                        <div>
+                          {expense.description} -{" "}
+                          {new Date(
+                            String(expense.purchase_date).split(" ")[0]
+                          ).toDateString()}
+                        </div>
+                        <div>
+                          {expense.address.split(",")[0]} <br />
+                          {expense.address.split(",")[1]},{" "}
+                          {expense.address.split(",")[2]}
+                        </div>
+                      </Col>
+                      <Col xs={3} className="pt-4 justify-content-end">
+                        {expense.purchase_status === "UNPAID" ? (
+                          <Col className="mt-0" style={redPill}>
+                            {expense.purchase_status}
+                          </Col>
+                        ) : (
+                          <Col className="mt-0" style={greenPill}>
+                            {expense.purchase_status}
+                          </Col>
+                        )}
+                      </Col>
+                    </Row>
+                  </div>
                 ) : (
                   <Row></Row>
                 );
               })}
             </div>
             <div>
-              <Row style={headings}> Maintenance Payments</Row>
-
               {expenses.map((expense) => {
                 return expense.purchase_type === "MAINTENANCE" ||
                   expense.purchase_type === "REPAIRS" ? (
-                  <Row
-                    className="my-2 p-3"
-                    style={
-                      (mediumBold,
-                      {
-                        background: "#FFFFFF 0% 0% no-repeat padding-box",
-                        boxShadow: "0px 3px 6px #00000029",
-                        borderRadius: "5px",
-                        opacity: 1,
-                      })
-                    }
-                    onClick={() => {
-                      setMaintenanceExpenseDetail(true);
-                      setPayment(expense);
-                    }}
-                  >
-                    <Col
-                      xs={3}
-                      className="pt-4 justify-content-center align-items-center"
-                      style={{
-                        color: "#007AFF",
-                        border: "4px solid #007AFF",
-                        borderRadius: "50%",
-                        height: "83px",
-                        width: "83px",
+                  <div>
+                    <Row style={headings}> Maintenance Payments</Row>
+                    <Row
+                      className="my-2 p-3"
+                      style={
+                        (mediumBold,
+                        {
+                          background: "#FFFFFF 0% 0% no-repeat padding-box",
+                          boxShadow: "0px 3px 6px #00000029",
+                          borderRadius: "5px",
+                          opacity: 1,
+                        })
+                      }
+                      onClick={() => {
+                        setMaintenanceExpenseDetail(true);
+                        setPayment(expense);
                       }}
                     >
-                      ${expense.amount_due.toFixed(2)}
-                    </Col>
-                    <Col style={mediumBold}>
-                      {expense.description} -{" "}
-                      {new Date(
-                        String(expense.purchase_date).split(" ")[0]
-                      ).toDateString()}
-                    </Col>
-                  </Row>
+                      <Col
+                        xs={3}
+                        className="pt-4 justify-content-center align-items-center"
+                        style={{
+                          color: "#007AFF",
+                          border: "4px solid #007AFF",
+                          borderRadius: "50%",
+                          height: "83px",
+                          width: "83px",
+                        }}
+                      >
+                        ${expense.amount_due.toFixed(2)}
+                      </Col>
+                      <Col style={mediumBold}>
+                        {expense.description} -{" "}
+                        {new Date(
+                          String(expense.purchase_date).split(" ")[0]
+                        ).toDateString()}
+                      </Col>
+                    </Row>
+                  </div>
                 ) : (
                   <div></div>
                 );
               })}
             </div>
           </div>
-        ) : !expenseDetail && !maintenanceExpenseDetail ? (
-          <div
-            className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-
-              opacity: 1,
-            }}
-          >
-            <Button
-              variant="outline-primary"
-              style={pillButton}
-              onClick={cancelEdit}
-              className="mx-2"
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="outline-primary"
-              style={pillButton}
-              onClick={addUtility}
-              className="mx-2"
-            >
-              Add Utility
-            </Button>
+        ) : newUtility === null &&
+          !editingUtility &&
+          !expenseDetail &&
+          !maintenanceExpenseDetail ? (
+          <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
+            <Row style={headings}>No expenses</Row>
           </div>
         ) : (
           ""
         )}
       </div>
+
       {expenseDetail && !maintenanceExpenseDetail ? (
         <div
           className="d-flex flex-column mx-2 p-3"
@@ -945,14 +1035,15 @@ function OwnerUtilities(props) {
             </Col>
             <Col></Col>
           </Row>
-          {/* {payment.purchase_status === "UNPAID" ? (
+          {payment.purchase_status === "UNPAID" &&
+          payment.payer.includes(user.user_uid) ? (
             <Row className="d-flex mx-2">
               <Col></Col>
               <Col xs={6} className="d-flex p-0 justify-content-center">
                 <Button
                   style={bluePillButton}
                   onClick={() => {
-                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
+                    navigate(`/ownerPaymentPage/${payment.purchase_uid}`, {
                       state: {
                         amount: payment.amount_due,
                         selectedProperty: payment,
@@ -961,14 +1052,14 @@ function OwnerUtilities(props) {
                     });
                   }}
                 >
-                  Paid by Manager
+                  Pay Bill
                 </Button>
               </Col>
               <Col></Col>
             </Row>
           ) : (
             ""
-          )} */}
+          )}
         </div>
       ) : (
         ""

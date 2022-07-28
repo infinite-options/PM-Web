@@ -36,82 +36,79 @@ function ManagerOverview(props) {
   const [expandAccountPayable, setExpandAccountPayable] = useState(false);
 
   let revenueTotal = 0;
-  console.log(properties);
+
   for (const item of properties) {
-    console.log(item.property_uid);
-    if (item.manager_revenue !== undefined) {
-      if (item.manager_revenue.length == 0) {
-      } else if (item.manager_revenue.length == 1) {
-        revenueTotal += item.manager_revenue[0].amount_paid;
-      } else {
-        for (const or of item.manager_revenue) {
-          revenueTotal += or.amount_paid;
-        }
-      }
+    if (
+      (item.rental_revenue !== undefined && item.rental_revenue !== 0) ||
+      (item.extraCharges_revenue !== undefined &&
+        item.extraCharges_revenue !== 0) ||
+      (item.utiltiy_revenue !== undefined && item.utiltiy_revenue !== 0)
+    ) {
+      revenueTotal =
+        revenueTotal +
+        item.rental_revenue +
+        item.extraCharges_revenue +
+        item.utility_revenue;
+    }
+  }
+  console.log(revenueTotal);
+  let expenseTotal = 0;
+  for (const item of properties) {
+    if (
+      (item.maintenance_expenses !== undefined && item.maintenance_expenses) ||
+      (item.management_expenses !== undefined &&
+        item.management_expenses !== 0) ||
+      (item.repairs_expenses !== undefined && item.repairs_expenses !== 0) ||
+      (item.utility_expenses !== 0 && item.utility_expenses !== undefined)
+    ) {
+      expenseTotal =
+        expenseTotal +
+        item.maintenance_expenses +
+        item.management_expenses +
+        item.repairs_expenses +
+        item.utility_expenses;
     }
   }
 
-  let expenseTotal = 0;
-  let rentTotal = 0;
-  for (const item of properties) {
-    if (item.manager_expense !== undefined) {
-      if (item.manager_expense.length == 0) {
-      } else if (item.manager_expense.length == 1) {
-        if (item.manager_expense[0].purchase_type == "RENT") {
-          expenseTotal += item.management_expenses;
-        } else {
-          expenseTotal += item.manager_expense[0].amount_paid;
-        }
-      } else {
-        for (const or of item.manager_expense) {
-          if (or.purchase_type == "RENT") {
-            rentTotal = item.management_expenses;
-          } else {
-            expenseTotal += or.amount_paid;
-          }
-        }
-        expenseTotal = expenseTotal + rentTotal;
-      }
-    }
-  }
+  console.log(expenseTotal, revenueTotal);
 
   let revenueExpectedTotal = 0;
 
   for (const item of properties) {
-    console.log(item.property_uid);
-    if (item.manager_expected_revenue !== undefined) {
-      if (item.manager_expected_revenue.length == 0) {
-      } else if (item.manager_expected_revenue.length == 1) {
-        revenueExpectedTotal += item.manager_expected_revenue[0].amount_due;
-      } else {
-        for (const or of item.manager_expected_revenue) {
-          revenueExpectedTotal += or.amount_due;
-        }
-      }
+    if (
+      (item.rental_expected_revenue !== undefined &&
+        item.rental_expected_revenue !== 0) ||
+      (item.extraCharges_expected_revenue !== undefined &&
+        item.extraCharges_expected_revenue !== 0) ||
+      (item.utility_expected_revenue !== undefined &&
+        item.utility_expected_revenue !== 0)
+    ) {
+      revenueExpectedTotal =
+        revenueExpectedTotal +
+        item.rental_expected_revenue +
+        item.extraCharges_expected_revenue +
+        item.utility_expected_revenue;
     }
   }
-
+  console.log(revenueExpectedTotal);
   let expenseExpectedTotal = 0;
-  let rentExpectedTotal = 0;
   for (const item of properties) {
-    if (item.manager_expected_expense !== undefined) {
-      if (item.manager_expected_expense.length == 0) {
-      } else if (item.manager_expected_expense.length == 1) {
-        if (item.manager_expected_expense[0].purchase_type == "RENT") {
-          expenseExpectedTotal += item.management_expected_expenses;
-        } else {
-          expenseExpectedTotal += item.manager_expected_expense[0].amount_due;
-        }
-      } else {
-        for (const or of item.manager_expected_expense) {
-          if (or.purchase_type == "RENT") {
-            rentExpectedTotal = item.management_expected_expenses;
-          } else {
-            expenseExpectedTotal += or.amount_due;
-          }
-        }
-        expenseExpectedTotal = expenseExpectedTotal + rentExpectedTotal;
-      }
+    if (
+      (item.maintenance_expected_expenses !== undefined &&
+        item.maintenance_expected_expenses) ||
+      (item.management_expected_expenses !== undefined &&
+        item.management_expected_expenses !== 0) ||
+      (item.repairs_expected_expenses !== undefined &&
+        item.repairs_expected_expenses !== 0) ||
+      (item.utility_expected_expenses !== 0 &&
+        item.utility_expected_expenses !== undefined)
+    ) {
+      expenseExpectedTotal =
+        expenseExpectedTotal +
+        item.maintenance_expected_expenses +
+        item.management_expected_expenses +
+        item.repairs_expected_expenses +
+        item.utility_expected_expenses;
     }
   }
   console.log(revenueExpectedTotal, expenseExpectedTotal);
@@ -236,7 +233,9 @@ function ManagerOverview(props) {
                         {(property.rental_revenue !== undefined &&
                           property.rental_revenue !== 0) ||
                         (property.extraCharges_revenue !== undefined &&
-                          property.extraCharges_revenue !== 0) ? (
+                          property.extraCharges_revenue !== 0) ||
+                        (property.utiltiy_revenue !== undefined &&
+                          property.utiltiy_revenue !== 0) ? (
                           <Row
                             style={{
                               background:
@@ -452,13 +451,10 @@ function ManagerOverview(props) {
                       (property.management_expenses !== undefined &&
                         property.management_expenses !== 0) ||
                       (property.repairs_expenses !== undefined &&
-                        property.repairs_expenses !== 0) ? (
+                        property.repairs_expenses !== 0) ||
+                      (property.utility_expenses !== 0 &&
+                        property.utility_expenses !== undefined) ? (
                       <div>
-                        {console.log(
-                          property.maintenance_expenses,
-                          property.management_expenses,
-                          property.repairs_expenses
-                        )}
                         <Row
                           style={{
                             background:
@@ -560,7 +556,43 @@ function ManagerOverview(props) {
                         ) : (
                           ""
                         )}
-
+                        {property.utility_expenses !== 0 &&
+                        property.utility_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" mx-3 my-1"
+                              >
+                                Utilities
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.utility_expenses.toFixed(2)}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
                         {property.repairs_expenses !== 0 &&
                         property.repairs_expenses !== undefined ? (
                           <Row
@@ -687,7 +719,11 @@ function ManagerOverview(props) {
                       (property.rental_expected_revenue !== undefined &&
                         property.rental_expected_revenue !== 0) ||
                       (property.extraCharges_expected_revenue !== undefined &&
-                        property.extraCharges_expected_revenue !== 0) ? (
+                        property.extraCharges_expected_revenue !== 0) ||
+                      (property.utility_expected_revenue !== undefined &&
+                        property.utility_expected_revenue !== 0) ||
+                      (property.utility_expected_expenses !== 0 &&
+                        property.utility_expected_expenses !== undefined) ? (
                       <div>
                         <Row
                           style={{
@@ -936,6 +972,43 @@ function ManagerOverview(props) {
                                 className="text-center m-1 pt-1"
                               >
                                 {property.repairs_expected_expenses.toFixed(2)}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.utility_expected_expenses !== 0 &&
+                        property.utility_expected_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Utilities
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.utility_expected_expenses.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
