@@ -27,6 +27,7 @@ function PropertyAppliances(props) {
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [showDetailsNoEdit, setShowDetailsNoEdit] = useState(false);
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
     // console.log(newApplianceState);
@@ -40,19 +41,26 @@ function PropertyAppliances(props) {
   };
   const showApplianceDetail = (appliance) => {
     setApplianceType(appliance);
-    console.log(
-      "ehere",
-      appliance,
-      showDetails,
-      applianceType,
-      applianceState[appliance]["available"],
-      addApplianceInfo,
-      applianceType == appliance,
-      applianceState
+    setShowDetails(!showDetails);
+    setAddApplianceInfo(!addApplianceInfo);
+    setApplianceType(appliance);
+    setApplianceState(applianceState);
+    setApplianceName(applianceState[appliance]["name"]);
+    setAppliancePurchasedOn(applianceState[appliance]["purchased"]);
+    setAppliancePurchasesOrderNumber(
+      applianceState[appliance]["purchased_order"]
     );
+    setApplianceInstalledOn(applianceState[appliance]["installed"]);
+    setApplianceSerialNum(applianceState[appliance]["serial_num"]);
+    setApplianceModelNum(applianceState[appliance]["model_num"]);
+    setApplianceWarrantyTill(applianceState[appliance]["warranty_till"]);
+    setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
+  };
 
-    setShowDetails(true);
-    setAddApplianceInfo(true);
+  const showApplianceDetailNoEdit = (appliance) => {
+    setApplianceType(appliance);
+    setShowDetailsNoEdit(!showDetailsNoEdit);
+    setAddApplianceInfo(!addApplianceInfo);
     setApplianceType(appliance);
     setApplianceState(applianceState);
     setApplianceName(applianceState[appliance]["name"]);
@@ -161,7 +169,9 @@ function PropertyAppliances(props) {
                         showApplianceDetail(appliance);
                         console.log("here");
                       }
-                    : () => {}
+                    : () => {
+                        showApplianceDetailNoEdit(appliance);
+                      }
                 }
               >
                 <p className="ms-1 mb-1">{appliance}</p>
@@ -324,6 +334,154 @@ function PropertyAppliances(props) {
                       Save
                     </Button>
                   </div>
+                </Row>
+              ) : null}
+            </Row>
+            <Row>
+              {addApplianceInfo &&
+              showDetailsNoEdit &&
+              applianceState[appliance]["available"] == true &&
+              applianceType == appliance ? (
+                <Row>
+                  <Row className="mx-4 p-0">
+                    <Col>Name</Col>
+                    <Col>
+                      <Form.Control
+                        disabled
+                        style={squareForm}
+                        type="text"
+                        value={
+                          applianceName || applianceState[appliance]["name"]
+                        }
+                        placeholder="Appliance Name"
+                        onChange={(e) => setApplianceName(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Purchased On</Col>
+                    <Col>
+                      <Form.Control
+                        disabled
+                        style={squareForm}
+                        type="date"
+                        value={
+                          appliancePurchasedOn ||
+                          applianceState[appliance]["purchased"]
+                        }
+                        placeholder="Purchased On"
+                        onChange={(e) =>
+                          setAppliancePurchasedOn(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Purchase Order Number</Col>
+                    <Col>
+                      <Form.Control
+                        disabled
+                        style={squareForm}
+                        value={
+                          appliancePurchasesOrderNumber ||
+                          applianceState[appliance]["purchased_order"]
+                        }
+                        placeholder="Purchase Order Number"
+                        onChange={(e) =>
+                          setAppliancePurchasesOrderNumber(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Installed On</Col>
+                    <Col>
+                      <Form.Control
+                        disabled
+                        style={squareForm}
+                        type="date"
+                        value={
+                          applianceInstalledOn ||
+                          applianceState[appliance]["installed"]
+                        }
+                        placeholder="Installed On"
+                        onChange={(e) =>
+                          setApplianceInstalledOn(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Serial Number</Col>
+                    <Col>
+                      <Form.Control
+                        disabled
+                        style={squareForm}
+                        value={
+                          applianceSerialNum ||
+                          applianceState[appliance]["serial_num"]
+                        }
+                        placeholder="Serial Number"
+                        onChange={(e) => setApplianceSerialNum(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Model Number</Col>
+                    <Col>
+                      <Form.Control
+                        disabled
+                        style={squareForm}
+                        value={
+                          applianceModelNum ||
+                          applianceState[appliance]["model_num"]
+                        }
+                        placeholder="Model Number"
+                        onChange={(e) => setApplianceModelNum(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Warranty Till</Col>
+                    <Col>
+                      <Form.Control
+                        disabled
+                        style={squareForm}
+                        type="date"
+                        value={
+                          applianceWarrantyTill ||
+                          applianceState[appliance]["warranty_till"]
+                        }
+                        placeholder="Warranty Till"
+                        onChange={(e) =>
+                          setApplianceWarrantyTill(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Warranty Info</Col>
+                    <Col>
+                      <Form.Control
+                        disabled
+                        style={squareForm}
+                        value={
+                          applianceWarrantyInfo ||
+                          applianceState[appliance]["warranty_info"]
+                        }
+                        placeholder="Warranty Info"
+                        onChange={(e) =>
+                          setApplianceWarrantyInfo(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
                 </Row>
               ) : null}
             </Row>
