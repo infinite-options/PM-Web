@@ -1,3 +1,4 @@
+import { ListItemSecondaryAction } from "@material-ui/core";
 import React, { useState } from "react";
 import { Container, Row, Col, Carousel } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -11,95 +12,99 @@ function OwnerDashboard(props) {
   const [expandExpenses, setExpandExpenses] = useState(false);
   const [expandAccountPayable, setExpandAccountPayable] = useState(false);
   let revenueTotal = 0;
+
   for (const item of properties) {
-    if (item.owner_revenue.length == 0) {
-    } else if (item.owner_revenue.length == 1) {
-      revenueTotal += item.owner_revenue[0].amount_paid;
-    } else {
-      for (const or of item.owner_revenue) {
-        revenueTotal += or.amount_paid;
-      }
+    if (
+      (item.rental_revenue !== undefined && item.rental_revenue !== 0) ||
+      (item.extraCharges_revenue !== undefined &&
+        item.extraCharges_revenue !== 0) ||
+      (item.utiltiy_revenue !== undefined && item.utiltiy_revenue !== 0)
+    ) {
+      revenueTotal =
+        revenueTotal +
+        item.rental_revenue +
+        item.extraCharges_revenue +
+        item.utility_revenue;
     }
   }
-
+  console.log(revenueTotal);
   let expenseTotal = 0;
-  let rentTotal = 0;
   for (const item of properties) {
-    if (item.owner_expense !== undefined) {
-      if (item.owner_expense.length == 0) {
-      } else if (item.owner_expense.length == 1) {
-        if (item.owner_expense[0].purchase_type == "RENT") {
-          expenseTotal += item.management_expenses;
-        } else {
-          expenseTotal += item.owner_expense[0].amount_paid;
-        }
-      } else {
-        for (const or of item.owner_expense) {
-          if (or.purchase_type == "RENT") {
-            rentTotal = item.management_expenses;
-          } else {
-            expenseTotal += or.amount_paid;
-          }
-        }
-        expenseTotal = expenseTotal + rentTotal;
-      }
-    }
-  }
-  console.log(expenseTotal, revenueTotal);
-  let yearExpenseTotal = 0;
-  for (const item of properties) {
-    console.log(item);
-    if (item.year_expense !== 0) {
-      console.log(item.year_expense);
-      yearExpenseTotal += item.year_expense;
+    if (
+      (item.maintenance_expenses !== undefined && item.maintenance_expenses) ||
+      (item.management_expenses !== undefined &&
+        item.management_expenses !== 0) ||
+      (item.insurance_expenses !== undefined &&
+        item.insurance_expenses !== 0) ||
+      (item.repairs_expenses !== undefined && item.repairs_expenses !== 0) ||
+      (item.mortgage_expenses !== undefined && item.mortgage_expenses !== 0) ||
+      (item.taxes_expenses !== undefined && item.taxes_expenses !== 0) ||
+      (item.utility_expenses !== 0 && item.utility_expenses !== undefined)
+    ) {
+      expenseTotal =
+        expenseTotal +
+        item.maintenance_expenses +
+        item.management_expenses +
+        item.repairs_expenses +
+        item.utility_expenses;
     }
   }
 
-  let yearRevenueTotal = 0;
-  for (const item of properties) {
-    if (item.year_revenue !== 0) {
-      console.log(item.year_revenue);
-      yearRevenueTotal += item.year_revenue;
-    }
-  }
+  console.log(expenseTotal, revenueTotal);
+  // let yearExpenseTotal = 0;
+  // for (const item of properties) {
+  //   console.log(item);
+  //   if (item.year_expense !== 0) {
+  //     console.log(item.year_expense);
+  //     yearExpenseTotal += item.year_expense;
+  //   }
+  // }
+
+  // let yearRevenueTotal = 0;
+  // for (const item of properties) {
+  //   if (item.year_revenue !== 0) {
+  //     console.log(item.year_revenue);
+  //     yearRevenueTotal += item.year_revenue;
+  //   }
+  // }
 
   let revenueExpectedTotal = 0;
 
   for (const item of properties) {
-    console.log(item.property_uid);
-    if (item.owner_expected_revenue !== undefined) {
-      if (item.owner_expected_revenue.length == 0) {
-      } else if (item.owner_expected_revenue.length == 1) {
-        revenueExpectedTotal += item.owner_expected_revenue[0].amount_due;
-      } else {
-        for (const or of item.owner_expected_revenue) {
-          revenueExpectedTotal += or.amount_due;
-        }
-      }
+    if (
+      (item.rental_expected_revenue !== undefined &&
+        item.rental_expected_revenue !== 0) ||
+      (item.extraCharges_expected_revenue !== undefined &&
+        item.extraCharges_expected_revenue !== 0) ||
+      (item.utility_expected_revenue !== undefined &&
+        item.utility_expected_revenue !== 0)
+    ) {
+      revenueExpectedTotal =
+        revenueExpectedTotal +
+        item.rental_expected_revenue +
+        item.extraCharges_expected_revenue +
+        item.utility_expected_revenue;
     }
   }
-
+  console.log(revenueExpectedTotal);
   let expenseExpectedTotal = 0;
-  let rentExpectedTotal = 0;
   for (const item of properties) {
-    if (item.owner_expected_expense !== undefined) {
-      if (item.owner_expected_expense.length == 0) {
-      } else if (item.owner_expected_expense.length == 1) {
-        if (item.owner_expected_expense[0].purchase_type == "RENT") {
-          expenseExpectedTotal += item.management_expected_expenses;
-        } else {
-          expenseExpectedTotal += item.owner_expected_expense[0].amount_due;
-        }
-      } else {
-        for (const or of item.owner_expected_expense) {
-          if (or.purchase_type == "RENT") {
-            rentExpectedTotal = item.management_expected_expenses;
-          } else {
-            expenseExpectedTotal += or.amount_due;
-          }
-        }
-        expenseExpectedTotal = expenseExpectedTotal + rentExpectedTotal;
-      }
+    if (
+      (item.maintenance_expected_expenses !== undefined &&
+        item.maintenance_expected_expenses) ||
+      (item.management_expected_expenses !== undefined &&
+        item.management_expected_expenses !== 0) ||
+      (item.repairs_expected_expenses !== undefined &&
+        item.repairs_expected_expenses !== 0) ||
+      (item.utility_expected_expenses !== 0 &&
+        item.utility_expected_expenses !== undefined)
+    ) {
+      expenseExpectedTotal =
+        expenseExpectedTotal +
+        item.maintenance_expected_expenses +
+        item.management_expected_expenses +
+        item.repairs_expected_expenses +
+        item.utility_expected_expenses;
     }
   }
   console.log(revenueExpectedTotal, expenseExpectedTotal);
@@ -257,8 +262,12 @@ function OwnerDashboard(props) {
                   {properties.map((property, i) => {
                     return (
                       <div>
-                        {property.extraCharges_revenue !== 0 ||
-                        property.rental_revenue !== 0 ? (
+                        {(property.rental_revenue !== undefined &&
+                          property.rental_revenue !== 0) ||
+                        (property.extraCharges_revenue !== undefined &&
+                          property.extraCharges_revenue !== 0) ||
+                        (property.utiltiy_revenue !== undefined &&
+                          property.utiltiy_revenue !== 0) ? (
                           <Row
                             style={{
                               background:
@@ -528,7 +537,9 @@ function OwnerDashboard(props) {
                       (property.mortgage_expenses !== undefined &&
                         property.mortgage_expenses !== 0) ||
                       (property.taxes_expenses !== undefined &&
-                        property.taxes_expenses !== 0) ? (
+                        property.taxes_expenses !== 0) ||
+                      (property.utility_expenses !== 0 &&
+                        property.utility_expenses !== undefined) ? (
                       <div>
                         {console.log(
                           property.maintenance_expenses,
@@ -665,6 +676,55 @@ function OwnerDashboard(props) {
                               >
                                 {" "}
                                 {property.management_year_expense.toFixed(2)}
+                              </p>
+                            </Col> */}
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.utility_expenses !== 0 &&
+                        property.utility_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className=" mx-3 my-1"
+                              >
+                                Utilities
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.utility_expenses.toFixed(2)}
+                              </p>
+                            </Col>
+                            {/* <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {" "}
+                                {property.utility_year_expense.toFixed(2)}
                               </p>
                             </Col> */}
                           </Row>
@@ -960,7 +1020,11 @@ function OwnerDashboard(props) {
                       (property.rental_expected_revenue !== undefined &&
                         property.rental_expected_revenue !== 0) ||
                       (property.extraCharges_expected_revenue !== undefined &&
-                        property.extraCharges_expected_revenue !== 0) ? (
+                        property.extraCharges_expected_revenue !== 0) ||
+                      (property.utility_expected_revenue !== undefined &&
+                        property.utility_expected_revenue !== 0) ||
+                      (property.utility_expected_expenses !== 0 &&
+                        property.utility_expected_expenses !== undefined) ? (
                       <div>
                         <Row
                           style={{
@@ -1209,6 +1273,43 @@ function OwnerDashboard(props) {
                                 className="text-center m-1 pt-1"
                               >
                                 {property.repairs_expected_expenses.toFixed(2)}
+                              </p>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
+                        {property.utility_expected_expenses !== 0 &&
+                        property.utility_expected_expenses !== undefined ? (
+                          <Row
+                            style={{
+                              background:
+                                i % 2 === 0
+                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                            }}
+                          >
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...mediumBold,
+                                  font: "normal normal bold 12px Helvetica-Bold",
+                                }}
+                                className="mx-3 my-1"
+                              >
+                                Utilities
+                              </p>
+                            </Col>
+                            <Col>
+                              <p
+                                style={{
+                                  ...small,
+                                  ...red,
+                                }}
+                                className="text-center m-1 pt-1"
+                              >
+                                {property.utility_expected_expenses.toFixed(2)}
                               </p>
                             </Col>
                           </Row>
