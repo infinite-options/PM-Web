@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import moment from "moment";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
-
-import { Elements } from "@stripe/react-stripe-js";
-
 import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import StripePayment from "../components/StripePayment.js";
 import {
   pillButton,
@@ -23,7 +21,7 @@ import {
   greenPill,
 } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
 import { post, get } from "../utils/api";
@@ -31,45 +29,59 @@ import AppContext from "../AppContext";
 import File from "../icons/File.svg";
 
 function OwnerUtilities(props) {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   const [stripePromise, setStripePromise] = useState(null);
-  // const [expenses, setExpenses] = React.useState([]);
-  const { properties, setStage, expenses } = props;
-
+  const { properties, expenses } = props;
   const useLiveStripeKey = false;
-  const [message, setMessage] = React.useState("");
-  console.log(expenses);
-  const [utilityState, setUtilityState] = React.useState([]);
-  const [newUtility, setNewUtility] = React.useState(null);
-  const [editingUtility, setEditingUtility] = React.useState(false);
-  const [propertyState, setPropertyState] = React.useState(properties);
-
-  const [files, setFiles] = React.useState([]);
-  const [newFile, setNewFile] = React.useState(null);
-  const [editingDoc, setEditingDoc] = React.useState(null);
-  const [tenantPay, setTenantPay] = React.useState(false);
-  const [ownerPay, setOwnerPay] = React.useState(false);
-  const [expenseDetail, setExpenseDetail] = React.useState(false);
+  const [utilityState, setUtilityState] = useState([]);
+  const [newUtility, setNewUtility] = useState(null);
+  const [editingUtility, setEditingUtility] = useState(false);
+  const [propertyState, setPropertyState] = useState(properties);
+  const [files, setFiles] = useState([]);
+  const [newFile, setNewFile] = useState(null);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [tenantPay, setTenantPay] = useState(false);
+  const [ownerPay, setOwnerPay] = useState(false);
+  const [expenseDetail, setExpenseDetail] = useState(false);
+  const [expenseDetailOwner, setExpenseDetailOwner] = useState(false);
   const [maintenanceExpenseDetail, setMaintenanceExpenseDetail] =
-    React.useState(false);
-  const [payment, setPayment] = React.useState(false);
+    useState(false);
+  const [payExpense, setPayExpense] = useState(false);
+  const [payment, setPayment] = useState(false);
   const emptyUtility = {
     provider: "",
     service_name: "",
     charge: "",
     properties: [],
-    split_type: "uniform",
+    split_type: "No Split",
     due_date: "",
     add_to_rent: false,
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
+  const [purchaseUID, setPurchaseUID] = useState("");
+  const [message, setMessage] = useState("");
+  const [amount, setAmount] = useState("");
+  const [purchase, setPurchase] = useState({});
+  const [totalSum, setTotalSum] = useState("");
   const [stripePayment, setStripePayment] = useState(false);
-  const [paymentConfirm, setPaymentConfirm] = useState(false);
-  React.useEffect(async () => {
+  const [disabled, setDisabled] = useState(false);
+  const requestTitleRef = React.createRef();
+  const requestDescriptionRef = React.createRef();
+  const tagPriorityRef = React.createRef();
+
+  const [expenseUnique, setExpenseUnique] = useState("");
+
+  const submitForm = () => {
+    const requestTitle = requestTitleRef.current.value;
+    const requestDescription = requestDescriptionRef.current.value;
+    const tagPriority = tagPriorityRef.current.value;
+    props.onConfirm(requestTitle, requestDescription, tagPriority);
+  };
+
+  const PayBill = async (pid) => {
     const url = useLiveStripeKey
       ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
       : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
@@ -77,34 +89,102 @@ function OwnerUtilities(props) {
     const responseData = await response.json();
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
-    // let tempAllPurchases = [];
-    // for (let i in purchaseUID) {
-    //   let response1 = await get(`/purchases?purchase_uid=${purchaseUID[i]}`);
-    //   tempAllPurchases.push(response1.result[0]);
-    // }
-    // response = await get(`/purchases?purchase_uid=${purchaseUID}`);
-    // setPurchase(response.result[0]);
-    // setAllPurchases(tempAllPurchases);
-  }, []);
-  React.useEffect(() => {
-    console.log(properties);
-    properties.forEach((p) => (p.checked = false));
-  }, [properties]);
+
+    response = await get(`/purchases?purchase_uid=${pid}`);
+    setPurchase(response.result[0]);
+    setTotalSum(response.result[0].amount_due);
+    setAmount(response.result[0].amount_due - response.result[0].amount_paid);
+  };
+
+  useEffect(() => {
+    if (amount > totalSum || amount <= 0) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [amount]);
+
   const cancel = () => setStripePayment(false);
   const submit = () => {
     cancel();
-    setPaymentConfirm(true);
+    setPayExpense(false);
   };
+
+  //group an array by property
+  function groupBy(arr, property) {
+    return arr.reduce(function (memo, x) {
+      if (!memo[x[property]]) {
+        memo[x[property]] = [];
+      }
+      memo[x[property]].push(x);
+      return memo;
+    }, {});
+  }
+
+  useEffect(() => {
+    const grouped = groupBy(expenses, "purchase_uid");
+    const keys = Object.keys(grouped);
+    var output = [];
+    //loop keys
+    keys.forEach((key) => {
+      //merge using reduce
+      const out = grouped[key].reduce((acc, current) => {
+        return {
+          address: acc.address + ";" + current.address,
+          amount: current.amount,
+          amount_due: current.amount_due,
+          amount_paid: current.amount_paid,
+          bill_algorithm: current.bill_algorithm,
+          bill_created_by: current.bill_created_by,
+          bill_description: current.bill_description,
+          bill_docs: current.bill_docs,
+          bill_uid: current.bill_uid,
+          bill_utility_type: current.bill_utility_type,
+          charge_id: current.charge_id,
+          description: current.description,
+          linked_bill_id: current.linked_bill_id,
+          next_payment: current.next_payment,
+          pay_purchase_id: current.pay_purchase_id,
+          payer: current.payer,
+          payment_date: current.payment_date,
+          payment_frequency: current.payment_frequency,
+          payment_notes: current.payment_notes,
+          payment_type: current.payment_type,
+          payment_uid: current.payment_uid,
+          pur_property_id: current.pur_property_id,
+          purchase_date: current.purchase_date,
+          purchase_frequency: current.purchase_frequency,
+          purchase_notes: current.purchase_notes,
+          purchase_status: current.purchase_status,
+          purchase_type: current.purchase_type,
+          purchase_uid: current.purchase_uid,
+          receiver: current.receiver,
+        };
+      });
+      console.log(out.address.split(";"));
+      output.push(out);
+    });
+    console.log(output);
+    setExpenseUnique(output);
+  }, []);
+
+  console.log(expenseUnique);
+
   const splitFees = (newUtility) => {
     let charge = parseFloat(newUtility.charge);
+    if (newUtility.split_type === "No Split") {
+      let count = newUtility.properties.length;
+      let charge_per = charge;
+      newUtility.properties.forEach((p) => (p.charge = charge_per));
+    }
 
-    if (newUtility.split_type === "uniform") {
+    if (newUtility.split_type === "Uniform") {
       let count = newUtility.properties.length;
       let charge_per = charge / count;
       newUtility.properties.forEach((p) => (p.charge = charge_per));
     }
 
-    if (newUtility.split_type === "tenant") {
+    if (newUtility.split_type === "Tenant") {
       let total = 0;
       newUtility.properties.forEach((p, i) => {
         if (p.rental_status === "ACTIVE") {
@@ -126,7 +206,7 @@ function OwnerUtilities(props) {
       );
     }
 
-    if (newUtility.split_type === "area") {
+    if (newUtility.split_type === "Area") {
       let total_area = 0;
       newUtility.properties.forEach((p) => (total_area = total_area + p.area));
       // console.log(total_area)
@@ -180,13 +260,14 @@ function OwnerUtilities(props) {
     console.log(new_purchase_pm);
     const response_pm = await post("/purchases", new_purchase_pm, null, null);
     const purchase_uid = response_pm.purchase_uid;
+    setPurchaseUID(response_pm.purchase_uid);
     console.log(response_pm);
     splitFees(newUtility);
     for (const property of newUtility.properties) {
       console.log(property);
       const new_purchase = {
         linked_bill_id: bill_uid,
-        pur_property_id: property.property_uid,
+        pur_property_id: [property.property_uid],
         payer: "",
         receiver: user.user_uid,
         purchase_type: "UTILITY",
@@ -215,19 +296,13 @@ function OwnerUtilities(props) {
       console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
-    navigate(`/ownerPaymentPage/${purchase_uid}`, {
-      state: {
-        amount: response_pm.amount_due,
-        selectedProperty: "",
-        purchaseUID: purchase_uid,
-      },
-    });
     setNewUtility({ ...emptyUtility });
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
     setEditingUtility(false);
     setTenantPay(false);
     setOwnerPay(false);
+    setPayExpense(true);
   };
 
   const addUtility = async () => {
@@ -277,18 +352,7 @@ function OwnerUtilities(props) {
   const Capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
-  const editUtility = (i) => {
-    // const newUtilityState = [...utilityState];
-    // const utility = newUtilityState.splice(i, 1)[0];
-    // setUtilityState(newUtilityState);
-    // setEditingUtility(utility);
-    // setNewUtility({...utility});
-  };
-  const deleteUtility = (i) => {
-    // const newUtilityState = [...utilityState];
-    // newUtilityState.splice(i, 1);
-    // setUtilityState(newUtilityState);
-  };
+
   const changeNewUtility = (event, field) => {
     // console.log('as')
     // console.log(event)
@@ -373,23 +437,34 @@ function OwnerUtilities(props) {
       <Header
         title="Expenses"
         leftText={
-          editingUtility || expenseDetail || maintenanceExpenseDetail
+          editingUtility ||
+          expenseDetail ||
+          expenseDetailOwner ||
+          maintenanceExpenseDetail ||
+          payExpense
             ? "< Back"
             : ""
         }
         leftFn={() => {
           setNewUtility(null);
           setExpenseDetail(false);
+          setExpenseDetailOwner(false);
           setMaintenanceExpenseDetail(false);
           setPayment(null);
           propertyState.forEach((prop) => (prop.checked = false));
           setPropertyState(propertyState);
           setTenantPay(false);
           setOwnerPay(false);
+          setPayExpense(false);
+          setStripePayment(false);
           setEditingUtility(false);
         }}
         rightText={
-          editingUtility || expenseDetail || maintenanceExpenseDetail
+          editingUtility ||
+          expenseDetail ||
+          expenseDetailOwner ||
+          maintenanceExpenseDetail ||
+          payExpense
             ? ""
             : "+ New"
         }
@@ -407,7 +482,8 @@ function OwnerUtilities(props) {
         {newUtility !== null &&
         editingUtility &&
         !expenseDetail &&
-        !maintenanceExpenseDetail ? (
+        !maintenanceExpenseDetail &&
+        !expenseDetailOwner ? (
           <div
             className="mx-2 mt-2 p-3"
             style={{
@@ -669,41 +745,14 @@ function OwnerUtilities(props) {
                       value={newUtility.split_type}
                       onChange={(e) => changeNewUtility(e, "split_type")}
                     >
-                      <option value="uniform">Uniform</option>
-                      <option value="tenant">By Tenant Count</option>
-                      <option value="area">By Square Footage</option>
+                      <option value="No Split">No Split</option>
+                      <option value="Uniform">Uniform</option>
+                      <option value="Tenant">By Tenant Count</option>
+                      <option value="Area">By Square Footage</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
               </Row>
-              {/* <Row>
-                <Col>
-                  <Form.Group className="mx-2 my-3">
-                    <Form.Label style={mediumBold} className="mb-0 ms-2">
-                      Message
-                    </Form.Label>
-                    <Form.Control
-                      placeholder="M4METEST"
-                      style={squareForm}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Elements stripe={stripePromise}>
-                    <StripePayment
-                      cancel={cancel}
-                      submit={submit}
-                      purchases={[purchase]}
-                      message={message}
-                      amount={amount}
-                    />
-                  </Elements>
-                </Col>
-              </Row> */}
             </Row>
 
             <div
@@ -741,15 +790,17 @@ function OwnerUtilities(props) {
         ) : (
           ""
         )}
-        {expenses.length > 0 &&
+        {expenseUnique.length > 0 &&
         newUtility === null &&
         !editingUtility &&
+        !expenseDetailOwner &&
         !expenseDetail &&
-        !maintenanceExpenseDetail ? (
+        !maintenanceExpenseDetail &&
+        !payExpense ? (
           <div className="mx-2 my-2 p-3">
             <div>
               <Row style={headings}>Utility Expenses Due From Owner</Row>
-              {expenses.map((expense) => {
+              {expenseUnique.map((expense) => {
                 return expense.purchase_type === "UTILITY" &&
                   expense.payer.includes(user.user_uid) ? (
                   <div>
@@ -762,7 +813,7 @@ function OwnerUtilities(props) {
                         opacity: 1,
                       }}
                       onClick={() => {
-                        setExpenseDetail(true);
+                        setExpenseDetailOwner(true);
                         setPayment(expense);
                       }}
                     >
@@ -789,11 +840,15 @@ function OwnerUtilities(props) {
                             String(expense.purchase_date).split(" ")[0]
                           ).toDateString()}
                         </div>
-                        <div>
-                          {expense.address.split(",")[0]} <br />
-                          {expense.address.split(",")[1]},{" "}
-                          {expense.address.split(",")[2]}
-                        </div>
+                        {expense.bill_algorithm === "No Split" ? (
+                          <div>
+                            {expense.address.split(",")[0]} <br />
+                            {expense.address.split(",")[1]},{" "}
+                            {expense.address.split(",")[2]}
+                          </div>
+                        ) : (
+                          <div>Split Method - {expense.bill_algorithm}</div>
+                        )}
                       </Col>
                       <Col xs={3} className="pt-4 justify-content-end">
                         {expense.purchase_status === "UNPAID" ? (
@@ -815,7 +870,7 @@ function OwnerUtilities(props) {
             </div>
             <div>
               <Row style={headings}>Utility Expenses Due From Tenant</Row>
-              {expenses.map((expense) => {
+              {expenseUnique.map((expense) => {
                 return expense.purchase_type === "UTILITY" &&
                   !expense.payer.includes(user.user_uid) ? (
                   <div>
@@ -880,7 +935,7 @@ function OwnerUtilities(props) {
               })}
             </div>
             <div>
-              {expenses.map((expense) => {
+              {expenseUnique.map((expense) => {
                 return expense.purchase_type === "MAINTENANCE" ||
                   expense.purchase_type === "REPAIRS" ? (
                   <div>
@@ -931,7 +986,9 @@ function OwnerUtilities(props) {
         ) : newUtility === null &&
           !editingUtility &&
           !expenseDetail &&
-          !maintenanceExpenseDetail ? (
+          !expenseDetailOwner &&
+          !maintenanceExpenseDetail &&
+          !payExpense ? (
           <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
             <Row style={headings}>No expenses</Row>
           </div>
@@ -940,7 +997,7 @@ function OwnerUtilities(props) {
         )}
       </div>
 
-      {expenseDetail && !maintenanceExpenseDetail ? (
+      {expenseDetail && !expenseDetailOwner && !maintenanceExpenseDetail ? (
         <div
           className="d-flex flex-column mx-2 p-3"
           style={{
@@ -983,14 +1040,20 @@ function OwnerUtilities(props) {
           <Row className="my-2 mx-2" style={mediumBold}>
             Properties Billed:
           </Row>
-          <Row
-            className="my-2 mx-2 p-1"
-            style={
-              (mediumBold, { border: "1px solid #707070", borderRadius: "5px" })
-            }
-          >
-            {payment.address}
-          </Row>
+          {payment.address.split(";").map((address) => {
+            return (
+              <Row
+                className="my-2 mx-2 p-1"
+                style={
+                  (mediumBold,
+                  { border: "1px solid #707070", borderRadius: "5px" })
+                }
+              >
+                {address}
+              </Row>
+            );
+          })}
+
           <Row className="d-flex my-2 mx-2" style={mediumBold}>
             <Col className="d-flex p-0 justify-content-left">Expense type:</Col>
             <Col className="d-flex p-0 justify-content-end">Utility</Col>
@@ -1043,13 +1106,18 @@ function OwnerUtilities(props) {
                 <Button
                   style={bluePillButton}
                   onClick={() => {
-                    navigate(`/ownerPaymentPage/${payment.purchase_uid}`, {
-                      state: {
-                        amount: payment.amount_due,
-                        selectedProperty: payment,
-                        purchaseUID: payment.purchase_uid,
-                      },
-                    });
+                    // navigate(`/ownerPaymentPage/${payment.purchase_uid}`, {
+                    //   state: {
+                    //     amount: payment.amount_due,
+                    //     selectedProperty: payment,
+                    //     purchaseUID: payment.purchase_uid,
+                    //   },
+                    // });
+                    setPurchaseUID(payment.purchase_uid);
+                    setPayExpense(true);
+                    PayBill(payment.purchase_uid);
+                    setExpenseDetail(false);
+                    setExpenseDetailOwner(false);
                   }}
                 >
                   Pay Bill
@@ -1064,7 +1132,137 @@ function OwnerUtilities(props) {
       ) : (
         ""
       )}
-      {!expenseDetail && maintenanceExpenseDetail ? (
+      {!expenseDetail && expenseDetailOwner && !maintenanceExpenseDetail ? (
+        <div
+          className="d-flex flex-column mx-2 p-3"
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            opacity: 1,
+            height: "100%",
+          }}
+        >
+          {console.log(payment)}
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={headings}
+          >
+            {payment.bill_utility_type}
+          </Row>
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={mediumBold}
+          >
+            {payment.bill_description}{" "}
+          </Row>
+          <Row className="my-2 align-items-center justify-content-center">
+            <Col
+              xs={3}
+              className="pt-4 justify-content-center align-items-center"
+              style={
+                (mediumBold,
+                {
+                  color: "#007AFF",
+                  border: "4px solid #007AFF",
+                  borderRadius: "50%",
+                  height: "83px",
+                  width: "83px",
+                })
+              }
+            >
+              ${payment.amount_due.toFixed(2)}
+            </Col>
+          </Row>
+          <Row className="my-2 mx-2" style={mediumBold}>
+            Properties Billed:
+          </Row>
+          {payment.address.split(";").map((address) => {
+            return (
+              <Row
+                className="my-2 mx-2 p-1"
+                style={
+                  (mediumBold,
+                  { border: "1px solid #707070", borderRadius: "5px" })
+                }
+              >
+                {address}
+              </Row>
+            );
+          })}
+
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Expense type:</Col>
+            <Col className="d-flex p-0 justify-content-end">Utility</Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Split Method:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {payment.bill_algorithm}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">
+              Bill Received on:
+            </Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {new Date(
+                String(payment.purchase_date).split(" ")[0]
+              ).toDateString()}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">
+              Payment Status:
+            </Col>
+            {payment.purchase_status === "UNPAID" ? (
+              <Col xs={3} className="mt-0" style={redPill}>
+                {payment.purchase_status}
+              </Col>
+            ) : (
+              <Col xs={3} className="mt-0" style={greenPill}>
+                {payment.purchase_status}
+              </Col>
+            )}
+          </Row>
+          <Row className="d-flex my-5 mx-2">
+            <Col></Col>
+            <Col className="d-flex p-0 justify-content-center">
+              <Button
+                style={bluePillButton}
+                onClick={() => setExpenseDetailOwner(false)}
+              >
+                Okay
+              </Button>
+            </Col>
+            <Col></Col>
+          </Row>
+          {payment.purchase_status === "UNPAID" &&
+          payment.payer.includes(user.user_uid) ? (
+            <Row className="d-flex mx-2">
+              <Col></Col>
+              <Col xs={6} className="d-flex p-0 justify-content-center">
+                <Button
+                  style={bluePillButton}
+                  onClick={() => {
+                    setPurchaseUID(payment.purchase_uid);
+                    setPayExpense(true);
+                    setExpenseDetail(false);
+                    setExpenseDetailOwner(false);
+                    PayBill(payment.purchase_uid);
+                  }}
+                >
+                  Pay Bill
+                </Button>
+              </Col>
+              <Col></Col>
+            </Row>
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        ""
+      )}
+      {!expenseDetail && !expenseDetailOwner && maintenanceExpenseDetail ? (
         <div
           className="d-flex flex-column mx-2 p-3"
           style={{
@@ -1162,16 +1360,14 @@ function OwnerUtilities(props) {
                 <Button
                   style={bluePillButton}
                   onClick={() => {
-                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
-                      state: {
-                        amount: payment.amount_due,
-                        selectedProperty: payment,
-                        purchaseUID: payment.purchase_uid,
-                      },
-                    });
+                    setPurchaseUID(payment.purchase_uid);
+                    setPayExpense(true);
+                    PayBill(payment.purchase_uid);
+                    setExpenseDetail(false);
+                    setExpenseDetailOwner(false);
                   }}
                 >
-                  Paid by Manager
+                  Pay Bill
                 </Button>
               </Col>
               <Col></Col>
@@ -1179,6 +1375,161 @@ function OwnerUtilities(props) {
           ) : (
             ""
           )}
+        </div>
+      ) : (
+        ""
+      )}
+      {payExpense &&
+      !editingUtility &&
+      !expenseDetailOwner &&
+      !expenseDetail &&
+      !maintenanceExpenseDetail ? (
+        <div className="mx-2 my-2 p-3">
+          <div>
+            <Row
+              className="my-2 align-items-center justify-content-center"
+              style={headings}
+            >
+              {payment.bill_utility_type}
+            </Row>
+            <Row
+              className="my-2 align-items-center justify-content-center"
+              style={mediumBold}
+            >
+              {payment.bill_description}{" "}
+            </Row>
+            <Row className="my-2 align-items-center justify-content-center">
+              <Col
+                xs={3}
+                className="pt-4 justify-content-center align-items-center"
+                style={
+                  (mediumBold,
+                  {
+                    color: "#007AFF",
+                    border: "4px solid #007AFF",
+                    borderRadius: "50%",
+                    height: "83px",
+                    width: "83px",
+                  })
+                }
+              >
+                ${payment.amount_due.toFixed(2)}
+              </Col>
+            </Row>
+            <div className="mt-3" hidden={stripePayment}>
+              <Form.Group style={mediumBold}>
+                <Form.Label>Amount</Form.Label>
+                {purchaseUID.length === 1 ? (
+                  <Form.Control
+                    placeholder={purchase.amount_due - purchase.amount_paid}
+                    style={squareForm}
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                ) : (
+                  <Form.Control
+                    disabled
+                    placeholder={purchase.amount_due - purchase.amount_paid}
+                    style={squareForm}
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                )}
+              </Form.Group>
+
+              <Form.Group style={mediumBold}>
+                <Form.Label>Message</Form.Label>
+                <Form.Control
+                  placeholder="M4METEST"
+                  style={squareForm}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </Form.Group>
+              <Row
+                className="text-center mt-5"
+                style={{
+                  display: "text",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {disabled ? (
+                  <Col>
+                    <Button
+                      className="mt-2 mb-2"
+                      variant="outline-primary"
+                      disabled
+                      style={bluePillButton}
+                    >
+                      Pay with Stripe
+                    </Button>
+                  </Col>
+                ) : (
+                  <Col>
+                    <Button
+                      className="mt-2 mb-2"
+                      variant="outline-primary"
+                      onClick={() => {
+                        //navigate("/tenant");
+                        setStripePayment(true);
+                      }}
+                      style={bluePillButton}
+                    >
+                      Pay with Stripe
+                    </Button>
+                  </Col>
+                )}
+                {disabled ? (
+                  <Col>
+                    <Button
+                      className="mt-2 mb-2"
+                      variant="outline-primary"
+                      disabled
+                      style={pillButton}
+                    >
+                      Pay with PayPal
+                    </Button>
+                  </Col>
+                ) : (
+                  <Col>
+                    <Button
+                      className="mt-2 mb-2"
+                      variant="outline-primary"
+                      onClick={submitForm}
+                      style={pillButton}
+                    >
+                      Pay with PayPal
+                    </Button>
+                  </Col>
+                )}
+                <Col>
+                  <Button
+                    className="mt-2 mb-2"
+                    variant="outline-primary"
+                    onClick={() => {
+                      setPayExpense(false);
+                    }}
+                    style={bluePillButton}
+                  >
+                    Pay later
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+            <div hidden={!stripePayment}>
+              <Elements stripe={stripePromise}>
+                <StripePayment
+                  cancel={cancel}
+                  submit={submit}
+                  purchases={[purchase]}
+                  message={message}
+                  amount={amount}
+                />
+              </Elements>
+            </div>
+          </div>{" "}
         </div>
       ) : (
         ""

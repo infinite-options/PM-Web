@@ -343,143 +343,81 @@ function PropertyAppliances(props) {
               applianceState[appliance]["available"] == true &&
               applianceType == appliance ? (
                 <Row>
-                  <Row className="mx-4 p-0">
+                  <Row className="mx-2 p-0">
                     <Col>Name</Col>
-                    <Col>
-                      <Form.Control
-                        disabled
-                        style={squareForm}
-                        type="text"
-                        value={
-                          applianceName || applianceState[appliance]["name"]
-                        }
-                        placeholder="Appliance Name"
-                        onChange={(e) => setApplianceName(e.target.value)}
-                      />
+                    <Col className="d-flex justify-content-end">
+                      <p>
+                        {applianceName || applianceState[appliance]["name"]}
+                      </p>
                     </Col>
                   </Row>
 
-                  <Row className="mx-4 mt-1 p-0">
-                    <Col>Purchased On</Col>
-                    <Col>
-                      <Form.Control
-                        disabled
-                        style={squareForm}
-                        type="date"
-                        value={
-                          appliancePurchasedOn ||
-                          applianceState[appliance]["purchased"]
-                        }
-                        placeholder="Purchased On"
-                        onChange={(e) =>
-                          setAppliancePurchasedOn(e.target.value)
-                        }
-                      />
+                  <Row className="mx-2 mt-1 p-0">
+                    <Col xs={7}>Purchased On</Col>
+                    <Col className="d-flex justify-content-end">
+                      <p>
+                        {appliancePurchasedOn ||
+                          applianceState[appliance]["purchased"]}
+                      </p>
                     </Col>
                   </Row>
-                  <Row className="mx-4 mt-1 p-0">
-                    <Col>Purchase Order Number</Col>
-                    <Col>
-                      <Form.Control
-                        disabled
-                        style={squareForm}
-                        value={
-                          appliancePurchasesOrderNumber ||
-                          applianceState[appliance]["purchased_order"]
-                        }
-                        placeholder="Purchase Order Number"
-                        onChange={(e) =>
-                          setAppliancePurchasesOrderNumber(e.target.value)
-                        }
-                      />
+                  <Row className="mx-2 mt-1 p-0">
+                    <Col xs={7}>Purchase Order Number</Col>
+                    <Col className="d-flex justify-content-end">
+                      <p>
+                        {appliancePurchasesOrderNumber ||
+                          applianceState[appliance]["purchased_order"]}
+                      </p>
                     </Col>
                   </Row>
 
-                  <Row className="mx-4 mt-1 p-0">
-                    <Col>Installed On</Col>
-                    <Col>
-                      <Form.Control
-                        disabled
-                        style={squareForm}
-                        type="date"
-                        value={
-                          applianceInstalledOn ||
-                          applianceState[appliance]["installed"]
-                        }
-                        placeholder="Installed On"
-                        onChange={(e) =>
-                          setApplianceInstalledOn(e.target.value)
-                        }
-                      />
+                  <Row className="mx-2 mt-1 p-0">
+                    <Col xs={7}>Installed On</Col>
+                    <Col className="d-flex justify-content-end">
+                      <p>
+                        {applianceInstalledOn ||
+                          applianceState[appliance]["installed"]}
+                      </p>
                     </Col>
                   </Row>
 
-                  <Row className="mx-4 mt-1 p-0">
-                    <Col>Serial Number</Col>
-                    <Col>
-                      <Form.Control
-                        disabled
-                        style={squareForm}
-                        value={
-                          applianceSerialNum ||
-                          applianceState[appliance]["serial_num"]
-                        }
-                        placeholder="Serial Number"
-                        onChange={(e) => setApplianceSerialNum(e.target.value)}
-                      />
+                  <Row className="mx-2 mt-1 p-0">
+                    <Col xs={7}>Serial Number</Col>
+                    <Col className="d-flex justify-content-end">
+                      <p>
+                        {applianceSerialNum ||
+                          applianceState[appliance]["serial_num"]}
+                      </p>
                     </Col>
                   </Row>
 
-                  <Row className="mx-4 mt-1 p-0">
-                    <Col>Model Number</Col>
-                    <Col>
-                      <Form.Control
-                        disabled
-                        style={squareForm}
-                        value={
-                          applianceModelNum ||
-                          applianceState[appliance]["model_num"]
-                        }
-                        placeholder="Model Number"
-                        onChange={(e) => setApplianceModelNum(e.target.value)}
-                      />
+                  <Row className="mx-2 mt-1 p-0">
+                    <Col xs={7}>Model Number</Col>
+                    <Col className="d-flex justify-content-end">
+                      <p>
+                        {applianceModelNum ||
+                          applianceState[appliance]["model_num"]}
+                      </p>
                     </Col>
                   </Row>
 
-                  <Row className="mx-4 mt-1 p-0">
-                    <Col>Warranty Till</Col>
-                    <Col>
-                      <Form.Control
-                        disabled
-                        style={squareForm}
-                        type="date"
-                        value={
-                          applianceWarrantyTill ||
-                          applianceState[appliance]["warranty_till"]
-                        }
-                        placeholder="Warranty Till"
-                        onChange={(e) =>
-                          setApplianceWarrantyTill(e.target.value)
-                        }
-                      />
+                  <Row className="mx-2 mt-1 p-0">
+                    <Col xs={7}>Warranty Till</Col>
+                    <Col className="d-flex justify-content-end">
+                      <p>
+                        {applianceWarrantyTill ||
+                          applianceState[appliance]["warranty_till"]}
+                      </p>
                     </Col>
                   </Row>
 
-                  <Row className="mx-4 mt-1 p-0">
-                    <Col>Warranty Info</Col>
-                    <Col>
-                      <Form.Control
-                        disabled
-                        style={squareForm}
-                        value={
-                          applianceWarrantyInfo ||
-                          applianceState[appliance]["warranty_info"]
-                        }
-                        placeholder="Warranty Info"
-                        onChange={(e) =>
-                          setApplianceWarrantyInfo(e.target.value)
-                        }
-                      />
+                  <Row className="mx-2 mt-1 p-0">
+                    <Col xs={7}>Warranty Info</Col>
+                    <Col className="d-flex justify-content-end">
+                      <p>
+                        {applianceWarrantyInfo ||
+                          applianceState[appliance]["warranty_info"]}
+                      </p>
                     </Col>
                   </Row>
                 </Row>
