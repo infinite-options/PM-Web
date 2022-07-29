@@ -21,7 +21,10 @@ function ManagerApplianceList(props) {
     }
   ).length;
   console.log(num_appliances);
-
+  const toggleAppliance = (i) => {
+    setListAppliances(true);
+    setCurrentAppliance(i);
+  };
   return (
     <div
       className="pb-5 mb-5 h-100"
@@ -58,12 +61,13 @@ function ManagerApplianceList(props) {
         </p>
         {num_appliances} appliances
       </div>
-      {Object.values(JSON.parse(property.appliances)).map((appliance) => {
+      {Object.values(JSON.parse(property.appliances)).map((appliance, i) => {
         return appliance.available ? (
           <div
             onClick={() => {
-              setListAppliances(!listAppliances);
-              setCurrentAppliance(appliance.name);
+              // setListAppliances(!listAppliances);
+              // setCurrentAppliance(i);
+              toggleAppliance(i);
             }}
             className="mx-2 my-2 p-3"
             style={{
@@ -74,7 +78,6 @@ function ManagerApplianceList(props) {
               opacity: 1,
             }}
           >
-            {console.log(Object.keys(JSON.parse(property.appliances)))}
             <Row>
               <Col style={mediumBold}>
                 <div style={{ color: "#007AFF" }}>{appliance.name}</div>
@@ -91,8 +94,18 @@ function ManagerApplianceList(props) {
               </Col>
             </Row>
             <Row>
-              {listAppliances && currentAppliance == appliance.name ? (
+              {listAppliances && currentAppliance == i ? (
                 <div>
+                  <div>
+                    Order Number:{" "}
+                    {appliance.purchased_order
+                      ? appliance.purchased_order
+                      : "NA"}
+                  </div>
+                  <div>
+                    Installed On:{" "}
+                    {appliance.installed ? appliance.installed : "NA"}
+                  </div>
                   <div>
                     Serial Number:{" "}
                     {appliance.serial_num ? appliance.serial_num : "NA"}

@@ -1,13 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import moment from "moment";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
-
-import { Elements } from "@stripe/react-stripe-js";
-
 import { loadStripe } from "@stripe/stripe-js";
-import StripePayment from "../components/StripePayment.js";
 import {
   pillButton,
   smallPillButton,
@@ -23,53 +19,125 @@ import {
   greenPill,
 } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
-import { post, get } from "../utils/api";
+import { post } from "../utils/api";
 import AppContext from "../AppContext";
 import File from "../icons/File.svg";
 
 function ManagerUtilities(props) {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { userData, refresh } = React.useContext(AppContext);
-  const { access_token, user } = userData;
+  const { userData } = useContext(AppContext);
+  const { user } = userData;
   const [stripePromise, setStripePromise] = useState(null);
-  // const [expenses, setExpenses] = React.useState([]);
-  const { properties, setStage, expenses } = props;
-  console.log(properties);
+  const { properties, expenses } = props;
   const useLiveStripeKey = false;
-  const [message, setMessage] = React.useState("");
   const [managerID, setManagerID] = useState("");
-  const [utilityState, setUtilityState] = React.useState([]);
-  const [newUtility, setNewUtility] = React.useState(null);
-  const [editingUtility, setEditingUtility] = React.useState(false);
-  const [propertyState, setPropertyState] = React.useState(properties);
+  const [utilityState, setUtilityState] = useState([]);
+  const [newUtility, setNewUtility] = useState(null);
+  const [editingUtility, setEditingUtility] = useState(false);
+  const [propertyState, setPropertyState] = useState(properties);
 
-  const [files, setFiles] = React.useState([]);
-  const [newFile, setNewFile] = React.useState(null);
-  const [editingDoc, setEditingDoc] = React.useState(null);
-  const [tenantPay, setTenantPay] = React.useState(false);
-  const [ownerPay, setOwnerPay] = React.useState(false);
-  const [expenseDetail, setExpenseDetail] = React.useState(false);
+  const [files, setFiles] = useState([]);
+  const [newFile, setNewFile] = useState(null);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [tenantPay, setTenantPay] = useState(false);
+  const [ownerPay, setOwnerPay] = useState(false);
+  const [expenseDetail, setExpenseDetail] = useState(false);
+  const [expenseDetailManager, setExpenseDetailManager] = useState(false);
   const [maintenanceExpenseDetail, setMaintenanceExpenseDetail] =
-    React.useState(false);
-  const [payment, setPayment] = React.useState(false);
+    useState(false);
+  const [payment, setPayment] = useState(false);
   const emptyUtility = {
     provider: "",
     service_name: "",
     charge: "",
     properties: [],
-    split_type: "uniform",
+    split_type: "No Split",
     due_date: "",
     add_to_rent: false,
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [stripePayment, setStripePayment] = useState(false);
   const [paymentConfirm, setPaymentConfirm] = useState(false);
-  React.useEffect(async () => {
+  const [expenseUnique, setExpenseUnique] = useState("");
+
+  //group an array by property
+  function groupBy(arr, property) {
+    return arr.reduce(function (memo, x) {
+      if (!memo[x[property]]) {
+        memo[x[property]] = [];
+      }
+      memo[x[property]].push(x);
+      return memo;
+    }, {});
+  }
+
+  useEffect(() => {
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length < 1) {
+      console.log("No associated PM Businesses");
+      return;
+    } else if (management_businesses.length > 1) {
+      console.log("Multiple associated PM Businesses");
+      management_buid = management_businesses[0].business_uid;
+    } else {
+      management_buid = management_businesses[0].business_uid;
+    }
+    setManagerID(management_buid);
+
+    const grouped = groupBy(expenses, "purchase_uid");
+    const keys = Object.keys(grouped);
+    var output = [];
+    //loop keys
+    keys.forEach((key) => {
+      //merge using reduce
+      const out = grouped[key].reduce((acc, current) => {
+        return {
+          address: acc.address + ";" + current.address,
+          amount: current.amount,
+          amount_due: current.amount_due,
+          amount_paid: current.amount_paid,
+          bill_algorithm: current.bill_algorithm,
+          bill_created_by: current.bill_created_by,
+          bill_description: current.bill_description,
+          bill_docs: current.bill_docs,
+          bill_uid: current.bill_uid,
+          bill_utility_type: current.bill_utility_type,
+          charge_id: current.charge_id,
+          description: current.description,
+          linked_bill_id: current.linked_bill_id,
+          next_payment: current.next_payment,
+          pay_purchase_id: current.pay_purchase_id,
+          payer: current.payer,
+          payment_date: current.payment_date,
+          payment_frequency: current.payment_frequency,
+          payment_notes: current.payment_notes,
+          payment_type: current.payment_type,
+          payment_uid: current.payment_uid,
+          pur_property_id: current.pur_property_id,
+          purchase_date: current.purchase_date,
+          purchase_frequency: current.purchase_frequency,
+          purchase_notes: current.purchase_notes,
+          purchase_status: current.purchase_status,
+          purchase_type: current.purchase_type,
+          purchase_uid: current.purchase_uid,
+          receiver: current.receiver,
+        };
+      });
+      output.push(out);
+    });
+    console.log(output);
+    setExpenseUnique(output);
+  }, []);
+
+  console.log(expenseUnique);
+
+  useEffect(async () => {
     const url = useLiveStripeKey
       ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
       : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
@@ -78,7 +146,7 @@ function ManagerUtilities(props) {
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     console.log(properties);
     properties.forEach((p) => (p.checked = false));
   }, [properties]);
@@ -89,14 +157,18 @@ function ManagerUtilities(props) {
   };
   const splitFees = (newUtility) => {
     let charge = parseFloat(newUtility.charge);
-
-    if (newUtility.split_type === "uniform") {
+    if (newUtility.split_type === "No Split") {
+      let count = newUtility.properties.length;
+      let charge_per = charge;
+      newUtility.properties.forEach((p) => (p.charge = charge_per));
+    }
+    if (newUtility.split_type === "Uniform") {
       let count = newUtility.properties.length;
       let charge_per = charge / count;
       newUtility.properties.forEach((p) => (p.charge = charge_per));
     }
 
-    if (newUtility.split_type === "tenant") {
+    if (newUtility.split_type === "Tenant") {
       let total = 0;
       newUtility.properties.forEach((p, i) => {
         if (p.rental_status === "ACTIVE") {
@@ -118,7 +190,7 @@ function ManagerUtilities(props) {
       );
     }
 
-    if (newUtility.split_type === "area") {
+    if (newUtility.split_type === "Area") {
       let total_area = 0;
       newUtility.properties.forEach((p) => (total_area = total_area + p.area));
       // console.log(total_area)
@@ -374,7 +446,10 @@ function ManagerUtilities(props) {
       <Header
         title="Expenses"
         leftText={
-          editingUtility || expenseDetail || maintenanceExpenseDetail
+          editingUtility ||
+          expenseDetail ||
+          expenseDetailManager ||
+          maintenanceExpenseDetail
             ? "< Back"
             : ""
         }
@@ -390,7 +465,10 @@ function ManagerUtilities(props) {
           setEditingUtility(false);
         }}
         rightText={
-          editingUtility || expenseDetail || maintenanceExpenseDetail
+          editingUtility ||
+          expenseDetail ||
+          expenseDetailManager ||
+          maintenanceExpenseDetail
             ? ""
             : "+ New"
         }
@@ -408,6 +486,7 @@ function ManagerUtilities(props) {
         {newUtility !== null &&
         editingUtility &&
         !expenseDetail &&
+        !expenseDetailManager &&
         !maintenanceExpenseDetail ? (
           <div
             className="mx-2 mt-2 p-3"
@@ -670,9 +749,10 @@ function ManagerUtilities(props) {
                       value={newUtility.split_type}
                       onChange={(e) => changeNewUtility(e, "split_type")}
                     >
-                      <option value="uniform">Uniform</option>
-                      <option value="tenant">By Tenant Count</option>
-                      <option value="area">By Square Footage</option>
+                      <option value="No Split">No Split</option>
+                      <option value="Uniform">Uniform</option>
+                      <option value="Tenant">By Tenant Count</option>
+                      <option value="Area">By Square Footage</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
@@ -715,15 +795,16 @@ function ManagerUtilities(props) {
         ) : (
           ""
         )}
-        {expenses.length > 0 &&
+        {expenseUnique.length > 0 &&
         newUtility === null &&
         !editingUtility &&
         !expenseDetail &&
+        !expenseDetailManager &&
         !maintenanceExpenseDetail ? (
           <div className="mx-2 my-2 p-3">
             <div>
               <Row style={headings}>Utility Expenses Due From Manager</Row>
-              {expenses.map((expense) => {
+              {expenseUnique.map((expense) => {
                 return expense.purchase_type === "UTILITY" &&
                   expense.payer.includes(managerID) ? (
                   <div>
@@ -736,7 +817,7 @@ function ManagerUtilities(props) {
                         opacity: 1,
                       }}
                       onClick={() => {
-                        setExpenseDetail(true);
+                        setExpenseDetailManager(true);
                         setPayment(expense);
                       }}
                     >
@@ -763,11 +844,7 @@ function ManagerUtilities(props) {
                             String(expense.purchase_date).split(" ")[0]
                           ).toDateString()}
                         </div>
-                        <div>
-                          {expense.address.split(",")[0]} <br />
-                          {expense.address.split(",")[1]},{" "}
-                          {expense.address.split(",")[2]}
-                        </div>
+                        <div>Split - {expense.bill_algorithm}</div>
                       </Col>
                       <Col xs={3} className="pt-4 justify-content-end">
                         {expense.purchase_status === "UNPAID" ? (
@@ -787,9 +864,10 @@ function ManagerUtilities(props) {
                 );
               })}
             </div>
+            {console.log(managerID)}
             <div>
               <Row style={headings}>Utility Expenses Due From Tenant</Row>
-              {expenses.map((expense) => {
+              {expenseUnique.map((expense) => {
                 return expense.purchase_type === "UTILITY" &&
                   !expense.payer.includes(managerID) ? (
                   <div>
@@ -854,7 +932,7 @@ function ManagerUtilities(props) {
               })}
             </div>
             <div>
-              {expenses.map((expense) => {
+              {expenseUnique.map((expense) => {
                 return expense.purchase_type === "MAINTENANCE" ||
                   expense.purchase_type === "REPAIRS" ? (
                   <div>
@@ -905,6 +983,7 @@ function ManagerUtilities(props) {
         ) : newUtility === null &&
           !editingUtility &&
           !expenseDetail &&
+          !expenseDetailManager &&
           !maintenanceExpenseDetail ? (
           <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
             <Row style={headings}>No expenses</Row>
@@ -914,7 +993,7 @@ function ManagerUtilities(props) {
         )}
       </div>
 
-      {expenseDetail && !maintenanceExpenseDetail ? (
+      {expenseDetail && !expenseDetailManager && !maintenanceExpenseDetail ? (
         <div
           className="d-flex flex-column mx-2 p-3"
           style={{
@@ -957,14 +1036,19 @@ function ManagerUtilities(props) {
           <Row className="my-2 mx-2" style={mediumBold}>
             Properties Billed:
           </Row>
-          <Row
-            className="my-2 mx-2 p-1"
-            style={
-              (mediumBold, { border: "1px solid #707070", borderRadius: "5px" })
-            }
-          >
-            {payment.address}
-          </Row>
+          {payment.address.split(";").map((address) => {
+            return (
+              <Row
+                className="my-2 mx-2 p-1"
+                style={
+                  (mediumBold,
+                  { border: "1px solid #707070", borderRadius: "5px" })
+                }
+              >
+                {address}
+              </Row>
+            );
+          })}
           <Row className="d-flex my-2 mx-2" style={mediumBold}>
             <Col className="d-flex p-0 justify-content-left">Expense type:</Col>
             <Col className="d-flex p-0 justify-content-end">Utility</Col>
@@ -1038,7 +1122,138 @@ function ManagerUtilities(props) {
       ) : (
         ""
       )}
-      {!expenseDetail && maintenanceExpenseDetail ? (
+      {!expenseDetail && expenseDetailManager && !maintenanceExpenseDetail ? (
+        <div
+          className="d-flex flex-column mx-2 p-3"
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            opacity: 1,
+            height: "100%",
+          }}
+        >
+          {console.log(payment)}
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={headings}
+          >
+            {payment.bill_utility_type}
+          </Row>
+          <Row
+            className="my-2 align-items-center justify-content-center"
+            style={mediumBold}
+          >
+            {payment.bill_description}{" "}
+          </Row>
+          <Row className="my-2 align-items-center justify-content-center">
+            <Col
+              xs={3}
+              className="pt-4 justify-content-center align-items-center"
+              style={
+                (mediumBold,
+                {
+                  color: "#007AFF",
+                  border: "4px solid #007AFF",
+                  borderRadius: "50%",
+                  height: "83px",
+                  width: "83px",
+                })
+              }
+            >
+              ${payment.amount_due.toFixed(2)}
+            </Col>
+          </Row>
+          <Row className="my-2 mx-2" style={mediumBold}>
+            Properties Billed:
+          </Row>
+          {payment.address.split(";").map((address) => {
+            return (
+              <Row
+                className="my-2 mx-2 p-1"
+                style={
+                  (mediumBold,
+                  { border: "1px solid #707070", borderRadius: "5px" })
+                }
+              >
+                {address}
+              </Row>
+            );
+          })}
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Expense type:</Col>
+            <Col className="d-flex p-0 justify-content-end">Utility</Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">Split Method:</Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {payment.bill_algorithm}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">
+              Bill Received on:
+            </Col>
+            <Col className="d-flex p-0 justify-content-end">
+              {new Date(
+                String(payment.purchase_date).split(" ")[0]
+              ).toDateString()}
+            </Col>
+          </Row>
+          <Row className="d-flex my-2 mx-2" style={mediumBold}>
+            <Col className="d-flex p-0 justify-content-left">
+              Payment Status:
+            </Col>
+            {payment.purchase_status === "UNPAID" ? (
+              <Col xs={3} className="mt-0" style={redPill}>
+                {payment.purchase_status}
+              </Col>
+            ) : (
+              <Col xs={3} className="mt-0" style={greenPill}>
+                {payment.purchase_status}
+              </Col>
+            )}
+          </Row>
+          <Row className="d-flex my-5 mx-2">
+            <Col></Col>
+            <Col className="d-flex p-0 justify-content-center">
+              <Button
+                style={bluePillButton}
+                onClick={() => setExpenseDetailManager(false)}
+              >
+                Okay
+              </Button>
+            </Col>
+            <Col></Col>
+          </Row>
+          {payment.purchase_status === "UNPAID" &&
+          payment.payer.includes(user.user_uid) ? (
+            <Row className="d-flex mx-2">
+              <Col></Col>
+              <Col xs={6} className="d-flex p-0 justify-content-center">
+                <Button
+                  style={bluePillButton}
+                  onClick={() => {
+                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
+                      state: {
+                        amount: payment.amount_due,
+                        selectedProperty: payment,
+                        purchaseUID: payment.purchase_uid,
+                      },
+                    });
+                  }}
+                >
+                  Pay Bill
+                </Button>
+              </Col>
+              <Col></Col>
+            </Row>
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        ""
+      )}
+      {!expenseDetail && !expenseDetailManager && maintenanceExpenseDetail ? (
         <div
           className="d-flex flex-column mx-2 p-3"
           style={{

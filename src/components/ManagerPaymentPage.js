@@ -59,11 +59,12 @@ function ManagerPaymentPage(props) {
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
     let tempAllPurchases = [];
-    for (let i in purchaseUID) {
-      let response1 = await get(`/purchases?purchase_uid=${purchaseUID[i]}`);
-      tempAllPurchases.push(response1.result[0]);
-    }
+    // for (let i in purchaseUID) {
+    //   let response1 = await get(`/purchases?purchase_uid=${purchaseUID[i]}`);
+    //   tempAllPurchases.push(response1.result[0]);
+    // }
     response = await get(`/purchases?purchase_uid=${purchaseUID}`);
+    tempAllPurchases.push(response.result[0]);
     setPurchase(response.result[0]);
 
     setTotalSum(response.result[0].amount_due);

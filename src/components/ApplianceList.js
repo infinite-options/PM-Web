@@ -59,7 +59,6 @@ function ApplianceList(props) {
             }}
             key={i}
           >
-            {console.log(appliance)}
             <Row>
               <Col style={mediumBold}>
                 <div style={{ color: "#007AFF" }}>{appliance.name}</div>

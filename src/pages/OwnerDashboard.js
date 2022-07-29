@@ -119,16 +119,13 @@ function OwnerDashboard(props) {
   });
 
   return (
-    <div
-      className="h-100"
-      style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
-    >
+    <div className="h-100" style={{ backgroundColor: "#E9E9E9" }}>
       <Header title="Owner Dashboard" />
       <Container className="px-3 pb-5 mb-5 ">
         <div
           className="px-2 p-2"
           style={{
-            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            backgroundColor: "#FFFFFF",
             borderRadius: "10px",
             opacity: 1,
           }}
@@ -143,7 +140,7 @@ function OwnerDashboard(props) {
           <Row
             className="mx-2 mt-4 p-3"
             style={{
-              background: "#007AFF 0% 0% no-repeat padding-box",
+              backgroundColor: "#007AFF",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
               color: "white",
@@ -174,11 +171,9 @@ function OwnerDashboard(props) {
           <Row
             className="mx-2 mt-4 p-3"
             style={{
-              background:
-                revenueTotal > expenseTotal
-                  ? "#3DB727 0% 0% no-repeat padding-box"
-                  : "#E3441F 0% 0% no-repeat padding-box",
-              // background: "#93EE9C 0% 0% no-repeat padding-box",
+              backgroundColor:
+                revenueTotal > expenseTotal ? "#3DB727" : "#E3441F",
+              // backgroundColor: "#93EE9C",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
               color: "white",
@@ -205,7 +200,7 @@ function OwnerDashboard(props) {
           <Row
             className="mx-2  mt-4 p-3"
             style={{
-              background: "#3DB727 0% 0% no-repeat padding-box",
+              backgroundColor: "#3DB727",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
               color: "white",
@@ -270,10 +265,8 @@ function OwnerDashboard(props) {
                           property.utiltiy_revenue !== 0) ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -308,10 +301,8 @@ function OwnerDashboard(props) {
                         {property.rental_revenue !== 0 ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -349,10 +340,8 @@ function OwnerDashboard(props) {
                         {property.extraCharges_revenue !== 0 ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -391,10 +380,8 @@ function OwnerDashboard(props) {
                         property.utility_revenue !== 0 ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -430,7 +417,7 @@ function OwnerDashboard(props) {
 
                   <Row
                     style={{
-                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      backgroundColor: "#F3F3F3",
                     }}
                   >
                     <Col>
@@ -471,7 +458,7 @@ function OwnerDashboard(props) {
           <Row
             className="mx-2  mt-4 p-3"
             style={{
-              background: "#E3441F 0% 0% no-repeat padding-box",
+              backgroundColor: "#E3441F",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
               color: "white",
@@ -551,10 +538,8 @@ function OwnerDashboard(props) {
                         )}
                         <Row
                           style={{
-                            background:
-                              i % 2 === 0
-                                ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                : "#F3F3F3 0% 0% no-repeat padding-box",
+                            backgroundColor:
+                              i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                           }}
                         >
                           <Col xs={6}>
@@ -589,10 +574,8 @@ function OwnerDashboard(props) {
                         property.maintenance_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -637,10 +620,8 @@ function OwnerDashboard(props) {
                         property.management_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -686,10 +667,8 @@ function OwnerDashboard(props) {
                         property.utility_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -735,10 +714,8 @@ function OwnerDashboard(props) {
                         property.insurance_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -783,10 +760,8 @@ function OwnerDashboard(props) {
                         property.repairs_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -831,10 +806,8 @@ function OwnerDashboard(props) {
                         property.mortgage_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -879,10 +852,8 @@ function OwnerDashboard(props) {
                         property.taxes_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -931,7 +902,7 @@ function OwnerDashboard(props) {
 
                   <Row
                     style={{
-                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      backgroundColor: "#F3F3F3",
                     }}
                   >
                     <Col>
@@ -972,10 +943,10 @@ function OwnerDashboard(props) {
           <Row
             className="mx-2 mt-4 p-3"
             style={{
-              background:
+              backgroundColor:
                 revenueExpectedTotal > expenseExpectedTotal
-                  ? "#3DB727 0% 0% no-repeat padding-box"
-                  : "#E3441F 0% 0% no-repeat padding-box",
+                  ? "#3DB727"
+                  : "#E3441F",
               boxShadow: "0px 3px 3px #00000029",
               borderRadius: "20px",
             }}
@@ -1028,10 +999,8 @@ function OwnerDashboard(props) {
                       <div>
                         <Row
                           style={{
-                            background:
-                              i % 2 === 0
-                                ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                : "#F3F3F3 0% 0% no-repeat padding-box",
+                            backgroundColor:
+                              i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                           }}
                         >
                           <Col xs={6}>
@@ -1057,10 +1026,8 @@ function OwnerDashboard(props) {
                         property.rental_expected_revenue !== 0 ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -1094,10 +1061,8 @@ function OwnerDashboard(props) {
                         property.extraCharges_expected_revenue !== 0 ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -1130,10 +1095,8 @@ function OwnerDashboard(props) {
                         property.utility_expected_revenue !== 0 ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -1167,10 +1130,8 @@ function OwnerDashboard(props) {
                         property.maintenance_expected_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -1206,10 +1167,8 @@ function OwnerDashboard(props) {
                         property.management_expected_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -1246,10 +1205,8 @@ function OwnerDashboard(props) {
                         property.repairs_expected_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -1283,10 +1240,8 @@ function OwnerDashboard(props) {
                         property.utility_expected_expenses !== undefined ? (
                           <Row
                             style={{
-                              background:
-                                i % 2 === 0
-                                  ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                  : "#F3F3F3 0% 0% no-repeat padding-box",
+                              backgroundColor:
+                                i % 2 === 0 ? "#FFFFFF" : "#F3F3F3",
                             }}
                           >
                             <Col>
@@ -1331,7 +1286,7 @@ function OwnerDashboard(props) {
             interval={null}
             className="mx-2 mt-4 p-3 "
             style={{
-              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              backgroundColor: "#F3F3F3",
             }}
           >
             <Carousel.Item>
@@ -1366,7 +1321,7 @@ function OwnerDashboard(props) {
               id="owner-bills"
               className="mx-2 px-1 py-3 justify-content-center"
               style={{
-                background: "#007AFF 0% 0% no-repeat padding-box",
+                backgroundColor: "#007AFF",
                 borderRadius: "0px 0px 10px 10px",
               }}
             >
