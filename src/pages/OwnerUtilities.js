@@ -33,10 +33,8 @@ function OwnerUtilities(props) {
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   const [stripePromise, setStripePromise] = useState(null);
-  // const [expenses, setExpenses] = useState([]);
   const { properties, expenses } = props;
   const useLiveStripeKey = false;
-
   const [utilityState, setUtilityState] = useState([]);
   const [newUtility, setNewUtility] = useState(null);
   const [editingUtility, setEditingUtility] = useState(false);
@@ -298,19 +296,13 @@ function OwnerUtilities(props) {
       console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
-    navigate(`/ownerPaymentPage/${purchase_uid}`, {
-      state: {
-        amount: response_pm.amount_due,
-        selectedProperty: "",
-        purchaseUID: purchase_uid,
-      },
-    });
     setNewUtility({ ...emptyUtility });
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
     setEditingUtility(false);
     setTenantPay(false);
     setOwnerPay(false);
+    setPayExpense(true);
   };
 
   const addUtility = async () => {
@@ -761,34 +753,6 @@ function OwnerUtilities(props) {
                   </Form.Group>
                 </Col>
               </Row>
-              {/* <Row>
-                <Col>
-                  <Form.Group className="mx-2 my-3">
-                    <Form.Label style={mediumBold} className="mb-0 ms-2">
-                      Message
-                    </Form.Label>
-                    <Form.Control
-                      placeholder="M4METEST"
-                      style={squareForm}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Elements stripe={stripePromise}>
-                    <StripePayment
-                      cancel={cancel}
-                      submit={submit}
-                      purchases={[purchase]}
-                      message={message}
-                      amount={amount}
-                    />
-                  </Elements>
-                </Col>
-              </Row> */}
             </Row>
 
             <div
@@ -1388,16 +1352,14 @@ function OwnerUtilities(props) {
                 <Button
                   style={bluePillButton}
                   onClick={() => {
-                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
-                      state: {
-                        amount: payment.amount_due,
-                        selectedProperty: payment,
-                        purchaseUID: payment.purchase_uid,
-                      },
-                    });
+                    setPurchaseUID(payment.purchase_uid);
+                    setPayExpense(true);
+                    PayBill(payment.purchase_uid);
+                    setExpenseDetail(false);
+                    setExpenseDetailOwner(false);
                   }}
                 >
-                  Paid by Manager
+                  Pay Bill
                 </Button>
               </Col>
               <Col></Col>

@@ -4,6 +4,8 @@ import moment from "moment";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import StripePayment from "../components/StripePayment.js";
 import {
   pillButton,
   smallPillButton,
@@ -22,7 +24,7 @@ import ArrowDown from "../icons/ArrowDown.svg";
 import { useNavigate } from "react-router-dom";
 import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
-import { post } from "../utils/api";
+import { post, get } from "../utils/api";
 import AppContext from "../AppContext";
 import File from "../icons/File.svg";
 
@@ -38,7 +40,6 @@ function ManagerUtilities(props) {
   const [newUtility, setNewUtility] = useState(null);
   const [editingUtility, setEditingUtility] = useState(false);
   const [propertyState, setPropertyState] = useState(properties);
-
   const [files, setFiles] = useState([]);
   const [newFile, setNewFile] = useState(null);
   const [editingDoc, setEditingDoc] = useState(null);
@@ -48,6 +49,7 @@ function ManagerUtilities(props) {
   const [expenseDetailManager, setExpenseDetailManager] = useState(false);
   const [maintenanceExpenseDetail, setMaintenanceExpenseDetail] =
     useState(false);
+  const [payExpense, setPayExpense] = useState(false);
   const [payment, setPayment] = useState(false);
   const emptyUtility = {
     provider: "",
@@ -59,9 +61,55 @@ function ManagerUtilities(props) {
     add_to_rent: false,
   };
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [purchaseUID, setPurchaseUID] = useState("");
+  const [message, setMessage] = useState("");
+  const [amount, setAmount] = useState("");
+  const [purchase, setPurchase] = useState({});
+  const [totalSum, setTotalSum] = useState("");
   const [stripePayment, setStripePayment] = useState(false);
-  const [paymentConfirm, setPaymentConfirm] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const requestTitleRef = React.createRef();
+  const requestDescriptionRef = React.createRef();
+  const tagPriorityRef = React.createRef();
+
   const [expenseUnique, setExpenseUnique] = useState("");
+
+  const submitForm = () => {
+    const requestTitle = requestTitleRef.current.value;
+    const requestDescription = requestDescriptionRef.current.value;
+    const tagPriority = tagPriorityRef.current.value;
+    props.onConfirm(requestTitle, requestDescription, tagPriority);
+  };
+
+  const PayBill = async (pid) => {
+    const url = useLiveStripeKey
+      ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
+      : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
+    let response = await fetch(url);
+    const responseData = await response.json();
+    const stripePromise = loadStripe(responseData.publicKey);
+    setStripePromise(stripePromise);
+
+    response = await get(`/purchases?purchase_uid=${pid}`);
+    setPurchase(response.result[0]);
+    setTotalSum(response.result[0].amount_due);
+    setAmount(response.result[0].amount_due - response.result[0].amount_paid);
+  };
+
+  useEffect(() => {
+    if (amount > totalSum || amount <= 0) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [amount]);
+
+  const cancel = () => setStripePayment(false);
+  const submit = () => {
+    cancel();
+    setPayExpense(false);
+  };
 
   //group an array by property
   function groupBy(arr, property) {
@@ -137,24 +185,6 @@ function ManagerUtilities(props) {
 
   console.log(expenseUnique);
 
-  useEffect(async () => {
-    const url = useLiveStripeKey
-      ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
-      : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
-    let response = await fetch(url);
-    const responseData = await response.json();
-    const stripePromise = loadStripe(responseData.publicKey);
-    setStripePromise(stripePromise);
-  }, []);
-  useEffect(() => {
-    console.log(properties);
-    properties.forEach((p) => (p.checked = false));
-  }, [properties]);
-  const cancel = () => setStripePayment(false);
-  const submit = () => {
-    cancel();
-    setPaymentConfirm(true);
-  };
   const splitFees = (newUtility) => {
     let charge = parseFloat(newUtility.charge);
     if (newUtility.split_type === "No Split") {
@@ -295,12 +325,14 @@ function ManagerUtilities(props) {
         purchaseUID: purchase_uid,
       },
     });
+
     setNewUtility({ ...emptyUtility });
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
     setEditingUtility(false);
     setTenantPay(false);
     setOwnerPay(false);
+    setPayExpense(true);
   };
 
   const addUtility = async () => {
@@ -449,26 +481,31 @@ function ManagerUtilities(props) {
           editingUtility ||
           expenseDetail ||
           expenseDetailManager ||
-          maintenanceExpenseDetail
+          maintenanceExpenseDetail ||
+          payExpense
             ? "< Back"
             : ""
         }
         leftFn={() => {
           setNewUtility(null);
           setExpenseDetail(false);
+          setExpenseDetailManager(false);
           setMaintenanceExpenseDetail(false);
           setPayment(null);
           propertyState.forEach((prop) => (prop.checked = false));
           setPropertyState(propertyState);
           setTenantPay(false);
           setOwnerPay(false);
+
+          setPayExpense(false);
           setEditingUtility(false);
         }}
         rightText={
           editingUtility ||
           expenseDetail ||
           expenseDetailManager ||
-          maintenanceExpenseDetail
+          maintenanceExpenseDetail ||
+          payExpense
             ? ""
             : "+ New"
         }
@@ -566,8 +603,6 @@ function ManagerUtilities(props) {
                     onChange={(e) => changeNewUtility(e, "add_to_rent")}
                   />
                 </Form.Group>
-                {/*<Checkbox type='BOX' checked={newUtility.add_to_rent ? 'checked' : ''}*/}
-                {/*          onClick={(checked) => changeNewUtility(checked, 'add_to_rent')} />*/}
               </Col>
             </Row>
             <Row>
@@ -800,7 +835,8 @@ function ManagerUtilities(props) {
         !editingUtility &&
         !expenseDetail &&
         !expenseDetailManager &&
-        !maintenanceExpenseDetail ? (
+        !maintenanceExpenseDetail &&
+        !payExpense ? (
           <div className="mx-2 my-2 p-3">
             <div>
               <Row style={headings}>Utility Expenses Due From Manager</Row>
@@ -984,7 +1020,8 @@ function ManagerUtilities(props) {
           !editingUtility &&
           !expenseDetail &&
           !expenseDetailManager &&
-          !maintenanceExpenseDetail ? (
+          !maintenanceExpenseDetail &&
+          !payExpense ? (
           <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
             <Row style={headings}>No expenses</Row>
           </div>
@@ -1101,13 +1138,11 @@ function ManagerUtilities(props) {
                 <Button
                   style={bluePillButton}
                   onClick={() => {
-                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
-                      state: {
-                        amount: payment.amount_due,
-                        selectedProperty: payment,
-                        purchaseUID: payment.purchase_uid,
-                      },
-                    });
+                    setPurchaseUID(payment.purchase_uid);
+                    setPayExpense(true);
+                    PayBill(payment.purchase_uid);
+                    setExpenseDetail(false);
+                    setExpenseDetailManager(false);
                   }}
                 >
                   Pay Bill
@@ -1232,13 +1267,11 @@ function ManagerUtilities(props) {
                 <Button
                   style={bluePillButton}
                   onClick={() => {
-                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
-                      state: {
-                        amount: payment.amount_due,
-                        selectedProperty: payment,
-                        purchaseUID: payment.purchase_uid,
-                      },
-                    });
+                    setPurchaseUID(payment.purchase_uid);
+                    setPayExpense(true);
+                    PayBill(payment.purchase_uid);
+                    setExpenseDetail(false);
+                    setExpenseDetailManager(false);
                   }}
                 >
                   Pay Bill
@@ -1351,16 +1384,14 @@ function ManagerUtilities(props) {
                 <Button
                   style={bluePillButton}
                   onClick={() => {
-                    navigate(`/managerPaymentPage/${payment.purchase_uid}`, {
-                      state: {
-                        amount: payment.amount_due,
-                        selectedProperty: payment,
-                        purchaseUID: payment.purchase_uid,
-                      },
-                    });
+                    setPurchaseUID(payment.purchase_uid);
+                    setPayExpense(true);
+                    PayBill(payment.purchase_uid);
+                    setExpenseDetail(false);
+                    setExpenseDetailManager(false);
                   }}
                 >
-                  Paid by Manager
+                  Pay Bill
                 </Button>
               </Col>
               <Col></Col>
@@ -1368,6 +1399,168 @@ function ManagerUtilities(props) {
           ) : (
             ""
           )}
+        </div>
+      ) : (
+        ""
+      )}
+      {payExpense &&
+      !editingUtility &&
+      !expenseDetailManager &&
+      !expenseDetail &&
+      !maintenanceExpenseDetail ? (
+        <div className="mx-2 my-2 p-3">
+          <div>
+            <Row
+              className="my-2 align-items-center justify-content-center"
+              style={headings}
+            >
+              {payment.bill_utility_type}
+            </Row>
+            <Row
+              className="my-2 align-items-center justify-content-center"
+              style={mediumBold}
+            >
+              {payment.bill_description}{" "}
+            </Row>
+            <Row className="my-2 align-items-center justify-content-center">
+              <Col
+                xs={3}
+                className="pt-4 justify-content-center align-items-center"
+                style={
+                  (mediumBold,
+                  {
+                    color: "#007AFF",
+                    border: "4px solid #007AFF",
+                    borderRadius: "50%",
+                    height: "83px",
+                    width: "83px",
+                  })
+                }
+              >
+                ${payment.amount_due.toFixed(2)}
+              </Col>
+            </Row>
+            <div className="mt-3" hidden={stripePayment}>
+              <Form.Group style={mediumBold}>
+                <Form.Label>Amount</Form.Label>
+                {purchaseUID.length === 1 ? (
+                  <Form.Control
+                    placeholder={purchase.amount_due - purchase.amount_paid}
+                    style={squareForm}
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                ) : (
+                  <Form.Control
+                    disabled
+                    placeholder={purchase.amount_due - purchase.amount_paid}
+                    style={squareForm}
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                )}
+              </Form.Group>
+
+              <Form.Group style={mediumBold}>
+                <Form.Label>Message</Form.Label>
+                <Form.Control
+                  placeholder="M4METEST"
+                  style={squareForm}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </Form.Group>
+              <Row
+                className="text-center mt-5"
+                style={{
+                  display: "text",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {disabled ? (
+                  <Row style={{ width: "80%", margin: " 10%" }}>
+                    Amount to be paid must be greater than 0 and less than or
+                    equal total:
+                  </Row>
+                ) : null}
+
+                {disabled ? (
+                  <Col>
+                    <Button
+                      className="mt-2 mb-2"
+                      variant="outline-primary"
+                      disabled
+                      style={bluePillButton}
+                    >
+                      Pay with Stripe
+                    </Button>
+                  </Col>
+                ) : (
+                  <Col>
+                    <Button
+                      className="mt-2 mb-2"
+                      variant="outline-primary"
+                      onClick={() => {
+                        //navigate("/tenant");
+                        setStripePayment(true);
+                      }}
+                      style={bluePillButton}
+                    >
+                      Pay with Stripe
+                    </Button>
+                  </Col>
+                )}
+                {disabled ? (
+                  <Col>
+                    <Button
+                      className="mt-2 mb-2"
+                      variant="outline-primary"
+                      disabled
+                      style={pillButton}
+                    >
+                      Pay with PayPal
+                    </Button>
+                  </Col>
+                ) : (
+                  <Col>
+                    <Button
+                      className="mt-2 mb-2"
+                      variant="outline-primary"
+                      onClick={submitForm}
+                      style={pillButton}
+                    >
+                      Pay with PayPal
+                    </Button>
+                  </Col>
+                )}
+                <Col>
+                  <Button
+                    className="mt-2 mb-2"
+                    variant="outline-primary"
+                    onClick={() => {
+                      setPayExpense(false);
+                    }}
+                    style={bluePillButton}
+                  >
+                    Pay later
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+            <div hidden={!stripePayment}>
+              <Elements stripe={stripePromise}>
+                <StripePayment
+                  cancel={cancel}
+                  submit={submit}
+                  purchases={[purchase]}
+                  message={message}
+                  amount={amount}
+                />
+              </Elements>
+            </div>
+          </div>{" "}
         </div>
       ) : (
         ""
