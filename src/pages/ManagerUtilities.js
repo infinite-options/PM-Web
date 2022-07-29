@@ -880,7 +880,15 @@ function ManagerUtilities(props) {
                             String(expense.purchase_date).split(" ")[0]
                           ).toDateString()}
                         </div>
-                        <div>Split - {expense.bill_algorithm}</div>
+                        {expense.bill_algorithm === "No Split" ? (
+                          <div>
+                            {expense.address.split(",")[0]} <br />
+                            {expense.address.split(",")[1]},{" "}
+                            {expense.address.split(",")[2]}
+                          </div>
+                        ) : (
+                          <div>Split Method - {expense.bill_algorithm}</div>
+                        )}
                       </Col>
                       <Col xs={3} className="pt-4 justify-content-end">
                         {expense.purchase_status === "UNPAID" ? (

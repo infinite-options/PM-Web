@@ -840,7 +840,15 @@ function OwnerUtilities(props) {
                             String(expense.purchase_date).split(" ")[0]
                           ).toDateString()}
                         </div>
-                        <div>Split - {expense.bill_algorithm}</div>
+                        {expense.bill_algorithm === "No Split" ? (
+                          <div>
+                            {expense.address.split(",")[0]} <br />
+                            {expense.address.split(",")[1]},{" "}
+                            {expense.address.split(",")[2]}
+                          </div>
+                        ) : (
+                          <div>Split Method - {expense.bill_algorithm}</div>
+                        )}
                       </Col>
                       <Col xs={3} className="pt-4 justify-content-end">
                         {expense.purchase_status === "UNPAID" ? (
@@ -1447,13 +1455,6 @@ function OwnerUtilities(props) {
                   justifyContent: "space-between",
                 }}
               >
-                {disabled ? (
-                  <Row style={{ width: "80%", margin: " 10%" }}>
-                    Amount to be paid must be greater than 0 and less than or
-                    equal total:
-                  </Row>
-                ) : null}
-
                 {disabled ? (
                   <Col>
                     <Button
