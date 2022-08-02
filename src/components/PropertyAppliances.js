@@ -28,6 +28,7 @@ function PropertyAppliances(props) {
   const [applianceInstalledOn, setApplianceInstalledOn] = useState(null);
   const [applianceWarrantyTill, setApplianceWarrantyTill] = useState(null);
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
+  const [applianceImages, setApplianceImages] = useState(null);
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showDetailsNoEdit, setShowDetailsNoEdit] = useState(false);
@@ -39,11 +40,12 @@ function PropertyAppliances(props) {
     newApplianceState[appliance]["available"] =
       !newApplianceState[appliance]["available"];
     // console.log(newApplianceState);
-    setAddApplianceInfo(true);
-    setShowDetails(true);
+    // setAddApplianceInfo(true);
+    // setShowDetails(true);
     setApplianceType(appliance);
     setApplianceState(newApplianceState);
   };
+
   const showApplianceDetail = (appliance) => {
     setApplianceType(appliance);
     setShowDetails(!showDetails);
@@ -61,6 +63,7 @@ function PropertyAppliances(props) {
     setApplianceModelNum(applianceState[appliance]["model_num"]);
     setApplianceWarrantyTill(applianceState[appliance]["warranty_till"]);
     setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
+    // setApplianceImages(applianceState[appliance]["images"]);
   };
 
   const showApplianceDetailNoEdit = (appliance) => {
@@ -80,6 +83,7 @@ function PropertyAppliances(props) {
     setApplianceModelNum(applianceState[appliance]["model_num"]);
     setApplianceWarrantyTill(applianceState[appliance]["warranty_till"]);
     setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
+    // setApplianceImages(applianceState[appliance]["images"]);
   };
 
   const updateAppliance = (appliance) => {
@@ -97,8 +101,10 @@ function PropertyAppliances(props) {
     newApplianceState[appliance]["serial_num"] = applianceSerialNum;
     newApplianceState[appliance]["warranty_info"] = applianceWarrantyInfo;
     newApplianceState[appliance]["warranty_till"] = applianceWarrantyTill;
+    // newApplianceState[appliance]["images"] = applianceImages;
     console.log(newApplianceState);
     setAddApplianceInfo(false);
+    setShowDetails(false);
     setApplianceState(newApplianceState);
     setApplianceName("");
     setAppliancePurchasedOn("");
@@ -115,9 +121,10 @@ function PropertyAppliances(props) {
   const cancelAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
     console.log(newApplianceState);
-    newApplianceState[appliance]["available"] = false;
+    // newApplianceState[appliance]["available"] = false;
     console.log(newApplianceState);
     setAddApplianceInfo(false);
+    setShowDetails(false);
     setApplianceState(newApplianceState);
     setApplianceName("");
     setAppliancePurchasedOn("");
@@ -198,7 +205,6 @@ function PropertyAppliances(props) {
                     edit
                       ? () => {
                           showApplianceDetail(appliance);
-                          console.log("here");
                         }
                       : () => {
                           showApplianceDetailNoEdit(appliance);
@@ -254,7 +260,6 @@ function PropertyAppliances(props) {
                             appliancePurchasedOn ||
                             applianceState[appliance]["purchased"]
                           }
-                          placeholder="Purchased On"
                           onChange={(e) =>
                             setAppliancePurchasedOn(e.target.value)
                           }
@@ -288,7 +293,6 @@ function PropertyAppliances(props) {
                             applianceInstalledOn ||
                             applianceState[appliance]["installed"]
                           }
-                          placeholder="Installed On"
                           onChange={(e) =>
                             setApplianceInstalledOn(e.target.value)
                           }
@@ -338,7 +342,6 @@ function PropertyAppliances(props) {
                             applianceWarrantyTill ||
                             applianceState[appliance]["warranty_till"]
                           }
-                          placeholder="Warranty Till"
                           onChange={(e) =>
                             setApplianceWarrantyTill(e.target.value)
                           }
@@ -362,6 +365,21 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
+                    {/* <Row className="mx-4 mt-1 p-0">
+                      <Col>Upload images</Col>
+                      <Col>
+                        <Form.Control
+                          type="file"
+                          multiple
+                          style={squareForm}
+                          value={
+                            applianceImages ||
+                            applianceState[appliance]["images"]
+                          }
+                          onChange={(e) => setApplianceImages(e.target.value)}
+                        />
+                      </Col>
+                    </Row> */}
                     <div className="text-center my-3">
                       <Button
                         variant="outline-primary"
@@ -477,6 +495,15 @@ function PropertyAppliances(props) {
                         </p>
                       </Col>
                     </Row>
+                    {/* <Row className="mx-2 mt-1 p-0">
+                      <Col xs={7}>Warranty Info</Col>
+                      <Col className="d-flex justify-content-end">
+                        <p>
+                          {applianceImages ||
+                            applianceState[appliance]["images"]}
+                        </p>
+                      </Col>
+                    </Row> */}
                   </Row>
                 ) : null}
               </Row>
@@ -601,7 +628,6 @@ function PropertyAppliances(props) {
                   style={squareForm}
                   type="date"
                   value={appliancePurchasedOn}
-                  placeholder="Purchased On"
                   onChange={(e) => setAppliancePurchasedOn(e.target.value)}
                 />
               </Col>
@@ -627,7 +653,6 @@ function PropertyAppliances(props) {
                   style={squareForm}
                   type="date"
                   value={applianceInstalledOn}
-                  placeholder="Installed On"
                   onChange={(e) => setApplianceInstalledOn(e.target.value)}
                 />
               </Col>
@@ -663,7 +688,6 @@ function PropertyAppliances(props) {
                   style={squareForm}
                   type="date"
                   value={applianceWarrantyTill}
-                  placeholder="Warranty Till"
                   onChange={(e) => setApplianceWarrantyTill(e.target.value)}
                 />
               </Col>
@@ -680,6 +704,18 @@ function PropertyAppliances(props) {
                 />
               </Col>
             </Row>
+            {/* <Row className="mx-4 mt-1 p-0">
+              <Col>Upload images</Col>
+              <Col>
+                <Form.Control
+                  type="file"
+                  multiple
+                  style={squareForm}
+                  value={applianceImages}
+                  onChange={(e) => setApplianceImages(e.target.value)}
+                />
+              </Col>
+            </Row> */}
           </Row>
           <div className="text-center my-3">
             <Button
