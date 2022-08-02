@@ -282,7 +282,6 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
-
                     <Row className="mx-4 mt-1 p-0">
                       <Col>Installed On</Col>
                       <Col>
@@ -299,7 +298,6 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
-
                     <Row className="mx-4 mt-1 p-0">
                       <Col>Serial Number</Col>
                       <Col>
@@ -316,7 +314,6 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
-
                     <Row className="mx-4 mt-1 p-0">
                       <Col>Model Number</Col>
                       <Col>
@@ -331,7 +328,6 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
-
                     <Row className="mx-4 mt-1 p-0">
                       <Col>Warranty Till</Col>
                       <Col>
@@ -348,7 +344,6 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
-
                     <Row className="mx-4 mt-1 p-0">
                       <Col>Warranty Info</Col>
                       <Col>
@@ -365,21 +360,7 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
-                    {/* <Row className="mx-4 mt-1 p-0">
-                      <Col>Upload images</Col>
-                      <Col>
-                        <Form.Control
-                          type="file"
-                          multiple
-                          style={squareForm}
-                          value={
-                            applianceImages ||
-                            applianceState[appliance]["images"]
-                          }
-                          onChange={(e) => setApplianceImages(e.target.value)}
-                        />
-                      </Col>
-                    </Row> */}
+                    \
                     <div className="text-center my-3">
                       <Button
                         variant="outline-primary"
