@@ -470,7 +470,7 @@ function PropertyForm(props) {
   console.log(activeDate);
   return (
     <div
-      className="mx-2 p-2 m-0"
+      className="d-flex flex-column w-100 mx-2 p-2 m-0"
       style={{
         background: "#ffffff 0% 0% no-repeat padding-box",
         borderRadius: "10px",
@@ -483,7 +483,7 @@ function PropertyForm(props) {
         onConfirm={onConfirm}
       />
       {edit ? (
-        <div>
+        <div className="d-flex flex-column w-100">
           <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Address {address === "" ? required : ""}
@@ -496,28 +496,32 @@ function PropertyForm(props) {
             />
           </Form.Group>
           <div className="d-flex my-3">
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-                Unit
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="#122"
-                value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-                City {city === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="San Jose"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-            </Form.Group>
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                  Unit
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="#122"
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mx-2 ">
+                <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                  City {city === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="San Jose"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
           </div>
           <div className="d-flex my-3">
             <Col>
@@ -525,20 +529,7 @@ function PropertyForm(props) {
                 <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                   State {state === "" ? required : ""}
                 </Form.Label>
-                {/* <Form.Select
-                style={squareForm}
-                onChange={(e) => setState(e.target.value)}
-              >
-                {stateList.map((list) => {
-                  return <option value={list.abbreviation}>{list.name}</option>;
-                })}
-              </Form.Select> */}
-                {/* <Form.Control
-                style={squareForm}
-                placeholder="CA"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              /> */}
+
                 <Form.Select
                   style={{
                     ...squareForm,
