@@ -117,10 +117,9 @@ function OwnerProperties(props) {
             key={i}
             onClick={() => selectProperty(property)}
             className="pt-1 mb-4"
-            style={{ height: "100px" }}
           >
-            <Row className="h-100">
-              <Col xs={4} className="h-100">
+            <Row>
+              <Col xs={4}>
                 <div style={tileImg} className="mt-1">
                   {JSON.parse(property.images).length > 0 ? (
                     <img

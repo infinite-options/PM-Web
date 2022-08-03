@@ -448,7 +448,9 @@ function PropertyForm(props) {
       } else {
         newProperty[key] = file.image;
       }
+      console.log(newProperty[key]);
     }
+    console.log(files);
     if (property) {
       newProperty.owner_id = property.owner_id;
       newProperty.manager_id = property.manager_id;

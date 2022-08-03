@@ -13,7 +13,7 @@ function ManagerApplianceList(props) {
   const property_uid = location.state.property_uid;
   const property = location.state.property;
   const [listAppliances, setListAppliances] = useState(false);
-  const [currentAppliance, setCurrentAppliance] = useState("");
+  const [currentAppliance, setCurrentAppliance] = useState([]);
   console.log(property, property_uid);
   var num_appliances = Object.values(JSON.parse(property.appliances)).filter(
     function (appliance) {
@@ -21,9 +21,29 @@ function ManagerApplianceList(props) {
     }
   ).length;
   console.log(num_appliances);
-  const toggleAppliance = (i) => {
-    setListAppliances(true);
-    setCurrentAppliance(i);
+  const toggleList = (x) => {
+    console.log(x);
+    console.log(currentAppliance);
+    if (currentAppliance.includes(x)) {
+      console.log("in if");
+      if (currentAppliance.length === 1) {
+        let ap = [];
+        console.log(ap);
+        setCurrentAppliance(ap);
+      } else {
+        let ap = currentAppliance.filter((item) => item !== x);
+        console.log(ap);
+        setCurrentAppliance(ap);
+      }
+    } else {
+      console.log("in else");
+      let ap = currentAppliance.filter((item, i) => item !== x);
+      console.log(ap);
+      ap.push(x);
+      console.log(ap);
+      setCurrentAppliance(ap);
+      setListAppliances(true);
+    }
   };
   return (
     <div
@@ -64,11 +84,6 @@ function ManagerApplianceList(props) {
       {Object.values(JSON.parse(property.appliances)).map((appliance, i) => {
         return appliance.available ? (
           <div
-            onClick={() => {
-              // setListAppliances(!listAppliances);
-              // setCurrentAppliance(i);
-              toggleAppliance(i);
-            }}
             className="mx-2 my-2 p-3"
             style={{
               background: "#FFFFFF 0% 0% no-repeat padding-box",
@@ -83,7 +98,13 @@ function ManagerApplianceList(props) {
                 <div style={{ color: "#007AFF" }}>{appliance.name}</div>
                 <div>Purchased: {appliance.purchased}</div>
               </Col>
-              <Col xs={2} className="justify-content-end">
+              <Col
+                xs={2}
+                className="justify-content-end"
+                onClick={() => {
+                  toggleList(i);
+                }}
+              >
                 <img
                   src={
                     listAppliances && currentAppliance == appliance.name
@@ -94,8 +115,12 @@ function ManagerApplianceList(props) {
               </Col>
             </Row>
             <Row>
-              {listAppliances && currentAppliance == i ? (
+              {listAppliances && currentAppliance.includes(i) ? (
                 <div>
+                  <div>
+                    Purchased From:{" "}
+                    {appliance.purchased_from ? appliance.purchased_from : "NA"}
+                  </div>
                   <div>
                     Order Number:{" "}
                     {appliance.purchased_order

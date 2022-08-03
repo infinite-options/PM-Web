@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Checkbox from "./Checkbox";
+import ApplianceImages from "./ApplianceImages";
 import { Container, Form, Button, Row, Col, Table } from "react-bootstrap";
 import {
   squareForm,
@@ -10,6 +11,7 @@ import {
   bluePillButton,
   subHeading,
 } from "../utils/styles";
+import { put } from "../utils/api";
 
 function PropertyAppliances(props) {
   const { state, edit } = props;
@@ -28,7 +30,9 @@ function PropertyAppliances(props) {
   const [applianceInstalledOn, setApplianceInstalledOn] = useState(null);
   const [applianceWarrantyTill, setApplianceWarrantyTill] = useState(null);
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
-  const [applianceImages, setApplianceImages] = useState(null);
+  // const [applianceImages, setApplianceImages] = useState(null);
+
+  // const imageState = useState([]);
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showDetailsNoEdit, setShowDetailsNoEdit] = useState(false);
@@ -86,7 +90,7 @@ function PropertyAppliances(props) {
     // setApplianceImages(applianceState[appliance]["images"]);
   };
 
-  const updateAppliance = (appliance) => {
+  const updateAppliance = async (appliance) => {
     const newApplianceState = { ...applianceState };
     console.log(newApplianceState);
     newApplianceState[appliance]["available"] =
@@ -101,8 +105,29 @@ function PropertyAppliances(props) {
     newApplianceState[appliance]["serial_num"] = applianceSerialNum;
     newApplianceState[appliance]["warranty_info"] = applianceWarrantyInfo;
     newApplianceState[appliance]["warranty_till"] = applianceWarrantyTill;
-    // newApplianceState[appliance]["images"] = applianceImages;
-    console.log(newApplianceState);
+    // let i = 0;
+    // let ap = [];
+    // let aimages = [];
+    // let files = imageState[0];
+    // for (const file of imageState[0]) {
+    //   let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+    //   if (file.file !== null) {
+    //     ap[key] = file.file;
+    //   } else {
+    //     ap[key] = file.image;
+    //   }
+    //   aimages.push(ap[key]);
+    // }
+    // console.log(aimages);
+    // newApplianceState[appliance]["images"] = aimages;
+    // console.log(newApplianceState);
+    // let newProperty = {
+    //   property_uid: "200-000003",
+    //   appliances: newApplianceState[appliance],
+    // };
+    // console.log(newProperty);
+    // const response = await put("/appliances", newProperty, null, files);
+
     setAddApplianceInfo(false);
     setShowDetails(false);
     setApplianceState(newApplianceState);
@@ -360,7 +385,7 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
-                    \
+                    {/* <ApplianceImages state={imageState} /> */}
                     <div className="text-center my-3">
                       <Button
                         variant="outline-primary"
