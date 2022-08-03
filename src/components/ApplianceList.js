@@ -9,17 +9,41 @@ import { mediumBold } from "../utils/styles";
 
 function ApplianceList(props) {
   const navigate = useNavigate();
-  const { back, property_uid, property, reload } = props;
+  const { back, property } = props;
 
   const [listAppliances, setListAppliances] = useState(false);
-  const [currentAppliance, setCurrentAppliance] = useState("");
+  const [currentAppliance, setCurrentAppliance] = useState([]);
 
   var num_appliances = Object.values(JSON.parse(property.appliances)).filter(
     function (appliance) {
       return appliance.available;
     }
   ).length;
-  console.log(num_appliances);
+
+  const toggleList = (x) => {
+    console.log(x);
+    console.log(currentAppliance);
+    if (currentAppliance.includes(x)) {
+      console.log("in if");
+      if (currentAppliance.length === 1) {
+        let ap = [];
+        console.log(ap);
+        setCurrentAppliance(ap);
+      } else {
+        let ap = currentAppliance.filter((item) => item !== x);
+        console.log(ap);
+        setCurrentAppliance(ap);
+      }
+    } else {
+      console.log("in else");
+      let ap = currentAppliance.filter((item, i) => item !== x);
+      console.log(ap);
+      ap.push(x);
+      console.log(ap);
+      setCurrentAppliance(ap);
+      setListAppliances(true);
+    }
+  };
 
   return (
     <div
@@ -62,14 +86,15 @@ function ApplianceList(props) {
             <Row>
               <Col style={mediumBold}>
                 <div style={{ color: "#007AFF" }}>{appliance.name}</div>
-                <div>Purchased: {appliance.purchased}</div>
+                <div>
+                  Purchased: {appliance.purchased ? appliance.purchased : "NA"}
+                </div>
               </Col>
               <Col
                 xs={2}
                 className="justify-content-end"
                 onClick={() => {
-                  setListAppliances(!listAppliances);
-                  setCurrentAppliance(i);
+                  toggleList(i);
                 }}
               >
                 <img
@@ -82,8 +107,12 @@ function ApplianceList(props) {
               </Col>
             </Row>
             <Row>
-              {listAppliances && currentAppliance == i ? (
+              {listAppliances && currentAppliance.includes(i) ? (
                 <div>
+                  <div>
+                    Purchased From:{" "}
+                    {appliance.purchased_from ? appliance.purchased_from : "NA"}
+                  </div>
                   <div>
                     Order Number:{" "}
                     {appliance.purchased_order
