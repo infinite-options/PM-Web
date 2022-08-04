@@ -183,6 +183,8 @@ function PropertyAppliances(props) {
     setNewAppliance(null);
     setApplianceName("");
     setAppliancePurchasedOn("");
+    setAppliancePurchasedFrom("");
+    setAppliancePurchasesOrderNumber("");
     setApplianceSerialNum("");
     setApplianceModelNum("");
     setApplianceWarrantyTill("");
@@ -206,6 +208,8 @@ function PropertyAppliances(props) {
                 setTableView(!tableView);
                 setApplianceType("");
                 setApplianceName("");
+                setAppliancePurchasedFrom("");
+                setAppliancePurchasesOrderNumber("");
                 setAppliancePurchasedOn("");
                 setApplianceSerialNum("");
                 setApplianceModelNum("");
