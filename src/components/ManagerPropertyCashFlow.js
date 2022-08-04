@@ -67,8 +67,8 @@ function ManagerPropertyCashFlow(props) {
     }
 
     console.log("in useeffect", expenseTotal);
-    setRevenue(revenueTotal);
-    setExpense(expenseTotal);
+    setRevenue(revenueTotal.toFixed(2));
+    setExpense(expenseTotal.toFixed(2));
     setMaintenance(maintenanceTotal);
   });
 
@@ -131,7 +131,7 @@ function ManagerPropertyCashFlow(props) {
               color: "#ffffff",
             }}
           >
-            ${revenue.toFixed(2)}
+            ${revenue}
           </Col>
           <Col></Col>
         </Col>
@@ -248,7 +248,7 @@ function ManagerPropertyCashFlow(props) {
               color: "#ffffff",
             }}
           >
-            ${expense.toFixed(2)}
+            ${expense}
           </Col>
           <Col>
             <img
