@@ -131,7 +131,7 @@ function ManagerPropertyCashFlow(props) {
               color: "#ffffff",
             }}
           >
-            ${revenue}
+            ${revenue.toFixed(2)}
           </Col>
           <Col></Col>
         </Col>
@@ -248,7 +248,7 @@ function ManagerPropertyCashFlow(props) {
               color: "#ffffff",
             }}
           >
-            ${expense}
+            ${expense.toFixed(2)}
           </Col>
           <Col>
             <img

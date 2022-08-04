@@ -202,7 +202,17 @@ function PropertyAppliances(props) {
           <Col className="d-flex justify-content-end mb-1">
             <Button
               style={bluePillButton}
-              onClick={() => setTableView(!tableView)}
+              onClick={() => {
+                setTableView(!tableView);
+                setApplianceType("");
+                setApplianceName("");
+                setAppliancePurchasedOn("");
+                setApplianceSerialNum("");
+                setApplianceModelNum("");
+                setApplianceWarrantyTill("");
+                setApplianceWarrantyInfo("");
+                setApplianceType("");
+              }}
             >
               {!tableView ? "Table View" : "List View"}
             </Button>
