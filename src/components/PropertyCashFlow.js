@@ -114,8 +114,8 @@ function PropertyCashFlow(props) {
       yearRevenueTotal += property.year_revenue;
     }
     console.log("in useeffect", expenseTotal);
-    setRevenue(revenueTotal);
-    setExpense(expenseTotal);
+    setRevenue(revenueTotal.toFixed(2));
+    setExpense(expenseTotal.toFixed(2));
     setMaintenance(maintenanceTotal);
     setMortgage(mortgageTotal);
     setTax(taxTotal);
