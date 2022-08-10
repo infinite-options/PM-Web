@@ -195,6 +195,8 @@ function ManagerHome() {
           properties={properties}
           tab={footerTab}
           setTab={setFooterTab}
+          stage={stage}
+          setStage={setStage}
         />
       ) : (
         ""

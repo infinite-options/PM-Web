@@ -3,19 +3,16 @@ import { Col } from "react-bootstrap";
 import { smallBlue, smallGray } from "../utils/styles";
 import Dashboard_Blue from "../icons/Dashboard_Blue.svg";
 import Dashboard_Gray from "../icons/Dashboard_Gray.svg";
-import Roles_Blue from "../icons/Roles_Blue.svg";
-import Roles_Gray from "../icons/Roles_Gray.svg";
 import Repairs_Blue from "../icons/Repairs_Blue.svg";
 import Repairs_Gray from "../icons/Repairs_Gray.svg";
 import Profile_Blue from "../icons/Profile_Blue.svg";
 import Profile_Gray from "../icons/Profile_Gray.svg";
-
 import Expenses_Blue from "../icons/Expenses_Blue.svg";
 import Expenses_Gray from "../icons/Expenses_Gray.svg";
 import AppContext from "../AppContext";
 
 function ManagerFooter(props) {
-  const { tab, setTab, properties } = props;
+  const { tab, setTab, properties, stage, setStage } = props;
   const { logout } = React.useContext(AppContext);
   const footerContainer = {
     backgroundColor: "#F5F5F5",
@@ -61,7 +58,13 @@ function ManagerFooter(props) {
           Repairs
         </p>
       </Col>
-      <Col className="text-center" onClick={() => setTab("PROFILE")}>
+      <Col
+        className="text-center"
+        onClick={() => {
+          setTab("PROFILE");
+          setStage("DASHBOARD");
+        }}
+      >
         <img
           src={tab === "PROFILE" ? Profile_Blue : Profile_Gray}
           alt="Profile"

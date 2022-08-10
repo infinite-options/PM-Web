@@ -15,9 +15,9 @@ import Expenses_Gray from "../icons/Expenses_Gray.svg";
 import AppContext from "../AppContext";
 
 function OwnerFooter(props) {
-  const { tab, setTab } = props;
+  const { tab, setTab, stage, setStage } = props;
   const { logout } = React.useContext(AppContext);
-
+  console.log(tab);
   const footerContainer = {
     backgroundColor: "#F5F5F5",
     borderTop: "1px solid #EAEAEA",
@@ -34,6 +34,7 @@ function OwnerFooter(props) {
         className="text-center"
         onClick={() => {
           setTab("DASHBOARD");
+          setStage("DASHBOARD");
         }}
       >
         <img
@@ -62,7 +63,13 @@ function OwnerFooter(props) {
           Contacts
         </p>
       </Col>
-      <Col className="text-center" onClick={() => setTab("REPAIRS")}>
+      <Col
+        className="text-center"
+        onClick={() => {
+          setTab("REPAIRS");
+          setStage("DASHBOARD");
+        }}
+      >
         <img
           src={tab === "REPAIRS" ? Repairs_Blue : Repairs_Gray}
           alt="Repairs"
@@ -71,7 +78,13 @@ function OwnerFooter(props) {
           Repairs
         </p>
       </Col>
-      <Col className="text-center" onClick={() => setTab("PROFILE")}>
+      <Col
+        className="text-center"
+        onClick={() => {
+          setTab("PROFILE");
+          setStage("DASHBOARD");
+        }}
+      >
         <img
           src={tab === "PROFILE" ? Profile_Blue : Profile_Gray}
           alt="Profile"

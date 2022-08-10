@@ -103,22 +103,6 @@ function OwnerHome(props) {
     setBills(response.result);
   };
 
-  // const fetchProfile = async () => {
-  //   if (access_token === null || user.role.indexOf("OWNER") === -1) {
-  //     navigate("/");
-  //     return;
-  //   }
-
-  //   const response = await get("/ownerProfileInfo", access_token);
-  //   console.log(response);
-
-  //   if (response.msg === "Token has expired") {
-  //     console.log("here msg");
-  //     refresh();
-  //     return;
-  //   }
-  //   setProfileInfo(response.result[0]);
-  // };
   useEffect(() => {
     if (access_token === null) {
       navigate("/");
@@ -131,12 +115,6 @@ function OwnerHome(props) {
     }
     fetchBills();
   }, [access_token]);
-  // useEffect(() => {
-  //   if (access_token === null) {
-  //     navigate("/");
-  //   }
-  //   fetchProfile();
-  // }, [access_token]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -148,6 +126,7 @@ function OwnerHome(props) {
     }
     setFooterTab(tab);
   };
+  console.log(footerTab);
   return (
     <div className="d-flex flex-column h-100">
       <div className="flex-grow-1">
@@ -267,7 +246,16 @@ function OwnerHome(props) {
         className="flex-grow-1"
         style={{ height: "90%", overflow: "auto" }}
       ></div> */}
-      {showFooter ? <OwnerFooter tab={footerTab} setTab={setTab} /> : ""}
+      {showFooter ? (
+        <OwnerFooter
+          tab={footerTab}
+          setTab={setTab}
+          stage={stage}
+          setStage={setStage}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 }
