@@ -2,8 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import ManagerPropertyCashFlow from "../components/ManagerPropertyCashFlow";
 import CreateInsurance from "../components/CreateInsurance";
 import CreateExpense from "../components/CreateExpense";
+import CreateRevenue from "../components/CreateRevenue";
 import CreateTax from "../components/CreateTax";
 import CreateMortgage from "../components/CreateMortgage";
 import ManagerTenantApplications from "../components/ManagerTenantApplications";
@@ -13,28 +15,22 @@ import AppContext from "../AppContext";
 import ManagerManagementContract from "../components/ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
 import ConfirmDialog from "../components/ConfirmDialog";
-import PropertyCashFlow from "../components/PropertyCashFlow";
 import ManagerRentalHistory from "../components/ManagerRentalHistory";
 import ManagerPropertyForm from "../components/ManagerPropertyForm";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
 import BlueArrowUp from "../icons/BlueArrowUp.svg";
 import BlueArrowDown from "../icons/BlueArrowDown.svg";
 import BlueArrowRight from "../icons/BlueArrowRight.svg";
-
 import No_Image from "../icons/No_Image_Available.jpeg";
-import Repair from "../icons/Repair.svg";
 import {
   tileImg,
   greenPill,
   mediumBold,
   redPill,
-  xSmall,
-  smallLine,
   orangePill,
   bluePill,
 } from "../utils/styles";
 import { get, put } from "../utils/api";
-import ManagerPropertyCashFlow from "../components/ManagerPropertyCashFlow";
 
 function ManagerPropertyView(props) {
   const navigate = useNavigate();
@@ -169,6 +165,7 @@ function ManagerPropertyView(props) {
   const [selectedTenantApplication, setSelectedTenantApplication] =
     useState(null);
   const [showCreateExpense, setShowCreateExpense] = useState(false);
+  const [showCreateRevenue, setShowCreateRevenue] = useState(false);
   const [showCreateTax, setShowCreateTax] = useState(false);
   const [showCreateMortgage, setShowCreateMortgage] = useState(false);
   const [showCreateInsurance, setShowCreateInsurance] = useState(false);
@@ -191,6 +188,8 @@ function ManagerPropertyView(props) {
   const headerBack = () => {
     showCreateExpense
       ? setShowCreateExpense(false)
+      : showCreateRevenue
+      ? setShowCreateRevenue(false)
       : showCreateTax
       ? setShowCreateTax(false)
       : showCreateMortgage
@@ -205,9 +204,21 @@ function ManagerPropertyView(props) {
     fetchProperty();
     navigate("../manager-properties");
   };
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [
+    editProperty,
+    showCreateExpense,
+    showCreateRevenue,
+    showCreateTax,
+    showCreateMortgage,
+    showCreateInsurance,
+    showManagementContract,
+    showTenantAgreement,
+  ]);
   const cashFlowState = {
     setShowCreateExpense,
+    setShowCreateRevenue,
     setShowCreateTax,
     setShowCreateMortgage,
     setShowCreateInsurance,
@@ -282,35 +293,6 @@ function ManagerPropertyView(props) {
       acceptedTenantApplications={acceptedTenantApplications}
       setAcceptedTenantApplications={setAcceptedTenantApplications}
     />
-  ) : showTenantProfile ? (
-    <ManagerTenantProfileView
-      back={closeTenantApplication}
-      application={selectedTenantApplication}
-    />
-  ) : showCreateExpense ? (
-    <CreateExpense
-      property={property}
-      reload={reloadProperty}
-      back={() => setShowCreateExpense(false)}
-    />
-  ) : showCreateTax ? (
-    <CreateTax
-      property={property}
-      reload={reloadProperty}
-      back={() => setShowCreateTax(false)}
-    />
-  ) : showCreateMortgage ? (
-    <CreateMortgage
-      property={property}
-      reload={reloadProperty}
-      back={() => setShowCreateMortgage(false)}
-    />
-  ) : showCreateInsurance ? (
-    <CreateInsurance
-      property={property}
-      reload={reloadProperty}
-      back={() => setShowCreateInsurance(false)}
-    />
   ) : (
     <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
       <ConfirmDialog
@@ -321,179 +303,266 @@ function ManagerPropertyView(props) {
       />
       <Header title="Properties" leftText="<Back" leftFn={headerBack} />
       <Container className="pb-5 mb-5">
-        <div>
+        {editProperty ? (
+          <ManagerPropertyForm
+            property={property}
+            edit={editProperty}
+            setEdit={setEditProperty}
+            hideEdit={hideEdit}
+            onSubmit={reloadProperty}
+          />
+        ) : showTenantProfile ? (
+          <ManagerTenantProfileView
+            back={closeTenantApplication}
+            application={selectedTenantApplication}
+          />
+        ) : showCreateExpense ? (
+          <CreateExpense
+            property={property}
+            reload={reloadProperty}
+            back={() => setShowCreateExpense(false)}
+          />
+        ) : showCreateRevenue ? (
+          <CreateRevenue
+            property={property}
+            reload={reloadProperty}
+            back={() => setShowCreateRevenue(false)}
+          />
+        ) : showCreateTax ? (
+          <CreateTax
+            property={property}
+            reload={reloadProperty}
+            back={() => setShowCreateTax(false)}
+          />
+        ) : showCreateMortgage ? (
+          <CreateMortgage
+            property={property}
+            reload={reloadProperty}
+            back={() => setShowCreateMortgage(false)}
+          />
+        ) : showCreateInsurance ? (
+          <CreateInsurance
+            property={property}
+            reload={reloadProperty}
+            back={() => setShowCreateInsurance(false)}
+          />
+        ) : (
           <div>
-            <div
-              className="mx-2 my-2 p-3"
-              style={{
-                background: "#FFFFFF 0% 0% no-repeat padding-box",
-                borderRadius: "10px",
-                opacity: 1,
-              }}
-            >
+            <div>
               <div
-                style={{ ...tileImg, height: "200px", position: "relative" }}
-              >
-                {property.images.length > 0 ? (
-                  <img
-                    src={JSON.parse(property.images)[currentImg]}
-                    className="w-100 h-100"
-                    style={{ borderRadius: "4px", objectFit: "contain" }}
-                    alt="Property"
-                  />
-                ) : (
-                  ""
-                )}
-                <div
-                  style={{ position: "absolute", left: "5px", top: "90px" }}
-                  onClick={previousImg}
-                >
-                  {"<"}
-                </div>
-                <div
-                  style={{ position: "absolute", right: "5px", top: "90px" }}
-                  onClick={nextImg}
-                >
-                  {">"}
-                </div>
-              </div>
-              <Row>
-                <Col>
-                  <h5 className="mt-2 mb-0" style={mediumBold}>
-                    ${property.listed_rent}/mo
-                  </h5>
-                </Col>
-                <Col>
-                  <div className="d-flex mt-2 mb-0 justify-content-end">
-                    {property.rental_status === "ACTIVE" ? (
-                      <p style={greenPill} className="mb-0">
-                        Rented
-                      </p>
-                    ) : property.rental_status === "PROCESSING" ? (
-                      <p style={bluePill} className="mb-0">
-                        Processing
-                      </p>
-                    ) : property.management_status === "FORWARDED" ? (
-                      <p style={redPill} className="mb-0">
-                        New
-                      </p>
-                    ) : property.management_status === "SENT" ? (
-                      <p style={orangePill} className="mb-0">
-                        Processing
-                      </p>
-                    ) : (
-                      <p style={orangePill} className="mb-0">
-                        Not Rented
-                      </p>
-                    )}
-                  </div>
-                </Col>
-              </Row>
-
-              <p
+                className="mx-2 my-2 p-3"
                 style={{
-                  font: "normal normal normal 20px Bahnschrift-Regular",
-                  letterSpacing: "0px",
-                  color: "#000000",
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
                 }}
-                className="mt-1 mb-2"
               >
-                {property.address}
-                {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-                {property.city}, {property.state} {property.zip}
-              </p>
-              <ManagerPropertyCashFlow
-                property={property}
-                state={cashFlowState}
-              />
-            </div>
-
-            {property.rental_status === "ACTIVE" ? (
-              <ManagerRentalHistory property={property} />
-            ) : (
-              <ManagerTenantApplications
-                property={property}
-                createNewTenantAgreement={createNewTenantAgreement}
-                selectTenantApplication={selectTenantApplication}
-              />
-            )}
-            <div
-              className="mx-2 my-2 py-3"
-              style={{
-                background: "#FFFFFF 0% 0% no-repeat padding-box",
-                borderRadius: "10px",
-                opacity: 1,
-              }}
-            >
-              <div
-                style={mediumBold}
-                className=" d-flex flex-column justify-content-center align-items-center"
-              >
-                <div className="d-flex mt-1">
-                  <h6 style={mediumBold} className="mb-1">
-                    Property Details
-                  </h6>
+                <div
+                  style={{ ...tileImg, height: "200px", position: "relative" }}
+                >
+                  {property.images.length > 0 ? (
+                    <img
+                      src={JSON.parse(property.images)[currentImg]}
+                      className="w-100 h-100"
+                      style={{ borderRadius: "4px", objectFit: "contain" }}
+                      alt="Property"
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <div
+                    style={{ position: "absolute", left: "5px", top: "90px" }}
+                    onClick={previousImg}
+                  >
+                    {"<"}
+                  </div>
+                  <div
+                    style={{ position: "absolute", right: "5px", top: "90px" }}
+                    onClick={nextImg}
+                  >
+                    {">"}
+                  </div>
                 </div>
-                {expandDetails ? (
-                  <ManagerPropertyForm
-                    property={property}
-                    edit={editProperty}
-                    setEdit={setEditProperty}
-                    hideEdit={hideEdit}
-                    onSubmit={reloadProperty}
-                  />
-                ) : (
-                  ""
-                )}
-                <div className="d-flex mt-1">
-                  <img
-                    onClick={() => setExpandDetails(!expandDetails)}
-                    src={expandDetails ? BlueArrowUp : BlueArrowDown}
-                    alt="Expand"
-                  />
+                <Row>
+                  <Col>
+                    <h5 className="mt-2 mb-0" style={mediumBold}>
+                      ${property.listed_rent}/mo
+                    </h5>
+                  </Col>
+                  <Col>
+                    <div className="d-flex mt-2 mb-0 justify-content-end">
+                      {property.rental_status === "ACTIVE" ? (
+                        <p style={greenPill} className="mb-0">
+                          Rented
+                        </p>
+                      ) : property.rental_status === "PROCESSING" ? (
+                        <p style={bluePill} className="mb-0">
+                          Processing
+                        </p>
+                      ) : property.management_status === "FORWARDED" ? (
+                        <p style={redPill} className="mb-0">
+                          New
+                        </p>
+                      ) : property.management_status === "SENT" ? (
+                        <p style={orangePill} className="mb-0">
+                          Processing
+                        </p>
+                      ) : (
+                        <p style={orangePill} className="mb-0">
+                          Not Rented
+                        </p>
+                      )}
+                    </div>
+                  </Col>
+                </Row>
+
+                <p
+                  style={{
+                    font: "normal normal normal 20px Bahnschrift-Regular",
+                    letterSpacing: "0px",
+                    color: "#000000",
+                  }}
+                  className="mt-1 mb-2"
+                >
+                  {property.address}
+                  {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+                  {property.city}, {property.state} {property.zip}
+                </p>
+                <ManagerPropertyCashFlow
+                  property={property}
+                  state={cashFlowState}
+                />
+              </div>
+
+              {property.rental_status === "ACTIVE" ? (
+                <ManagerRentalHistory property={property} />
+              ) : (
+                <ManagerTenantApplications
+                  property={property}
+                  createNewTenantAgreement={createNewTenantAgreement}
+                  selectTenantApplication={selectTenantApplication}
+                />
+              )}
+              <div
+                className="mx-2 my-2 py-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <div
+                  style={mediumBold}
+                  className=" d-flex flex-column justify-content-center align-items-center"
+                >
+                  <div className="d-flex mt-1">
+                    <h6 style={mediumBold} className="mb-1">
+                      Property Details
+                    </h6>
+                  </div>
+                  {expandDetails ? (
+                    <ManagerPropertyForm
+                      property={property}
+                      edit={editProperty}
+                      setEdit={setEditProperty}
+                      hideEdit={hideEdit}
+                      onSubmit={reloadProperty}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <div className="d-flex mt-1">
+                    <img
+                      onClick={() => setExpandDetails(!expandDetails)}
+                      src={expandDetails ? BlueArrowUp : BlueArrowDown}
+                      alt="Expand"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div
-              className="mx-2 my-2 py-3"
-              style={{
-                background: "#FFFFFF 0% 0% no-repeat padding-box",
-                borderRadius: "10px",
-                opacity: 1,
-              }}
-            >
               <div
-                style={mediumBold}
-                className="d-flex flex-column justify-content-center align-items-center"
+                className="mx-2 my-2 py-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
               >
-                <div className="d-flex mt-1">
-                  <h6 style={mediumBold} className="mb-1">
-                    Property Owner Agreement
-                  </h6>
+                <div
+                  style={mediumBold}
+                  className="d-flex flex-column justify-content-center align-items-center"
+                >
+                  <div className="d-flex mt-1">
+                    <h6 style={mediumBold} className="mb-1">
+                      Property Owner Agreement
+                    </h6>
+                  </div>
+                  {expandManagerDocs ? (
+                    <PropertyManagerDocs
+                      property={property}
+                      fetchProperty={fetchProperty}
+                      addDocument={addContract}
+                      selectContract={selectContract}
+                      setExpandManagerDocs={setExpandManagerDocs}
+                      setShowDialog={setShowDialog}
+                      endEarlyDate={endEarlyDate}
+                      setEndEarlyDate={setEndEarlyDate}
+                      cancel={cancel}
+                      setCancel={setCancel}
+                      reload={""}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <div className="d-flex mt-1">
+                    <img
+                      onClick={() => setExpandManagerDocs(!expandManagerDocs)}
+                      src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
+                      alt="Expand"
+                    />
+                  </div>
                 </div>
-                {expandManagerDocs ? (
-                  <PropertyManagerDocs
-                    property={property}
-                    fetchProperty={fetchProperty}
-                    addDocument={addContract}
-                    selectContract={selectContract}
-                    setExpandManagerDocs={setExpandManagerDocs}
-                    setShowDialog={setShowDialog}
-                    endEarlyDate={endEarlyDate}
-                    setEndEarlyDate={setEndEarlyDate}
-                    cancel={cancel}
-                    setCancel={setCancel}
-                    reload={""}
-                  />
-                ) : (
-                  ""
-                )}
-                <div className="d-flex mt-1">
-                  <img
-                    onClick={() => setExpandManagerDocs(!expandManagerDocs)}
-                    src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
-                    alt="Expand"
-                  />
+              </div>
+
+              <div
+                className="mx-2 my-2 p-3"
+                style={{
+                  background: "#FFFFFF 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <div
+                  style={mediumBold}
+                  className=" d-flex flex-column justify-content-center align-items-center"
+                  onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}
+                >
+                  <div className="d-flex mt-1">
+                    <h6 style={mediumBold} className="mb-1">
+                      Tenant Info
+                    </h6>
+                  </div>
+                  {expandLeaseDocs ? (
+                    // <ManagerLeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
+                    <ManagerTenantAgreementView
+                      back={closeAgreement}
+                      property={property}
+                      selectedAgreement={selectedAgreement}
+                      renewLease={renewLease}
+                      acceptedTenantApplications={acceptedTenantApplications}
+                      setAcceptedTenantApplications={
+                        setAcceptedTenantApplications
+                      }
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <div className="d-flex mt-1">
+                    <img
+                      src={expandLeaseDocs ? BlueArrowUp : BlueArrowDown}
+                      alt="Expand"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -509,225 +578,185 @@ function ManagerPropertyView(props) {
               <div
                 style={mediumBold}
                 className=" d-flex flex-column justify-content-center align-items-center"
-                onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}
               >
                 <div className="d-flex mt-1">
                   <h6 style={mediumBold} className="mb-1">
-                    Tenant Info
+                    Recent Maintenance Requests
                   </h6>
                 </div>
-                {expandLeaseDocs ? (
-                  // <ManagerLeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
-                  <ManagerTenantAgreementView
-                    back={closeAgreement}
-                    property={property}
-                    selectedAgreement={selectedAgreement}
-                    renewLease={renewLease}
-                    acceptedTenantApplications={acceptedTenantApplications}
-                    setAcceptedTenantApplications={
-                      setAcceptedTenantApplications
-                    }
-                  />
-                ) : (
-                  ""
-                )}
-                <div className="d-flex mt-1">
-                  <img
-                    src={expandLeaseDocs ? BlueArrowUp : BlueArrowDown}
-                    alt="Expand"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+                <div style={{ maxHeight: "220px", overflow: "scroll" }}>
+                  {recentMaintenanceRequests.length > 0 ? (
+                    recentMaintenanceRequests.map((mr) => {
+                      return (
+                        <Row className="mx-2 mb-4">
+                          <Col xs={3}>
+                            <div style={tileImg}>
+                              {JSON.parse(mr.images).length > 0 ? (
+                                <img
+                                  src={JSON.parse(mr.images)[0]}
+                                  alt="Repair Image"
+                                  className="h-100 w-100"
+                                  style={{
+                                    objectFit: "cover",
+                                    height: "50px",
+                                    width: "50px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={No_Image}
+                                  alt="No Repair Image"
+                                  className="h-100 w-100"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    height: "50px",
+                                    width: "50px",
+                                  }}
+                                />
+                              )}
+                            </div>
+                          </Col>
+                          <Col>
+                            <Row
+                              style={{
+                                font: "normal normal normal 14px Bahnschrift-Regular",
+                              }}
+                            >
+                              {mr.title}
+                            </Row>
+                            <Row
+                              className="mb-2"
+                              style={{
+                                font: "normal normal normal 12px Bahnschrift-Regular",
+                              }}
+                            >
+                              {mr.description}
+                            </Row>
+                            <Row>
+                              <hr opacity={1} />
+                            </Row>
 
-          <div
-            className="mx-2 my-2 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-          >
-            <div
-              style={mediumBold}
-              className=" d-flex flex-column justify-content-center align-items-center"
-            >
-              <div className="d-flex mt-1">
-                <h6 style={mediumBold} className="mb-1">
-                  Recent Maintenance Requests
-                </h6>
-              </div>
-              <div style={{ maxHeight: "220px", overflow: "scroll" }}>
-                {recentMaintenanceRequests.length > 0 ? (
-                  recentMaintenanceRequests.map((mr) => {
-                    return (
-                      <Row className="mx-2 mb-4">
-                        <Col xs={3}>
-                          <div style={tileImg}>
-                            {JSON.parse(mr.images).length > 0 ? (
-                              <img
-                                src={JSON.parse(mr.images)[0]}
-                                alt="Repair Image"
-                                className="h-100 w-100"
+                            {mr.request_status === "COMPLETED" ? (
+                              <Row
                                 style={{
-                                  objectFit: "cover",
-                                  height: "50px",
-                                  width: "50px",
+                                  font: "normal normal normal 12px Bahnschrift-Regular",
+                                  color: "#007AFF",
                                 }}
-                              />
+                              >
+                                Completed on:{" "}
+                                {new Date(mr.scheduled_date).toLocaleDateString(
+                                  "en-us",
+                                  {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  }
+                                )}
+                              </Row>
+                            ) : mr.request_status === "SCHEDULED" ? (
+                              <Row
+                                style={{
+                                  font: "normal normal normal 12px Bahnschrift-Regular",
+                                  color: "#E3441F",
+                                }}
+                              >
+                                Scheduled for:{" "}
+                                {new Date(mr.scheduled_date).toLocaleDateString(
+                                  "en-us",
+                                  {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  }
+                                )}
+                              </Row>
                             ) : (
-                              <img
-                                src={No_Image}
-                                alt="No Repair Image"
-                                className="h-100 w-100"
+                              <Row
                                 style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                  height: "50px",
-                                  width: "50px",
+                                  font: "normal normal normal 12px Bahnschrift-Regular",
+                                  color: "#007AFF",
                                 }}
-                              />
+                              >
+                                Requested on:{" "}
+                                {new Date(
+                                  mr.request_created_date.split(" ")[0]
+                                ).toLocaleDateString("en-us", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                              </Row>
                             )}
-                          </div>
-                        </Col>
-                        <Col>
-                          <Row
-                            style={{
-                              font: "normal normal normal 14px Bahnschrift-Regular",
-                            }}
-                          >
-                            {mr.title}
-                          </Row>
-                          <Row
-                            className="mb-2"
-                            style={{
-                              font: "normal normal normal 12px Bahnschrift-Regular",
-                            }}
-                          >
-                            {mr.description}
-                          </Row>
-                          <Row>
-                            <hr opacity={1} />
-                          </Row>
-
-                          {mr.request_status === "COMPLETED" ? (
-                            <Row
-                              style={{
-                                font: "normal normal normal 12px Bahnschrift-Regular",
-                                color: "#007AFF",
-                              }}
-                            >
-                              Completed on:{" "}
-                              {new Date(mr.scheduled_date).toLocaleDateString(
-                                "en-us",
-                                {
-                                  year: "numeric",
-                                  month: "short",
-                                  day: "numeric",
-                                }
-                              )}
-                            </Row>
-                          ) : mr.request_status === "SCHEDULED" ? (
-                            <Row
-                              style={{
-                                font: "normal normal normal 12px Bahnschrift-Regular",
-                                color: "#E3441F",
-                              }}
-                            >
-                              Scheduled for:{" "}
-                              {new Date(mr.scheduled_date).toLocaleDateString(
-                                "en-us",
-                                {
-                                  year: "numeric",
-                                  month: "short",
-                                  day: "numeric",
-                                }
-                              )}
-                            </Row>
-                          ) : (
-                            <Row
-                              style={{
-                                font: "normal normal normal 12px Bahnschrift-Regular",
-                                color: "#007AFF",
-                              }}
-                            >
-                              Requested on:{" "}
-                              {new Date(
-                                mr.request_created_date.split(" ")[0]
-                              ).toLocaleDateString("en-us", {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                              })}
-                            </Row>
-                          )}
-                        </Col>
-                      </Row>
-                    );
-                  })
-                ) : (
-                  <div style={mediumBold} className="d-flex mt-3">
-                    No requests in past 30 days
-                  </div>
-                )}
-              </div>
-              {pastMaintenanceRequests.length > 0 ? (
-                <div
-                  style={(mediumBold, { color: "#007AFF", cursor: "pointer" })}
-                  className="d-flex mt-3"
-                  onClick={() => {
-                    navigate("./repairs", { state: { property: property } });
-                  }}
-                >
-                  <div className="d-flex mt-1  align-items-center">
-                    <h6 style={mediumBold} className="mb-1">
-                      Past Maintenance Requests
-                    </h6>
-                    &nbsp; &nbsp;
-                    <div className="d-flex align-items-center">
-                      <img src={BlueArrowRight} alt="Expand" />
+                          </Col>
+                        </Row>
+                      );
+                    })
+                  ) : (
+                    <div style={mediumBold} className="d-flex mt-3">
+                      No requests in past 30 days
+                    </div>
+                  )}
+                </div>
+                {pastMaintenanceRequests.length > 0 ? (
+                  <div
+                    style={
+                      (mediumBold, { color: "#007AFF", cursor: "pointer" })
+                    }
+                    className="d-flex mt-3"
+                    onClick={() => {
+                      navigate("./repairs", { state: { property: property } });
+                    }}
+                  >
+                    <div className="d-flex mt-1  align-items-center">
+                      <h6 style={mediumBold} className="mb-1">
+                        Past Maintenance Requests
+                      </h6>
+                      &nbsp; &nbsp;
+                      <div className="d-flex align-items-center">
+                        <img src={BlueArrowRight} alt="Expand" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div></div>
-              )}
+                ) : (
+                  <div></div>
+                )}
+              </div>
             </div>
-          </div>
-          <div
-            className="mx-2 my-2 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              border: " 1px solid #007AFF",
-              borderRadius: "5px",
-              opacity: 1,
-            }}
-          >
             <div
-              style={(mediumBold, { color: "#007AFF", cursor: "pointer" })}
-              onClick={() => {
-                navigate(`/appliances/${property.property_uid}`, {
-                  state: {
-                    property: property,
-                    property_uid: property.property_uid,
-                  },
-                });
+              className="mx-2 my-2 p-3"
+              style={{
+                background: "#FFFFFF 0% 0% no-repeat padding-box",
+                border: " 1px solid #007AFF",
+                borderRadius: "5px",
+                opacity: 1,
               }}
-              className=" d-flex flex-row justify-content-center align-items-center"
             >
-              <div className="d-flex mt-1  align-items-center">
-                <h6 style={mediumBold} className="mb-1">
-                  List of Appliances
-                </h6>
-                &nbsp; &nbsp;
-                <div className="d-flex align-items-center">
-                  <img src={BlueArrowRight} alt="Expand" />
+              <div
+                style={(mediumBold, { color: "#007AFF", cursor: "pointer" })}
+                onClick={() => {
+                  navigate(`/appliances/${property.property_uid}`, {
+                    state: {
+                      property: property,
+                      property_uid: property.property_uid,
+                    },
+                  });
+                }}
+                className=" d-flex flex-row justify-content-center align-items-center"
+              >
+                <div className="d-flex mt-1  align-items-center">
+                  <h6 style={mediumBold} className="mb-1">
+                    List of Appliances
+                  </h6>
+                  &nbsp; &nbsp;
+                  <div className="d-flex align-items-center">
+                    <img src={BlueArrowRight} alt="Expand" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </Container>
     </div>
   );

@@ -2,60 +2,50 @@ import React from "react";
 import { Form, Button } from "react-bootstrap";
 import { squareForm, pillButton, small, hidden, red } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
-import { put, post } from "../utils/api";
+import { post } from "../utils/api";
 
-function CreateMortgage(props) {
-  console.log("props", props);
-  const [category, setCategory] = React.useState("Mortgage");
+function CreateRevenue(props) {
+  const { property, reload } = props;
+  const [category, setCategory] = React.useState("Management");
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [amount, setAmount] = React.useState("");
-  const [frequency, setFrequency] = React.useState("Weekly");
-  const [frequencyOfPayment, setFrequencyOfPayment] =
-    React.useState("Once a week");
+  const [frequency, setFrequency] = React.useState("Monthly");
+  const [frequencyOfPayment, setFrequencyOfPayment] = React.useState("");
   const [date, setDate] = React.useState("");
-  React.useEffect(() => {
-    if (frequency === "Weekly") {
-      const newFrequencyOfPayment = frequencyOfPayment.replace("month", "week");
-      setFrequencyOfPayment(newFrequencyOfPayment);
-    } else if (frequency === "Monthly") {
-      const newFrequencyOfPayment = frequencyOfPayment.replace("week", "month");
-      setFrequencyOfPayment(newFrequencyOfPayment);
-    }
-  }, [frequency]);
+  // React.useEffect(() => {
+  //   if (frequency === "Monthly") {
+  //     const newFrequencyOfPayment = frequencyOfPayment.replace("year", "month");
+  //     setFrequencyOfPayment(newFrequencyOfPayment);
+  //   } else if (frequency === "Annually") {
+  //     const newFrequencyOfPayment = frequencyOfPayment.replace("month", "year");
+  //     setFrequencyOfPayment(newFrequencyOfPayment);
+  //   } else {
+  //     const newFrequencyOfPayment = "One-time";
+  //     setFrequencyOfPayment(newFrequencyOfPayment);
+  //   }
+  // }, [frequency]);
   const submitForm = async () => {
-    if (title === "" || amount === "" || date === "") {
+    if (amount === "") {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    let mortgage = [];
-    const files = JSON.parse(props.property.images);
-    const newMortgage = {
-      category: category,
-      title: title,
+    const newRevenue = {
+      pur_property_id: property.property_uid,
+      payer: property.owner_id,
+      receiver: property.property_uid,
+      purchase_type: category,
+      // title: title,
       description: description,
-      amount: amount,
-      frequency: frequency,
-      frequency_of_payment: frequencyOfPayment,
-      next_date: date,
+      amount_due: amount,
+      purchase_frequency: frequency,
+      payment_frequency: frequencyOfPayment,
+      next_payment: date,
     };
-    mortgage.push(newMortgage);
-    console.log(newMortgage);
-    // let formData = new FormData();
-    const updateMortgage = {
-      property_uid: props.property.property_uid,
-      mortgages: JSON.stringify(newMortgage),
-    };
-    // for (let i = -1; i < files.length - 1; i++) {
-    //   let key = `img_${i}`;
-    //   if (i === -1) {
-    //     key = "img_cover";
-    //   }
-    //   updateMortgage[key] = files[i + 1];
-    // }
 
-    const response = await put("/properties", updateMortgage, null, files);
-    props.reload();
+    console.log(newRevenue);
+    const response = await post("/createRevenues", newRevenue);
+    reload();
     props.back();
   };
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -69,7 +59,7 @@ function CreateMortgage(props) {
     );
   return (
     <div>
-      <h5>Add New Mortgage Payment</h5>
+      <h5>Add New Revenue Payment</h5>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Category
@@ -79,27 +69,18 @@ function CreateMortgage(props) {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
-          <option>Mortgage</option>
+          <option>Rent</option>
+          <option>Extra Charges</option>
         </Form.Select>
       </Form.Group>
-      <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Title {title === "" ? required : ""}
-        </Form.Label>
-        <Form.Control
-          style={squareForm}
-          placeholder="Painting"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </Form.Group>
+
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Description
         </Form.Label>
         <Form.Control
           style={squareForm}
-          placeholder="Apartment Maintenance"
+          placeholder="Payment description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -124,46 +105,64 @@ function CreateMortgage(props) {
           value={frequency}
           onChange={(e) => setFrequency(e.target.value)}
         >
-          <option>Weekly</option>
           <option>Monthly</option>
+          <option>Annually</option>
+          <option>One-time</option>
         </Form.Select>
       </Form.Group>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Frequency of payment
         </Form.Label>
-        {frequency === "Weekly" ? (
+
+        {frequency === "One-time" ? (
           <Form.Select
             style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
             value={frequencyOfPayment}
             onChange={(e) => setFrequencyOfPayment(e.target.value)}
           >
-            <option>Once a week</option>
-            <option>Every other week</option>
+            <option>One-time</option>
           </Form.Select>
-        ) : (
+        ) : frequency === "Monthly" ? (
           <Form.Select
             style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
             value={frequencyOfPayment}
             onChange={(e) => setFrequencyOfPayment(e.target.value)}
           >
+            <option>Every other month</option>
             <option>Once a month</option>
             <option>Twice a month</option>
           </Form.Select>
+        ) : frequency === "Annually" ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a year</option>
+            <option>Twice a year</option>
+          </Form.Select>
+        ) : (
+          <div></div>
         )}
       </Form.Group>
-      <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Payment Datent {date === "" ? required : ""}
-        </Form.Label>
-        <Form.Control
-          style={squareForm}
-          placeholder="200"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-      </Form.Group>
+      {frequency === "One-time" ? (
+        <div></div>
+      ) : (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Payment Date{date === "" ? required : ""}
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            placeholder="200"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </Form.Group>
+      )}
+
       <div className="text-center" style={errorMessage === "" ? hidden : {}}>
         <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
       </div>
@@ -182,11 +181,11 @@ function CreateMortgage(props) {
           onClick={submitForm}
           className="mx-2"
         >
-          Save Mortgage
+          Save Revenue
         </Button>
       </div>
     </div>
   );
 }
 
-export default CreateMortgage;
+export default CreateRevenue;

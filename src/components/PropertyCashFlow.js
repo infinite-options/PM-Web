@@ -12,6 +12,7 @@ function PropertyCashFlow(props) {
     setShowCreateTax,
     setShowCreateMortgage,
     setShowCreateInsurance,
+    setShowCreateRevenue,
   } = state;
 
   const [expandRevenue, setExpandRevenue] = useState(false);
@@ -38,6 +39,10 @@ function PropertyCashFlow(props) {
   const addExpense = (e) => {
     e.stopPropagation();
     setShowCreateExpense(true);
+  };
+  const addRevenue = (e) => {
+    e.stopPropagation();
+    setShowCreateRevenue(true);
   };
   const addTax = (e) => {
     e.stopPropagation();
@@ -185,7 +190,14 @@ function PropertyCashFlow(props) {
           >
             ${revenue}
           </Col>
-          <Col></Col>
+          <Col>
+            <img
+              style={{ width: "20px" }}
+              src={Add}
+              alt="Add Revenue"
+              onClick={addRevenue}
+            />
+          </Col>
         </Col>
       </Row>
       <div>

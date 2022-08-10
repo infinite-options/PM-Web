@@ -7,7 +7,7 @@ import Add from "../icons/Add.svg";
 
 function ManagerPropertyCashFlow(props) {
   const { property, state } = props;
-  const { setShowCreateExpense } = state;
+  const { setShowCreateExpense, setShowCreateRevenue } = state;
 
   const [expandRevenue, setExpandRevenue] = useState(false);
   const [expandExpenses, setExpandExpenses] = useState(false);
@@ -27,7 +27,10 @@ function ManagerPropertyCashFlow(props) {
     e.stopPropagation();
     setShowCreateExpense(true);
   };
-
+  const addRevenue = (e) => {
+    e.stopPropagation();
+    setShowCreateRevenue(true);
+  };
   let revenueTotal = 0;
   let expenseTotal = 0;
 
@@ -133,7 +136,14 @@ function ManagerPropertyCashFlow(props) {
           >
             ${revenue}
           </Col>
-          <Col></Col>
+          <Col>
+            <img
+              style={{ width: "20px" }}
+              src={Add}
+              alt="Add Revenue"
+              onClick={addRevenue}
+            />
+          </Col>
         </Col>
       </Row>
       <div>

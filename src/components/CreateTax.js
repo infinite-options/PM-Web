@@ -144,7 +144,7 @@ function CreateTax(props) {
       </Form.Group>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
-          Next payment {date === "" ? required : ""}
+          Payment Datent {date === "" ? required : ""}
         </Form.Label>
         <Form.Control
           style={squareForm}

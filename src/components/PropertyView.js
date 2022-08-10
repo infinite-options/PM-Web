@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import PropertyCashFlow from "./PropertyCashFlow";
 import PropertyForm from "./PropertyForm";
 import CreateExpense from "./CreateExpense";
+import CreateRevenue from "./CreateRevenue";
 import CreateTax from "./CreateTax";
 import CreateMortgage from "./CreateMortgage";
 import ManagerDocs from "./ManagerDocs";
@@ -24,20 +25,17 @@ import No_Image from "../icons/No_Image_Available.jpeg";
 import { get, put } from "../utils/api";
 import {
   tileImg,
-  gray,
   squareForm,
-  bPill,
   redPill,
   orangePill,
   greenPill,
   mediumBold,
-  mediumImg,
   bluePillButton,
   redPillButton,
   smallImg,
 } from "../utils/styles";
 function PropertyView(props) {
-  const { property_uid, back, reload, hideEdit, setStage } = props;
+  const { property_uid, back, reload, setStage } = props;
   const [property, setProperty] = useState({
     images: "[]",
   });
@@ -106,6 +104,7 @@ function PropertyView(props) {
   const [editProperty, setEditProperty] = useState(false);
   const [contracts, setContracts] = useState([]);
   const [showCreateExpense, setShowCreateExpense] = useState(false);
+  const [showCreateRevenue, setShowCreateRevenue] = useState(false);
   const [showCreateTax, setShowCreateTax] = useState(false);
   const [showCreateMortgage, setShowCreateMortgage] = useState(false);
   const [showCreateInsurance, setShowCreateInsurance] = useState(false);
@@ -132,6 +131,8 @@ function PropertyView(props) {
       ? setEditProperty(false)
       : showCreateExpense
       ? setShowCreateExpense(false)
+      : showCreateRevenue
+      ? setShowCreateRevenue(false)
       : showCreateTax
       ? setShowCreateTax(false)
       : showCreateMortgage
@@ -162,6 +163,7 @@ function PropertyView(props) {
   }, [
     editProperty,
     showCreateExpense,
+    showCreateRevenue,
     showCreateTax,
     showCreateMortgage,
     showCreateInsurance,
@@ -176,6 +178,7 @@ function PropertyView(props) {
 
   const cashFlowState = {
     setShowCreateExpense,
+    setShowCreateRevenue,
     setShowCreateTax,
     setShowCreateMortgage,
     setShowCreateInsurance,
@@ -358,6 +361,12 @@ function PropertyView(props) {
               property={property}
               reload={reloadProperty}
               back={() => setShowCreateExpense(false)}
+            />
+          ) : showCreateRevenue ? (
+            <CreateRevenue
+              property={property}
+              reload={reloadProperty}
+              back={() => setShowCreateRevenue(false)}
             />
           ) : showCreateTax ? (
             <CreateTax
