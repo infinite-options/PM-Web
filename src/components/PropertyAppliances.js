@@ -14,10 +14,10 @@ import {
 import { put } from "../utils/api";
 
 function PropertyAppliances(props) {
-  const { state, edit } = props;
+  const { state, edit, property } = props;
   const [applianceState, setApplianceState] = state;
   const appliances = Object.keys(applianceState);
-
+  console.log(props);
   const [newAppliance, setNewAppliance] = useState(null);
   const [applianceType, setApplianceType] = useState(null);
   const [applianceName, setApplianceName] = useState(null);
@@ -30,14 +30,15 @@ function PropertyAppliances(props) {
   const [applianceInstalledOn, setApplianceInstalledOn] = useState(null);
   const [applianceWarrantyTill, setApplianceWarrantyTill] = useState(null);
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
-  // const [applianceImages, setApplianceImages] = useState(null);
+  const [applianceImages, setApplianceImages] = useState(null);
 
-  // const imageState = useState([]);
+  const [currentImg, setCurrentImg] = useState(0);
+  const imageState = useState([]);
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showDetailsNoEdit, setShowDetailsNoEdit] = useState(false);
-
   const [tableView, setTableView] = useState(false);
+
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
     // console.log(newApplianceState);
@@ -67,6 +68,21 @@ function PropertyAppliances(props) {
     setApplianceModelNum(applianceState[appliance]["model_num"]);
     setApplianceWarrantyTill(applianceState[appliance]["warranty_till"]);
     setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
+    if (applianceState[appliance]["images"] !== undefined) {
+      const files = [];
+      setApplianceImages(applianceState[appliance]["images"]);
+      const images = applianceState[appliance]["images"];
+      for (let i = 0; i < images.length; i++) {
+        files.push({
+          index: i,
+          image: images[i],
+          file: null,
+          coverPhoto: i === 0,
+        });
+      }
+      imageState[1](files);
+    }
+
     // setApplianceImages(applianceState[appliance]["images"]);
   };
 
@@ -87,14 +103,53 @@ function PropertyAppliances(props) {
     setApplianceModelNum(applianceState[appliance]["model_num"]);
     setApplianceWarrantyTill(applianceState[appliance]["warranty_till"]);
     setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
-    // setApplianceImages(applianceState[appliance]["images"]);
-  };
 
+    if (applianceState[appliance]["images"] !== undefined) {
+      const files = [];
+      setApplianceImages(applianceState[appliance]["images"]);
+      const images = applianceState[appliance]["images"];
+      for (let i = 0; i < images.length; i++) {
+        files.push({
+          index: i,
+          image: images[i],
+          file: null,
+          coverPhoto: i === 0,
+        });
+      }
+      imageState[1](files);
+    }
+  };
+  const nextImg = (api) => {
+    console.log(api);
+    if (currentImg === api.length - 1) {
+      setCurrentImg(0);
+    } else {
+      setCurrentImg(currentImg + 1);
+    }
+    console.log(currentImg);
+  };
+  const previousImg = (api) => {
+    console.log(api);
+    if (currentImg === 0) {
+      setCurrentImg(api.length - 1);
+    } else {
+      setCurrentImg(currentImg - 1);
+    }
+    console.log(currentImg);
+  };
+  const Capitalize = (str) => {
+    console.log(typeof str);
+    return (
+      str.toString().charAt(0).toUpperCase() +
+      str.toString().slice(1).toLowerCase()
+    );
+  };
   const updateAppliance = async (appliance) => {
     const newApplianceState = { ...applianceState };
     console.log(newApplianceState);
-    newApplianceState[appliance]["available"] =
-      newApplianceState[appliance]["available"];
+    newApplianceState[appliance]["available"] = Capitalize(
+      newApplianceState[appliance]["available"]
+    );
     newApplianceState[appliance]["model_num"] = applianceModelNum;
     newApplianceState[appliance]["name"] = applianceName;
     newApplianceState[appliance]["purchased"] = appliancePurchasedOn;
@@ -105,32 +160,38 @@ function PropertyAppliances(props) {
     newApplianceState[appliance]["serial_num"] = applianceSerialNum;
     newApplianceState[appliance]["warranty_info"] = applianceWarrantyInfo;
     newApplianceState[appliance]["warranty_till"] = applianceWarrantyTill;
-    // let i = 0;
-    // let ap = [];
-    // let aimages = [];
-    // let files = imageState[0];
-    // for (const file of imageState[0]) {
-    //   let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
-    //   if (file.file !== null) {
-    //     ap[key] = file.file;
-    //   } else {
-    //     ap[key] = file.image;
-    //   }
-    //   aimages.push(ap[key]);
-    // }
-    // console.log(aimages);
-    // newApplianceState[appliance]["images"] = aimages;
-    // console.log(newApplianceState);
-    // let newProperty = {
-    //   property_uid: "200-000003",
-    //   appliances: newApplianceState[appliance],
-    // };
-    // console.log(newProperty);
-    // const response = await put("/appliances", newProperty, null, files);
+    if (imageState[0].length === 0) {
+      newApplianceState[appliance]["images"] = imageState[0];
+    }
+
+    console.log(newApplianceState[appliance]);
+    if (property) {
+      let newProperty = {
+        property_uid: property.property_uid,
+        appliances: JSON.stringify({
+          [appliance]: newApplianceState[appliance],
+        }),
+      };
+      let i = 0;
+      let files = imageState[0];
+      for (const file of imageState[0]) {
+        let key = `img_${appliance}_${i++}`;
+        console.log(key);
+        if (file.file !== null) {
+          newProperty[key] = file.file;
+        } else {
+          newProperty[key] = file.image;
+        }
+      }
+
+      console.log(newProperty);
+      const response = await put("/appliances", newProperty, null, files);
+    }
 
     setAddApplianceInfo(false);
     setShowDetails(false);
     setApplianceState(newApplianceState);
+    imageState[0] = [];
     setApplianceName("");
     setAppliancePurchasedOn("");
     setAppliancePurchasesOrderNumber("");
@@ -148,6 +209,9 @@ function PropertyAppliances(props) {
     console.log(newApplianceState);
     // newApplianceState[appliance]["available"] = false;
     console.log(newApplianceState);
+    console.log(imageState);
+    imageState[0] = [];
+    console.log(imageState);
     setAddApplianceInfo(false);
     setShowDetails(false);
     setApplianceState(newApplianceState);
@@ -161,9 +225,10 @@ function PropertyAppliances(props) {
     setApplianceWarrantyTill("");
     setApplianceWarrantyInfo("");
     setApplianceType("");
+    setApplianceImages("");
   };
 
-  const addAppliance = () => {
+  const addAppliance = async () => {
     const newApplianceState = { ...applianceState };
     console.log(newApplianceState[newAppliance]);
     newApplianceState[newAppliance] = {};
@@ -179,6 +244,32 @@ function PropertyAppliances(props) {
     newApplianceState[newAppliance]["warranty_info"] = applianceWarrantyInfo;
     newApplianceState[newAppliance]["warranty_till"] = applianceWarrantyTill;
     setApplianceState(newApplianceState);
+    if (property) {
+      let newProperty = {
+        property_uid: property.property_uid,
+        appliances: JSON.stringify({
+          [newAppliance]: newApplianceState[newAppliance],
+        }),
+      };
+      let i = 0;
+      let files = imageState[0];
+      for (const file of imageState[0]) {
+        let key = file.coverPhoto
+          ? `img_${newAppliance}_${i++}`
+          : `img_${newAppliance}_${i++}`;
+        console.log(key);
+        if (file.file !== null) {
+          newProperty[key] = file.file;
+        } else {
+          newProperty[key] = file.image;
+        }
+      }
+      console.log(newApplianceState);
+
+      console.log(newProperty);
+      const response = await put("/appliances", newProperty, null, files);
+    }
+    imageState[0] = [];
     console.log(newApplianceState);
     setNewAppliance(null);
     setApplianceName("");
@@ -399,7 +490,8 @@ function PropertyAppliances(props) {
                         />
                       </Col>
                     </Row>
-                    {/* <ApplianceImages state={imageState} /> */}
+                    {property ? <ApplianceImages state={imageState} /> : ""}
+
                     <div className="text-center my-3">
                       <Button
                         variant="outline-primary"
@@ -515,15 +607,71 @@ function PropertyAppliances(props) {
                         </p>
                       </Col>
                     </Row>
-                    {/* <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Warranty Info</Col>
+                    <Row className="mx-2 mt-1 p-0">
+                      <Col xs={7}>Images</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {applianceImages ||
-                            applianceState[appliance]["images"]}
-                        </p>
+                        <div
+                          style={{
+                            height: "50px",
+                            position: "relative",
+                          }}
+                        >
+                          {applianceState[appliance]["images"] !== undefined &&
+                          applianceState[appliance]["images"].length > 0 ? (
+                            <div>
+                              {console.log(
+                                applianceState[appliance]["images"][currentImg]
+                              )}
+                              <img
+                                src={
+                                  applianceState[appliance]["images"][
+                                    currentImg
+                                  ]
+                                }
+                                // className="w-50 h-50"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "contain",
+                                  width: "50px",
+                                  height: "50px",
+                                }}
+                                alt="Property"
+                              />
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  left: "-15px",
+                                  top: "10px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() =>
+                                  previousImg(
+                                    applianceState[appliance]["images"]
+                                  )
+                                }
+                              >
+                                {"<"}
+                              </div>
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  right: "-15px",
+                                  top: "10px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() =>
+                                  nextImg(applianceState[appliance]["images"])
+                                }
+                              >
+                                {">"}
+                              </div>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
                       </Col>
-                    </Row> */}
+                    </Row>
                   </Row>
                 ) : null}
               </Row>
@@ -545,6 +693,7 @@ function PropertyAppliances(props) {
                 <th>Model Number</th>
                 <th>Warranty Till</th>
                 <th>Warranty Info</th>
+                <th>Images</th>
               </tr>
             </thead>
 
@@ -584,6 +733,61 @@ function PropertyAppliances(props) {
                   <td>
                     {applianceWarrantyInfo ||
                       applianceState[appliance]["warranty_info"]}
+                  </td>
+                  <td>
+                    <div
+                      style={{
+                        height: "50px",
+                        position: "relative",
+                      }}
+                    >
+                      {applianceState[appliance]["images"] !== undefined &&
+                      applianceState[appliance]["images"].length > 0 ? (
+                        <div>
+                          <img
+                            src={
+                              applianceState[appliance]["images"][currentImg]
+                            }
+                            // className="w-50 h-50"
+                            style={{
+                              borderRadius: "4px",
+                              objectFit: "contain",
+                              width: "50px",
+                              height: "50px",
+                            }}
+                            alt="Property"
+                          />
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: "-7px",
+                              top: "10px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              previousImg(applianceState[appliance]["images"])
+                            }
+                          >
+                            {"<"}
+                          </div>
+                          <div
+                            style={{
+                              position: "absolute",
+                              right: "-2px",
+                              top: "10px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              nextImg(applianceState[appliance]["images"])
+                            }
+                          >
+                            {">"}
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -724,19 +928,8 @@ function PropertyAppliances(props) {
                 />
               </Col>
             </Row>
-            {/* <Row className="mx-4 mt-1 p-0">
-              <Col>Upload images</Col>
-              <Col>
-                <Form.Control
-                  type="file"
-                  multiple
-                  style={squareForm}
-                  value={applianceImages}
-                  onChange={(e) => setApplianceImages(e.target.value)}
-                />
-              </Col>
-            </Row> */}
           </Row>
+          {property ? <ApplianceImages state={imageState} /> : ""}
           <div className="text-center my-3">
             <Button
               variant="outline-primary"

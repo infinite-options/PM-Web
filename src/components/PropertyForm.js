@@ -37,7 +37,7 @@ function PropertyForm(props) {
       model_num: "",
       warranty_till: "",
       warranty_info: "",
-      images: "",
+      images: [],
     },
     Dishwasher: {
       available: false,
@@ -50,7 +50,7 @@ function PropertyForm(props) {
       model_num: "",
       warranty_till: "",
       warranty_info: "",
-      images: "",
+      images: [],
     },
     Refrigerator: {
       available: false,
@@ -63,7 +63,7 @@ function PropertyForm(props) {
       model_num: "",
       warranty_till: "",
       warranty_info: "",
-      images: "",
+      images: [],
     },
     Washer: {
       available: false,
@@ -76,7 +76,7 @@ function PropertyForm(props) {
       model_num: "",
       warranty_till: "",
       warranty_info: "",
-      images: "",
+      images: [],
     },
     Dryer: {
       available: false,
@@ -89,7 +89,7 @@ function PropertyForm(props) {
       model_num: "",
       warranty_till: "",
       warranty_info: "",
-      images: "",
+      images: [],
     },
     Range: {
       available: false,
@@ -102,7 +102,7 @@ function PropertyForm(props) {
       model_num: "",
       warranty_till: "",
       warranty_info: "",
-      images: "",
+      images: [],
     },
   });
   const utilityState = useState({
@@ -434,7 +434,7 @@ function PropertyForm(props) {
       area: area,
       listed_rent: rent,
       deposit: deposit,
-      appliances: JSON.stringify(applianceState[0]),
+      // appliances: JSON.stringify(applianceState[0]),
       utilities: JSON.stringify(utilityState[0]),
       pets_allowed: petsAllowed,
       deposit_for_rent: depositForRent,
@@ -461,6 +461,37 @@ function PropertyForm(props) {
         files
       );
     } else {
+      const newProperty = {
+        owner_id: user.user_uid,
+        manager_id: "",
+        active_date: activeDate,
+        address: address,
+        unit: unit,
+        city: city,
+        state: state,
+        zip: zip,
+        property_type: type,
+        num_beds: numBeds,
+        num_baths: numBaths,
+        area: area,
+        listed_rent: rent,
+        deposit: deposit,
+        appliances: JSON.stringify(applianceState[0]),
+        utilities: JSON.stringify(utilityState[0]),
+        pets_allowed: petsAllowed,
+        deposit_for_rent: depositForRent,
+      };
+      const files = imageState[0];
+      let i = 0;
+      for (const file of imageState[0]) {
+        let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        if (file.file !== null) {
+          newProperty[key] = file.file;
+        } else {
+          newProperty[key] = file.image;
+        }
+        console.log(newProperty[key]);
+      }
       const response = await post("/properties", newProperty, null, files);
     }
     props.onSubmit();
@@ -741,7 +772,11 @@ function PropertyForm(props) {
           <p>{formatter.format(deposit)}</p>
         </Row>
       )}
-      <PropertyAppliances state={applianceState} edit={edit} />
+      <PropertyAppliances
+        state={applianceState}
+        property={property}
+        edit={edit}
+      />
       <PropertyUtilities state={utilityState} edit={edit} />
       <Container style={({ paddingLeft: "0px" }, mediumBold)} className="my-3">
         <h6>Pets Allowed</h6>
