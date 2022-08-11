@@ -6,7 +6,7 @@ import { post } from "../utils/api";
 
 function CreateRevenue(props) {
   const { property, reload } = props;
-  const [category, setCategory] = React.useState("Management");
+  const [category, setCategory] = React.useState("Rent");
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [amount, setAmount] = React.useState("");

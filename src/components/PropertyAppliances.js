@@ -38,7 +38,7 @@ function PropertyAppliances(props) {
   const [showDetails, setShowDetails] = useState(false);
   const [showDetailsNoEdit, setShowDetailsNoEdit] = useState(false);
   const [tableView, setTableView] = useState(false);
-
+  const [currentAppliance, setCurrentAppliance] = useState([]);
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
     // console.log(newApplianceState);
@@ -86,10 +86,31 @@ function PropertyAppliances(props) {
     // setApplianceImages(applianceState[appliance]["images"]);
   };
 
-  const showApplianceDetailNoEdit = (appliance) => {
+  const showApplianceDetailNoEdit = (appliance, x) => {
+    console.log(x);
+    console.log(currentAppliance);
+    if (currentAppliance.includes(x)) {
+      console.log("in if");
+      if (currentAppliance.length === 1) {
+        let ap = [];
+        console.log(ap);
+        setCurrentAppliance(ap);
+      } else {
+        let ap = currentAppliance.filter((item) => item !== x);
+        console.log(ap);
+        setCurrentAppliance(ap);
+      }
+    } else {
+      console.log("in else");
+      let ap = currentAppliance.filter((item, i) => item !== x);
+      console.log(ap);
+      ap.push(x);
+      console.log(ap);
+      setCurrentAppliance(ap);
+    }
     setApplianceType(appliance);
-    setShowDetailsNoEdit(!showDetailsNoEdit);
-    setAddApplianceInfo(!addApplianceInfo);
+    setShowDetailsNoEdit(true);
+    setAddApplianceInfo(true);
     setApplianceType(appliance);
     setApplianceState(applianceState);
     setApplianceName(applianceState[appliance]["name"]);
@@ -144,6 +165,31 @@ function PropertyAppliances(props) {
       str.toString().slice(1).toLowerCase()
     );
   };
+
+  const toggleList = (x) => {
+    console.log(x);
+    console.log(currentAppliance);
+    if (currentAppliance.includes(x)) {
+      console.log("in if");
+      if (currentAppliance.length === 1) {
+        let ap = [];
+        console.log(ap);
+        setCurrentAppliance(ap);
+      } else {
+        let ap = currentAppliance.filter((item) => item !== x);
+        console.log(ap);
+        setCurrentAppliance(ap);
+      }
+    } else {
+      console.log("in else");
+      let ap = currentAppliance.filter((item, i) => item !== x);
+      console.log(ap);
+      ap.push(x);
+      console.log(ap);
+      setCurrentAppliance(ap);
+    }
+  };
+
   const updateAppliance = async (appliance) => {
     const newApplianceState = { ...applianceState };
     console.log(newApplianceState);
@@ -320,7 +366,7 @@ function PropertyAppliances(props) {
       <Row className="d-flex flex-column justify-content-left">
         {!tableView &&
           appliances.map((appliance, i) => (
-            <Row key={i} className="d-flex flex-column ps-2 align-items-center">
+            <Row className="d-flex flex-column ps-2 align-items-center" key={i}>
               <Row>
                 <Col xs={1}>
                   <Checkbox
@@ -337,7 +383,8 @@ function PropertyAppliances(props) {
                           showApplianceDetail(appliance);
                         }
                       : () => {
-                          showApplianceDetailNoEdit(appliance);
+                          showApplianceDetailNoEdit(appliance, i);
+                          // toggleList(i);
                         }
                   }
                 >
@@ -518,93 +565,67 @@ function PropertyAppliances(props) {
               <Row>
                 {addApplianceInfo &&
                 !tableView &&
+                currentAppliance.includes(i) &&
                 showDetailsNoEdit &&
-                applianceState[appliance]["available"] == true &&
-                applianceType == appliance ? (
+                applianceState[appliance]["available"] == true ? (
                   <Row>
                     <Row className="mx-2 p-0">
                       <Col>Name</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {applianceName || applianceState[appliance]["name"]}
-                        </p>
+                        <p>{applianceState[appliance]["name"]}</p>
                       </Col>
                     </Row>
                     <Row className="mx-2 mt-1 p-0">
                       <Col xs={7}>Purchased From</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {appliancePurchasedFrom ||
-                            applianceState[appliance]["purchased_from"]}
-                        </p>
+                        <p>{applianceState[appliance]["purchased_from"]}</p>
                       </Col>
                     </Row>
                     <Row className="mx-2 mt-1 p-0">
                       <Col xs={7}>Purchased On</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {appliancePurchasedOn ||
-                            applianceState[appliance]["purchased"]}
-                        </p>
+                        <p>{applianceState[appliance]["purchased"]}</p>
                       </Col>
                     </Row>
                     <Row className="mx-2 mt-1 p-0">
                       <Col xs={7}>Purchase Order Number</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {appliancePurchasesOrderNumber ||
-                            applianceState[appliance]["purchased_order"]}
-                        </p>
+                        <p>{applianceState[appliance]["purchased_order"]}</p>
                       </Col>
                     </Row>
 
                     <Row className="mx-2 mt-1 p-0">
                       <Col xs={7}>Installed On</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {applianceInstalledOn ||
-                            applianceState[appliance]["installed"]}
-                        </p>
+                        <p>{applianceState[appliance]["installed"]}</p>
                       </Col>
                     </Row>
 
                     <Row className="mx-2 mt-1 p-0">
                       <Col xs={7}>Serial Number</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {applianceSerialNum ||
-                            applianceState[appliance]["serial_num"]}
-                        </p>
+                        <p>{applianceState[appliance]["serial_num"]}</p>
                       </Col>
                     </Row>
 
                     <Row className="mx-2 mt-1 p-0">
                       <Col xs={7}>Model Number</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {applianceModelNum ||
-                            applianceState[appliance]["model_num"]}
-                        </p>
+                        <p>{applianceState[appliance]["model_num"]}</p>
                       </Col>
                     </Row>
 
                     <Row className="mx-2 mt-1 p-0">
                       <Col xs={7}>Warranty Till</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {applianceWarrantyTill ||
-                            applianceState[appliance]["warranty_till"]}
-                        </p>
+                        <p>{applianceState[appliance]["warranty_till"]}</p>
                       </Col>
                     </Row>
 
                     <Row className="mx-2 mt-1 p-0">
                       <Col xs={7}>Warranty Info</Col>
                       <Col className="d-flex justify-content-end">
-                        <p>
-                          {applianceWarrantyInfo ||
-                            applianceState[appliance]["warranty_info"]}
-                        </p>
+                        <p>{applianceState[appliance]["warranty_info"]}</p>
                       </Col>
                     </Row>
                     <Row className="mx-2 mt-1 p-0">
@@ -667,7 +688,7 @@ function PropertyAppliances(props) {
                               </div>
                             </div>
                           ) : (
-                            ""
+                            "None"
                           )}
                         </div>
                       </Col>
@@ -785,7 +806,7 @@ function PropertyAppliances(props) {
                           </div>
                         </div>
                       ) : (
-                        ""
+                        "None"
                       )}
                     </div>
                   </td>
