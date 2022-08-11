@@ -69,26 +69,64 @@ function PropertyCashFlow(props) {
   useEffect(() => {
     console.log("in useeffect");
     console.log("in useeffect", property.owner_revenue);
-    if (property.owner_revenue.length == 0) {
-    } else if (property.owner_revenue.length == 1) {
-      revenueTotal += property.owner_revenue[0].amount_due;
-    } else {
-      for (const or of property.owner_revenue) {
-        revenueTotal += or.amount_due;
-      }
+    // if (property.owner_revenue.length == 0) {
+    // } else if (property.owner_revenue.length == 1) {
+    //   revenueTotal += property.owner_revenue[0].amount_due;
+    // } else {
+    //   for (const or of property.owner_revenue) {
+    //     revenueTotal += or.amount_due;
+    //   }
+    // }
+    if (
+      (property.rental_revenue !== undefined &&
+        property.rental_revenue !== 0) ||
+      (property.extraCharges_revenue !== undefined &&
+        property.extraCharges_revenue !== 0) ||
+      (property.utiltiy_revenue !== undefined && property.utiltiy_revenue !== 0)
+    ) {
+      revenueTotal =
+        revenueTotal +
+        property.rental_revenue +
+        property.extraCharges_revenue +
+        property.utility_revenue;
     }
 
     console.log("in useeffect", revenueTotal);
-    if (property.owner_expense.length == 0) {
-    } else if (property.owner_expense.length == 1) {
-      expenseTotal += property.owner_expense[0].amount_due;
-      maintenanceTotal += property.owner_expense[0].amount_due;
-    } else {
-      for (const or of property.owner_expense) {
-        expenseTotal += or.amount_due;
-        maintenanceTotal += or.amount_due;
-      }
+    // if (property.owner_expense.length == 0) {
+    // } else if (property.owner_expense.length == 1) {
+    //   expenseTotal += property.owner_expense[0].amount_due;
+    //   maintenanceTotal += property.owner_expense[0].amount_due;
+    // } else {
+    //   for (const or of property.owner_expense) {
+    //     expenseTotal += or.amount_due;
+    //     maintenanceTotal += or.amount_due;
+    //   }
+    // }
+
+    if (
+      (property.maintenance_expenses !== undefined &&
+        property.maintenance_expenses !== 0) ||
+      (property.management_expenses !== undefined &&
+        property.management_expenses !== 0) ||
+      (property.insurance_expenses !== undefined &&
+        property.insurance_expenses !== 0) ||
+      (property.repairs_expenses !== undefined &&
+        property.repairs_expenses !== 0) ||
+      (property.mortgage_expenses !== undefined &&
+        property.mortgage_expenses !== 0) ||
+      (property.taxes_expenses !== undefined &&
+        property.taxes_expenses !== 0) ||
+      (property.utility_expenses !== 0 &&
+        property.utility_expenses !== undefined)
+    ) {
+      expenseTotal =
+        expenseTotal +
+        property.maintenance_expenses +
+        property.management_expenses +
+        property.repairs_expenses +
+        property.utility_expenses;
     }
+
     if (property.mortgages !== null) {
       expenseTotal += Number(JSON.parse(property.mortgages).amount);
       mortgageTotal += Number(JSON.parse(property.mortgages).amount);
@@ -555,7 +593,7 @@ function PropertyCashFlow(props) {
                       style={{ ...small, ...red }}
                       className="text-center m-1 pt-1"
                     >
-                      {maintenance}
+                      {expense}
                     </p>
                   </Col>
                   <Col>
