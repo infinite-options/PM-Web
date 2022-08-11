@@ -39,10 +39,9 @@ function ManagerOverview(props) {
 
   for (const item of properties) {
     if (
-      (item.rental_revenue !== undefined && item.rental_revenue !== 0) ||
-      (item.extraCharges_revenue !== undefined &&
-        item.extraCharges_revenue !== 0) ||
-      (item.utiltiy_revenue !== undefined && item.utiltiy_revenue !== 0)
+      item.rental_revenue !== 0 ||
+      item.extraCharges_revenue !== 0 ||
+      item.utiltiy_revenue !== 0
     ) {
       revenueTotal =
         revenueTotal +
@@ -51,7 +50,7 @@ function ManagerOverview(props) {
         item.utility_revenue;
     }
   }
-  console.log(revenueTotal);
+  console.log("revenueTotal", revenueTotal);
   let expenseTotal = 0;
   for (const item of properties) {
     if (

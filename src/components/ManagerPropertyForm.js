@@ -31,55 +31,79 @@ function ManagerPropertyForm(props) {
       available: false,
       name: "",
       purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
       serial_num: "",
       model_num: "",
       warranty_till: "",
       warranty_info: "",
+      images: [],
     },
     Dishwasher: {
       available: false,
       name: "",
       purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
       serial_num: "",
       model_num: "",
       warranty_till: "",
       warranty_info: "",
+      images: [],
     },
     Refrigerator: {
       available: false,
       name: "",
       purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
       serial_num: "",
       model_num: "",
       warranty_till: "",
       warranty_info: "",
+      images: [],
     },
     Washer: {
       available: false,
       name: "",
       purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
       serial_num: "",
       model_num: "",
       warranty_till: "",
       warranty_info: "",
+      images: [],
     },
     Dryer: {
       available: false,
       name: "",
       purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
       serial_num: "",
       model_num: "",
       warranty_till: "",
       warranty_info: "",
+      images: [],
     },
     Range: {
       available: false,
       name: "",
       purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
       serial_num: "",
       model_num: "",
       warranty_till: "",
       warranty_info: "",
+      images: [],
     },
   });
   const utilityState = useState({
@@ -100,6 +124,7 @@ function ManagerPropertyForm(props) {
   const [numBaths, setNumBaths] = useState("");
   const [area, setArea] = useState("");
   const [rent, setRent] = useState("");
+  const [activeDate, setActiveDate] = useState("");
   const [deposit, setDeposit] = useState("");
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [depositForRent, setDepositForRent] = useState(false);
@@ -119,6 +144,7 @@ function ManagerPropertyForm(props) {
     setNumBaths(property.num_baths);
     setArea(property.area);
     setRent(property.listed_rent);
+    setActiveDate(property.active_date);
     setDeposit(property.deposit);
     setPetsAllowed(property.pets_allowed);
     setDepositForRent(property.deposit_for_rent);
@@ -151,6 +177,7 @@ function ManagerPropertyForm(props) {
       numBaths === "" ||
       area === "" ||
       rent === "" ||
+      activeDate === "" ||
       deposit === ""
     ) {
       setErrorMessage("Please fill out all fields");
@@ -159,6 +186,7 @@ function ManagerPropertyForm(props) {
     const newProperty = {
       owner_id: user.user_uid,
       manager_id: "",
+      active_date: activeDate,
       address: address,
       unit: unit,
       city: city,
@@ -170,7 +198,7 @@ function ManagerPropertyForm(props) {
       area: area,
       listed_rent: rent,
       deposit: deposit,
-      appliances: JSON.stringify(applianceState[0]),
+      // appliances: JSON.stringify(applianceState[0]),
       utilities: JSON.stringify(utilityState[0]),
       // pets_allowed: petsAllowed,
       // deposit_for_rent: depositForRent
@@ -198,6 +226,37 @@ function ManagerPropertyForm(props) {
         files
       );
     } else {
+      const newProperty = {
+        owner_id: user.user_uid,
+        manager_id: "",
+        active_date: activeDate,
+        address: address,
+        unit: unit,
+        city: city,
+        state: state,
+        zip: zip,
+        property_type: type,
+        num_beds: numBeds,
+        num_baths: numBaths,
+        area: area,
+        listed_rent: rent,
+        deposit: deposit,
+        appliances: JSON.stringify(applianceState[0]),
+        utilities: JSON.stringify(utilityState[0]),
+        pets_allowed: petsAllowed,
+        deposit_for_rent: depositForRent,
+      };
+      const files = imageState[0];
+      let i = 0;
+      for (const file of imageState[0]) {
+        let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+        if (file.file !== null) {
+          newProperty[key] = file.file;
+        } else {
+          newProperty[key] = file.image;
+        }
+        console.log(newProperty[key]);
+      }
       const response = await post("/properties", newProperty, null, files);
     }
     setEdit(false);
@@ -232,14 +291,14 @@ function ManagerPropertyForm(props) {
   });
 
   return (
-    <div className="mx-2">
+    <div className="d-flex flex-column w-100 mx-2 p-2 m-0">
       <ConfirmDialog2
         title={"Can't edit here. Click on the edit icon to make any changes"}
         isOpen={showDialog}
         onConfirm={onConfirm}
       />
       {edit ? (
-        <div>
+        <div className="d-flex flex-column w-100">
           <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
               Address {required}
@@ -252,52 +311,60 @@ function ManagerPropertyForm(props) {
             />
           </Form.Group>
           <div className="d-flex my-3">
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Unit
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="#122"
-                value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                City {required}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="San Jose"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-            </Form.Group>
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Unit
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="#122"
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  City {required}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="San Jose"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
           </div>
           <div className="d-flex my-3">
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                State {required}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="CA"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Zip Code {required}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="90808"
-                value={zip}
-                onChange={(e) => setZip(e.target.value)}
-              />
-            </Form.Group>
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  State {required}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="CA"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mx-2">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Zip Code {required}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="90808"
+                  value={zip}
+                  onChange={(e) => setZip(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
           </div>
         </div>
       ) : (
@@ -394,6 +461,25 @@ function ManagerPropertyForm(props) {
             <p>{area}</p>
           </Col>
         </Row>
+      )}{" "}
+      {edit ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+            Active Date {activeDate === "" ? required : ""}
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            type="date"
+            // placeholder="2000"
+            value={activeDate}
+            onChange={(e) => setActiveDate(e.target.value)}
+          />
+        </Form.Group>
+      ) : (
+        <Row className="mx-2">
+          <h6>Active Date</h6>
+          <p>{activeDate}</p>
+        </Row>
       )}
       {edit ? (
         <Form.Group className="mx-2 my-3">
@@ -431,7 +517,11 @@ function ManagerPropertyForm(props) {
           <p>{formatter.format(deposit)}</p>
         </Row>
       )}
-      <PropertyAppliances state={applianceState} edit={edit} />
+      <PropertyAppliances
+        state={applianceState}
+        property={property}
+        edit={edit}
+      />
       <PropertyUtilities state={utilityState} edit={edit} />
       <Container className="my-3">
         <h6>Pets Allowed</h6>
