@@ -1,0 +1,52 @@
+
+*{
+    --background: #b2967d
+}
+.header-name{
+    margin: 1.5rem 0rem 1rem 0rem;
+
+}
+.top-bar{
+    display: flex;
+    flex-direction: row;
+    background-color: var(--background);
+}
+
+.circle{
+    border: black solid 1px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 1rem;
+}
+.sidenav{
+    height: 100%;
+    width: 20%;
+    position: fixed; 
+    z-index: 3; 
+    top: 0; 
+    left: 0; 
+    background-color:var(--background); 
+    transition: .5s ease; 
+    overflow-x: hidden; 
+    margin-top: 7rem; 
+    display: flex; 
+    flex-direction: column; 
+    border-top: black solid;
+}
+.sidenav-elements{
+    padding: 0.5rem 0rem 0.5rem 0.5rem;
+    text-decoration: none;
+    color: black;
+}
+.tenantCard{
+    margin-left: 20rem;
+    margin-top: 5rem;
+    border: black solid;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
