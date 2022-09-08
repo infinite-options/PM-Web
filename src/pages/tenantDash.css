@@ -10,6 +10,9 @@
     display: flex;
     flex-direction: row;
     background-color: var(--background);
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
 
 .circle{
@@ -40,8 +43,8 @@
     color: black;
 }
 .tenantCard{
-    margin-left: 20rem;
-    margin-top: 5rem;
+    margin-left: 18rem;
+    margin-top: 12rem;
     border: black solid;
     width: 25%;
     display: flex;
@@ -49,4 +52,28 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+.tenantImg{
+    width: 100%;
+    height: auto;
+}
+.announcements{
+    margin-top: 3rem;
+    float: right;
+}
+.card-table{
+    
+    border: black solid 1px;
+    padding: 5px;
+}
+.table-row{
+    border: black solid 1px;
+    padding: 5px;
+}
+.table-col{
+    border: black solid 1px;
+    padding: 5px;
+}
+.upcoming-payments{
+    margin-left: 20rem;
 }
