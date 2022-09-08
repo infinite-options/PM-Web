@@ -1,19 +1,18 @@
 import React from "react"
 
 export default function UpcomingPayments(props){
-    const rents = JSON.parse(props.data);
-    console.log(rents);
-    const rows = rents.map((row,index)=>{
+    const rents = props.data; //array of objects 
+    
+    const rows = rents.map((row,index)=>{//row is an element in the array 
         return(
             <tr>
                 <th className="table-col">{index+1}</th>
-                <th className="table-col">{row.of}</th>
-                <th className="table-col">{row.fee_name}</th>
-                <th className="table-col">{row.due_by}</th>
+                <th className="table-col">{"" + row.purchase_notes+ " " + row.description}</th>
+                <th className="table-col">{row.purchase_type}</th>
+                <th className="table-col">{row.next_payment.substring(0,10)}</th>
                 <th className="table-col"><button>Pay</button></th>
-                <th className="table-col">{row.charge}</th>
+                <th className="table-col">{row.amount_due}</th>
             </tr>
-            
         )
     })
     return(

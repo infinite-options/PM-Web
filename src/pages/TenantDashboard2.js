@@ -14,10 +14,15 @@ export default function TenantDashboard2(){
 
     const [tenantData, setTenantData] = React.useState([]) 
     const [propertyData, setPropertyData] = React.useState([])
+    const navigate = useNavigate();
+    const { userData, refresh } = useContext(AppContext);
+    const { access_token, user } = userData;
     const getProfileFromApi = () => { //process to get data from aateButtons(pi using axios
         axios.get('https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantProfileInfo?',{
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2MjYwODg4MywianRpIjoiZTk4YThmNmEtNjUxMC00Y2IyLWJkM2EtNzQ3ZmUxNDIxNDJlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX3VpZCI6IjEwMC0wMDAwMTgiLCJmaXJzdF9uYW1lIjoiVmloYSIsImxhc3RfbmFtZSI6IlNoYWgiLCJwaG9uZV9udW1iZXIiOiI0MDg3Njc4MTU3IiwiZW1haWwiOiJ2aWhhLnNoYWhAc2pzdS5lZHUiLCJyb2xlIjoiVEVOQU5ULE9XTkVSIiwiZ29vZ2xlX2F1dGhfdG9rZW4iOiJ5YTI5LmEwQVZBOXkxdGxDd2RzZEwtTVg1SnFaN3l1Xy1MY2phZXFLZm5aNlE0SGZvY0cwaHMzQ3d2RVhmaFowUUxQcGs2RzN5STN6U3o1bUNaMGJqMHhvaEcxNDBDZHgzY1BBZzlsQ08xQ2NVUXRqZ3pER1NvM3dqdE1pRDMwRUllVjF5LWVISU85TUdEcnlzaWVfVDZpaXBHSTE2ODRoOS1JYUNnWUtBVEFTQVFBU0ZRRTY1ZHI4enA2NHVpS3kzMFI0UVptOW52TDBMQTAxNjMiLCJidXNpbmVzc2VzIjpbXX0sIm5iZiI6MTY2MjYwODg4MywiZXhwIjoxNjYyNjEyNDgzfQ.PehfaVCiNWlYNDy9fjn7MJc9Rqb9ajlCr2S2YpzHIa4'
+                // 'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2MjYwODg4MywianRpIjoiZTk4YThmNmEtNjUxMC00Y2IyLWJkM2EtNzQ3ZmUxNDIxNDJlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX3VpZCI6IjEwMC0wMDAwMTgiLCJmaXJzdF9uYW1lIjoiVmloYSIsImxhc3RfbmFtZSI6IlNoYWgiLCJwaG9uZV9udW1iZXIiOiI0MDg3Njc4MTU3IiwiZW1haWwiOiJ2aWhhLnNoYWhAc2pzdS5lZHUiLCJyb2xlIjoiVEVOQU5ULE9XTkVSIiwiZ29vZ2xlX2F1dGhfdG9rZW4iOiJ5YTI5LmEwQVZBOXkxdGxDd2RzZEwtTVg1SnFaN3l1Xy1MY2phZXFLZm5aNlE0SGZvY0cwaHMzQ3d2RVhmaFowUUxQcGs2RzN5STN6U3o1bUNaMGJqMHhvaEcxNDBDZHgzY1BBZzlsQ08xQ2NVUXRqZ3pER1NvM3dqdE1pRDMwRUllVjF5LWVISU85TUdEcnlzaWVfVDZpaXBHSTE2ODRoOS1JYUNnWUtBVEFTQVFBU0ZRRTY1ZHI4enA2NHVpS3kzMFI0UVptOW52TDBMQTAxNjMiLCJidXNpbmVzc2VzIjpbXX0sIm5iZiI6MTY2MjYwODg4MywiZXhwIjoxNjYyNjEyNDgzfQ.PehfaVCiNWlYNDy9fjn7MJc9Rqb9ajlCr2S2YpzHIa4'
+                // 'Authorization': 'Bearer ' + access_token
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2MjY1Nzg5MiwianRpIjoiNjg1ZWU2ZTktYWEzMi00YjFlLWI5NWYtMjI2MjZmZGVkOWEwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX3VpZCI6IjEwMC0wMDAwMTgiLCJmaXJzdF9uYW1lIjoiVmloYSIsImxhc3RfbmFtZSI6IlNoYWgiLCJwaG9uZV9udW1iZXIiOiI0MDg3Njc4MTU3IiwiZW1haWwiOiJ2aWhhLnNoYWhAc2pzdS5lZHUiLCJyb2xlIjoiVEVOQU5ULE9XTkVSIiwiZ29vZ2xlX2F1dGhfdG9rZW4iOiJ5YTI5LmEwQVZBOXkxdGxDd2RzZEwtTVg1SnFaN3l1Xy1MY2phZXFLZm5aNlE0SGZvY0cwaHMzQ3d2RVhmaFowUUxQcGs2RzN5STN6U3o1bUNaMGJqMHhvaEcxNDBDZHgzY1BBZzlsQ08xQ2NVUXRqZ3pER1NvM3dqdE1pRDMwRUllVjF5LWVISU85TUdEcnlzaWVfVDZpaXBHSTE2ODRoOS1JYUNnWUtBVEFTQVFBU0ZRRTY1ZHI4enA2NHVpS3kzMFI0UVptOW52TDBMQTAxNjMiLCJidXNpbmVzc2VzIjpbXX0sIm5iZiI6MTY2MjY1Nzg5MiwiZXhwIjoxNjYyNjYxNDkyfQ.3hVON7s7-lTYDXsERvRko_xKKJ5GLffmHH85Wscp9iY'
             }
         })
         .then(response => {
@@ -32,7 +37,7 @@ export default function TenantDashboard2(){
     const getPropertiesFromApi = () => { //process to get data from aateButtons(pi using axios
         axios.get('https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantProperties?',{
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2MjYwODg4MywianRpIjoiZTk4YThmNmEtNjUxMC00Y2IyLWJkM2EtNzQ3ZmUxNDIxNDJlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX3VpZCI6IjEwMC0wMDAwMTgiLCJmaXJzdF9uYW1lIjoiVmloYSIsImxhc3RfbmFtZSI6IlNoYWgiLCJwaG9uZV9udW1iZXIiOiI0MDg3Njc4MTU3IiwiZW1haWwiOiJ2aWhhLnNoYWhAc2pzdS5lZHUiLCJyb2xlIjoiVEVOQU5ULE9XTkVSIiwiZ29vZ2xlX2F1dGhfdG9rZW4iOiJ5YTI5LmEwQVZBOXkxdGxDd2RzZEwtTVg1SnFaN3l1Xy1MY2phZXFLZm5aNlE0SGZvY0cwaHMzQ3d2RVhmaFowUUxQcGs2RzN5STN6U3o1bUNaMGJqMHhvaEcxNDBDZHgzY1BBZzlsQ08xQ2NVUXRqZ3pER1NvM3dqdE1pRDMwRUllVjF5LWVISU85TUdEcnlzaWVfVDZpaXBHSTE2ODRoOS1JYUNnWUtBVEFTQVFBU0ZRRTY1ZHI4enA2NHVpS3kzMFI0UVptOW52TDBMQTAxNjMiLCJidXNpbmVzc2VzIjpbXX0sIm5iZiI6MTY2MjYwODg4MywiZXhwIjoxNjYyNjEyNDgzfQ.PehfaVCiNWlYNDy9fjn7MJc9Rqb9ajlCr2S2YpzHIa4'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2MjY1Nzg5MiwianRpIjoiNjg1ZWU2ZTktYWEzMi00YjFlLWI5NWYtMjI2MjZmZGVkOWEwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX3VpZCI6IjEwMC0wMDAwMTgiLCJmaXJzdF9uYW1lIjoiVmloYSIsImxhc3RfbmFtZSI6IlNoYWgiLCJwaG9uZV9udW1iZXIiOiI0MDg3Njc4MTU3IiwiZW1haWwiOiJ2aWhhLnNoYWhAc2pzdS5lZHUiLCJyb2xlIjoiVEVOQU5ULE9XTkVSIiwiZ29vZ2xlX2F1dGhfdG9rZW4iOiJ5YTI5LmEwQVZBOXkxdGxDd2RzZEwtTVg1SnFaN3l1Xy1MY2phZXFLZm5aNlE0SGZvY0cwaHMzQ3d2RVhmaFowUUxQcGs2RzN5STN6U3o1bUNaMGJqMHhvaEcxNDBDZHgzY1BBZzlsQ08xQ2NVUXRqZ3pER1NvM3dqdE1pRDMwRUllVjF5LWVISU85TUdEcnlzaWVfVDZpaXBHSTE2ODRoOS1JYUNnWUtBVEFTQVFBU0ZRRTY1ZHI4enA2NHVpS3kzMFI0UVptOW52TDBMQTAxNjMiLCJidXNpbmVzc2VzIjpbXX0sIm5iZiI6MTY2MjY1Nzg5MiwiZXhwIjoxNjYyNjYxNDkyfQ.3hVON7s7-lTYDXsERvRko_xKKJ5GLffmHH85Wscp9iY' 
             }
         })
         .then(response => {
@@ -52,9 +57,7 @@ export default function TenantDashboard2(){
     console.log(tenantData)
     console.log(propertyData)
     //THIS ENTIRE SECTION MAKES IT SO THAT SOMEONE NAMED VIHA WHO IS A TENANT CAN ONLY ACCESS THE TENANTS INFORMATION
-    // const navigate = useNavigate();
-    // const { userData, refresh } = useContext(AppContext);
-    // const { access_token, user } = userData;
+    
     // const [profile, setProfile] = useState([]);
     // const [properties, setProperties] = useState([]);
     // const [isLoading, setIsLoading] = useState(true);
@@ -99,15 +102,44 @@ export default function TenantDashboard2(){
     //     }
     //     setProperties(response.result[0]);
     //   };
-    //   useEffect(() => {
-    //     if (access_token === null) {
-    //       navigate("/");
-    //     }
-    //     fetchProfile();
-    //     fetchUserProperties();
-    //   }, []);
+    // useEffect(() => {
+    // // if (access_token === null) {
+    // //   navigate("/");
+    // // }
+    // console.log("in use effect");
+    // fetchProfile();
+    // fetchUserProperties();
+    // }, []);
+
+    // useEffect(() => {
+    //     // if (access_token === null) {
+    //     //   navigate("/");
+    //     // }
+    //     console.log("in second use effect");
+    //     if (access_token === null || user.role.indexOf("TENANT") === -1) {
+    //         navigate("/");
+    //         return;
+    //       }
+    //       const response = axios.get("https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantProfileInfo?", 
+    //         {headers: {
+    //                     'Authorization': access_token
+    //                 }}
+    //       );
+    //       console.log("first");
+    //       console.log(response);
+      
+    //       if (response.msg === "Token has expired") {
+    //         console.log("here msg");
+    //         refresh();
+      
+    //         return;
+    //       }
+    //       //Extracts user profile
+    //       setProfile(response.result[0]);
+    //     }, []);
     // console.log("profile: " + profile)
     // console.log("properties: " + properties)
+    // console.log(access_token)
     //END OF POSSIBLY IMPORTANT STUFF
     return(
         <div>
@@ -134,10 +166,10 @@ export default function TenantDashboard2(){
                 <h2>Announcements</h2>
                 <h3>Tenant must evacuate within 3 months</h3>
             </div> */}
-            {propertyData.length !== 0 && <UpcomingPayments
-                data = {propertyData.result[0].rent_payments}
-            />}
+             {propertyData.length !== 0 && <UpcomingPayments
+                 data = {propertyData.result[0].tenantExpenses}
+             />}
 
-        </div>
+    </div>
     )
 }
