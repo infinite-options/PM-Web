@@ -1,0 +1,24 @@
+nav {
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 3rem;
+  /* padding: 1rem; */
+}
+nav a {
+  color: inherit;
+  text-decoration: none;
+}
+nav ul {
+  list-style: none;
+  margin-left: -2rem;
+  /* margin: 1rem; */
+}
+nav ul li {
+  padding: 7px;
+  padding-left: 1rem;
+}
+.headertype {
+  /* padding-right: 1rem; */
+  padding-top: 10rem;
+}

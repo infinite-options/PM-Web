@@ -1,9 +1,9 @@
 import React from "react"
 
-export default function TopBar(props){
+export default function TopHead(props){
     return(
         <div>
-            Hello {props.firstName}
+            {props.fullName}
         </div>
     )
 }

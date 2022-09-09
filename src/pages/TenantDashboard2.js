@@ -13,12 +13,13 @@ export default function TenantDashboard2(){
         }).catch(err =>{
           console.log(err)
         })
+        
     
     }
     React.useEffect(()=>{ //gets the data from api only once. 
         getDataFromApi();
     },[]) //empty brackets prevents stuff from refreshing
-    console.log(tenantData.result[0].owner[0].owner_first_name)
+    // console.log(tenantData.result[0].owner[0].owner_first_name)
     return(
         <div>
             {/* <TopBar firstName={tenantData.result[0].address}/> */}
