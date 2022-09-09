@@ -8,8 +8,11 @@ import TenantCard from "../components/tenantComponents/TenantCard"
 import { get } from "../utils/api";
 import "./tenantDash.css"
 import UpcomingPayments from "../components/tenantComponents/UpcomingPayments"
+import PaymentHistory from "../components/tenantComponents/PaymentHistory"
+import Maintenence from "../components/tenantComponents/Maintenence"
+import Appliances from "../components/tenantComponents/Appliances"
 import AppContext from "../AppContext";
-//tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantProfileInfo
+//tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantDashboard
 export default function TenantDashboard2(){
 
     const [propertyData, setPropertyData] = React.useState([])
@@ -71,6 +74,15 @@ export default function TenantDashboard2(){
             </div> */}
              {propertyData.length !== 0 && <UpcomingPayments
                  data = {propertyData.result[0].properties[0].tenantExpenses}
+             /> }
+             {propertyData.length !== 0 && <PaymentHistory
+                data = {null}
+             /> }
+             {propertyData.length !== 0 && <Maintenence
+                data = {null}
+             /> }
+             {propertyData.length !== 0 && <Appliances
+                data = {propertyData.result[0].properties[0].appliances}
              /> }
 
     </div>
