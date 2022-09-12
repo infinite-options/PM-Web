@@ -3,6 +3,8 @@ import React from "react"
 export default function UpcomingPayments(props){
     const history = props.data; //array of objects 
     
+    const noRows = "No data available"
+    
     // const rows = rents.map((row,index)=>{//row is an element in the array 
     //     return(
     //         <tr>
@@ -15,8 +17,15 @@ export default function UpcomingPayments(props){
     //         </tr>
     //     )
     // })
+    // const rows = history.map((row, index)=>{
+    //     return(
+    //         <tr>
+    //             <th>hello</th>
+    //         </tr>
+    //     )
+    // })
     return(
-        <div className= "upcoming-payments">
+        <div className= "payment-history">
             Payment History
             <table className="table-upcoming-payments">
             <thead>
@@ -29,9 +38,9 @@ export default function UpcomingPayments(props){
                     <th className="table-col">Amount</th>
                 </tr>
             </thead>
-            {/* <tbody>
-                {rows}
-            </tbody> */}
+            <tbody>
+                {history === '' && <tr className="table-row">{noRows}</tr>}
+            </tbody>
 
             </table>
         </div>

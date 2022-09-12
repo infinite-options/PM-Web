@@ -3,10 +3,30 @@ import React from "react";
 
 export default function Appliances(props){
     const apps = JSON.parse(props.data);
-    console.log(apps)
+    const arr = Object.entries(apps);
+
+    const rows = arr.map((row, index)=>{
+        return(
+            <tr>
+                <th className="table-col">{row[0]}</th>
+                <th className="table-col">{row[1].name}</th>
+                <th className="table-col">{row[1].purchased_from}</th>
+                <th className="table-col">{row[1].purchased_on}</th>
+                <th className="table-col">{"order number"}</th>
+                <th className="table-col">{row[1].installed}</th>
+                <th className="table-col">{row[1].serial_num}</th>
+                <th className="table-col">{row[1].model_num}</th>
+                <th className="table-col">{row[1].warranty_till}</th>
+
+                <th className="table-col">{"closed date"}</th>
+
+            </tr>
+        )
+    })
+
     
     return(
-        <div className= "upcoming-payments">
+        <div className= "appliances">
             Appliances:
             <table className="table-upcoming-payments">
                 <thead>
@@ -23,9 +43,9 @@ export default function Appliances(props){
                         <th className="table-col">Closed Date</th>
                     </tr>
                 </thead>
-            {/* <tbody>
+            <tbody>
                 {rows}
-            </tbody> */}
+            </tbody>
 
             </table>
         </div>

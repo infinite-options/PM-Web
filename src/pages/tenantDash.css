@@ -1,10 +1,21 @@
 
 *{
-    --background: #b2967d
+    --background: #b2967d;
+    --greenColor: #00A300;
+    --blueColor: #0000FF;
 }
 .header-name{
     margin: 1.5rem 0rem 1rem 0rem;
 
+}
+.grid-layout{
+    grid-template-areas: 
+        "header header header header"
+        "side card ann ann"
+        "side card upcoming upcoming"
+        "side card history history"
+        "side main main main"
+        "side app app app";
 }
 .top-bar{
     display: flex;
@@ -13,6 +24,7 @@
     position: fixed;
     top: 0;
     width: 100%;
+    grid-area: header;
 }
 
 .circle{
@@ -36,35 +48,51 @@
     display: flex; 
     flex-direction: column; 
     border-top: black solid;
+    grid-area: side;
 }
 .sidenav-elements{
     padding: 0.5rem 0rem 0.5rem 0.5rem;
     text-decoration: none;
     color: black;
 }
+
 .tenantCard{
-    margin-left: 18rem;
-    margin-top: 12rem;
+    
     border: black solid;
-    width: 25%;
+    width: 31%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
+    grid-area: card;
+    
+}
+#lease-ends{
+    color: var(--greenColor);
+    font-size: 1.3rem;
 }
 .tenantImg{
     width: 100%;
     height: auto;
 }
-.announcements{
-    margin-top: 3rem;
-    float: right;
+.add1{
+    font-size: 1.3rem;
+}
+.blue-text{
+    color: var(--blueColor);
+}
+
+.ann{
+    border: solid black;
+    height: 20vh;
+    width: 40vw;
 }
 .card-table{
     
     border: black solid 1px;
     padding: 5px;
+    margin-bottom: 10px;
 }
 .table-row{
     border: black solid 1px;
@@ -75,5 +103,29 @@
     padding: 5px;
 }
 .upcoming-payments{
-    margin-left: 20rem;
+    grid-area: upcoming;
+}
+.payment-history{
+    grid-area: history;
+
+}
+.maintenence{
+    margin-left: 18rem;
+    grid-area: main;
+    margin-top: 2rem;
+}
+.appliances{
+    margin-top: 2rem;
+
+    margin-left: 18rem;
+    grid-area: app;
+}
+.mid-right{
+    display: flex;
+    flex-direction: row;
+    margin-top: 10rem;
+    margin-left: 18rem;
+    /* overflow-x: hidden;
+    flex-wrap: wrap; */
+    gap: 3rem;
 }

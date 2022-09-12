@@ -2,7 +2,7 @@ import React from "react"
 
 export default function Maintenence(props){
     const main = props.data; //array of objects 
-    console.log(main);
+    const noRows = "No data available"
     // const rows = main.map((row,index)=>{//row is an element in the array 
     //     return(
     //         <tr>
@@ -16,7 +16,7 @@ export default function Maintenence(props){
     //     )
     // })
     return(
-        <div className= "upcoming-payments">
+        <div className= "maintenence">
             Maintenence
             <table className="table-upcoming-payments">
             <thead>
@@ -33,9 +33,9 @@ export default function Maintenence(props){
                     <th className="table-col">Closed Date</th>
                 </tr>
             </thead>
-            {/* <tbody>
-                {rows}
-            </tbody> */}
+            <tbody>
+                {main === '' && <tr className="table-row">{noRows}</tr>}
+            </tbody>
 
             </table>
         </div>

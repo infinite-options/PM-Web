@@ -48,38 +48,45 @@ export default function TenantDashboard2(){
     console.log(access_token)
     //END OF POSSIBLY IMPORTANT STUFF
     return(
-        <div>
+        <div >
             
             {propertyData.length !== 0 && <TopBar 
                 firstName={propertyData.result[0].tenant_first_name}
                 lastName={propertyData.result[0].tenant_last_name}
             />}
              <SideBar/>
-            {propertyData.length !== 0 && <TenantCard 
-                imgSrc = {propertyData.result[0].properties[0].images}
-                leaseEnds = {propertyData.result[0].properties[0].active_date}
-                address1 = {propertyData.result[0].properties[0].address}
-                city = {propertyData.result[0].properties[0].city}
-                state = {propertyData.result[0].properties[0].state}
-                zip = {propertyData.result[0].properties[0].zip}
-                cost = {propertyData.result[0].properties[0].listed_rent}
-                beds = {propertyData.result[0].properties[0].num_beds}
-                bath = {propertyData.result[0].properties[0].num_baths}
-                size = {propertyData.result[0].properties[0].area}
+            
+            <div className="mid-right">
+              {propertyData.length !== 0 && <TenantCard 
+                  imgSrc = {propertyData.result[0].properties[0].images}
+                  leaseEnds = {propertyData.result[0].properties[0].active_date}
+                  address1 = {propertyData.result[0].properties[0].address}
+                  city = {propertyData.result[0].properties[0].city}
+                  state = {propertyData.result[0].properties[0].state}
+                  zip = {propertyData.result[0].properties[0].zip}
+                  cost = {propertyData.result[0].properties[0].listed_rent}
+                  beds = {propertyData.result[0].properties[0].num_beds}
+                  bath = {propertyData.result[0].properties[0].num_baths}
+                  size = {propertyData.result[0].properties[0].area}
 
-            />}
-            {/* <div className="announcements">
-                <h2>Announcements</h2>
-                <h3>Tenant must evacuate within 3 months</h3>
-            </div> */}
-             {propertyData.length !== 0 && <UpcomingPayments
-                 data = {propertyData.result[0].properties[0].tenantExpenses}
-             /> }
-             {propertyData.length !== 0 && <PaymentHistory
-                data = {null}
-             /> }
+              />}
+              <div className="flex-right">
+                <div className="announcements">
+                    <h2>Announcements</h2>
+                    <h3 className="ann">Tenant must evacuate within 3 months</h3>
+                </div>
+                {propertyData.length !== 0 && <UpcomingPayments
+                    data = {propertyData.result[0].properties[0].tenantExpenses}
+                /> }
+                {propertyData.length !== 0 && <PaymentHistory
+                    data = {''}
+                /> }
+              </div>
+              
+            </div>
+            
              {propertyData.length !== 0 && <Maintenence
-                data = {null}
+                data = {''}
              /> }
              {propertyData.length !== 0 && <Appliances
                 data = {propertyData.result[0].properties[0].appliances}
