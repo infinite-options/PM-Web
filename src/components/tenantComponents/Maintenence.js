@@ -20,7 +20,7 @@ export default function Maintenence(props){
             Maintenence
             <table className="table-upcoming-payments">
             <thead>
-                <tr className="table-row">
+                <tr className="table-row blue-text">
                     <th className="table-col">ID</th>
                     <th className="table-col">Address</th>
                     <th className="table-col">Issue</th>
@@ -34,7 +34,7 @@ export default function Maintenence(props){
                 </tr>
             </thead>
             <tbody>
-                {main === '' && <tr className="table-row">{noRows}</tr>}
+                {main === '' && <tr className="table-row no-data">{noRows}</tr>}
             </tbody>
 
             </table>

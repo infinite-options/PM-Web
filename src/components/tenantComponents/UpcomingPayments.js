@@ -8,9 +8,9 @@ export default function UpcomingPayments(props){
             <tr>
                 <th className="table-col">{index+1}</th>
                 <th className="table-col">{"" + row.purchase_notes+ " " + row.description}</th>
-                <th className="table-col">{row.purchase_type}</th>
-                <th className="table-col">{row.next_payment.substring(0,10)}</th>
-                <th className="table-col"><button>Pay</button></th>
+                <th className="table-col blue-text">{row.purchase_type}</th>
+                <th className="table-col green-text">{row.next_payment.substring(0,10)}</th>
+                <th className="table-col"><button className="yellow payB" >Pay</button></th>
                 <th className="table-col">{row.amount_due}</th>
             </tr>
         )
@@ -18,9 +18,9 @@ export default function UpcomingPayments(props){
     return(
         <div className= "upcoming-payments">
             Upcoming Payments
-            <table className="table-upcoming-payments">
+            <table className="table-upcoming-payments ">
             <thead>
-                <tr className="table-row">
+                <tr className="table-row blue-text">
                     <th className="table-col">ID</th>
                     <th className="table-col">Description</th>
                     <th className="table-col">Type</th>

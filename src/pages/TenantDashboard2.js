@@ -11,6 +11,7 @@ import UpcomingPayments from "../components/tenantComponents/UpcomingPayments"
 import PaymentHistory from "../components/tenantComponents/PaymentHistory"
 import Maintenence from "../components/tenantComponents/Maintenence"
 import Appliances from "../components/tenantComponents/Appliances"
+import PersonalInfo from "../components/tenantComponents/PersonalInfo"
 import AppContext from "../AppContext";
 //tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantDashboard
 export default function TenantDashboard2(){
@@ -57,23 +58,28 @@ export default function TenantDashboard2(){
              <SideBar/>
             
             <div className="mid-right">
+              <div className="flex-left">
               {propertyData.length !== 0 && <TenantCard 
-                  imgSrc = {propertyData.result[0].properties[0].images}
-                  leaseEnds = {propertyData.result[0].properties[0].active_date}
-                  address1 = {propertyData.result[0].properties[0].address}
-                  city = {propertyData.result[0].properties[0].city}
-                  state = {propertyData.result[0].properties[0].state}
-                  zip = {propertyData.result[0].properties[0].zip}
-                  cost = {propertyData.result[0].properties[0].listed_rent}
-                  beds = {propertyData.result[0].properties[0].num_beds}
-                  bath = {propertyData.result[0].properties[0].num_baths}
-                  size = {propertyData.result[0].properties[0].area}
+                    imgSrc = {propertyData.result[0].properties[0].images}
+                    leaseEnds = {propertyData.result[0].properties[0].active_date}
+                    address1 = {propertyData.result[0].properties[0].address}
+                    city = {propertyData.result[0].properties[0].city}
+                    state = {propertyData.result[0].properties[0].state}
+                    zip = {propertyData.result[0].properties[0].zip}
+                    cost = {propertyData.result[0].properties[0].listed_rent}
+                    beds = {propertyData.result[0].properties[0].num_beds}
+                    bath = {propertyData.result[0].properties[0].num_baths}
+                    size = {propertyData.result[0].properties[0].area}
 
-              />}
+                />}
+                <button className="b yellow">Submit Maintenence Ticket</button>
+                <button className="b">Contact Property Manager</button>
+              </div>
+
               <div className="flex-right">
                 <div className="announcements">
-                    <h2>Announcements</h2>
-                    <h3 className="ann">Tenant must evacuate within 3 months</h3>
+                    Announcements
+                    <h3 className="ann"></h3>
                 </div>
                 {propertyData.length !== 0 && <UpcomingPayments
                     data = {propertyData.result[0].properties[0].tenantExpenses}
@@ -88,10 +94,22 @@ export default function TenantDashboard2(){
              {propertyData.length !== 0 && <Maintenence
                 data = {''}
              /> }
-             {propertyData.length !== 0 && <Appliances
+             {propertyData.length !== 0 && 
+             <div>
+              <Appliances
                 data = {propertyData.result[0].properties[0].appliances}
-             /> }
+              /> 
+              <PersonalInfo 
+                data = {propertyData.result[0]}
+              /> 
+            </div>}
 
+            {/* <div className="profile">
+              {propertyData.length !== 0 && <PersonalInfo 
+              data = {propertyData.result[0].tenantInfo[0]}
+              />}
+            </div> */}
+            
     </div>
     )
 }

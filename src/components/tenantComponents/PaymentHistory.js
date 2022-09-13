@@ -29,7 +29,7 @@ export default function UpcomingPayments(props){
             Payment History
             <table className="table-upcoming-payments">
             <thead>
-                <tr className="table-row">
+                <tr className="table-row blue-text">
                     <th className="table-col">ID</th>
                     <th className="table-col">Description</th>
                     <th className="table-col">Type</th>
@@ -39,7 +39,7 @@ export default function UpcomingPayments(props){
                 </tr>
             </thead>
             <tbody>
-                {history === '' && <tr className="table-row">{noRows}</tr>}
+                {history === '' && <tr className="table-row no-data">{noRows}</tr>}
             </tbody>
 
             </table>

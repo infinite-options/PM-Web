@@ -4,7 +4,7 @@ import React from "react";
 export default function Appliances(props){
     const apps = JSON.parse(props.data);
     const arr = Object.entries(apps);
-
+    console.log(arr);
     const rows = arr.map((row, index)=>{
         return(
             <tr>
@@ -12,7 +12,7 @@ export default function Appliances(props){
                 <th className="table-col">{row[1].name}</th>
                 <th className="table-col">{row[1].purchased_from}</th>
                 <th className="table-col">{row[1].purchased_on}</th>
-                <th className="table-col">{"order number"}</th>
+                <th className="table-col">{row[1].purchased_order}</th>
                 <th className="table-col">{row[1].installed}</th>
                 <th className="table-col">{row[1].serial_num}</th>
                 <th className="table-col">{row[1].model_num}</th>
