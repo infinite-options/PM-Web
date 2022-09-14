@@ -67,7 +67,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    
+    background: var(--greenColor)
     
 }
 #lease-ends{
@@ -103,7 +103,7 @@
     border: solid black;
     height: 20vh;
     width: 55vw;
-
+    background: var(--yellowColor)
 }
 .card-table{
     
@@ -120,9 +120,10 @@
     padding: 5px;
 }
 .upcoming-payments{
+    background-color: var(--greenColor);
 }
 .payment-history{
-
+    background-color: var(--yellowBorder);
 }
 .maintenence{
     margin-left: 15rem;
@@ -142,16 +143,22 @@
     align-items: flex-start;
     /* justify-content: flex-end; */
 
-    
+    background-color: var(--blueColor);
     margin-right: 2rem;
 }
+/* move card */
 .flex-left{
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: center;
-    margin-right: 5vw;
+    margin-right: 1vw; 
+    /* margin right is the space between card and annoucemnt table */
     margin-left: 7vw;
+    background-color: red;
+}
+.flex-right{
+    background: purple;
 }
 
 .b{
@@ -201,4 +208,7 @@
 }
 .profile{
     margin-left: 15rem;
+}
+.table-upcoming-payments{
+    min-width: 55vw;
 }

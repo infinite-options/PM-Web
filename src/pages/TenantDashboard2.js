@@ -54,6 +54,7 @@ export default function TenantDashboard2(){
             {propertyData.length !== 0 && <TopBar 
                 firstName={propertyData.result[0].tenant_first_name}
                 lastName={propertyData.result[0].tenant_last_name}
+                
             />}
              <SideBar/>
             

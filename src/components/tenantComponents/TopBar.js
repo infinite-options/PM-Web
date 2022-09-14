@@ -1,6 +1,7 @@
 import React from "react"
 //change tenant to role
 export default function TopBar(props){
+    console.log(props.firstName);
     return(
         <div className="top-bar">
             <div className="circle"></div>
