@@ -56,7 +56,7 @@ export default function TenantDashboard2(){
                 lastName={propertyData.result[0].tenant_last_name}
                 
             />}
-             <SideBar/>
+             {/* <SideBar/>
             
             <div className="mid-right">
               <div className="flex-left">
@@ -90,20 +90,59 @@ export default function TenantDashboard2(){
                 /> }
               </div>
               
+            </div> */}
+            <div className="flex-1">
+              <div className="sidebar">
+                <SideBar/>
+              </div>
+              <div className="main-content">
+                  <br/>
+                  <div className = "box1">
+                    {propertyData.length !== 0 && <TenantCard 
+                      imgSrc = {propertyData.result[0].properties[0].images}
+                      leaseEnds = {propertyData.result[0].properties[0].active_date}
+                      address1 = {propertyData.result[0].properties[0].address}
+                      city = {propertyData.result[0].properties[0].city}
+                      state = {propertyData.result[0].properties[0].state}
+                      zip = {propertyData.result[0].properties[0].zip}
+                      cost = {propertyData.result[0].properties[0].listed_rent}
+                      beds = {propertyData.result[0].properties[0].num_beds}
+                      bath = {propertyData.result[0].properties[0].num_baths}
+                      size = {propertyData.result[0].properties[0].area}
+
+                  />}
+                    <button className="b yellow">Submit Maintenence Ticket</button>
+                    <button className="b">Contact Property Manager</button>
+                  </div>
+                  <div className ="box2">
+                    <div className="announcements">
+                      Announcements 
+                      <h3 className="ann"></h3>
+                    </div>
+                    {propertyData.length !== 0 && <UpcomingPayments
+                    data = {propertyData.result[0].properties[0].tenantExpenses}
+                    /> }
+                    {propertyData.length !== 0 && <PaymentHistory
+                    data = {''}
+                /> }
+                  </div>
+              </div>
             </div>
-            
-             {propertyData.length !== 0 && <Maintenence
-                data = {''}
-             /> }
-             {propertyData.length !== 0 && 
-             <div>
-              <Appliances
-                data = {propertyData.result[0].properties[0].appliances}
-              /> 
-              <PersonalInfo 
-                data = {propertyData.result[0]}
-              /> 
-            </div>}
+            <div className="flex-2">
+              {propertyData.length !== 0 && <Maintenence
+                  data = {''}
+              /> }
+              {propertyData.length !== 0 && 
+              <div>
+                <Appliances
+                  data = {propertyData.result[0].properties[0].appliances}
+                /> 
+                <PersonalInfo 
+                  data = {propertyData.result[0]}
+                /> 
+              </div>}
+            </div>
+             
 
             {/* <div className="profile">
               {propertyData.length !== 0 && <PersonalInfo 

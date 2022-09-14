@@ -9,7 +9,7 @@ export default function PersonalInfo(props){
             Profile
             <br></br>
             Personal Info
-            <table className="table-upcoming-payments">
+            <table className="table-upcoming-payments profTable">
 
             <tbody>
                 <tr>

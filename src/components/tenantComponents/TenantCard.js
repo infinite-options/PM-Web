@@ -4,6 +4,7 @@ export default function TenantCard(props){
     const imgS = JSON.parse(props.imgSrc)
     
     return(
+        // <div className="tenantCard">
         <div className="tenantCard">
             <div className="card-spacing">
                 <img className="tenantImg" src ={imgS[0]}></img>
