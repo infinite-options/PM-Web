@@ -1,0 +1,67 @@
+
+
+.headerNav {
+    position: absolute;
+    color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    background: #229ebc;
+    /* margin-left: 2rem; */
+    width: 100%;
+
+}
+
+.navButtons{
+    padding: 20px;
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    
+}
+.nav-links {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+}
+.nav-icon {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+
+@media screen and (min-width: 500px) and (max-width: 900px) {
+   
+    .navButtons {
+        padding: 10px;
+        color: #ffffff;
+        text-decoration: none;
+        text-transform: uppercase;
+      
+    }
+   
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        top: 13vh;
+        left: -150%;
+        transition: 0.2s all;
+    }
+
+    .nav-links.active {
+        background: #229ebc;
+        left: 0%;
+        z-index: 1000;
+    }
+    .nav-icon {
+        display: flex;
+    }
+
+ 
+}
+      
+
