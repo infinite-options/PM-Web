@@ -33,9 +33,10 @@ export default function Table(props){
   var totalUrgent = 0;
   const numOverDays = 0;
   var indexes = 0;
-  const days = (date_1, date_2) =>{
+  const numDays = (date_1, date_2) =>{
     let difference =date_2.getTime() - date_1.getTime();
     let totalDays = Math.ceil((difference/ (1000 * 3600 * 24)));
+
     return totalDays;
 }
   const rows = properties.map((row, index)=>{
@@ -46,12 +47,14 @@ export default function Table(props){
             request.priority === "High" ? totalUrgent = totalUrgent+1 : totalUrgent = totalUrgent+0;
             indexes = indexes + 1;
             
-            const created_date = new Date(request.request_created_date.split(" ")[0]);
+            // const created_date = new Date(request.request_created_date.split(" ")[0]);
+            const created_date = new Date(request.request_created_date);
             // console.log(created_date)
             const current = new Date();
-
+            console.log(created_date)
+            console.log(current)
            
-            const totalNumofDays = days(created_date, current)
+            const totalNumofDays = numDays(created_date, current)
             if (totalNumofDays > 30){
                 numOverDays = numOverDays + 1;
             }
@@ -71,7 +74,7 @@ export default function Table(props){
                     <th style={{color:"blue"}}>{totalNumofDays}</th>
                     <th style={{color:"blue"}}>{"N/A"}</th>
                     <th>{row.maintenanceRequests.length !==0 ? row.maintenanceRequests[0].priority : "None"}</th>
-                    <th>{row.maintenanceRequests.length !==0 ? row.maintenanceRequests[0].request_created_by : "None"}</th>
+                    <th>{row.maintenanceRequests.length !==0 && row.maintenanceRequests[0].assigned_business!=null? row.maintenanceRequests[0].assigned_business : "None"}</th>
                     <th>{row.maintenanceRequests.length !==0 ? "$" + row.maintenanceRequests[0].total_quotes : "None"}</th>
                     <th style={{color:"blue"}}>N/A</th>
                 </tr>
