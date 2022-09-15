@@ -47,7 +47,6 @@ export default function Table(props){
             request.priority === "High" ? totalUrgent = totalUrgent+1 : totalUrgent = totalUrgent+0;
             indexes = indexes + 1;
             
-            // const created_date = new Date(request.request_created_date.split(" ")[0]);
             const created_date = new Date(request.request_created_date);
             // console.log(created_date)
             const current = new Date();
