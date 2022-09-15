@@ -5,7 +5,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProfileInfo from "./pages/ProfileInfo";
-import OwnerHome from "./pages/OwnerHome";
+// import OwnerHome from "./pages/OwnerHome";
 import TenantHome from "./pages/TenantHome";
 import TenantAvailableProperties from "./pages/TenantAvailableProperties";
 import ApplyToProperty from "./pages/ApplyToProperty";
@@ -66,8 +66,8 @@ import ManagerRepairInfo from "./pages/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
-import TenantDashboard from "./pages/TenantDashboard2" // updated tenant dashboard
-// import TenantPayment from "./pages/tenantPayment"  
+import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
+import OwnerDashboard from "./pages/OwnerDashboard2"; //owner dashboard
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -108,7 +108,7 @@ function App() {
             <Route path="signup" element={<Signup />} />
             <Route path="signupexisting" element={<SignupExisting />} />
             <Route path="profileInfo" element={<ProfileInfo />} />
-            <Route path="owner" element={<OwnerHome />} />
+            <Route path="owner" element={<OwnerDashboard />} />
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
