@@ -20,6 +20,9 @@ export default function Navbar (){
             <li>
                 <a href="/Reports">Reports</a>
             </li>
+            <li>
+                <a href="/Manager">Profile</a>
+            </li>
         </ul>
 
     </nav>

@@ -22,3 +22,22 @@ nav ul li {
   /* padding-right: 1rem; */
   padding-top: 10rem;
 }
+.circle {
+  border: black solid 1px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 1rem;
+}
+.header-name {
+  margin: 1.5rem 0rem 1rem 0rem;
+}
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--background);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  grid-area: header;
+}
