@@ -66,7 +66,7 @@ import ManagerRepairInfo from "./pages/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
-import TenantDashboard from "./pages/TenantDashboard2" // updated tenant dashboard 
+import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
 import OwnerDashboard from "./pages/OwnerDashboard2"; //owner dashboard
 function App() {
   const [userData, setUserData] = React.useState({
@@ -130,6 +130,7 @@ function App() {
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
+            {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             <Route
               path="tenantAvailableProperties"
               element={<TenantAvailableProperties />}
