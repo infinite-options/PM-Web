@@ -1,4 +1,5 @@
 import React from "react"
+import {BrowserRouter as Router, Link} from 'react-router-dom';
 
 export default function UpcomingPayments(props){
     const rents = props.data; //array of objects 
@@ -10,7 +11,18 @@ export default function UpcomingPayments(props){
                 <th className="table-col">{"" + row.purchase_notes+ " " + row.description}</th>
                 <th className="table-col blue-text">{row.purchase_type}</th>
                 <th className="table-col green-text">{row.next_payment.substring(0,10)}</th>
-                <th className="table-col"><button className="yellow payB" >Pay</button></th>
+                <th className="table-col">
+                    <Link to=".../pages/tenantPayment">
+                        <button className="yellow payB" >
+                            Pay
+                        </button>
+                    </Link>
+                   
+                        {/* <button className="yellow payB" >
+                            <a href="tenantComponents/test">Pay</a>
+                        </button> */}
+                    
+                </th>
                 <th className="table-col">{row.amount_due}</th>
             </tr>
         )
@@ -18,7 +30,7 @@ export default function UpcomingPayments(props){
     return(
         <div className= "upcoming-payments">
             Upcoming Payments
-            <table className="table-upcoming-payments ">
+            <table className="table-upcoming-payments">
             <thead>
                 <tr className="table-row blue-text">
                     <th className="table-col">ID</th>

@@ -28,7 +28,7 @@ export default function Appliances(props){
     return(
         <div className= "appliances">
             Appliances:
-            <table className="table-upcoming-payments">
+            <table className="table-upcoming-payments appliances-table">
                 <thead>
                     <tr className="table-row">
                         <th className="table-col">Appliance</th>
