@@ -66,6 +66,8 @@ import ManagerRepairInfo from "./pages/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
+import TenantDashboard from "./pages/TenantDashboard2" // updated tenant dashboard
+// import TenantPayment from "./pages/tenantPayment"  
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -95,7 +97,7 @@ function App() {
     const response = await get("/refresh", userData.refresh_token);
     updateUserData(response.result);
   };
-  console.log(userData);
+  // console.log(userData);
   return (
     <AppContext.Provider value={{ userData, updateUserData, logout, refresh }}>
       <BrowserRouter>
@@ -127,7 +129,8 @@ function App() {
             <Route path="jobsCompleted" element={<JobsCompleted />} />
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
-            <Route path="tenant" element={<TenantHome />} />
+            <Route path="tenant" element={<TenantDashboard />} />
+            {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             <Route
               path="tenantAvailableProperties"
               element={<TenantAvailableProperties />}
