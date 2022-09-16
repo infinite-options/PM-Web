@@ -41,6 +41,21 @@
   src: local("Helvetica-Bold"),
     url(./fonts/Helvetica-Bold.ttf) format("truetype");
 }
+@font-face {
+  font-family: "Avenir-Light";
+  src: local("Avenir-Light"),
+    url(./fonts/Avenir-Light.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Arial";
+  src: local("Arial"),
+    url(./fonts/Arial.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Quicksand-Regular";
+  src: local("Quicksand-Regular"),
+    url(./fonts/Quicksand-Regular.otf) format("opentype");
+}
 .carousel-control-next-icon, .carousel-control-prev-icon /*, .carousel-indicators */ {
     filter: invert(100%);
 }
