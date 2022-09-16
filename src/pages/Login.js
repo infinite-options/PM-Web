@@ -8,6 +8,8 @@ import SelectRole from "../components/SelectRole";
 import { post, put } from "../utils/api";
 import { pillButton, boldSmall, red, small, hidden } from "../utils/styles";
 import SocialLogin from "./SocialLogin";
+import Homepage from "./Homepage";
+import Landing from "./LandingNavbar";
 
 function Login(props) {
   const context = useContext(AppContext);
@@ -174,8 +176,9 @@ function Login(props) {
         </div>
       ) : loginStage === "ROLE" && props.signupStage !== "NAME" ? (
         <div className="d-flex flex-column h-100 pb-5">
-          <Header title="Login" />
-          <SelectRole />
+          {/* <Header title="Login" /> */}
+          {/* <SelectRole /> */}
+          <Homepage />
         </div>
       ) : loginStage === "LOGIN" && props.signupStage === "NAME" ? (
         <div className="d-flex flex-column h-100">

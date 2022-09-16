@@ -1,12 +1,13 @@
-
-
 .headerNav {
     position: absolute;
     color: #ffffff;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     background: #229ebc;
     /* margin-left: 2rem; */
+
+    position: sticky;  
+    z-index: 500;
     width: 100%;
 
 }
@@ -16,6 +17,8 @@
     color: #ffffff;
     text-decoration: none;
     text-transform: uppercase;
+    font-family: Avenir-Light;
+    cursor: pointer;
     
 }
 .nav-links {
@@ -29,6 +32,22 @@
     font-size: 2rem;
     cursor: pointer;
 }
+.navButtons:active {
+    padding: 20px;
+    color: #000000;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: Avenir-Light;
+    cursor: pointer;
+}
+ .navButtons:hover {
+     padding: 20px;
+     color: #000000;
+     text-decoration: none;
+     text-transform: uppercase;
+     font-family: Avenir-Light;
+     cursor: pointer;
+ }
 
 
 @media screen and (min-width: 500px) and (max-width: 900px) {
@@ -38,7 +57,24 @@
         color: #ffffff;
         text-decoration: none;
         text-transform: uppercase;
-      
+        font-family: Avenir-Light;
+        cursor: pointer;
+    }
+    .navButtons:hover {
+        padding: 10px;
+        color: #000000;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-family: Avenir-Light;
+        cursor: pointer;
+    }
+    .navButtons:active {
+        padding: 10px;
+        color: #000000;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-family: Avenir-Light;
+        cursor: pointer;
     }
    
     .nav-links {
