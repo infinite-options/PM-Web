@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import "./navbar.css";
 import MenuIcon from "../icons/MenuIcon.svg";
 import AppContext from "../AppContext";
+import Logout from "../components/Logout";
 
 import "./navbar.css";
 function Landing() {
@@ -202,16 +203,56 @@ function Landing() {
               </Row>
             </Col>
           ) : (
-            <Col
-              xs={4}
-              className="d-flex justify-content-center align-items-center"
-              style={{
-                padding: "5px",
-                color: "white",
-                fontSize: "26px",
-              }}
-            >
-              {user.first_name} {user.last_name}
+            <Col xs={4}>
+              <Row
+                className="d-flex justify-content-center align-items-center"
+                style={{
+                  padding: "5px",
+                }}
+              >
+                <Button
+                  style={{
+                    backgroundColor: "white",
+                    borderColor: "white",
+                    borderRadius: "10px",
+                    color: "black",
+                    width: "10rem",
+                    font: "normal normal normal 18px Avenir-Light",
+                  }}
+                  onClick={() => navigate("/")}
+                >
+                  {user.first_name} {user.last_name}
+                </Button>
+              </Row>
+
+              <Row
+                className="d-flex justify-content-center align-items-center"
+                style={{
+                  padding: "5px",
+                }}
+              >
+                <Logout />
+              </Row>
+              <Row
+                className="d-flex justify-content-center align-items-center"
+                style={{
+                  padding: "5px",
+                }}
+              >
+                <Button
+                  style={{
+                    backgroundColor: "white",
+                    borderColor: "white",
+                    borderRadius: "10px",
+                    color: "black",
+                    width: "10rem",
+                    font: "normal normal normal 18px Avenir-Light",
+                  }}
+                  onClick={signupexisting}
+                >
+                  Modify Existing
+                </Button>
+              </Row>
             </Col>
           )}
         </Row>

@@ -162,7 +162,11 @@ function Homepage() {
                 <br />
               </div>
               <div style={{ textAlign: "right" }}>
-                <img src={Next} style={{ height: "55px", width: "55px" }} />
+                <img
+                  src={Next}
+                  style={{ height: "55px", width: "55px" }}
+                  onClick={() => navigate("/OwnersTab")}
+                />
               </div>
             </div>
           </Col>
@@ -242,7 +246,11 @@ function Homepage() {
                 sign electronically
               </div>
               <div style={{ textAlign: "right" }}>
-                <img src={Next} style={{ height: "55px", width: "55px" }} />
+                <img
+                  src={Next}
+                  style={{ height: "55px", width: "55px" }}
+                  onClick={() => navigate("/renterLanding")}
+                />
               </div>
             </div>
           </Col>
