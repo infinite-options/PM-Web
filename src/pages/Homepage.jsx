@@ -69,7 +69,7 @@ function Homepage() {
               style={{
                 padding: "5px 0px 5px 0px",
                 color: "#219dbc",
-                fontFamily: "quicksand, sans-serif",
+                fontFamily: "normal normal normal 46px Helvetica",
                 fontSize: "46px",
               }}
             >
@@ -82,6 +82,8 @@ function Homepage() {
               style={{
                 marginTop: "2rem",
                 textAlign: "center",
+                fontFamily: "normal normal normal 20px Helvetica",
+                fontSize: "20px",
               }}
             >
               We're not your average property management company. We're here to
@@ -101,6 +103,7 @@ function Homepage() {
                   // borderRadius: "10px",
                   color: "white",
                   width: "10rem",
+                  font: "normal normal normal 18px Avenir-Light",
                 }}
               >
                 Learn More
@@ -151,8 +154,10 @@ function Homepage() {
                 padding: "10px",
               }}
             >
-              <div>Owners </div>
-              <div>
+              <div style={{ font: "normal normal normal 20px Helvetica-Bold" }}>
+                Owners{" "}
+              </div>
+              <div style={{ font: "normal normal normal 16px Helvetica" }}>
                 Why use our software to manage your portfolio <br />
                 <br />
               </div>
@@ -189,8 +194,10 @@ function Homepage() {
                 padding: "10px",
               }}
             >
-              <div>Property Managers</div>
-              <div>
+              <div style={{ font: "normal normal normal 20px Helvetica-Bold" }}>
+                Property Managers
+              </div>
+              <div style={{ font: "normal normal normal 16px Helvetica" }}>
                 Why use our software to manage your clients <br />
                 <br />
               </div>
@@ -227,8 +234,10 @@ function Homepage() {
                 padding: "10px",
               }}
             >
-              <div>Renters </div>
-              <div>
+              <div style={{ font: "normal normal normal 20px Helvetica-Bold" }}>
+                Renters{" "}
+              </div>
+              <div style={{ font: "normal normal normal 16px Helvetica" }}>
                 How to pay rent, manage maintenance requests, review documents,
                 sign electronically
               </div>
@@ -273,8 +282,10 @@ function Homepage() {
                 padding: "10px",
               }}
             >
-              <div>Maintenance </div>
-              <div>
+              <div style={{ font: "normal normal normal 20px Helvetica-Bold" }}>
+                Maintenance{" "}
+              </div>
+              <div style={{ font: "normal normal normal 16px Helvetica" }}>
                 How to see Quote Requests, see Jobs Awarded, Schedule Jobs,
                 Complete Tickets, Invoice, Get Paid
               </div>
@@ -310,8 +321,10 @@ function Homepage() {
                 padding: "10px",
               }}
             >
-              <div>Investors </div>
-              <div>
+              <div style={{ font: "normal normal normal 20px Helvetica-Bold" }}>
+                Investors{" "}
+              </div>
+              <div style={{ font: "normal normal normal 16px Helvetica" }}>
                 How to see our portfolio, select a property, become a client{" "}
                 <br />
                 <br />
@@ -333,7 +346,7 @@ function Homepage() {
           <div
             style={{
               color: "#219dbc",
-              fontFamily: "quicksand, sans-serif",
+              font: "normal normal normal 46px Quicksand-Regular",
               fontSize: "46px",
               textAlign: "center",
             }}
@@ -348,11 +361,12 @@ function Homepage() {
             <img
               src={Landing3_1}
               style={{
-                height: "491px",
-                width: "350px",
+                height: "239px",
+                width: "319px",
                 objectFit: "cover",
                 objectPosition: "center",
                 position: "absolute",
+                // border: "1px solid red",
               }}
               alt="PM"
             />
@@ -360,12 +374,20 @@ function Homepage() {
               style={{
                 backgroundColor: "white",
                 position: "absolute",
-                width: "350px",
-                top: "369px",
-                height: "160px",
+                width: "319px",
+                top: "239px",
+                height: "100px",
+                border: "1px solid grey",
               }}
             >
-              <div>10 Things to Look For in a Rental Property</div>
+              <div
+                style={{
+                  font: "normal normal normal 24px Quicksand-Regular",
+                  padding: "10px",
+                }}
+              >
+                10 Things to Look For in a Rental Property
+              </div>
             </div>
           </Col>
           <Col
@@ -376,8 +398,8 @@ function Homepage() {
             <img
               src={Landing3_2}
               style={{
-                height: "491px",
-                width: "350px",
+                height: "239px",
+                width: "319px",
                 objectFit: "cover",
                 objectPosition: "center",
                 position: "absolute",
@@ -388,12 +410,20 @@ function Homepage() {
               style={{
                 backgroundColor: "white",
                 position: "absolute",
-                width: "350px",
-                top: "369px",
-                height: "160px",
+                width: "319px",
+                top: "239px",
+                height: "100px",
+                border: "1px solid grey",
               }}
             >
-              <div>Forecasting: A Look Into the 2023 Real Estate Market</div>
+              <div
+                style={{
+                  font: "normal normal normal 24px Quicksand-Regular",
+                  padding: "10px",
+                }}
+              >
+                Forecasting: A Look Into the 2023 Real Estate Market
+              </div>
             </div>
           </Col>
           <Col
@@ -404,8 +434,8 @@ function Homepage() {
             <img
               src={Landing3_3}
               style={{
-                height: "491px",
-                width: "350px",
+                height: "239px",
+                width: "319px",
                 objectFit: "cover",
                 objectPosition: "center",
                 position: "absolute",
@@ -416,12 +446,20 @@ function Homepage() {
               style={{
                 backgroundColor: "white",
                 position: "absolute",
-                width: "350px",
-                top: "369px",
-                height: "160px",
+                width: "319px",
+                top: "239px",
+                height: "100px",
+                border: "1px solid grey",
               }}
             >
-              <div>Buying Your First Investment Property 101 </div>
+              <div
+                style={{
+                  font: "normal normal normal 24px Quicksand-Regular",
+                  padding: "10px",
+                }}
+              >
+                Buying Your First Investment Property 101{" "}
+              </div>
             </div>
           </Col>
         </Row>

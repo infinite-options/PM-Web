@@ -153,6 +153,7 @@ function Landing() {
                     borderRadius: "10px",
                     color: "black",
                     width: "10rem",
+                    font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={login}
                 >
@@ -172,6 +173,7 @@ function Landing() {
                     borderRadius: "10px",
                     color: "white",
                     width: "10rem",
+                    font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={signup}
                 >
@@ -191,6 +193,7 @@ function Landing() {
                     borderRadius: "10px",
                     color: "black",
                     width: "10rem",
+                    font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={signupexisting}
                 >
