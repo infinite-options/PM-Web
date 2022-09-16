@@ -1,12 +1,13 @@
-
-
 .headerNav {
     position: absolute;
     color: #ffffff;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     background: #229ebc;
     /* margin-left: 2rem; */
+
+    position: sticky;  
+    z-index: 500;
     width: 100%;
 
 }

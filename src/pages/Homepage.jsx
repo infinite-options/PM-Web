@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Landing_logo from "../icons/Landing_logo.png";
 import Landing1_1 from "../icons/Landing1_1.svg";
 import Landing1_2 from "../icons/Landing1_2.png";
 
@@ -12,16 +11,12 @@ import Landing2_4 from "../icons/Landing2_4.jpg";
 import Landing2_5 from "../icons/Landing2_5.jpg";
 
 import Next from "../icons/Next.svg";
-
 import Landing3_1 from "../icons/Landing3_1.png";
 import Landing3_2 from "../icons/Landing3_2.png";
 import Landing3_3 from "../icons/Landing3_3.png";
 
-import "./navbar.css";
-import LandingNavbar from "./LandingNavbar";
-
 import AppContext from "../AppContext";
-function Landing() {
+function Homepage() {
   const navigate = useNavigate();
   const { userData } = React.useContext(AppContext);
   React.useEffect(() => {
@@ -40,88 +35,12 @@ function Landing() {
     navigate("/signupexisting");
   };
   return (
-    <div className="d-flex flex-column ">
-      <Container fluid className="w-100 ">
-        <Row
-          className="d-flex"
-          style={{ backgroundColor: "#229ebc", padding: "2rem" }}
-        >
-          <Col xs={4}></Col>
-          <Col className="d-flex justify-content-center align-items-center">
-            <img
-              src={Landing_logo}
-              style={{ height: "100%", width: "70%", objectFit: "contain" }}
-              alt="Manifest logo"
-            />
-          </Col>
-          <Col xs={4}>
-            <Row
-              className="d-flex justify-content-center align-items-center"
-              style={{
-                padding: "5px",
-              }}
-            >
-              <Button
-                style={{
-                  backgroundColor: "white",
-                  borderColor: "white",
-                  borderRadius: "10px",
-                  color: "black",
-                  width: "10rem",
-                }}
-                onClick={login}
-              >
-                {" "}
-                Login{" "}
-              </Button>
-            </Row>
-            <Row
-              className="d-flex justify-content-center align-items-center"
-              style={{
-                padding: "5px",
-              }}
-            >
-              <Button
-                style={{
-                  backgroundColor: "#fb8500",
-                  borderColor: "#fb8500",
-                  borderRadius: "10px",
-                  color: "white",
-                  width: "10rem",
-                }}
-                onClick={signup}
-              >
-                {" "}
-                Signup{" "}
-              </Button>
-            </Row>
-            <Row
-              className="d-flex justify-content-center align-items-center"
-              style={{
-                padding: "5px",
-              }}
-            >
-              <Button
-                style={{
-                  backgroundColor: "white",
-                  borderColor: "white",
-                  borderRadius: "10px",
-                  color: "black",
-                  width: "10rem",
-                }}
-                onClick={signupexisting}
-              >
-                {" "}
-                Modify Existing{" "}
-              </Button>
-            </Row>
-          </Col>
-        </Row>
-        <LandingNavbar />
+    <div className="d-flex">
+      <Container fluid className="w-100">
         <Row
           className="d-flex justify-content-center aling-items-center"
           style={{
-            marginTop: "2rem",
+            // marginTop: "20rem",
             padding: "2rem",
             backgroundColor: "#ffffff",
             height: "400px",
@@ -511,4 +430,4 @@ function Landing() {
   );
 }
 
-export default Landing;
+export default Homepage;
