@@ -255,7 +255,6 @@ function Landing() {
               </Row>
             </Col>
           )}
-
         </Row>
         <Row>
           <nav class="headerNav">

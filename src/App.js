@@ -71,6 +71,7 @@ import OwnerDashboard from "./pages/OwnerDashboard2"; //updated owner dashboard
 import Homepage from "./pages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
 import RenterLanding from "./pages/renterLanding";
+import OwnersTab from "./pages/OwnersTab";
 
 function App() {
   const [userData, setUserData] = React.useState({
@@ -142,6 +143,10 @@ function App() {
               path="tenantAvailableProperties"
               element={<TenantAvailableProperties />}
             />
+            <Route
+              path="OwnersTab"
+              element={<OwnersTab/>}
+             />
             <Route
               path="uploadTenantDocuments"
               element={<TenantDocumentUpload />}
