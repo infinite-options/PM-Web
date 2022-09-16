@@ -1,0 +1,59 @@
+*{
+    --background:   rgb(250,250,250);
+    --buttonColor1: #628191;
+    --buttonColor2: #FB8500;
+    --bg3: rgb(255,183,3);
+    
+}
+.main-renter-page{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    background-color: var(--background);
+}
+.main-img{
+    margin-top: 9rem;
+    width: 50%;
+    height: auto;
+}
+.options{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.o{
+    padding: 3rem;
+    font-size: 2.5rem;
+    background-color: var(--buttonColor1);
+    margin: 5px;
+}
+.search{
+    padding: 3rem;
+    background-color: var(--buttonColor2);
+}
+.p-container{
+    display: flex;
+    flex-direction: row;
+
+}
+.prop-card{
+    /* background-color: var(--buttonColor1); */
+    color: var(--background);
+    width: 25rem;
+    height: 25rem;
+    display: flex;
+    flex-direction: row;
+    margin: 2rem;
+}
+.left-side{
+    padding-left: 1rem;
+}
+.p1{
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
+.p2{
+    font-size: 2rem;
+}

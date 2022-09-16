@@ -17,19 +17,19 @@ export default function TenantCard(props){
             <table className="card-table">
                 <thead>
                     <tr className="table-row blue-text">
-                       <th className="table-col">Bed</th>
-                       <th className="table-col">Bath</th>
-                       <th className="table-col">Area</th>
-                       <th className="table-col">Floors</th>
+                       <th className="table-col small">Bed</th>
+                       <th className="table-col small">Bath</th>
+                       <th className="table-col small">Area</th>
+                       <th className="table-col small">Floors</th>
                     </tr>
                    
                 </thead>
                 <tbody>
                     <tr className="table-row blue-text">
-                        <td className="table-col">{props.beds}</td>
-                        <td className="table-col">{props.bath}</td>
-                        <td className="table-col">{props.size}</td>
-                        <td className="table-col">1</td>
+                        <td className="table-col small">{props.beds}</td>
+                        <td className="table-col small">{props.bath}</td>
+                        <td className="table-col small">{props.size}</td>
+                        <td className="table-col small">1</td>
                     </tr>
                 </tbody>
             </table>
