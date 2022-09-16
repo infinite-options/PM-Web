@@ -61,7 +61,7 @@ export default function HomepageNavbar() {
           <Link to="/inventory" class="navButtons" onClick={closeMenuProjects}>
             Property Managers
           </Link>
-          <Link to="/editpart" class="navButtons" onClick={closeMenuProjects}>
+          <Link to="/renterLanding" class="navButtons" onClick={closeMenuProjects}>
             Renters
           </Link>
           <Link to="/addparts" class="navButtons" onClick={closeMenuProjects}>

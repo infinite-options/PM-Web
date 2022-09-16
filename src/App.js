@@ -68,6 +68,7 @@ import ManagerPaymentPage from "./components/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
 import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
 import OwnerDashboard from "./pages/OwnerDashboard2"; //owner dashboard
+import RenterLanding from "./pages/renterLanding";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -196,6 +197,7 @@ function App() {
               path="/managerPaymentPage/:purchase_uid"
               element={<ManagerPaymentPage />}
             />
+            <Route path="renterLanding" element={<RenterLanding />} />
             <Route path="rentPayment" element={<RentPayment />} />
             <Route path="PaymentPage" element={<PaymentPage />} />
             <Route path="paymentHistory" element={<PaymentHistory />} />

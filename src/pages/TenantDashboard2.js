@@ -50,11 +50,21 @@ export default function TenantDashboard2() {
   return (
     <div>
       {propertyData.length !== 0 && (
-        <TopBar
-          firstName={propertyData.result[0].tenant_first_name}
-          lastName={propertyData.result[0].tenant_last_name}
-        />
+        // <TopBar
+        //   firstName={propertyData.result[0].tenant_first_name}
+        //   lastName={propertyData.result[0].tenant_last_name}
+        // />
+        // <div className="topBar">
+        //   <div className="circle"></div>
+        //   <div>
+        //     <h1>{propertyData.result[0].tenant_first_name}</h1>
+        //     <h2>Tenant</h2>
+        //   </div>
+        // </div>
+        <div><h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
+                <h8 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h8></div>
       )}
+    
 
       <div className="flex-1">
         <div className="sidebar">
@@ -81,10 +91,11 @@ export default function TenantDashboard2() {
             <button className="b">Contact Property Manager</button>
           </div>
           <div className="box2">
-            <div className="upcoming-payments-table">
+            <div className="announcements">
               Announcements
               <h3 className="ann"></h3>
             </div>
+            
             {propertyData.length !== 0 && (
               <UpcomingPayments
                 data={propertyData.result[0].properties[0].tenantExpenses}

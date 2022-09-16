@@ -1,0 +1,34 @@
+*{
+    --background:   rgb(250,250,250);
+    --buttonColor1: #628191;
+    --buttonColor2: #FB8500;
+    
+}
+.main-renter-page{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    background-color: var(--background);
+}
+.main-img{
+    margin-top: 9rem;
+    width: 50%;
+    height: auto;
+}
+.options{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.o{
+    padding: 3rem;
+    font-size: 2.5rem;
+    background-color: var(--buttonColor1);
+    margin: 5px;
+}
+.search{
+    padding: 3rem;
+    background-color: var(--buttonColor2)
+}
