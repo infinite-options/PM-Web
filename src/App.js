@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppContext from "./AppContext";
-import Landing from "./pages/Landing";
+import Landing from "./pages/LandingNavbar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProfileInfo from "./pages/ProfileInfo";
-// import OwnerHome from "./pages/OwnerHome";
+import OwnerHome from "./pages/OwnerHome";
 import TenantHome from "./pages/TenantHome";
 import TenantAvailableProperties from "./pages/TenantAvailableProperties";
 import ApplyToProperty from "./pages/ApplyToProperty";
@@ -67,7 +67,9 @@ import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
 import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
-import OwnerDashboard from "./pages/OwnerDashboard2"; //owner dashboard
+import OwnerDashboard from "./pages/OwnerDashboard2"; //updated owner dashboard
+import Homepage from "./pages/Homepage";
+import LandingNavbar from "./pages/LandingNavbar";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -101,14 +103,16 @@ function App() {
   return (
     <AppContext.Provider value={{ userData, updateUserData, logout, refresh }}>
       <BrowserRouter>
+        <LandingNavbar />
         <Routes>
           <Route path="/">
-            <Route index element={<Landing />} />
+            <Route index element={<Homepage />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="signupexisting" element={<SignupExisting />} />
             <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerDashboard />} />
+            <Route path="owner_original" element={<OwnerHome />} />
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />
@@ -130,6 +134,7 @@ function App() {
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
+            <Route path="tenant_original" element={<TenantHome />} />
             {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             <Route
               path="tenantAvailableProperties"
