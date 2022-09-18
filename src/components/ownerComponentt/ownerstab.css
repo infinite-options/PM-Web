@@ -1,0 +1,102 @@
+.topcontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* background-color: red; */
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+}
+.bottomcontainer {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  /* background-color: blue; */
+}
+.bottomcontent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 2rem;
+  /* background-color: green; */
+  height: 100%;
+}
+.embeddedcontainer {
+  display: flex;
+  flex-direction: column;
+  /* background-color: orange; */
+  width: 30vw;
+  height: 20vh;
+}
+.bottomimages {
+  width: 100px;
+  /* min-width: 14vw; */
+}
+.propertydescription {
+  font-family: "Prompt", sans-serif;
+  font-size: 56px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+.firstpara {
+  font-family: "Prompt", sans-serif;
+  font-size: 18px;
+  color: #323232;
+  max-width: 40vw;
+  min-width: 300px;
+}
+.bottomcaptions {
+  font-family: "Prompt", sans-serif;
+  max-width: 15vw;
+  font-size: 16px;
+  text-align: center;
+  padding-bottom: 30px;
+}
+.getstarted {
+  font-family: "Prompt", sans-serif;
+  font-size: 56px;
+  text-align: center;
+}
+.signup {
+  text-align: center;
+  font-family: "Prompt", sans-serif;
+  font-size: 20px;
+  font-weight: lighter;
+}
+.signupinput {
+  display: flex;
+  flex-direction: row;
+  background-color: pink;
+  /* align-items: center; */
+}
+.lastcontainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.btns {
+  align-self: center;
+  background-color: #fb8500;
+  border: none;
+  max-width: 40vw;
+  padding: 5px;
+  padding-left: 60px;
+  padding-right: 60px;
+  border-color: black;
+}
+.btns :hover {
+  color: white;
+}
+.inputval {
+  border-color: red;
+  width: 70vw;
+}
+.buttondescription {
+  font-size: 15px;
+  color: white;
+}
