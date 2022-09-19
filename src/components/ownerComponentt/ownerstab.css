@@ -70,8 +70,11 @@
 }
 .signupinput {
   display: flex;
+  vertical-align: top;
   flex-direction: row;
-  background-color: pink;
+  justify-content: center;
+  padding: 20px;
+  /* background-color: pink; */
   /* align-items: center; */
 }
 .lastcontainer {
@@ -81,20 +84,22 @@
 }
 .btns {
   align-self: center;
+  /* vertical-align: top; */
   background-color: #fb8500;
-  border: none;
+  border: 5px black;
   max-width: 40vw;
-  padding: 5px;
+  padding: 3px;
   padding-left: 60px;
   padding-right: 60px;
   border-color: black;
 }
-.btns :hover {
-  color: white;
+.btns:hover {
+  background-color: gray;
+  color: black;
 }
 .inputval {
   border-color: red;
-  width: 70vw;
+  width: 50vw;
 }
 .buttondescription {
   font-size: 15px;

@@ -34,16 +34,19 @@ class FormComponent extends React.Component {
     }
     render(){
         return(
-            <div className='signupinput'>
+            <div>
+                <div className='signupinput'>
+                    <div className="d-flex justify-content-center flex-column">
+                        
+                        <input type="email" name="email" value={this.state.email} onChange={this.onChange} className="inputval" />
+                        <span className="text-danger">{this.state.error}</span>
+                    </div>
+                    <div className="d-inline-block justify-content-center align-items-center">
+                        <button type="submit" className="btns" onClick={()=>this.onSubmit()}><span className='buttondescription'>Sign Up</span></button>
+                    </div>
+                </div>
                 {/* <label>Enter your email here *</label> */}
-                <div className="d-flex justify-content-center">
-                    
-                    <input type="email" name="email" value={this.state.email} onChange={this.onChange} className="inputval" />
-                    <span className="text-danger">{this.state.error}</span>
-                </div>
-                <div className="d-flex justify-content-center">
-                    <button type="submit" className="btns" onClick={()=>this.onSubmit()}><span className='buttondescription'>Sign Up</span></button>
-                </div>
+                
                   
             </div>
         )  
