@@ -1,0 +1,50 @@
+.sidebar{
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+}
+.sidebarButtons {
+  padding: 20px;
+  color: #000000;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Avenir-Light;
+  cursor: pointer;
+
+}
+
+.sidebarLinks {
+  display: flex;
+  flex-direction: column;
+  /* position: absolute; */
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.nav-icon {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.sidebarButtons:active {
+  padding: 20px;
+  color: #c93667;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Avenir-Light;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.sidebarButtons:hover {
+  padding: 20px;
+  color: #c93667;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Avenir-Light;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+
