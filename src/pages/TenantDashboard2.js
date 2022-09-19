@@ -61,8 +61,10 @@ export default function TenantDashboard2() {
         //     <h2>Tenant</h2>
         //   </div>
         // </div>
-        <div><h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
-                <h8 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h8></div>
+        <div>
+          <h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
+          <h8 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h8>
+          </div>
       )}
     
 
