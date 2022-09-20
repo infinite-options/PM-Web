@@ -17,7 +17,8 @@ import AppContext from "../AppContext";
 import "./maintenance.css"
 import "react-widgets/styles.css";
 import DropdownList from "react-widgets/DropdownList";
-import { TableSortLabel } from "@material-ui/core";
+import { ImageList, TableSortLabel } from "@material-ui/core";
+import { upload } from "@testing-library/user-event/dist/upload";
 
 export default function MaintenancePage(){
     const [propertyData, setPropertyData] = React.useState([]);
@@ -34,6 +35,8 @@ export default function MaintenancePage(){
     const [checkedThree, setCheckedThree] = React.useState(false);
     const [checkedFour, setCheckedFour] = React.useState(false);
     const [textArea, setTextArea] = React.useState("");
+    const [uploadImages, setUploadImages] = React.useState([]);
+    const [imageURLs, setImageURLs] = React.useState([]);
     const fetchTenantDashboard = async () => {
       if (access_token === null || user.role.indexOf("TENANT") === -1) {
         navigate("/");
@@ -74,9 +77,23 @@ export default function MaintenancePage(){
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("print something please")
+        console.log(issueDescription)
+        console.log(issueType)
+        console.log(textArea)
+        console.log(uploadImages)
+        console.log(imageURLs);
+
     }
-    
-    
+    function onImageChange(e){
+        setUploadImages([...e.target.files]);
+    }
+    React.useEffect(()=>{
+        if(uploadImages.length < 1 ) return;
+        const newImageUrls = [];
+        uploadImages.forEach(img => newImageUrls.push(URL.createObjectURL(img)));
+        setImageURLs(newImageUrls);
+    },[uploadImages]
+    )
     return(
         <div className="maintenence-page">
             {propertyData.length !== 0 && (
@@ -187,8 +204,10 @@ export default function MaintenancePage(){
                                 className="input-fields last-text-area"
                             />
                     </label>
-                    
+
                 </form>
+                <input type = "file" multiple accept="image/*" onChange ={onImageChange} />
+                {imageURLs.map(imageSrc=><img src={imageSrc}/>)}
                 <input type="submit" onClick={handleSubmit}/>
             </div>
         </div>
