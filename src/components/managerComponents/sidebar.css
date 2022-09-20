@@ -27,7 +27,7 @@
   cursor: pointer;
 }
 
-.sidebarButtons:active {
+.sidebarButtonsActive {
   padding: 20px;
   color: #c93667;
   text-decoration: none;

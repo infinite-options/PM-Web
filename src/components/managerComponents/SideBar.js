@@ -1,11 +1,28 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./sidebar.css";
 
 function Sidebar() {
   const navigate = useNavigate();
+  let sidebarButtonsActive = {
+    padding: "20px",
+    color: "#c93667",
+    textDecoration: "none",
+    textTransform: "uppercase",
+    fontFamily: "Avenir-Light",
+    cursor: "pointer",
+    fontWeight: "700",
+  };
+  let sidebarButtons = {
+    padding: "20px",
+    color: "#000000",
+    textDecoration: "none",
+    textTransform: "uppercase",
+    fontFamily: "Avenir-Light",
+    cursor: "pointer",
+  };
 
   return (
     <div>
@@ -13,27 +30,71 @@ function Sidebar() {
         <nav class="sidebar">
           <div>
             <div className="sidebarLinks">
-              <Link to="/manager" class="sidebarButtons">
+              <NavLink
+                to="/manager"
+                className="sidebarButtons"
+                activeClassName="sidebarButtonsActive"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
                 Dashboard
-              </Link>
-              <Link to="/manager-properties" class="sidebarButtons">
+              </NavLink>
+              <NavLink
+                to="/manager-properties"
+                className="sidebarButtons"
+                activeClassName="sidebarButtonsActive"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
                 Properties
-              </Link>
-              <Link to="/OwnersTab" class="sidebarButtons">
+              </NavLink>
+              <NavLink
+                to="/OwnersTab"
+                className="sidebarButtons"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
                 Tenants
-              </Link>
-              <Link to="/manager-repairs" class="sidebarButtons">
+              </NavLink>
+              <NavLink
+                to="/manager-repairs"
+                className="sidebarButtons"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
                 Maintenance
-              </Link>
-              <Link to="/renterLanding" class="sidebarButtons">
+              </NavLink>
+              <NavLink
+                to="/renterLanding"
+                className="sidebarButtons"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
                 Accounting
-              </Link>
-              <Link to="/addparts" class="sidebarButtons">
+              </NavLink>
+              <NavLink
+                to="/addparts"
+                className="sidebarButtons"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
                 Reports
-              </Link>
-              <Link to="/manager-utilities" class="sidebarButtons">
+              </NavLink>
+              <NavLink
+                to="/manager-utilities"
+                className="sidebarButtons"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
                 Utilities
-              </Link>
+              </NavLink>
             </div>
           </div>
         </nav>

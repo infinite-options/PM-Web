@@ -124,7 +124,7 @@ function PropertyForm(props) {
   const [area, setArea] = useState("");
   const [rent, setRent] = useState("");
   const [activeDate, setActiveDate] = useState("");
-
+  const [description, setDescription] = useState("");
   const [deposit, setDeposit] = useState("");
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [depositForRent, setDepositForRent] = useState(false);
@@ -148,6 +148,7 @@ function PropertyForm(props) {
     setArea(property.area);
     setRent(property.listed_rent);
     setActiveDate(property.active_date);
+    setDescription(property.description);
     setDeposit(property.deposit);
     setPetsAllowed(property.pets_allowed);
     setDepositForRent(property.deposit_for_rent);
@@ -414,6 +415,7 @@ function PropertyForm(props) {
       area === "" ||
       rent === "" ||
       activeDate === "" ||
+      description === "" ||
       deposit === ""
     ) {
       setErrorMessage("Please fill out all fields");
@@ -423,6 +425,7 @@ function PropertyForm(props) {
       owner_id: user.user_uid,
       manager_id: "",
       active_date: activeDate,
+      description: description,
       address: address,
       unit: unit,
       city: city,
@@ -465,6 +468,7 @@ function PropertyForm(props) {
         owner_id: user.user_uid,
         manager_id: "",
         active_date: activeDate,
+        description: description,
         address: address,
         unit: unit,
         city: city,
@@ -641,6 +645,24 @@ function PropertyForm(props) {
             {address}
             {unit === "" ? "," : ` ${unit},`} {city}, {state}, {zip}
           </p>
+        </Row>
+      )}
+      {edit ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+            Description {description === "" ? required : ""}
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            placeholder="Describe the property"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </Form.Group>
+      ) : (
+        <Row className="mx-2">
+          <h6>Description</h6>
+          <p>{description}</p>
         </Row>
       )}
       {edit ? (
