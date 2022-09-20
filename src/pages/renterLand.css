@@ -35,7 +35,7 @@
 .p-container{
     display: flex;
     flex-direction: row;
-
+    flex-wrap: wrap;
 }
 .prop-card{
     /* background-color: var(--buttonColor1); */

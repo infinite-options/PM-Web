@@ -26,6 +26,39 @@ export default function RenterLanding() {
      
   },[])
   console.log(data);
+  //things to do:
+  //->change maintainence thing to remove assigned, schedule and closed date and add an image thing
+  //working on payment pages
+  //formatting
+  const featuredProperties = data.result;
+  // for(var i =0 ; i < data.result.length; i++){
+  //   if(data.result[i].featured == "True"){
+  //     featuredProperties.push(data.result[i]);
+  //   }
+  // }
+  console.log(featuredProperties);
+  const colors = ["#628191","#FB8500", "rgb(255,183,3)", "rgb(33,158,188)"];
+  //need to make it so that only featured proerties are mapped
+  const mapProperty = featuredProperties?.map((prop,index)=>{
+    if(prop.featured == "True"){
+      return(
+        <PropertyCard
+              color= {colors[index%4]}
+              add1={prop.address}
+              cost={prop.listed_rent}
+              bedrooms={prop.num_beds}
+              bathrooms={prop.num_baths}
+              property_type={prop.property_type}
+              city = {prop.city}
+              imgSrc = {prop.images}
+        />
+      )
+    }
+    else{
+
+    }
+    
+  })
   return (
     <div className="main-renter-page">
       {/* <LandingNavbar/> */}
@@ -41,50 +74,7 @@ export default function RenterLanding() {
       <h1>Featured Properties</h1>
       {/* <PropertyCard propImg={PropImg}/> */}
       {data.length !== 0 && <div className="p-container">
-        <div>
-          <PropertyCard
-            color="#628191"
-            add1={data.result[0].address}
-            cost={data.result[0].listed_rent}
-            bedrooms={data.result[0].num_beds}
-            bathrooms={data.result[0].num_baths}
-            property_type={data.result[0].property_type}
-            city = {data.result[0].city}
-            imgSrc = {data.result[0].images}
-          />
-          <PropertyCard
-            color="#FB8500"
-            add1={data.result[1].address}
-            cost={data.result[1].listed_rent}
-            bedrooms={data.result[1].num_beds}
-            bathrooms={data.result[1].num_baths}
-            property_type={data.result[1].property_type}
-            city = {data.result[1].city}
-            imgSrc = {data.result[1].images}
-          />
-        </div>
-        <div>
-          <PropertyCard
-            color="rgb(255,183,3)"
-            add1={data.result[2].address}
-            cost={data.result[2].listed_rent}
-            bedrooms={data.result[2].num_beds}
-            bathrooms={data.result[2].num_baths}
-            property_type={data.result[2].property_type}
-            city = {data.result[2].city}
-            imgSrc = {data.result[2].images}
-          />
-          <PropertyCard
-            color="rgb(33,158,188)"
-            add1={data.result[3].address}
-            cost={data.result[3].listed_rent}
-            bedrooms={data.result[3].num_beds}
-            bathrooms={data.result[3].num_baths}
-            property_type={data.result[3].property_type}
-            city = {data.result[3].city}
-            imgSrc = {data.result[3].images}
-          />
-        </div>
+        {mapProperty}
       </div>} 
     </div>
   );

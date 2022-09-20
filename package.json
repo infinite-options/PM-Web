@@ -23,6 +23,7 @@
     "react-google-login": "^5.2.2",
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.0",
+    "react-widgets": "^5.8.4",
     "web-vitals": "^2.1.3"
   },
   "scripts": {

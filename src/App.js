@@ -72,7 +72,7 @@ import Homepage from "./pages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
 import RenterLanding from "./pages/renterLanding";
 import OwnersTab from "./pages/OwnersTab";
-
+import MaintenencePage from "./pages/MaintenencePage"
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -142,6 +142,10 @@ function App() {
             <Route
               path="tenantAvailableProperties"
               element={<TenantAvailableProperties />}
+            />
+            <Route
+              path="maintenencePage"
+              element={<MaintenencePage />}
             />
             <Route
               path="OwnersTab"

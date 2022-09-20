@@ -44,8 +44,9 @@ export default function TenantDashboard2() {
     console.log("in use effect");
     fetchTenantDashboard();
   }, []);
-  console.log(propertyData);
-  console.log(access_token);
+  const goToMaintenence = () => {
+    navigate("/maintenencePage");
+  };
   //END OF POSSIBLY IMPORTANT STUFF
   return (
     <div>
@@ -89,7 +90,7 @@ export default function TenantDashboard2() {
                 size={propertyData.result[0].properties[0].area}
               />
             )}
-            <button className="b yellow">Submit Maintenence Ticket</button>
+            <button className="b yellow" onClick ={goToMaintenence}>Submit Maintenence Ticket</button>
             <button className="b">Contact Property Manager</button>
           </div>
           <div className="box2">
