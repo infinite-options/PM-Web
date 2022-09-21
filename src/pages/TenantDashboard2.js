@@ -47,6 +47,7 @@ export default function TenantDashboard2() {
   const goToMaintenence = () => {
     navigate("/maintenencePage");
   };
+
   //END OF POSSIBLY IMPORTANT STUFF
   return (
     <div>
@@ -109,7 +110,7 @@ export default function TenantDashboard2() {
         </div>
       </div>
       <div className="flex-2">
-        {propertyData.length !== 0 && <Maintenence data={""} />}
+        {propertyData.length !== 0 && <Maintenence data={''} />}
         {propertyData.length !== 0 && (
           <div>
             <Appliances

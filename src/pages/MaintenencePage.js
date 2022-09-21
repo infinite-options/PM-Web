@@ -1,12 +1,14 @@
 //I need to make this page the main page first
 import React, { useState, useContext, useEffect } from "react";
 // import * as React from 'react';
+import { useLocation } from "react-router-dom";
+import { useParams } from "react-router";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../components/tenantComponents/TopBar";
 import SideBar from "../components/tenantComponents/SideBar";
 import TenantCard from "../components/tenantComponents/TenantCard";
-import { get } from "../utils/api";
+import { get, post } from "../utils/api";
 import "./tenantDash.css";
 import UpcomingPayments from "../components/tenantComponents/UpcomingPayments";
 import PaymentHistory from "../components/tenantComponents/PaymentHistory";
@@ -19,7 +21,7 @@ import "react-widgets/styles.css";
 import DropdownList from "react-widgets/DropdownList";
 import { ImageList, TableSortLabel } from "@material-ui/core";
 import { upload } from "@testing-library/user-event/dist/upload";
-
+// import { get, post } from "../utils/api";
 export default function MaintenancePage(){
     const [propertyData, setPropertyData] = React.useState([]);
     const navigate = useNavigate();
@@ -30,13 +32,15 @@ export default function MaintenancePage(){
     //form states
     const [issueDescription, setIssueDescription] = React.useState("")
     const [issueType, setIssueType] = React.useState("Plumbing")
-    const [checkedOne, setCheckedOne] = React.useState(false);
-    const [checkedTwo, setCheckedTwo] = React.useState(false);
-    const [checkedThree, setCheckedThree] = React.useState(false);
-    const [checkedFour, setCheckedFour] = React.useState(false);
+
     const [textArea, setTextArea] = React.useState("");
     const [uploadImages, setUploadImages] = React.useState([]);
     const [imageURLs, setImageURLs] = React.useState([]);
+
+    //possible declarations for the submit portion
+    
+    const { property_uid } = useParams();
+    const [errorMessage, setErrorMessage] = useState("");
     const fetchTenantDashboard = async () => {
       if (access_token === null || user.role.indexOf("TENANT") === -1) {
         navigate("/");
@@ -60,29 +64,40 @@ export default function MaintenancePage(){
       fetchTenantDashboard();
     }, []);
     
-    const handleChangeOne = () => {
-        setCheckedOne(!checkedOne);
-      };
-    
-    const handleChangeTwo = () => {
-    setCheckedTwo(!checkedTwo);
-    };
-    const handleChangeThree = () => {
-        setCheckedThree(!checkedThree);
-    };
 
-    const handleChangeFour = () => {
-    setCheckedFour(!checkedFour);
-    };
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = async () => {
+        // event.preventDefault();
         console.log("print something please")
         console.log(issueDescription)
         console.log(issueType)
         console.log(textArea)
         console.log(uploadImages)
         console.log(imageURLs);
+        if (issueDescription === "") {
+            setErrorMessage("Please fill out required fields");
+            return;
+        }
+        const newRequest = {
+            // property_uid: propertyData.length !== 0 && propertyData[0].properties !==0? propertyData[0].properties[0].property_uid : "propertyData not found",
+            property_uid: property_uid,
+            description: issueDescription,
+            request_type: issueType,
+            additional_info: textArea
+          };
+          const files = uploadImages;
+          let i = 0;
+          for (const file of uploadImages) {
+            let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+            if (file.file !== null) {
+              newRequest[key] = file.file;
+            } else {
+              newRequest[key] = file.image;
+            }
+          }
 
+          console.log(files);
+          await post("/maintenanceRequests", newRequest, null, files);
+          navigate("/tenant");
     }
     function onImageChange(e){
         setUploadImages([...e.target.files]);
@@ -148,54 +163,9 @@ export default function MaintenancePage(){
                         />
                     
                     </label>
-
-                    <label>Example Multiselect
-                        <br/>    
-                        <label>                        
-                            <input
-                                type="checkbox"
-                                label="Value 1"
-                                value={checkedOne}
-                                onChange={handleChangeOne}
-                            />
-                               OPTION 1
-                        </label>
-                        <br/>
-                        <label >
-                            <input
-                                type="checkbox"
-                                label="Value 2"
-                                value={checkedTwo}
-                                onChange={handleChangeTwo}
-                            />
-                            OPTION 2
-                        </label>
-                        <br/>
-                        <label >
-                            <input
-                                type="checkbox"
-                                label="Value 3"
-                                value={checkedThree}
-                                onChange={handleChangeThree}
-                            />
-                            OPTION 3
-                        </label>
-                        <br/>
-                        <label>
-                            <input
-                                type="checkbox"
-                                label="Value 4"
-                                value={checkedFour}
-                                onChange={handleChangeFour}
-                            />
-                            OPTION 4
-                            <br/>
-                        </label>
-                    </label>
-
                 <br/>
 
-                    <label> Example textarea: 
+                    <label> Additional Information: 
                             <br/>
                             <input 
                                 type = "text"

@@ -1,9 +1,15 @@
 import React from "react"
 import {BrowserRouter as Router, Link} from 'react-router-dom';
+// import { get } from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function UpcomingPayments(props){
+    const navigate = useNavigate();
+
     const rents = props.data; //array of objects 
-    
+    const goToPayment = () => {
+        navigate("/tenantDuePayments");
+      };
     const rows = rents.map((row,index)=>{//row is an element in the array 
         return(
             <tr>
@@ -12,11 +18,10 @@ export default function UpcomingPayments(props){
                 <th className="table-col blue-text">{row.purchase_type}</th>
                 <th className="table-col green-text">{row.next_payment.substring(0,10)}</th>
                 <th className="table-col">
-                    <Link to=".../pages/tenantPayment">
-                        <button className="yellow payB" >
-                            Pay
-                        </button>
-                    </Link>
+                    <button className="yellow payB" onClick={goToPayment}>
+                        Pay
+                    </button>
+                    
                    
                         {/* <button className="yellow payB" >
                             <a href="tenantComponents/test">Pay</a>
