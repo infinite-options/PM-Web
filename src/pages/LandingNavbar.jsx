@@ -3,7 +3,6 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Landing_logo from "../icons/Landing_logo.png";
 import { Link } from "react-router-dom";
-import "./navbar.css";
 import MenuIcon from "../icons/MenuIcon.svg";
 import AppContext from "../AppContext";
 import Logout from "../components/Logout";
@@ -46,7 +45,7 @@ function Landing() {
     if (role === "OWNER") {
       navigate("/owner_original");
     } else if (role === "MANAGER") {
-      navigate("/manager");
+      navigate("/manager_original");
     } else if (role === "PM_EMPLOYEE") {
       navigate("/manager");
     } else if (role === "TENANT") {
@@ -303,7 +302,7 @@ function Landing() {
                   Owners
                 </Link>
                 <Link
-                  to="/inventory"
+                  to="/managerLanding"
                   class="navButtons"
                   onClick={closeMenuProjects}
                 >
