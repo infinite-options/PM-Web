@@ -151,7 +151,7 @@ function ManagerRepairsOverview(props) {
         <div className="sidebar">
           <SideBar />
         </div>
-        <div className="w-100">
+        <div className="main-content">
           <br />
           <div
             className="mx-2 my-2 p-3"
@@ -164,7 +164,7 @@ function ManagerRepairsOverview(props) {
             {repairIter.map(
               (row, i) =>
                 row.repairs_list.length > 0 && (
-                  <Container className="mb-5" key={i}>
+                  <Container className="pt-1 mb-4" key={i}>
                     <h4 className="mt-2 mb-3" style={{ fontWeight: "600" }}>
                       {row.title}
                     </h4>
@@ -186,14 +186,17 @@ function ManagerRepairsOverview(props) {
 
                         onClick={() => selectRepair(repair)}
                       >
-                        <Col xs={4}>
-                          <div style={tileImg}>
+                        <Col xs={2}>
+                          <div>
                             {JSON.parse(repair.images).length > 0 ? (
                               <img
                                 src={JSON.parse(repair.images)[0]}
                                 alt="Repair Image"
                                 className="h-100 w-100"
-                                style={{ objectFit: "cover" }}
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                }}
                               />
                             ) : (
                               <img
@@ -247,12 +250,21 @@ function ManagerRepairsOverview(props) {
                               >
                                 Requested{" "}
                                 {days(
-                                  new Date(
-                                    repair.request_created_date.split(" ")[0]
-                                  ),
+                                  new Date(repair.request_created_date),
                                   new Date()
                                 )}{" "}
                                 days ago
+                              </p>
+                            </div>
+                          </div>
+                          <div className="d-flex">
+                            <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                              <p
+                                style={{ ...blue, ...xSmall }}
+                                className="mb-0"
+                              >
+                                Request Created on{" "}
+                                {repair.request_created_date.split(" ")[0]}
                               </p>
                             </div>
                           </div>
