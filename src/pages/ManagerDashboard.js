@@ -13,6 +13,7 @@ export default function ManagerDashboard() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState([]);
+  const [search, setSearch] = useState("");
   const [searchCity, setSearchCity] = useState("");
   const [searchZip, setSearchZip] = useState("");
   const [searchRentStatus, setSearchRentStatus] = useState("");
@@ -115,7 +116,7 @@ export default function ManagerDashboard() {
           <br />
           <Row className="w-100 m-3">
             <Col> Search by</Col>
-            <Col>
+            {/* <Col>
               <input
                 type="text"
                 placeholder="City"
@@ -144,6 +145,16 @@ export default function ManagerDashboard() {
                 }}
               />
             </Col>
+            <Col></Col> */}
+            <Col>
+              <input
+                type="text"
+                placeholder="Search"
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                }}
+              />
+            </Col>
           </Row>
           <Row className="w-100 m-3">
             <table style={subHeading} class="table-hover">
@@ -162,34 +173,46 @@ export default function ManagerDashboard() {
 
               <tbody>
                 {properties
+                  // .filter((val) => {
+                  //   if (searchCity === "") {
+                  //     return val;
+                  //   } else if (
+                  //     val.city.toLowerCase().includes(searchCity.toLowerCase())
+                  //   ) {
+                  //     return val;
+                  //   }
+                  // })
+                  // .filter((val) => {
+                  //   if (searchZip === "") {
+                  //     return val;
+                  //   } else if (
+                  //     val.zip.toLowerCase().includes(searchZip.toLowerCase())
+                  //   ) {
+                  //     return val;
+                  //   }
+                  // })
+                  // .filter((val) => {
+                  //   if (searchRentStatus === "") {
+                  //     return val;
+                  //   } else if (
+                  //     val.rent_status
+                  //       .toLowerCase()
+                  //       .includes(searchRentStatus.toLowerCase())
+                  //   ) {
+                  //     return val;
+                  //   }
+                  // })
                   .filter((val) => {
-                    if (searchCity === "") {
-                      return val;
-                    } else if (
-                      val.city.toLowerCase().includes(searchCity.toLowerCase())
-                    ) {
-                      return val;
-                    }
-                  })
-                  .filter((val) => {
-                    if (searchZip === "") {
-                      return val;
-                    } else if (
-                      val.zip.toLowerCase().includes(searchZip.toLowerCase())
-                    ) {
-                      return val;
-                    }
-                  })
-                  .filter((val) => {
-                    if (searchRentStatus === "") {
-                      return val;
-                    } else if (
-                      val.rent_status
-                        .toLowerCase()
-                        .includes(searchRentStatus.toLowerCase())
-                    ) {
-                      return val;
-                    }
+                    const query = search.toLowerCase();
+
+                    return (
+                      val.address.toLowerCase().indexOf(query) >= 0 ||
+                      val.city.toLowerCase().indexOf(query) >= 0 ||
+                      val.zip.toLowerCase().indexOf(query) >= 0 ||
+                      val.rent_status.toLowerCase().indexOf(query) >= 0 ||
+                      val.oldestOpenMR.toLowerCase().indexOf(query) >= 0 ||
+                      val.late_date.toLowerCase().indexOf(query) >= 0
+                    );
                   })
                   .map((property, i) => (
                     <tr>
@@ -220,22 +243,21 @@ export default function ManagerDashboard() {
                       <td> {property.zip}</td>
                       <td>{property.rent_status}</td>
                       <td>
-                        {property.late_date != "" ? (
-                          <div>
-                            {days(new Date(property.late_date), new Date())}{" "}
-                            &nbsp; days
-                          </div>
+                        {/* {property.late_date != "" ? (
+                          <div>{property.late_date}</div>
                         ) : (
                           "Not applicable"
-                        )}
+                        )} */}
+                        {property.late_date}
                       </td>
                       <td>{property.maintenanceRequests.length}</td>
                       <td>
-                        {property.oldestOpenMR != "" ? (
+                        {/* {property.oldestOpenMR != "" ? (
                           <div>{property.oldestOpenMR}</div>
                         ) : (
                           "Not applicable"
-                        )}
+                        )} */}
+                        {property.oldestOpenMR}
                       </td>
                     </tr>
                   ))}
