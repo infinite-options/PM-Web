@@ -1,40 +1,25 @@
-//I need to make this page the main page first
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SideBar from "../components/managerComponents/SideBar";
 import { get } from "../utils/api";
 import "./tenantDash.css";
-import { Container, Form, Button, Row, Col, Table } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { subHeading } from "../utils/styles";
 import AppContext from "../AppContext";
-//tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantDashboard
-export default function TenantDashboard2() {
+export default function ManagerDashboard() {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [propertyData, setPropertyData] = React.useState([]);
-  const [properties, setProperties] = React.useState([]);
-
+  const [properties, setProperties] = useState([]);
+  const [searchCity, setSearchCity] = useState("");
+  const [searchZip, setSearchZip] = useState("");
+  const [searchRentStatus, setSearchRentStatus] = useState("");
   const fetchTenantDashboard = async () => {
     if (access_token === null) {
       navigate("/");
       return;
-    }
-
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
-      return;
-    } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
-      management_buid = management_businesses[0].business_uid;
-    } else {
-      management_buid = management_businesses[0].business_uid;
     }
     const response = await get("/managerDashboard", access_token);
     console.log("second");
@@ -47,8 +32,7 @@ export default function TenantDashboard2() {
 
       return;
     }
-    setPropertyData(response);
-    // const properties = response.result
+
     const properties = response.result.filter(
       (property) => property.management_status !== "REJECTED"
     );
@@ -105,8 +89,6 @@ export default function TenantDashboard2() {
     console.log("in use effect");
     fetchTenantDashboard();
   }, []);
-  console.log(propertyData);
-  console.log(access_token);
 
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
@@ -129,8 +111,40 @@ export default function TenantDashboard2() {
         <div className="sidebar">
           <SideBar />
         </div>
-        <div className="main-content">
+        <div>
           <br />
+          <Row className="w-100 m-3">
+            <Col> Search by</Col>
+            <Col>
+              <input
+                type="text"
+                placeholder="City"
+                onChange={(event) => {
+                  setSearchCity(event.target.value);
+                }}
+              />
+            </Col>
+            <Col></Col>
+            <Col>
+              <input
+                type="text"
+                placeholder="Zip"
+                onChange={(event) => {
+                  setSearchZip(event.target.value);
+                }}
+              />
+            </Col>
+            <Col></Col>
+            <Col>
+              <input
+                type="text"
+                placeholder="Rent Status"
+                onChange={(event) => {
+                  setSearchRentStatus(event.target.value);
+                }}
+              />
+            </Col>
+          </Row>
           <Row className="w-100 m-3">
             <table style={subHeading} class="table-hover">
               <thead>
@@ -147,47 +161,84 @@ export default function TenantDashboard2() {
               </thead>
 
               <tbody>
-                {properties.map((property, i) => (
-                  <tr>
-                    <td>
-                      {JSON.parse(property.images).length > 0 ? (
-                        <img
-                          src={JSON.parse(property.images)[0]}
-                          alt="Property"
-                          style={{
-                            borderRadius: "4px",
-                            objectFit: "cover",
-                            width: "100px",
-                            height: "100px",
-                          }}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </td>
-                    <td>
-                      {property.address}
-                      {property.unit !== "" ? " " + property.unit : ""}, <br />
-                    </td>
-                    <td>
-                      {property.city}, {property.state}
-                    </td>
-                    <td> {property.zip}</td>
-                    <td>{property.rent_status}</td>
-                    <td>
-                      {property.late_date != "" ? (
-                        <div>
-                          {days(new Date(property.late_date), new Date())}{" "}
-                          &nbsp; days
-                        </div>
-                      ) : (
-                        "Not applicable"
-                      )}
-                    </td>
-                    <td>{property.maintenanceRequests.length}</td>
-                    <td></td>
-                  </tr>
-                ))}
+                {properties
+                  .filter((val) => {
+                    if (searchCity === "") {
+                      return val;
+                    } else if (
+                      val.city.toLowerCase().includes(searchCity.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .filter((val) => {
+                    if (searchZip === "") {
+                      return val;
+                    } else if (
+                      val.zip.toLowerCase().includes(searchZip.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .filter((val) => {
+                    if (searchRentStatus === "") {
+                      return val;
+                    } else if (
+                      val.rent_status
+                        .toLowerCase()
+                        .includes(searchRentStatus.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .map((property, i) => (
+                    <tr>
+                      <td>
+                        {JSON.parse(property.images).length > 0 ? (
+                          <img
+                            src={JSON.parse(property.images)[0]}
+                            alt="Property"
+                            style={{
+                              borderRadius: "4px",
+                              objectFit: "cover",
+                              width: "100px",
+                              height: "100px",
+                            }}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </td>
+                      <td>
+                        {property.address}
+                        {property.unit !== "" ? " " + property.unit : ""},{" "}
+                        <br />
+                      </td>
+                      <td>
+                        {property.city}, {property.state}
+                      </td>
+                      <td> {property.zip}</td>
+                      <td>{property.rent_status}</td>
+                      <td>
+                        {property.late_date != "" ? (
+                          <div>
+                            {days(new Date(property.late_date), new Date())}{" "}
+                            &nbsp; days
+                          </div>
+                        ) : (
+                          "Not applicable"
+                        )}
+                      </td>
+                      <td>{property.maintenanceRequests.length}</td>
+                      <td>
+                        {property.oldestOpenMR != "" ? (
+                          <div>{property.oldestOpenMR}</div>
+                        ) : (
+                          "Not applicable"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </Row>

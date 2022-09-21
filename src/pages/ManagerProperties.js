@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import Phone from "../icons/Phone.svg";
@@ -6,48 +6,29 @@ import Message from "../icons/Message.svg";
 import {
   blue,
   bluePill,
-  gray,
   smallImg,
   hidden,
   greenPill,
   mediumBold,
   orangePill,
   redPill,
-  tileImg,
   xSmall,
 } from "../utils/styles";
-import Header from "../components/Header";
 import AppContext from "../AppContext";
 import { get } from "../utils/api";
 import SideBar from "../components/managerComponents/SideBar";
 function ManagerProperties(props) {
   const navigate = useNavigate();
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const [properties, setProperties] = React.useState([]);
-  const [propertyData, setPropertyData] = React.useState([]);
+  const [properties, setProperties] = useState([]);
   const fetchProperties = async () => {
     if (access_token === null) {
       navigate("/");
       return;
     }
 
-    // const response = await get(`/managerProperties`, access_token);
     // const response =  await get(`/propertyInfo?manager_id=${user.user_uid}`);
-
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
-      return;
-    } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
-      management_buid = management_businesses[0].business_uid;
-    } else {
-      management_buid = management_businesses[0].business_uid;
-    }
 
     const response = await get("/managerDashboard", access_token);
 
@@ -55,7 +36,6 @@ function ManagerProperties(props) {
       refresh();
       return;
     }
-    setPropertyData(response);
     // const properties = response.result
     const properties = response.result.filter(
       (property) => property.management_status !== "REJECTED"
@@ -110,12 +90,8 @@ function ManagerProperties(props) {
     setProperties(properties_unique);
   };
 
-  React.useEffect(fetchProperties, [access_token]);
+  useEffect(fetchProperties, [access_token]);
 
-  // const selectProperty = (property) => {
-  //     setSelectedProperty(property);
-  //     setStage('PROPERTY');
-  // }
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
