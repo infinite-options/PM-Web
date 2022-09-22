@@ -9,16 +9,13 @@ import {
   TableSortLabel,
   Box,
 } from "@material-ui/core";
+import { Row, Col } from "react-bootstrap";
+import AppContext from "../AppContext";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/managerComponents/SideBar";
 import { get } from "../utils/api";
 import "./tenantDash.css";
-import { Row, Col } from "react-bootstrap";
-import { subHeading } from "../utils/styles";
-import AppContext from "../AppContext";
-import PropTypes from "prop-types";
-
-import { visuallyHidden } from "@mui/utils";
-import { SortableHeader } from "./SortableHeader";
 
 export default function ManagerDashboard() {
   const navigate = useNavigate();
@@ -30,14 +27,8 @@ export default function ManagerDashboard() {
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
-  const [sorting, setSorting] = useState({ field: "name", ascending: false });
-
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const fetchTenantDashboard = async () => {
     if (access_token === null) {
@@ -64,7 +55,6 @@ export default function ManagerDashboard() {
     const pids = new Set();
     properties.forEach((property) => {
       if (pids.has(property.property_uid)) {
-        // properties_unique[properties_unique.length-1].tenants.push(property)
         const index = properties_unique.findIndex(
           (item) => item.property_uid === property.property_uid
         );
@@ -113,26 +103,6 @@ export default function ManagerDashboard() {
     fetchTenantDashboard();
   }, []);
 
-  const days = (date_1, date_2) => {
-    let difference = date_2.getTime() - date_1.getTime();
-    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-    return TotalDays;
-  };
-  function applySorting(key, ascending) {
-    setSorting({ key: key, ascending: ascending });
-  }
-  useEffect(() => {
-    const propertiesCopy = [...properties];
-
-    const sortedproperties = propertiesCopy.sort((a, b) => {
-      return a[sorting.key].localeCompare(b[sorting.key]);
-    });
-
-    setProperties(
-      sorting.ascending ? sortedproperties : sortedproperties.reverse()
-    );
-  }, [sorting]);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -155,8 +125,6 @@ export default function ManagerDashboard() {
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
 
-  // This method is created for cross-browser compatibility, if you don't
-  // need to support IE11, you can use Array.prototype.sort() directly
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -173,49 +141,41 @@ export default function ManagerDashboard() {
     {
       id: "images",
       numeric: false,
-      disablePadding: true,
       label: "Property Images",
     },
     {
       id: "address",
       numeric: false,
-      disablePadding: false,
       label: "Street Address",
     },
     {
       id: "city",
       numeric: false,
-      disablePadding: false,
       label: "City,State",
     },
     {
       id: "zip",
       numeric: true,
-      disablePadding: false,
       label: "Zip",
     },
     {
       id: "rent_status",
       numeric: false,
-      disablePadding: false,
       label: "Rent Status",
     },
     {
       id: "late_date",
       numeric: true,
-      disablePadding: false,
       label: "Days Late",
     },
     {
       id: "num_maintenanceRequests",
       numeric: true,
-      disablePadding: false,
       label: "Maintenance Requests Open",
     },
     {
       id: "oldestOpenMR",
       numeric: true,
-      disablePadding: false,
       label: "Longest duration",
     },
   ];
@@ -267,15 +227,6 @@ export default function ManagerDashboard() {
 
   return (
     <div>
-      {/* {propertyData.length !== 0 && (
-        <div>
-          <h3 style={{ paddingLeft: "7rem", paddingTop: "2rem" }}>
-            {propertyData.result[0].tenant_first_name}
-          </h3>
-          <h8 style={{ paddingLeft: "7rem", paddingTop: "2rem" }}>Manager</h8>
-        </div>
-      )} */}
-
       <div className="flex-1">
         <div className="sidebar">
           <SideBar />
@@ -295,111 +246,9 @@ export default function ManagerDashboard() {
               />
             </Col>
           </Row>
-          {/* <Row className="w-100 m-3">
-            <table style={subHeading} class="table-hover">
-              <thead>
-                <tr>
-                  <th>Property Images</th>
-                  <th
-                    onClick={() => applySorting("address", !sorting.ascending)}
-                  >
-                    Street Address
-                  </th>
-                  <th onClick={() => applySorting("city", !sorting.ascending)}>
-                    City,State
-                  </th>
-                  <th onClick={() => applySorting("zip", !sorting.ascending)}>
-                    Zip
-                  </th>
-                  <th
-                    onClick={() =>
-                      applySorting("rent_status", !sorting.ascending)
-                    }
-                  >
-                    Rent Status
-                  </th>
-                  <th
-                    onClick={() =>
-                      applySorting("late_date", !sorting.ascending)
-                    }
-                  >
-                    Days Late
-                  </th>
-                  <th
-                    onClick={() =>
-                      applySorting(
-                        "num_maintenanceRequests",
-                        !sorting.ascending
-                      )
-                    }
-                  >
-                    Maintenance Requests Open
-                  </th>
-                  <th
-                    onClick={() =>
-                      applySorting("oldestOpenMR", !sorting.ascending)
-                    }
-                  >
-                    Longest duration
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {properties
-
-                  .filter((val) => {
-                    const query = search.toLowerCase();
-
-                    return (
-                      val.address.toLowerCase().indexOf(query) >= 0 ||
-                      val.city.toLowerCase().indexOf(query) >= 0 ||
-                      val.zip.toLowerCase().indexOf(query) >= 0 ||
-                      val.rent_status.toLowerCase().indexOf(query) >= 0 ||
-                      val.oldestOpenMR.toLowerCase().indexOf(query) >= 0 ||
-                      val.late_date.toLowerCase().indexOf(query) >= 0
-                    );
-                  })
-                  .map((property, i) => (
-                    <tr>
-                      <td>
-                        {JSON.parse(property.images).length > 0 ? (
-                          <img
-                            src={JSON.parse(property.images)[0]}
-                            alt="Property"
-                            style={{
-                              borderRadius: "4px",
-                              objectFit: "cover",
-                              width: "100px",
-                              height: "100px",
-                            }}
-                          />
-                        ) : (
-                          ""
-                        )}
-                      </td>
-                      <td>
-                        {property.address}
-                        {property.unit !== "" ? " " + property.unit : ""}
-                        <br />
-                      </td>
-                      <td>
-                        {property.city}, {property.state}
-                      </td>
-                      <td> {property.zip}</td>
-                      <td>{property.rent_status}</td>
-                      <td>{property.late_date}</td>
-                      <td>{property.num_maintenanceRequests}</td>
-                      <td>{property.oldestOpenMR}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </Row> */}
           <Row className="m-3">
             <Table>
               <EnhancedTableHead
-                numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
@@ -407,6 +256,7 @@ export default function ManagerDashboard() {
               />{" "}
               <TableBody>
                 {stableSort(properties, getComparator(order, orderBy))
+                  // for filtering
                   .filter((val) => {
                     const query = search.toLowerCase();
 
@@ -420,7 +270,6 @@ export default function ManagerDashboard() {
                       String(val.late_date).toLowerCase().indexOf(query) >= 0
                     );
                   })
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((property, index) => {
                     return (
                       <TableRow
