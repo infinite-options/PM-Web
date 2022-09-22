@@ -28,9 +28,8 @@ export default function Maintenence(props){
                     <th className="table-col">Days Open</th>
                     <th className="table-col">Type</th>
                     <th className="table-col">Status</th>
-                    <th className="table-col">Assigned</th>
-                    <th className="table-col">Schedule</th>
-                    <th className="table-col">Closed Date</th>
+                    <th className="table-col">Upload Images</th>
+            
                 </tr>
             </thead>
             <tbody>

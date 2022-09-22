@@ -91,6 +91,7 @@ function PaymentPage(props) {
     setPaymentConfirm(true);
   };
 
+
   return (
     <div className="h-100 d-flex flex-column">
       <Header
@@ -124,7 +125,7 @@ function PaymentPage(props) {
             padding: "10px",
           }}
         >
-          {selectedProperty.property.address}
+          {selectedProperty.address}
         </div>
       </Row>
       {paymentConfirm ? (

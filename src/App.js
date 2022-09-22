@@ -55,7 +55,7 @@ import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
 import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./pages/ManagerUtilities";
-import TenantDuePayments from "./components/TenantDuePayments";
+import TenantDuePayments from "./components/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 import OwnerPaymentHistory from "./components/OwnerPaymentHistory";
 import ManagerOwnerList from "./components/ManagerOwnerList";
@@ -72,7 +72,9 @@ import Homepage from "./pages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
 import RenterLanding from "./pages/renterLanding";
 import OwnersTab from "./pages/OwnersTab";
+import MaintenencePage from "./pages/MaintenencePage"
 import ManagerLanding from "./pages/ManagerLanding";
+
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -143,7 +145,15 @@ function App() {
               path="tenantAvailableProperties"
               element={<TenantAvailableProperties />}
             />
-            <Route path="OwnersTab" element={<OwnersTab />} />
+            <Route
+              path="maintenencePage"
+              element={<MaintenencePage />}
+            />
+            <Route
+              path="OwnersTab"
+              element={<OwnersTab/>}
+             />
+
             <Route
               path="uploadTenantDocuments"
               element={<TenantDocumentUpload />}

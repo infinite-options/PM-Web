@@ -44,8 +44,10 @@ export default function TenantDashboard2() {
     console.log("in use effect");
     fetchTenantDashboard();
   }, []);
-  console.log(propertyData);
-  console.log(access_token);
+  const goToMaintenence = () => {
+    navigate("/maintenencePage");
+  };
+  // console.log(propertyData.result[0]);
   //END OF POSSIBLY IMPORTANT STUFF
   return (
     <div>
@@ -61,8 +63,10 @@ export default function TenantDashboard2() {
         //     <h2>Tenant</h2>
         //   </div>
         // </div>
-        <div><h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
-                <h8 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h8></div>
+        <div>
+          <h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
+          <h8 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h8>
+          </div>
       )}
     
 
@@ -87,7 +91,7 @@ export default function TenantDashboard2() {
                 size={propertyData.result[0].properties[0].area}
               />
             )}
-            <button className="b yellow">Submit Maintenence Ticket</button>
+            <button className="b yellow" onClick ={goToMaintenence}>Submit Maintenence Ticket</button>
             <button className="b">Contact Property Manager</button>
           </div>
           <div className="box2">
@@ -99,6 +103,7 @@ export default function TenantDashboard2() {
             {propertyData.length !== 0 && (
               <UpcomingPayments
                 data={propertyData.result[0].properties[0].tenantExpenses}
+                type = {true}
               />
             )}
             {propertyData.length !== 0 && <PaymentHistory data={""} />}
@@ -106,7 +111,7 @@ export default function TenantDashboard2() {
         </div>
       </div>
       <div className="flex-2">
-        {propertyData.length !== 0 && <Maintenence data={""} />}
+        {propertyData.length !== 0 && <Maintenence data={''} />}
         {propertyData.length !== 0 && (
           <div>
             <Appliances
