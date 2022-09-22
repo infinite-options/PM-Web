@@ -2,14 +2,37 @@ import React from "react"
 import {BrowserRouter as Router, Link} from 'react-router-dom';
 // import { get } from "../utils/api";
 import { useNavigate } from "react-router-dom";
-
+import PaymentComponent from "../TenantDuePayments2"
 export default function UpcomingPayments(props){
     const navigate = useNavigate();
-
-    const rents = props.data; //array of objects 
+    const [totalSum, setTotalSum] = React.useState(0);
+    const [purchaseUIDs, setPurchaseUIDs] = React.useState([]);//figure out which payment is being payed for
+    const rents = props.data; //array of objects
+    console.log(props.data) 
     const goToPayment = () => {
         navigate("/tenantDuePayments");
+        // <PaymentComponent data = {rents}/>
       };
+
+    function handleCheck(event, amt,pid){ //pid is the purchase uid
+        let tempPurchaseUID = purchaseUIDs;
+        if(event.target.checked){
+            setTotalSum(prev=>amt+prev)
+            // setPurchaseUIDs(prev=>.)
+            tempPurchaseUID.push(pid);
+        }
+        else{
+            setTotalSum(prev=>prev-amt)
+            for (let uid in purchaseUIDs) {
+                if (purchaseUIDs[uid] === pid) {
+                    purchaseUIDs.splice(uid, 1);
+                }
+            }
+        }
+        setPurchaseUIDs(tempPurchaseUID);
+
+    }
+    
     const rows = rents.map((row,index)=>{//row is an element in the array 
         return(
             <tr>
@@ -18,10 +41,15 @@ export default function UpcomingPayments(props){
                 <th className="table-col blue-text">{row.purchase_type}</th>
                 <th className="table-col green-text">{row.next_payment.substring(0,10)}</th>
                 <th className="table-col">
+                    {props.type?
                     <button className="yellow payB" onClick={goToPayment}>
                         Pay
-                    </button>
+                    </button>:
+                    <label>
+                        <input type = "checkbox" onClick={event=>handleCheck(event,row.amount_due, row.purchase_uid)}/>
+                    </label>
                     
+                    }
                    
                         {/* <button className="yellow payB" >
                             <a href="tenantComponents/test">Pay</a>
@@ -32,6 +60,8 @@ export default function UpcomingPayments(props){
             </tr>
         )
     })
+    //confused about: where to send info?
+    console.log(props)
     return(
         <div className= "upcoming-payments">
             Upcoming Payments
@@ -48,6 +78,24 @@ export default function UpcomingPayments(props){
             </thead>
             <tbody>
                 {rows}
+                {props.type == false && 
+                    <tr>
+                        <th className="table-col">Amount: {totalSum} </th>
+                        <button 
+                        onClick={()=> {
+                            navigate(`/paymentPage/${purchaseUIDs[0]}`, {
+                                state: {
+                                    amount: totalSum,
+                                    selectedProperty: props.selectedProperty,
+                                    purchaseUIDs: purchaseUIDs
+                                },
+                            });
+                        }}                        
+                        >
+                            Pay Now
+                        </button>
+                    </tr>
+                }
             </tbody>
 
             </table>

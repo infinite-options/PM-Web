@@ -47,7 +47,7 @@ export default function TenantDashboard2() {
   const goToMaintenence = () => {
     navigate("/maintenencePage");
   };
-
+  // console.log(propertyData.result[0]);
   //END OF POSSIBLY IMPORTANT STUFF
   return (
     <div>
@@ -103,6 +103,7 @@ export default function TenantDashboard2() {
             {propertyData.length !== 0 && (
               <UpcomingPayments
                 data={propertyData.result[0].properties[0].tenantExpenses}
+                type = {true}
               />
             )}
             {propertyData.length !== 0 && <PaymentHistory data={""} />}

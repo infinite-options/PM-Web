@@ -1,9 +1,9 @@
+/* css for maintenance and tenant payment page.  */
 .main-content2{
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-
 }
 .below{
     display: flex;
@@ -23,4 +23,20 @@
 form{
     display: flex;
     flex-direction: column;
+}
+/* #payment-options{
+    background-color: red;
+} */
+.pay1{
+    margin: 2rem;
+    text-decoration: none;
+    padding: 1rem;
+    border-radius: 10px;
+    background: white;
+}
+.pay1:hover{
+    transition-timing-function: ease-in;
+    transition-duration: 0.2s;
+    background: rgb(181, 180, 180);
+
 }

@@ -3,14 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { get } from "../utils/api";
 import AppContext from "../AppContext";
 import SideBar from "./tenantComponents/SideBar";
-export default function TenantDuePayments() {
+import UpcomingPayments from "./tenantComponents/UpcomingPayments";
+import "../pages/maintenance.css"
+export default function TenantDuePayments(props) {
 
     const [propertyData, setPropertyData] = React.useState([]);
     const [tenantExpenses, setTenantExpenses] = React.useState([]);
     const navigate = useNavigate();
     const { userData, refresh } = useContext(AppContext);
     const { access_token, user } = userData;
-  
+    // const {paypal, setPaypal} = React.useState(false)
+    // const {zelle, setZelle} = React.useState(false)
+
+    // const {ahc, setAhc} = React.useState(false)
+    // const {apple, setApple} = React.useState(false)
+    const [paymentOptions, setPaymentOptions] = React.useState([
+        {name:"paypal", isActive: false},
+        {name:"zelle", isActive: false},
+        {name:"ahc", isActive: false},
+        {name:"apple", isActive: false},
+    ])
     const [isLoading, setIsLoading] = useState(true);
     const fetchTenantDashboard = async () => {
         if (access_token === null || user.role.indexOf("TENANT") === -1) {
@@ -29,14 +41,30 @@ export default function TenantDuePayments() {
           return;
         }
         setPropertyData(response);
+        setTenantExpenses(response.result[0].properties[0].tenantExpenses);
+
       };
     useEffect(() => {
     console.log("in use effect");
     fetchTenantDashboard();
-    }, []);
-    
-    
-    
+    }, [paymentOptions]);
+    const handlePaymentOption = (index)=>{
+        console.log("payment choice called")
+        let temp = paymentOptions.slice();
+        for(var i = 0; i < temp.length; i ++){
+            if(i==index){
+                temp[index].isActive = !temp[index].isActive;
+            }
+            else{
+                temp[i].isActive = false;
+            }
+        }
+        
+        setPaymentOptions(temp)
+    }
+    console.log(paymentOptions)
+
+
     
     return(
         <div className="tenant-payment-page">
@@ -62,26 +90,46 @@ export default function TenantDuePayments() {
                 <div className="sidebar">
                     <SideBar />
                 </div>
-                <div className="main-content2">
+                <div className="main-content2" >
                     <h2>Payment Portal</h2>
-                    <div>
-                        <button>
+                    <div id = "payment-options2">
+                        <button className="pay1" 
+                            style={{backgroundColor: paymentOptions[0].isActive? "rgb(181, 180, 180)" : "white"}}
+                            onClick={()=>handlePaymentOption(0)}
+                        
+                        >
                             Paypal
                         </button>
-                        <button>
+                        <button className="pay1" 
+                            style={{backgroundColor: paymentOptions[1].isActive? "rgb(181, 180, 180)" : "white"}}
+
+                        onClick={()=>handlePaymentOption(1)}
+                        >
                             Zelle
                         </button>
-                        <button>
+                        <button className="pay1" 
+                        style={{backgroundColor: paymentOptions[2].isActive? "rgb(181, 180, 180)" : "white"}}
+                        onClick={()=>handlePaymentOption(2)}
+                        >
                             ACH Bank
                         </button>
-                        <button>
+                        <button className="pay1"
+                        style={{backgroundColor: paymentOptions[3].isActive? "rgb(181, 180, 180)" : "white"}}
+
+                        onClick={()=>handlePaymentOption(3)}
+                        >
                             Apple Pay
                         </button>
                     </div>
-                </div>
-                <div>
+                    {propertyData.length!==0 && <UpcomingPayments 
+                        data = {propertyData.result[0].properties[0].tenantExpenses}
+                        type = {false}
+                        selectedProperty = {propertyData.result[0].properties[0]}
+                    />}
+                    
 
                 </div>
+                
             </div>
         </div>
     )
