@@ -218,12 +218,18 @@ function ManagerRepairsList(props) {
                           <p style={{ ...blue, ...xSmall }} className="mb-0">
                             Requested{" "}
                             {days(
-                              new Date(
-                                repair.request_created_date.split(" ")[0]
-                              ),
+                              new Date(repair.request_created_date),
                               new Date()
                             )}{" "}
                             days ago
+                          </p>
+                        </div>
+                      </div>
+                      <div className="d-flex">
+                        <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                          <p style={{ ...blue, ...xSmall }} className="mb-0">
+                            Request Created on{" "}
+                            {repair.request_created_date.split(" ")[0]}
                           </p>
                         </div>
                       </div>

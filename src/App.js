@@ -41,7 +41,6 @@ import TenantDocumentUpload from "./pages/TenantDocumentUpload";
 import ReviewTenantProfile from "./pages/ReviewTenantprofile";
 import TenantPropertyView from "./pages/TenantPropertyView";
 import ReviewPropertyLease from "./pages/reviewPropertyLease";
-import LeaseApplicationStatus from "./pages/LeaseApplicationStatus";
 import OwnerContacts from "./pages/OwnerContacts";
 import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
@@ -68,11 +67,14 @@ import ManagerPaymentPage from "./components/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
 import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
 import OwnerDashboard from "./pages/OwnerDashboard2"; //updated owner dashboard
+import ManagerDashboard from "./pages/ManagerDashboard"; //updated owner dashboard
 import Homepage from "./pages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
 import RenterLanding from "./pages/renterLanding";
 import OwnersTab from "./pages/OwnersTab";
 import MaintenencePage from "./pages/MaintenencePage"
+import ManagerLanding from "./pages/ManagerLanding";
+
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -151,6 +153,7 @@ function App() {
               path="OwnersTab"
               element={<OwnersTab/>}
              />
+
             <Route
               path="uploadTenantDocuments"
               element={<TenantDocumentUpload />}
@@ -172,7 +175,10 @@ function App() {
             {/*  path="leaseApplicationStatus"*/}
             {/*  element={<LeaseApplicationStatus />}*/}
             {/*/>*/}
-            <Route path="manager" element={<ManagerHome />} />
+            <Route path="manager" element={<ManagerDashboard />} />
+            <Route path="managerLanding" element={<ManagerLanding />} />
+
+            <Route path="manager_original" element={<ManagerHome />} />
             <Route
               path="/:property_uid/repairRequest"
               element={<RepairRequest />}
