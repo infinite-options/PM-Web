@@ -32,7 +32,27 @@ export default function UpcomingPayments(props){
         setPurchaseUIDs(tempPurchaseUID);
 
     }
-    
+    function navigateToPaymentPage(){
+        if(props.paymentSelection[1].isActive == true){
+            console.log("zelle selected")
+            navigate('/zelle',{
+                state:{
+                    amount: totalSum,
+                    selectedProperty: props.selectedProperty,
+                    purchaseUIDs,purchaseUIDs
+                },
+            })
+        }
+        else{
+            navigate(`/paymentPage/${purchaseUIDs[0]}`, {
+                state: {
+                    amount: totalSum,
+                    selectedProperty: props.selectedProperty,
+                    purchaseUIDs: purchaseUIDs
+                },
+            });
+        }
+    }
     const rows = rents.map((row,index)=>{//row is an element in the array 
         return(
             <tr>
@@ -46,7 +66,11 @@ export default function UpcomingPayments(props){
                         Pay
                     </button>:
                     <label>
-                        <input type = "checkbox" onClick={event=>handleCheck(event,row.amount_due, row.purchase_uid)}/>
+                        <input 
+                            className="check" 
+                            type = "checkbox" 
+                            onClick={event=>handleCheck(event,row.amount_due, row.purchase_uid)}
+                        />
                     </label>
                     
                     }
@@ -78,27 +102,24 @@ export default function UpcomingPayments(props){
             </thead>
             <tbody>
                 {rows}
-                {props.type == false && 
-                    <tr>
-                        <th className="table-col">Amount: {totalSum} </th>
+                
+            </tbody>
+            
+
+            </table>
+            {props.type == false && 
+                    <div className="amount-pay">
+                        <h4 className="amount">Amount: {totalSum}</h4>
                         <button 
+                        className="pay-button2"
                         onClick={()=> {
-                            navigate(`/paymentPage/${purchaseUIDs[0]}`, {
-                                state: {
-                                    amount: totalSum,
-                                    selectedProperty: props.selectedProperty,
-                                    purchaseUIDs: purchaseUIDs
-                                },
-                            });
+                            navigateToPaymentPage()
                         }}                        
                         >
                             Pay Now
                         </button>
-                    </tr>
+                    </div>
                 }
-            </tbody>
-
-            </table>
         </div>
     )
 }

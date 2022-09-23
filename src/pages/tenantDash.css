@@ -2,7 +2,7 @@
 *{
     --background: white;
     --greenColor: #8dca8d;
-    --blueColor: #0000FF;
+    --blueColor: #5252e7;
     --yellowColor: #fff34b94;
     --yellowBorder: #fff34b65;
 
@@ -202,8 +202,9 @@
     width: 100%;
     margin: 0;
 }
-
-
+.amount{
+    float: right;
+}
 /*new file*/
 .flex-1{
     display: flex;
@@ -362,4 +363,52 @@
         margin-top: 0;
         margin-right: 0;
     }
+}
+.check{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;  
+    border: black solid;
+
+}
+.check:checked{
+    background-color: #FB8500;
+}
+.amount-pay{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.pay-button2{
+    text-align: center;
+    width: 20%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+    border: none;
+
+    
+    text-decoration: none;
+    background: var(--blueColor);
+    color: black;
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, 
+                transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 1rem;
+    padding: 10px;
+}
+.pay-button2:hover{
+    background: #8ebdf7;
+}
+.pay-button2:focus{
+    outline: 1px solid #fff;
+    outline-offset: -4px;
 }
