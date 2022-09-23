@@ -38,9 +38,11 @@ function ManagerUtilities(props) {
 
   // const { properties, expenses } = props;
   const useLiveStripeKey = false;
-  const properties = location.state.properties;
-  const expenses = location.state.expenses;
-
+  // const properties = location.state.properties;
+  // const expenses = location.state.expenses;
+  const [properties, setProperties] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [managerID, setManagerID] = useState("");
   const [utilityState, setUtilityState] = useState([]);
   const [newUtility, setNewUtility] = useState(null);
@@ -103,32 +105,12 @@ function ManagerUtilities(props) {
     setAmount(response.result[0].amount_due - response.result[0].amount_paid);
   };
 
-  useEffect(() => {
-    if (amount > totalSum || amount <= 0) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
+  const fetchProperties = async () => {
+    if (access_token === null) {
+      navigate("/");
+      return;
     }
-  }, [amount]);
 
-  const cancel = () => setStripePayment(false);
-  const submit = () => {
-    cancel();
-    setPayExpense(false);
-  };
-
-  //group an array by property
-  function groupBy(arr, property) {
-    return arr.reduce(function (memo, x) {
-      if (!memo[x[property]]) {
-        memo[x[property]] = [];
-      }
-      memo[x[property]].push(x);
-      return memo;
-    }, {});
-  }
-
-  useEffect(() => {
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );
@@ -143,8 +125,67 @@ function ManagerUtilities(props) {
       management_buid = management_businesses[0].business_uid;
     }
     setManagerID(management_buid);
+    const response = await get("/managerDashboard", access_token);
+    console.log("second");
+    console.log(response);
+    setIsLoading(false);
 
-    const grouped = groupBy(expenses, "purchase_uid");
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+
+      return;
+    }
+
+    const properties = response.result.filter(
+      (property) => property.management_status !== "REJECTED"
+    );
+
+    const properties_unique = [];
+    const pids = new Set();
+    const mr = [];
+    properties.forEach((property) => {
+      if (pids.has(property.property_uid)) {
+        console.log("here in if");
+        // properties_unique[properties_unique.length-1].tenants.push(property)
+        const index = properties_unique.findIndex(
+          (item) => item.property_uid === property.property_uid
+        );
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "PROCESSING"
+        ) {
+          console.log("here", property);
+          properties_unique[index].tenants.push(property);
+        }
+      } else {
+        console.log("here in else");
+        pids.add(property.property_uid);
+        properties_unique.push(property);
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "PROCESSING"
+        ) {
+          console.log("here", property);
+          properties_unique[properties_unique.length - 1].tenants = [property];
+        }
+      }
+    });
+    setProperties(properties_unique);
+    let expense = [];
+    properties_unique.forEach((property) => {
+      if (property.expenses.length > 0) {
+        console.log("has expense");
+        property.expenses.forEach((ex) => {
+          console.log("has expense", ex);
+          expense.push(ex);
+        });
+      }
+    });
+
+    console.log(expense);
+    console.log(properties_unique);
+    const grouped = groupBy(expense, "purchase_uid");
     const keys = Object.keys(grouped);
     var output = [];
     //loop keys
@@ -187,9 +228,100 @@ function ManagerUtilities(props) {
     });
     console.log(output);
     setExpenseUnique(output);
-  }, []);
 
-  console.log(expenseUnique);
+    setExpenses(expense);
+  };
+  useEffect(() => {
+    console.log("in use effect");
+    fetchProperties();
+  }, []);
+  useEffect(() => {
+    if (amount > totalSum || amount <= 0) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [amount]);
+
+  const cancel = () => setStripePayment(false);
+  const submit = () => {
+    cancel();
+    setPayExpense(false);
+  };
+
+  //group an array by property
+  function groupBy(arr, property) {
+    return arr.reduce(function (memo, x) {
+      if (!memo[x[property]]) {
+        memo[x[property]] = [];
+      }
+      memo[x[property]].push(x);
+      return memo;
+    }, {});
+  }
+
+  // useEffect(() => {
+  //   const management_businesses = user.businesses.filter(
+  //     (business) => business.business_type === "MANAGEMENT"
+  //   );
+  //   let management_buid = null;
+  //   if (management_businesses.length < 1) {
+  //     console.log("No associated PM Businesses");
+  //     return;
+  //   } else if (management_businesses.length > 1) {
+  //     console.log("Multiple associated PM Businesses");
+  //     management_buid = management_businesses[0].business_uid;
+  //   } else {
+  //     management_buid = management_businesses[0].business_uid;
+  //   }
+  //   setManagerID(management_buid);
+
+  //   const grouped = groupBy(expenses, "purchase_uid");
+  //   const keys = Object.keys(grouped);
+  //   var output = [];
+  //   //loop keys
+  //   keys.forEach((key) => {
+  //     //merge using reduce
+  //     const out = grouped[key].reduce((acc, current) => {
+  //       return {
+  //         address: acc.address + ";" + current.address,
+  //         amount: current.amount,
+  //         amount_due: current.amount_due,
+  //         amount_paid: current.amount_paid,
+  //         bill_algorithm: current.bill_algorithm,
+  //         bill_created_by: current.bill_created_by,
+  //         bill_description: current.bill_description,
+  //         bill_docs: current.bill_docs,
+  //         bill_uid: current.bill_uid,
+  //         bill_utility_type: current.bill_utility_type,
+  //         charge_id: current.charge_id,
+  //         description: current.description,
+  //         linked_bill_id: current.linked_bill_id,
+  //         next_payment: current.next_payment,
+  //         pay_purchase_id: current.pay_purchase_id,
+  //         payer: current.payer,
+  //         payment_date: current.payment_date,
+  //         payment_frequency: current.payment_frequency,
+  //         payment_notes: current.payment_notes,
+  //         payment_type: current.payment_type,
+  //         payment_uid: current.payment_uid,
+  //         pur_property_id: current.pur_property_id,
+  //         purchase_date: current.purchase_date,
+  //         purchase_frequency: current.purchase_frequency,
+  //         purchase_notes: current.purchase_notes,
+  //         purchase_status: current.purchase_status,
+  //         purchase_type: current.purchase_type,
+  //         purchase_uid: current.purchase_uid,
+  //         receiver: current.receiver,
+  //       };
+  //     });
+  //     output.push(out);
+  //   });
+  //   console.log(output);
+  //   setExpenseUnique(output);
+  // }, []);
+
+  // console.log(expenseUnique);
 
   const splitFees = (newUtility) => {
     let charge = parseFloat(newUtility.charge);
@@ -852,7 +984,8 @@ function ManagerUtilities(props) {
             ) : (
               ""
             )}
-            {expenseUnique.length > 0 &&
+            {expenses.length > 0 &&
+            expenseUnique.length > 0 &&
             newUtility === null &&
             !editingUtility &&
             !expenseDetail &&
@@ -1053,7 +1186,7 @@ function ManagerUtilities(props) {
               !maintenanceExpenseDetail &&
               !payExpense ? (
               <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
-                <Row style={headings}>No expenses</Row>
+                <Row style={headings}></Row>
               </div>
             ) : (
               ""
