@@ -106,7 +106,7 @@ export default function TenantDashboard2() {
                 type = {true}
               />
             )}
-            {propertyData.length !== 0 && <PaymentHistory data={""} />}
+            {propertyData.length !== 0 && <PaymentHistory data={propertyData.result[0].properties[0].tenantExpenses} />}
           </div>
         </div>
       </div>

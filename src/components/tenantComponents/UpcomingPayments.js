@@ -53,36 +53,42 @@ export default function UpcomingPayments(props){
             });
         }
     }
+    console.log(rents);
     const rows = rents.map((row,index)=>{//row is an element in the array 
-        return(
-            <tr>
-                <th className="table-col">{index+1}</th>
-                <th className="table-col">{"" + row.purchase_notes+ " " + row.description}</th>
-                <th className="table-col blue-text">{row.purchase_type}</th>
-                <th className="table-col green-text">{row.next_payment.substring(0,10)}</th>
-                <th className="table-col">
-                    {props.type?
-                    <button className="yellow payB" onClick={goToPayment}>
-                        Pay
-                    </button>:
-                    <label>
-                        <input 
-                            className="check" 
-                            type = "checkbox" 
-                            onClick={event=>handleCheck(event,row.amount_due, row.purchase_uid)}
-                        />
-                    </label>
-                    
-                    }
-                   
-                        {/* <button className="yellow payB" >
-                            <a href="tenantComponents/test">Pay</a>
-                        </button> */}
-                    
-                </th>
-                <th className="table-col">{row.amount_due}</th>
-            </tr>
-        )
+        if(row.purchase_status == "UNPAID"){
+            return(
+            
+                <tr>
+                    <th className="table-col">{index+1}</th>
+                    <th className="table-col">{"" + row.purchase_notes+ " " + row.description}</th>
+                    <th className="table-col blue-text">{row.purchase_type}</th>
+                    <th className="table-col green-text">{row.next_payment.substring(0,10)}</th>
+                    <th className="table-col">
+                        {props.type?
+                        <button className="yellow payB" onClick={goToPayment}>
+                            Pay
+                        </button>:
+                        <label>
+                            <input 
+                                className="check" 
+                                type = "checkbox" 
+                                onClick={event=>handleCheck(event,row.amount_due, row.purchase_uid)}
+                            />
+                        </label>
+                        
+                        }
+                       
+                            {/* <button className="yellow payB" >
+                                <a href="tenantComponents/test">Pay</a>
+                            </button> */}
+                        
+                    </th>
+                    <th className="table-col">{row.amount_due}</th>
+                </tr>
+            )
+        }
+        
+        
     })
     //confused about: where to send info?
     console.log(props)
@@ -101,7 +107,7 @@ export default function UpcomingPayments(props){
                 </tr>
             </thead>
             <tbody>
-                {rows}
+                {rents.length!==0 ? rows: <tr><th>No upcoming payments</th></tr>}
                 
             </tbody>
             
