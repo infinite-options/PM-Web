@@ -7,7 +7,7 @@ import LOGO4 from './OwnerImages/house.webp';
 import LOGO5 from './OwnerImages/reporting.webp';
 import LOGO6 from './OwnerImages/requests.webp';
 import FormComponent from '../components/FormComponent';
-import { Grid } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
 
 export default function OwnersTab () {
@@ -40,34 +40,75 @@ export default function OwnersTab () {
                 
             
             </div>
-            <div className='bottomcontainer'>
-                <div className='bottomcontent'>
-                    <img src={LOGO1} className='bottomimages' />
-                    <h2 style={{textAlign:"center"}}>Improve Visibility</h2>
-                    <h2 className='bottomcaptions embeddedcontainer'>Get a complete overview of your property portfolio and dive into any details you want.</h2>
-                    <img src={LOGO6} className='bottomimages' />
-                    <h2 style={{textAlign:"center"}}>Track Maintenance Requests</h2>
-                    <h2 className='bottomcaptions embeddedcontainer'>See all Maintenance requests and track cost and resolution time.</h2>
-                </div>
-                <div className='bottomcontent'>
-                    <img src={LOGO2} className='bottomimages' />
-                    <h2 style={{textAlign:"center"}}>Quick Customer Support</h2>
-                    <h2 className='bottomcaptions embeddedcontainer'>Responses in less than 2 business hours for owners, less than 4 business hours for residents.</h2>
-                    <img src={LOGO3} className='bottomimages' />
-                    <h2 style={{textAlign:"center"}}>Improve Residential Satisfaction</h2>
-                    <h2 className='bottomcaptions embeddedcontainer'>Residents will be more likely to renew leases and pay bills on time with Manifest.</h2>
-                </div>
-                <div className='bottomcontent'>
-                    <img src={LOGO5} className='bottomimages' />
-                    <h2 style={{textAlign:"center"}}>Easy Reporting</h2>
-                    <h2 className='bottomcaptions embeddedcontainer'>See each property's cash flow in your dashboard and easy access to finances, bills, invoices and more.</h2>
-                    <img src={LOGO4} className='bottomimages' />
-                    <h2 style={{textAlign:"center"}}>Monitor Rent Payments</h2>
-                    <h2 className='bottomcaptions embeddedcontainer'>See who has paid and who hasn't. Track late fees and bill payments.</h2>
-                </div>
-                
-                
+            <div className='grids'>
+                <Grid container spacing = {1}>
+                    <Grid className="aligned"item xs={4}>
+                        <img src={LOGO1} className='bottomimages' />
+                        <h4 className='texts'>Improve Visibility</h4>
+                        <h2 className='bottomcaptions'>Get a complete overview of your property portfolio and dive into any specific details you want.</h2>
+                    </Grid>
+                    <Grid className="aligned" item xs={4}>
+                        <img src={LOGO2} className='bottomimages' />
+                        <h4 className='texts'>Quick Customer Support</h4>
+                        <h2 className='bottomcaptions'>Responses in less than 2 business hours for owners, less than 4 business hours for residents.</h2>
+                    </Grid>
+                    <Grid className="aligned" item xs={4}>
+                        <img src={LOGO5} className='bottomimages' />
+                        <h4 className='texts'>Easy Reporting</h4>
+                        <h2 className='bottomcaptions'>See each property's cash flow in your dashboard and easy access to finances, bills, invoices and more.</h2>
+                    </Grid>
+                    <Grid className="aligned"item xs={4}>
+                        <img src={LOGO6} className='bottomimages' />
+                        <h2 className='texts'>Track Maintenance Requests</h2>
+                        <h2 className='bottomcaptions'>See all Maintenance requests and track cost and resolution time.</h2>
+                    </Grid>
+                    <Grid className="aligned" item xs={4}>
+                        <img src={LOGO3} className='bottomimages' />
+                        <h2 className='texts'>Improve Residential Satisfaction</h2>
+                        <h2 className='bottomcaptions'>Residents will be more likely to renew leases and pay bills on time with Manifest.</h2>
+                    </Grid>
+                    <Grid className="aligned" item xs={4}>
+                        <img src={LOGO4} className='bottomimages' />
+                        <h2 className='texts'>Monitor Rent Payments</h2>
+                        <h2 className='bottomcaptions'>See who has paid and who hasn't. Track late fees and bill payments.</h2>
+                    </Grid>
+                </Grid>
             </div>
+            {/* <div className='bottomcontainer'>
+                <div className='bottomcontent'>
+                    <div className='embeddedcontainer'>
+                        <img src={LOGO1} className='bottomimages' />
+                        <h2 style={{textAlign:"center"}}>Improve Visibility</h2>
+                        <h2 className='bottomcaptions'>Get a complete overview of your property portfolio and dive into any details you want.</h2>
+                    </div>
+                    <div className='embeddedcontainer'>
+                        <img src={LOGO6} className='bottomimages' />
+                        <h2 style={{textAlign:"center"}}>Track Maintenance Requests</h2>
+                        <h2 className='bottomcaptions'>See all Maintenance requests and track cost and resolution time.</h2>
+                    </div>
+                    <div className='embeddedcontainer'>
+                        <img src={LOGO1} className='bottomimages' />
+                        <h2 style={{textAlign:"center"}}>Improve Visibility</h2>
+                        <h2 className='bottomcaptions'>Get a complete overview of your property portfolio and dive into any details you want.</h2>
+                    </div>
+                    <div className='embeddedcontainer'>
+                        <img src={LOGO6} className='bottomimages' />
+                        <h2 style={{textAlign:"center"}}>Track Maintenance Requests</h2>
+                        <h2 className='bottomcaptions'>See all Maintenance requests and track cost and resolution time.</h2>
+                    </div>
+                    <div className='embeddedcontainer'>
+                        <img src={LOGO1} className='bottomimages' />
+                        <h2 style={{textAlign:"center"}}>Improve Visibility</h2>
+                        <h2 className='bottomcaptions'>Get a complete overview of your property portfolio and dive into any details you want.</h2>
+                    </div>
+                    <div className='embeddedcontainer'>
+                        <img src={LOGO6} className='bottomimages' />
+                        <h2 style={{textAlign:"center"}}>Track Maintenance Requests</h2>
+                        <h2 className='bottomcaptions'>See all Maintenance requests and track cost and resolution time.</h2>
+                    </div>
+                </div>
+                
+            </div> */}
             <div>
                 <h2 className='getstarted'>Get Started</h2>
                 <h2 className='signup'>Sign up for free* today and let Manifest take care of the rest.</h2>
