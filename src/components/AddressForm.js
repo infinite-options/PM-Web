@@ -290,7 +290,7 @@ function AddressForm(props) {
     },
   ];
   return (
-    <Container>
+    <div>
       <Row>
         <Col className="px-0">
           <Form.Group className="mx-2 mb-3">
@@ -478,7 +478,7 @@ function AddressForm(props) {
       ) : (
         ""
       )}
-    </Container>
+    </div>
   );
 }
 

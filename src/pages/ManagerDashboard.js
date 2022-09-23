@@ -15,7 +15,6 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/managerComponents/SideBar";
 import { get } from "../utils/api";
-import "./tenantDash.css";
 
 export default function ManagerDashboard() {
   const navigate = useNavigate();
@@ -159,6 +158,16 @@ export default function ManagerDashboard() {
       label: "Zip",
     },
     {
+      id: "listed_rent",
+      numeric: true,
+      label: "Rent",
+    },
+    {
+      id: "tenant",
+      numeric: false,
+      label: "Tenant",
+    },
+    {
       id: "rent_status",
       numeric: false,
       label: "Rent Status",
@@ -282,6 +291,17 @@ export default function ManagerDashboard() {
                           {JSON.parse(property.images).length > 0 ? (
                             <img
                               src={JSON.parse(property.images)[0]}
+                              onClick={() => {
+                                navigate(
+                                  `/manager-properties/${property.property_uid}`,
+                                  {
+                                    state: {
+                                      property: property,
+                                      property_uid: property.property_uid,
+                                    },
+                                  }
+                                );
+                              }}
                               alt="Property"
                               style={{
                                 borderRadius: "4px",
@@ -302,7 +322,23 @@ export default function ManagerDashboard() {
                           {property.city}, {property.state}
                         </TableCell>
                         <TableCell>{property.zip}</TableCell>
+                        <TableCell>{property.listed_rent}</TableCell>
+                        <TableCell>
+                          {property.rentalInfo !== "NOT RENTED" ? (
+                            property.rentalInfo.map((tf, i) => {
+                              return (
+                                <div>
+                                  {i + 1} {tf.tenant_first_name}{" "}
+                                  {tf.tenant_last_name}
+                                </div>
+                              );
+                            })
+                          ) : (
+                            <div>{property.rentalInfo}</div>
+                          )}
+                        </TableCell>
                         <TableCell>{property.rent_status}</TableCell>
+
                         <TableCell>
                           {property.late_date != "Not Applicable" ? (
                             <div>{property.late_date} days</div>

@@ -79,7 +79,7 @@ function SignupEmailForm(props) {
   return (
     <div className="d-flex flex-column h-100">
       <Header title="Sign Up" leftText="< Back" leftFn={props.back} />
-      <Container className="px-4">
+      <div className="px-4">
         <h5>Full Name</h5>
         <p style={gray}>{props.firstName + " " + props.lastName}</p>
         <h5>Phone Number</h5>
@@ -109,7 +109,7 @@ function SignupEmailForm(props) {
           </div>
         </div>
         {showEmailForm ? (
-          <div>
+          <div className="flex-grow-1 d-flex flex-column justify-content-end">
             <Form>
               <Form.Group className="mx-2 my-3">
                 <Form.Label as="h5" className="mb-0 ms-1">
@@ -179,7 +179,7 @@ function SignupEmailForm(props) {
         ) : (
           ""
         )}
-      </Container>
+      </div>
       {!showEmailForm ? (
         <div className="flex-grow-1 d-flex flex-column justify-content-end">
           <div className="text-center">

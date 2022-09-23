@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+} from "@material-ui/core";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
+import {
   blue,
   gray,
   greenPill,
@@ -30,6 +41,11 @@ function ManagerRepairsOverview(props) {
   const [scheduledRepairs, setScheduledRepairs] = React.useState([]);
   const [completedRepairs, setCompletedRepairs] = React.useState([]);
   const [repairIter, setRepairIter] = React.useState([]);
+  // search variables
+  const [search, setSearch] = useState("");
+  // sorting variables
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
 
   const { properties, setFooterTab } = props;
 
@@ -145,6 +161,133 @@ function ManagerRepairsOverview(props) {
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
   };
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const headCells = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Repair Images",
+    },
+    {
+      id: "status",
+      numeric: false,
+      label: "Status",
+    },
+    {
+      id: "title",
+      numeric: false,
+      label: "Issue",
+    },
+    {
+      id: "description",
+      numeric: false,
+      label: "Description",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    {
+      id: "priority",
+      numeric: false,
+      label: "Priority",
+    },
+    {
+      id: "request_created_date",
+      numeric: false,
+      label: "Date Reported",
+    },
+    {
+      id: `days_open`,
+      numeric: true,
+      label: "Days Open",
+    },
+    {
+      id: "quote_status",
+      numeric: false,
+      label: "Quote Status",
+    },
+  ];
+  function EnhancedTableHead(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? "right" : "left"}
+              padding={"normal"}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHead.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
+
   return stage === "LIST" ? (
     <div>
       <div className="flex-1">
@@ -153,7 +296,7 @@ function ManagerRepairsOverview(props) {
         </div>
         <div className="main-content">
           <br />
-          <div
+          {/* <div
             className="mx-2 my-2 p-3"
             style={{
               background: "#FFFFFF 0% 0% no-repeat padding-box",
@@ -164,7 +307,7 @@ function ManagerRepairsOverview(props) {
             {repairIter.map(
               (row, i) =>
                 row.repairs_list.length > 0 && (
-                  <Container className="pt-1 mb-4" key={i}>
+                  <div className="pt-1 mb-4" key={i}>
                     <h4 className="mt-2 mb-3" style={{ fontWeight: "600" }}>
                       {row.title}
                     </h4>
@@ -235,8 +378,7 @@ function ManagerRepairsOverview(props) {
                             )}
                           </div>
                           <p style={gray} className="mt-2 mb-0">
-                            {/*{repair.property.address}{repair.property.unit !== '' ? ' '+repair.property.unit : ''}, {repair.property.city}, {repair.property.state} <br/>*/}
-                            {/*{repair.property.zip}*/}
+
                             {repair.address}
                             {repair.unit !== "" ? " " + repair.unit : ""},{" "}
                             {repair.city}, {repair.state} <br />
@@ -283,10 +425,69 @@ function ManagerRepairsOverview(props) {
                         </Col>
                       </Row>
                     ))}
-                  </Container>
+                  </div>
                 )
             )}
-          </div>
+          </div> */}
+          <Row className="m-3">
+            <Table>
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                // rowCount="4"
+              />{" "}
+              <TableBody>
+                {repairIter.map((row, index) => {
+                  return stableSort(
+                    row.repairs_list,
+                    getComparator(order, orderBy)
+                  ).map((repair, j) => (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={j}>
+                      <TableCell>
+                        {JSON.parse(repair.images).length > 0 ? (
+                          <img
+                            src={JSON.parse(repair.images)[0]}
+                            onClick={() => selectRepair(repair)}
+                            alt="repair"
+                            style={{
+                              borderRadius: "4px",
+                              objectFit: "cover",
+                              width: "100px",
+                              height: "100px",
+                            }}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </TableCell>
+                      <TableCell>{row.title}</TableCell>
+                      <TableCell>{repair.title}</TableCell>
+                      <TableCell>{repair.description}</TableCell>
+
+                      <TableCell>
+                        {repair.address}
+                        {repair.unit !== "" ? " " + repair.unit : ""},{" "}
+                        {repair.city}, {repair.state} <br />
+                        {repair.zip}
+                      </TableCell>
+                      <TableCell>{repair.priority}</TableCell>
+
+                      <TableCell>
+                        {repair.request_created_date.split(" ")[0]}
+                      </TableCell>
+                      <TableCell>{repair.days_open} days</TableCell>
+                      <TableCell>
+                        {repair.quotes_to_review > 0
+                          ? `${repair.quotes_to_review} new quote(s) to review`
+                          : "No new quotes"}
+                      </TableCell>
+                    </TableRow>
+                  ));
+                })}
+              </TableBody>
+            </Table>
+          </Row>
         </div>
       </div>
     </div>

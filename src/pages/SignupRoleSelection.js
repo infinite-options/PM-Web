@@ -91,9 +91,9 @@ function SignupRoleSelection(props) {
   return (
     <div>
       {signupStage !== "ADDROLES" ? (
-        <div>
-          <Header title="Sign Up" leftText="< Back" leftFn={props.back} />
-          <Container>
+        <div className="m-3">
+          {/* <Header title="Sign Up" leftText="< Back" leftFn={props.back} /> */}
+          <div>
             <h5 className="mb-5">How do you plan to use this app?</h5>
             {availableRoles.map((role, i) => (
               <div key={i} className="d-flex">
@@ -111,7 +111,7 @@ function SignupRoleSelection(props) {
               </div>
             ))}
             <div
-              className="text-center"
+              // className="text-center"
               style={errorMessage === "" ? hidden : {}}
             >
               <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
@@ -125,7 +125,7 @@ function SignupRoleSelection(props) {
                 Next
               </Button>
             </div>
-          </Container>
+          </div>
         </div>
       ) : (
         <div>

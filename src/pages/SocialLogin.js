@@ -427,8 +427,8 @@ function SocialLogin(props) {
                 responseType="code"
                 buttonText="Log In"
                 ux_mode="redirect"
-                redirectUri="http://localhost:3000"
-                // redirectUri="https://io-pm.netlify.app"
+                // redirectUri="http://localhost:3000"
+                redirectUri="https://io-pm.netlify.app"
                 scope="https://www.googleapis.com/auth/calendar"
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
@@ -456,7 +456,7 @@ function SocialLogin(props) {
                 // responseType="code"
                 // buttonText="Log In"
                 // ux_mode="redirect"
-                //redirectUri="http://localhost:3000"
+                // redirectUri="http://localhost:3000"
                 redirectUri="https://io-pm.netlify.app"
                 scope="https://www.googleapis.com/auth/calendar"
                 onSuccess={responseGoogle}
