@@ -11,13 +11,17 @@
   flex-direction: column;
   row-gap: 2rem;
 }
+.grids {
+  /* background-color: red; */
+  align-items: center;
+}
 .bottomcontainer {
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
   align-items: center;
   column-gap: 2rem;
-  /* background-color: blue; */
+  background-color: blue;
 }
 .o-container {
   display: flex;
@@ -25,27 +29,41 @@
   flex-direction: row;
   align-items: center;
   column-gap: 2rem;
-  /* background-color: red; */
+  background-color: red;
 }
 .bottomcontent {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-direction: wrap;
   justify-content: center;
   align-items: center;
   row-gap: 2rem;
-  /* background-color: green; */
+  background-color: green;
   height: 100%;
 }
 .embeddedcontainer {
   display: flex;
   flex-direction: column;
-  /* background-color: orange; */
-  width: 30vw;
-  height: 20vh;
-  padding-bottom: 20px;
+  background-color: orange;
+  align-items: center;
+  /* width: 30vw;
+  height: 20vh; */
+}
+.texts {
+  align-items: center;
+  text-align: center;
+  font-size: 25px;
+}
+.aligned {
+  display: flex;
+  border-color: white;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .bottomimages {
   width: 100px;
+  align-items: center;
   /* min-width: 14vw; */
 }
 .propertydescription {
