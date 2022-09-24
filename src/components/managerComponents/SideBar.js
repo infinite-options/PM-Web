@@ -64,6 +64,15 @@ function Sidebar() {
                 Tenants
               </NavLink>
               <NavLink
+                to="/owner-list"
+                className="sidebarButtons"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
+                Owners
+              </NavLink>
+              <NavLink
                 to="/manager-repairs"
                 className="sidebarButtons"
                 style={({ isActive }) =>

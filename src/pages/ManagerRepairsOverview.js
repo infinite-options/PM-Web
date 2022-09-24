@@ -9,6 +9,7 @@ import {
   TableSortLabel,
   Box,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import {
@@ -27,8 +28,17 @@ import AppContext from "../AppContext";
 import No_Image from "../icons/No_Image_Available.jpeg";
 import ManagerRepairDetail from "./ManagerRepairDetail";
 import SideBar from "../components/managerComponents/SideBar";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px", // <-- arbitrary value
+    },
+  },
+});
+
 function ManagerRepairsOverview(props) {
   const navigate = useNavigate();
+  const classes = useStyles();
   const location = useLocation();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
@@ -254,8 +264,8 @@ function ManagerRepairsOverview(props) {
           {headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
-              padding={"normal"}
+              align="center"
+              size="small"
               sortDirection={orderBy === headCell.id ? order : false}
             >
               <TableSortLabel
@@ -430,7 +440,7 @@ function ManagerRepairsOverview(props) {
             )}
           </div> */}
           <Row className="m-3">
-            <Table>
+            <Table classes={{ root: classes.customTable }} size="small">
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -444,7 +454,7 @@ function ManagerRepairsOverview(props) {
                     getComparator(order, orderBy)
                   ).map((repair, j) => (
                     <TableRow hover role="checkbox" tabIndex={-1} key={j}>
-                      <TableCell>
+                      <TableCell padding="none" size="small" align="center">
                         {JSON.parse(repair.images).length > 0 ? (
                           <img
                             src={JSON.parse(repair.images)[0]}
@@ -461,23 +471,33 @@ function ManagerRepairsOverview(props) {
                           ""
                         )}
                       </TableCell>
-                      <TableCell>{row.title}</TableCell>
-                      <TableCell>{repair.title}</TableCell>
-                      <TableCell>{repair.description}</TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {row.title}
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {repair.title}
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {repair.description}
+                      </TableCell>
 
-                      <TableCell>
+                      <TableCell padding="none" size="small" align="center">
                         {repair.address}
                         {repair.unit !== "" ? " " + repair.unit : ""},{" "}
                         {repair.city}, {repair.state} <br />
                         {repair.zip}
                       </TableCell>
-                      <TableCell>{repair.priority}</TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {repair.priority}
+                      </TableCell>
 
-                      <TableCell>
+                      <TableCell padding="none" size="small" align="center">
                         {repair.request_created_date.split(" ")[0]}
                       </TableCell>
-                      <TableCell>{repair.days_open} days</TableCell>
-                      <TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {repair.days_open} days
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
                         {repair.quotes_to_review > 0
                           ? `${repair.quotes_to_review} new quote(s) to review`
                           : "No new quotes"}

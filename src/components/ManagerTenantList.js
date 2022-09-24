@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
+import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -29,9 +30,17 @@ import {
   greenPill,
 } from "../utils/styles";
 
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 16px 6px 16px", // <-- arbitrary value
+    },
+  },
+});
+
 function ManagerTenantList(props) {
   const navigate = useNavigate();
-
+  const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [tenants, setTenants] = useState([]);
@@ -208,8 +217,8 @@ function ManagerTenantList(props) {
           {headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
-              padding={"normal"}
+              align="center"
+              size="small"
               sortDirection={orderBy === headCell.id ? order : false}
             >
               <TableSortLabel
@@ -330,7 +339,7 @@ function ManagerTenantList(props) {
             </Col>
           </Row>
           <Row className="m-3">
-            <Table>
+            <Table classes={{ root: classes.customTable }} size="small">
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -354,6 +363,9 @@ function ManagerTenantList(props) {
                     return (
                       <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                         <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
                           onClick={() => {
                             setSelectedTenant(tenant);
                             setUserPayments(tenant.user_payments);
@@ -363,19 +375,25 @@ function ManagerTenantList(props) {
                         >
                           {tenant.tenant_first_name} {tenant.tenant_last_name}
                         </TableCell>
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {tenant.address}
                           {tenant.unit !== "" ? " " + tenant.unit : ""}
                         </TableCell>
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {tenant.city}, {tenant.state}
                         </TableCell>
-                        <TableCell>{tenant.zip}</TableCell>
-                        <TableCell>{tenant.tenant_phone_number}</TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {tenant.zip}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {tenant.tenant_phone_number}
+                        </TableCell>
 
-                        <TableCell>{tenant.tenant_email}</TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {tenant.tenant_email}
+                        </TableCell>
 
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           <div className="d-flex  justify-content-end ">
                             <div
                               style={tenant.tenant_id ? {} : hidden}
