@@ -46,7 +46,12 @@ function ManagerTenantList(props) {
   const [tenants, setTenants] = useState([]);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState([]);
-  const [userPayments, setUserPayments] = React.useState([]);
+  const [userPayments, setUserPayments] = useState([]);
+  const [lateAfter, setLateAfter] = useState("");
+  const [lateFee, setLateFee] = useState("");
+  const [lateFeePer, setLateFeePer] = useState("");
+  const [dueDate, setDueDate] = useState("1");
+  const [rentDetails, setRentDetails] = useState([]);
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
 
   // search variables
@@ -87,8 +92,14 @@ function ManagerTenantList(props) {
     // console.log(response.result);
     setTenants(response.result);
     setSelectedTenant(response.result[0]);
+    setDueDate(response.result[0].due_by);
+    setDueDate(response.result[0].due_by);
+    setLateAfter(response.result[0].late_by);
+    setLateFee(response.result[0].late_fee);
 
     setUserPayments(response.result[0].user_payments);
+    setRentDetails(JSON.parse(response.result[0].rent_payments));
+    setLateFeePer(response.result[0].perDay_late_fee);
     setMaintenanceRequests(response.result[0].user_repairRequests);
     console.log(selectedTenant);
     // await getAlerts(properties_unique)
@@ -98,6 +109,20 @@ function ManagerTenantList(props) {
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
+  function ordinal_suffix_of(i) {
+    var j = i % 10,
+      k = i % 100;
+    if (j == 1 && k != 11) {
+      return i + "st";
+    }
+    if (j == 2 && k != 12) {
+      return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+      return i + "rd";
+    }
+    return i + "th";
+  }
   const paymentsByMonth = {};
   for (const payment of userPayments) {
     const month = moment(payment.payment_date).format("MMMM YYYY");
@@ -468,6 +493,93 @@ function ManagerTenantList(props) {
                     </div>
                   </div>
                 </Col>
+              </Row>
+              <Row className="my-3">
+                <h6 style={mediumBold}>Lease Length</h6>
+                <Row>
+                  <Col className="d-flex justify-content-start flex-column">
+                    <h6>Lease Start Date</h6>
+                    <h6>Lease End Date</h6>
+                    <h6>Rent Due</h6>
+                    <h6>Late After</h6>
+                    <h6>Late Fee</h6>
+                    <h6>Per Day Late Fee</h6>
+                  </Col>
+                  <Col className="d-flex flex-column ">
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {selectedTenant.lease_start}
+                    </h6>
+
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {selectedTenant.lease_end}
+                    </h6>
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {`${ordinal_suffix_of(dueDate)} of the month`}
+                    </h6>
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {lateAfter} days
+                    </h6>
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      ${lateFee}
+                    </h6>
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      ${lateFeePer}
+                    </h6>
+                  </Col>
+                </Row>
+              </Row>
+              <Row className="my-4">
+                <h6 style={mediumBold}>Rent Payments</h6>
+                {rentDetails.map((fee, i) => (
+                  <Row key={i}>
+                    <Col className="d-flex justify-content-start">
+                      <h6 className="mb-1">{fee.fee_name}</h6>
+                    </Col>
+                    <Col className="d-flex justify-content-end">
+                      <h6
+                        style={{
+                          font: "normal normal normal 16px Bahnschrift-Regular",
+                        }}
+                        className="mb-1"
+                      >
+                        {fee.fee_type === "%"
+                          ? `${fee.charge}% of ${fee.of}`
+                          : `$${fee.charge}`}{" "}
+                        {fee.frequency}
+                      </h6>
+                    </Col>
+                  </Row>
+                ))}
               </Row>
               <Row
                 className="d-flex justify-content-center my-2"

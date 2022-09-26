@@ -141,6 +141,11 @@ function ManagerOwnerList(props) {
       label: "Email address",
     },
     {
+      id: "properties",
+      numeric: false,
+      label: "Properties",
+    },
+    {
       id: "actions",
       numeric: false,
       label: "Actions",
@@ -317,7 +322,28 @@ function ManagerOwnerList(props) {
                         <TableCell padding="none" size="small" align="center">
                           {owner.owner_email}
                         </TableCell>
-
+                        <TableCell>
+                          {owner.properties.map((property, i) => {
+                            return (
+                              <Row
+                                className="p-1"
+                                style={{
+                                  background:
+                                    i % 2 === 0
+                                      ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                      : "#F3F3F3 0% 0% no-repeat padding-box",
+                                  font: "normal normal normal 16px Bahnschrift-Regular",
+                                }}
+                              >
+                                {property.address}
+                                {property.unit !== ""
+                                  ? ` ${property.unit}, `
+                                  : ", "}
+                                {property.city}, {property.state} {property.zip}
+                              </Row>
+                            );
+                          })}
+                        </TableCell>
                         <TableCell padding="none" size="small" align="center">
                           <div className="d-flex  justify-content-end ">
                             <div
@@ -343,7 +369,7 @@ function ManagerOwnerList(props) {
               </TableBody>
             </Table>
           </Row>
-          {showDetails ? (
+          {/* {showDetails ? (
             <Row className="mx-2">
               {selectedOwner.properties.map((property, i) => {
                 return (
@@ -364,7 +390,7 @@ function ManagerOwnerList(props) {
                 );
               })}
             </Row>
-          ) : null}
+          ) : null} */}
         </div>
       </div>
     </div>

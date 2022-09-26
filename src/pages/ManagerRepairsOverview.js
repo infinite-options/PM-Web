@@ -298,7 +298,7 @@ function ManagerRepairsOverview(props) {
     // rowCount: PropTypes.number.isRequired,
   };
 
-  return stage === "LIST" ? (
+  return (
     <div>
       <div className="flex-1">
         <div className="sidebar">
@@ -458,7 +458,14 @@ function ManagerRepairsOverview(props) {
                         {JSON.parse(repair.images).length > 0 ? (
                           <img
                             src={JSON.parse(repair.images)[0]}
-                            onClick={() => selectRepair(repair)}
+                            // onClick={() => selectRepair(repair)}
+                            onClick={() => {
+                              navigate(`./${repair.maintenance_request_uid}`, {
+                                state: {
+                                  repair: repair,
+                                },
+                              });
+                            }}
                             alt="repair"
                             style={{
                               borderRadius: "4px",
@@ -511,16 +518,6 @@ function ManagerRepairsOverview(props) {
         </div>
       </div>
     </div>
-  ) : stage === "REPAIRDETAILS" ? (
-    <div className="flex-grow-1">
-      <ManagerRepairDetail
-        repair={repair}
-        back={() => setStage("LIST")}
-        reload={fetchRepairs}
-      />
-    </div>
-  ) : (
-    ""
   );
 }
 
