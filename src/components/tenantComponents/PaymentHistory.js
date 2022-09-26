@@ -14,7 +14,7 @@ export default function UpcomingPayments(props){
                     <th className="table-col">{row.purchase_type}</th>
                     <th className="table-col">{row.next_payment.substring(0,10)}</th>
                     <th className="table-col"></th>
-                    <th className="table-col">{row.amount_due}</th>
+                    <th className="table-col">{row.amount_paid}</th>
                 </tr>
             )
         }

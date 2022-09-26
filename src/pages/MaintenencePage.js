@@ -21,6 +21,7 @@ import "react-widgets/styles.css";
 import DropdownList from "react-widgets/DropdownList";
 import { ImageList, TableSortLabel } from "@material-ui/core";
 import { upload } from "@testing-library/user-event/dist/upload";
+import RepairImages from "../components/RepairImages"
 // import { get, post } from "../utils/api";
 export default function MaintenancePage(){
     const [propertyData, setPropertyData] = React.useState([]);
@@ -36,10 +37,14 @@ export default function MaintenancePage(){
     const [textArea, setTextArea] = React.useState("");
     const [uploadImages, setUploadImages] = React.useState([]);
     const [imageURLs, setImageURLs] = React.useState([]);
+    const location = useLocation();
 
+    const [data, setData] = useState(location.state.property_uid);
+    const {state} = useLocation();
+    const imageState = useState([]);
     //possible declarations for the submit portion
     
-    const { property_uid } = useParams();
+    // const { property_uid } = useParams();
     const [errorMessage, setErrorMessage] = useState("");
     const fetchTenantDashboard = async () => {
       if (access_token === null || user.role.indexOf("TENANT") === -1) {
@@ -67,26 +72,30 @@ export default function MaintenancePage(){
 
     const handleSubmit = async () => {
         // event.preventDefault();
-        console.log("print something please")
-        console.log(issueDescription)
-        console.log(issueType)
-        console.log(textArea)
-        console.log(uploadImages)
-        console.log(imageURLs);
-        if (issueDescription === "") {
-            setErrorMessage("Please fill out required fields");
-            return;
-        }
+        // console.log("print something please")
+        // console.log(issueDescription)
+        // console.log(issueType)
+        // console.log(textArea)
+        // console.log(uploadImages)
+        // console.log(imageURLs);
+        console.log(data)
+        // if (issueDescription === "") {
+        //     setErrorMessage("Please fill out required fields");
+        //     return;
+        // }
         const newRequest = {
             // property_uid: propertyData.length !== 0 && propertyData[0].properties !==0? propertyData[0].properties[0].property_uid : "propertyData not found",
-            property_uid: property_uid,
-            description: issueDescription,
+            property_uid: data,
+            title: issueDescription,
             request_type: issueType,
-            additional_info: textArea
+            description: textArea,
+            //send tenant id
+            //priority
+
           };
-          const files = uploadImages;
+          const files = imageState[0];
           let i = 0;
-          for (const file of uploadImages) {
+          for (const file of imageState[0]) {
             let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
             if (file.file !== null) {
               newRequest[key] = file.file;
@@ -96,19 +105,20 @@ export default function MaintenancePage(){
           }
 
           console.log(files);
-          await post("/maintenanceRequests", newRequest, null, files);
+        //   console.log(newRequest);
+          await post("/maintenanceRequests", newRequest,null,files);
           navigate("/tenant");
     }
-    function onImageChange(e){
-        setUploadImages([...e.target.files]);
-    }
-    React.useEffect(()=>{
-        if(uploadImages.length < 1 ) return;
-        const newImageUrls = [];
-        uploadImages.forEach(img => newImageUrls.push(URL.createObjectURL(img)));
-        setImageURLs(newImageUrls);
-    },[uploadImages]
-    )
+    // function onImageChange(e){
+    //     setUploadImages([...e.target.files]);
+    // }
+    // React.useEffect(()=>{
+    //     if(uploadImages.length < 1 ) return;
+    //     const newImageUrls = [];
+    //     uploadImages.forEach(img => newImageUrls.push(URL.createObjectURL(img)));
+    //     setImageURLs(newImageUrls);
+    // },[uploadImages]
+    // )
     return(
         <div className="maintenence-page">
             {propertyData.length !== 0 && (
@@ -176,8 +186,9 @@ export default function MaintenancePage(){
                     </label>
 
                 </form>
-                <input type = "file" multiple accept="image/*" onChange ={onImageChange} />
-                {imageURLs.map(imageSrc=><img src={imageSrc}/>)}
+                {/* <input type = "file" multiple accept="image/*" onChange ={onImageChange} />
+                {imageURLs.map(imageSrc=><img src={imageSrc}/>)} */}
+                <RepairImages state ={imageState}/>
                 <input type="submit" onClick={handleSubmit}/>
             </div>
         </div>

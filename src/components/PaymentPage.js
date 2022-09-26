@@ -155,7 +155,7 @@ function PaymentPage(props) {
               className="mt-8 mb-2"
               variant="outline-primary"
               onClick={() => {
-                navigate("/paymentHistory");
+                navigate("/tenant"); //should change the navigation to tenantDashboard
                 //setStripePayment(true);
               }}
               style={bluePillButton}

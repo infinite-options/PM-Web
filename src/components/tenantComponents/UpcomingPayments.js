@@ -75,7 +75,6 @@ export default function UpcomingPayments(props){
                                 onClick={event=>handleCheck(event,row.amount_due, row.purchase_uid)}
                             />
                         </label>
-                        
                         }
                        
                             {/* <button className="yellow payB" >

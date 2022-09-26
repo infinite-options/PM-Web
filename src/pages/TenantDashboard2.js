@@ -45,8 +45,13 @@ export default function TenantDashboard2() {
     fetchTenantDashboard();
   }, []);
   const goToMaintenence = () => {
-    navigate("/maintenencePage");
+    navigate("/maintenencePage", {
+      state: {
+        property_uid: propertyData?.result[0].properties[0].property_uid
+      },
+    });
   };
+  console.log(propertyData)
   // console.log(propertyData.result[0]);
   //END OF POSSIBLY IMPORTANT STUFF
   return (
