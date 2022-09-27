@@ -54,24 +54,38 @@ function PaymentPage(props) {
   };
 
   React.useEffect(async () => {
-    const url = useLiveStripeKey
-      ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
-      : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
-    let response = await fetch(url);
-    const responseData = await response.json();
-    const stripePromise = loadStripe(responseData.publicKey);
-    setStripePromise(stripePromise);
+    // const url = useLiveStripeKey
+    //   ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
+    //   : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
+    // let response = await fetch(url);
+    // const responseData = await response.json();
+    // const stripePromise = loadStripe(responseData.publicKey);
+    // setStripePromise(stripePromise);
     let tempAllPurchases = [];
     for (let i in purchaseUIDs) {
       let response1 = await get(`/purchases?purchase_uid=${purchaseUIDs[i]}`);
       tempAllPurchases.push(response1.result[0]);
     }
-    response = await get(`/purchases?purchase_uid=${purchase_uid}`);
+    let response = await get(`/purchases?purchase_uid=${purchase_uid}`);
     console.log("Print 1", response);
     setPurchase(response.result[0]);
     // setAmount(response.result[0].amount_due - response.result[0].amount_paid);
     setAllPurchases(tempAllPurchases);
   }, []);
+
+  const toggleKeys = async () => {
+    const url =
+      message === "PMTEST"
+        ? "https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/getCorrectKeys/PMTEST"
+        : "https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/getCorrectKeys/PM";
+    let response = await fetch(url, {
+      method: "POST",
+    });
+    const responseData = await response.json();
+    console.log(responseData.PUBLISHABLE_KEY);
+    const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);
+    setStripePromise(stripePromise);
+  };
 
   useEffect(() => {
     console.log("allPurchases", allPurchases);
@@ -90,7 +104,6 @@ function PaymentPage(props) {
     cancel();
     setPaymentConfirm(true);
   };
-
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -271,6 +284,7 @@ function PaymentPage(props) {
                     variant="outline-primary"
                     onClick={() => {
                       //navigate("/tenant");
+                      toggleKeys();
                       setStripePayment(true);
                     }}
                     style={bluePillButton}
