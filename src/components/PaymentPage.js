@@ -54,9 +54,12 @@ function PaymentPage(props) {
   };
 
   React.useEffect(async () => {
+    // const url = useLiveStripeKey
+    //   ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
+    //   : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
     const url = useLiveStripeKey
-      ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
-      : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
+      ? "https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/PM"
+      : "https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/PMTEST";
     let response = await fetch(url);
     const responseData = await response.json();
     const stripePromise = loadStripe(responseData.publicKey);

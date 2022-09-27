@@ -19,7 +19,7 @@ export default function TenantDashboard2() {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-
+  const [maintenanceRequests, setMaintenanceRequests] = React.useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchTenantDashboard = async () => {
@@ -28,7 +28,6 @@ export default function TenantDashboard2() {
       return;
     }
     const response = await get("/tenantDashboard", access_token);
-    console.log("second");
     console.log(response);
     setIsLoading(false);
 
@@ -40,18 +39,30 @@ export default function TenantDashboard2() {
     }
     setPropertyData(response);
   };
+  const getMaintenanceRequests = () => { //process to get data from aateButtons(pi using axios
+    axios.get('https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/maintenanceRequests')
+    .then(response => {
+      setMaintenanceRequests(response.data) //useState is getting the data
+
+    }).catch(err =>{
+      console.log(err)
+    })
+
+  }
   useEffect(() => {
-    console.log("in use effect");
     fetchTenantDashboard();
+    getMaintenanceRequests();
   }, []);
+  console.log(maintenanceRequests);
   const goToMaintenence = () => {
     navigate("/maintenencePage", {
       state: {
-        property_uid: propertyData?.result[0].properties[0].property_uid
+        property_uid: propertyData?.result[0].properties[0].property_uid,
+        tenant_id: propertyData?.result[0].tenant_id,
       },
     });
   };
-  console.log(propertyData)
+  // console.log(propertyData)
   // console.log(propertyData.result[0]);
   //END OF POSSIBLY IMPORTANT STUFF
   return (
@@ -116,13 +127,15 @@ export default function TenantDashboard2() {
         </div>
       </div>
       <div className="flex-2">
-        {propertyData.length !== 0 && <Maintenence data={''} />}
+        {propertyData.length !== 0 && <Maintenence 
+                                        data={maintenanceRequests.result}
+                                        address = {propertyData.result[0].properties[0].address} />}
         {propertyData.length !== 0 && (
           <div>
             <Appliances
               data={propertyData.result[0].properties[0].appliances}
             />
-            <PersonalInfo data={propertyData.result[0]} />
+            <PersonalInfo id = "profile" data={propertyData.result[0]} />
           </div>
         )}
       </div>

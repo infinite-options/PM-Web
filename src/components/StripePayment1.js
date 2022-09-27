@@ -18,7 +18,9 @@ function StripePayment(props) {
   const submitPayment = async () => {
     const paymentData = {
       customer_uid: user.user_uid,
-      business_code: message === 'M4METEST' ?  message : 'M4ME',
+      // business_code: message === 'M4METEST' ?  message : 'M4ME',
+      business_code: message === 'PMTEST' ?  message : 'PM',
+
       payment_summary: {
         total: parseFloat(amount)
       }

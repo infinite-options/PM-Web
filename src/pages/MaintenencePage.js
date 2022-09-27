@@ -1,26 +1,24 @@
 //I need to make this page the main page first
 import React, { useState, useContext, useEffect } from "react";
-// import * as React from 'react';
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router";
+// import * as React from 'react';\
 import axios from "axios";
+
+import { useLocation } from "react-router-dom";
+
 import { useNavigate } from "react-router-dom";
-import TopBar from "../components/tenantComponents/TopBar";
+
 import SideBar from "../components/tenantComponents/SideBar";
-import TenantCard from "../components/tenantComponents/TenantCard";
+
 import { get, post } from "../utils/api";
 import "./tenantDash.css";
-import UpcomingPayments from "../components/tenantComponents/UpcomingPayments";
-import PaymentHistory from "../components/tenantComponents/PaymentHistory";
+
 import Maintenence from "../components/tenantComponents/Maintenence";
-import Appliances from "../components/tenantComponents/Appliances";
-import PersonalInfo from "../components/tenantComponents/PersonalInfo";
+
 import AppContext from "../AppContext";
 import "./maintenance.css"
 import "react-widgets/styles.css";
 import DropdownList from "react-widgets/DropdownList";
-import { ImageList, TableSortLabel } from "@material-ui/core";
-import { upload } from "@testing-library/user-event/dist/upload";
+
 import RepairImages from "../components/RepairImages"
 // import { get, post } from "../utils/api";
 export default function MaintenancePage(){
@@ -33,15 +31,17 @@ export default function MaintenancePage(){
     //form states
     const [issueDescription, setIssueDescription] = React.useState("")
     const [issueType, setIssueType] = React.useState("Plumbing")
-
+    const [priority, setPriority] = React.useState("Low");
     const [textArea, setTextArea] = React.useState("");
-    const [uploadImages, setUploadImages] = React.useState([]);
-    const [imageURLs, setImageURLs] = React.useState([]);
+
     const location = useLocation();
 
     const [data, setData] = useState(location.state.property_uid);
+    const [tenantId, setTenantId] = useState(location.state.tenant_id);
     const {state} = useLocation();
     const imageState = useState([]);
+    const [maintenanceRequests, setMaintenanceRequests] = React.useState([]);
+
     //possible declarations for the submit portion
     
     // const { property_uid } = useParams();
@@ -64,34 +64,39 @@ export default function MaintenancePage(){
       }
       setPropertyData(response);
     };
+    const getMaintenanceRequests = () => { //process to get data from aateButtons(pi using axios
+        axios.get('https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/maintenanceRequests')
+        .then(response => {
+          setMaintenanceRequests(response.data) //useState is getting the data
+    
+        }).catch(err =>{
+          console.log(err)
+        })
+    
+      }
     useEffect(() => {
       console.log("in use effect");
       fetchTenantDashboard();
+      getMaintenanceRequests();
+
     }, []);
     
 
     const handleSubmit = async () => {
-        // event.preventDefault();
-        // console.log("print something please")
-        // console.log(issueDescription)
-        // console.log(issueType)
-        // console.log(textArea)
-        // console.log(uploadImages)
-        // console.log(imageURLs);
+
         console.log(data)
-        // if (issueDescription === "") {
-        //     setErrorMessage("Please fill out required fields");
-        //     return;
-        // }
+        if (issueDescription === "") {
+            setErrorMessage("Please fill out required fields");
+            return;
+        }
         const newRequest = {
             // property_uid: propertyData.length !== 0 && propertyData[0].properties !==0? propertyData[0].properties[0].property_uid : "propertyData not found",
             property_uid: data,
             title: issueDescription,
             request_type: issueType,
             description: textArea,
-            //send tenant id
-            //priority
-
+            request_created_by: tenantId,
+            priority: priority,
           };
           const files = imageState[0];
           let i = 0;
@@ -109,30 +114,11 @@ export default function MaintenancePage(){
           await post("/maintenanceRequests", newRequest,null,files);
           navigate("/tenant");
     }
-    // function onImageChange(e){
-    //     setUploadImages([...e.target.files]);
-    // }
-    // React.useEffect(()=>{
-    //     if(uploadImages.length < 1 ) return;
-    //     const newImageUrls = [];
-    //     uploadImages.forEach(img => newImageUrls.push(URL.createObjectURL(img)));
-    //     setImageURLs(newImageUrls);
-    // },[uploadImages]
-    // )
+
     return(
         <div className="maintenence-page">
             {propertyData.length !== 0 && (
-                // <TopBar
-                //   firstName={propertyData.result[0].tenant_first_name}
-                //   lastName={propertyData.result[0].tenant_last_name}
-                // />
-                // <div className="topBar">
-                //   <div className="circle"></div>
-                //   <div>
-                //     <h1>{propertyData.result[0].tenant_first_name}</h1>
-                //     <h2>Tenant</h2>
-                //   </div>
-                // </div>
+                
                 <div>
                 <h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
                 <h8 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h8>
@@ -147,8 +133,11 @@ export default function MaintenancePage(){
                     <br />
                     <h2>Mainenance Portal</h2>
                     <h5>Current Tickets</h5>
-                    <Maintenence data={""} />
-                    
+                    {propertyData.length!==0 && (
+                        <Maintenence data={maintenanceRequests.result}  
+                        address={propertyData?.result[0].properties[0].address}/>
+                    )}
+
                 </div>
             </div>
             <div className="below">
@@ -170,6 +159,15 @@ export default function MaintenancePage(){
                             value={issueType}
                             onChange={(nextValue) => setIssueType(nextValue)}
                             data={["Plumbing", "Landscape", "Appliances", "Electrical", "Other"]}
+                        />
+                    
+                    </label>
+                    <label>Priority
+                        <br/>
+                        <DropdownList
+                            value={priority}
+                            onChange={(nextValue) => setPriority(nextValue)}
+                            data={["Low", "Medium", "High"]}
                         />
                     
                     </label>

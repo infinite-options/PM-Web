@@ -124,10 +124,12 @@
 .table-row{
     border: black solid 1px;
     padding: 5px;
+    
 }
 .table-col{
     border: black solid 1px;
     padding: 5px;
+    
 }
 
 .maintenence{
@@ -411,4 +413,9 @@
 .pay-button2:focus{
     outline: 1px solid #fff;
     outline-offset: -4px;
+}
+.table-img{
+    width: 60%;
+    height: auto;
+    align-items: center;
 }
