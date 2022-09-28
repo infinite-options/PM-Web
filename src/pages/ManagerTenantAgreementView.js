@@ -156,7 +156,7 @@ function ManagerTenantAgreementView(props) {
   return (
     <div className="mb-2 pb-2">
       {agreement ? (
-        <Container>
+        <Container className="d-flex flex-column my-2">
           <Row className="d-flex my-2">
             <Col className="d-flex justify-content-start">
               Tenant: {agreement.tenant_first_name} {agreement.tenant_last_name}
@@ -244,7 +244,7 @@ function ManagerTenantAgreementView(props) {
                     font: "normal normal normal 16px Bahnschrift-Regular",
                   }}
                 >
-                  ${lateFee.toFixed(2)}
+                  ${lateFee}
                 </h6>
                 <h6
                   className="d-flex justify-content-end"
@@ -252,7 +252,7 @@ function ManagerTenantAgreementView(props) {
                     font: "normal normal normal 16px Bahnschrift-Regular",
                   }}
                 >
-                  ${lateFeePer.toFixed(2)}
+                  ${lateFeePer}
                 </h6>
               </Col>
             </Row>

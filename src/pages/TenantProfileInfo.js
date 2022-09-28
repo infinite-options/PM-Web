@@ -48,13 +48,14 @@ function TenantProfileInfo(props) {
     }
     setAutofillState(newAutofillState);
   };
+  console.log(autofillState);
   const [anchorEl, setAnchorEl] = useState(null);
   // const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = React.useState(autofillState.first_name);
   const [lastName, setLastName] = React.useState(autofillState.last_name);
   const [salary, setSalary] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  const [phone, setPhone] = React.useState(autofillState.phone_number);
+  const [email, setEmail] = React.useState(autofillState.email);
   const [frequency, setFrequency] = useState("Annual");
   const [jobTitle, setJobTitle] = React.useState("");
   const [company, setCompany] = React.useState("");
@@ -203,6 +204,8 @@ function TenantProfileInfo(props) {
     const tenantProfile = {
       first_name: firstName,
       last_name: lastName,
+      tenant_email: email,
+      tenant_phone_number: phone,
       current_salary: salary,
       salary_frequency: frequency,
       current_job_title: jobTitle,
@@ -319,7 +322,7 @@ function TenantProfileInfo(props) {
   return (
     <div className="pb-4">
       <Header title="Tenant Profile" />
-      <Container>
+      <div>
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
             First Name {firstName === "" ? required : ""}
@@ -613,7 +616,7 @@ function TenantProfileInfo(props) {
             Save Tenant Profile
           </Button>
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

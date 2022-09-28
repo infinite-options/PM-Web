@@ -1,6 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+} from "@material-ui/core";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
+import {
   blue,
   gray,
   greenPill,
@@ -27,6 +38,11 @@ function ManagerRepairsList(props) {
   const [scheduledRepairs, setScheduledRepairs] = useState([]);
   const [completedRepairs, setCompletedRepairs] = useState([]);
   const [repairIter, setRepairIter] = useState([]);
+  // search variables
+  const [search, setSearch] = useState("");
+  // sorting variables
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
 
   const property = location.state.property;
 
@@ -123,7 +139,137 @@ function ManagerRepairsList(props) {
   };
 
   useEffect(fetchRepairs, [access_token]);
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const headCells = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Repair Images",
+    },
+    {
+      id: "title",
+      numeric: false,
+      label: "Repair Title",
+    },
+    {
+      id: "desc",
+      numeric: false,
+      label: "Description",
+    },
+    {
+      id: "address",
+      numeric: true,
+      label: "address",
+    },
+    {
+      id: "priority",
+      numeric: false,
+      label: "Priority",
+    },
+    {
+      id: "created_day",
+      numeric: false,
+      label: "Request Created Date",
+    },
+    {
+      id: "quote_status",
+      numeric: false,
+      label: "Quote Status",
+    },
+    // {
+    //   id: "late_date",
+    //   numeric: true,
+    //   label: "Days Late",
+    // },
+    // {
+    //   id: "num_maintenanceRequests",
+    //   numeric: true,
+    //   label: "Maintenance Requests Open",
+    // },
+    // {
+    //   id: "oldestOpenMR",
+    //   numeric: true,
+    //   label: "Longest duration",
+    // },
+  ];
+  function EnhancedTableHead(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? "right" : "left"}
+              padding={"normal"}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHead.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
   return (
     <div
       className="h-100 pb-5 mb-5"
@@ -150,7 +296,7 @@ function ManagerRepairsList(props) {
         {repairIter.map(
           (row, i) =>
             row.repairs_list.length > 0 && (
-              <Container className="mb-5" key={i}>
+              <div className="mb-5" key={i}>
                 <h4 className="mt-2 mb-3" style={{ fontWeight: "600" }}>
                   {row.title}
                 </h4>
@@ -245,7 +391,7 @@ function ManagerRepairsList(props) {
                     </Col>
                   </Row>
                 ))}
-              </Container>
+              </div>
             )
         )}
       </div>

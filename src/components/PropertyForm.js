@@ -486,6 +486,7 @@ function PropertyForm(props) {
         deposit_for_rent: depositForRent,
       };
       const files = imageState[0];
+      console.log(files, imageState);
       let i = 0;
       for (const file of imageState[0]) {
         let key = file.coverPhoto ? "img_cover" : `img_${i++}`;

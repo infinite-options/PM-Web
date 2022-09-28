@@ -82,12 +82,14 @@ function OwnerUtilities(props) {
   };
 
   const PayBill = async (pid) => {
-    const url = useLiveStripeKey
-      ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
-      : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
+    const url =
+      message === "PMTEST"
+        ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
+        : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
     const responseData = await response.json();
-    const stripePromise = loadStripe(responseData.publicKey);
+    console.log(responseData.PUBLISHABLE_KEY);
+    const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);
     setStripePromise(stripePromise);
 
     response = await get(`/purchases?purchase_uid=${pid}`);

@@ -10,6 +10,7 @@ import Logout from "../components/Logout";
 import "./navbar.css";
 function Landing() {
   const [open, setOpen] = useState(false);
+  const [openRoles, setOpenRoles] = useState(false);
   const navigate = useNavigate();
   const { userData } = React.useContext(AppContext);
   const { user } = userData;
@@ -78,6 +79,10 @@ function Landing() {
   const handleClick = () => {
     console.log("here handleclick");
     setOpen(!open);
+  };
+  const handleClickRoles = () => {
+    console.log("here handleclick");
+    setOpenRoles(!openRoles);
   };
 
   const closeMenu = () => {
@@ -345,33 +350,46 @@ function Landing() {
                 width: "100%",
               }}
             >
-              {availableRoles != null
-                ? availableRoles.map((role, i) => (
-                    <div
-                      key={i}
-                      className={open ? "nav-links active" : "nav-links"}
-                    >
-                      <div
-                        onClick={() => {
-                          role === selectedRole ||
-                          role === currentRole.toUpperCase()
-                            ? roleSelection(role)
-                            : roleSelection(role);
-                        }}
-                        class="navButtons"
-                      >
-                        <p className="d-inline-block text-left">
-                          {longNames[role]}
-                        </p>
+              <div>
+                {openRoles ? (
+                  <img
+                    src={MenuIcon}
+                    className="nav-icon"
+                    onClick={() => {
+                      handleClickRoles();
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={MenuIcon}
+                    className="nav-icon"
+                    onClick={() => {
+                      handleClickRoles();
+                    }}
+                  />
+                )}
+              </div>
+              <div className={openRoles ? "nav-links active" : "nav-links"}>
+                {availableRoles != null
+                  ? availableRoles.map((role, i) => (
+                      <div key={i}>
+                        <div
+                          onClick={() => {
+                            role === selectedRole ||
+                            role === currentRole.toUpperCase()
+                              ? roleSelection(role)
+                              : roleSelection(role);
+                          }}
+                          class="navButtons"
+                        >
+                          <p className="d-inline-block text-left">
+                            {longNames[role]}
+                          </p>
+                        </div>
                       </div>
-                      {/* <Checkbox
-                type="CIRCLE"
-                checked={role === selectedRole}
-                onClick={() => setSelectedRole(role)}
-              /> */}
-                    </div>
-                  ))
-                : ""}
+                    ))
+                  : ""}
+              </div>
             </div>
             <div
               style={{

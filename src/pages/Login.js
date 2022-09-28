@@ -95,12 +95,12 @@ function Login(props) {
     <div className="h-100 pb-5">
       {loginStage === "LOGIN" && props.signupStage !== "NAME" ? (
         <div className="d-flex flex-column h-100">
-          <Header
+          {/* <Header
             title="Login"
             leftText="< Back"
             leftFn={() => navigate("/")}
-          />
-          <Container className="px-4">
+          /> */}
+          <Container className="d-flex flex-column mt-3">
             <div className="text-center">
               {/* <img src={AppleLogin} alt="Apple Login" className="m-1" />
               <img src={FacebookLogin} alt="Facebook Login" className="m-1" />
@@ -141,7 +141,7 @@ function Login(props) {
                 />
               </Form.Group>
             </Form>
-            <div className="text-center pt-1 pb-3">
+            <div className="text-center pt-1 pb-2">
               <Button
                 variant="outline-primary"
                 style={pillButton}
