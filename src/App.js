@@ -55,6 +55,7 @@ import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
 import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./pages/ManagerUtilities";
+import OwnerUtilities from "./pages/OwnerUtilities";
 import TenantDuePayments from "./components/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 import OwnerPaymentHistory from "./components/OwnerPaymentHistory";
@@ -72,9 +73,11 @@ import Homepage from "./pages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
 import RenterLanding from "./pages/renterLanding";
 import OwnersTab from "./pages/OwnersTab";
-import MaintenencePage from "./pages/MaintenencePage"
+import MaintenencePage from "./pages/MaintenencePage";
 import ManagerLanding from "./pages/ManagerLanding";
-import ZellePayment from "./components/ZellePaymentPage"
+import ZellePayment from "./components/ZellePaymentPage";
+import OwnerRepairList from "./components/OwnerRepairList";
+import OwnerRepairRequest from "./components/OwnerRepairRequest";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -145,14 +148,8 @@ function App() {
               path="tenantAvailableProperties"
               element={<TenantAvailableProperties />}
             />
-            <Route
-              path="maintenencePage"
-              element={<MaintenencePage />}
-            />
-            <Route
-              path="OwnersTab"
-              element={<OwnersTab/>}
-             />
+            <Route path="maintenencePage" element={<MaintenencePage />} />
+            <Route path="OwnersTab" element={<OwnersTab />} />
 
             <Route
               path="uploadTenantDocuments"
@@ -282,7 +279,7 @@ function App() {
               element={<ManagerRepairDetail />}
             />
             <Route
-              path="/owner-repairs/:rr_id"
+              path="owner-repairs/:rr_id"
               element={<OwnerRepairDetails />}
             />
             <Route path="/properties" element={<NotManagedProperties />} />
@@ -297,6 +294,12 @@ function App() {
               element={<MaintenanceQuotesScheduled />}
             />
             <Route path="manager-utilities" element={<ManagerUtilities />} />
+            <Route path="owner-utilities" element={<OwnerUtilities />} />
+            <Route path="owner-repairs" element={<OwnerRepairList />} />
+            <Route
+              path="owner-repairRequest"
+              element={<OwnerRepairRequest />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

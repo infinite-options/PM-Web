@@ -4,8 +4,8 @@
 //     email: '',
 //     error: ''
 // }
-// class FormComponent extends React.Component {  
-    
+// class FormComponent extends React.Component {
+
 //     constructor(){
 //         super();
 //         this.state = emailState;
@@ -46,17 +46,13 @@
 //                         <button type="submit" className="btns" onClick={()=>this.onSubmit()}><span className='buttondescription'>Sign Up</span></button>
 //                     </div>
 //                 </div>
-                
-                
-                  
+
 //             </div>
-//         )  
+//         )
 //     }
-// }  
-   
+// }
+
 // export default FormComponent;
-
-
 
 // import { useState } from 'react';
 // import { get, post } from "../utils/api";
@@ -118,9 +114,9 @@
 
 //     }
 //     await post("/signUpForm", SignUpInfo);
-    
+
 // };
-    
+
 // // Showing success message
 // const successMessage = () => {
 // 	return (
@@ -173,14 +169,13 @@
 //                 <input onChange={handleMessage} className="messageinput"
 //                 value={message} type="email" />
 //             </div>
-            
+
 //             <div className="d-inline-block justify-content-center align-items-center">
 //                 <button className="btn" onClick={handleSubmit}  type="submit">
 //                 Submit
 //                 </button>
 //             </div>
-            
-            
+
 //         </div>
 // 	</div>
 // );
@@ -189,11 +184,23 @@
 import { useState } from "react";
 import { Input } from "./Input";
 import { get, post } from "../utils/api";
-import "../components/ownerComponentt/ownerstab.css";
+import "./ownerComponents/ownerstab.css";
 
 export default function App() {
-  const [form, setForm] = useState({ Firstname: "",Lastname: "", email: "", phone: "", message: "" });
-  const [errors, setErrors] = useState({ Firstname: [], Lastname: [], email: [], phone: [], message: [] });
+  const [form, setForm] = useState({
+    Firstname: "",
+    Lastname: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState({
+    Firstname: [],
+    Lastname: [],
+    email: [],
+    phone: [],
+    message: [],
+  });
 
   const checkRules = (input, rules) => {
     let errors = [];
@@ -234,25 +241,25 @@ export default function App() {
     return { noErrors: true, errors };
   };
 
-  const handleSubmit = async(f) => {
+  const handleSubmit = async (f) => {
     const { errors, noErrors } = checkFormValidation(f);
     setErrors(errors);
     if (noErrors) {
       alert("You Have Signed Up!");
     }
     const SignUpInfo = {
-        first_name: f.Firstname,
-        last_name: f.Lastname,
-        message: f.message,
-        email: f.email,
-        phone_no: f.phone,
-            }
+      first_name: f.Firstname,
+      last_name: f.Lastname,
+      message: f.message,
+      email: f.email,
+      phone_no: f.phone,
+    };
     await post("/signUpForm", SignUpInfo);
   };
   return (
     <div>
       <div style={{ display: "grid", placeItems: "center" }}>
-      <Input
+        <Input
           name="First Name"
           value={form.Firstname}
           errors={errors.Firstname}
@@ -276,16 +283,18 @@ export default function App() {
           errors={errors.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
         />
-        <Input className="messageinput"
+        <Input
+          className="messageinput"
           name="Message"
           value={form.message}
           errors={errors.message}
           onChange={(e) => setForm({ ...form, message: e.target.value })}
         />
-        <br/>
-        <button className="buttons"onClick={() => handleSubmit(form)}>Sign Up</button>
+        <br />
+        <button className="buttons" onClick={() => handleSubmit(form)}>
+          Sign Up
+        </button>
       </div>
     </div>
   );
 }
-
