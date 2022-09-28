@@ -74,7 +74,7 @@ import RenterLanding from "./pages/renterLanding";
 import OwnersTab from "./pages/OwnersTab";
 import MaintenencePage from "./pages/MaintenencePage"
 import ManagerLanding from "./pages/ManagerLanding";
-
+import ZellePayment from "./components/ZellePaymentPage"
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -197,6 +197,7 @@ function App() {
               element={<RepairStatus />}
             />
             <Route path="tenantDuePayments" element={<TenantDuePayments />} />
+            <Route path="zelle" element={<ZellePayment />} />
             <Route
               path="tenantPastPaidPayments"
               element={<TenantPastPaidPayments />}

@@ -125,6 +125,7 @@ export default function TenantDuePayments(props) {
                         data = {propertyData.result[0].properties[0].tenantExpenses}
                         type = {false}
                         selectedProperty = {propertyData.result[0].properties[0]}
+                        paymentSelection = {paymentOptions}
                     />}
                     
 
