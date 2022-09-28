@@ -76,11 +76,9 @@ function PaymentPage(props) {
   const toggleKeys = async () => {
     const url =
       message === "PMTEST"
-        ? "https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/getCorrectKeys/PMTEST"
-        : "https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/getCorrectKeys/PM";
-    let response = await fetch(url, {
-      method: "POST",
-    });
+        ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
+        : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
+    let response = await fetch(url);
     const responseData = await response.json();
     console.log(responseData.PUBLISHABLE_KEY);
     const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);

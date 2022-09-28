@@ -47,7 +47,7 @@ function ManagerUtilities(props) {
   const [utilityState, setUtilityState] = useState([]);
   const [newUtility, setNewUtility] = useState(null);
   const [editingUtility, setEditingUtility] = useState(false);
-  const [propertyState, setPropertyState] = useState(properties);
+  const [propertyState, setPropertyState] = useState([]);
   const [files, setFiles] = useState([]);
   const [newFile, setNewFile] = useState(null);
   const [editingDoc, setEditingDoc] = useState(null);
@@ -93,11 +93,9 @@ function ManagerUtilities(props) {
   const PayBill = async (pid) => {
     const url =
       message === "PMTEST"
-        ? "https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/getCorrectKeys/PMTEST"
-        : "https://huo8rhh76i.execute-api.us-west-1.amazonaws.com/dev/api/v2/getCorrectKeys/PM";
-    let response = await fetch(url, {
-      method: "POST",
-    });
+        ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
+        : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
+    let response = await fetch(url);
     const responseData = await response.json();
     console.log(responseData.PUBLISHABLE_KEY);
     const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);
@@ -176,6 +174,7 @@ function ManagerUtilities(props) {
       }
     });
     setProperties(properties_unique);
+    setPropertyState(properties_unique);
     let expense = [];
     properties_unique.forEach((property) => {
       if (property.expenses.length > 0) {
@@ -796,7 +795,7 @@ function ManagerUtilities(props) {
                     </Form.Group>
                   </Col>
                 </Row>
-
+                {console.log(properties)}
                 <Row className="mx-1 mt-3 mb-2">
                   <h6 style={mediumBold}>Properties</h6>
                   {properties.map((property, i) => (
