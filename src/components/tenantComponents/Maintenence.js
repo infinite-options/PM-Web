@@ -43,23 +43,23 @@ export default function Maintenence(props){
                     <th className="table-col">{props?.address}</th>
                     <th className="table-col">{row.title}</th>
                     <th className="table-col">{row.request_created_date.substring(0,10)}</th>
-                    <th className="table-col">{numDays(created_date, current)}</th>
+                    <th className="table-col date-cell">{numDays(created_date, current)}</th>
                     <th className="table-col">{row.priority}</th>
                     <th className="table-col">{row.request_status}</th>
-                    <th className="table-col">
+                    <th className="table-col img-cell">
                         {imgUrl.length > 1 ?
                         <div className = "img-orientation">
-                            <div onClick={previousImg} className="left-arrow">
+                            <div onClick={previousImg} className="arrow">
                                     {"<"}
                             </div>
-                            <img src = {imgUrl[currentImg]} className="table-img"></img>
+                            <img src = {imgUrl[currentImg]} className="table-img multi-img-cell"></img>
 
-                            <div onClick={nextImg} className="right-arrow">
+                            <div onClick={nextImg} className="arrow">
                                 {">"}
                             </div>    
                         </div>
                         :
-                        <div>
+                        <div className = "img-orientation">
                             <img src = {imgUrl[0]} className="table-img"></img>
 
                         </div>
