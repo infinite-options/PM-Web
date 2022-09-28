@@ -9,15 +9,23 @@ import {
   TableSortLabel,
   Box,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { Row, Col } from "react-bootstrap";
 import AppContext from "../AppContext";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/managerComponents/SideBar";
 import { get } from "../utils/api";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px", // <-- arbitrary value
+    },
+  },
+});
 export default function ManagerDashboard() {
   const navigate = useNavigate();
+  const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
 
@@ -178,9 +186,24 @@ export default function ManagerDashboard() {
       label: "Days Late",
     },
     {
-      id: "num_maintenanceRequests",
+      id: "new_mr",
       numeric: true,
-      label: "Maintenance Requests Open",
+      label: "OP",
+    },
+    {
+      id: "process_mr",
+      numeric: true,
+      label: "PR",
+    },
+    {
+      id: "quote_received_mr",
+      numeric: true,
+      label: "QR",
+    },
+    {
+      id: "quotes_accepted_mr",
+      numeric: true,
+      label: "IP",
     },
     {
       id: "oldestOpenMR",
@@ -200,11 +223,12 @@ export default function ManagerDashboard() {
           {headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
-              padding={"normal"}
+              align="center"
+              size="small"
               sortDirection={orderBy === headCell.id ? order : false}
             >
               <TableSortLabel
+                align="center"
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : "asc"}
                 onClick={createSortHandler(headCell.id)}
@@ -256,7 +280,7 @@ export default function ManagerDashboard() {
             </Col>
           </Row>
           <Row className="m-3">
-            <Table>
+            <Table classes={{ root: classes.customTable }} size="small">
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -287,7 +311,7 @@ export default function ManagerDashboard() {
                         tabIndex={-1}
                         key={property.address}
                       >
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {JSON.parse(property.images).length > 0 ? (
                             <img
                               src={JSON.parse(property.images)[0]}
@@ -314,16 +338,20 @@ export default function ManagerDashboard() {
                             ""
                           )}
                         </TableCell>
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {property.address}
                           {property.unit !== "" ? " " + property.unit : ""}
                         </TableCell>
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {property.city}, {property.state}
                         </TableCell>
-                        <TableCell>{property.zip}</TableCell>
-                        <TableCell>{property.listed_rent}</TableCell>
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.zip}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.listed_rent}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {property.rentalInfo !== "NOT RENTED" ? (
                             property.rentalInfo.map((tf, i) => {
                               return (
@@ -337,19 +365,30 @@ export default function ManagerDashboard() {
                             <div>{property.rentalInfo}</div>
                           )}
                         </TableCell>
-                        <TableCell>{property.rent_status}</TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.rent_status}
+                        </TableCell>
 
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {property.late_date != "Not Applicable" ? (
                             <div>{property.late_date} days</div>
                           ) : (
                             <div>{property.late_date}</div>
                           )}
                         </TableCell>
-                        <TableCell>
-                          {property.num_maintenanceRequests}
+                        <TableCell padding="none" size="small" align="center">
+                          {property.new_mr}
                         </TableCell>
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.process_mr}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.quote_received_mr}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.quote_accepted_mr}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {property.oldestOpenMR != "Not Applicable" ? (
                             <div>{property.oldestOpenMR} days</div>
                           ) : (

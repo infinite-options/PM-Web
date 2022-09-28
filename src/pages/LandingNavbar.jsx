@@ -391,7 +391,7 @@ function Landing() {
                   : ""}
               </div>
             </div>
-            {/* <div
+            <div
               style={{
                 display: "flex",
                 flexDirection: "row",
@@ -421,7 +421,7 @@ function Landing() {
                     </div>
                   ))
                 : ""}
-            </div> */}
+            </div>
           </nav>
         </Row>
       </Container>

@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
+import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -29,15 +30,28 @@ import {
   greenPill,
 } from "../utils/styles";
 
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 16px 6px 16px", // <-- arbitrary value
+    },
+  },
+});
+
 function ManagerTenantList(props) {
   const navigate = useNavigate();
-
+  const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [tenants, setTenants] = useState([]);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState([]);
-  const [userPayments, setUserPayments] = React.useState([]);
+  const [userPayments, setUserPayments] = useState([]);
+  const [lateAfter, setLateAfter] = useState("");
+  const [lateFee, setLateFee] = useState("");
+  const [lateFeePer, setLateFeePer] = useState("");
+  const [dueDate, setDueDate] = useState("1");
+  const [rentDetails, setRentDetails] = useState([]);
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
 
   // search variables
@@ -78,8 +92,14 @@ function ManagerTenantList(props) {
     // console.log(response.result);
     setTenants(response.result);
     setSelectedTenant(response.result[0]);
+    setDueDate(response.result[0].due_by);
+    setDueDate(response.result[0].due_by);
+    setLateAfter(response.result[0].late_by);
+    setLateFee(response.result[0].late_fee);
 
     setUserPayments(response.result[0].user_payments);
+    setRentDetails(JSON.parse(response.result[0].rent_payments));
+    setLateFeePer(response.result[0].perDay_late_fee);
     setMaintenanceRequests(response.result[0].user_repairRequests);
     console.log(selectedTenant);
     // await getAlerts(properties_unique)
@@ -89,6 +109,20 @@ function ManagerTenantList(props) {
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
+  function ordinal_suffix_of(i) {
+    var j = i % 10,
+      k = i % 100;
+    if (j == 1 && k != 11) {
+      return i + "st";
+    }
+    if (j == 2 && k != 12) {
+      return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+      return i + "rd";
+    }
+    return i + "th";
+  }
   const paymentsByMonth = {};
   for (const payment of userPayments) {
     const month = moment(payment.payment_date).format("MMMM YYYY");
@@ -159,6 +193,93 @@ function ManagerTenantList(props) {
     return stabilizedThis.map((el) => el[0]);
   }
 
+  const headCells2 = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Repair Images",
+    },
+    {
+      id: "title",
+      numeric: false,
+      label: "Issue",
+    },
+    {
+      id: "description",
+      numeric: false,
+      label: "Description",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    {
+      id: "priority",
+      numeric: false,
+      label: "Priority",
+    },
+    {
+      id: "request_created_date",
+      numeric: false,
+      label: "Date Reported",
+    },
+    {
+      id: "days_open",
+      numeric: true,
+      label: "Days Open",
+    },
+    {
+      id: "quote_status",
+      numeric: false,
+      label: "Quote Status",
+    },
+  ];
+  function EnhancedTableHead2(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCells2.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHead2.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
   const headCells = [
     {
       id: "tenant_last_name",
@@ -208,8 +329,8 @@ function ManagerTenantList(props) {
           {headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
-              padding={"normal"}
+              align="center"
+              size="small"
               sortDirection={orderBy === headCell.id ? order : false}
             >
               <TableSortLabel
@@ -330,7 +451,7 @@ function ManagerTenantList(props) {
             </Col>
           </Row>
           <Row className="m-3">
-            <Table>
+            <Table classes={{ root: classes.customTable }} size="small">
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -354,6 +475,9 @@ function ManagerTenantList(props) {
                     return (
                       <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                         <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
                           onClick={() => {
                             setSelectedTenant(tenant);
                             setUserPayments(tenant.user_payments);
@@ -363,19 +487,25 @@ function ManagerTenantList(props) {
                         >
                           {tenant.tenant_first_name} {tenant.tenant_last_name}
                         </TableCell>
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {tenant.address}
                           {tenant.unit !== "" ? " " + tenant.unit : ""}
                         </TableCell>
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           {tenant.city}, {tenant.state}
                         </TableCell>
-                        <TableCell>{tenant.zip}</TableCell>
-                        <TableCell>{tenant.tenant_phone_number}</TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {tenant.zip}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {tenant.tenant_phone_number}
+                        </TableCell>
 
-                        <TableCell>{tenant.tenant_email}</TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {tenant.tenant_email}
+                        </TableCell>
 
-                        <TableCell>
+                        <TableCell padding="none" size="small" align="center">
                           <div className="d-flex  justify-content-end ">
                             <div
                               style={tenant.tenant_id ? {} : hidden}
@@ -450,6 +580,93 @@ function ManagerTenantList(props) {
                     </div>
                   </div>
                 </Col>
+              </Row>
+              <Row className="my-3">
+                <h6 style={mediumBold}>Lease Length</h6>
+                <Row>
+                  <Col className="d-flex justify-content-start flex-column">
+                    <h6>Lease Start Date</h6>
+                    <h6>Lease End Date</h6>
+                    <h6>Rent Due</h6>
+                    <h6>Late After</h6>
+                    <h6>Late Fee</h6>
+                    <h6>Per Day Late Fee</h6>
+                  </Col>
+                  <Col className="d-flex flex-column ">
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {selectedTenant.lease_start}
+                    </h6>
+
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {selectedTenant.lease_end}
+                    </h6>
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {`${ordinal_suffix_of(dueDate)} of the month`}
+                    </h6>
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      {lateAfter} days
+                    </h6>
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      ${lateFee}
+                    </h6>
+                    <h6
+                      className="d-flex justify-content-end"
+                      style={{
+                        font: "normal normal normal 16px Bahnschrift-Regular",
+                      }}
+                    >
+                      ${lateFeePer}
+                    </h6>
+                  </Col>
+                </Row>
+              </Row>
+              <Row className="my-4">
+                <h6 style={mediumBold}>Rent Payments</h6>
+                {rentDetails.map((fee, i) => (
+                  <Row key={i}>
+                    <Col className="d-flex justify-content-start">
+                      <h6 className="mb-1">{fee.fee_name}</h6>
+                    </Col>
+                    <Col className="d-flex justify-content-end">
+                      <h6
+                        style={{
+                          font: "normal normal normal 16px Bahnschrift-Regular",
+                        }}
+                        className="mb-1"
+                      >
+                        {fee.fee_type === "%"
+                          ? `${fee.charge}% of ${fee.of}`
+                          : `$${fee.charge}`}{" "}
+                        {fee.frequency}
+                      </h6>
+                    </Col>
+                  </Row>
+                ))}
               </Row>
               <Row
                 className="d-flex justify-content-center my-2"
@@ -534,6 +751,114 @@ function ManagerTenantList(props) {
                     overflow: "scroll",
                   }}
                 >
+                  <Row className="m-3">
+                    <Table classes={{ root: classes.customTable }} size="small">
+                      <EnhancedTableHead2
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        rowCount={maintenanceRequests.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          maintenanceRequests,
+                          getComparator(order, orderBy)
+                        ).map((repair, j) => (
+                          <TableRow hover role="checkbox" tabIndex={-1} key={j}>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(repair.images).length > 0 ? (
+                                <img
+                                  src={JSON.parse(repair.images)[0]}
+                                  // onClick={() => selectRepair(repair)}
+                                  onClick={() => {
+                                    navigate(
+                                      `./${repair.maintenance_request_uid}`,
+                                      {
+                                        state: {
+                                          repair: repair,
+                                        },
+                                      }
+                                    );
+                                  }}
+                                  alt="repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                ""
+                              )}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.description}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.address}
+                              {repair.unit !== ""
+                                ? " " + repair.unit
+                                : ""}, {repair.city}, {repair.state} <br />
+                              {repair.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.quotes_to_review > 0
+                                ? `${repair.quotes_to_review} new quote(s) to review`
+                                : "No new quotes"}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Row>
                   {maintenanceRequests.map((request) => (
                     <div
                       className="my-3 p-2"

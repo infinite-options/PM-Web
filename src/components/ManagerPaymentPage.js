@@ -51,19 +51,19 @@ function ManagerPaymentPage(props) {
   };
 
   React.useEffect(async () => {
-    const url = useLiveStripeKey
-      ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
-      : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
-    let response = await fetch(url);
-    const responseData = await response.json();
-    const stripePromise = loadStripe(responseData.publicKey);
-    setStripePromise(stripePromise);
+    // const url = useLiveStripeKey
+    //   ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
+    //   : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
+    // let response = await fetch(url);
+    // const responseData = await response.json();
+    // const stripePromise = loadStripe(responseData.publicKey);
+    // setStripePromise(stripePromise);
     let tempAllPurchases = [];
     // for (let i in purchaseUID) {
     //   let response1 = await get(`/purchases?purchase_uid=${purchaseUID[i]}`);
     //   tempAllPurchases.push(response1.result[0]);
     // }
-    response = await get(`/purchases?purchase_uid=${purchaseUID}`);
+    let response = await get(`/purchases?purchase_uid=${purchaseUID}`);
     tempAllPurchases.push(response.result[0]);
     setPurchase(response.result[0]);
 
@@ -71,7 +71,17 @@ function ManagerPaymentPage(props) {
     setAmount(response.result[0].amount_due - response.result[0].amount_paid);
     setAllPurchases(tempAllPurchases);
   }, []);
-
+  const toggleKeys = async () => {
+    const url =
+      message === "PMTEST"
+        ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
+        : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
+    let response = await fetch(url);
+    const responseData = await response.json();
+    console.log(responseData.PUBLISHABLE_KEY);
+    const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);
+    setStripePromise(stripePromise);
+  };
   useEffect(() => {
     if (amount > totalSum || amount <= 0) {
       setDisabled(true);
@@ -255,6 +265,7 @@ function ManagerPaymentPage(props) {
                     variant="outline-primary"
                     onClick={() => {
                       //navigate("/tenant");
+                      toggleKeys();
                       setStripePayment(true);
                     }}
                     style={bluePillButton}
