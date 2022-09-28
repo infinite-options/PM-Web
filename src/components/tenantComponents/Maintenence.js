@@ -33,6 +33,9 @@ export default function Maintenence(props){
                   setCurrentImg(currentImg - 1);
                 }
               };
+            if(imgUrl.length > 1){
+                
+            }
             return(
             
                 <tr>
@@ -43,7 +46,25 @@ export default function Maintenence(props){
                     <th className="table-col">{numDays(created_date, current)}</th>
                     <th className="table-col">{row.priority}</th>
                     <th className="table-col">{row.request_status}</th>
-                    <th className="table-col"><img src = {imgUrl[0]} className="table-img"></img></th>
+                    <th className="table-col">
+                        {imgUrl.length > 1 ?
+                        <div className = "img-orientation">
+                            <div onClick={previousImg} className="left-arrow">
+                                    {"<"}
+                            </div>
+                            <img src = {imgUrl[currentImg]} className="table-img"></img>
+
+                            <div onClick={nextImg} className="right-arrow">
+                                {">"}
+                            </div>    
+                        </div>
+                        :
+                        <div>
+                            <img src = {imgUrl[0]} className="table-img"></img>
+
+                        </div>
+                        }
+                    </th>
                 </tr>
             )
            

@@ -419,3 +419,15 @@
     height: auto;
     align-items: center;
 }
+.img-orientation{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.left-arrow{
+    background-color: grey;
+}
+.right-arrow{
+    background-color: grey;
+}
