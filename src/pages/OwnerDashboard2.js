@@ -7,11 +7,13 @@ import Header from "../components/Header";
 import Table from "../components/ownerComponents/Table";
 import Table2 from "../components/ownerComponents/Table2";
 import AppContext from "../AppContext";
+import PropertyForm from "../components/PropertyForm";
 import { get } from "../utils/api";
 export default function OwnerDashboard2() {
   const [ownerData, setOwnerData] = useState([]);
   const [dataTable, setDataTable] = useState([]);
 
+  const [stage, setStage] = useState("LIST");
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
@@ -41,19 +43,49 @@ export default function OwnerDashboard2() {
     console.log("in use effect");
     fetchOwnerDashboard();
   }, []);
+  const addProperty = () => {
+    fetchOwnerDashboard();
+    setStage("LIST");
+  };
 
-  return (
+  return stage === "LIST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
         <div className="sidebar">
           <SideBar />
         </div>
         <div className="w-100">
-          <Header title="Owner" />
+          <Header
+            title="Owner"
+            rightText="+ New"
+            rightFn={() => setStage("NEW")}
+          />
           <Row>{dataTable.length !== 0 && <Table data={dataTable} />}</Row>
           <Row>{dataTable.length !== 0 && <Table2 data={dataTable} />}</Row>
         </div>
       </div>
     </div>
+  ) : stage === "NEW" ? (
+    <div className="OwnerDashboard2">
+      <div className="flex-1">
+        <div className="sidebar">
+          <SideBar />
+        </div>
+        <div className="w-100">
+          <Header
+            title="Properties"
+            leftText="< Back"
+            leftFn={() => setStage("LIST")}
+          />
+          <PropertyForm
+            edit
+            cancel={() => setStage("LIST")}
+            onSubmit={addProperty}
+          />
+        </div>
+      </div>
+    </div>
+  ) : (
+    ""
   );
 }

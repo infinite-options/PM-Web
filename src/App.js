@@ -56,12 +56,14 @@ import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./pages/ManagerUtilities";
 import OwnerUtilities from "./pages/OwnerUtilities";
+import PropertyView from "./components/PropertyView";
 import TenantDuePayments from "./components/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 import OwnerPaymentHistory from "./components/OwnerPaymentHistory";
 import ManagerOwnerList from "./components/ManagerOwnerList";
 import ManagerTenantList from "./components/ManagerTenantList";
 import ManagerApplianceList from "./components/ManagerApplianceList";
+import ApplianceList from "./components/ApplianceList";
 import ManagerRepairInfo from "./pages/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
@@ -78,6 +80,8 @@ import ManagerLanding from "./pages/ManagerLanding";
 import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/OwnerRepairList";
 import OwnerRepairRequest from "./components/OwnerRepairRequest";
+
+import PropertyForm from "./components/PropertyForm";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -251,9 +255,14 @@ function App() {
               element={<ManagerApplianceList />}
             />
             <Route
+              path="/owner-appliances/:mp_id"
+              element={<ApplianceList />}
+            />
+            <Route
               path="manager-properties/:mp_id"
               element={<ManagerPropertyView />}
             />
+            <Route path="owner-properties/:mp_id" element={<PropertyView />} />
             <Route
               path="manager-properties/:mp_id/repairs"
               element={<ManagerRepairsList />}
@@ -300,6 +309,7 @@ function App() {
               path="owner-repairRequest"
               element={<OwnerRepairRequest />}
             />
+            <Route path="add-property" element={<PropertyForm />} />
           </Route>
         </Routes>
       </BrowserRouter>
