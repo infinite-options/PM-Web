@@ -3,6 +3,7 @@ import React from "react"
 export default function Maintenence(props){
     const main = props?.data; //array of objects 
     const noRows = "No data available"
+    const [currentImg, setCurrentImg] = React.useState(0);
     var counter = 0;
     //implement date.now and calculate amount of days
     const rows = main?.map((row,index)=>{//row is an element in the array 
@@ -18,6 +19,20 @@ export default function Maintenence(props){
               const current = new Date();
             counter+=1;
             const imgUrl = JSON.parse(row.images)
+            const nextImg = () => {
+                if (currentImg === imgUrl.length - 1) {
+                  setCurrentImg(0);
+                } else {
+                  setCurrentImg(currentImg + 1);
+                }
+              };
+              const previousImg = () => {
+                if (currentImg === 0) {
+                  setCurrentImg(imgUrl.length - 1);
+                } else {
+                  setCurrentImg(currentImg - 1);
+                }
+              };
             return(
             
                 <tr>
