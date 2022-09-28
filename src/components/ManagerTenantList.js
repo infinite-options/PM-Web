@@ -193,6 +193,93 @@ function ManagerTenantList(props) {
     return stabilizedThis.map((el) => el[0]);
   }
 
+  const headCells2 = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Repair Images",
+    },
+    {
+      id: "title",
+      numeric: false,
+      label: "Issue",
+    },
+    {
+      id: "description",
+      numeric: false,
+      label: "Description",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    {
+      id: "priority",
+      numeric: false,
+      label: "Priority",
+    },
+    {
+      id: "request_created_date",
+      numeric: false,
+      label: "Date Reported",
+    },
+    {
+      id: "days_open",
+      numeric: true,
+      label: "Days Open",
+    },
+    {
+      id: "quote_status",
+      numeric: false,
+      label: "Quote Status",
+    },
+  ];
+  function EnhancedTableHead2(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCells2.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHead2.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
   const headCells = [
     {
       id: "tenant_last_name",
@@ -664,6 +751,114 @@ function ManagerTenantList(props) {
                     overflow: "scroll",
                   }}
                 >
+                  <Row className="m-3">
+                    <Table classes={{ root: classes.customTable }} size="small">
+                      <EnhancedTableHead2
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        rowCount={maintenanceRequests.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          maintenanceRequests,
+                          getComparator(order, orderBy)
+                        ).map((repair, j) => (
+                          <TableRow hover role="checkbox" tabIndex={-1} key={j}>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(repair.images).length > 0 ? (
+                                <img
+                                  src={JSON.parse(repair.images)[0]}
+                                  // onClick={() => selectRepair(repair)}
+                                  onClick={() => {
+                                    navigate(
+                                      `./${repair.maintenance_request_uid}`,
+                                      {
+                                        state: {
+                                          repair: repair,
+                                        },
+                                      }
+                                    );
+                                  }}
+                                  alt="repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                ""
+                              )}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.description}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.address}
+                              {repair.unit !== ""
+                                ? " " + repair.unit
+                                : ""}, {repair.city}, {repair.state} <br />
+                              {repair.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.priority}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.request_created_date.split(" ")[0]}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {repair.quotes_to_review > 0
+                                ? `${repair.quotes_to_review} new quote(s) to review`
+                                : "No new quotes"}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Row>
                   {maintenanceRequests.map((request) => (
                     <div
                       className="my-3 p-2"
