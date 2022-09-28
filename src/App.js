@@ -81,7 +81,6 @@ import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/OwnerRepairList";
 import OwnerRepairRequest from "./components/OwnerRepairRequest";
 
-import PropertyForm from "./components/PropertyForm";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -309,7 +308,6 @@ function App() {
               path="owner-repairRequest"
               element={<OwnerRepairRequest />}
             />
-            <Route path="add-property" element={<PropertyForm />} />
           </Route>
         </Routes>
       </BrowserRouter>
