@@ -173,7 +173,7 @@ function TenantWelcomePage(props) {
   const goToReviewPropertyLease = (application) => {
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
       state: {
-        application_uid: application.application_uid,
+        application_uid: application.application_uid, 
         application_status_1: application.application_status,
       },
     });

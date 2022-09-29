@@ -1,13 +1,23 @@
 import React from "react"
+import { useNavigate } from "react-router-dom";
 
 export default function TenantCard(props){
     const imgS = JSON.parse(props.imgSrc)
-    
+    const navigate = useNavigate();
+
+    const goToPropertyLeaseInfo = () => {
+        console.log("card clicked");
+        navigate(`/reviewPropertyLease/${props.property_uid}`, {
+          state: {
+            property_uid: props.property_uid,
+          },
+        });
+      };
     return(
         // <div className="tenantCard">
         <div className="tenantCard">
             <div className="card-spacing">
-                <img className="tenantImg" src ={imgS[0]}></img>
+                <img className="tenantImg" onClick={goToPropertyLeaseInfo} src ={imgS[0]} ></img>
                 <h3 id="lease-ends" className="green-text">Lease Ends: {props.leaseEnds}</h3>
                 <h4 className="add1 card-text"><strong>{props.address1}</strong></h4>
                 <h4 className = "add1 card-text">{props.city}, {props.state}</h4>
