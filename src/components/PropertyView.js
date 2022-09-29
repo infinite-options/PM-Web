@@ -329,14 +329,7 @@ function PropertyView(props) {
         agreement={selectedAgreement}
       />
     ) : (
-      <div
-        className="pb-5 mb-5"
-        style={{
-          background: "#E9E9E9 0% 0% no-repeat padding-box",
-          borderRadius: "10px",
-          opacity: 1,
-        }}
-      >
+      <div className="w-100">
         <ConfirmDialog
           title={"Are you sure you want to reject this Property Manager?"}
           isOpen={showDialog}

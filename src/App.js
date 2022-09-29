@@ -80,6 +80,7 @@ import ManagerLanding from "./pages/ManagerLanding";
 import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/OwnerRepairList";
 import OwnerRepairRequest from "./components/OwnerRepairRequest";
+import PropertyManagersList from "./components/PropertyManagersList";
 
 function App() {
   const [userData, setUserData] = React.useState({
@@ -153,7 +154,6 @@ function App() {
             />
             <Route path="maintenencePage" element={<MaintenencePage />} />
             <Route path="OwnersTab" element={<OwnersTab />} />
-
             <Route
               path="uploadTenantDocuments"
               element={<TenantDocumentUpload />}
@@ -177,7 +177,6 @@ function App() {
             {/*/>*/}
             <Route path="manager" element={<ManagerDashboard />} />
             <Route path="managerLanding" element={<ManagerLanding />} />
-
             <Route path="manager_original" element={<ManagerHome />} />
             <Route
               path="/:property_uid/repairRequest"
@@ -291,7 +290,6 @@ function App() {
               element={<OwnerRepairDetails />}
             />
             <Route path="/properties" element={<NotManagedProperties />} />
-
             <Route path="quotes-sent" element={<MaintenanceQuotesSent />} />
             <Route
               path="quotes-sent/:q_id"
@@ -308,6 +306,7 @@ function App() {
               path="owner-repairRequest"
               element={<OwnerRepairRequest />}
             />
+            <Route path="pm-list" element={<PropertyManagersList />} />
           </Route>
         </Routes>
       </BrowserRouter>

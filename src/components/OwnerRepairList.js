@@ -53,7 +53,7 @@ function OwnerRepairList(props) {
     const properties_unique = [];
     properties.forEach((property) => {
       if (pids.has(property.property_uid)) {
-        console.log("here in if");
+        // console.log("here in if");
         // properties_unique[properties_unique.length-1].tenants.push(property)
         const index = properties_unique.findIndex(
           (item) => item.property_uid === property.property_uid
@@ -62,18 +62,18 @@ function OwnerRepairList(props) {
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          console.log("here", property);
+          // console.log("here", property);
           properties_unique[index].tenants.push(property.rentalInfo);
         }
       } else {
-        console.log("here in else");
+        // console.log("here in else");
         pids.add(property.property_uid);
         properties_unique.push(property);
         if (
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          console.log("here", property);
+          // console.log("here", property);
           properties_unique[properties_unique.length - 1].tenants = [
             property.rentalInfo,
           ];
@@ -127,19 +127,22 @@ function OwnerRepairList(props) {
 
     let repairI = [];
     let repairIT = [];
-    for (let r = 0; r <= response.result.length - 1; r++) {
-      let new_repairs = [];
-      let info_repairs = [];
-      let processing_repairs = [];
-      let scheduled_repairs = [];
-      let completed_repairs = [];
-      let newrepairs = "";
-      let inforepairs = "";
-      let processingrepairs = "";
-      let scheduledrepairs = "";
-      let completedrepairs = "";
+    let new_repairs = [];
+    let info_repairs = [];
+    let processing_repairs = [];
+    let scheduled_repairs = [];
+    let completed_repairs = [];
+    let newrepairs = "";
+    let inforepairs = "";
+    let processingrepairs = "";
+    let scheduledrepairs = "";
+    let completedrepairs = "";
+    for (let r = 0; r < response.result.length; r++) {
+      console.log(response.result[r]);
+
       let repairs = response.result[r].maintenanceRequests;
       repairs.forEach((repair, i) => {
+        console.log(repair);
         const request_created_date = new Date(
           Date.parse(repair.request_created_date)
         );
@@ -161,10 +164,10 @@ function OwnerRepairList(props) {
           repair.priority_n = 1;
         }
       });
-      // console.log("repairs unsorted", repairs);
+      console.log("repairs unsorted", repairs);
       let repairs_sorted = sort_repairs(repairs);
       sort_repairs_address(repairs);
-      // console.log("repairs sorted", repairs_sorted);
+      console.log("repairs sorted", repairs_sorted);
 
       repairs_sorted.forEach((repair_sorted, i) => {
         // console.log("repairs sorted in for each ", i, repair_sorted);
@@ -188,43 +191,25 @@ function OwnerRepairList(props) {
       });
 
       repairI = [
-        [
-          {
-            address:
-              response.result[r].address +
-              " " +
-              response.result[r].unit +
-              ", " +
-              response.result[r].city +
-              ", " +
-              response.result[r].state +
-              " " +
-              response.result[r].zip,
-          },
-        ],
-        [
-          { title: "New", repairs_list: new_repairs },
-          { title: "Info Requested", repairs_list: info_repairs },
-          { title: "Processing", repairs_list: processing_repairs },
-          { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
-          { title: "Completed", repairs_list: completed_repairs },
-        ],
-      ];
-      // console.log(repairI);
-      repairIT.push(repairI);
-      // setRepairIter(repairI.push(repairI));
-      setRepairIter([
         { title: "New", repairs_list: new_repairs },
         { title: "Info Requested", repairs_list: info_repairs },
         { title: "Processing", repairs_list: processing_repairs },
         { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
         { title: "Completed", repairs_list: completed_repairs },
-      ]);
+      ];
+      console.log(repairI);
+      repairIT.push(repairI);
+      // setRepairIter(repairI.push(repairI));
     }
-    console.log("repairs_sorted", repairIT);
+    console.log("repairs_sorted", repairI, repairIT);
+    setRepairIter(repairI);
   };
-
-  useEffect(fetchRepairs, [access_token]);
+  useEffect(() => {
+    if (access_token === null) {
+      navigate("/");
+    }
+    fetchRepairs();
+  }, [access_token]);
   // console.log(repairIter);
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
@@ -590,7 +575,7 @@ function OwnerRepairList(props) {
                                   {
                                     state: {
                                       repair: repair,
-                                      property: row[0][0].address,
+                                      property: repair.address,
                                     },
                                   }
                                 );
@@ -619,9 +604,6 @@ function OwnerRepairList(props) {
 
                         <TableCell padding="none" size="small" align="center">
                           {repair.address}
-                          {repair.unit !== "" ? " " + repair.unit : ""},{" "}
-                          {repair.city}, {repair.state} <br />
-                          {repair.zip}
                         </TableCell>
                         <TableCell padding="none" size="small" align="center">
                           {repair.priority}
