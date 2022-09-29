@@ -15,6 +15,17 @@ import AppContext from "../AppContext";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/managerComponents/SideBar";
+import {
+  blue,
+  bluePill,
+  smallImg,
+  hidden,
+  greenPill,
+  mediumBold,
+  orangePill,
+  redPill,
+  xSmall,
+} from "../utils/styles";
 import { get } from "../utils/api";
 const useStyles = makeStyles({
   customTable: {
@@ -341,6 +352,44 @@ export default function ManagerDashboard() {
                         <TableCell padding="none" size="small" align="center">
                           {property.address}
                           {property.unit !== "" ? " " + property.unit : ""}
+                          <div className="d-flex">
+                            <div className="d-flex align-items-end">
+                              <p
+                                style={{ ...blue, ...xSmall }}
+                                className="mb-0"
+                              >
+                                {property.repairs.new > 0
+                                  ? `${property.repairs.new} new repair requests to review`
+                                  : ""}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="d-flex">
+                            <div className="d-flex align-items-end">
+                              <p
+                                style={{ ...blue, ...xSmall }}
+                                className="mb-0"
+                              >
+                                {property.new_tenant_applications.length > 0
+                                  ? `${property.new_tenant_applications.length} new tenant application(s) to review`
+                                  : ""}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="d-flex">
+                            <div className="d-flex align-items-end">
+                              <p
+                                style={{ ...blue, ...xSmall }}
+                                className="mb-0"
+                              >
+                                {property.end_early_applications.length > 0
+                                  ? "Tenant(s) requested to end the lease early"
+                                  : ""}
+                              </p>
+                            </div>
+                          </div>
                         </TableCell>
                         <TableCell padding="none" size="small" align="center">
                           {property.city}, {property.state}
