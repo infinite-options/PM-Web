@@ -12,21 +12,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import {
-  blue,
-  gray,
-  greenPill,
-  orangePill,
-  redPill,
-  tileImg,
-  xSmall,
-} from "../utils/styles";
-import Header from "../components/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import { get } from "../utils/api";
 import AppContext from "../AppContext";
-import No_Image from "../icons/No_Image_Available.jpeg";
-import ManagerRepairDetail from "./ManagerRepairDetail";
 import SideBar from "../components/managerComponents/SideBar";
 const useStyles = makeStyles({
   customTable: {
@@ -39,25 +27,14 @@ const useStyles = makeStyles({
 function ManagerRepairsOverview(props) {
   const navigate = useNavigate();
   const classes = useStyles();
-  const location = useLocation();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
-  const [repair, setRepair] = useState([]);
-  const [repairs, setRepairs] = React.useState([]);
-  const [stage, setStage] = React.useState("LIST");
-  const [newRepairs, setNewRepairs] = React.useState([]);
-  const [infoRepairs, setInfoRepairs] = React.useState([]);
-  const [processingRepairs, setProcessingRepairs] = React.useState([]);
-  const [scheduledRepairs, setScheduledRepairs] = React.useState([]);
-  const [completedRepairs, setCompletedRepairs] = React.useState([]);
   const [repairIter, setRepairIter] = React.useState([]);
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-
-  const { properties, setFooterTab } = props;
 
   const sort_repairs = (repairs) => {
     const repairs_with_quotes = repairs.filter(
@@ -129,7 +106,6 @@ function ManagerRepairsOverview(props) {
 
     let repairs_sorted = sort_repairs(repairs);
     console.log(repairs_sorted);
-    setRepairs(repairs_sorted);
 
     const new_repairs = repairs_sorted.filter(
       (item) => item.request_status === "NEW"
@@ -146,11 +122,7 @@ function ManagerRepairsOverview(props) {
     const completed_repairs = repairs_sorted.filter(
       (item) => item.request_status === "COMPLETE"
     );
-    setNewRepairs(new_repairs);
-    setInfoRepairs(info_repairs);
-    setProcessingRepairs(processing_repairs);
-    setScheduledRepairs(scheduled_repairs);
-    setCompletedRepairs(completed_repairs);
+
     setRepairIter([
       { title: "New", repairs_list: new_repairs },
       { title: "Info Requested", repairs_list: info_repairs },
@@ -161,11 +133,7 @@ function ManagerRepairsOverview(props) {
   };
 
   React.useEffect(fetchRepairs, [access_token]);
-
-  const selectRepair = (repair) => {
-    setRepair(repair);
-    setStage("REPAIRDETAILS");
-  };
+  console.log(repairIter);
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));

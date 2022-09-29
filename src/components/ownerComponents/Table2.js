@@ -23,8 +23,10 @@
 //   })
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./table.css";
 export default function Table(props) {
+  const navigate = useNavigate();
   const properties = props.data;
   var totalRequests = 0;
   var totalUrgent = 0;
@@ -62,7 +64,19 @@ export default function Table(props) {
         console.log(row.maintenanceRequests),
         console.log(request),
         (
-          <tr>
+          <tr
+            onClick={() =>
+              navigate(
+                `/owner-repairs/${row.maintenanceRequests[0].maintenance_request_uid}`,
+                {
+                  state: {
+                    repair: row.maintenanceRequests[0],
+                    property: row.address,
+                  },
+                }
+              )
+            }
+          >
             <th>{indexes}</th>
             <th>
               {row.address +

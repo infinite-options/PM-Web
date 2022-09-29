@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
 import { get, put } from "../utils/api";
@@ -18,11 +18,17 @@ import {
   gray,
   pillButton,
 } from "../utils/styles";
+import SideBar from "./ownerComponents/SideBar";
 
 function PropertyManagersList(props) {
   const navigate = useNavigate();
-  const { back, property_uid, property, reload } = props;
 
+  const location = useLocation();
+  // const { back, property_uid, property, reload } = props;
+
+  const property_uid = location.state.property_uid;
+
+  const property = location.state.property;
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [propertyManagers, setPropertyManagers] = useState([]);
@@ -69,7 +75,7 @@ function PropertyManagersList(props) {
 
           // alert("youve already rejected this Management Company");
           setShowDialog(true);
-          reload();
+          navigate(`/owner-properties/${property_uid}`);
         } else {
           console.log("here in else");
           const newProperty = {
@@ -86,7 +92,7 @@ function PropertyManagersList(props) {
           // }
           const response = await put("/properties", newProperty, null, files);
           //   setAddPropertyManager(false);
-          reload();
+          navigate(`/owner-properties/${property_uid}`);
           setStage("LIST");
         }
       }
@@ -105,7 +111,7 @@ function PropertyManagersList(props) {
       // }
       const response = await put("/properties", newProperty, null, files);
       //   setAddPropertyManager(false);
-      reload();
+      // reload();
       setStage("LIST");
     } else {
       console.log("in else");
@@ -133,7 +139,7 @@ function PropertyManagersList(props) {
         // }
         const response = await put("/properties", newProperty, null, files);
         // setAddPropertyManager(false);
-        reload();
+        // navigate(`/owner-properties/${property_uid}`);
         setStage("LIST");
       }
       setStage("LIST");
@@ -141,233 +147,228 @@ function PropertyManagersList(props) {
   };
 
   return stage === "LIST" ? (
-    <div
-      className="pb-5 mb-5 h-100"
-      style={{
-        background: "#E9E9E9 0% 0% no-repeat padding-box",
-        borderRadius: "10px",
-        opacity: 1,
-      }}
-    >
-      <Header title="Property Managers" leftText="< Back" leftFn={back} />
-      <div
-        className="mx-2 my-2 p-3"
-        style={{
-          background: "#FFFFFF 0% 0% no-repeat padding-box",
-          borderRadius: "10px",
-          opacity: 1,
-        }}
-      >
-        {propertyManagers.map((property, i) => (
-          <Container key={i} className="pt-1" style={{ height: "100px" }}>
-            <Row
-              className="h-100"
-              onClick={() => {
-                setStage("PMDETAILS");
-                setSelectedPropertyManagers(property);
-              }}
-            >
-              <Col className="ps-0">
-                <div className="d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                    {property.business_name}
-                  </h5>
-                </div>
-                <div>
-                  <p style={gray} className="mt-1 mb-0">
-                    {property.business_type}
-                  </p>
-                </div>
-              </Col>
-              <Col>
-                <div className="d-flex  justify-content-end ">
-                  <div
-                    style={property.business_uid ? {} : hidden}
-                    onClick={stopPropagation}
-                  >
-                    <a href={`tel:${property.business_phone_number}`}>
-                      <img src={Phone} alt="Phone" style={smallImg} />
-                    </a>
-                    <a href={`mailto:${property.business_email}`}>
-                      <img src={Message} alt="Message" style={smallImg} />
-                    </a>
-                    <a href={`mailto:${property.business_email}`}>
-                      <img src={Mail} alt="Mail" style={smallImg} />
-                    </a>
+    <div className="flex-1">
+      <div className="sidebar">
+        <SideBar />
+      </div>
+      <div className="w-100">
+        {/* <Header
+          title="Property Managers"
+          leftText="< Back"
+          leftFn={() => navigate(`/owner-properties/${property_uid}`)}
+        /> */}
+        <div>
+          {propertyManagers.map((property, i) => (
+            <Container key={i} className="pt-1" style={{ height: "100px" }}>
+              <Row
+                className="h-100"
+                onClick={() => {
+                  setStage("PMDETAILS");
+                  setSelectedPropertyManagers(property);
+                }}
+              >
+                <Col className="ps-0">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h5 className="mb-0" style={{ fontWeight: "600" }}>
+                      {property.business_name}
+                    </h5>
                   </div>
-                </div>
-              </Col>
-              <hr />
-            </Row>
-          </Container>
-        ))}
+                  <div>
+                    <p style={gray} className="mt-1 mb-0">
+                      {property.business_type}
+                    </p>
+                  </div>
+                </Col>
+                <Col>
+                  <div className="d-flex  justify-content-end ">
+                    <div
+                      style={property.business_uid ? {} : hidden}
+                      onClick={stopPropagation}
+                    >
+                      <a href={`tel:${property.business_phone_number}`}>
+                        <img src={Phone} alt="Phone" style={smallImg} />
+                      </a>
+                      <a href={`mailto:${property.business_email}`}>
+                        <img src={Message} alt="Message" style={smallImg} />
+                      </a>
+                      <a href={`mailto:${property.business_email}`}>
+                        <img src={Mail} alt="Mail" style={smallImg} />
+                      </a>
+                    </div>
+                  </div>
+                </Col>
+                <hr />
+              </Row>
+            </Container>
+          ))}
+        </div>
       </div>
     </div>
   ) : stage === "PMDETAILS" ? (
-    <div
-      className="pb-5 mb-5 h-100"
-      style={{
-        background: "#E9E9E9 0% 0% no-repeat padding-box",
-        borderRadius: "10px",
-        opacity: 1,
-      }}
-    >
-      <Header title="" leftText="< Back" leftFn={() => setStage("LIST")} />
-      {console.log(selectedPropertyManagers)}
-      <div
-        className="mx-2 my-2 p-3"
-        style={{
-          background: "#FFFFFF 0% 0% no-repeat padding-box",
-          borderRadius: "10px",
-          opacity: 1,
-        }}
-      >
-        <p style={mediumBold}>{selectedPropertyManagers.business_name}</p>
+    <div className="flex-1">
+      <div className="sidebar">
+        <SideBar />
+      </div>
+      <div className="w-100">
+        <Header title="" leftText="< Back" leftFn={() => setStage("LIST")} />
+        {console.log(selectedPropertyManagers)}
+        <div
+          className="mx-2 my-2 p-3"
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
+          }}
+        >
+          <p style={mediumBold}>{selectedPropertyManagers.business_name}</p>
 
-        <div
-          className="m-2 p-2"
-          style={{
-            background: "#F3F3F3 0% 0% no-repeat padding-box",
-            borderRadius: "5px",
-          }}
-        >
-          Fees Charged:
-          {JSON.parse(selectedPropertyManagers.business_services_fees).map(
-            (bsf) => {
-              return (
-                <div
-                  className="m-2 p-2"
-                  style={{
-                    background: " #FFFFFF 0% 0% no-repeat padding-box",
-                    boxShadow: " 0px 1px 6px #00000029",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <p> {bsf.fee_name}&nbsp;</p>
-                  {bsf.fee_type === "%"
-                    ? `${bsf.charge}% of ${bsf.of}`
-                    : `$${bsf.charge}`}{" "}
-                  {bsf.frequency}
-                </div>
-              );
-            }
-          )}
-        </div>
-        <div
-          className="m-2 p-2"
-          style={{
-            background: "#F3F3F3 0% 0% no-repeat padding-box",
-            borderRadius: "5px",
-          }}
-        >
-          Payment Details
-          <Row>
-            <Col xs={1}>
-              {selectedPropertyManagers.business_paypal === null ? (
-                <img src={UnFilledBox} />
-              ) : (
-                <img src={BlueFilledBox} />
-              )}
-            </Col>
-            <Col>PayPal</Col>
-          </Row>
-          <Row>
-            <Col xs={1}>
-              {selectedPropertyManagers.business_apple_pay === null ? (
-                <img src={UnFilledBox} />
-              ) : (
-                <img src={BlueFilledBox} />
-              )}
-            </Col>
-            <Col>Apple Pay</Col>
-          </Row>
-          <Row>
-            <Col xs={1}>
-              {selectedPropertyManagers.business_zelle === null ? (
-                <img src={UnFilledBox} />
-              ) : (
-                <img src={BlueFilledBox} />
-              )}
-            </Col>
-            <Col>Zelle</Col>
-          </Row>
-          <Row>
-            <Col xs={1}>
-              {selectedPropertyManagers.business_venmo === null ? (
-                <img src={UnFilledBox} />
-              ) : (
-                <img src={BlueFilledBox} />
-              )}
-            </Col>
-            <Col>Venmo</Col>
-          </Row>
-          <Row>
-            <Col xs={1}>
-              {selectedPropertyManagers.business_account_number === null ? (
-                <img src={UnFilledBox} />
-              ) : (
-                <img src={BlueFilledBox} />
-              )}
-            </Col>
-            <Col>Checking Acct.</Col>
-          </Row>
-        </div>
-        <div
-          className="m-2 p-2"
-          style={{
-            background: "#F3F3F3 0% 0% no-repeat padding-box",
-            borderRadius: "5px",
-          }}
-        >
-          <Row>
-            <Col>Locations of Service</Col>
-            <Col xs={3}>(-)(+) miles</Col>
-          </Row>
-          {JSON.parse(selectedPropertyManagers.business_locations).map((bl) => {
-            return (
-              <Row>
-                <Col
-                  className="m-2 p-2"
-                  style={{
-                    background: " #FFFFFF 0% 0% no-repeat padding-box",
-                    boxShadow: " 0px 1px 6px #00000029",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {bl.location}
-                </Col>
-                <Col
-                  xs={3}
-                  className="m-2 p-2"
-                  style={{
-                    background: " #FFFFFF 0% 0% no-repeat padding-box",
-                    boxShadow: " 0px 1px 6px #00000029",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {bl.distance}
-                </Col>
-              </Row>
-            );
-          })}
-        </div>
-        <div
-          className="m-2 p-2"
-          style={{
-            background: "#F3F3F3 0% 0% no-repeat padding-box",
-            borderRadius: "5px",
-          }}
-        >
-          <div> File a request</div>
-
-          <Button
-            variant="outline-primary"
-            style={pillButton}
-            className="mx-1"
-            onClick={updateBusiness}
+          <div
+            className="m-2 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
           >
-            Request Quote from PM
-          </Button>
+            Fees Charged:
+            {JSON.parse(selectedPropertyManagers.business_services_fees).map(
+              (bsf) => {
+                return (
+                  <div
+                    className="m-2 p-2"
+                    style={{
+                      background: " #FFFFFF 0% 0% no-repeat padding-box",
+                      boxShadow: " 0px 1px 6px #00000029",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <p> {bsf.fee_name}&nbsp;</p>
+                    {bsf.fee_type === "%"
+                      ? `${bsf.charge}% of ${bsf.of}`
+                      : `$${bsf.charge}`}{" "}
+                    {bsf.frequency}
+                  </div>
+                );
+              }
+            )}
+          </div>
+          <div
+            className="m-2 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
+            Payment Details
+            <Row>
+              <Col xs={1}>
+                {selectedPropertyManagers.business_paypal === null ? (
+                  <img src={UnFilledBox} />
+                ) : (
+                  <img src={BlueFilledBox} />
+                )}
+              </Col>
+              <Col>PayPal</Col>
+            </Row>
+            <Row>
+              <Col xs={1}>
+                {selectedPropertyManagers.business_apple_pay === null ? (
+                  <img src={UnFilledBox} />
+                ) : (
+                  <img src={BlueFilledBox} />
+                )}
+              </Col>
+              <Col>Apple Pay</Col>
+            </Row>
+            <Row>
+              <Col xs={1}>
+                {selectedPropertyManagers.business_zelle === null ? (
+                  <img src={UnFilledBox} />
+                ) : (
+                  <img src={BlueFilledBox} />
+                )}
+              </Col>
+              <Col>Zelle</Col>
+            </Row>
+            <Row>
+              <Col xs={1}>
+                {selectedPropertyManagers.business_venmo === null ? (
+                  <img src={UnFilledBox} />
+                ) : (
+                  <img src={BlueFilledBox} />
+                )}
+              </Col>
+              <Col>Venmo</Col>
+            </Row>
+            <Row>
+              <Col xs={1}>
+                {selectedPropertyManagers.business_account_number === null ? (
+                  <img src={UnFilledBox} />
+                ) : (
+                  <img src={BlueFilledBox} />
+                )}
+              </Col>
+              <Col>Checking Acct.</Col>
+            </Row>
+          </div>
+          <div
+            className="m-2 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
+            <Row>
+              <Col>Locations of Service</Col>
+              <Col xs={3}>(-)(+) miles</Col>
+            </Row>
+            {JSON.parse(selectedPropertyManagers.business_locations).map(
+              (bl) => {
+                return (
+                  <Row>
+                    <Col
+                      className="m-2 p-2"
+                      style={{
+                        background: " #FFFFFF 0% 0% no-repeat padding-box",
+                        boxShadow: " 0px 1px 6px #00000029",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      {bl.location}
+                    </Col>
+                    <Col
+                      xs={3}
+                      className="m-2 p-2"
+                      style={{
+                        background: " #FFFFFF 0% 0% no-repeat padding-box",
+                        boxShadow: " 0px 1px 6px #00000029",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      {bl.distance}
+                    </Col>
+                  </Row>
+                );
+              }
+            )}
+          </div>
+          <div
+            className="m-2 p-2"
+            style={{
+              background: "#F3F3F3 0% 0% no-repeat padding-box",
+              borderRadius: "5px",
+            }}
+          >
+            <div> File a request</div>
+
+            <Button
+              variant="outline-primary"
+              style={pillButton}
+              className="mx-1"
+              onClick={updateBusiness}
+            >
+              Request Quote from PM
+            </Button>
+          </div>
         </div>
       </div>
     </div>

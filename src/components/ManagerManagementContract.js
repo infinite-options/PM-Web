@@ -18,6 +18,7 @@ import {
   headings,
 } from "../utils/styles";
 import AppContext from "../AppContext";
+import SideBar from "../components/managerComponents/SideBar";
 
 function ManagerManagementContract(props) {
   const { userData, refresh } = React.useContext(AppContext);
@@ -173,179 +174,191 @@ function ManagerManagementContract(props) {
     );
 
   return (
-    <div
-      className="mb-5 pb-5"
-      style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}
-    >
-      <Header
-        title="Management Contract"
-        leftText="< Back"
-        leftFn={back}
-        rightText="Save"
-        rightFn={save}
-      />
-      <div
-        className="mx-2 my-2 p-3"
-        style={{
-          background: "#FFFFFF 0% 0% no-repeat padding-box",
-          borderRadius: "10px",
-          opacity: 1,
-        }}
-      >
-        <div className="text-center" style={errorMessage === "" ? hidden : {}}>
-          <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
-        </div>
-        <div className="mb-4">
-          <h5 style={headings}>Contract Details</h5>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label style={mediumBold} className="mb-0 ms-2">
-              Contract Name {contractName === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              value={contractName}
-              placeholder="Contract Name"
-              onChange={(e) => setContractName(e.target.value)}
-            />
-          </Form.Group>
-        </div>
-        <Row className="mb-4">
-          <h5 style={mediumBold}>PM Agreement Dates</h5>
-          <Col>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label style={mediumBold} className="mb-0 ms-2">
-                Start Date {startDate === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label style={mediumBold} className="mb-0 ms-2">
-                End Date {endDate === "" ? required : ""}
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <div className="mb-4">
-          <h5 style={mediumBold}>PM Fees</h5>
-          <div className="mx-2">
-            <ManagerFees feeState={feeState} setFeeState={setFeeState} />
+    <div className="flex-1">
+      <div className="sidebar">
+        <SideBar />
+      </div>
+      <div className="w-100">
+        <Header
+          title="Management Contract"
+          leftText="< Back"
+          leftFn={back}
+          rightText="Save"
+          rightFn={save}
+        />
+        <div
+          className="mx-2 my-2 p-3"
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
+          }}
+        >
+          <div
+            className="text-center"
+            style={errorMessage === "" ? hidden : {}}
+          >
+            <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
-        </div>
-        <div className="mb-4">
-          <h5 style={mediumBold}>Contact Details</h5>
-          <BusinessContact state={contactState} />
-        </div>
-        <div className="mb-4">
-          <h5 style={mediumBold}>Property Manager Documents</h5>
-          {files.map((file, i) => (
-            <div key={i}>
-              <div className="d-flex justify-content-between align-items-end">
-                <div>
-                  <h6 style={mediumBold}>{file.name}</h6>
-                  <p style={small} className="m-0">
-                    {file.description}
-                  </p>
-                </div>
-                <div>
-                  <img
-                    src={EditIcon}
-                    alt="Edit"
-                    className="px-1 mx-2"
-                    onClick={() => editDocument(i)}
-                  />
-                  <img
-                    src={DeleteIcon}
-                    alt="Delete"
-                    className="px-1 mx-2"
-                    onClick={() => deleteDocument(i)}
-                  />
-                  <a href={file.link} target="_blank">
-                    <img src={File} />
-                  </a>
-                </div>
-              </div>
-              <hr style={{ opacity: 1 }} />
-            </div>
-          ))}
-          {newFile !== null ? (
-            <div>
-              <Form.Group>
-                <Form.Label style={mediumBold} className="mb-0 ms-2">
-                  Document Name
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  value={newFile.name}
-                  placeholder="Name"
-                  onChange={(e) => updateNewFile("name", e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label style={mediumBold} className="mb-0 ms-2">
-                  Description
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  value={newFile.description}
-                  placeholder="Description"
-                  onChange={(e) => updateNewFile("description", e.target.value)}
-                />
-              </Form.Group>
-              <div className="text-center my-3">
-                <Button
-                  variant="outline-primary"
-                  style={smallPillButton}
-                  as="p"
-                  onClick={cancelEdit}
-                  className="mx-2"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  style={smallPillButton}
-                  as="p"
-                  onClick={saveNewFile}
-                  className="mx-2"
-                >
-                  Save Document
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <input
-                id="file"
-                type="file"
-                accept="image/*,.pdf"
-                onChange={addFile}
-                className="d-none"
+          <div className="mb-4">
+            <h5 style={headings}>
+              {property.address}
+              {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+              {property.city}, {property.state} {property.zip}
+            </h5>
+            <h5 style={headings}>Contract Details</h5>
+            <Form.Group className="mx-2 my-3">
+              <Form.Label style={mediumBold} className="mb-0 ms-2">
+                Contract Name {contractName === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                value={contractName}
+                placeholder="Contract Name"
+                onChange={(e) => setContractName(e.target.value)}
               />
-              <label htmlFor="file">
-                <Button
-                  variant="outline-primary"
-                  style={smallPillButton}
-                  as="p"
-                >
-                  Add Document
-                </Button>
-              </label>
+            </Form.Group>
+          </div>
+          <Row className="mb-4">
+            <h5 style={mediumBold}>PM Agreement Dates</h5>
+            <Col>
+              <Form.Group className="mx-2 my-3">
+                <Form.Label style={mediumBold} className="mb-0 ms-2">
+                  Start Date {startDate === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mx-2 my-3">
+                <Form.Label style={mediumBold} className="mb-0 ms-2">
+                  End Date {endDate === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <div className="mb-4">
+            <h5 style={mediumBold}>PM Fees</h5>
+            <div className="mx-2">
+              <ManagerFees feeState={feeState} setFeeState={setFeeState} />
             </div>
-          )}
-        </div>
+          </div>
+          <div className="mb-4">
+            <h5 style={mediumBold}>Contact Details</h5>
+            <BusinessContact state={contactState} />
+          </div>
+          <div className="mb-4">
+            <h5 style={mediumBold}>Property Manager Documents</h5>
+            {files.map((file, i) => (
+              <div key={i}>
+                <div className="d-flex justify-content-between align-items-end">
+                  <div>
+                    <h6 style={mediumBold}>{file.name}</h6>
+                    <p style={small} className="m-0">
+                      {file.description}
+                    </p>
+                  </div>
+                  <div>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="px-1 mx-2"
+                      onClick={() => editDocument(i)}
+                    />
+                    <img
+                      src={DeleteIcon}
+                      alt="Delete"
+                      className="px-1 mx-2"
+                      onClick={() => deleteDocument(i)}
+                    />
+                    <a href={file.link} target="_blank">
+                      <img src={File} />
+                    </a>
+                  </div>
+                </div>
+                <hr style={{ opacity: 1 }} />
+              </div>
+            ))}
+            {newFile !== null ? (
+              <div>
+                <Form.Group>
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Document Name
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    value={newFile.name}
+                    placeholder="Name"
+                    onChange={(e) => updateNewFile("name", e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Description
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    value={newFile.description}
+                    placeholder="Description"
+                    onChange={(e) =>
+                      updateNewFile("description", e.target.value)
+                    }
+                  />
+                </Form.Group>
+                <div className="text-center my-3">
+                  <Button
+                    variant="outline-primary"
+                    style={smallPillButton}
+                    as="p"
+                    onClick={cancelEdit}
+                    className="mx-2"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    style={smallPillButton}
+                    as="p"
+                    onClick={saveNewFile}
+                    className="mx-2"
+                  >
+                    Save Document
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <input
+                  id="file"
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={addFile}
+                  className="d-none"
+                />
+                <label htmlFor="file">
+                  <Button
+                    variant="outline-primary"
+                    style={smallPillButton}
+                    as="p"
+                  >
+                    Add Document
+                  </Button>
+                </label>
+              </div>
+            )}
+          </div>
+        </div>{" "}
       </div>
     </div>
   );

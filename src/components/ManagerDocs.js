@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Row, Col } from "react-bootstrap";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -14,10 +14,10 @@ import {
   mediumBold,
   squareForm,
 } from "../utils/styles";
-import ManagerFees from "./ManagerFees";
-import BusinessContact from "./BusinessContact";
 
 function ManagerDocs(props) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { addDocument, property, selectContract, reload, setStage } = props;
   const [contracts, setContracts] = useState([]);
   const [businesses, setBusinesses] = useState([]);
@@ -211,7 +211,12 @@ function ManagerDocs(props) {
               console.log(addPropertyManager);
               setAddPropertyManager(true);
               console.log(addPropertyManager);
-              setStage("PROPERTYMANAGERLISTS");
+              navigate("/pm-list", {
+                state: {
+                  property: property,
+                  property_uid: property.property_uid,
+                },
+              });
             }}
           >
             Search Property Managers
