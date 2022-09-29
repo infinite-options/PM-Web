@@ -428,12 +428,13 @@
     align-items: center;
 }
 
-.arrow{
-    background-color: grey;
-    border-radius: 50%;
-    padding: 10px 15px 10px 15px;
+
+.right-arrow:hover{
+    background-color: lightgray;
+    transition-duration: 0.3s;
+    transition-property: all;
 }
-.arrow:hover{
+.left-arrow:hover{
     background-color: lightgray;
     transition-duration: 0.3s;
     transition-property: all;
@@ -444,4 +445,33 @@
 }
 .multi-img-cell{
     width: 20vw;
+}
+.rel{
+    position: relative;
+}
+.right-arrow{
+    background-color: grey;
+    border-radius: 50%;
+    padding: 10px 15px 10px 15px;
+    position: absolute;
+    right: 140px;
+    
+}
+.left-arrow{
+    background-color: grey;
+    border-radius: 50%;
+    padding: 10px 15px 10px 15px;
+    position: absolute;
+    left: 875px;
+    z-index: 3;
+}
+.right-arrow:hover{
+    background-color: lightgray;
+    transition-duration: 0.3s;
+    transition-property: all;
+}
+.left-arrow:hover{
+    background-color: lightgray;
+    transition-duration: 0.3s;
+    transition-property: all;
 }
