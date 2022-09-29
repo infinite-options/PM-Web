@@ -13,6 +13,7 @@ import Maintenence from "../components/tenantComponents/Maintenence";
 import Appliances from "../components/tenantComponents/Appliances";
 import PersonalInfo from "../components/tenantComponents/PersonalInfo";
 import AppContext from "../AppContext";
+import loadinggif from "../icons/loading.gif"
 //tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantDashboard
 export default function TenantDashboard2() {
   const [propertyData, setPropertyData] = React.useState([]);
@@ -77,6 +78,12 @@ export default function TenantDashboard2() {
   return (
     // p.length > 0?
     <div>
+    {isLoading===true && (
+      <div className="loading-container">
+        <img src={loadinggif} alt = "LOADING" className="loading-img"></img> 
+      </div>
+      
+    )}
     {propertyData !== undefined && isLoading === false && (<div>
       {console.log("on line 80")}
       {propertyData!== undefined && p.properties?.length > 0 ? 

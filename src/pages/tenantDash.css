@@ -475,3 +475,11 @@
     transition-duration: 0.3s;
     transition-property: all;
 }
+.loading-img{
+    justify-content: center;
+}
+.loading-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
