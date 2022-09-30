@@ -50,7 +50,8 @@ function PropertyCard(props) {
 
                 <div style={{marginTop:"10px",fontSize:"14px",color:"gray"}}>
                     <div>{property.address}, {property.unit} </div>
-                    <div>{property.city}, {property.zip}</div>
+                    <div>{property.city}, {property.state} - {property.zip}</div>
+                    {/* <div></div> */}
                 </div>
                     
                 <div style={{display:"flex",marginTop:"10px",marginBottom:"10px"}} onClick={stopEventPropagation}>

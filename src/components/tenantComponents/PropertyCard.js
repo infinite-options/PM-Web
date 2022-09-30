@@ -1,7 +1,20 @@
 import react from "react"
-
+import { useNavigate } from "react-router-dom";
+import Apply from "../../icons/ApplyIcon.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
 export default function PropertyCard(props){
-    const imgS = JSON.parse(props.imgSrc)
+    console.log("in property card 2")
+    // if(part!=2){
+        // const imgS = JSON.parse(props.imgSrc)
+
+    // }
+    const navigate = useNavigate();
+
+    const goToApplyToProperty = () => {
+        // navigate("/applyToProperty");
+        navigate(`/tenantPropertyView/${props.property_uid}`)
+    }
     return(
         <div className="prop-card" style={{background:props.color}}>
             <div className="left-side">
@@ -13,7 +26,42 @@ export default function PropertyCard(props){
             </div>
             
             <div className="right-side">
-                <img className="card-img" src = {imgS}></img>
+                <img className="card-img" src = {props.part !== 2? JSON.parse(props.imgSrc)[0]:props.imgSrc[0]}></img>
+                {props.part == 2 && 
+                <div className= "contacts">
+                    <div>
+                        {/* {console.log("im trying to print an apply button")} */}
+                        <img src={Apply} onClick={goToApplyToProperty} alt="documentIcon"  />
+                        <div className="mask flex-center">
+                            <p className="white-text" style={{fontSize:"14px"}}>Apply</p>
+                        </div>
+                    </div>
+                    <div>
+                        <img
+                            // onClick={() =>
+                            //     (window.location.href = `tel:${property.manager_phone_number}`)
+                            //     }
+                            src={Phone}
+                            style={{marginRight:"10px"}}
+                        />
+                        <div className="mask flex-center">
+                            <p className="white-text" style={{fontSize:"14px" ,marginRight:"0px"}}>Call</p>
+                        </div>
+
+                    </div>
+                    <div>
+                    <img
+                        // onClick={() =>
+                        //     (window.location.href = `mailto:${property.manager_email}`)
+                        //     }
+                            src={Message}
+                            style={{marginRight:"10px"}}
+                        />
+                        <div className="mask flex-center">
+                            <p className="white-text" style={{fontSize:"14px",marginLeft:"0px"}}>Email</p>
+                        </div>
+                    </div>
+                </div>}
             </div>
         </div>
     )

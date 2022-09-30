@@ -103,3 +103,8 @@
     transition-timing-function: ease;
     margin-top: 1rem;
 }
+.contacts{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
