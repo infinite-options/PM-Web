@@ -2,12 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Row, Col } from "react-bootstrap";
 import AppContext from "../AppContext";
-import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
 import { get } from "../utils/api";
 import GreyArrowRight from "../icons/GreyArrowRight.svg";
 import OpenDoc from "../icons/OpenDoc.svg";
-import { pillButton, bluePillButton, mediumBold } from "../utils/styles";
+import { mediumBold } from "../utils/styles";
+import SideBar from "./managerComponents/SideBar";
 
 function ManagerDocuments(props) {
   const navigate = useNavigate();
@@ -97,114 +97,69 @@ function ManagerDocuments(props) {
   const { setStage } = props;
   useState(() => {}, []);
   return (
-    <div
-      style={{
-        background: "#E9E9E9 0% 0% no-repeat padding-box",
-        borderRadius: "10px",
-        opacity: 1,
-
-        height: "100vh",
-      }}
-    >
-      <Header
-        title="Documents"
-        leftText="< Back"
-        leftFn={() => setStage("DASHBOARD")}
-      />
-      <div
-        className="mx-2 my-2 p-3"
-        style={{
-          background: "#FFFFFF 0% 0% no-repeat padding-box",
-          borderRadius: "10px",
-          opacity: 1,
-        }}
-      >
-        <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
-          <Col
-            className="mx-2"
-            style={mediumBold}
-            onClick={() =>
-              setExpandActiveLeaseDocuments(!expandActiveLeaseDocuments)
-            }
+    <div>
+      <div className="flex-1">
+        <div className="sidebar">
+          <SideBar />
+        </div>
+        <div className="w-100">
+          <Header title="Documents" />
+          <div
+            className="mx-2 my-2 p-3"
+            style={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
           >
-            Lease Documents
-          </Col>
-          <Col xs={1}>
-            <img src={GreyArrowRight} alt="Arrow Right" />
-          </Col>
-          {expandActiveLeaseDocuments ? (
-            Object.values(activeLeaseDocuments)[0].length > 0 ? (
-              Object.values(activeLeaseDocuments)[0].map((ald, i) => {
-                return (
-                  <Row
-                    className="d-flex align-items-center p-2"
-                    style={{
-                      boxShadow: "0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    <Col
-                      className="d-flex mx-4"
-                      style={{
-                        font: "normal normal 600 18px Bahnschrift-Regular",
-                        color: "#007AFF",
-                      }}
-                    >
-                      {ald[0].description != "" ? (
-                        <p>{ald[0].description}</p>
-                      ) : (
-                        <p>Document {i + 1}</p>
-                      )}
-                    </Col>
-                    <Col xs={1} className=" d-flex justify-content-end">
-                      <a href={ald[0].link} target="_blank">
-                        <img src={OpenDoc} />
-                      </a>
-                    </Col>
-                  </Row>
-                );
-              })
-            ) : (
-              <Row>
-                {" "}
-                <Col
-                  className=" d-flex align-items-left mx-4"
-                  style={{
-                    font: "normal normal 600 18px Bahnschrift-Regular",
-                    color: "#007AFF",
-                  }}
-                >
-                  <p>No documents</p>
-                </Col>
-              </Row>
-            )
-          ) : null}
-        </Row>
-        <hr />
-        <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
-          <Col
-            className="mx-2"
-            style={mediumBold}
-            onClick={() =>
-              setExpandActiveManagerDocuments(!expandActiveManagerDocuments)
-            }
-          >
-            Manager Documents
-          </Col>
-          <Col xs={1}>
-            <img src={GreyArrowRight} alt="Arrow Right" />
-          </Col>
-          {expandActiveManagerDocuments ? (
-            Object.values(activeManagerDocuments)[0].length > 0 ? (
-              Object.values(activeManagerDocuments)[0].map((amd, i) => {
-                return (
-                  <Row
-                    className="d-flex align-items-center p-2"
-                    style={{
-                      boxShadow: "0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                    }}
-                  >
+            <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
+              <Col
+                className="mx-2"
+                style={mediumBold}
+                onClick={() =>
+                  setExpandActiveLeaseDocuments(!expandActiveLeaseDocuments)
+                }
+              >
+                Lease Documents
+              </Col>
+              <Col xs={1}>
+                <img src={GreyArrowRight} alt="Arrow Right" />
+              </Col>
+              {expandActiveLeaseDocuments ? (
+                Object.values(activeLeaseDocuments)[0].length > 0 ? (
+                  Object.values(activeLeaseDocuments)[0].map((ald, i) => {
+                    return (
+                      <Row
+                        className="d-flex align-items-center p-2"
+                        style={{
+                          boxShadow: "0px 1px 6px #00000029",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        <Col
+                          className="d-flex mx-4"
+                          style={{
+                            font: "normal normal 600 18px Bahnschrift-Regular",
+                            color: "#007AFF",
+                          }}
+                        >
+                          {ald[0].description != "" ? (
+                            <p>{ald[0].description}</p>
+                          ) : (
+                            <p>Document {i + 1}</p>
+                          )}
+                        </Col>
+                        <Col xs={1} className=" d-flex justify-content-end">
+                          <a href={ald[0].link} target="_blank">
+                            <img src={OpenDoc} />
+                          </a>
+                        </Col>
+                      </Row>
+                    );
+                  })
+                ) : (
+                  <Row>
+                    {" "}
                     <Col
                       className=" d-flex align-items-left mx-4"
                       style={{
@@ -212,61 +167,61 @@ function ManagerDocuments(props) {
                         color: "#007AFF",
                       }}
                     >
-                      {amd[0].description != "" ? (
-                        <p>{amd[0].description}</p>
-                      ) : (
-                        <p>Document {i + 1}</p>
-                      )}
-                    </Col>
-                    <Col xs={1} className=" d-flex justify-content-end">
-                      <a href={amd[0].link} target="_blank">
-                        <img src={OpenDoc} />
-                      </a>
+                      <p>No documents</p>
                     </Col>
                   </Row>
-                );
-              })
-            ) : (
-              <Row>
-                {" "}
-                <Col
-                  className=" d-flex align-items-left mx-4"
-                  style={{
-                    font: "normal normal 600 18px Bahnschrift-Regular",
-                    color: "#007AFF",
-                  }}
-                >
-                  <p>No documents</p>
-                </Col>
-              </Row>
-            )
-          ) : null}
-        </Row>
-        <hr />
-        <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
-          <Col
-            className="mx-2"
-            style={mediumBold}
-            onClick={() =>
-              setExpandPastLeaseDocuments(!expandPastLeaseDocuments)
-            }
-          >
-            Past Lease Documents
-          </Col>
-          <Col xs={1}>
-            <img src={GreyArrowRight} alt="Arrow Right" />
-          </Col>
-          {expandPastLeaseDocuments ? (
-            Object.values(pastLeaseDocuments)[0].length > 0 ? (
-              Object.values(pastLeaseDocuments)[0].map((pld, i) => {
-                return (
-                  <Row
-                    className="d-flex align-items-center p-2"
-                    style={{
-                      boxShadow: "0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                    }}
-                  >
+                )
+              ) : null}
+            </Row>
+            <hr />
+            <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
+              <Col
+                className="mx-2"
+                style={mediumBold}
+                onClick={() =>
+                  setExpandActiveManagerDocuments(!expandActiveManagerDocuments)
+                }
+              >
+                Manager Documents
+              </Col>
+              <Col xs={1}>
+                <img src={GreyArrowRight} alt="Arrow Right" />
+              </Col>
+              {expandActiveManagerDocuments ? (
+                Object.values(activeManagerDocuments)[0].length > 0 ? (
+                  Object.values(activeManagerDocuments)[0].map((amd, i) => {
+                    return (
+                      <Row
+                        className="d-flex align-items-center p-2"
+                        style={{
+                          boxShadow: "0px 1px 6px #00000029",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        <Col
+                          className=" d-flex align-items-left mx-4"
+                          style={{
+                            font: "normal normal 600 18px Bahnschrift-Regular",
+                            color: "#007AFF",
+                          }}
+                        >
+                          {amd[0].description != "" ? (
+                            <p>{amd[0].description}</p>
+                          ) : (
+                            <p>Document {i + 1}</p>
+                          )}
+                        </Col>
+                        <Col xs={1} className=" d-flex justify-content-end">
+                          <a href={amd[0].link} target="_blank">
+                            <img src={OpenDoc} />
+                          </a>
+                        </Col>
+                      </Row>
+                    );
+                  })
+                ) : (
+                  <Row>
+                    {" "}
                     <Col
                       className=" d-flex align-items-left mx-4"
                       style={{
@@ -274,61 +229,61 @@ function ManagerDocuments(props) {
                         color: "#007AFF",
                       }}
                     >
-                      {pld[0].description != "" ? (
-                        <p>{pld[0].description}</p>
-                      ) : (
-                        <p>Document {i + 1}</p>
-                      )}
-                    </Col>
-                    <Col xs={1} className=" d-flex justify-content-end">
-                      <a href={pld[0].link} target="_blank">
-                        <img src={OpenDoc} />
-                      </a>
+                      <p>No documents</p>
                     </Col>
                   </Row>
-                );
-              })
-            ) : (
-              <Row>
-                {" "}
-                <Col
-                  className=" d-flex align-items-left mx-4"
-                  style={{
-                    font: "normal normal 600 18px Bahnschrift-Regular",
-                    color: "#007AFF",
-                  }}
-                >
-                  <p>No documents</p>
-                </Col>
-              </Row>
-            )
-          ) : null}
-        </Row>
-        <hr />
-        <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
-          <Col
-            className="mx-2"
-            style={mediumBold}
-            onClick={() =>
-              setExpandPastManagerDocuments(!expandPastManagerDocuments)
-            }
-          >
-            Past Manager Documents
-          </Col>
-          <Col xs={1}>
-            <img src={GreyArrowRight} alt="Arrow Right" />
-          </Col>
-          {expandPastManagerDocuments ? (
-            Object.values(pastManagerDocuments)[0].length > 0 ? (
-              Object.values(pastManagerDocuments)[0].map((pmd, i) => {
-                return (
-                  <Row
-                    className="d-flex align-items-center p-2"
-                    style={{
-                      boxShadow: "0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                    }}
-                  >
+                )
+              ) : null}
+            </Row>
+            <hr />
+            <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
+              <Col
+                className="mx-2"
+                style={mediumBold}
+                onClick={() =>
+                  setExpandPastLeaseDocuments(!expandPastLeaseDocuments)
+                }
+              >
+                Past Lease Documents
+              </Col>
+              <Col xs={1}>
+                <img src={GreyArrowRight} alt="Arrow Right" />
+              </Col>
+              {expandPastLeaseDocuments ? (
+                Object.values(pastLeaseDocuments)[0].length > 0 ? (
+                  Object.values(pastLeaseDocuments)[0].map((pld, i) => {
+                    return (
+                      <Row
+                        className="d-flex align-items-center p-2"
+                        style={{
+                          boxShadow: "0px 1px 6px #00000029",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        <Col
+                          className=" d-flex align-items-left mx-4"
+                          style={{
+                            font: "normal normal 600 18px Bahnschrift-Regular",
+                            color: "#007AFF",
+                          }}
+                        >
+                          {pld[0].description != "" ? (
+                            <p>{pld[0].description}</p>
+                          ) : (
+                            <p>Document {i + 1}</p>
+                          )}
+                        </Col>
+                        <Col xs={1} className=" d-flex justify-content-end">
+                          <a href={pld[0].link} target="_blank">
+                            <img src={OpenDoc} />
+                          </a>
+                        </Col>
+                      </Row>
+                    );
+                  })
+                ) : (
+                  <Row>
+                    {" "}
                     <Col
                       className=" d-flex align-items-left mx-4"
                       style={{
@@ -336,37 +291,77 @@ function ManagerDocuments(props) {
                         color: "#007AFF",
                       }}
                     >
-                      {pmd[0].description != "" ? (
-                        <p>{pmd[0].description}</p>
-                      ) : (
-                        <p>Document {i + 1}</p>
-                      )}
-                    </Col>
-                    <Col xs={1} className=" d-flex justify-content-end">
-                      <a href={pmd[0].link} target="_blank">
-                        <img src={OpenDoc} />
-                      </a>
+                      <p>No documents</p>
                     </Col>
                   </Row>
-                );
-              })
-            ) : (
-              <Row>
-                {" "}
-                <Col
-                  className=" d-flex align-items-left mx-4"
-                  style={{
-                    font: "normal normal 600 18px Bahnschrift-Regular",
-                    color: "#007AFF",
-                  }}
-                >
-                  <p>No documents</p>
-                </Col>
-              </Row>
-            )
-          ) : null}
-        </Row>
-        <hr />
+                )
+              ) : null}
+            </Row>
+            <hr />
+            <Row className="p-2" onClick={() => setStage("DOCUMENTS")}>
+              <Col
+                className="mx-2"
+                style={mediumBold}
+                onClick={() =>
+                  setExpandPastManagerDocuments(!expandPastManagerDocuments)
+                }
+              >
+                Past Manager Documents
+              </Col>
+              <Col xs={1}>
+                <img src={GreyArrowRight} alt="Arrow Right" />
+              </Col>
+              {expandPastManagerDocuments ? (
+                Object.values(pastManagerDocuments)[0].length > 0 ? (
+                  Object.values(pastManagerDocuments)[0].map((pmd, i) => {
+                    return (
+                      <Row
+                        className="d-flex align-items-center p-2"
+                        style={{
+                          boxShadow: "0px 1px 6px #00000029",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        <Col
+                          className=" d-flex align-items-left mx-4"
+                          style={{
+                            font: "normal normal 600 18px Bahnschrift-Regular",
+                            color: "#007AFF",
+                          }}
+                        >
+                          {pmd[0].description != "" ? (
+                            <p>{pmd[0].description}</p>
+                          ) : (
+                            <p>Document {i + 1}</p>
+                          )}
+                        </Col>
+                        <Col xs={1} className=" d-flex justify-content-end">
+                          <a href={pmd[0].link} target="_blank">
+                            <img src={OpenDoc} />
+                          </a>
+                        </Col>
+                      </Row>
+                    );
+                  })
+                ) : (
+                  <Row>
+                    {" "}
+                    <Col
+                      className=" d-flex align-items-left mx-4"
+                      style={{
+                        font: "normal normal 600 18px Bahnschrift-Regular",
+                        color: "#007AFF",
+                      }}
+                    >
+                      <p>No documents</p>
+                    </Col>
+                  </Row>
+                )
+              ) : null}
+            </Row>
+            <hr />
+          </div>
+        </div>
       </div>
     </div>
   );

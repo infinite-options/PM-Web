@@ -99,6 +99,24 @@ function Sidebar() {
               >
                 Reports
               </NavLink>
+              <NavLink
+                to="/manager-profile"
+                className="sidebarButtons"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
+                Profile
+              </NavLink>
+              <NavLink
+                to="/manager-documents"
+                className="sidebarButtons"
+                style={({ isActive }) =>
+                  isActive ? sidebarButtonsActive : sidebarButtons
+                }
+              >
+                Documents
+              </NavLink>
             </div>
           </div>
         </nav>

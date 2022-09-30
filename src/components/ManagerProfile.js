@@ -7,7 +7,7 @@ import ManagerPaymentSelection from "../components/ManagerPaymentSelection";
 import { get, post, put } from "../utils/api";
 import { squareForm, gray, headings } from "../utils/styles";
 import Logout from "./Logout";
-
+import SideBar from "./managerComponents/SideBar";
 function ManagerProfile(props) {
   const { setFooterTab, setStage } = props;
   const context = React.useContext(AppContext);
@@ -127,244 +127,251 @@ function ManagerProfile(props) {
   };
 
   return (
-    <div className="pb-5 mb-5">
-      <Header
-        title="Profile"
-        leftText={editProfile ? "Cancel" : "< Back"}
-        leftFn={() =>
-          editProfile ? setEditProfile(false) : setStage("DASHBOARD")
-        }
-        rightText={editProfile ? "Save" : "Edit"}
-        rightFn={() => (editProfile ? saveProfile() : setEditProfile(true))}
-      />
-      {editProfile ? (
-        <div className="mx-3 my-3">
-          <div className="my-3">
-            <Row className="mb-4" style={headings}>
-              <div>Personal Details</div>
-            </Row>
-
-            <Form.Group className="my-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Company Name
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Company Name"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-              />
-            </Form.Group>
-
-            <Row>
-              <Col>
-                <Form.Group className="my-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    First Name
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    placeholder="First Name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="my-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Last Name
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    placeholder="Last"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col>
-                <Form.Group className="my-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Phone Number
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    placeholder="(xxx)xxx-xxxx"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="my-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Email Address
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    placeholder="Email"
-                    value={email}
-                    type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </div>
-
-          <div className="my-4">
-            <Row className="mb-4" style={headings}>
-              <div>Identification Details</div>
-            </Row>
-
-            <Row>
-              <Col>
-                <Form.Group className="my-0">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    EIN Number
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    placeholder="12-1234567"
-                    value={einNumber}
-                    onChange={(e) => setEinNumber(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="my-0">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Social Security Number
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    placeholder="123-45-6789"
-                    value={ssn}
-                    onChange={(e) => setSsn(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </div>
+    <div>
+      <div className="flex-1">
+        <div className="sidebar">
+          <SideBar />
         </div>
-      ) : (
-        <div className="mx-3 my-3">
-          <Row className="mb-4" style={headings}>
-            <div>Personal Details</div>
-          </Row>
-          <h6>Company Name</h6>
-          <p style={gray}>
-            {companyName && companyName !== "NULL"
-              ? companyName
-              : "No Company Details Provided"}
-          </p>
+        <div className="w-100">
+          <Header
+            title="Profile"
+            leftText={editProfile ? "Cancel" : ""}
+            leftFn={() => (editProfile ? setEditProfile(false) : "")}
+            rightText={editProfile ? "Save" : "Edit"}
+            rightFn={() => (editProfile ? saveProfile() : setEditProfile(true))}
+          />
+          {editProfile ? (
+            <div className="mx-3 my-3">
+              <div className="my-3">
+                <Row className="mb-4" style={headings}>
+                  <div>Personal Details</div>
+                </Row>
 
-          <Row>
-            <Col>
-              <h6>First Name</h6>
-              <p style={gray}>
-                {firstName && firstName !== "NULL"
-                  ? firstName
-                  : "No First Name Provided"}
-              </p>
-            </Col>
-            <Col>
-              <h6>Last Name</h6>
-              <p style={gray}>
-                {lastName && lastName !== "NULL"
-                  ? lastName
-                  : "No Last Name Provided"}
-              </p>
-            </Col>
-          </Row>
+                <Form.Group className="my-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Company Name
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="Company Name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                  />
+                </Form.Group>
 
-          <Row>
-            <Col>
-              <h6>Phone Number</h6>
-              <p style={gray}>
-                {phoneNumber && phoneNumber !== "NULL"
-                  ? phoneNumber
-                  : "No Phone Number Provided"}
-              </p>
-            </Col>
-            <Col>
-              <h6>Email</h6>
-              <p style={gray}>
-                {email && email !== "NULL" ? email : "No Email Provided"}
-              </p>
-            </Col>
-          </Row>
+                <Row>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        First Name
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="First Name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Last Name
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="Last"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-          <div className="my-2">
-            <Row className="mb-4" style={headings}>
-              <div>Identification Details</div>
+                <Row>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Phone Number
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="(xxx)xxx-xxxx"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Email Address
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="Email"
+                        value={email}
+                        type="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </div>
+
+              <div className="my-4">
+                <Row className="mb-4" style={headings}>
+                  <div>Identification Details</div>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <Form.Group className="my-0">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        EIN Number
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="12-1234567"
+                        value={einNumber}
+                        onChange={(e) => setEinNumber(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="my-0">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Social Security Number
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="123-45-6789"
+                        value={ssn}
+                        onChange={(e) => setSsn(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          ) : (
+            <div className="mx-3 my-3">
+              <Row className="mb-4" style={headings}>
+                <div>Personal Details</div>
+              </Row>
+              <h6>Company Name</h6>
+              <p style={gray}>
+                {companyName && companyName !== "NULL"
+                  ? companyName
+                  : "No Company Details Provided"}
+              </p>
+
+              <Row>
+                <Col>
+                  <h6>First Name</h6>
+                  <p style={gray}>
+                    {firstName && firstName !== "NULL"
+                      ? firstName
+                      : "No First Name Provided"}
+                  </p>
+                </Col>
+                <Col>
+                  <h6>Last Name</h6>
+                  <p style={gray}>
+                    {lastName && lastName !== "NULL"
+                      ? lastName
+                      : "No Last Name Provided"}
+                  </p>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <h6>Phone Number</h6>
+                  <p style={gray}>
+                    {phoneNumber && phoneNumber !== "NULL"
+                      ? phoneNumber
+                      : "No Phone Number Provided"}
+                  </p>
+                </Col>
+                <Col>
+                  <h6>Email</h6>
+                  <p style={gray}>
+                    {email && email !== "NULL" ? email : "No Email Provided"}
+                  </p>
+                </Col>
+              </Row>
+
+              <div className="my-2">
+                <Row className="mb-4" style={headings}>
+                  <div>Identification Details</div>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <h6>SSN</h6>
+                    <p style={gray}>
+                      {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}
+                    </p>
+                  </Col>
+                  <Col>
+                    <h6>EIN</h6>
+                    <p style={gray}>
+                      {einNumber && einNumber !== "NULL"
+                        ? ssn
+                        : "No EIN Provided"}
+                    </p>
+                  </Col>
+                </Row>
+
+                {/*<Container>*/}
+                {/*  <Row>*/}
+                {/*    <Col>*/}
+                {/*      <h6>* &nbsp; SSN</h6>*/}
+                {/*    </Col>*/}
+                {/*    <Col>*/}
+                {/*      <p style={gray}>*/}
+                {/*        {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}*/}
+                {/*      </p>*/}
+                {/*    </Col>*/}
+                {/*  </Row>*/}
+                {/*  <Row>*/}
+                {/*    <Col>*/}
+                {/*      <h6>* &nbsp; EIN</h6>*/}
+                {/*    </Col>*/}
+                {/*    <Col>*/}
+                {/*      <p style={gray}>*/}
+                {/*        {einNumber && einNumber !== "NULL"*/}
+                {/*          ? ssn*/}
+                {/*          : "No EIN Provided"}*/}
+                {/*      </p>*/}
+                {/*    </Col>*/}
+                {/*  </Row>*/}
+                {/*</Container>*/}
+              </div>
+            </div>
+          )}
+
+          <ManagerPaymentSelection
+            paymentState={paymentState}
+            setPaymentState={setPaymentState}
+            editProfile={editProfile}
+          />
+
+          {/*<ManagerFees state={feeState}/>*/}
+          {/*<ManagerLocations state={locationState}/>*/}
+          {/*<ManagerFees feeState={feeState} setFeeState={setFeeState}/>*/}
+          {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
+
+          {editProfile ? (
+            ""
+          ) : (
+            <Row className="my-4">
+              <Logout />
             </Row>
-
-            <Row>
-              <Col>
-                <h6>SSN</h6>
-                <p style={gray}>
-                  {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}
-                </p>
-              </Col>
-              <Col>
-                <h6>EIN</h6>
-                <p style={gray}>
-                  {einNumber && einNumber !== "NULL" ? ssn : "No EIN Provided"}
-                </p>
-              </Col>
-            </Row>
-
-            {/*<Container>*/}
-            {/*  <Row>*/}
-            {/*    <Col>*/}
-            {/*      <h6>* &nbsp; SSN</h6>*/}
-            {/*    </Col>*/}
-            {/*    <Col>*/}
-            {/*      <p style={gray}>*/}
-            {/*        {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}*/}
-            {/*      </p>*/}
-            {/*    </Col>*/}
-            {/*  </Row>*/}
-            {/*  <Row>*/}
-            {/*    <Col>*/}
-            {/*      <h6>* &nbsp; EIN</h6>*/}
-            {/*    </Col>*/}
-            {/*    <Col>*/}
-            {/*      <p style={gray}>*/}
-            {/*        {einNumber && einNumber !== "NULL"*/}
-            {/*          ? ssn*/}
-            {/*          : "No EIN Provided"}*/}
-            {/*      </p>*/}
-            {/*    </Col>*/}
-            {/*  </Row>*/}
-            {/*</Container>*/}
-          </div>
-        </div>
-      )}
-
-      <ManagerPaymentSelection
-        paymentState={paymentState}
-        setPaymentState={setPaymentState}
-        editProfile={editProfile}
-      />
-
-      {/*<ManagerFees state={feeState}/>*/}
-      {/*<ManagerLocations state={locationState}/>*/}
-      {/*<ManagerFees feeState={feeState} setFeeState={setFeeState}/>*/}
-      {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
-
-      {editProfile ? (
-        ""
-      ) : (
-        <Row className="my-4">
-          <Logout />
-        </Row>
-      )}
+          )}
+        </div>{" "}
+      </div>{" "}
     </div>
   );
 }
