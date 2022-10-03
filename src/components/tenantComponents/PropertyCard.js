@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Apply from "../../icons/ApplyIcon.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+//this is the colored boxed property card
 export default function PropertyCard(props){
     console.log("in property card 2")
     // if(part!=2){
@@ -15,8 +16,16 @@ export default function PropertyCard(props){
         // navigate("/applyToProperty");
         navigate(`/tenantPropertyView/${props.property_uid}`)
     }
+    const goToPropertyInfo = () =>{
+        
+        navigate('/propertyInfo',{
+            state:{
+                property: props.property,
+            }
+        });
+    }
     return(
-        <div className="prop-card" style={{background:props.color}}>
+        <div className="prop-card" style={{background:props.color}} onClick = {goToPropertyInfo}>
             <div className="left-side">
                 <h2 className="p1">{props.add1}</h2>
                 <h2 className="p2">${props.cost}/month</h2>

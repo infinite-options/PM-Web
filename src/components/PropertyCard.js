@@ -25,9 +25,17 @@ function PropertyCard(props) {
         e.stopPropagation();
         e.preventDefault();
     }
+    const goToPropertyInfo = () =>{
+        
+        navigate('/propertyInfo',{
+            state:{
+                property: props.property,
+            }
+        });
+    }
     console.log(property);
     return (
-        <div style={{border:"1px solid lightblue", cursor: "pointer", display: "flex"}} >
+        <div style={{border:"1px solid lightblue", cursor: "pointer", display: "flex"}} onClick={goToPropertyInfo} >
             <div className="img" style={{ flex: "0 0 35%", background:"lightgrey" }}>
                 {property.images && property.images.length > 0 ? (<img style={{width:"100%", height:"100%"}} src={property.images[0]}/>) : (<img style={{width:"100%", height:"100%"}} src={No_Image}/>) }
             </div>

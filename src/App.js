@@ -81,7 +81,7 @@ import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/OwnerRepairList";
 import OwnerRepairRequest from "./components/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
-
+import PropertyInfo from "./pages/PropertyInfo"
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -248,6 +248,7 @@ function App() {
             <Route path="manager-properties" element={<ManagerProperties />} />
             <Route path="/owner-list" element={<ManagerOwnerList />} />
             <Route path="/tenant-list" element={<ManagerTenantList />} />
+            <Route path="/propertyInfo" element={<PropertyInfo />} />
             <Route
               path="/appliances/:mp_id"
               element={<ManagerApplianceList />}

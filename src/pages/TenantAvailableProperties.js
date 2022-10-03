@@ -67,8 +67,10 @@ export default function TenantAvailableProperties(props) {
   const colors = ["#628191","#FB8500", "rgb(255,183,3)", "rgb(33,158,188)"];
 
   const boxView = properties.map((prop,index)=>{
+    console.log(prop);
     return(
       <PropertyCard2
+
             color= {colors[index%4]}
             add1={prop.address}
             cost={prop.listed_rent}
@@ -79,6 +81,7 @@ export default function TenantAvailableProperties(props) {
             imgSrc = {prop.images}
             part = {2}
             uid = {prop.property_uid}
+            property = {prop}
       />
     )
     })
@@ -98,8 +101,6 @@ export default function TenantAvailableProperties(props) {
       </Container>
       :
       <Container className="p-container">
-        {console.log(properties)}
-
         {boxView}
       </Container>}
     </div>
