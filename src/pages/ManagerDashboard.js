@@ -15,17 +15,7 @@ import AppContext from "../AppContext";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/managerComponents/SideBar";
-import {
-  blue,
-  bluePill,
-  smallImg,
-  hidden,
-  greenPill,
-  mediumBold,
-  orangePill,
-  redPill,
-  xSmall,
-} from "../utils/styles";
+import { blue, xSmall } from "../utils/styles";
 import { get } from "../utils/api";
 const useStyles = makeStyles({
   customTable: {
@@ -42,6 +32,7 @@ export default function ManagerDashboard() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState([]);
+  const [selectedTenant, setSelectedTenant] = useState([]);
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
@@ -121,6 +112,29 @@ export default function ManagerDashboard() {
     fetchTenantDashboard();
   }, []);
 
+  const fetchTenantDetails = async (tenant_id) => {
+    if (access_token === null) {
+      navigate("/");
+      return;
+    }
+    console.log(tenant_id);
+    const response = await get("/tenantDetails?tenant_id=" + tenant_id);
+
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+
+      return;
+    }
+    setSelectedTenant(response.result);
+    console.log(response.result);
+    navigate(`/tenant-list/${tenant_id}`, {
+      state: {
+        selectedTenant: response.result[0],
+      },
+    });
+  };
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -185,6 +199,11 @@ export default function ManagerDashboard() {
       id: "tenant",
       numeric: false,
       label: "Tenant",
+    },
+    {
+      id: "num_apps",
+      numeric: false,
+      label: "Apps",
     },
     {
       id: "rent_status",
@@ -352,7 +371,7 @@ export default function ManagerDashboard() {
                         <TableCell padding="none" size="small" align="center">
                           {property.address}
                           {property.unit !== "" ? " " + property.unit : ""}
-                          <div className="d-flex">
+                          {/* <div className="d-flex">
                             <div className="d-flex align-items-end">
                               <p
                                 style={{ ...blue, ...xSmall }}
@@ -363,8 +382,34 @@ export default function ManagerDashboard() {
                                   : ""}
                               </p>
                             </div>
-                          </div>
-
+                          </div> */}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.city}, {property.state}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.zip}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.listed_rent}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.rentalInfo !== "NOT RENTED" ? (
+                            property.rentalInfo.map((tf, i) => {
+                              return (
+                                <div
+                                  onClick={() => {
+                                    fetchTenantDetails(tf.tenant_id);
+                                  }}
+                                >
+                                  {i + 1} {tf.tenant_first_name}{" "}
+                                  {tf.tenant_last_name}
+                                </div>
+                              );
+                            })
+                          ) : (
+                            <div>{property.rentalInfo}</div>
+                          )}
                           <div className="d-flex">
                             <div className="d-flex align-items-end">
                               <p
@@ -392,27 +437,7 @@ export default function ManagerDashboard() {
                           </div>
                         </TableCell>
                         <TableCell padding="none" size="small" align="center">
-                          {property.city}, {property.state}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.zip}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.listed_rent}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.rentalInfo !== "NOT RENTED" ? (
-                            property.rentalInfo.map((tf, i) => {
-                              return (
-                                <div>
-                                  {i + 1} {tf.tenant_first_name}{" "}
-                                  {tf.tenant_last_name}
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <div>{property.rentalInfo}</div>
-                          )}
+                          {property.num_apps}
                         </TableCell>
                         <TableCell padding="none" size="small" align="center">
                           {property.rent_status}

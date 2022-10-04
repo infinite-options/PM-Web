@@ -96,7 +96,6 @@ function ManagerTenantList(props) {
     setDueDate(response.result[0].due_by);
     setLateAfter(response.result[0].late_by);
     setLateFee(response.result[0].late_fee);
-
     setUserPayments(response.result[0].user_payments);
     setRentDetails(JSON.parse(response.result[0].rent_payments));
     setLateFeePer(response.result[0].perDay_late_fee);
@@ -372,71 +371,6 @@ function ManagerTenantList(props) {
         <div>
           <br />
 
-          {/* <div
-            className="mx-2 my-2 p-3"
-            hidden={showDetails}
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-          >
-            {tenants.map((tenant, i) => (
-              <div
-                key={i}
-                className="my-3 p-2"
-                style={{
-                  boxShadow: " 0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setSelectedTenant(tenant);
-                  setUserPayments(tenant.user_payments);
-                  setMaintenanceRequests(tenant.user_repairRequests);
-                  setShowDetails(true);
-                }}
-              >
-                <Row className="p-1">
-                  <Col>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <h5 className="mb-0" style={mediumBold}>
-                        {tenant.tenant_first_name} {tenant.tenant_last_name}
-                      </h5>
-                    </div>
-                  </Col>
-                </Row>
-                <Row className="px-1 mb-1">
-                  <Col
-                    style={{
-                      color: "#777777",
-                      font: "normal normal normal 14px Bahnschrift-Regular",
-                    }}
-                  >
-                    {tenant.address}
-                    {tenant.unit !== "" ? " " + tenant.unit : ""}, <br />
-                    {tenant.city}, {tenant.state} {tenant.zip}
-                  </Col>
-
-                  <Col>
-                    <div className="d-flex  justify-content-end ">
-                      <div
-                        style={tenant.tenant_id ? {} : hidden}
-                        onClick={stopPropagation}
-                      >
-                        <a href={`tel:${tenant.tenant_phone_number}`}>
-                          <img src={Phone} alt="Phone" style={smallImg} />
-                        </a>
-                        <a href={`mailto:${tenant.tenant_email}`}>
-                          <img src={Message} alt="Message" style={smallImg} />
-                        </a>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-            ))}
-          </div> */}
           <Row className="w-100 m-3">
             <Col> Search by</Col>
 
@@ -483,6 +417,19 @@ function ManagerTenantList(props) {
                             setUserPayments(tenant.user_payments);
                             setMaintenanceRequests(tenant.user_repairRequests);
                             setShowDetails(!showDetails);
+                            navigate(`./${tenant.tenant_id}`, {
+                              state: {
+                                // maintenanceRequests: maintenanceRequests,
+                                // userPayments: userPayments,
+                                // rentDetails: rentDetails,
+                                // selectedTenant: selectedTenant,
+                                // dueDate: dueDate,
+                                // lateAfter: lateAfter,
+                                // lateFee: lateFee,
+                                // lateFeePer: lateFeePer,
+                                selectedTenant: tenant,
+                              },
+                            });
                           }}
                         >
                           {tenant.tenant_first_name} {tenant.tenant_last_name}

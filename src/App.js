@@ -81,7 +81,9 @@ import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/OwnerRepairList";
 import OwnerRepairRequest from "./components/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
-
+import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
+import ManagerDocuments from "./components/ManagerDocuments";
+import ManagerProfile from "./components/ManagerProfile";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -249,6 +251,10 @@ function App() {
             <Route path="/owner-list" element={<ManagerOwnerList />} />
             <Route path="/tenant-list" element={<ManagerTenantList />} />
             <Route
+              path="/tenant-list/:t_id"
+              element={<ManagerTenantListDetail />}
+            />
+            <Route
               path="/appliances/:mp_id"
               element={<ManagerApplianceList />}
             />
@@ -300,6 +306,8 @@ function App() {
               element={<MaintenanceQuotesScheduled />}
             />
             <Route path="manager-utilities" element={<ManagerUtilities />} />
+            <Route path="manager-profile" element={<ManagerProfile />} />
+            <Route path="manager-documents" element={<ManagerDocuments />} />
             <Route path="owner-utilities" element={<OwnerUtilities />} />
             <Route path="owner-repairs" element={<OwnerRepairList />} />
             <Route

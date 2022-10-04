@@ -172,7 +172,7 @@ function ManagerManagementContract(props) {
     ) : (
       ""
     );
-
+  console.log(property);
   return (
     <div className="flex-1">
       <div className="sidebar">
@@ -200,12 +200,28 @@ function ManagerManagementContract(props) {
           >
             <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
+          <div className="row">
+            <div className="col">
+              <h5 style={headings}>
+                {property.address}
+                {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+                {property.city}, {property.state} {property.zip}
+              </h5>
+            </div>
+            <div className="col">
+              <h5 style={headings}>
+                Owner: {property.owner[0].owner_first_name}{" "}
+                {property.owner[0].owner_last_name}
+              </h5>
+              <h5 style={headings}>
+                Rental Status:{" "}
+                {property.rental_status == ""
+                  ? "Not Rented"
+                  : property.rental_status}
+              </h5>
+            </div>
+          </div>
           <div className="mb-4">
-            <h5 style={headings}>
-              {property.address}
-              {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-              {property.city}, {property.state} {property.zip}
-            </h5>
             <h5 style={headings}>Contract Details</h5>
             <Form.Group className="mx-2 my-3">
               <Form.Label style={mediumBold} className="mb-0 ms-2">
