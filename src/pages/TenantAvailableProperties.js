@@ -82,6 +82,7 @@ export default function TenantAvailableProperties(props) {
             part = {2}
             uid = {prop.property_uid}
             property = {prop}
+            unit = {prop.unit}
       />
     )
     })

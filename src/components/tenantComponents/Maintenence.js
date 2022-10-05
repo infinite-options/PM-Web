@@ -105,7 +105,7 @@ export default function Maintenence(props){
                     <th className="table-col">Issue</th>
                     <th className="table-col">Date Reported</th>
                     <th className="table-col">Days Open</th>
-                    <th className="table-col">Type</th>
+                    <th className="table-col">Priority</th>
                     <th className="table-col">Status</th>
                     <th className="table-col">Upload Images</th>
             

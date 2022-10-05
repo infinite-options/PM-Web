@@ -27,10 +27,13 @@ export default function PropertyCard(props){
     return(
         <div className="prop-card" style={{background:props.color}} onClick = {goToPropertyInfo}>
             <div className="left-side">
-                <h2 className="p1">{props.add1}</h2>
+                {props.unit!=="" ? <h2 className="p1">{props.add1} , {props.unit}</h2>:
+                     <h2 className="p1">{props.add1}</h2>
+                }
                 <h2 className="p2">${props.cost}/month</h2>
                 <h3 className="p3">{props.bedrooms} Bedroom {props.bathrooms} Bathroom</h3>
                 <h3 className="p4">Bright Spacious {props.property_type} located in the city of {props.city}</h3>
+                {/* {props.unit !== "" && <h4 className="p5">Unit Number: </h4>} */}
                 <button className="read-more" style={{background:props.color}} >Read More</button>
             </div>
             
