@@ -838,36 +838,8 @@ function PropertyForm(props) {
       </Container>
       <Container style={({ paddingLeft: "0px" }, mediumBold)} className="my-3">
         <h6>Deposit can be used for last month's rent</h6>
-        <Row>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={depositForRent}
-              onClick={
-                edit
-                  ? () => setDepositForRent(true)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">Yes</p>
-          </Col>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={!depositForRent}
-              onClick={
-                edit
-                  ? () => setDepositForRent(false)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">No</p>
-          </Col>
-        </Row>
+
+        <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
       </Container>
 
       {edit ? (
@@ -875,36 +847,7 @@ function PropertyForm(props) {
       ) : (
         <Container className="my-3">
           <h6>Available to Rent</h6>
-          <Row>
-            <Col className="d-flex ps-4">
-              <Checkbox
-                type="CIRCLE"
-                checked={availableToRent}
-                onClick={
-                  edit
-                    ? () => setAvailableToRent(true)
-                    : () => {
-                        setShowDialog(true);
-                      }
-                }
-              />
-              <p className="ms-1 mb-1">Yes</p>
-            </Col>
-            <Col className="d-flex ps-4">
-              <Checkbox
-                type="CIRCLE"
-                checked={!availableToRent}
-                onClick={
-                  edit
-                    ? () => setAvailableToRent(false)
-                    : () => {
-                        setShowDialog(true);
-                      }
-                }
-              />
-              <p className="ms-1 mb-1">No</p>
-            </Col>
-          </Row>
+          <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
         </Container>
       )}
       {edit ? (
