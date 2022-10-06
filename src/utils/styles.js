@@ -358,7 +358,6 @@ const blueLarge = {
 const newHeading = {
   backgroundColor: "blue",
 };
-
 const editButton = {
   color: "#007AFF",
   border: "2px solid #007AFF",

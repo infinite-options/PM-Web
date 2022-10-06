@@ -22,7 +22,9 @@ function ReviewTenantProfile(props) {
   const navigate = useNavigate();
   const [profile, setProfile] = React.useState(null);
   const [files, setFiles] = React.useState([]);
+  const [documentClick, setDocumentClick] = React.useState([]);
 
+  
   const goToPropertyView = () => {
     navigate(`/tenantPropertyView/${property_uid}`);
   };
@@ -102,6 +104,11 @@ function ReviewTenantProfile(props) {
           ? JSON.parse(response.result[0].documents)
           : [];
         setFiles(documents);
+        // var temp = new Array();
+        // for(var num = 0; num < files.length; num++){
+        //   temp.push(false);
+        // }
+        // setDocumentClick(temp);
         return;
       }
       if (user.role.indexOf("TENANT") === -1) {
@@ -111,7 +118,15 @@ function ReviewTenantProfile(props) {
     };
     fetchProfileInfo();
   }, []);
-
+  console.log(files);
+  
+  // function handleDocumentClick(i){
+  //   console.log("clicked");
+  //   const temp = documentClick;
+  //   temp[i] = !temp[i];
+  //   setDocumentClick(temp);
+  // }
+  // console.log(documentClick);
   return (
     <div className="h-100 d-flex flex-column">
       <Header
@@ -436,7 +451,9 @@ function ReviewTenantProfile(props) {
           {files.map((file, i) => (
             <div key={i}>
               <div className="d-flex justify-content-between align-items-end">
-                <div>
+                
+                <div style ={{display: "flex" , flexDirection: "row"}}>
+                  <input type ="checkbox" ></input>
                   <h6 style={{ paddingLeft: "20px", fontWeight: "bold" }}>
                     {file.name}
                   </h6>

@@ -14,6 +14,7 @@ import Appliances from "../components/tenantComponents/Appliances";
 import PersonalInfo from "../components/tenantComponents/PersonalInfo";
 import AppContext from "../AppContext";
 import loadinggif from "../icons/loading.gif"
+import Carousel from 'react-elastic-carousel'
 //tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantDashboard
 export default function TenantDashboard2() {
   const [propertyData, setPropertyData] = React.useState([]);
@@ -23,6 +24,7 @@ export default function TenantDashboard2() {
   const [maintenanceRequests, setMaintenanceRequests] = React.useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [p, setP] = React.useState([]);
+  const [lookingAt, setLookingAt] = React.useState(0)
   const fetchTenantDashboard = async () => {
     if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
@@ -30,16 +32,20 @@ export default function TenantDashboard2() {
     }
     const response = await get("/tenantDashboard", access_token);
     console.log(response);
-    setPropertyData(response);
-    setP(response.result[0]);
-    setIsLoading(false);
-
+    console.log("message response: " + response.msg);
     if (response.msg === "Token has expired") {
       console.log("here msg");
       refresh();
-
+      console.log("After refresh response: " + response); 
       return;
     }
+    setPropertyData(response);
+    console.log("Received Property Data" + propertyData);
+    setP(response.result[0]);
+    console.log("Result from property data" + p);
+    setIsLoading(false);
+    
+    
     
   };
   const getMaintenanceRequests = () => { //process to get data from aateButtons(pi using axios
@@ -59,10 +65,24 @@ export default function TenantDashboard2() {
   const goToMaintenence = () => {
     navigate("/maintenencePage", {
       state: {
-        property_uid: propertyData?.result[0].properties[0].property_uid,
+        property_uid: propertyData?.result[0].properties[lookingAt].property_uid,
         tenant_id: propertyData?.result[0].tenant_id,
       },
     });
+  };
+  const nextSlide = () => {
+    if (lookingAt === p.properties.length-1) {
+      setLookingAt(0);
+    } else {
+      setLookingAt(lookingAt + 1);
+    }
+  };
+  const prevSlide = () => {
+    if (lookingAt === 0) {
+      setLookingAt(p.properties.length - 1);
+    } else {
+      setLookingAt(lookingAt - 1);
+    }
   };
   // console.log(propertyData.result[0]);
   //END OF POSSIBLY IMPORTANT STUFF
@@ -71,9 +91,15 @@ export default function TenantDashboard2() {
   //PROBLEMS:
   //1.the if else statement does not seem to work because of undefined readings
   // console.log(p)
-  console.log(isLoading);
-  console.log(propertyData)
-  console.log(p.properties)
+  const breakPoints = [
+    {width: 1, itemsToShow: 1},
+    {width: 550, itemsToShow: 1},
+    {width: 768, itemsToShow: 1},
+    {width: 1200, itemsToShow: 1}
+]
+  console.log("Loading: " + isLoading);
+  console.log(p.properties);
+  
 
   return (
     // p.length > 0?
@@ -84,8 +110,8 @@ export default function TenantDashboard2() {
       </div>
       
     )}
+    
     {propertyData !== undefined && isLoading === false && (<div>
-      {console.log("on line 80")}
       {propertyData!== undefined && p.properties?.length > 0 ? 
  
         <div>
@@ -98,26 +124,37 @@ export default function TenantDashboard2() {
         )}
         <div className="flex-1">
           <div className="sidebar">
-            <SideBar uid = {propertyData.result[0].properties[0].property_uid}/>
+            <SideBar uid = {propertyData.result[0].properties[lookingAt].property_uid}/>
           </div>
+          
           <div className="main-content">
             <br />
             <div className="box1">
-              {propertyData.length !== 0 && (
-                <TenantCard
-                  imgSrc={propertyData.result[0].properties[0]?.images}
-                  leaseEnds={propertyData.result[0].properties[0]?.active_date}
-                  address1={propertyData.result[0].properties[0]?.address}
-                  city={propertyData.result[0].properties[0]?.city}
-                  state={propertyData.result[0].properties[0]?.state}
-                  zip={propertyData.result[0].properties[0]?.zip}
-                  cost={propertyData.result[0].properties[0]?.listed_rent}
-                  beds={propertyData.result[0].properties[0]?.num_beds}
-                  bath={propertyData.result[0].properties[0]?.num_baths}
-                  size={propertyData.result[0].properties[0]?.area}
-                  property={propertyData.result[0].properties[0]?.property_uid}
-                />
-              )}
+              <div className="tenantCard-witharrows-container">
+                <div onClick={prevSlide} className="left-arrow2">
+                                          {"<"}
+                    </div>
+                {propertyData.length !== 0 && (
+                  <TenantCard
+                    imgSrc={propertyData.result[0].properties[lookingAt]?.images}
+                    leaseEnds={propertyData.result[0].properties[lookingAt]?.active_date}
+                    address1={propertyData.result[0].properties[lookingAt]?.address}
+                    city={propertyData.result[0].properties[lookingAt]?.city}
+                    state={propertyData.result[0].properties[lookingAt]?.state}
+                    zip={propertyData.result[0].properties[lookingAt]?.zip}
+                    cost={propertyData.result[0].properties[lookingAt]?.listed_rent}
+                    beds={propertyData.result[0].properties[lookingAt]?.num_beds}
+                    bath={propertyData.result[0].properties[lookingAt]?.num_baths}
+                    size={propertyData.result[0].properties[lookingAt]?.area}
+                    property={propertyData.result[0].properties[lookingAt]?.property_uid}
+                  />
+                )}
+                    <div onClick={nextSlide} className="right-arrow2">
+                                  {">"}
+                    </div>   
+              
+              </div>
+
               <button className="b yellow" onClick ={goToMaintenence}>Submit Maintenence Ticket</button>
               <button className="b">Contact Property Manager</button>
             </div>
@@ -133,18 +170,20 @@ export default function TenantDashboard2() {
                   type = {true}
                 />
               )}
-              {propertyData.length !== 0 && <PaymentHistory data={propertyData.result[0].properties[0]?.tenantExpenses} />}
+              {propertyData.length !== 0 && <PaymentHistory data={propertyData.result[0].properties[lookingAt]?.tenantExpenses} />}
             </div>
           </div>
         </div>
         <div className="flex-2">
           {propertyData.length !== 0 && <Maintenence 
                                           data={maintenanceRequests.result}
-                                          address = {propertyData.result[0].properties[0]?.address} />}
+                                          address = {propertyData.result[0].properties[lookingAt]?.address} 
+                                          propertyId = {propertyData.result[0].properties[lookingAt]?.property_uid}/>
+                                          }
           {propertyData.length !== 0 && (
             <div>
               <Appliances
-                data={propertyData.result[0].properties[0]?.appliances}
+                data={propertyData.result[0].properties[lookingAt]?.appliances}
               />
               <PersonalInfo id = "profile" data={propertyData.result[0]} />
             </div>

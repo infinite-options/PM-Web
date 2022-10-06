@@ -483,3 +483,37 @@
     justify-content: center;
     align-items: center;
 }
+.right-arrow2{
+    background-color: grey;
+    border-radius: 50%;
+    padding: 10px 15px 10px 15px;
+    /* position: absolute; */
+    /* left: 420px;
+    top: 750px; */
+}
+.left-arrow2{
+    background-color: grey;
+    border-radius: 50%;
+    padding: 10px 15px 10px 15px;
+    /* position: absolute; */
+    /* left: 135px; */
+    z-index: 3;
+    /* top: 750px; */
+}
+.right-arrow2:hover{
+    background-color: lightgray;
+    transition-duration: 0.3s;
+    transition-property: all;
+}
+.left-arrow2:hover{
+    background-color: lightgray;
+    transition-duration: 0.3s;
+    transition-property: all;
+}
+.tenantCard-witharrows-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}

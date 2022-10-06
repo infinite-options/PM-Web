@@ -81,15 +81,25 @@ export default function PropertyInfo(){
     
     return(
         <div className="prop-info-container">
-            
-            <h3 className="prop-info-images-container" >
-                {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
-                <img className="more-info-prop-images" src={imgs[currentImg]}/>
-                <div onClick={nextImg} className="right-arrow">{">"}</div>  */}
-                <Carousel breakPoints = {breakPoints}>
+            {imgs.length>3?
+                <h3 className="prop-info-images-container" >
+                    {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
+                    <img className="more-info-prop-images" src={imgs[currentImg]}/>
+                    <div onClick={nextImg} className="right-arrow">{">"}</div>  */}
+                        <Carousel breakPoints = {breakPoints}>
+                            {showImgs}
+                        </Carousel>
+                </h3>
+                :
+                <h3 className="prop-info-images-container" >
+                    {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
+                    <img className="more-info-prop-images" src={imgs[currentImg]}/>
+                    <div onClick={nextImg} className="right-arrow">{">"}</div>  */}
                     {showImgs}
-                </Carousel>
-            </h3>
+                </h3>
+                
+            }
+            
             <h1 className="prop-info-address">{data.address}</h1>
             
             <h3 className="prop-info-prop-type">{data.property_type}</h3>
