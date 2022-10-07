@@ -68,7 +68,9 @@ import ManagerRepairInfo from "./pages/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
-import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
+// import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
+import TenantDashboard from "./pages/TenantFirstPageView"; // new tenant first page view
+import ActualTenantDashboard from "./pages/TenantDashboard2"; // new tenant first page view
 import OwnerDashboard from "./pages/OwnerDashboard2"; //updated owner dashboard
 import ManagerDashboard from "./pages/ManagerDashboard"; //updated owner dashboard
 import Homepage from "./pages/Homepage";
@@ -146,6 +148,7 @@ function App() {
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
+            <Route path="tenant_dash" element={<ActualTenantDashboard />} />
             <Route path="tenant_original" element={<TenantHome />} />
             {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             <Route

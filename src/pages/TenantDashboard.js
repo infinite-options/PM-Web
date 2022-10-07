@@ -379,7 +379,7 @@ function TenantDashboard(props) {
     navigate("/tenantAvailableProperties");
   };
   const goToReviewPropertyLease = (application) => {
-    console.log(application);
+    console.log(application.application_status);
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
       state: {
         application_uid: application.application_uid,

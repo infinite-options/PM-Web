@@ -515,5 +515,12 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-
+}
+.first-page-card-organization{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 50%;
+    height: auto;
 }

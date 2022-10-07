@@ -686,7 +686,7 @@ function ReviewPropertyLease(props) {
               >
                 <u>Lease Documents:</u>
               </p>
-              <h6 style={{ paddingLeft: "45px", paddingBottom: "30px" }}> Property Manager is yet to upload the lease document. Please contact him </h6>
+              <h6 style={{ paddingLeft: "45px", paddingBottom: "30px" }}> Property Manager is yet to upload the lease document. Please contact them </h6>
 
             </>
           )

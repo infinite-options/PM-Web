@@ -1,7 +1,7 @@
 //I need to make this page the main page first
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TopBar from "../components/tenantComponents/TopBar";
 import SideBar from "../components/tenantComponents/SideBar";
 import TenantCard from "../components/tenantComponents/TenantCard";
@@ -24,7 +24,10 @@ export default function TenantDashboard2() {
   const [maintenanceRequests, setMaintenanceRequests] = React.useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [p, setP] = React.useState([]);
-  const [lookingAt, setLookingAt] = React.useState(0)
+  const location = useLocation();
+  const [lookingAt, setLookingAt] = React.useState(location.state.lookingAt);
+
+  const [propertyClicked, setPropertyClicked] = React.useState(false);
   const fetchTenantDashboard = async () => {
     if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
@@ -113,9 +116,10 @@ export default function TenantDashboard2() {
     
     {propertyData !== undefined && isLoading === false && (<div>
       {propertyData!== undefined && p.properties?.length > 0 ? 
- 
+
+        
         <div>
-      
+          
         {propertyData?.length !== 0 && (
           <div>
             <h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
@@ -147,6 +151,9 @@ export default function TenantDashboard2() {
                     bath={propertyData.result[0].properties[lookingAt]?.num_baths}
                     size={propertyData.result[0].properties[lookingAt]?.area}
                     property={propertyData.result[0].properties[lookingAt]?.property_uid}
+                    data = {p}
+                    type = {1}
+                    lookingAt = {lookingAt}
                   />
                 )}
                     <div onClick={nextSlide} className="right-arrow2">
@@ -189,7 +196,7 @@ export default function TenantDashboard2() {
             </div>
           )}
         </div>
-
+          
       </div>
       :
         <div>
