@@ -47,15 +47,13 @@ export default function ManagerDashboard() {
     const response = await get("/managerDashboard", access_token);
     console.log("second");
     console.log(response);
-    setIsLoading(false);
 
     if (response.msg === "Token has expired") {
       console.log("here msg");
       refresh();
-
       return;
     }
-
+    setIsLoading(false);
     const properties = response.result.filter(
       (property) => property.management_status !== "REJECTED"
     );

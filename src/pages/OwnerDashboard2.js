@@ -27,7 +27,7 @@ export default function OwnerDashboard2() {
     const response = await get("/ownerDashboard", access_token);
     console.log("second");
     console.log(response);
-    setIsLoading(false);
+    // setIsLoading(false);
 
     if (response.msg === "Token has expired") {
       console.log("here msg");
@@ -35,6 +35,7 @@ export default function OwnerDashboard2() {
 
       return;
     }
+    setIsLoading(false);
     setOwnerData(response);
     setDataTable(response.result);
   };

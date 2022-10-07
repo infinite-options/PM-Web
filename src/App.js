@@ -84,6 +84,9 @@ import PropertyManagersList from "./components/PropertyManagersList";
 import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
 import ManagerDocuments from "./components/ManagerDocuments";
 import ManagerProfile from "./components/ManagerProfile";
+
+import OwnerDocuments from "./components/OwnerDocuments";
+import OwnerProfile from "./components/OwnerProfile";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -308,6 +311,8 @@ function App() {
             <Route path="manager-utilities" element={<ManagerUtilities />} />
             <Route path="manager-profile" element={<ManagerProfile />} />
             <Route path="manager-documents" element={<ManagerDocuments />} />
+            <Route path="owner-profile" element={<OwnerProfile />} />
+            <Route path="owner-documents" element={<OwnerDocuments />} />
             <Route path="owner-utilities" element={<OwnerUtilities />} />
             <Route path="owner-repairs" element={<OwnerRepairList />} />
             <Route

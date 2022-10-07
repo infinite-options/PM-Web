@@ -836,14 +836,45 @@ function PropertyForm(props) {
           </Col>
         </Row>
       </Container>
-      <Container style={({ paddingLeft: "0px" }, mediumBold)} className="my-3">
+      <Container className="my-3">
         <h6>Deposit can be used for last month's rent</h6>
-
-        <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
+        <Row>
+          <Col className="d-flex ps-4">
+            <Checkbox
+              type="CIRCLE"
+              checked={depositForRent}
+              onClick={
+                edit
+                  ? () => setDepositForRent(true)
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
+            />
+            <p className="ms-1 mb-1">Yes</p>
+          </Col>
+          <Col className="d-flex ps-4">
+            <Checkbox
+              type="CIRCLE"
+              checked={!depositForRent}
+              onClick={
+                edit
+                  ? () => setDepositForRent(false)
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
+            />
+            <p className="ms-1 mb-1">No</p>
+          </Col>
+        </Row>
       </Container>
 
       {edit ? (
-        ""
+        <Container className="my-3">
+          <h6>Available to Rent</h6>
+          <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
+        </Container>
       ) : (
         <Container className="my-3">
           <h6>Available to Rent</h6>

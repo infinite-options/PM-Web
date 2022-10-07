@@ -1,25 +1,25 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
-import ManagerPaymentSelection from "../components/ManagerPaymentSelection";
+import { squareForm, red, gray, headings } from "../utils/styles";
 import { get, put } from "../utils/api";
-import { squareForm, gray, headings } from "../utils/styles";
-import Logout from "./Logout";
-import SideBar from "./managerComponents/SideBar";
-function ManagerProfile(props) {
+import OwnerPaymentSelection from "../components/OwnerPaymentSelection";
+import Logout from "../components/Logout";
+import SideBar from "./ownerComponents/SideBar";
+function OwnerProfile(props) {
   const context = useContext(AppContext);
   const { userData, refresh } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
+  const { errorMessage, setShowFooter, setFooterTab, setStage } = props;
   const [profileInfo, setProfileInfo] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
-  const [companyName, setCompanyName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [einNumber, setEinNumber] = useState("");
   const [ssn, setSsn] = useState("");
   const [paymentState, setPaymentState] = useState({
@@ -30,88 +30,66 @@ function ManagerProfile(props) {
     accountNumber: "",
     routingNumber: "",
   });
-  // const feeState = useState([]);
-  // const locationState = useState([]);
-  const [feeState, setFeeState] = useState([]);
-  const [locationState, setLocationState] = useState([]);
 
   const loadProfile = (profile) => {
     setProfileInfo(profile);
-    setCompanyName(profile.business_name);
-    setFirstName(profile.employee_first_name);
-    setLastName(profile.employee_last_name);
-    setEmail(profile.employee_email);
-    setPhoneNumber(profile.employee_phone_number);
-    setEinNumber(profile.employee_ein_number);
-    setSsn(profile.employee_ssn);
+    setFirstName(profile.owner_first_name);
+    setLastName(profile.owner_last_name);
+    setEmail(profile.owner_email);
+    setPhoneNumber(profile.owner_phone_number);
+    setEinNumber(profile.owner_ein_number);
+    setSsn(profile.owner_ssn);
     setPaymentState({
-      paypal: profile.business_paypal ? profile.business_paypal : "",
-      applePay: profile.business_apple_pay ? profile.business_apple_pay : "",
-      zelle: profile.business_zelle ? profile.business_zelle : "",
-      venmo: profile.business_venmo ? profile.business_venmo : "",
-      accountNumber: profile.business_account_number
-        ? profile.business_account_number
+      paypal: profile.owner_paypal ? profile.owner_paypal : "",
+      applePay: profile.owner_apple_pay ? profile.owner_apple_pay : "",
+      zelle: profile.owner_zelle ? profile.owner_zelle : "",
+      venmo: profile.owner_venmo ? profile.owner_venmo : "",
+      accountNumber: profile.owner_account_number
+        ? profile.owner_account_number
         : "",
-      routingNumber: profile.business_routing_number
-        ? profile.business_routing_number
+      routingNumber: profile.owner_routing_number
+        ? profile.owner_routing_number
         : "",
     });
-    setFeeState(JSON.parse(profile.business_services_fees));
-
-    const location = JSON.parse(profile.business_locations);
-    setLocationState(location);
   };
-
-  const fetchProfileInfo = async () => {
+  const fetchProfile = async () => {
     if (access_token === null) {
       navigate("/");
       return;
     }
-    const busi_res = await get(`/businesses?business_email=${user.email}`);
-    console.log("busi_res", busi_res);
-    if (user.role.indexOf("MANAGER") === -1 || busi_res.result.length > 0) {
-      console.log("no manager profile");
-      // props.onConfirm();
+    const response = await get("/ownerProfileInfo", access_token);
+    console.log(response);
+
+    if (response.msg === "Token has expired") {
+      console.log("here msg");
+      refresh();
+      return;
     }
 
-    const employee_response = await get(`/employees?user_uid=${user.user_uid}`);
-    if (employee_response.result.length !== 0) {
-      const employee = employee_response.result[0];
-      const business_response = await get(
-        `/businesses?business_uid=${employee.business_uid}`
-      );
-      const business = business_response.result[0];
-      const profile = { ...employee, ...business };
-      // console.log(profile)
-      loadProfile(profile);
+    if (user.role.indexOf("OWNER") === -1) {
+      console.log("no owner profile");
+      props.onConfirm();
     }
+
+    const owner = response.result[0];
+    const profile = { ...owner };
+    loadProfile(profile);
   };
+  useEffect(() => {
+    fetchProfile();
+  }, [access_token]);
 
-  useEffect(fetchProfileInfo, [access_token]);
-
-  const saveProfile = async () => {
+  const submitInfo = async () => {
     const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
       paymentState;
-    const employee_info = {
-      employee_uid: profileInfo.employee_uid,
-      user_uid: profileInfo.user_uid,
-      business_uid: profileInfo.business_uid,
-      first_name: firstName,
-      last_name: lastName,
-      phone_number: phoneNumber,
-      email: email,
-      ein_number: einNumber,
-      ssn: ssn,
-    };
-    const business_info = {
-      business_uid: profileInfo.business_uid,
-      type: profileInfo.business_type,
-      name: profileInfo.business_name,
-      phone_number: profileInfo.business_phone_number,
-      email: profileInfo.business_email,
-      ein_number: profileInfo.business_ein_number,
-      services_fees: feeState[0],
-      locations: locationState[0],
+
+    const ownerProfile = {
+      first_name: profileInfo.firstName,
+      last_name: profileInfo.lastName,
+      email: profileInfo.email,
+      phone_number: profileInfo.phoneNumber,
+      ssn: profileInfo.ssn,
+      ein_number: profileInfo.einNumber,
       paypal: paypal || null,
       apple_pay: applePay || null,
       zelle: zelle || null,
@@ -120,11 +98,20 @@ function ManagerProfile(props) {
       routing_number: routingNumber || null,
     };
 
-    const employee_response = await put("/employees", employee_info);
-    const business_response = await put("/businesses", business_info);
+    await put(`/ownerProfileInfo`, ownerProfile, access_token);
     setEditProfile(false);
-    fetchProfileInfo();
+    fetchProfile();
+    // props.onConfirm();
   };
+
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
 
   return (
     <div>
@@ -138,27 +125,21 @@ function ManagerProfile(props) {
             leftText={editProfile ? "Cancel" : ""}
             leftFn={() => (editProfile ? setEditProfile(false) : "")}
             rightText={editProfile ? "Save" : "Edit"}
-            rightFn={() => (editProfile ? saveProfile() : setEditProfile(true))}
+            rightFn={() => (editProfile ? submitInfo() : setEditProfile(true))}
           />
           {editProfile ? (
-            <div className="mx-3 my-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <div className="my-3">
                 <Row className="mb-4" style={headings}>
                   <div>Personal Details</div>
                 </Row>
-
-                <Form.Group className="my-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Company Name
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    placeholder="Company Name"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                  />
-                </Form.Group>
-
                 <Row>
                   <Col>
                     <Form.Group className="my-2">
@@ -167,7 +148,7 @@ function ManagerProfile(props) {
                       </Form.Label>
                       <Form.Control
                         style={squareForm}
-                        placeholder="First Name"
+                        placeholder="First"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                       />
@@ -187,7 +168,6 @@ function ManagerProfile(props) {
                     </Form.Group>
                   </Col>
                 </Row>
-
                 <Row>
                   <Col>
                     <Form.Group className="my-2">
@@ -196,8 +176,8 @@ function ManagerProfile(props) {
                       </Form.Label>
                       <Form.Control
                         style={squareForm}
-                        placeholder="(xxx)xxx-xxxx"
-                        value={phoneNumber}
+                        placeholder="(789)909-9099"
+                        value={lastName}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
                     </Form.Group>
@@ -205,26 +185,36 @@ function ManagerProfile(props) {
                   <Col>
                     <Form.Group className="my-2">
                       <Form.Label as="h6" className="mb-0 ms-2">
-                        Email Address
+                        Email Id
                       </Form.Label>
                       <Form.Control
                         style={squareForm}
-                        placeholder="Email"
+                        placeholder="nikTesla@gmail.com"
                         value={email}
-                        type="email"
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
                 </Row>
               </div>
-
               <div className="my-4">
                 <Row className="mb-4" style={headings}>
                   <div>Identification Details</div>
                 </Row>
-
                 <Row>
+                  <Col>
+                    <Form.Group className="my-0">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        SSN {ssn === "" ? required : ""}
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="131-89-1829"
+                        value={ssn}
+                        onChange={(e) => setSsn(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
                   <Col>
                     <Form.Group className="my-0">
                       <Form.Label as="h6" className="mb-0 ms-2">
@@ -232,22 +222,9 @@ function ManagerProfile(props) {
                       </Form.Label>
                       <Form.Control
                         style={squareForm}
-                        placeholder="12-1234567"
+                        placeholder="1231"
                         value={einNumber}
                         onChange={(e) => setEinNumber(e.target.value)}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    <Form.Group className="my-0">
-                      <Form.Label as="h6" className="mb-0 ms-2">
-                        Social Security Number
-                      </Form.Label>
-                      <Form.Control
-                        style={squareForm}
-                        placeholder="123-45-6789"
-                        value={ssn}
-                        onChange={(e) => setSsn(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
@@ -255,16 +232,17 @@ function ManagerProfile(props) {
               </div>
             </div>
           ) : (
-            <div className="mx-3 my-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="mb-4" style={headings}>
                 <div>Personal Details</div>
               </Row>
-              <h6>Company Name</h6>
-              <p style={gray}>
-                {companyName && companyName !== "NULL"
-                  ? companyName
-                  : "No Company Details Provided"}
-              </p>
 
               <Row>
                 <Col>
@@ -323,46 +301,14 @@ function ManagerProfile(props) {
                     </p>
                   </Col>
                 </Row>
-
-                {/*<Container>*/}
-                {/*  <Row>*/}
-                {/*    <Col>*/}
-                {/*      <h6>* &nbsp; SSN</h6>*/}
-                {/*    </Col>*/}
-                {/*    <Col>*/}
-                {/*      <p style={gray}>*/}
-                {/*        {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}*/}
-                {/*      </p>*/}
-                {/*    </Col>*/}
-                {/*  </Row>*/}
-                {/*  <Row>*/}
-                {/*    <Col>*/}
-                {/*      <h6>* &nbsp; EIN</h6>*/}
-                {/*    </Col>*/}
-                {/*    <Col>*/}
-                {/*      <p style={gray}>*/}
-                {/*        {einNumber && einNumber !== "NULL"*/}
-                {/*          ? ssn*/}
-                {/*          : "No EIN Provided"}*/}
-                {/*      </p>*/}
-                {/*    </Col>*/}
-                {/*  </Row>*/}
-                {/*</Container>*/}
               </div>
             </div>
           )}
-
-          <ManagerPaymentSelection
+          <OwnerPaymentSelection
             paymentState={paymentState}
             setPaymentState={setPaymentState}
             editProfile={editProfile}
           />
-
-          {/*<ManagerFees state={feeState}/>*/}
-          {/*<ManagerLocations state={locationState}/>*/}
-          {/*<ManagerFees feeState={feeState} setFeeState={setFeeState}/>*/}
-          {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
-
           {editProfile ? (
             ""
           ) : (
@@ -370,10 +316,10 @@ function ManagerProfile(props) {
               <Logout />
             </Row>
           )}
-        </div>{" "}
-      </div>{" "}
+        </div>
+      </div>
     </div>
   );
 }
 
-export default ManagerProfile;
+export default OwnerProfile;
