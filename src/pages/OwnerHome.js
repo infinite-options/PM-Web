@@ -6,7 +6,7 @@ import AppContext from "../AppContext";
 import OwnerProperties from "./OwnerProperties";
 import OwnerDashboard from "./OwnerDashboard";
 import OwnerProfileTab from "./OwnerProfileTab";
-import OwnerProfile from "./OwnerProfile";
+import OwnerProfile from "../components/OwnerProfile";
 import OwnerSwitchRole from "../components/OwnerSwitchRole";
 import OwnerContacts from "./OwnerContacts";
 import OwnerRepairList from "../components/OwnerRepairList";

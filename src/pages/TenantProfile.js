@@ -9,13 +9,10 @@ import {
   DropdownButton,
   Dropdown,
 } from "react-bootstrap";
-import Popover from "@material-ui/core/Popover";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import AddressForm from "../components/AddressForm";
 import Check from "../icons/Check.svg";
-import ArrowUp from "../icons/ArrowUp.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
 import { get, put, post } from "../utils/api";
 import {
   squareForm,

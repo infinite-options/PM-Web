@@ -3,18 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
-import DocumentOpen from "../icons/documentOpen.svg";
-import { subHeading, subText } from "../utils/styles";
 import { get, put, post } from "../utils/api";
 import {
-  tileImg,
   squareForm,
   smallPillButton,
   small,
-  underline,
   mediumBold,
 } from "../utils/styles";
-import Plus from "../icons/Plus.svg";
 import File from "../icons/File.svg";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
@@ -24,29 +19,10 @@ function TenantDocumentUpload(props) {
   const { userData, refresh } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
-  const [fileState, setFileState] = useState([]);
 
-  const readFile = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      file.data = e.target.result;
-      const newFileState = [...fileState];
-      newFileState.push(file);
-      setFileState(newFileState);
-    };
-    reader.readAsDataURL(file.file);
-  };
-  // const addFile = (e) => {
-  //   const file = {
-  //     index: fileState.length,
-  //     file: e.target.files[0],
-  //     data: ""
-  //   }
-  //   readFile(file);
-  // }
-  const [newFile, setNewFile] = React.useState(null);
-  const [editingDoc, setEditingDoc] = React.useState(null);
-  const [files, setFiles] = React.useState([]);
+  const [newFile, setNewFile] = useState(null);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [files, setFiles] = useState([]);
 
   // ============================= <File addition/Updation>============================================================
   const addFile = (e) => {
@@ -55,6 +31,7 @@ function TenantDocumentUpload(props) {
       name: file.name,
       description: "",
       file: file,
+      shared: false,
     };
     setNewFile(newFile);
   };
@@ -79,11 +56,19 @@ function TenantDocumentUpload(props) {
     setEditingDoc(file);
     setNewFile({ ...file });
   };
-  const saveNewFile = (e) => {
+  const saveNewFile = async (e) => {
     // copied from addFile, change e.target.files to state.newFile
     const newFiles = [...files];
     newFiles.push(newFile);
     setFiles(newFiles);
+    const tenantProfile = {};
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      tenantProfile[key] = newFiles[i].file;
+      delete newFiles[i].file;
+    }
+    tenantProfile.documents = JSON.stringify(newFiles);
+    await put("/tenantProfileInfo", tenantProfile, access_token, files);
     setNewFile(null);
   };
   const deleteDocument = (i) => {
@@ -125,18 +110,7 @@ function TenantDocumentUpload(props) {
     await put("/tenantProfileInfo", tenantProfile, access_token, files);
     props.onConfirm();
   };
-  // useEffect(() => {
-  //   const addDocument = async () => {
 
-  //     for (let i = 0; i < files.length; i++) {
-  //       let key = `doc_${i}`;
-  //       tenantProfile[key] = files[i].file;
-  //       delete files[i].file;
-  //     }
-  //     await put("/tenantProfileInfo", tenantProfile, access_token, files);
-
-  //   }
-  // })
   // ======================================<Return function>=======================================
   return (
     <div className="h-100 d-flex flex-column">
@@ -144,29 +118,11 @@ function TenantDocumentUpload(props) {
         title="Documents"
         leftText="< Back"
         leftFn={() => navigate("/tenant")}
-        rightText="Save"
-        rightFn={() => submitInfo()}
+        // rightText="Save"
+        // rightFn={submitInfo}
       />
 
       <Container className="pt-1 mb-4">
-        {/* <div style={{display:"flex",justifyContent: "space-around"}}>
-            <div style={{width:"50px",height:"50px"}}>
-                    <input id='file' type='file' accept='*' onChange={addFile} className='d-none'/>
-                    <div className='mx-2' style={{minHeight: '100px', minWidth: '100px'}}>
-                        <label htmlFor='file' style={tileImg} className='d-flex justify-content-center align-items-center'>
-                            <img src={Plus}/>
-                        </label>
-                        <div style={{textAlign:"center"}}>Click to Upload</div>
-                    </div>
-            </div>
-
-              {fileState.map((file, i) => (
-                  <div style={{width:"50px",height:"50px"}}>
-                      <img src={File} style={{width:"100%",height:"80%"}}></img>
-                      <div>{file.file.name}</div>
-                  </div>
-              ))}
-          </div> */}
         <div className="mb-4">
           {/* <h5 style={mediumBold}>Tenant Documents</h5> */}
           {files.map((file, i) => (
@@ -245,22 +201,6 @@ function TenantDocumentUpload(props) {
               </div>
             </div>
           ) : (
-            // <div>
-            // <div style={{width:"50px",height:"50px"}}>
-            //   <input id='file' type='file' accept='image/*,.pdf' onChange={addFile} className='d-none'/>
-            //   {/* <label htmlFor='file'>
-            //     <Button variant='outline-primary' style={smallPillButton} as='p'>
-            //       Add Document
-            //     </Button>
-            //   </label> */}
-            //  <div className='mx-2' style={{minHeight: '100px', minWidth: '100px'}}>
-            //     <label htmlFor='file' style={tileImg} className='d-flex justify-content-center align-items-center'>
-            //         <img src={Plus}/>
-            //     </label>
-            //     <div style={{textAlign:"center"}}>Click to Upload</div>
-            //   </div>
-            // </div>
-            // </div>
             <div>
               <input
                 id="file"

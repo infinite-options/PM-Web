@@ -2,6 +2,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import * as ReactBootStrap from "react-bootstrap";
 import TopBar from "../components/tenantComponents/TopBar";
 import SideBar from "../components/tenantComponents/SideBar";
 import TenantCard from "../components/tenantComponents/TenantCard";
@@ -18,6 +19,7 @@ import Carousel from 'react-elastic-carousel'
 import ReviewPropertyLease from "./reviewPropertyLease";
 import { propTypes } from "react-bootstrap/esm/Image";
 //dont have documents added page
+
 //tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantDashboard
 export default function TenantDashboard2() {
   const [propertyData, setPropertyData] = React.useState([]);
@@ -52,6 +54,7 @@ export default function TenantDashboard2() {
       console.log("After refresh response: " + response); 
       return;
     }
+
     setPropertyData(response);
     console.log("Received Property Data" + propertyData);
     setP(response.result[0]);
@@ -80,17 +83,21 @@ export default function TenantDashboard2() {
         }
     }
     setIsLoading(false);
+
   };
-  const getMaintenanceRequests = () => { //process to get data from aateButtons(pi using axios
-    axios.get('https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/maintenanceRequests')
-    .then(response => {
-      setMaintenanceRequests(response.data) //useState is getting the data
-
-    }).catch(err =>{
-      console.log(err)
-    })
-
-  }
+  const getMaintenanceRequests = () => {
+    //process to get data from aateButtons(pi using axios
+    axios
+      .get(
+        "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/maintenanceRequests"
+      )
+      .then((response) => {
+        setMaintenanceRequests(response.data); //useState is getting the data
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
     fetchTenantDashboard();
     console.log("dashboard data fetched");
@@ -164,6 +171,7 @@ export default function TenantDashboard2() {
   //PROBLEMS:
   //1.the if else statement does not seem to work because of undefined readings
   // console.log(p)
+
   const breakPoints = [
     {width: 1, itemsToShow: 1},
     {width: 550, itemsToShow: 1},
@@ -174,13 +182,15 @@ export default function TenantDashboard2() {
   console.log("properties " + p.properties);
   
 
+
   return (
     // p.length > 0?
     <div>
+
     {isLoading===true && (
-      <div className="loading-container">
-        <img src={loadinggif} alt = "LOADING" className="loading-img"></img> 
-      </div>
+     <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+          <ReactBootStrap.Spinner animation="border" role="status" />
+        </div>
       
     )}
     

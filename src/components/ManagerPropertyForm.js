@@ -129,6 +129,8 @@ function ManagerPropertyForm(props) {
   const [deposit, setDeposit] = useState("");
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [depositForRent, setDepositForRent] = useState(false);
+
+  const [availableToRent, setAvailableToRent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
 
@@ -150,6 +152,7 @@ function ManagerPropertyForm(props) {
     setDeposit(property.deposit);
     setPetsAllowed(property.pets_allowed);
     setDepositForRent(property.deposit_for_rent);
+    setAvailableToRent(property.available_to_rent);
     applianceState[1](JSON.parse(property.appliances));
     utilityState[1](JSON.parse(property.utilities));
     loadImages();
@@ -208,6 +211,7 @@ function ManagerPropertyForm(props) {
       // deposit_for_rent: depositForRent
       pets_allowed: petsAllowed ? 1 : 0,
       deposit_for_rent: depositForRent ? 1 : 0,
+      available_to_rent: availableToRent ? 1 : 0,
     };
     const files = imageState[0];
     let i = 0;
@@ -250,6 +254,7 @@ function ManagerPropertyForm(props) {
         utilities: JSON.stringify(utilityState[0]),
         pets_allowed: petsAllowed,
         deposit_for_rent: depositForRent,
+        available_to_rent: availableToRent,
       };
       const files = imageState[0];
       let i = 0;
@@ -612,6 +617,96 @@ function ManagerPropertyForm(props) {
           </Col>
         </Row>
       </Container>
+
+      {edit ? (
+        <Container
+          style={({ paddingLeft: "0px" }, mediumBold)}
+          className="my-3"
+        >
+          <h6>Available to Rent</h6>
+          <Row>
+            <Col className="d-flex ps-4">
+              <Checkbox
+                type="CIRCLE"
+                checked={availableToRent}
+                onClick={
+                  edit
+                    ? () => setAvailableToRent(true)
+                    : () => {
+                        setShowDialog(true);
+                      }
+                }
+              />
+              <p className="ms-1 mb-1">Yes</p>
+            </Col>
+            <Col className="d-flex ps-4">
+              <Checkbox
+                type="CIRCLE"
+                checked={!availableToRent}
+                onClick={
+                  edit
+                    ? () => setAvailableToRent(false)
+                    : () => {
+                        setShowDialog(true);
+                      }
+                }
+              />
+              <p className="ms-1 mb-1">No</p>
+            </Col>
+          </Row>
+        </Container>
+      ) : (
+        <Container className="my-3">
+          <h6>Available to Rent</h6>
+          <Row>
+            <Col className="d-flex ps-4">
+              <Checkbox
+                type="CIRCLE"
+                checked={availableToRent}
+                onClick={
+                  edit
+                    ? () => setAvailableToRent(true)
+                    : () => {
+                        setShowDialog(true);
+                      }
+                }
+              />
+              <p className="ms-1 mb-1">Yes</p>
+            </Col>
+            <Col className="d-flex ps-4">
+              <Checkbox
+                type="CIRCLE"
+                checked={!availableToRent}
+                onClick={
+                  edit
+                    ? () => setAvailableToRent(false)
+                    : () => {
+                        setShowDialog(true);
+                      }
+                }
+              />
+              <p className="ms-1 mb-1">No</p>
+            </Col>
+          </Row>
+        </Container>
+      )}
+      {edit ? (
+        <Container
+          style={({ paddingLeft: "0px" }, mediumBold)}
+          className="my-3"
+        >
+          <h6> Featured</h6>
+          <p> {property.featured}</p>
+        </Container>
+      ) : (
+        <Container
+          style={({ paddingLeft: "0px" }, mediumBold)}
+          className="my-3"
+        >
+          <h6> Featured</h6>
+          <p> {property.featured}</p>
+        </Container>
+      )}
       {edit ? (
         <div>
           <PropertyImages state={imageState} />
