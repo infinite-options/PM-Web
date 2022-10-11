@@ -5,10 +5,11 @@ export default function Maintenence(props){
     const noRows = "No data available"
     var counter = 0;
     const [currentImg, setCurrentImg] = React.useState(0);
-
+    var exists = false;
     //implement date.now and calculate amount of days
     const rows = main?.map((row,index)=>{//row is an element in the array 
-        if(row.title != null){
+        exists = true;
+        if(row.title != null && row.property_uid === props.propertyId){
             const numDays = (date_1, date_2) => {
                 let difference = date_2.getTime() - date_1.getTime();
                 let totalDays = Math.ceil(difference / (1000 * 3600 * 24));
@@ -105,16 +106,19 @@ export default function Maintenence(props){
                     <th className="table-col">Issue</th>
                     <th className="table-col">Date Reported</th>
                     <th className="table-col">Days Open</th>
-                    <th className="table-col">Type</th>
+                    <th className="table-col">Priority</th>
                     <th className="table-col">Status</th>
                     <th className="table-col">Upload Images</th>
             
                 </tr>
             </thead>
             <tbody>
-                {/* {main === '' && <tr className="table-row no-data">{noRows}</tr>} */}
+               
                 {/* {main?rows:<tr className="table-row no-data">{noRows} */}
-                {rows}
+                {/* {rows ? rows : <th className="table-col">No requests at this time</th>} */}
+                {exists? rows : <tr className="table-row no-data"> No recent requests</tr>}
+                
+                
             </tbody>
 
             </table>

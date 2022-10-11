@@ -6,14 +6,15 @@ import { get } from "../utils/api";
 import AppContext from "../AppContext";
 
 import PropertyCard from "../components/PropertyCard";
-
-function TenantAvailableProperties(props) {
+import PropertyCard2 from "../components/tenantComponents/PropertyCard";
+export default function TenantAvailableProperties(props) {
   const { hideBackButton } = props;
   const [properties, setProperties] = useState([]);
   const navigate = useNavigate();
   const { userData } = React.useContext(AppContext);
   const { user } = userData;
   const [appliedProperties, setAppliedProperties] = useState({});
+  const [view, setView] = useState(true);
 
   // useEffect(() => {
   // }, []);
@@ -47,31 +48,65 @@ function TenantAvailableProperties(props) {
     fetchApplications().then(fetchProperties);
   }, []);
 
+  const changeView = () =>{
+    setView(prev => !prev)
+    console.log(view);
+  }
+  const tableView = properties.map((value, i) => {
+    // const applied = appliedProperties.hasOwnProperty(value.property_uid);
+    let applied = null;
+    if (appliedProperties.hasOwnProperty(value.property_uid)) {
+      applied = appliedProperties[value.property_uid];
+    }
+    return (
+      <div key={i} style={{ marginBottom: "10px" }}>
+        <PropertyCard property={value} applied={applied}></PropertyCard>
+      </div>
+    );
+  })
+  const colors = ["#628191","#FB8500", "rgb(255,183,3)", "rgb(33,158,188)"];
+
+  const boxView = properties.map((prop,index)=>{
+    console.log(prop);
+    return(
+      <PropertyCard2
+
+            color= {colors[index%4]}
+            add1={prop.address}
+            cost={prop.listed_rent}
+            bedrooms={prop.num_beds}
+            bathrooms={prop.num_baths}
+            property_type={prop.property_type}
+            city = {prop.city}
+            imgSrc = {prop.images}
+            part = {2}
+            uid = {prop.property_uid}
+            property = {prop}
+            unit = {prop.unit}
+      />
+    )
+    })
+    
   return (
     <div className="mb-5 pb-5">
       <Header
         title="Available Properties"
         leftText={hideBackButton ? "" : "< Back"}
         leftFn={() => navigate("/tenant")}
-        rightText="Filter by"
+        rightFn = {changeView}
+        rightText="Change View"
       />
-
+      {view?
       <Container>
-        {properties.map((value, i) => {
-          // const applied = appliedProperties.hasOwnProperty(value.property_uid);
-          let applied = null;
-          if (appliedProperties.hasOwnProperty(value.property_uid)) {
-            applied = appliedProperties[value.property_uid];
-          }
-          return (
-            <div key={i} style={{ marginBottom: "10px" }}>
-              <PropertyCard property={value} applied={applied}></PropertyCard>
-            </div>
-          );
-        })}
+        {tableView}
       </Container>
+      :
+      <Container className="p-container">
+        {boxView}
+      </Container>}
     </div>
+    
+    
   );
 }
 
-export default TenantAvailableProperties;

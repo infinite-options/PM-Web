@@ -51,11 +51,12 @@ export default function RenterLanding() {
               property_type={prop.property_type}
               city = {prop.city}
               imgSrc = {prop.images}
+              unit = {prop.unit}
         />
       )
     }
     else{
-
+      
     }
     
   })

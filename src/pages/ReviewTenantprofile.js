@@ -20,6 +20,7 @@ function ReviewTenantProfile(props) {
   const { userData } = useContext(AppContext);
   const { user, access_token } = userData;
   const navigate = useNavigate();
+  const [documentClick, setDocumentClick] = React.useState([]);
   const [profile, setProfile] = useState(null);
   const [filesOrigignal, setFilesOriginal] = useState([]);
   const [files, setFiles] = useState([]);
@@ -29,6 +30,8 @@ function ReviewTenantProfile(props) {
   const [adultOccupants, setAdultOccupants] = useState("");
   const [childrenOccupants, setChildrenOccupants] = useState("");
 
+
+  
   const goToPropertyView = () => {
     navigate(`/tenantPropertyView/${property_uid}`);
   };
@@ -155,9 +158,18 @@ function ReviewTenantProfile(props) {
   };
 
   useEffect(() => {
+
     fetchProfileInfo();
   }, []);
-
+  console.log(files);
+  
+  // function handleDocumentClick(i){
+  //   console.log("clicked");
+  //   const temp = documentClick;
+  //   temp[i] = !temp[i];
+  //   setDocumentClick(temp);
+  // }
+  // console.log(documentClick);
   return (
     <div className="h-100 d-flex flex-column">
       <Header
@@ -481,6 +493,7 @@ function ReviewTenantProfile(props) {
         <div className="mb-4">
           {filesCopy.map((file, i) => (
             <div key={i}>
+
               <div className="d-flex justify-content-left align-items-start">
                 <Checkbox
                   type="CIRCLE"

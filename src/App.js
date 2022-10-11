@@ -68,7 +68,9 @@ import ManagerRepairInfo from "./pages/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
-import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
+// import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
+import TenantDashboard from "./pages/TenantFirstPageView"; // new tenant first page view
+import ActualTenantDashboard from "./pages/TenantDashboard2"; // new tenant first page view
 import OwnerDashboard from "./pages/OwnerDashboard2"; //updated owner dashboard
 import ManagerDashboard from "./pages/ManagerDashboard"; //updated owner dashboard
 import Homepage from "./pages/Homepage";
@@ -81,12 +83,16 @@ import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/OwnerRepairList";
 import OwnerRepairRequest from "./components/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
+
+import PropertyInfo from "./pages/PropertyInfo"
+import AppliedDashboard from "./pages/AppliedDashboard"
 import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
 import ManagerDocuments from "./components/ManagerDocuments";
 import ManagerProfile from "./components/ManagerProfile";
 
 import OwnerDocuments from "./components/OwnerDocuments";
 import OwnerProfile from "./components/OwnerProfile";
+
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -151,6 +157,8 @@ function App() {
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
+            <Route path="tenant_dash" element={<ActualTenantDashboard />} />\
+            <Route path="applied_dashboard" element={<AppliedDashboard />} />
             <Route path="tenant_original" element={<TenantHome />} />
             {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             <Route
@@ -191,6 +199,7 @@ function App() {
               path="residentAnnouncements"
               element={<ResidentAnnouncements />}
             />
+
             <Route
               path="detailAnnouncements"
               element={<DetailAnnouncements />}
@@ -253,6 +262,7 @@ function App() {
             <Route path="manager-properties" element={<ManagerProperties />} />
             <Route path="/owner-list" element={<ManagerOwnerList />} />
             <Route path="/tenant-list" element={<ManagerTenantList />} />
+            <Route path="/propertyInfo" element={<PropertyInfo />} />
             <Route
               path="/tenant-list/:t_id"
               element={<ManagerTenantListDetail />}

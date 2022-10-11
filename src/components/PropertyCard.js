@@ -25,9 +25,17 @@ function PropertyCard(props) {
         e.stopPropagation();
         e.preventDefault();
     }
+    const goToPropertyInfo = () =>{
+        
+        navigate('/propertyInfo',{
+            state:{
+                property: props.property,
+            }
+        });
+    }
     console.log(property);
     return (
-        <div style={{border:"1px solid lightblue", cursor: "pointer", display: "flex"}} >
+        <div style={{border:"1px solid lightblue", cursor: "pointer", display: "flex"}} onClick={goToPropertyInfo} >
             <div className="img" style={{ flex: "0 0 35%", background:"lightgrey" }}>
                 {property.images && property.images.length > 0 ? (<img style={{width:"100%", height:"100%"}} src={property.images[0]}/>) : (<img style={{width:"100%", height:"100%"}} src={No_Image}/>) }
             </div>
@@ -50,7 +58,8 @@ function PropertyCard(props) {
 
                 <div style={{marginTop:"10px",fontSize:"14px",color:"gray"}}>
                     <div>{property.address}, {property.unit} </div>
-                    <div>{property.city}, {property.zip}</div>
+                    <div>{property.city}, {property.state} - {property.zip}</div>
+                    {/* <div></div> */}
                 </div>
                     
                 <div style={{display:"flex",marginTop:"10px",marginBottom:"10px"}} onClick={stopEventPropagation}>

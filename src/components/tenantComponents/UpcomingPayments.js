@@ -8,7 +8,6 @@ export default function UpcomingPayments(props){
     const [totalSum, setTotalSum] = React.useState(0);
     const [purchaseUIDs, setPurchaseUIDs] = React.useState([]);//figure out which payment is being payed for
     const rents = props.data; //array of objects
-    console.log(props.data) 
     const goToPayment = () => {
         navigate("/tenantDuePayments");
         // <PaymentComponent data = {rents}/>
