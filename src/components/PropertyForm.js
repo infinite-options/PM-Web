@@ -128,6 +128,7 @@ function PropertyForm(props) {
   const [deposit, setDeposit] = useState("");
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [depositForRent, setDepositForRent] = useState(false);
+  const [availableToRent, setAvailableToRent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const { property, edit, setEdit, hideEdit } = props;
@@ -152,6 +153,7 @@ function PropertyForm(props) {
     setDeposit(property.deposit);
     setPetsAllowed(property.pets_allowed);
     setDepositForRent(property.deposit_for_rent);
+    setAvailableToRent(property.available_to_rent);
     applianceState[1](JSON.parse(property.appliances));
     utilityState[1](JSON.parse(property.utilities));
     loadImages();
@@ -834,7 +836,7 @@ function PropertyForm(props) {
           </Col>
         </Row>
       </Container>
-      <Container style={({ paddingLeft: "0px" }, mediumBold)} className="my-3">
+      <Container className="my-3">
         <h6>Deposit can be used for last month's rent</h6>
         <Row>
           <Col className="d-flex ps-4">
@@ -867,6 +869,35 @@ function PropertyForm(props) {
           </Col>
         </Row>
       </Container>
+
+      {edit ? (
+        <Container className="my-3">
+          <h6>Available to Rent</h6>
+          <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
+        </Container>
+      ) : (
+        <Container className="my-3">
+          <h6>Available to Rent</h6>
+          <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
+        </Container>
+      )}
+      {edit ? (
+        <Container
+          style={({ paddingLeft: "0px" }, mediumBold)}
+          className="my-3"
+        >
+          <h6> Featured</h6>
+          <p> {property.featured}</p>
+        </Container>
+      ) : (
+        <Container
+          style={({ paddingLeft: "0px" }, mediumBold)}
+          className="my-3 "
+        >
+          <h6> Featured</h6>
+          <p> {property.featured}</p>
+        </Container>
+      )}
       {edit ? (
         <div>
           <PropertyImages state={imageState} />

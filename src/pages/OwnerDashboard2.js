@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import * as ReactBootStrap from "react-bootstrap";
 import SideBar from "../components/ownerComponents/SideBar";
 import Header from "../components/Header";
 import Table from "../components/ownerComponents/Table";
@@ -27,7 +28,7 @@ export default function OwnerDashboard2() {
     const response = await get("/ownerDashboard", access_token);
     console.log("second");
     console.log(response);
-    setIsLoading(false);
+    // setIsLoading(false);
 
     if (response.msg === "Token has expired") {
       console.log("here msg");
@@ -35,6 +36,7 @@ export default function OwnerDashboard2() {
 
       return;
     }
+    setIsLoading(false);
     setOwnerData(response);
     setDataTable(response.result);
   };
@@ -54,15 +56,22 @@ export default function OwnerDashboard2() {
         <div className="sidebar">
           <SideBar />
         </div>
-        <div className="w-100">
-          <Header
-            title="Owner"
-            rightText="+ New"
-            rightFn={() => setStage("NEW")}
-          />
-          <Row>{dataTable.length !== 0 && <Table data={dataTable} />}</Row>
-          <Row>{dataTable.length !== 0 && <Table2 data={dataTable} />}</Row>
-        </div>
+        {dataTable.length > 0 ? (
+          <div className="w-100">
+            <Header
+              title="Owner"
+              rightText="+ New"
+              rightFn={() => setStage("NEW")}
+            />
+
+            <Row>{dataTable.length !== 0 && <Table data={dataTable} />}</Row>
+            <Row>{dataTable.length !== 0 && <Table2 data={dataTable} />}</Row>
+          </div>
+        ) : (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        )}
       </div>
     </div>
   ) : stage === "NEW" ? (

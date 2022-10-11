@@ -8,14 +8,16 @@ import TenantAvailableProperties from "./TenantAvailableProperties";
 import SwitchRole from "../components/SwitchRole";
 import { get } from "../utils/api";
 import TenantWelcomePage from "./TenantWelcomePage";
-import OwnerProfileTab from "./OwnerProfileTab";
+import TenantProfileTab from "./TenantProfileTab";
 import PaymentPage from "../components/PaymentPage";
 import PaymentSelection from "../components/PaymentSelection";
-
+import TenantDocumentUpload from "./TenantDocumentUpload";
+import OwnerSwitchRole from "../components/OwnerSwitchRole";
 function TenantHome() {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
+  const [stage, setStage] = useState("DASHBOARD");
   const [footerTab, setFooterTab] = useState("DASHBOARD");
   const [showFooter, setShowFooter] = useState(true);
   const [profile, setProfile] = useState([]);
@@ -98,16 +100,37 @@ function TenantHome() {
             )}
 
             {footerTab === "PROFILE" ? (
-              // <TenantProfile
-              //   setShowFooter={setShowFooter}
-              //   setTab={setFooterTab}
-              // />
-              <OwnerProfileTab
-                profileInfo={profile}
-                setStage={setFooterTab}
-                setShowFooter={setShowFooter}
-                setTab={setFooterTab}
-              />
+              <div>
+                {stage === "DASHBOARD" ? (
+                  <TenantProfileTab
+                    // profileInfo={profileInfo}
+                    stage={stage}
+                    setStage={setStage}
+                    setShowFooter={setShowFooter}
+                    setTab={setFooterTab}
+                  />
+                ) : stage === "ROLES" ? (
+                  <OwnerSwitchRole
+                    setStage={setStage}
+                    setShowFooter={setShowFooter}
+                    setTab={setFooterTab}
+                  />
+                ) : stage === "PROFILE" ? (
+                  <TenantProfile
+                    setStage={setStage}
+                    setShowFooter={setShowFooter}
+                    setTab={setFooterTab}
+                  />
+                ) : stage === "DOCUMENTS" ? (
+                  <TenantDocumentUpload
+                    setStage={setStage}
+                    setShowFooter={setShowFooter}
+                    setTab={setFooterTab}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
             ) : (
               ""
             )}

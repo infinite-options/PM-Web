@@ -10,6 +10,7 @@ import {
   Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
 import AppContext from "../AppContext";
 import PropTypes from "prop-types";
@@ -47,15 +48,13 @@ export default function ManagerDashboard() {
     const response = await get("/managerDashboard", access_token);
     console.log("second");
     console.log(response);
-    setIsLoading(false);
 
     if (response.msg === "Token has expired") {
       console.log("here msg");
       refresh();
-
       return;
     }
-
+    setIsLoading(false);
     const properties = response.result.filter(
       (property) => property.management_status !== "REJECTED"
     );
@@ -294,84 +293,85 @@ export default function ManagerDashboard() {
         <div className="sidebar">
           <SideBar />
         </div>
-        <div>
-          <br />
-          <Row className="w-100 m-3">
-            <Col> Search by</Col>
+        {properties.length > 0 ? (
+          <div>
+            <br />
+            <Row className="w-100 m-3">
+              <Col> Search by</Col>
 
-            <Col>
-              <input
-                type="text"
-                placeholder="Search"
-                onChange={(event) => {
-                  setSearch(event.target.value);
-                }}
-              />
-            </Col>
-          </Row>
-          <Row className="m-3">
-            <Table classes={{ root: classes.customTable }} size="small">
-              <EnhancedTableHead
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                rowCount={properties.length}
-              />{" "}
-              <TableBody>
-                {stableSort(properties, getComparator(order, orderBy))
-                  // for filtering
-                  .filter((val) => {
-                    const query = search.toLowerCase();
+              <Col>
+                <input
+                  type="text"
+                  placeholder="Search"
+                  onChange={(event) => {
+                    setSearch(event.target.value);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row className="m-3">
+              <Table classes={{ root: classes.customTable }} size="small">
+                <EnhancedTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                  rowCount={properties.length}
+                />{" "}
+                <TableBody>
+                  {stableSort(properties, getComparator(order, orderBy))
+                    // for filtering
+                    .filter((val) => {
+                      const query = search.toLowerCase();
 
-                    return (
-                      val.address.toLowerCase().indexOf(query) >= 0 ||
-                      val.city.toLowerCase().indexOf(query) >= 0 ||
-                      val.zip.toLowerCase().indexOf(query) >= 0 ||
-                      val.rent_status.toLowerCase().indexOf(query) >= 0 ||
-                      String(val.oldestOpenMR).toLowerCase().indexOf(query) >=
-                        0 ||
-                      String(val.late_date).toLowerCase().indexOf(query) >= 0
-                    );
-                  })
-                  .map((property, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={property.address}
-                      >
-                        <TableCell padding="none" size="small" align="center">
-                          {JSON.parse(property.images).length > 0 ? (
-                            <img
-                              src={JSON.parse(property.images)[0]}
-                              onClick={() => {
-                                navigate(
-                                  `/manager-properties/${property.property_uid}`,
-                                  {
-                                    state: {
-                                      property: property,
-                                      property_uid: property.property_uid,
-                                    },
-                                  }
-                                );
-                              }}
-                              alt="Property"
-                              style={{
-                                borderRadius: "4px",
-                                objectFit: "cover",
-                                width: "100px",
-                                height: "100px",
-                              }}
-                            />
-                          ) : (
-                            ""
-                          )}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.address}
-                          {property.unit !== "" ? " " + property.unit : ""}
-                          {/* <div className="d-flex">
+                      return (
+                        val.address.toLowerCase().indexOf(query) >= 0 ||
+                        val.city.toLowerCase().indexOf(query) >= 0 ||
+                        val.zip.toLowerCase().indexOf(query) >= 0 ||
+                        val.rent_status.toLowerCase().indexOf(query) >= 0 ||
+                        String(val.oldestOpenMR).toLowerCase().indexOf(query) >=
+                          0 ||
+                        String(val.late_date).toLowerCase().indexOf(query) >= 0
+                      );
+                    })
+                    .map((property, index) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={property.address}
+                        >
+                          <TableCell padding="none" size="small" align="center">
+                            {JSON.parse(property.images).length > 0 ? (
+                              <img
+                                src={JSON.parse(property.images)[0]}
+                                onClick={() => {
+                                  navigate(
+                                    `/manager-properties/${property.property_uid}`,
+                                    {
+                                      state: {
+                                        property: property,
+                                        property_uid: property.property_uid,
+                                      },
+                                    }
+                                  );
+                                }}
+                                alt="Property"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.address}
+                            {property.unit !== "" ? " " + property.unit : ""}
+                            {/* <div className="d-flex">
                             <div className="d-flex align-items-end">
                               <p
                                 style={{ ...blue, ...xSmall }}
@@ -383,99 +383,104 @@ export default function ManagerDashboard() {
                               </p>
                             </div>
                           </div> */}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.city}, {property.state}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.zip}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.listed_rent}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.rentalInfo !== "NOT RENTED" ? (
-                            property.rentalInfo.map((tf, i) => {
-                              return (
-                                <div
-                                  onClick={() => {
-                                    fetchTenantDetails(tf.tenant_id);
-                                  }}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.city}, {property.state}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.zip}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.listed_rent}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.rentalInfo !== "NOT RENTED" ? (
+                              property.rentalInfo.map((tf, i) => {
+                                return (
+                                  <div
+                                    onClick={() => {
+                                      fetchTenantDetails(tf.tenant_id);
+                                    }}
+                                  >
+                                    {i + 1} {tf.tenant_first_name}{" "}
+                                    {tf.tenant_last_name}
+                                  </div>
+                                );
+                              })
+                            ) : (
+                              <div>{property.rentalInfo}</div>
+                            )}
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
                                 >
-                                  {i + 1} {tf.tenant_first_name}{" "}
-                                  {tf.tenant_last_name}
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <div>{property.rentalInfo}</div>
-                          )}
-                          <div className="d-flex">
-                            <div className="d-flex align-items-end">
-                              <p
-                                style={{ ...blue, ...xSmall }}
-                                className="mb-0"
-                              >
-                                {property.new_tenant_applications.length > 0
-                                  ? `${property.new_tenant_applications.length} new tenant application(s) to review`
-                                  : ""}
-                              </p>
+                                  {property.new_tenant_applications.length > 0
+                                    ? `${property.new_tenant_applications.length} new tenant application(s) to review`
+                                    : ""}
+                                </p>
+                              </div>
                             </div>
-                          </div>
 
-                          <div className="d-flex">
-                            <div className="d-flex align-items-end">
-                              <p
-                                style={{ ...blue, ...xSmall }}
-                                className="mb-0"
-                              >
-                                {property.end_early_applications.length > 0
-                                  ? "Tenant(s) requested to end the lease early"
-                                  : ""}
-                              </p>
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {property.end_early_applications.length > 0
+                                    ? "Tenant(s) requested to end the lease early"
+                                    : ""}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.num_apps}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.rent_status}
-                        </TableCell>
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.num_apps}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.rent_status}
+                          </TableCell>
 
-                        <TableCell padding="none" size="small" align="center">
-                          {property.late_date != "Not Applicable" ? (
-                            <div>{property.late_date} days</div>
-                          ) : (
-                            <div>{property.late_date}</div>
-                          )}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.new_mr}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.process_mr}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.quote_received_mr}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.quote_accepted_mr}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.oldestOpenMR != "Not Applicable" ? (
-                            <div>{property.oldestOpenMR} days</div>
-                          ) : (
-                            <div>{property.oldestOpenMR}</div>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </Row>
-        </div>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.late_date != "Not Applicable" ? (
+                              <div>{property.late_date} days</div>
+                            ) : (
+                              <div>{property.late_date}</div>
+                            )}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.new_mr}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.process_mr}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.quote_received_mr}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.quote_accepted_mr}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.oldestOpenMR != "Not Applicable" ? (
+                              <div>{property.oldestOpenMR} days</div>
+                            ) : (
+                              <div>{property.oldestOpenMR}</div>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </Row>
+          </div>
+        ) : (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
@@ -11,17 +11,23 @@ import {
   mediumBold,
 } from "../utils/styles";
 import AppContext from "../AppContext";
-import { get, post } from "../utils/api";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
+import { get, put, post } from "../utils/api";
+
+import Checkbox from "../components/Checkbox";
 
 function ReviewTenantProfile(props) {
   const { property_uid } = useParams();
-  const { userData } = React.useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const { user, access_token } = userData;
   const navigate = useNavigate();
-  const [profile, setProfile] = React.useState(null);
-  const [files, setFiles] = React.useState([]);
+  const [profile, setProfile] = useState(null);
+  const [filesOrigignal, setFilesOriginal] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [filesCopy, setFilesCopy] = useState([]);
+  const [shared, setShared] = useState(false);
+  const [message, setMessage] = useState("");
+  const [adultOccupants, setAdultOccupants] = useState("");
+  const [childrenOccupants, setChildrenOccupants] = useState("");
 
   const goToPropertyView = () => {
     navigate(`/tenantPropertyView/${property_uid}`);
@@ -29,86 +35,126 @@ function ReviewTenantProfile(props) {
   const goToShowApplied = () => {
     navigate("/applyToProperty");
   };
+  // const updateNewFile = (i, field, value) => {
+  //   const newFileCopy = { ...files[i] };
+  //   newFileCopy[field] = value;
+  //   console.log(newFileCopy);
+  //   newFile.push(newFileCopy);
+  //   setNewFile(newFile);
+  // };
 
-  const [message, setMessage] = React.useState("");
-  const [adultOccupants, setAdultOccupants] = React.useState("");
-  const [childrenOccupants, setChildrenOccupants] = React.useState("");
+  console.log("Files", files);
+  console.log("Files Copy", filesCopy);
+  console.log("New Files", filesOrigignal);
   const apply = async () => {
+    console.log(files);
+    console.log(filesOrigignal);
+    let application_docs = [];
+    for (let i = 0; i < filesCopy.length; i++) {
+      if (filesCopy[i].shared === true) {
+        application_docs.push(filesCopy[i]);
+      }
+    }
     const newApplication = {
       property_uid: property_uid,
       message: message,
       adult_occupants: adultOccupants,
       children_occupants: childrenOccupants,
+      documents: application_docs,
     };
+    console.log(application_docs);
     const response = await post("/applications", newApplication, access_token);
+
+    const tenantProfile = {};
+    let update_tenant_docs = [];
+    for (let i = 0; i < filesCopy.length; i++) {
+      //if no change, then we push original
+      if (filesCopy[i].shared === filesOrigignal[i].shared) {
+        // push the original info in database
+        update_tenant_docs.push(filesOrigignal[i]);
+      }
+      // if original data is shared, and current NOT, then push the original
+      else if (
+        filesCopy[i].shared === false &&
+        filesOrigignal[i].shared === true
+      ) {
+        //push original info in database
+        update_tenant_docs.push(filesOrigignal[i]);
+      }
+      // if original data is NOT shared, and current IS, then push the current
+      else if (
+        filesCopy[i].shared === true &&
+        filesOrigignal[i].shared === false
+      ) {
+        // push the current info in database
+        update_tenant_docs.push(filesCopy[i]);
+      } else {
+        //do nothing
+      }
+    }
+
+    console.log(update_tenant_docs);
+
+    for (let i = 0; i < update_tenant_docs.length; i++) {
+      let key = `doc_${i}`;
+      tenantProfile[key] = update_tenant_docs[i].file;
+      delete update_tenant_docs[i].file;
+    }
+    tenantProfile.documents = JSON.stringify(update_tenant_docs);
+    const res = await put(
+      "/tenantProfileInfo",
+      tenantProfile,
+      access_token,
+      update_tenant_docs
+    );
     goToShowApplied();
   };
-  // const addFile = (e) => {
-  //     const file = e.target.files[0];
-  //     const newFile = {
-  //       name: file.name,
-  //       description: '',
-  //       file: file
-  //     }
-  //     setNewFile(newFile);
-  //   }
+
   //   const updateNewFile = (field, value) => {
   //     const newFileCopy = {...newFile};
   //     newFileCopy[field] = value;
   //     setNewFile(newFileCopy);
   //   }
-  //   const cancelEdit = () => {
-  //     setNewFile(null);
-  //     if (editingDoc !== null) {
-  //       const newFiles = [...files];
-  //       newFiles.push(editingDoc);
-  //       setFiles(newFiles);
-  //     }
-  //     setEditingDoc(null);
-  //   }
+
   const editDocument = (i) => {
-    // const newFiles = [...files];
-    // const file = newFiles.splice(i, 1)[0];
-    // setFiles(newFiles);
-    // setEditingDoc(file);
-    // setNewFile({...file});
-  };
-  //   const saveNewFile = (e) => {
-  //     // copied from addFile, change e.target.files to state.newFile
-  //     const newFiles = [...files];
-  //     newFiles.push(newFile);
-  //     setFiles(newFiles);
-  //     setNewFile(null);
-  //   }
-  const deleteDocument = (i) => {
-    const newFiles = [...files];
-    newFiles.splice(i, 1);
+    const newFiles = [...filesCopy];
+    const file = newFiles.splice(i, 1)[0];
+    console.log(file);
+    file["shared"] = !file.shared;
+    console.log(file);
     setFiles(newFiles);
+    // setNewFile({ ...file });
+    // newFile.push(file);
+    // setNewFile(newFile);
   };
-  React.useEffect(() => {
-    const fetchProfileInfo = async () => {
-      const response = await get("/tenantProfileInfo", access_token);
-      console.log(response);
-      if (response.result && response.result.length !== 0) {
-        const res = response.result[0];
 
-        const currentAdd = JSON.parse(res.tenant_current_address);
-        const previousAdd = JSON.parse(res.tenant_previous_address);
-        res.tenant_current_address = currentAdd;
-        res.tenant_previous_address = previousAdd;
+  const fetchProfileInfo = async () => {
+    const response = await get("/tenantProfileInfo", access_token);
+    if (response.result && response.result.length !== 0) {
+      const res = response.result[0];
 
-        setProfile(res);
-        const documents = response.result[0].documents
-          ? JSON.parse(response.result[0].documents)
-          : [];
-        setFiles(documents);
-        return;
-      }
-      if (user.role.indexOf("TENANT") === -1) {
-        console.log("no tenant profile");
-        props.onConfirm();
-      }
-    };
+      const currentAdd = JSON.parse(res.tenant_current_address);
+      const previousAdd = JSON.parse(res.tenant_previous_address);
+      res.tenant_current_address = currentAdd;
+      res.tenant_previous_address = previousAdd;
+
+      setProfile(res);
+      const documents = response.result[0].documents
+        ? JSON.parse(response.result[0].documents)
+        : [];
+      // setFiles(documents);
+      setFilesCopy(documents);
+      let fo = JSON.parse(JSON.stringify(documents));
+      setFilesOriginal(fo);
+      return;
+    }
+    if (user.role.indexOf("TENANT") === -1) {
+      console.log("no tenant profile");
+      props.onConfirm();
+    }
+  };
+
+  useEffect(() => {
     fetchProfileInfo();
   }, []);
 
@@ -433,9 +479,14 @@ function ReviewTenantProfile(props) {
       </div>
       <Container fluid>
         <div className="mb-4">
-          {files.map((file, i) => (
+          {filesCopy.map((file, i) => (
             <div key={i}>
-              <div className="d-flex justify-content-between align-items-end">
+              <div className="d-flex justify-content-left align-items-start">
+                <Checkbox
+                  type="CIRCLE"
+                  checked={file.shared}
+                  onClick={() => editDocument(i)}
+                />
                 <div>
                   <h6 style={{ paddingLeft: "20px", fontWeight: "bold" }}>
                     {file.name}
@@ -444,15 +495,6 @@ function ReviewTenantProfile(props) {
                     {file.description}
                   </p>
                 </div>
-                {/* <div>
-                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
-                    onClick={() => editDocument(i)}/>
-                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
-                    onClick={() => deleteDocument(i)}/>
-                  <a href={file.link} target='_blank'>
-                    <img src={File}/>
-                  </a>
-                </div> */}
               </div>
               <hr style={{ opacity: 1 }} />
             </div>
