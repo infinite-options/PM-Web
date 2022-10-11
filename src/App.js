@@ -84,6 +84,7 @@ import OwnerRepairList from "./components/OwnerRepairList";
 import OwnerRepairRequest from "./components/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
 import PropertyInfo from "./pages/PropertyInfo"
+import AppliedDashboard from "./pages/AppliedDashboard"
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -148,7 +149,8 @@ function App() {
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
-            <Route path="tenant_dash" element={<ActualTenantDashboard />} />
+            <Route path="tenant_dash" element={<ActualTenantDashboard />} />\
+            <Route path="applied_dashboard" element={<AppliedDashboard />} />
             <Route path="tenant_original" element={<TenantHome />} />
             {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             <Route
@@ -189,6 +191,7 @@ function App() {
               path="residentAnnouncements"
               element={<ResidentAnnouncements />}
             />
+
             <Route
               path="detailAnnouncements"
               element={<DetailAnnouncements />}

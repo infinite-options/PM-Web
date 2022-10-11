@@ -10,20 +10,26 @@ export default function SubmitAppTenantCard(props){
     //need profile and user information first
 
     const goToActualDashboard=()=>{
-        console.log("going to dashboard");
-        navigate('/tenant_dash', {
-            state:{
-                lookingAt: props.lookingAt,
-            },
-        })
+        console.log("going to another page with property information and another renter lease info");
+        // navigate('/tenant_dash', {
+        //     state:{
+        //         lookingAt: props.lookingAt,
+        //     },
+        // })
+        // navigate('/applied_dashboard',{
+        //     state:{
+
+        //     }
+        // });
     }
     //nothing happens on click on this card?
+
     return(
         // <div className="tenantCard">
         <div className="tenantCard3">
             <div className="card-spacing">
                
-                {props.type == 3 && <img className="tenantImg3" src ={props.imgSrc}/>}
+                {props.type == 3 && <img className="tenantImg3" onClick={goToActualDashboard} src ={props.imgSrc}/>}
                 {/* {props.type == 1 && <div> 
                 <h3 id="lease-ends" className="green-text">Lease Ends: {props.leaseEnds}</h3>
                 <h4 className="add1 card-text"><strong>{props.address1}</strong></h4>

@@ -127,6 +127,9 @@ export default function TenantDashboard2() {
       setLookingAt(lookingAt - 1);
     }
   };
+  const goToAnnouncements = () => {
+     navigate("/residentAnnouncements");
+  };
   const fetchApplications = async () => {
     // console.log("profile", profile);
     // console.log("user", user);
@@ -233,7 +236,7 @@ export default function TenantDashboard2() {
               <button className="b">Contact Property Manager</button>
             </div>
             <div className="box2">
-              <div className="announcements">
+              <div className="announcements" onClick = {goToAnnouncements}>
                 Announcements
                 <h3 className="ann"></h3>
               </div>
