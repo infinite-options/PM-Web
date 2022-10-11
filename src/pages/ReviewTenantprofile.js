@@ -21,7 +21,7 @@ function ReviewTenantProfile(props) {
   const { user, access_token } = userData;
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
-  const [newFile, setNewFile] = useState([]);
+  const [filesOrigignal, setFilesOriginal] = useState([]);
   const [files, setFiles] = useState([]);
   const [filesCopy, setFilesCopy] = useState([]);
   const [shared, setShared] = useState(false);
@@ -35,41 +35,77 @@ function ReviewTenantProfile(props) {
   const goToShowApplied = () => {
     navigate("/applyToProperty");
   };
-  const updateNewFile = (i, field, value) => {
-    const newFileCopy = { ...files[i] };
-    newFileCopy[field] = value;
-    console.log(newFileCopy);
-    newFile.push(newFileCopy);
-    setNewFile(newFile);
-  };
+  // const updateNewFile = (i, field, value) => {
+  //   const newFileCopy = { ...files[i] };
+  //   newFileCopy[field] = value;
+  //   console.log(newFileCopy);
+  //   newFile.push(newFileCopy);
+  //   setNewFile(newFile);
+  // };
 
   console.log("Files", files);
   console.log("Files Copy", filesCopy);
-  console.log("New Files", newFile);
+  console.log("New Files", filesOrigignal);
   const apply = async () => {
     console.log(files);
-    console.log(newFile);
-
+    console.log(filesOrigignal);
+    let application_docs = [];
+    for (let i = 0; i < filesCopy.length; i++) {
+      if (filesCopy[i].shared === true) {
+        application_docs.push(filesCopy[i]);
+      }
+    }
     const newApplication = {
       property_uid: property_uid,
       message: message,
       adult_occupants: adultOccupants,
       children_occupants: childrenOccupants,
-      documents: newFile,
+      documents: application_docs,
     };
+    console.log(application_docs);
     const response = await post("/applications", newApplication, access_token);
+
     const tenantProfile = {};
+    let update_tenant_docs = [];
     for (let i = 0; i < filesCopy.length; i++) {
-      let key = `doc_${i}`;
-      tenantProfile[key] = filesCopy[i].file;
-      delete filesCopy[i].file;
+      //if no change, then we push original
+      if (filesCopy[i].shared === filesOrigignal[i].shared) {
+        // push the original info in database
+        update_tenant_docs.push(filesOrigignal[i]);
+      }
+      // if original data is shared, and current NOT, then push the original
+      else if (
+        filesCopy[i].shared === false &&
+        filesOrigignal[i].shared === true
+      ) {
+        //push original info in database
+        update_tenant_docs.push(filesOrigignal[i]);
+      }
+      // if original data is NOT shared, and current IS, then push the current
+      else if (
+        filesCopy[i].shared === true &&
+        filesOrigignal[i].shared === false
+      ) {
+        // push the current info in database
+        update_tenant_docs.push(filesCopy[i]);
+      } else {
+        //do nothing
+      }
     }
-    tenantProfile.documents = JSON.stringify(filesCopy);
+
+    console.log(update_tenant_docs);
+
+    for (let i = 0; i < update_tenant_docs.length; i++) {
+      let key = `doc_${i}`;
+      tenantProfile[key] = update_tenant_docs[i].file;
+      delete update_tenant_docs[i].file;
+    }
+    tenantProfile.documents = JSON.stringify(update_tenant_docs);
     const res = await put(
       "/tenantProfileInfo",
       tenantProfile,
       access_token,
-      filesCopy
+      update_tenant_docs
     );
     goToShowApplied();
   };
@@ -88,8 +124,8 @@ function ReviewTenantProfile(props) {
     console.log(file);
     setFiles(newFiles);
     // setNewFile({ ...file });
-    newFile.push(file);
-    setNewFile(newFile);
+    // newFile.push(file);
+    // setNewFile(newFile);
   };
 
   const fetchProfileInfo = async () => {
@@ -106,8 +142,10 @@ function ReviewTenantProfile(props) {
       const documents = response.result[0].documents
         ? JSON.parse(response.result[0].documents)
         : [];
-      setFiles(documents);
+      // setFiles(documents);
       setFilesCopy(documents);
+      let fo = JSON.parse(JSON.stringify(documents));
+      setFilesOriginal(fo);
       return;
     }
     if (user.role.indexOf("TENANT") === -1) {
