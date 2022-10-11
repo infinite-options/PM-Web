@@ -251,8 +251,8 @@ function ReviewPropertyLease(props) {
       {/* <Header title="Property Lease Details" /> */}
       <Header
         title="Property Lease Details"
-        leftText="< Back"
-        leftFn={() => navigate("/tenant")}
+        // leftText="< Back"
+        // leftFn={() => navigate("/tenant")}
       />
 
       {/* ==================< Property Details >=======================================  */}

@@ -113,10 +113,12 @@ export default function TenantFirstPageView(){
         
     })
     const leaseReceived = applications?.map((app,i)=>{
-        // console.log("");
+        console.log("Inside application list");
         if(app.application_status === "FORWARDED"){
             console.log(app.images);
+
             return(
+                // <div> Inside Return Statement {i}</div>
                 <SubmitAppTenantCard 
 
                         imgSrc={app.images[0]}
@@ -152,7 +154,7 @@ export default function TenantFirstPageView(){
             <div>
                 <h1>Lease Received</h1>
                 <div className="first-page-card-organization">
-                    {/* {leaseReceived} */}
+                    {leaseReceived}
                 </div>
             </div>
             <div>

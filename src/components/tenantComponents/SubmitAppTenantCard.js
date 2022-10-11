@@ -20,10 +20,10 @@ export default function SubmitAppTenantCard(props){
     //nothing happens on click on this card?
     return(
         // <div className="tenantCard">
-        <div className="tenantCard">
+        <div className="tenantCard3">
             <div className="card-spacing">
                
-                {props.type == 3 && <img className="tenantImg" src ={props.imgSrc}/>}
+                {props.type == 3 && <img className="tenantImg3" src ={props.imgSrc}/>}
                 {/* {props.type == 1 && <div> 
                 <h3 id="lease-ends" className="green-text">Lease Ends: {props.leaseEnds}</h3>
                 <h4 className="add1 card-text"><strong>{props.address1}</strong></h4>

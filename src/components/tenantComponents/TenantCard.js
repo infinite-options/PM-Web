@@ -59,11 +59,10 @@ export default function TenantCard(props){
     }
     return(
         // <div className="tenantCard">
-        <div className="tenantCard">
-            <div className="card-spacing">
+        <div className={props.type==1?"tenantCard":"tenantCard2"}>
+            <div className={props.type==1?"card-spacing":"card-spacing2"}>
                 {props.type == 1 && <img className="tenantImg" src ={imgS[0]} ></img>}
-                {props.type == 2 && <img className="tenantImg" onClick = {goToActualDashboard}src ={imgS[0]}/>}
-                {props.type == 3 && <img className="tenantImg" src ={props.imgSrc}/>}
+                {props.type == 2 && <img className="tenantImg2" onClick = {goToActualDashboard}src ={imgS[0]}/>}
                 {props.type == 1 && <div> 
                 <h3 id="lease-ends" className="green-text">Lease Ends: {props.leaseEnds}</h3>
                 <h4 className="add1 card-text"><strong>{props.address1}</strong></h4>
@@ -99,7 +98,7 @@ export default function TenantCard(props){
                 <div>
                     <h3 id="lease-ends" className="green-text">Lease Ends: {props.leaseEnds}</h3>
                     <h4 className="add1 card-text"><strong>{props.address1}</strong></h4>
-                    <h4>Application Status: <h4 className="in-green">{props.application_type}</h4></h4>
+                    <h5>Application Status: <h4 className="in-green">{props.application_type}</h4></h5>
                 </div>
 
             }
