@@ -10,20 +10,24 @@ import { get, put } from "../utils/api";
 import No_Image from "../icons/No_Image_Available.jpeg";
 
 function ReviewPropertyLease(props) {
+  console.log(props);
   const context = useContext(AppContext);
   const { userData } = context;
   const { access_token, user } = userData;
 
-  const { property_uid } = useParams();
-  console.log(property_uid);
+  const property_uid = props.property_uid;
+  console.log("property uid from review property lease: " + property_uid);
 
   const navigate = useNavigate();
   const location = useLocation();
   const [rentals, setRentals] = useState([]);
   const [rentPayments, setRentPayments] = useState([]);
   const [lease, setLease] = useState([]);
-  const application_uid = location.state.application_uid;
-  const application_status_1 = location.state.application_status_1;
+  // const application_uid = location.state.application_uid;
+  const application_uid = props.application_uid;
+  // const application_status_1 = location.state.application_status_1;
+  const application_status_1 = props.application_status_1;
+
   console.log(application_status_1);
   const { setTab } = props;
   const [properties, setProperties] = useState([]);
@@ -31,7 +35,8 @@ function ReviewPropertyLease(props) {
   const [showLease, setShowLease] = useState("True");
   const [endLeaseMessage, setEndLeaseMessage] = useState("No message has been set by Tenant.");
   const [endEarlyDate, setEndEarlyDate] = useState("");
-  const pmMessage = location.state.message;
+  // const pmMessage = location.state.message;
+  const pmMessage = props.message;
   const [disableEndLease, setDisable] = useState(false);
   const [within60, setWithin60] = useState(false);
   // let within60 = false;
@@ -215,7 +220,7 @@ function ReviewPropertyLease(props) {
     tempEndDate = tempEndDate.split("-");
     let endDate = new Date(parseInt(tempEndDate[0]), parseInt(tempEndDate[1]) - 1, parseInt(tempEndDate[2]));
     let difference = Math.abs(currentDate - endDate);
-    console.log(difference);
+    // console.log(difference);
     if (difference <= 5184000000) {
       // within60 = true;
       setWithin60(true);

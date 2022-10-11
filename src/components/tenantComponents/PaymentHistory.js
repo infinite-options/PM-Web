@@ -20,10 +20,10 @@ export default function UpcomingPayments(props){
         }
         
     })
-    
+
     return(
         <div className= "payment-history">
-            Payment History
+            Payment History (Last 30 Days)
             <table className="table-upcoming-payments">
             <thead>
                 <tr className="table-row blue-text">

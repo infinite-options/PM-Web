@@ -69,6 +69,7 @@
     justify-content: center;
     text-align: center;
     overflow-x: auto;
+    min-height: 300px;
     
 }
 #lease-ends{
@@ -520,7 +521,10 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    align-items: center;
+    align-items:center;
     width: 50%;
     height: auto;
+}
+.in-green{
+    color: var(--greenColor);
 }

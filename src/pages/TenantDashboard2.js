@@ -15,6 +15,9 @@ import PersonalInfo from "../components/tenantComponents/PersonalInfo";
 import AppContext from "../AppContext";
 import loadinggif from "../icons/loading.gif"
 import Carousel from 'react-elastic-carousel'
+import ReviewPropertyLease from "./reviewPropertyLease";
+import { propTypes } from "react-bootstrap/esm/Image";
+//dont have documents added page
 //tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantDashboard
 export default function TenantDashboard2() {
   const [propertyData, setPropertyData] = React.useState([]);
@@ -28,6 +31,13 @@ export default function TenantDashboard2() {
   const [lookingAt, setLookingAt] = React.useState(location.state.lookingAt);
 
   const [propertyClicked, setPropertyClicked] = React.useState(false);
+  const [applications, setApplications] = useState([]);
+  const [appUid,setAppUid] = useState("");
+  const [appstat1,setAppstat1] = useState("");
+
+  const [msg,setMsg] = useState("");
+
+  
   const fetchTenantDashboard = async () => {
     if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
@@ -46,10 +56,30 @@ export default function TenantDashboard2() {
     console.log("Received Property Data" + propertyData);
     setP(response.result[0]);
     console.log("Result from property data" + p);
+    
+    console.log(p.tenant_id);
+    const response2 = await get(`/applications?tenant_id=${response.result[0].tenant_id}`);
+    console.log("applications: ", response2);
+    const appArray = response2.result || [];
+    appArray.forEach((app) => {
+      app.images = app.images ? JSON.parse(app.images) : [];
+    });
+    setApplications(appArray);
+    console.log("applications", appArray);
+    console.log("applications array in the go to proprty lease function: " + applications)
+    console.log(applications); 
+    for(var i = 0; i < appArray.length; i  ++){
+        console.log("insdie go to property lease info for loop");
+        if(appArray[i].address === response.result[0]?.properties[lookingAt]?.address){ // we know which card we are in
+            setAppUid(appArray[i].application_uid);
+            console.log(appUid);
+            // appstat1 = applications[i].application_status;
+            setAppstat1(appArray[i].application_status);
+            // msg = applications[i].message;
+            setMsg(appArray[i].message);
+        }
+    }
     setIsLoading(false);
-    
-    
-    
   };
   const getMaintenanceRequests = () => { //process to get data from aateButtons(pi using axios
     axios.get('https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/maintenanceRequests')
@@ -63,7 +93,17 @@ export default function TenantDashboard2() {
   }
   useEffect(() => {
     fetchTenantDashboard();
+    console.log("dashboard data fetched");
+    console.log(p);
     getMaintenanceRequests();
+    console.log("maintenance data fetched");
+    fetchApplications();
+    console.log("applications data fetched");
+    console.log(applications);
+    console.log("end of use effect");
+    // goToPropertyLeaseInfo();
+    // console.log("lease info data fetched");
+    
   }, []);
   const goToMaintenence = () => {
     navigate("/maintenencePage", {
@@ -87,6 +127,33 @@ export default function TenantDashboard2() {
       setLookingAt(lookingAt - 1);
     }
   };
+  const fetchApplications = async () => {
+    // console.log("profile", profile);
+    // console.log("user", user);
+    // const response = await get(`/applications?tenant_id=${profile.tenant_id}`);
+    // console.log(p.tenant_id);
+    // const response = await get(`/applications?tenant_id=${p.tenant_id}`);
+    // console.log("applications: ", response);
+    // const appArray = response.result || [];
+    // appArray.forEach((app) => {
+    //   app.images = app.images ? JSON.parse(app.images) : [];
+    // });
+    // setApplications(appArray);
+    // console.log("applications", appArray);
+    // console.log("applications array in the go to proprty lease function: " + applications)
+    // console.log(applications); 
+    // for(var i = 0; i < appArray.length; i  ++){
+    //     console.log("insdie go to property lease info for loop");
+    //     if(appArray[i].address === propertyData.result[0].properties[lookingAt].address){ // we know which card we are in
+    //         setAppUid(appArray[i].application_uid);
+    //         console.log(appUid);
+    //         // appstat1 = applications[i].application_status;
+    //         setAppstat1(appArray[i].application_status);
+    //         // msg = applications[i].message;
+    //         setMsg(appArray[i].message);
+    //     }
+};
+
   // console.log(propertyData.result[0]);
   //END OF POSSIBLY IMPORTANT STUFF
   // console.log(p);
@@ -101,7 +168,7 @@ export default function TenantDashboard2() {
     {width: 1200, itemsToShow: 1}
 ]
   console.log("Loading: " + isLoading);
-  console.log(p.properties);
+  console.log("properties " + p.properties);
   
 
   return (
@@ -196,7 +263,13 @@ export default function TenantDashboard2() {
             </div>
           )}
         </div>
-          
+        <ReviewPropertyLease 
+          application_uid = {appUid} 
+          application_status_1 =  {appstat1}
+          message = {msg}
+          property_uid = {propertyData.result[0].properties[lookingAt]?.property_uid}
+        />
+        {console.log("prop uid: " + propertyData.result[0].properties[lookingAt]?.property_uid)}
       </div>
       :
         <div>
@@ -209,6 +282,7 @@ export default function TenantDashboard2() {
 
 
     </div>)}
+
       </div>
   );
 }
