@@ -8,10 +8,12 @@ import Apply from "../icons/ApplyIcon.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import Carousel from 'react-elastic-carousel'
+import ReviewPropertyLease from "./reviewPropertyLease";
 export default function PropertyInfo(){
     const location = useLocation();
     const navigate = useNavigate();
     const data = location.state.property;
+    const type = location.state.type;
     const imgs = data.images;
     const util = Object.entries(JSON.parse(data.utilities));
     // const [currentImg, setCurrentImg] = React.useState(0);
@@ -158,7 +160,15 @@ export default function PropertyInfo(){
 
                 </div>
             </div>
-            
+            {type == 2 && <div>
+                <ReviewPropertyLease 
+                    application_uid = {location.state.application_uid} 
+                    application_status_1 =  {location.state.application_status_1}
+                    message = {location.state.msg}
+                    property_uid = {location.state.property_uid}
+                />
+                </div>
+            }
             
         </div>
     )

@@ -53,11 +53,16 @@
 }
 
 .sidenav-elements{
-    padding: 0.5rem 0rem 0.5rem 1.5rem;
+    padding: 1rem 0rem 1rem 1.5rem;
     text-decoration: none;
     color: black;
-}
 
+}
+.sidenav-elements:hover{
+    text-decoration: none;
+    font-color: black;
+    font-weight: 500;
+}
 .tenantCard{
     
     border: black solid;
@@ -571,6 +576,6 @@
 }
 .card-spacing{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
 }

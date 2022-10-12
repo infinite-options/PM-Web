@@ -21,6 +21,7 @@ export default function PropertyCard(props){
         navigate('/propertyInfo',{
             state:{
                 property: props.property,
+                type: 1,
             }
         });
     }

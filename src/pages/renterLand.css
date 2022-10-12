@@ -158,3 +158,8 @@
     margin: 0 15px;
     font-size: 4em;
 }
+.available-props-container{
+    display: flex;
+    flex-direction: row;
+    
+}

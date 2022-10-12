@@ -16,11 +16,26 @@ export default function SubmitAppTenantCard(props){
         //         lookingAt: props.lookingAt,
         //     },
         // })
+        
+        // console.log(props.data.properties);
         // navigate('/applied_dashboard',{
         //     state:{
+        //         lookingAt: props.lookingAt,
+        //         // propertyId: props.property,
+        //     },
+        // })
+        console.log("property data information" + props.data)
+        navigate('/propertyInfo',{
+            state:{
+                property: props.data,
+                type : 2,
+                application_uid : props.application_uid,
+                application_status_1: props.application_status_1,
+                message: props.message,
+                property_uid: props.property_uid,
 
-        //     }
-        // });
+            }
+        });
     }
     //nothing happens on click on this card?
 

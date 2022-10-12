@@ -14,7 +14,16 @@ export default function TenantFirstPageView(){
     const [isLoading, setIsLoading] = useState(true);
     const [p, setP] = React.useState([]);
     const [lookingAt, setLookingAt] = React.useState(0)
+    const [appUid,setAppUid] = useState("");
+    const [appstat1,setAppstat1] = useState("");
+
+    const [msg,setMsg] = useState("");
     // const [propertyClicked, setPropertyClicked] = React.useState(false);
+    //in submit tenant card, I need the following 4 pieces of information:
+    // application_uid = {appUid} 
+    //       application_status_1 =  {appstat1}
+    //       message = {msg}
+    //       property_uid = {propertyData.result[0].properties[lookingAt]?.property_uid}
     const [applications, setApplications] = React.useState([]);
     const fetchTenantDashboard = async () => {
         if (access_token === null || user.role.indexOf("TENANT") === -1) {
@@ -43,6 +52,21 @@ export default function TenantFirstPageView(){
         });
         setApplications(appArray);
         console.log("applications", appArray);
+        setApplications(appArray);
+        console.log("applications", appArray);
+        console.log("applications array in the go to proprty lease function: " + applications)
+        console.log(applications); 
+        for(var i = 0; i < appArray.length; i  ++){
+            console.log("insdie go to property lease info for loop");
+            if(appArray[i].address === response.result[0]?.properties[lookingAt]?.address){ // we know which card we are in
+                setAppUid(appArray[i].application_uid);
+                console.log(appUid);
+                // appstat1 = applications[i].application_status;
+                setAppstat1(appArray[i].application_status);
+                // msg = applications[i].message;
+                setMsg(appArray[i].message);
+            }
+        }
         setIsLoading(false);
         
         
@@ -86,7 +110,7 @@ export default function TenantFirstPageView(){
     const applicationList = applications?.map((app,i)=>{
         console.log("Inside application list");
         if(app.application_status === "NEW"){
-            console.log(app.images);
+            console.log(p);
 
             return(
                 // <div> Inside Return Statement {i}</div>
@@ -103,10 +127,14 @@ export default function TenantFirstPageView(){
                         bath={app.num_baths}
                         size={app.area}
                         property={app.property_uid}
-                        data = {p}
+                        data = {app}
                         type = {3}
                         lookingAt = {i}
                         application_type = {"NEW"}
+                        application_uid = {appUid} 
+                        application_status_1 =  {appstat1}
+                        message = {msg}
+                        property_uid = {propertyData.result[0].properties[lookingAt]?.property_uid}
                 />
             )
         }
@@ -132,10 +160,11 @@ export default function TenantFirstPageView(){
                         bath={app.num_baths}
                         size={app.area}
                         property={app.property_uid}
-                        data = {p}
+                        data = {app}
                         type = {3}
                         lookingAt = {i}
                         application_type = {"FORWARDED"}
+
                 />
             )
         }
