@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
+import TenantDocumentUpload from "../../pages/TenantDocumentUpload";
+
 import Scroll from 'react-scroll'
 const ScrollLink = Scroll.ScrollLink
-
 export default function SideBar(props){
     const navigate = useNavigate();
     const goToSearchPM = () => {
@@ -34,6 +35,14 @@ export default function SideBar(props){
       anchor.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
     }
+    function goToDocuments(){
+      console.log("Go to documents");
+      // <TenantDocumentUpload
+      //               setStage={"DOCUMENTS"}
+      //               setShowFooter={true}
+      //               setTab={"DASHBOARD"}
+      //   />
+    }
     return(
         <div className="sidebar">
             <a className="sidenav-elements"onClick={goToDash}>DASHBOARD</a>
@@ -52,7 +61,7 @@ export default function SideBar(props){
               </ScrollLink>
             </div> */}
             <a className="sidenav-elements" onClick ={scrollM}>MAINTENANCE</a>
-            <a className="sidenav-elements">DOCUMENTS</a>
+            <a className="sidenav-elements" onClick = {goToDocuments}>DOCUMENTS</a>
             <a className="sidenav-elements" onClick={goToSearchPM}>SEARCH PROPERTIES</a>
             <a className="sidenav-elements" onClick ={scrollLease}>LEASE INFO</a>
 

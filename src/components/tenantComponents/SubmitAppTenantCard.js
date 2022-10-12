@@ -24,15 +24,20 @@ export default function SubmitAppTenantCard(props){
         //         // propertyId: props.property,
         //     },
         // })
-        console.log("property data information" + props.data)
+        console.log("property data information");
+        console.log(props.application_info)
+        const appUid = props.application_info.application_uid;
+        const status = props.application_info.application_status;
+        const msg = props.application_info.message;
+        const puid = props.application_info.property_uid
         navigate('/propertyInfo',{
             state:{
                 property: props.data,
                 type : 2,
-                application_uid : props.application_uid,
-                application_status_1: props.application_status_1,
-                message: props.message,
-                property_uid: props.property_uid,
+                application_uid : appUid,
+                application_status_1: status,
+                message: msg,
+                property_uid: puid,
 
             }
         });

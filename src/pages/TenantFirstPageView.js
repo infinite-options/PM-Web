@@ -16,7 +16,7 @@ export default function TenantFirstPageView(){
     const [lookingAt, setLookingAt] = React.useState(0)
     const [appUid,setAppUid] = useState("");
     const [appstat1,setAppstat1] = useState("");
-
+    var appArray = [];
     const [msg,setMsg] = useState("");
     // const [propertyClicked, setPropertyClicked] = React.useState(false);
     //in submit tenant card, I need the following 4 pieces of information:
@@ -46,7 +46,7 @@ export default function TenantFirstPageView(){
         
         const response2 = await get(`/applications?tenant_id=${response.result[0].tenant_id}`);
         console.log("applications: ", response2);
-        const appArray = response2.result || [];
+        appArray = response2.result || [];
         appArray.forEach((app) => {
           app.images = app.images ? JSON.parse(app.images) : [];
         });
@@ -55,18 +55,18 @@ export default function TenantFirstPageView(){
         setApplications(appArray);
         console.log("applications", appArray);
         console.log("applications array in the go to proprty lease function: " + applications)
-        console.log(applications); 
-        for(var i = 0; i < appArray.length; i  ++){
-            console.log("insdie go to property lease info for loop");
-            if(appArray[i].address === response.result[0]?.properties[lookingAt]?.address){ // we know which card we are in
-                setAppUid(appArray[i].application_uid);
-                console.log(appUid);
-                // appstat1 = applications[i].application_status;
-                setAppstat1(appArray[i].application_status);
-                // msg = applications[i].message;
-                setMsg(appArray[i].message);
-            }
-        }
+        // for(var i = 0; i < appArray.length; i  ++){
+        //     console.log("insdie go to property lease info for loop");
+        //     if(appArray[i].address === response.result[0]?.properties[lookingAt]?.address){ // we know which card we are in
+        //         setAppUid(appArray[i].application_uid);
+        //         console.log("App uid : " + appUid);
+        //         // appstat1 = applications[i].application_status;
+        //         setAppstat1(appArray[i].application_status);
+        //         // msg = applications[i].message;
+        //         setMsg(appArray[i].message);
+        //     }
+        // }
+
         setIsLoading(false);
         
         
@@ -108,10 +108,10 @@ export default function TenantFirstPageView(){
     })
   
     const applicationList = applications?.map((app,i)=>{
-        console.log("Inside application list");
+        
         if(app.application_status === "NEW"){
-            console.log(p);
-
+            
+            console.log("application info : "  + app)
             return(
                 // <div> Inside Return Statement {i}</div>
                 <SubmitAppTenantCard 
@@ -131,10 +131,11 @@ export default function TenantFirstPageView(){
                         type = {3}
                         lookingAt = {i}
                         application_type = {"NEW"}
-                        application_uid = {appUid} 
-                        application_status_1 =  {appstat1}
-                        message = {msg}
-                        property_uid = {propertyData.result[0].properties[lookingAt]?.property_uid}
+                        // application_uid = {appUid} 
+                        // application_status_1 =  {appstat1}
+                        // message = {msg}
+                        application_info = {app}
+                        // property_uid = {propertyData.result[0].properties[lookingAt]?.property_uid}
                 />
             )
         }
@@ -164,6 +165,7 @@ export default function TenantFirstPageView(){
                         type = {3}
                         lookingAt = {i}
                         application_type = {"FORWARDED"}
+                        application_info = {app}
 
                 />
             )
