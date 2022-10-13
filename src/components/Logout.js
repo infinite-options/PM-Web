@@ -9,27 +9,23 @@ function Logout(props) {
   const { logout } = React.useContext(AppContext);
 
   return (
-    <div className="text-center d-flex flex-column justify-content-end ">
-      <Col>
-        <Button
-          style={{
-            backgroundColor: "#fb8500",
-            borderColor: "#fb8500",
-            borderRadius: "10px",
-            color: "white",
-            width: "10rem",
-            font: "normal normal normal 18px Avenir-Light",
-          }}
-          onClick={() => {
-            logout();
-            navigate("/");
-          }}
-        >
-          {" "}
-          Logout
-        </Button>
-      </Col>
-    </div>
+    <Button
+      style={{
+        backgroundColor: "#fb8500",
+        borderColor: "#fb8500",
+        borderRadius: "10px",
+        color: "white",
+        width: "10rem",
+        font: "normal normal normal 18px Avenir-Light",
+      }}
+      onClick={() => {
+        logout();
+        navigate("/");
+      }}
+    >
+      {" "}
+      Logout
+    </Button>
   );
 }
 

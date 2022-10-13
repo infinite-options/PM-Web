@@ -27,13 +27,6 @@ function Homepage() {
   const login = () => {
     navigate("/login");
   };
-  const signup = () => {
-    navigate("/signup");
-  };
-  const signupexisting = () => {
-    // navigate('/signup');
-    navigate("/signupexisting");
-  };
   return (
     <div className="d-flex">
       <Container fluid className="w-100">
@@ -43,23 +36,32 @@ function Homepage() {
             // marginTop: "20rem",
             padding: "2rem",
             backgroundColor: "#ffffff",
-            height: "400px",
+            minHeight: "400px",
           }}
         >
-          <Col>
+          <Col
+            className="d-none d-md-block d-lg-block d-xl-block"
+            md={2}
+            lg={2}
+          >
             <img
               src={Landing1_1}
               style={{
-                height: "50%",
-                width: "70%",
-                objectFit: "contain",
-                objectPosition: "right",
+                maxHeight: "350px",
+                minHeight: "350px",
+                minWidth: "100px",
+                maxWidth: "200px",
+                objectFit: "cover",
+                // objectPosition: "right",
               }}
               alt="PM"
             />
           </Col>
           <Col
-            xs={7}
+            xs={12}
+            sm={12}
+            md={8}
+            lg={8}
             style={{
               padding: "2rem",
             }}
@@ -71,6 +73,7 @@ function Homepage() {
                 color: "#219dbc",
                 fontFamily: "normal normal normal 46px Helvetica",
                 fontSize: "46px",
+                textAlign: "center",
               }}
             >
               {" "}
@@ -110,10 +113,23 @@ function Homepage() {
               </Button>
             </Row>
           </Col>
-          <Col>
+          <Col
+            className="d-none d-md-block d-lg-block d-xl-block"
+            md={2}
+            lg={2}
+          >
             <img
               src={Landing1_2}
-              style={{ height: "70%", width: "70%", objectFit: "cover" }}
+              style={{
+                maxHeight: "350px",
+                minHeight: "350px",
+                minWidth: "100px",
+                maxWidth: "200px",
+                objectFit: "cover",
+                // height: "70%",
+                // width: "70%",
+                // objectFit: "cover",
+              }}
               alt="PM"
             />
           </Col>
@@ -123,13 +139,17 @@ function Homepage() {
           style={{
             backgroundColor: "#229ebc",
             padding: "2rem",
-            height: "600px",
+            minHeight: "600px",
           }}
         >
           <Col
-            xs={4}
+            xs={12}
+            sm={12}
+            md={4}
+            lg={4}
+            xl={4}
             className="d-flex justify-content-center aling-items-center"
-            style={{ position: "relative" }}
+            style={{ position: "relative", minHeight: "600px" }}
           >
             <img
               src={Landing2_1}
@@ -171,9 +191,13 @@ function Homepage() {
             </div>
           </Col>
           <Col
-            xs={4}
+            xs={12}
+            sm={12}
+            md={4}
+            lg={4}
+            xl={4}
             className="d-flex justify-content-center aling-items-center"
-            style={{ position: "relative" }}
+            style={{ position: "relative", minHeight: "600px" }}
           >
             <img
               src={Landing2_2}
@@ -211,9 +235,13 @@ function Homepage() {
             </div>
           </Col>
           <Col
-            xs={4}
+            xs={12}
+            sm={12}
+            md={4}
+            lg={4}
+            xl={4}
             className="d-flex justify-content-center aling-items-center"
-            style={{ position: "relative" }}
+            style={{ position: "relative", minHeight: "600px" }}
           >
             <img
               src={Landing2_3}
@@ -260,12 +288,17 @@ function Homepage() {
           style={{
             backgroundColor: "#229ebc",
             padding: "2rem",
-            height: "600px",
+            minHeight: "600px",
           }}
         >
           <Col
+            xs={12}
+            sm={12}
+            md={4}
+            lg={4}
+            xl={4}
             className="d-flex justify-content-center aling-items-center"
-            style={{ position: "relative" }}
+            style={{ position: "relative", minHeight: "600px" }}
           >
             <img
               src={Landing2_4}
@@ -303,8 +336,13 @@ function Homepage() {
             </div>
           </Col>
           <Col
+            xs={12}
+            sm={12}
+            md={4}
+            lg={4}
+            xl={4}
             className="d-flex justify-content-center aling-items-center"
-            style={{ position: "relative" }}
+            style={{ position: "relative", minHeight: "600px" }}
           >
             <img
               src={Landing2_5}
@@ -362,9 +400,13 @@ function Homepage() {
             Recent Blog Posts
           </div>
           <Col
-            xs={4}
+            xs={12}
+            sm={12}
+            md={4}
+            lg={4}
+            xl={4}
             className="d-flex justify-content-center aling-items-center"
-            style={{ position: "relative" }}
+            style={{ position: "relative", minHeight: "400px" }}
           >
             <img
               src={Landing3_1}
@@ -399,9 +441,13 @@ function Homepage() {
             </div>
           </Col>
           <Col
-            xs={4}
+            xs={12}
+            sm={12}
+            md={4}
+            lg={4}
+            xl={4}
             className="d-flex justify-content-center aling-items-center"
-            style={{ position: "relative" }}
+            style={{ position: "relative", minHeight: "400px" }}
           >
             <img
               src={Landing3_2}
@@ -435,9 +481,13 @@ function Homepage() {
             </div>
           </Col>
           <Col
-            xs={4}
+            xs={12}
+            sm={12}
+            md={4}
+            lg={4}
+            xl={4}
             className="d-flex justify-content-center aling-items-center"
-            style={{ position: "relative" }}
+            style={{ position: "relative", minHeight: "400px" }}
           >
             <img
               src={Landing3_3}
