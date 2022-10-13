@@ -19,7 +19,7 @@ import Carousel from 'react-elastic-carousel'
 import ReviewPropertyLease from "./reviewPropertyLease";
 import { propTypes } from "react-bootstrap/esm/Image";
 //dont have documents added page
-
+import { Element } from 'react-scroll'
 //tenant get request: https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/tenantDashboard
 export default function TenantDashboard2() {
   const [propertyData, setPropertyData] = React.useState([]);
@@ -200,18 +200,18 @@ export default function TenantDashboard2() {
         
         <div>
           
-        {propertyData?.length !== 0 && (
+        {/* {propertyData?.length !== 0 && (
           <div>
             <h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
             <h8 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h8>
           </div>
-        )}
+        )} */}
         <div className="flex-1">
           <div className="sidebar">
             <SideBar uid = {propertyData.result[0].properties[lookingAt].property_uid}/>
           </div>
           
-          <div className="main-content">
+          <div className="main-content" style= {{marginTop: "1rem"}}>
             <br />
             <div className="box1">
               <div className="tenantCard-witharrows-container">
@@ -250,7 +250,7 @@ export default function TenantDashboard2() {
                 Announcements
                 <h3 className="ann"></h3>
               </div>
-              
+              <div id = "scroll-to-expenses">
               {propertyData.length !== 0 && (
                 <UpcomingPayments
                   data={propertyData.result[0].properties[0]?.tenantExpenses}
@@ -258,24 +258,42 @@ export default function TenantDashboard2() {
                 />
               )}
               {propertyData.length !== 0 && <PaymentHistory data={propertyData.result[0].properties[lookingAt]?.tenantExpenses} />}
-            </div>
+            
+              </div>
+              </div>
           </div>
         </div>
         <div className="flex-2">
+          {/* <Element id="scroll-to-maintenance" name="scroll-to-maintenance"> 
           {propertyData.length !== 0 && <Maintenence 
                                           data={maintenanceRequests.result}
                                           address = {propertyData.result[0].properties[lookingAt]?.address} 
-                                          propertyId = {propertyData.result[0].properties[lookingAt]?.property_uid}/>
+                                          propertyId = {propertyData.result[0].properties[lookingAt]?.property_uid}
+                                          />
                                           }
+          
+          </Element> */}
+          <div id = "scroll-to-maintenance">
+          {propertyData.length !== 0 && <Maintenence 
+                                          data={maintenanceRequests.result}
+                                          address = {propertyData.result[0].properties[lookingAt]?.address} 
+                                          propertyId = {propertyData.result[0].properties[lookingAt]?.property_uid}
+                                          />
+                                          }
+          </div>
+          
           {propertyData.length !== 0 && (
             <div>
               <Appliances
                 data={propertyData.result[0].properties[lookingAt]?.appliances}
               />
-              <PersonalInfo id = "profile" data={propertyData.result[0]} />
+              <div id = "scroll-to-profile">
+                <PersonalInfo id = "profile" data={propertyData.result[0]} />
+              </div>
             </div>
           )}
         </div>
+        <div id = "scroll-to-lease">
         <ReviewPropertyLease 
           application_uid = {appUid} 
           application_status_1 =  {appstat1}
@@ -283,6 +301,8 @@ export default function TenantDashboard2() {
           property_uid = {propertyData.result[0].properties[lookingAt]?.property_uid}
         />
         {console.log("prop uid: " + propertyData.result[0].properties[lookingAt]?.property_uid)}
+        </div>
+       
       </div>
       :
         <div>

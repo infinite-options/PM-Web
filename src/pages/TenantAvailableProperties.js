@@ -7,6 +7,7 @@ import AppContext from "../AppContext";
 
 import PropertyCard from "../components/PropertyCard";
 import PropertyCard2 from "../components/tenantComponents/PropertyCard";
+import SideBar from "../components/tenantComponents/SideBar";
 export default function TenantAvailableProperties(props) {
   const { hideBackButton } = props;
   const [properties, setProperties] = useState([]);
@@ -96,14 +97,23 @@ export default function TenantAvailableProperties(props) {
         rightFn = {changeView}
         rightText="Change View"
       />
-      {view?
-      <Container>
-        {tableView}
-      </Container>
-      :
-      <Container className="p-container">
-        {boxView}
-      </Container>}
+      <div className="available-props-container">
+        <div className="sidebar">
+                <SideBar/>
+          </div>
+        <div>
+          {view?
+          <Container>
+            {tableView}
+          </Container>
+          :
+          <Container className="p-container">
+            {boxView}
+          </Container>}
+        </div>
+      </div>
+        
+      
     </div>
     
     
