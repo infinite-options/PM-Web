@@ -83,9 +83,9 @@ import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/OwnerRepairList";
 import OwnerRepairRequest from "./components/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
-
-import PropertyInfo from "./pages/PropertyInfo"
-import AppliedDashboard from "./pages/AppliedDashboard"
+import ModifyExisiting from "./pages/ModifyExisiting";
+import PropertyInfo from "./pages/PropertyInfo";
+import AppliedDashboard from "./pages/AppliedDashboard";
 import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
 import ManagerDocuments from "./components/ManagerDocuments";
 import ManagerProfile from "./components/ManagerProfile";
@@ -132,6 +132,8 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="signupexisting" element={<SignupExisting />} />
+            <Route path="modifyexisiting" element={<ModifyExisiting />} />
+            <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerDashboard />} />
             <Route path="owner_original" element={<OwnerHome />} />
             <Route path="maintenance" element={<MaintenanceHome />} />
@@ -202,7 +204,6 @@ function App() {
               path="residentAnnouncements"
               element={<ResidentAnnouncements />}
             />
-
             <Route
               path="detailAnnouncements"
               element={<DetailAnnouncements />}

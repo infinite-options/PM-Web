@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import MenuIcon from "../icons/MenuIcon.svg";
 import AppContext from "../AppContext";
 import Logout from "../components/Logout";
-
 import "./navbar.css";
 function Landing() {
   const [open, setOpen] = useState(false);
@@ -97,12 +96,6 @@ function Landing() {
     setSelectedRole(role);
     setCurrentRole(role);
     navigateToRole(role);
-    // console.log(role);
-    // if (role === selectRole) {
-    //   console.log("in if");
-    //   setSelectedRole(role);
-    //   navigateToRole(role);
-    // }
   };
   const roleSelection_original = (r) => {
     let role = r;
@@ -110,11 +103,6 @@ function Landing() {
     setCurrentRole(role);
     navigateToRole_original(role);
     console.log(role);
-    // if (role === selectRole) {
-    //   console.log("in if");
-    //   setSelectedRole(role);
-    //   navigateToRole(role);
-    // }
   };
   React.useEffect(() => {
     if (userData.access_token !== null) {
@@ -128,8 +116,14 @@ function Landing() {
     navigate("/signup");
   };
   const signupexisting = () => {
-    // navigate('/signup');
     navigate("/signupexisting");
+  };
+  const modifyexisiting = () => {
+    navigate("/modifyexisiting", {
+      state: {
+        user: user,
+      },
+    });
   };
   return (
     <div className="d-flex flex-column ">
@@ -139,7 +133,7 @@ function Landing() {
           <Col className="d-flex justify-content-center align-items-center">
             <img
               src={Landing_logo}
-              style={{ height: "100%", width: "70%", objectFit: "contain" }}
+              style={{ height: "100%", maxWidth: "70%", objectFit: "contain" }}
               alt="Manifest logo"
             />
           </Col>
@@ -229,12 +223,7 @@ function Landing() {
                 </Button>
               </Row>
 
-              <Row
-                className="d-flex justify-content-center align-items-center"
-                style={{
-                  padding: "5px",
-                }}
-              >
+              <Row className="d-flex justify-content-center align-items-center">
                 <Logout />
               </Row>
               <Row
@@ -252,7 +241,7 @@ function Landing() {
                     width: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
-                  onClick={signupexisting}
+                  onClick={modifyexisiting}
                 >
                   Modify Existing
                 </Button>
@@ -273,7 +262,7 @@ function Landing() {
                 {open ? (
                   <img
                     src={MenuIcon}
-                    className="nav-icon"
+                    class="nav-icon"
                     onClick={() => {
                       handleClick();
                     }}
@@ -281,7 +270,7 @@ function Landing() {
                 ) : (
                   <img
                     src={MenuIcon}
-                    className="nav-icon"
+                    class="nav-icon"
                     onClick={() => {
                       handleClick();
                     }}
@@ -350,25 +339,30 @@ function Landing() {
                 width: "100%",
               }}
             >
-              <div>
-                {openRoles ? (
-                  <img
-                    src={MenuIcon}
-                    className="nav-icon"
-                    onClick={() => {
-                      handleClickRoles();
-                    }}
-                  />
-                ) : (
-                  <img
-                    src={MenuIcon}
-                    className="nav-icon"
-                    onClick={() => {
-                      handleClickRoles();
-                    }}
-                  />
-                )}
-              </div>
+              {user != null ? (
+                <div>
+                  {openRoles ? (
+                    <img
+                      src={MenuIcon}
+                      className="nav-icon"
+                      onClick={() => {
+                        handleClickRoles();
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={MenuIcon}
+                      className="nav-icon"
+                      onClick={() => {
+                        handleClickRoles();
+                      }}
+                    />
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
+
               <div className={openRoles ? "nav-links active" : "nav-links"}>
                 {availableRoles != null
                   ? availableRoles.map((role, i) => (

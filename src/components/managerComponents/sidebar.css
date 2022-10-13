@@ -21,12 +21,6 @@
   background-color: #ffffff;
 }
 
-.nav-icon {
-  display: none;
-  font-size: 2rem;
-  cursor: pointer;
-}
-
 .sidebarButtonsActive {
   padding: 20px;
   color: #c93667;
