@@ -74,14 +74,21 @@ function PaymentPage(props) {
   }, []);
 
   const toggleKeys = async () => {
+    console.log("inside toggle keys");
     const url =
       message === "PMTEST"
         ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
         : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
+    console.log("response data ");
+    console.log(response);
     const responseData = await response.json();
-    console.log(responseData.PUBLISHABLE_KEY);
-    const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);
+    console.log(responseData);
+    console.log("This is the responseData.publicKey");
+    console.log(responseData.publicKey);
+    console.log("type of responseData.publicKey");
+    console.log(typeof(responseData.publicKey));
+    const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
   };
 
