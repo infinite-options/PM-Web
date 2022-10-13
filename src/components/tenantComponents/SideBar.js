@@ -42,7 +42,12 @@ export default function SideBar(props){
       //               setShowFooter={true}
       //               setTab={"DASHBOARD"}
       //   />
+      navigate('/uploadTenantDocuments');
     }
+  function actualProfile(){
+    navigate('/tenantProfile');
+
+  }
     return(
         <div className="sidebar">
             <a className="sidenav-elements"onClick={goToDash}>DASHBOARD</a>
@@ -64,7 +69,7 @@ export default function SideBar(props){
             <a className="sidenav-elements" onClick = {goToDocuments}>DOCUMENTS</a>
             <a className="sidenav-elements" onClick={goToSearchPM}>SEARCH PROPERTIES</a>
             <a className="sidenav-elements" onClick ={scrollLease}>LEASE INFO</a>
-
+            <a className="sidenav-elements" onClick = {actualProfile}>MORE PROFILE</a>
         </div>
     )
 }

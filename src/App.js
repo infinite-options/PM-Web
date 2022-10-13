@@ -89,10 +89,9 @@ import AppliedDashboard from "./pages/AppliedDashboard"
 import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
 import ManagerDocuments from "./components/ManagerDocuments";
 import ManagerProfile from "./components/ManagerProfile";
-
 import OwnerDocuments from "./components/OwnerDocuments";
 import OwnerProfile from "./components/OwnerProfile";
-
+import TenantProfile from "./pages/TenantProfile"
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -133,7 +132,6 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="signupexisting" element={<SignupExisting />} />
-            <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerDashboard />} />
             <Route path="owner_original" element={<OwnerHome />} />
             <Route path="maintenance" element={<MaintenanceHome />} />
@@ -161,6 +159,7 @@ function App() {
             <Route path="applied_dashboard" element={<AppliedDashboard />} />
             <Route path="tenant_original" element={<TenantHome />} />
             {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
+            {/* <Route path="tenant_doc_upload" element={<TenantDocumentUpload />} /> */}
             <Route
               path="tenantAvailableProperties"
               element={<TenantAvailableProperties />}
@@ -175,6 +174,10 @@ function App() {
             <Route
               path="reviewTenantProfile/:property_uid"
               element={<ReviewTenantProfile />}
+            />
+            <Route
+              path="profile-info"
+              element={<ProfileInfo />}
             />
             <Route
               path="tenantPropertyView/:property_uid"
@@ -239,6 +242,10 @@ function App() {
             <Route
               path="ownerPaymentHistory"
               element={<OwnerPaymentHistory />}
+            />
+            <Route
+              path="tenantProfile"
+              element={<TenantProfile />}
             />
             <Route
               path="managerPaymentHistory"
