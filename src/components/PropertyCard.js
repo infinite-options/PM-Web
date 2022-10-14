@@ -89,7 +89,7 @@ function PropertyCard(props) {
                             <Col>
                                 <img
                                     onClick={() =>
-                                    (window.location.href = `tel:${property.manager_phone_number}`)
+                                    (window.location.href = `tel:${property.business_number}`)
                                     }
                                     src={Phone}
                                     style={{marginRight:"10px"}}
@@ -101,7 +101,7 @@ function PropertyCard(props) {
                             <Col>
                                 <img
                                     onClick={() =>
-                                    (window.location.href = `mailto:${property.manager_email}`)
+                                    (window.location.href = `mailto:${property.business_email}`)
                                     }
                                     src={Message}
                                     style={{marginRight:"10px"}}
