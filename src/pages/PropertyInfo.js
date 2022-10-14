@@ -80,7 +80,8 @@ export default function PropertyInfo(){
             <img className="more-info-prop-images" src={img}/>
         )
     })
-    
+    console.log("location state: ");
+    console.log(location.state);
     return(
         <div className="prop-info-container">
             {imgs.length>3?
@@ -124,7 +125,7 @@ export default function PropertyInfo(){
                         <div>
                             <img
                                 onClick={() =>
-                                    (window.location.href = `tel:${location.state.business_number}`)
+                                    (window.location.href = `tel:${location.state.property.business_number}`)
                                     }
                                 src={Phone}
                                 style={{marginRight:"10px"}}
@@ -137,7 +138,7 @@ export default function PropertyInfo(){
                         <div>
                         <img
                             onClick={() =>
-                                (window.location.href = `mailto:${location.state.business_email}`)
+                                (window.location.href = `mailto:${location.state.property. business_email}`)
                                 }
                                 src={Message}
                                 style={{marginRight:"10px"}}
