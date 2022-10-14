@@ -92,6 +92,8 @@ import ManagerProfile from "./components/ManagerProfile";
 import OwnerDocuments from "./components/OwnerDocuments";
 import OwnerProfile from "./components/OwnerProfile";
 import TenantProfile from "./pages/TenantProfile"
+import TenantProfile2 from "./pages/TenantProfile2"
+
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -247,6 +249,10 @@ function App() {
             <Route
               path="tenantProfile"
               element={<TenantProfile />}
+            />
+            <Route
+              path="tenantProfile2"
+              element={<TenantProfile2 />}
             />
             <Route
               path="managerPaymentHistory"

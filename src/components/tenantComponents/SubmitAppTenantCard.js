@@ -30,6 +30,9 @@ export default function SubmitAppTenantCard(props){
         const status = props.application_info.application_status;
         const msg = props.application_info.message;
         const puid = props.application_info.property_uid
+        const busEmail = props.application_info.business_email;
+        const number = props.application_info.business_email;
+        const name = props.application_info.business_name;
         navigate('/propertyInfo',{
             state:{
                 property: props.data,
@@ -38,9 +41,12 @@ export default function SubmitAppTenantCard(props){
                 application_status_1: status,
                 message: msg,
                 property_uid: puid,
-
+                business_email: busEmail,
+                business_number: number,
+                business_name: name,
             }
         });
+
     }
     //nothing happens on click on this card?
 

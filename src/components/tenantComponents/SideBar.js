@@ -45,7 +45,7 @@ export default function SideBar(props){
       navigate('/uploadTenantDocuments');
     }
   function actualProfile(){
-    navigate('/tenantProfile');
+    navigate('/tenantProfile2');
 
   }
     return(
