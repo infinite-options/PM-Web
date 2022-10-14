@@ -173,15 +173,55 @@ export default function TenantFirstPageView(){
         
     })
     //application_status has to be "FORWARDED" for lease received
-    return (
-        <div>
-            <div >
+    // console.log(p.properties)
+    // return (
+    //     <div>
+    //         {p.properties > 0 ? 
+    //             <div> 
+    //                 <div>
+    //                     <h1>Properties Rented</h1>
+    //                     <div className="first-page-card-organization">
+    //                         {rentedProperties}
+    //                     </div>
+    //                 </div>
+                        
+    //                 <div>
+    //                     <h1>Lease Received</h1>
+    //                     <div className="first-page-card-organization">
+    //                         {leaseReceived}
+    //                     </div>
+    //                 </div>
+    //                 <div>
+    //                     <h1>Application Submitted</h1>
+    //                     <div className="first-page-card-organization">
+    //                         {applicationList}
+    //                     </div>
+                        
+    //                 </div>
+    //                 <div>
+    //                     <h1>Terminated Leases</h1>
+                        
+    //                 </div>
+    //             </div>
+    //             :
+    //             <div>
+    //                 {navigate('/tenant_original')}
+
+    //             </div>
+    //         }
+            
+    //     </div>
+        
+    // )
+    return(
+        <div> 
+            <div>
                 <h1>Properties Rented</h1>
                 <div className="first-page-card-organization">
                     {rentedProperties}
                 </div>
             </div>
-                
+            
             <div>
                 <h1>Lease Received</h1>
                 <div className="first-page-card-organization">
@@ -193,11 +233,11 @@ export default function TenantFirstPageView(){
                 <div className="first-page-card-organization">
                     {applicationList}
                 </div>
-                
+            
             </div>
             <div>
                 <h1>Terminated Leases</h1>
-                
+            
             </div>
         </div>
     )

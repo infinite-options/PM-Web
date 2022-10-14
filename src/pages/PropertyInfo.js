@@ -123,9 +123,9 @@ export default function PropertyInfo(){
                         </div>
                         <div>
                             <img
-                                // onClick={() =>
-                                //     (window.location.href = `tel:${property.manager_phone_number}`)
-                                //     }
+                                onClick={() =>
+                                    (window.location.href = `tel:${location.state.business_number}`)
+                                    }
                                 src={Phone}
                                 style={{marginRight:"10px"}}
                             />
@@ -136,9 +136,9 @@ export default function PropertyInfo(){
                         </div>
                         <div>
                         <img
-                            // onClick={() =>
-                            //     (window.location.href = `mailto:${property.manager_email}`)
-                            //     }
+                            onClick={() =>
+                                (window.location.href = `mailto:${location.state.business_email}`)
+                                }
                                 src={Message}
                                 style={{marginRight:"10px"}}
                             />
@@ -160,13 +160,26 @@ export default function PropertyInfo(){
 
                 </div>
             </div>
-            {type == 2 && <div>
-                <ReviewPropertyLease 
-                    application_uid = {location.state.application_uid} 
-                    application_status_1 =  {location.state.application_status_1}
-                    message = {location.state.msg}
-                    property_uid = {location.state.property_uid}
-                />
+            {type == 2 && 
+                <div> 
+                    <div>
+                        <ReviewPropertyLease 
+                            application_uid = {location.state.application_uid} 
+                            application_status_1 =  {location.state.application_status_1}
+                            message = {location.state.msg}
+                            property_uid = {location.state.property_uid}
+                        />
+                    </div>
+                    <div>
+                        Property Manager Information
+                        <br></br>
+                        <u>Property Manager</u>: {location.state.business_name}
+                        <br></br>
+                        <u>Manager Email</u>: {location.state.business_email}
+                        <br></br>
+                        <u>Manager Number</u> : {location.state.business_number}
+                        <br></br>
+                    </div>
                 </div>
             }
             
