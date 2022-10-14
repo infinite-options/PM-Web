@@ -131,10 +131,25 @@ function SignupRoleSelection(props) {
         <div>
           <Header title="Sign Up" leftText="< Back" leftFn={props.back} />
           <Container>
-            <h5 className="mb-5">
-              You're currently signed up as {props.signupRoles}, what role do
-              you want to add?
-            </h5>
+            <h5 className="mt-3 mb-2">You're currently signed up as</h5>
+            {availableRoles.map((role, i) => {
+              return props.signupRoles.includes(roleCodes[role]) ? (
+                <div key={i} className="d-flex">
+                  <Checkbox
+                    type="CIRCLE"
+                    checked={userRoles.indexOf(roleCodes[role]) == -1}
+                    // onClick={(checked) =>
+                    //   checked ? addRole(role) : removeRole(role)
+                    // }
+                  />
+
+                  <div className="flex-grow-1">
+                    <p className="d-inline-block text-left">{role}</p>
+                  </div>
+                </div>
+              ) : null;
+            })}
+            <h5 className="mt-3">what role do you want to add?</h5>
             {availableRoles.map((role, i) => {
               return signupRoles.includes(roleCodes[role]) ? null : (
                 <div key={i} className="d-flex">
