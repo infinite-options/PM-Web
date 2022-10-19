@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ConfirmDialog from "./ConfirmDialog";
+import MessageDialog from "./MessageDialog";
 import File from "../icons/File.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
@@ -21,6 +22,7 @@ import {
 function PropertyManagerDocs(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
+  console.log(user);
 
   const navigate = useNavigate();
   const {
@@ -42,6 +44,10 @@ function PropertyManagerDocs(props) {
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [addPropertyManager, setAddPropertyManager] = useState(false);
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const onCancel = () => {
+    setShowMessageForm(false);
+  };
 
   const updateBusiness = async () => {
     const files = JSON.parse(property.images);
@@ -129,6 +135,7 @@ function PropertyManagerDocs(props) {
     const ac = response.result;
 
     console.log(management_buid);
+
     if (response.result.length > 0) {
       ac.forEach((contract) => {
         if (contract.business_uid === management_buid) {
@@ -159,6 +166,17 @@ function PropertyManagerDocs(props) {
         onConfirm={cancelAgreement}
         onCancel={onCancel}
       /> */}
+      <MessageDialog
+        title={"Message"}
+        isOpen={showMessageForm}
+        senderPhone={user.phone_number}
+        senderEmail={user.email}
+        senderName={user.first_name + " " + user.last_name}
+        requestCreatedBy={user.user_uid}
+        userMessaged={property.owner_id}
+        receiverEmail={property.owner[0].owner_email}
+        onCancel={onCancel}
+      />
 
       {(property.management_status === "ACCEPTED" ||
         property.management_status === "SENT" ||
@@ -178,13 +196,15 @@ function PropertyManagerDocs(props) {
               {property.owner[0].owner_last_name}
             </Col>
             <Col className="d-flex justify-content-end">
-              <a href={`tel:${property.owner_phone_number}`}>
+              <a href={`tel:${property.owner[0].owner_phone_number}`}>
                 <img src={Phone} alt="Phone" style={smallImg} />
               </a>
-              <a href={`mailto:${property.owner_email}`}>
+              <a onClick={() => setShowMessageForm(true)}>
+                {/*  href={`mailto:${property.owner[0].owner_email}`}> */}
                 <img src={Message} alt="Message" style={smallImg} />
               </a>
             </Col>
+            {console.log(property.owner_id)}
           </Row>
 
           <Row className="flex-grow-1">

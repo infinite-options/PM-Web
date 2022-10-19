@@ -202,19 +202,19 @@ function TenantProfileInfo(props) {
     }
 
     const tenantProfile = {
-      first_name: firstName,
-      last_name: lastName,
+      tenant_first_name: firstName,
+      tenant_last_name: lastName,
       tenant_email: email,
       tenant_phone_number: phone,
-      current_salary: salary,
-      salary_frequency: frequency,
-      current_job_title: jobTitle,
-      current_job_company: company,
-      ssn: ssn,
-      drivers_license_number: dlNumber,
-      drivers_license_state: selectedDlState,
-      current_address: JSON.stringify(currentAddressState[0]),
-      previous_address: usePreviousAddress
+      tenant_current_salary: salary,
+      tenant_salary_frequency: frequency,
+      tenant_current_job_title: jobTitle,
+      tenant_current_job_company: company,
+      tenant_ssn: ssn,
+      tenant_drivers_license_number: dlNumber,
+      tenant_drivers_license_state: selectedDlState,
+      tenant_current_address: JSON.stringify(currentAddressState[0]),
+      tenant_previous_address: usePreviousAddress
         ? JSON.stringify(previousAddressState[0])
         : null,
     };

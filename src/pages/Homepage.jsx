@@ -230,7 +230,11 @@ function Homepage() {
                 <br />
               </div>
               <div style={{ textAlign: "right" }}>
-                <img src={Next} style={{ height: "55px", width: "55px" }} />
+                <img
+                  src={Next}
+                  onClick={() => navigate("/managerLanding")}
+                  style={{ height: "55px", width: "55px" }}
+                />
               </div>
             </div>
           </Col>
@@ -331,7 +335,11 @@ function Homepage() {
                 Complete Tickets, Invoice, Get Paid
               </div>
               <div style={{ textAlign: "right" }}>
-                <img src={Next} style={{ height: "55px", width: "55px" }} />
+                <img
+                  src={Next}
+                  onClick={() => navigate("/renterLanding")}
+                  style={{ height: "55px", width: "55px" }}
+                />
               </div>
             </div>
           </Col>
@@ -376,7 +384,11 @@ function Homepage() {
                 <br />
               </div>
               <div style={{ textAlign: "right" }}>
-                <img src={Next} style={{ height: "55px", width: "55px" }} />
+                <img
+                  src={Next}
+                  onClick={() => navigate("/renterLanding")}
+                  style={{ height: "55px", width: "55px" }}
+                />
               </div>
             </div>
           </Col>

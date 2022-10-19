@@ -49,10 +49,10 @@ export default function TenantAvailableProperties(props) {
     fetchApplications().then(fetchProperties);
   }, []);
 
-  const changeView = () =>{
-    setView(prev => !prev)
+  const changeView = () => {
+    setView((prev) => !prev);
     console.log(view);
-  }
+  };
   const tableView = properties.map((value, i) => {
     // const applied = appliedProperties.hasOwnProperty(value.property_uid);
     let applied = null;
@@ -64,59 +64,51 @@ export default function TenantAvailableProperties(props) {
         <PropertyCard property={value} applied={applied}></PropertyCard>
       </div>
     );
-  })
-  const colors = ["#628191","#FB8500", "rgb(255,183,3)", "rgb(33,158,188)"];
+  });
+  const colors = ["#628191", "#FB8500", "rgb(255,183,3)", "rgb(33,158,188)"];
 
-  const boxView = properties.map((prop,index)=>{
+  const boxView = properties.map((prop, index) => {
     console.log(prop);
-    return(
+    return (
       <PropertyCard2
-
-            color= {colors[index%4]}
-            add1={prop.address}
-            cost={prop.listed_rent}
-            bedrooms={prop.num_beds}
-            bathrooms={prop.num_baths}
-            property_type={prop.property_type}
-            city = {prop.city}
-            imgSrc = {prop.images}
-            part = {2}
-            uid = {prop.property_uid}
-            property = {prop}
-            unit = {prop.unit}
+        color={colors[index % 4]}
+        add1={prop.address}
+        cost={prop.listed_rent}
+        bedrooms={prop.num_beds}
+        bathrooms={prop.num_baths}
+        property_type={prop.property_type}
+        city={prop.city}
+        imgSrc={prop.images}
+        part={2}
+        uid={prop.property_uid}
+        property={prop}
+        unit={prop.unit}
+        description={prop.description}
       />
-    )
-    })
-    
+    );
+  });
+
   return (
     <div className="mb-5 pb-5">
       <Header
         title="Available Properties"
         leftText={hideBackButton ? "" : "< Back"}
         leftFn={() => navigate("/tenant")}
-        rightFn = {changeView}
+        rightFn={changeView}
         rightText="Change View"
       />
       <div className="available-props-container">
         <div className="sidebar">
-                <SideBar/>
-          </div>
+          <SideBar />
+        </div>
         <div>
-          {view?
-          <Container>
-            {tableView}
-          </Container>
-          :
-          <Container className="p-container">
-            {boxView}
-          </Container>}
+          {view ? (
+            <Container>{tableView}</Container>
+          ) : (
+            <Container className="p-container">{boxView}</Container>
+          )}
         </div>
       </div>
-        
-      
     </div>
-    
-    
   );
 }
-
