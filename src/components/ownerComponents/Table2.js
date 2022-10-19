@@ -1,27 +1,3 @@
-// import React from "react";
-// import './table.css'
-// export default function Table(props){
-//   const properties = props.data;
-//   const rows = properties.map((row, index)=>{
-
-//     return(
-
-//       <tr>
-//         <th>{index+1}</th>
-//         <th>{row.address + " " + row.unit + ', ' + row.city + ', ' + row.state + ' ' + row.zip}</th>
-//         <th style={{color:"blue"}}>{row.maintenanceRequests.length !==0 ? row.maintenanceRequests[0].title : "None"}</th>
-//         <th style={{color:"blue"}}>{row.maintenanceRequests.length !==0 ? row.maintenanceRequests[0].request_created_date : "None"}</th>
-//         <th>{"N/A"}</th>
-//         <th style={{color:"blue"}}>{"N/A"}</th>
-//         <th>{row.maintenanceRequests.length !==0 ? row.maintenanceRequests[0].priority : "None"}</th>
-//         <th>{row.maintenanceRequests.length !==0 ? row.maintenanceRequests[0].request_created_by : "None"}</th>
-//         <th>{row.maintenanceRequests.length !==0 ? "$" + row.maintenanceRequests[0].total_quotes : "None"}</th>
-//         <th style={{color:"blue"}}>N/A</th>
-//       </tr>
-//     )
-
-//   })
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./table.css";

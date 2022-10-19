@@ -133,6 +133,7 @@ function Landing() {
           <Col className="d-flex justify-content-center align-items-center">
             <img
               src={Landing_logo}
+              onClick={() => navigate("/")}
               style={{ height: "100%", maxWidth: "70%", objectFit: "contain" }}
               alt="Manifest logo"
             />
