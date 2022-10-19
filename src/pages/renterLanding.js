@@ -245,9 +245,9 @@ export default function RenterLanding() {
                       key={property.address}
                     >
                       <TableCell padding="none" size="small" align="center">
-                        {JSON.parse(property.images).length > 0 ? (
+                        {property.images.length > 0 ? (
                           <img
-                            src={JSON.parse(property.images)[0]}
+                            src={property.images[0]}
                             // onClick={() => {
                             //   navigate(
                             //     `/manager-properties/${property.property_uid}`,
