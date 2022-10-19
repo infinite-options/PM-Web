@@ -259,7 +259,7 @@ function ReviewPropertyLease(props) {
       <TenantPropertyView forPropertyLease="true" />
       {/* ==================< Lease Details >=======================================  */}
       {/* {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ? */}
-      {(true) ?
+      {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ?
         (<div style={{ marginLeft: "20px" }}>
           <p style={{ fontWeight: "bold", textAlign: "left", fontSize: "24px" }}>
             <u>Lease Details:</u>
@@ -562,7 +562,10 @@ function ReviewPropertyLease(props) {
 
         </div>)
         :
-        ""
+        <div>
+        
+              No Lease Information Available at this time
+        </div>
       }
 
       {/* ===============Manager Contact =================================== */}
@@ -747,7 +750,8 @@ function ReviewPropertyLease(props) {
           </Col>
 
         </Col>
-        : <Col>
+        : 
+        application_status_1 === "RENTED" ? <Col>
           <p
             style={{
               fontWeight: "bold",
@@ -768,7 +772,12 @@ function ReviewPropertyLease(props) {
             }}>
             You may not extend your lease until your lease is within 60 days of the end lease.
           </p>
-        </Col>}
+        </Col>
+        :
+        <Col>
+          
+        </Col>
+        }
       {/* ========== End Lease Early Button ========== */}
       {application_status_1 === "RENTED" ?
         <Col>

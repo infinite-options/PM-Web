@@ -89,26 +89,56 @@ function PropertyCard(props) {
           {/* <div></div> */}
         </div>
 
-        <div
-          style={{ display: "flex", marginTop: "10px", marginBottom: "10px" }}
-          onClick={stopEventPropagation}
-        >
-          {/*//Remove property management*/}
-          <Row
-            style={{
-              flex: "1",
-              fontSize: "12px",
-              color: "blue",
-              marginTop: "auto",
-              paddingRight: "20px",
-              marginBottom: "auto",
-            }}
-          >
-            <span style={{ marginLeft: "1px" }}>
-              {property.manager_business_name}
-            </span>
-          </Row>
-          {/*//Remove property management*/}
+
+                    {/*//Remove property management*/}
+                    <Row style={{flex:"1",fontSize:"12px",color:"blue",marginTop:"auto",paddingRight:"20px",marginBottom:"auto"}}>
+                        <span style={{marginLeft:"1px"}}>{property.manager_business_name}</span>
+                    </Row>
+                    {/*//Remove property management*/}
+                </div>
+                    <Row className="btns" style={{width:"250px"}}> 
+                        {applied === "REFUSED" ?
+                            (<Col className="view overlay zoom" style={{marginRight:"8px"}} >
+                                <img src={Apply} onClick={goToApplyToProperty} alt="documentIcon"  />
+                                <div className="mask flex-center">
+                                    <p className="white-text" style={{fontSize:"14px"}}>ReApply</p>
+                                </div> 
+                            </Col>)
+                            :
+                            (<Col className="view overlay zoom" >
+                                <img src={Apply} onClick={goToApplyToProperty} alt="documentIcon"  />
+                                <div className="mask flex-center">
+                                    <p className="white-text" style={{fontSize:"14px"}}>Apply</p>
+                                </div>                            
+                            </Col>)
+                            }
+                            <Col>
+                                <img
+                                    onClick={() =>
+                                    (window.location.href = `tel:${property.business_number}`)
+                                    }
+                                    src={Phone}
+                                    style={{marginRight:"10px"}}
+                                />
+                                <div className="mask flex-center">
+                                    <p className="white-text" style={{fontSize:"14px"}}>Call</p>
+                                </div>
+                            </Col>
+                            <Col>
+                                <img
+                                    onClick={() =>
+                                    (window.location.href = `mailto:${property.business_email}`)
+                                    }
+                                    src={Message}
+                                    style={{marginRight:"10px"}}
+                                />
+                                <div className="mask flex-center">
+                                    <p className="white-text" style={{fontSize:"14px"}}>Email</p>
+                                </div>
+                            </Col>
+                    </Row>
+            </div>
+
         </div>
         <Row className="btns" style={{ width: "250px" }}>
           {applied === "REFUSED" ? (
