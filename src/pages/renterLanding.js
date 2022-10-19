@@ -17,6 +17,9 @@ import { visuallyHidden } from "@mui/utils";
 import PropertyCard from "../components/tenantComponents/PropertyCard";
 import { get } from "../utils/api";
 import RenterMap from "../icons/RenterRoadMap.webp";
+import Apply from "../icons/ApplyIcon.svg";
+import Phone from "../icons/Phone.svg";
+import Message from "../icons/Message.svg";
 import "./renterLand.css";
 const useStyles = makeStyles({
   customTable: {
@@ -139,6 +142,8 @@ export default function RenterLanding() {
       numeric: true,
       label: "Size",
     },
+    { id: "beds", numeric: true, label: "Property Manager" },
+    { id: "beds", numeric: true, label: "Actions" },
   ];
   function EnhancedTableHead(props) {
     const { order, orderBy, onRequestSort } = props;
@@ -187,6 +192,11 @@ export default function RenterLanding() {
     rowCount: PropTypes.number.isRequired,
   };
 
+  const goToApplyToProperty = (pid) => {
+    // navigate("/applyToProperty");
+    navigate(`/tenantPropertyView/${pid}`);
+  };
+
   const mapProperty = featuredProperties?.map((prop, index) => {
     if (prop.featured == "True") {
       return (
@@ -208,6 +218,7 @@ export default function RenterLanding() {
     } else {
     }
   });
+
   return (
     <div className="main-renter-page">
       {/* <LandingNavbar/> */}
@@ -289,6 +300,56 @@ export default function RenterLanding() {
                       </TableCell>
                       <TableCell padding="none" size="small" align="center">
                         {property.num_beds + "/" + property.num_baths}
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {property.business_name}
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        <div className="contacts">
+                          <div style={{ marginRight: "10px" }}>
+                            {/* {console.log("im trying to print an apply button")} */}
+                            <img
+                              src={Apply}
+                              onClick={() =>
+                                goToApplyToProperty(property.property_uid)
+                              }
+                              alt="documentIcon"
+                            />
+                            <div className="mask flex-center">
+                              <p
+                                className="white-text"
+                                style={{ fontSize: "14px" }}
+                              >
+                                Apply
+                              </p>
+                            </div>
+                          </div>
+                          <div>
+                            <img src={Phone} style={{ marginRight: "10px" }} />
+                            <div className="mask flex-center">
+                              <p
+                                className="white-text"
+                                style={{ fontSize: "14px", marginRight: "0px" }}
+                              >
+                                Call
+                              </p>
+                            </div>
+                          </div>
+                          <div>
+                            <img
+                              src={Message}
+                              style={{ marginRight: "10px" }}
+                            />
+                            <div className="mask flex-center">
+                              <p
+                                className="white-text"
+                                style={{ fontSize: "14px", marginLeft: "0px" }}
+                              >
+                                Email
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
