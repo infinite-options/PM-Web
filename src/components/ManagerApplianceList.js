@@ -47,7 +47,7 @@ function ManagerApplianceList(props) {
   };
   return (
     <div className="flex-1">
-      <div className="sidebar">
+      <div>
         <SideBar />
       </div>
       <div className="w-100">

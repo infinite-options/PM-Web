@@ -269,7 +269,7 @@ function ManagerRepairsOverview(props) {
   return (
     <div>
       <div className="flex-1">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         <div className="main-content">

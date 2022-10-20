@@ -290,7 +290,7 @@ export default function ManagerDashboard() {
   return (
     <div>
       <div className="flex-1">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         {properties.length > 0 ? (

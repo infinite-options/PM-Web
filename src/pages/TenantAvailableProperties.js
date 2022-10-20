@@ -98,7 +98,7 @@ export default function TenantAvailableProperties(props) {
         rightText="Change View"
       />
       <div className="available-props-container">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         <div>

@@ -53,7 +53,7 @@ export default function OwnerDashboard2() {
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         {dataTable.length > 0 ? (
@@ -77,7 +77,7 @@ export default function OwnerDashboard2() {
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         <div className="w-100">

@@ -29,22 +29,21 @@ function Sidebar() {
   };
 
   return (
-    <div>
+    <div style={{ width: "13rem" }}>
       <Row>
         <nav class="sidebar">
-          <div>
-            <div className="sidebarLinks">
-              <NavLink
-                to="/manager"
-                className="sidebarButtons"
-                activeClassName="sidebarButtonsActive"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Dashboard
-              </NavLink>
-              {/* <NavLink
+          <div className="sidebarLinks">
+            <NavLink
+              to="/manager"
+              className="sidebarButtons"
+              activeClassName="sidebarButtonsActive"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Dashboard
+            </NavLink>
+            {/* <NavLink
                 to="/manager-properties"
                 className="sidebarButtons"
                 activeClassName="sidebarButtonsActive"
@@ -54,70 +53,78 @@ function Sidebar() {
               >
                 Properties
               </NavLink> */}
-              <NavLink
-                to="/tenant-list"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Tenants
-              </NavLink>
-              <NavLink
-                to="/owner-list"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Owners
-              </NavLink>
-              <NavLink
-                to="/manager-repairs"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Maintenance
-              </NavLink>
-              <NavLink
-                to="/manager-utilities"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Accounting
-              </NavLink>
-              <NavLink
-                to="/manager_original"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Reports
-              </NavLink>
-              <NavLink
-                to="/manager-profile"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Profile
-              </NavLink>
-              <NavLink
-                to="/manager-documents"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Documents
-              </NavLink>
-            </div>
+            <NavLink
+              to="/tenant-list"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Tenants
+            </NavLink>
+            <NavLink
+              to="/owner-list"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Owners
+            </NavLink>
+            <NavLink
+              to="/manager-repairs"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Maintenance
+            </NavLink>
+            <NavLink
+              to="/manager-utilities"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              utilities
+            </NavLink>
+            <NavLink
+              to="/manager_original"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Reports
+            </NavLink>
+            <NavLink
+              to="/manager-announcements"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Announcements
+            </NavLink>
+            <NavLink
+              to="/manager-profile"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Profile
+            </NavLink>
+            <NavLink
+              to="/manager-documents"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Documents
+            </NavLink>
           </div>
         </nav>
       </Row>

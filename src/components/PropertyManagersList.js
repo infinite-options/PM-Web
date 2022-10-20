@@ -148,7 +148,7 @@ function PropertyManagersList(props) {
 
   return stage === "LIST" ? (
     <div className="flex-1">
-      <div className="sidebar">
+      <div>
         <SideBar />
       </div>
       <div className="w-100">
@@ -206,7 +206,7 @@ function PropertyManagersList(props) {
     </div>
   ) : stage === "PMDETAILS" ? (
     <div className="flex-1">
-      <div className="sidebar">
+      <div>
         <SideBar />
       </div>
       <div className="w-100">

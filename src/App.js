@@ -12,6 +12,8 @@ import ApplyToProperty from "./pages/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
+
+import CreateAnnouncement from "./components/CreateAnnouncement";
 import Emergency from "./components/TenantEmergency";
 import RepairStatus from "./components/RepairStatus";
 import TenantDocuments from "./components/TenantDocuments";
@@ -91,8 +93,8 @@ import ManagerDocuments from "./components/ManagerDocuments";
 import ManagerProfile from "./components/ManagerProfile";
 import OwnerDocuments from "./components/OwnerDocuments";
 import OwnerProfile from "./components/OwnerProfile";
-import TenantProfile from "./pages/TenantProfile"
-import TenantProfile2 from "./pages/TenantProfile2"
+import TenantProfile from "./pages/TenantProfile";
+import TenantProfile2 from "./pages/TenantProfile2";
 
 function App() {
   const [userData, setUserData] = React.useState({
@@ -179,10 +181,7 @@ function App() {
               path="reviewTenantProfile/:property_uid"
               element={<ReviewTenantProfile />}
             />
-            <Route
-              path="profile-info"
-              element={<ProfileInfo />}
-            />
+            <Route path="profile-info" element={<ProfileInfo />} />
             <Route
               path="tenantPropertyView/:property_uid"
               element={<TenantPropertyView />}
@@ -205,6 +204,10 @@ function App() {
             <Route
               path="residentAnnouncements"
               element={<ResidentAnnouncements />}
+            />
+            <Route
+              path="manager-announcements"
+              element={<CreateAnnouncement />}
             />
             <Route
               path="detailAnnouncements"
@@ -246,14 +249,8 @@ function App() {
               path="ownerPaymentHistory"
               element={<OwnerPaymentHistory />}
             />
-            <Route
-              path="tenantProfile"
-              element={<TenantProfile />}
-            />
-            <Route
-              path="tenantProfile2"
-              element={<TenantProfile2 />}
-            />
+            <Route path="tenantProfile" element={<TenantProfile />} />
+            <Route path="tenantProfile2" element={<TenantProfile2 />} />
             <Route
               path="managerPaymentHistory"
               element={<ManagerPaymentHistory />}
