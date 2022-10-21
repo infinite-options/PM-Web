@@ -27,41 +27,51 @@ function DetailAnnouncements(props) {
           />
           <Container className="pt-1 mb-4">
             <div>
-              <Row style={subHeading} className="mt-1 mx-2">
-                Lease Renewal
+              <Row style={headings} className="mt-1 mx-2">
+                Announcement Details
               </Row>
-              <Row style={subText} className="mx-2">
-                Click below to renew your lease in time. Your current lease ends
-                on January 31, 2021.
+              <Row style={subHeading} className="mx-2">
+                {announcement.announcement_msg}
               </Row>
-              <Row className="mt-3">
-                <Col
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button variant="outline-primary" style={pillButton}>
-                    Click to view new lease
-                  </Button>
-                </Col>
+
+              <Row className="mt-1 mx-2" style={headings}>
+                Sent to:
               </Row>
-              <Row className="mt-1 mx-2" style={subText}>
-                For any questions, contact:
+              {announcement.receiver_details.map((receiver) => {
+                return (
+                  <Row className="mt-1 mx-2">
+                    <Col>
+                      <div style={subHeading}>
+                        {receiver.tenant_first_name} {receiver.tenant_last_name}
+                      </div>
+                      <div style={subText}>
+                        {receiver.address} {receiver.unit}
+                        ,&nbsp;{receiver.city},&nbsp;{receiver.state}&nbsp;{" "}
+                        {receiver.zip}
+                      </div>
+                    </Col>
+                    <Col xs={2} className="mt-1 mb-1">
+                      <a href={`tel:${receiver.teanant_phone_number}`}>
+                        <img src={Phone} />
+                      </a>
+                    </Col>
+                    <Col xs={2} className="mt-1 mb-1">
+                      <img src={Message} />
+                    </Col>
+                    <hr />
+                  </Row>
+                );
+              })}
+              <Row className="mt-1 mx-2" style={headings}>
+                Sent Out On:
               </Row>
-              <Row className="mt-1 mx-2">
-                <Col>
-                  <div style={headings}>John Parker</div>
-                  <div style={subText}>Property Manager</div>
-                </Col>
-                <Col xs={2} className="mt-1 mb-1">
-                  <img src={Phone} />
-                </Col>
-                <Col xs={2} className="mt-1 mb-1">
-                  <img src={Message} />
-                </Col>
-                <hr />
+              <Row className="mt-1 mx-2" style={subHeading}>
+                {new Date(announcement.date_announcement).toLocaleString(
+                  "default",
+                  { month: "long" }
+                )}{" "}
+                {new Date(announcement.date_announcement).getDate()},{" "}
+                {new Date(announcement.date_announcement).getFullYear()}
               </Row>
             </div>
           </Container>

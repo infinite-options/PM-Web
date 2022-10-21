@@ -13,6 +13,7 @@ import {
   blue,
 } from "../utils/styles";
 import { useNavigate } from "react-router-dom";
+import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
 import { post, get } from "../utils/api";
@@ -36,6 +37,7 @@ function CreateAnnouncement(props) {
   const [tenantState, setTenantState] = useState([]);
   const [byProperty, setByProperty] = useState(false);
   const [byTenants, setByTenants] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
   const [announcementDetail, setAnnouncementDetail] = useState(false);
 
   const emptyAnnouncement = {
@@ -185,13 +187,14 @@ function CreateAnnouncement(props) {
       announcement_msg: newAnnouncement.announcement_msg,
       receiver: receiver_uid,
     };
-
+    setShowSpinner(true);
     const response = await post("/announcement", new_announcement);
     setNewAnnouncement({ ...emptyAnnouncement });
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
     tenantState.forEach((prop) => (prop.checked = false));
     setTenantState(tenantState);
+    setShowSpinner(false);
     setEditingAnnouncement(null);
   };
 
@@ -223,6 +226,7 @@ function CreateAnnouncement(props) {
     newAnnouncementState.push({ ...newAnnouncement });
     setAnnouncementState(newAnnouncementState);
     setNewAnnouncement(null);
+    fetchProperties();
   };
   const cancelEdit = () => {
     setNewAnnouncement(null);
@@ -352,7 +356,10 @@ function CreateAnnouncement(props) {
                         <Checkbox
                           type="BOX"
                           checked={byProperty}
-                          onClick={() => setByProperty(!byProperty)}
+                          onClick={() => {
+                            setByProperty(!byProperty);
+                            setByTenants(false);
+                          }}
                         />
                         <p className="ms-1 mb-1">By Property</p>
                       </div>
@@ -373,7 +380,10 @@ function CreateAnnouncement(props) {
                         <Checkbox
                           type="BOX"
                           checked={byTenants}
-                          onClick={() => setByTenants(!byTenants)}
+                          onClick={() => {
+                            setByTenants(!byTenants);
+                            setByProperty(false);
+                          }}
                         />
                         <p className="ms-1 mb-1">By Tenants</p>
                       </div>
@@ -488,6 +498,13 @@ function CreateAnnouncement(props) {
                     Save
                   </Button>
                 </div>
+                {showSpinner ? (
+                  <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                    <ReactBootStrap.Spinner animation="border" role="status" />
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             ) : (
               ""
