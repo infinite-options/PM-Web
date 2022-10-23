@@ -4,6 +4,8 @@ import { get } from "../utils/api";
 import AppContext from "../AppContext";
 import SideBar from "./tenantComponents/SideBar";
 import UpcomingPayments from "./tenantComponents/UpcomingPayments";
+import PayPal from "./PayPal";
+import Venmo from "./Venmo";
 import "../pages/maintenance.css"
 export default function TenantDuePayments(props) {
 
@@ -33,11 +35,11 @@ export default function TenantDuePayments(props) {
         console.log("second");
         console.log(response);
         setIsLoading(false);
-    
+
         if (response.msg === "Token has expired") {
           console.log("here msg");
           refresh();
-    
+
           return;
         }
         setPropertyData(response);
@@ -59,13 +61,13 @@ export default function TenantDuePayments(props) {
                 temp[i].isActive = false;
             }
         }
-        
+
         setPaymentOptions(temp)
     }
     console.log(paymentOptions)
 
 
-    
+
     return(
         <div className="tenant-payment-page">
             {propertyData.length !== 0 && (
@@ -81,56 +83,53 @@ export default function TenantDuePayments(props) {
                 //   </div>
                 // </div>
                 <div>
-                <h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3> 
-                <h8 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h8>
+                <h3 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>{propertyData.result[0].tenant_first_name}</h3>
+                <h6 style={{paddingLeft: "7rem", paddingTop:"2rem"}}>Tenant</h6>
                 </div>
             )}
-        
+
             <div className="flex-1">
                 <div className="sidebar">
                     <SideBar />
                 </div>
                 <div className="main-content2" >
                     <h2>Payment Portal</h2>
-                    <div id = "payment-options2">
-                        <button className="pay1" 
-                            style={{backgroundColor: paymentOptions[0].isActive? "rgb(181, 180, 180)" : "white"}}
-                            onClick={()=>handlePaymentOption(0)}
-                        
-                        >
-                            Paypal
-                        </button>
-                        <button className="pay1" 
-                            style={{backgroundColor: paymentOptions[1].isActive? "rgb(181, 180, 180)" : "white"}}
+                    {/*<div id = "payment-options2">*/}
+                    {/*    <button className="pay1"*/}
+                    {/*        style={{backgroundColor: paymentOptions[0].isActive? "rgb(181, 180, 180)" : "white"}}*/}
+                    {/*        onClick={()=>handlePaymentOption(0)}*/}
 
-                        onClick={()=>handlePaymentOption(1)}
-                        >
-                            Zelle
-                        </button>
-                        <button className="pay1" 
-                        style={{backgroundColor: paymentOptions[2].isActive? "rgb(181, 180, 180)" : "white"}}
-                        onClick={()=>handlePaymentOption(2)}
-                        >
-                            ACH Bank
-                        </button>
-                        <button className="pay1"
-                        style={{backgroundColor: paymentOptions[3].isActive? "rgb(181, 180, 180)" : "white"}}
+                    {/*    >*/}
+                    {/*        Paypal*/}
+                    {/*    </button>*/}
+                    {/*    <button className="pay1"*/}
+                    {/*        style={{backgroundColor: paymentOptions[1].isActive? "rgb(181, 180, 180)" : "white"}}*/}
 
-                        onClick={()=>handlePaymentOption(3)}
-                        >
-                            Apple Pay
-                        </button>
-                    </div>
-                    {propertyData.length!==0 && <UpcomingPayments 
+                    {/*    onClick={()=>handlePaymentOption(1)}*/}
+                    {/*    >*/}
+                    {/*        Zelle*/}
+                    {/*    </button>*/}
+                    {/*    <button className="pay1"*/}
+                    {/*    style={{backgroundColor: paymentOptions[2].isActive? "rgb(181, 180, 180)" : "white"}}*/}
+                    {/*    onClick={()=>handlePaymentOption(2)}*/}
+                    {/*    >*/}
+                    {/*        ACH Bank*/}
+                    {/*    </button>*/}
+                    {/*    <button className="pay1"*/}
+                    {/*    style={{backgroundColor: paymentOptions[3].isActive? "rgb(181, 180, 180)" : "white"}}*/}
+
+                    {/*    onClick={()=>handlePaymentOption(3)}*/}
+                    {/*    >*/}
+                    {/*        Apple Pay*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
+                    {propertyData.length!==0 && <UpcomingPayments
                         data = {propertyData.result[0].properties[0].tenantExpenses}
                         type = {false}
                         selectedProperty = {propertyData.result[0].properties[0]}
                         paymentSelection = {paymentOptions}
                     />}
-                    
-
                 </div>
-                
             </div>
         </div>
     )

@@ -25,6 +25,7 @@ import {
   subHeading,
   squareForm,
 } from "../utils/styles";
+import PayPal from "./PayPal";
 
 function PaymentPage(props) {
   const navigate = useNavigate();
@@ -311,14 +312,7 @@ function PaymentPage(props) {
                 </Col>
               ) : (
                 <Col>
-                  <Button
-                    className="mt-2 mb-2"
-                    variant="outline-primary"
-                    onClick={submitForm}
-                    style={pillButton}
-                  >
-                    Pay with PayPal
-                  </Button>
+                  <PayPal balance={totalSum.toString()}/>
                 </Col>
               )}
             </Row>

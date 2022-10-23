@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Link} from 'react-router-dom';
 // import { get } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import PaymentComponent from "../TenantDuePayments2"
+import paymentSelection from "../PaymentSelection";
 export default function UpcomingPayments(props){
     const navigate = useNavigate();
     const [totalSum, setTotalSum] = React.useState(0);
@@ -16,12 +17,12 @@ export default function UpcomingPayments(props){
     function handleCheck(event, amt,pid){ //pid is the purchase uid
         let tempPurchaseUID = purchaseUIDs;
         if(event.target.checked){
-            setTotalSum(prev=>amt+prev)
+            setTotalSum(prevState => amt + prevState)
             // setPurchaseUIDs(prev=>.)
             tempPurchaseUID.push(pid);
         }
         else{
-            setTotalSum(prev=>prev-amt)
+            setTotalSum(prevState => prevState - amt)
             for (let uid in purchaseUIDs) {
                 if (purchaseUIDs[uid] === pid) {
                     purchaseUIDs.splice(uid, 1);
@@ -29,7 +30,6 @@ export default function UpcomingPayments(props){
             }
         }
         setPurchaseUIDs(tempPurchaseUID);
-
     }
     function navigateToPaymentPage(){
         if(props.paymentSelection[1].isActive == true){
@@ -38,7 +38,7 @@ export default function UpcomingPayments(props){
                 state:{
                     amount: totalSum,
                     selectedProperty: props.selectedProperty,
-                    purchaseUIDs,purchaseUIDs
+                    purchaseUIDs: purchaseUIDs
                 },
             })
         }
@@ -52,11 +52,10 @@ export default function UpcomingPayments(props){
             });
         }
     }
-    console.log(rents);
-    const rows = rents.map((row,index)=>{//row is an element in the array 
+    const rows = rents.map((row,index)=>{//row is an element in the array
         if(row.purchase_status == "UNPAID"){
             return(
-            
+
                 <tr>
                     <th className="table-col">{index+1}</th>
                     <th className="table-col">{"" + row.purchase_notes+ " " + row.description}</th>
@@ -68,28 +67,27 @@ export default function UpcomingPayments(props){
                             Pay
                         </button>:
                         <label>
-                            <input 
-                                className="check" 
-                                type = "checkbox" 
-                                onClick={event=>handleCheck(event,row.amount_due, row.purchase_uid)}
+                            <input
+                                className="check"
+                                type = "checkbox"
+                                onClick={(event) => handleCheck(event,row.amount_due, row.purchase_uid)}
                             />
                         </label>
                         }
-                       
+
                             {/* <button className="yellow payB" >
                                 <a href="tenantComponents/test">Pay</a>
                             </button> */}
-                        
+
                     </th>
                     <th className="table-col">{row.amount_due}</th>
                 </tr>
             )
         }
-        
-        
+
+
     })
-    //confused about: where to send info?
-    console.log(props)
+
     return(
         <div className= "upcoming-payments">
             Upcoming Payments
@@ -106,22 +104,17 @@ export default function UpcomingPayments(props){
             </thead>
             <tbody>
                 {rents.length!==0 ? rows: <tr><th>No upcoming payments</th></tr>}
-                
+
             </tbody>
-            
+
 
             </table>
-            {props.type == false && 
+            {props.type == false &&
                     <div className="amount-pay">
                         <h4 className="amount">Amount: {totalSum}</h4>
-                        <button 
-                        className="pay-button2"
-                        onClick={()=> {
-                            navigateToPaymentPage()
-                        }}                        
-                        >
+                         <button className="pay-button2" onClick={()=> {navigateToPaymentPage()}}>
                             Pay Now
-                        </button>
+                         </button>
                     </div>
                 }
         </div>
