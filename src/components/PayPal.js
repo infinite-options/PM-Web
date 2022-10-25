@@ -8,7 +8,8 @@ export default function PayPal(props) {
         "currency": "USD",
         "intent": "capture",
         "commit": "true",
-        "disable-funding": ["card", "paylater"]
+        "disable-funding": ["card", "paylater"],
+        "enable-funding": "venmo"
     }
 
     const style = {

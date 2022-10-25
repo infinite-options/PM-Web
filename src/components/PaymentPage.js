@@ -197,7 +197,7 @@ function PaymentPage(props) {
                 Pay Fees {purchase.description && `(${purchase.description})`}
               </div>
             )}
-            <div style={subHeading}>Max Payment: ${totalSum}</div>
+            {/*<div style={subHeading}>Max Payment: ${totalSum}</div>*/}
             {stripePayment ? (
               <div style={subHeading}>Amount to be paid: ${amount}</div>
             ) : null}
@@ -222,26 +222,26 @@ function PaymentPage(props) {
               />
           */}
           <div className="mt-5" hidden={stripePayment}>
-            <Form.Group>
-              <Form.Label>Amount</Form.Label>
-              {purchaseUIDs.length === 1 ? (
-                <Form.Control
-                  placeholder={purchase.amount_due - purchase.amount_paid}
-                  style={squareForm}
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              ) : (
-                <Form.Control
-                  disabled
-                  placeholder={purchase.amount_due - purchase.amount_paid}
-                  style={squareForm}
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              )}
-            </Form.Group>
-
+            {/*<Form.Group>*/}
+            {/*  <Form.Label>Amount</Form.Label>*/}
+            {/*  {purchaseUIDs.length === 1 ? (*/}
+            {/*    <Form.Control*/}
+            {/*      placeholder={purchase.amount_due - purchase.amount_paid}*/}
+            {/*      style={squareForm}*/}
+            {/*      value={amount}*/}
+            {/*      onChange={(e) => setAmount(e.target.value)}*/}
+            {/*    />*/}
+            {/*  ) : (*/}
+            {/*    <Form.Control*/}
+            {/*      disabled*/}
+            {/*      placeholder={purchase.amount_due - purchase.amount_paid}*/}
+            {/*      style={squareForm}*/}
+            {/*      value={amount}*/}
+            {/*      onChange={(e) => setAmount(e.target.value)}*/}
+            {/*    />*/}
+            {/*  )}*/}
+            {/*</Form.Group>*/}
+            <h2>Max Payment: ${totalSum}</h2>
             <Form.Group>
               <Form.Label>Message</Form.Label>
               <Form.Control
@@ -266,12 +266,12 @@ function PaymentPage(props) {
                   equal total:
                 </Row>
               ) : null}
-              {purchaseUIDs.length > 1 ? (
-                <Row style={{ width: "80%", margin: " 10%" }}>
-                  Note: You may not change the payment amount if you have
-                  selected 2 or more bills to pay
-                </Row>
-              ) : null}
+              {/*{purchaseUIDs.length > 1 ? (*/}
+              {/*  <Row style={{ width: "80%", margin: " 10%" }}>*/}
+              {/*    Note: You may not change the payment amount if you have*/}
+              {/*    selected 2 or more bills to pay*/}
+              {/*  </Row>*/}
+              {/*) : null}*/}
               {disabled ? (
                 <Col>
                   <Button

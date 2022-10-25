@@ -110,13 +110,18 @@ export default function UpcomingPayments(props){
 
             </table>
             {props.type == false &&
-                    <div className="amount-pay">
-                        <h4 className="amount">Amount: {totalSum}</h4>
-                         <button className="pay-button2" onClick={()=> {navigateToPaymentPage()}}>
+                <div className="amount-pay">
+                    <h4 className="amount">Amount: {totalSum}</h4>
+                    {totalSum === 0 ?
+                        <button className="pay-button2">
                             Pay Now
-                         </button>
-                    </div>
-                }
+                        </button> :
+                        <button className="pay-button2" onClick={()=> {navigateToPaymentPage()}}>
+                            Pay Now
+                        </button>
+                    }
+                </div>
+            }
         </div>
     )
 }
