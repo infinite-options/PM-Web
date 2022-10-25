@@ -111,7 +111,7 @@ export default function UpcomingPayments(props){
             </table>
             {props.type == false &&
                 <div className="amount-pay">
-                    <h4 className="amount">Amount: {totalSum}</h4>
+                    <h4 className="amount">Amount: ${totalSum}</h4>
                     {totalSum === 0 ?
                         <button className="pay-button2">
                             Pay Now
