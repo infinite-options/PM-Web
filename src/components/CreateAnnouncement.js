@@ -81,6 +81,16 @@ function CreateAnnouncement(props) {
       `/announcement?pm_id=${management_buid}`
     );
     console.log(responseAnnouncement);
+    let response_announcement = responseAnnouncement.result;
+    response_announcement = response_announcement
+      .sort((a, b) => {
+        return (
+          new Date(a.date_announcement).getTime() -
+          new Date(b.date_announcement).getTime()
+        );
+      })
+      .reverse();
+
     setAnnouncements(responseAnnouncement.result);
     const properties = response.result.filter(
       (property) => property.management_status !== "REJECTED"
@@ -117,6 +127,7 @@ function CreateAnnouncement(props) {
       tenant_id: "",
       tenant_name: "",
       address: "",
+      property_uid: "",
     };
     properties_unique.forEach((property) => {
       if (property.rentalInfo !== "NOT RENTED") {
@@ -125,6 +136,7 @@ function CreateAnnouncement(props) {
             tenant_id: tenant.tenant_id,
             tenant_name:
               tenant.tenant_first_name + " " + tenant.tenant_last_name,
+            property_uid: property.property_uid,
             address:
               property.address +
               " " +
@@ -168,25 +180,34 @@ function CreateAnnouncement(props) {
       management_buid = management_businesses[0].business_uid;
     }
     setManagerID(management_buid);
+    console.log(newAnnouncement);
     let receiver_uid = [];
+    let receiver_properties_id = [];
     if (byProperty) {
       newAnnouncement.properties.forEach((prop) =>
         prop.rentalInfo !== "NOT RENTED"
           ? prop.rentalInfo.map((tf, i) => receiver_uid.push(tf.tenant_id))
           : ""
       );
-    }
-    if (byTenants) {
-      newAnnouncement.tenants.forEach((tenant) =>
-        receiver_uid.push(tenant.tenant_id)
+      newAnnouncement.properties.forEach((prop) =>
+        prop.rentalInfo !== "NOT RENTED"
+          ? receiver_properties_id.push(prop.property_uid)
+          : ""
       );
     }
-
+    if (byTenants) {
+      newAnnouncement.tenants.forEach((tenant) => {
+        receiver_uid.push(tenant.tenant_id);
+        receiver_properties_id.push(tenant.property_uid);
+      });
+    }
     const new_announcement = {
       pm_id: managerID,
       announcement_msg: newAnnouncement.announcement_msg,
       receiver: receiver_uid,
+      receiver_properties: receiver_properties_id,
     };
+    console.log(new_announcement);
     setShowSpinner(true);
     const response = await post("/announcement", new_announcement);
     setNewAnnouncement({ ...emptyAnnouncement });
