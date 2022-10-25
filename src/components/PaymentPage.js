@@ -26,6 +26,7 @@ import {
   squareForm,
 } from "../utils/styles";
 import PayPal from "./PayPal";
+import ApplePay from "./ApplePay";
 
 function PaymentPage(props) {
   const navigate = useNavigate();
@@ -260,61 +261,20 @@ function PaymentPage(props) {
                 justifyContent: "space-between",
               }}
             >
-              {disabled ? (
-                <Row style={{ width: "80%", margin: " 10%" }}>
-                  Amount to be paid must be greater than 0 and less than or
-                  equal total:
-                </Row>
-              ) : null}
-              {/*{purchaseUIDs.length > 1 ? (*/}
-              {/*  <Row style={{ width: "80%", margin: " 10%" }}>*/}
-              {/*    Note: You may not change the payment amount if you have*/}
-              {/*    selected 2 or more bills to pay*/}
-              {/*  </Row>*/}
-              {/*) : null}*/}
-              {disabled ? (
-                <Col>
-                  <Button
-                    className="mt-2 mb-2"
-                    variant="outline-primary"
-                    disabled
-                    style={bluePillButton}
-                  >
-                    Pay with Stripe
-                  </Button>
-                </Col>
-              ) : (
-                <Col>
-                  <Button
-                    className="mt-2 mb-2"
-                    variant="outline-primary"
+              <Col>
+                <Button className="mt-2 mb-2" variant="outline-primary"
                     onClick={() => {
                       //navigate("/tenant");
                       toggleKeys();
                       setStripePayment(true);
                     }}
                     style={bluePillButton}
-                  >
-                    Pay with Stripe
-                  </Button>
-                </Col>
-              )}
-              {disabled ? (
-                <Col>
-                  <Button
-                    className="mt-2 mb-2"
-                    variant="outline-primary"
-                    disabled
-                    style={pillButton}
-                  >
-                    Pay with PayPal
-                  </Button>
-                </Col>
-              ) : (
-                <Col>
-                  <PayPal balance={totalSum.toString()}/>
-                </Col>
-              )}
+                >
+                  Pay with Stripe
+                </Button>
+                <PayPal balance={totalSum.toString()}/>
+
+              </Col>
             </Row>
           </div>
 
