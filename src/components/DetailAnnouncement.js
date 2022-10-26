@@ -28,40 +28,77 @@ function DetailAnnouncements(props) {
           <Container className="pt-1 mb-4">
             <div>
               <Row style={headings} className="mt-1 mx-2">
-                Announcement Details
+                {announcement.announcement_title}
               </Row>
               <Row style={subHeading} className="mx-2">
                 {announcement.announcement_msg}
               </Row>
-
-              <Row className="mt-1 mx-2" style={headings}>
-                Sent to:
-              </Row>
-              {announcement.receiver_details.map((receiver) => {
-                return (
-                  <Row className="mt-1 mx-2">
-                    <Col>
-                      <div style={subHeading}>
-                        {receiver.tenant_first_name} {receiver.tenant_last_name}
-                      </div>
-                      <div style={subText}>
-                        {receiver.address} {receiver.unit}
-                        ,&nbsp;{receiver.city},&nbsp;{receiver.state}&nbsp;{" "}
-                        {receiver.zip}
-                      </div>
-                    </Col>
-                    <Col xs={2} className="mt-1 mb-1">
-                      <a href={`tel:${receiver.teanant_phone_number}`}>
-                        <img src={Phone} />
-                      </a>
-                    </Col>
-                    <Col xs={2} className="mt-1 mb-1">
-                      <img src={Message} />
-                    </Col>
-                    <hr />
+              {announcement.announcement_mode == "Tenants" ? (
+                <div>
+                  <Row className="mt-1 mx-2" style={headings}>
+                    Sent to tenants:
                   </Row>
-                );
-              })}
+                  {announcement.receiver_details.map((receiver) => {
+                    return (
+                      <Row className="mt-1 mx-2">
+                        <Col>
+                          <div style={subHeading}>
+                            {receiver.tenant_first_name}{" "}
+                            {receiver.tenant_last_name}
+                          </div>
+                          <div style={subText}>
+                            {receiver.address} {receiver.unit}
+                            ,&nbsp;{receiver.city},&nbsp;{receiver.state}&nbsp;{" "}
+                            {receiver.zip}
+                          </div>
+                        </Col>
+                        <Col xs={2} className="mt-1 mb-1">
+                          <a href={`tel:${receiver.teanant_phone_number}`}>
+                            <img src={Phone} />
+                          </a>
+                        </Col>
+                        <Col xs={2} className="mt-1 mb-1">
+                          <img src={Message} />
+                        </Col>
+                        <hr />
+                      </Row>
+                    );
+                  })}{" "}
+                </div>
+              ) : (
+                <div>
+                  <Row className="mt-1 mx-2" style={headings}>
+                    Sent to properties:
+                  </Row>
+                  {announcement.receiver_details.map((receiver) => {
+                    return (
+                      <Row className="mt-1 mx-2">
+                        <Col>
+                          <div style={subHeading}>
+                            {receiver.address} {receiver.unit}
+                            ,&nbsp;{receiver.city},&nbsp;{receiver.state}&nbsp;{" "}
+                            {receiver.zip}
+                          </div>
+                          <div style={subText}>
+                            {receiver.tenant_first_name}{" "}
+                            {receiver.tenant_last_name}
+                          </div>
+                        </Col>
+                        <Col xs={2} className="mt-1 mb-1">
+                          <a href={`tel:${receiver.teanant_phone_number}`}>
+                            <img src={Phone} />
+                          </a>
+                        </Col>
+                        <Col xs={2} className="mt-1 mb-1">
+                          <img src={Message} />
+                        </Col>
+                        <hr />
+                      </Row>
+                    );
+                  })}{" "}
+                </div>
+              )}
+
               <Row className="mt-1 mx-2" style={headings}>
                 Sent Out On:
               </Row>

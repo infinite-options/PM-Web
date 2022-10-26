@@ -87,7 +87,7 @@ function Sidebar() {
                 isActive ? sidebarButtonsActive : sidebarButtons
               }
             >
-              utilities
+              Utilities
             </NavLink>
             <NavLink
               to="/manager_original"

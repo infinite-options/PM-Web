@@ -42,8 +42,11 @@ function CreateAnnouncement(props) {
 
   const emptyAnnouncement = {
     pm_id: "",
+    announcement_title: "",
     announcement_msg: "",
+    announcement_mode: "",
     receiver: [],
+    receiver_properties: [],
   };
   const [errorMessage, setErrorMessage] = useState("");
   const fetchProperties = async () => {
@@ -203,20 +206,36 @@ function CreateAnnouncement(props) {
     }
     const new_announcement = {
       pm_id: managerID,
+      announcement_title: newAnnouncement.announcement_title,
       announcement_msg: newAnnouncement.announcement_msg,
+      announcement_mode: byTenants ? "Tenants" : "Properties",
       receiver: receiver_uid,
       receiver_properties: receiver_properties_id,
     };
     console.log(new_announcement);
-    setShowSpinner(true);
+    // setShowSpinner(true);
     const response = await post("/announcement", new_announcement);
     setNewAnnouncement({ ...emptyAnnouncement });
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
     tenantState.forEach((prop) => (prop.checked = false));
+
     setTenantState(tenantState);
-    setShowSpinner(false);
+    // setShowSpinner(false);
     setEditingAnnouncement(null);
+    const newAnnouncementState = [...announcementState];
+    newAnnouncementState.push({ ...newAnnouncement });
+    setAnnouncementState(newAnnouncementState);
+    setNewAnnouncement(null);
+    fetchProperties();
+    const send_announcement = {
+      announcement_msg: new_announcement.announcement_msg,
+      announcement_title: new_announcement.announcement_title,
+      tenant_name: response["tenant_name"],
+      tenant_pno: response["tenant_pno"],
+      tenant_email: response["tenant_email"],
+    };
+    const res = await post("/SendAnnouncement", send_announcement);
   };
 
   // onclick save button
@@ -243,11 +262,8 @@ function CreateAnnouncement(props) {
     setErrorMessage("");
 
     await postAnnouncement(newAnnouncement);
-    const newAnnouncementState = [...announcementState];
-    newAnnouncementState.push({ ...newAnnouncement });
-    setAnnouncementState(newAnnouncementState);
-    setNewAnnouncement(null);
-    fetchProperties();
+
+    // fetchProperties();
   };
   const cancelEdit = () => {
     setNewAnnouncement(null);
@@ -338,6 +354,28 @@ function CreateAnnouncement(props) {
               >
                 <Row className="my-4 text-center">
                   <div style={headings}>New Announcement</div>
+                </Row>
+                <Row className="mb-2">
+                  <Col>
+                    <Form.Group className="mx-2">
+                      <Form.Label style={mediumBold} className="mb-0 ms-2">
+                        Announcement Title{" "}
+                        {newAnnouncement.announcement_title === ""
+                          ? required
+                          : ""}
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        required
+                        type="text"
+                        placeholder="Message Title"
+                        value={newAnnouncement.announcement_title}
+                        onChange={(e) =>
+                          changenewAnnouncement(e, "announcement_title")
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
                 </Row>
                 <Row className="mb-2">
                   <Col>
@@ -551,7 +589,7 @@ function CreateAnnouncement(props) {
                           }}
                         >
                           <Col style={headings}>
-                            {announce.announcement_msg}
+                            {announce.announcement_title}
                           </Col>
                           <Col style={{ textAlign: "right" }}>
                             {new Date(

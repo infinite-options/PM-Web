@@ -109,7 +109,7 @@ export default function ManagerDashboard() {
   useEffect(() => {
     console.log("in use effect");
     fetchTenantDashboard();
-  }, []);
+  }, [access_token]);
 
   const fetchTenantDetails = async (tenant_id) => {
     if (access_token === null) {

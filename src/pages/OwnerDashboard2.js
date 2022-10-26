@@ -44,7 +44,7 @@ export default function OwnerDashboard2() {
   useEffect(() => {
     console.log("in use effect");
     fetchOwnerDashboard();
-  }, []);
+  }, [access_token]);
   const addProperty = () => {
     fetchOwnerDashboard();
     setStage("LIST");
