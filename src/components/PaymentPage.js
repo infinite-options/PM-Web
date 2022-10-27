@@ -69,33 +69,33 @@ function PaymentPage(props) {
       tempAllPurchases.push(response1.result[0]);
     }
     let response = await get(`/purchases?purchase_uid=${purchase_uid}`);
-    console.log("Print 1", response);
+    //console.log("Print 1", response);
     setPurchase(response.result[0]);
     // setAmount(response.result[0].amount_due - response.result[0].amount_paid);
     setAllPurchases(tempAllPurchases);
   }, []);
 
   const toggleKeys = async () => {
-    console.log("inside toggle keys");
+    //console.log("inside toggle keys");
     const url =
       message === "PMTEST"
         ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
         : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
-    console.log("response data ");
-    console.log(response);
+    //console.log("response data ");
+    //console.log(response);
     const responseData = await response.json();
-    console.log(responseData);
-    console.log("This is the responseData.publicKey");
-    console.log(responseData.publicKey);
-    console.log("type of responseData.publicKey");
-    console.log(typeof(responseData.publicKey));
+    //console.log(responseData);
+    //console.log("This is the responseData.publicKey");
+    //console.log(responseData.publicKey);
+    //console.log("type of responseData.publicKey");
+    //console.log(typeof(responseData.publicKey));
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
   };
 
   useEffect(() => {
-    console.log("allPurchases", allPurchases);
+    //console.log("allPurchases", allPurchases);
   }, [allPurchases]);
 
   useEffect(() => {
@@ -272,8 +272,11 @@ function PaymentPage(props) {
                 >
                   Pay with Stripe
                 </Button>
-                <PayPal balance={totalSum.toString()}/>
-
+                <PayPal pay_purchase_id={purchase_uid}
+                        amount={totalSum}
+                        payment_notes={message}
+                        payment_type={"PAYPAL"}
+                />
               </Col>
             </Row>
           </div>
@@ -296,7 +299,7 @@ function PaymentPage(props) {
                 message={message}
                 amount={amount}
               />
-              {console.log(allPurchases, amount, message)}
+              {/* console.log(allPurchases, amount, message) */}
               {/* <StripePayment cancel={cancel} submit={submit} purchase={purchase}
                 message={message} amount={amount}/> */}
             </Elements>
