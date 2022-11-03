@@ -5,7 +5,18 @@ import { post } from "../utils/api";
 
 export default function PayPal(props) {
 
-    //Update backend with new payment
+    //Navigate to the tenant dashboard
+    const navigate = useNavigate();
+    function navigateToTenantDashBoard(){
+        navigate('/tenant_dash', {
+            //Set property slider to the first element
+            state:{
+                lookingAt: 0,
+            },
+        })
+    }
+
+    //Create new payment and update backend
     async function updateDatabase(charge_id) {
         const newPayment = {
             pay_purchase_id: props.pay_purchase_id,
@@ -15,16 +26,6 @@ export default function PayPal(props) {
             payment_type: props.payment_type
         }
         await post("/payments", newPayment)
-    }
-
-    //Navigate to the tenant dashboard
-    const navigate = useNavigate();
-    function navigateToTenantDashBoard(){
-        navigate('/tenant_dash', {
-            state:{
-                lookingAt: 0,
-            },
-        })
     }
 
     //Set up PayPal component with initial settings
@@ -64,6 +65,11 @@ export default function PayPal(props) {
                 navigateToTenantDashBoard()
                 setTimeout(() => {
                     alert("Thank you for your payment!")
+                }, 1500)
+            }
+            else{
+                setTimeout(() => {
+                    alert("Card Declined, please try again.")
                 }, 1500)
             }
         })

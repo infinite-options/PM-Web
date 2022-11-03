@@ -272,11 +272,13 @@ function PaymentPage(props) {
                 >
                   Pay with Stripe
                 </Button>
+
                 <PayPal pay_purchase_id={purchase_uid}
                         amount={totalSum}
                         payment_notes={message}
                         payment_type={"PAYPAL"}
                 />
+
               </Col>
             </Row>
           </div>
