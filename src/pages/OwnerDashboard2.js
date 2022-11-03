@@ -17,8 +17,6 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/ownerComponents/SideBar";
 import Header from "../components/Header";
-// import Table from "../components/ownerComponents/Table";
-// import Table2 from "../components/ownerComponents/Table2";
 import AppContext from "../AppContext";
 import PropertyForm from "../components/PropertyForm";
 import { get } from "../utils/api";
