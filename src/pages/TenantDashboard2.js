@@ -31,7 +31,7 @@ export default function TenantDashboard2() {
   const [p, setP] = React.useState([]);
   const location = useLocation();
   const [lookingAt, setLookingAt] = React.useState(location.state.lookingAt);
-
+  console.log(lookingAt);
   const [propertyClicked, setPropertyClicked] = React.useState(false);
   const [applications, setApplications] = useState([]);
   const [appUid, setAppUid] = useState("");

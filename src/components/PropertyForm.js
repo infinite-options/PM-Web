@@ -548,7 +548,7 @@ function PropertyForm(props) {
       />
       {edit ? (
         <div className="d-flex flex-column w-100">
-          <Form.Group className="mx-2 my-3">
+          <Form.Group className="mx-2 my-3 ps-4">
             <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Address {address === "" ? required : ""}
             </Form.Label>
@@ -559,7 +559,7 @@ function PropertyForm(props) {
               onChange={(e) => setAddress(e.target.value)}
             />
           </Form.Group>
-          <div className="d-flex my-3">
+          <div className="d-flex my-3 ps-4">
             <Col>
               <Form.Group className="mx-2">
                 <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
@@ -587,7 +587,7 @@ function PropertyForm(props) {
               </Form.Group>
             </Col>
           </div>
-          <div className="d-flex my-3">
+          <div className="d-flex my-3 ">
             <Col>
               <Form.Group className="mx-2">
                 <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
@@ -626,7 +626,7 @@ function PropertyForm(props) {
           </div>
         </div>
       ) : (
-        <Row className="mx-2">
+        <Row className="mx-2 ps-4">
           <Row className="d-flex justify-content-between">
             <Col>
               <h6 style={mediumBold}>Property Address</h6>
@@ -651,7 +651,7 @@ function PropertyForm(props) {
         </Row>
       )}
       {edit ? (
-        <Form.Group className="mx-2 my-3">
+        <Form.Group className="mx-2 my-3 ps-4">
           <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Description {description === "" ? required : ""}
           </Form.Label>
@@ -669,7 +669,7 @@ function PropertyForm(props) {
         </Row>
       )}
       {edit ? (
-        <Form.Group className="mx-2 my-3">
+        <Form.Group className="mx-2 my-3 ps-4">
           <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Type
           </Form.Label>
@@ -691,7 +691,7 @@ function PropertyForm(props) {
         </Row>
       )}
       {edit ? (
-        <div className="d-flex my-3">
+        <div className="d-flex my-3 ps-4">
           <Form.Group className="mx-2">
             <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Bedroom {numBeds === "" ? required : ""}
@@ -743,7 +743,7 @@ function PropertyForm(props) {
         </Row>
       )}
       {edit ? (
-        <Form.Group className="mx-2 my-3">
+        <Form.Group className="mx-2 my-3 ps-4">
           <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Active Date {activeDate === "" ? required : ""}
           </Form.Label>
@@ -762,7 +762,7 @@ function PropertyForm(props) {
         </Row>
       )}
       {edit ? (
-        <Form.Group className="mx-2 my-3">
+        <Form.Group className="mx-2 my-3 ps-4">
           <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Monthly Rent {rent === "" ? required : ""}
           </Form.Label>
@@ -780,7 +780,7 @@ function PropertyForm(props) {
         </Row>
       )}
       {edit ? (
-        <Form.Group className="mx-2 my-3">
+        <Form.Group className="mx-2 my-3 ps-4">
           <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
             Deposit {deposit === "" ? required : ""}
           </Form.Label>
@@ -872,8 +872,8 @@ function PropertyForm(props) {
 
       {edit ? (
         <Container className="my-3">
-          <h6>Available to Rent</h6>
-          <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
+          {/* <h6>Available to Rent</h6>
+          <p> {property.available_to_rent == 1 ? "True" : "False"}</p> */}
         </Container>
       ) : (
         <Container className="my-3">
@@ -886,8 +886,8 @@ function PropertyForm(props) {
           style={({ paddingLeft: "0px" }, mediumBold)}
           className="my-3"
         >
-          <h6> Featured</h6>
-          <p> {property.featured}</p>
+          {/* <h6> Featured</h6>
+          <p> {property.featured}</p> */}
         </Container>
       ) : (
         <Container
