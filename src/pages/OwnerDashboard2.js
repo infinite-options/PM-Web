@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -19,6 +19,7 @@ import SideBar from "../components/ownerComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
 import PropertyForm from "../components/PropertyForm";
+import SortDown from "../icons/Sort-down.svg";
 import { get } from "../utils/api";
 
 const useStyles = makeStyles({
@@ -45,6 +46,13 @@ export default function OwnerDashboard2() {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
+
+  const [monthlyCashFlow, setMonthlyCashFlow] = useState(false);
+  const [yearlyCashFlow, setYearlyCashFlow] = useState(false);
+  const [monthlyRevenue, setMonthlyRevenue] = useState(false);
+  const [yearlyRevenue, setYearlyRevenue] = useState(false);
+  const [monthlyExpense, setMonthlyExpense] = useState(false);
+  const [yearlyExpense, setYearlyExpense] = useState(false);
 
   const fetchOwnerDashboard = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
@@ -230,85 +238,6 @@ export default function OwnerDashboard2() {
     rowCount: PropTypes.number.isRequired,
   };
 
-  const cashFlowHeadCell = [
-    {
-      id: "to_date",
-      numeric: true,
-      label: "To Date",
-    },
-    {
-      id: "expected",
-      numeric: true,
-      label: "Expected",
-    },
-    {
-      id: "delta",
-      numeric: true,
-      label: "Delta",
-    },
-    {
-      id: "to_date_amortized",
-      numeric: true,
-      label: "To Date Amortized",
-    },
-    {
-      id: "expected_amortized",
-      numeric: true,
-      label: "Expected Amortized",
-    },
-    {
-      id: "amortized_delta",
-      numeric: true,
-      label: "Amortized Delta",
-    },
-  ];
-  function EnhancedTableHeadCashFlow(props) {
-    const { order, orderBy, onRequestSort } = props;
-    const createSortHandler = (property) => (event) => {
-      onRequestSort(event, property);
-    };
-
-    return (
-      <TableHead>
-        <TableRow>
-          {cashFlowHeadCell.map((headCell) => (
-            <TableCell
-              key={headCell.id}
-              align="center"
-              size="small"
-              sortDirection={orderBy === headCell.id ? order : false}
-            >
-              <TableSortLabel
-                align="center"
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </Box>
-                ) : null}
-              </TableSortLabel>
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    );
-  }
-
-  EnhancedTableHeadCashFlow.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
-  };
-
   const maintenancesHeadCell = [
     {
       id: "images",
@@ -404,6 +333,108 @@ export default function OwnerDashboard2() {
     rowCount: PropTypes.number.isRequired,
   };
   console.log(ownerData);
+  let revenueTotal = 0;
+
+  for (const item of ownerData) {
+    if (
+      (item.rental_revenue !== undefined && item.rental_revenue !== 0) ||
+      (item.extraCharges_revenue !== undefined &&
+        item.extraCharges_revenue !== 0) ||
+      (item.utiltiy_revenue !== undefined && item.utiltiy_revenue !== 0)
+    ) {
+      revenueTotal =
+        revenueTotal +
+        item.rental_revenue +
+        item.extraCharges_revenue +
+        item.utility_revenue;
+    }
+  }
+  console.log(revenueTotal);
+  let expenseTotal = 0;
+  for (const item of ownerData) {
+    if (
+      (item.maintenance_expenses !== undefined && item.maintenance_expenses) ||
+      (item.management_expenses !== undefined &&
+        item.management_expenses !== 0) ||
+      (item.insurance_expenses !== undefined &&
+        item.insurance_expenses !== 0) ||
+      (item.repairs_expenses !== undefined && item.repairs_expenses !== 0) ||
+      (item.mortgage_expenses !== undefined && item.mortgage_expenses !== 0) ||
+      (item.taxes_expenses !== undefined && item.taxes_expenses !== 0) ||
+      (item.utility_expenses !== 0 && item.utility_expenses !== undefined)
+    ) {
+      expenseTotal =
+        expenseTotal +
+        item.maintenance_expenses +
+        item.management_expenses +
+        item.repairs_expenses +
+        item.utility_expenses;
+    }
+  }
+
+  console.log(expenseTotal, revenueTotal);
+  // let yearExpenseTotal = 0;
+  // for (const item of ownerData) {
+  //   console.log(item);
+  //   if (item.year_expense !== 0) {
+  //     console.log(item.year_expense);
+  //     yearExpenseTotal += item.year_expense;
+  //   }
+  // }
+
+  // let yearRevenueTotal = 0;
+  // for (const item of ownerData) {
+  //   if (item.year_revenue !== 0) {
+  //     console.log(item.year_revenue);
+  //     yearRevenueTotal += item.year_revenue;
+  //   }
+  // }
+
+  let revenueExpectedTotal = 0;
+
+  for (const item of ownerData) {
+    if (
+      (item.rental_expected_revenue !== undefined &&
+        item.rental_expected_revenue !== 0) ||
+      (item.extraCharges_expected_revenue !== undefined &&
+        item.extraCharges_expected_revenue !== 0) ||
+      (item.utility_expected_revenue !== undefined &&
+        item.utility_expected_revenue !== 0)
+    ) {
+      revenueExpectedTotal =
+        revenueExpectedTotal +
+        item.rental_expected_revenue +
+        item.extraCharges_expected_revenue +
+        item.utility_expected_revenue;
+    }
+  }
+  console.log(revenueExpectedTotal);
+  let expenseExpectedTotal = 0;
+  for (const item of ownerData) {
+    if (
+      (item.maintenance_expected_expenses !== undefined &&
+        item.maintenance_expected_expenses) ||
+      (item.management_expected_expenses !== undefined &&
+        item.management_expected_expenses !== 0) ||
+      (item.repairs_expected_expenses !== undefined &&
+        item.repairs_expected_expenses !== 0) ||
+      (item.utility_expected_expenses !== 0 &&
+        item.utility_expected_expenses !== undefined)
+    ) {
+      expenseExpectedTotal =
+        expenseExpectedTotal +
+        item.maintenance_expected_expenses +
+        item.management_expected_expenses +
+        item.repairs_expected_expenses +
+        item.utility_expected_expenses;
+    }
+  }
+  console.log(revenueExpectedTotal, expenseExpectedTotal);
+
+  const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
+  const cashFlowExpected = (
+    revenueExpectedTotal - expenseExpectedTotal
+  ).toFixed(2);
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
       <Header
@@ -420,64 +451,102 @@ export default function OwnerDashboard2() {
             <h1>Cash Flow Summary</h1>
             <Row className="m-3">
               <Table classes={{ root: classes.customTable }} size="small">
-                <EnhancedTableHeadCashFlow
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                  rowCount={ownerData.length}
-                />{" "}
+                <TableHead>
+                  <TableCell></TableCell>
+                  <TableCell>To Date</TableCell>
+                  <TableCell>Expected</TableCell>
+                  <TableCell>Delta</TableCell>
+                  <TableCell>To Date Amortized</TableCell>
+                  <TableCell>Expected Amortized</TableCell>
+                  <TableCell>Delta Amortized</TableCell>
+                </TableHead>
                 <TableBody>
-                  {stableSort(ownerData, getComparator(order, orderBy))
-                    // for filtering
-                    .filter((val) => {
-                      const query = search.toLowerCase();
+                  <TableRow>
+                    <TableCell size="large">
+                      {new Date().toLocaleString("default", { month: "long" })}{" "}
+                      &nbsp;
+                      <img
+                        src={SortDown}
+                        onClick={() => setMonthlyCashFlow(!monthlyCashFlow)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>${cashFlow}</TableCell>
+                    <TableCell>${cashFlowExpected}</TableCell>
+                    <TableCell>${cashFlow - cashFlowExpected}</TableCell>
+                    <TableCell>To Date Amortized</TableCell>
+                    <TableCell>Expected Amortized</TableCell>
+                    <TableCell>Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!monthlyCashFlow}>
+                    <TableCell size="medium">
+                      &nbsp; Revenue{" "}
+                      <img
+                        src={SortDown}
+                        onClick={() => setMonthlyRevenue(!monthlyRevenue)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>${revenueTotal}</TableCell>
+                    <TableCell>${revenueExpectedTotal}</TableCell>
+                    <TableCell>
+                      ${revenueTotal - revenueExpectedTotal}
+                    </TableCell>
+                    <TableCell>To Date Amortized</TableCell>
+                    <TableCell>Expected Amortized</TableCell>
+                    <TableCell>Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!monthlyCashFlow}>
+                    <TableCell size="medium">
+                      &nbsp; Expenses{" "}
+                      <img
+                        src={SortDown}
+                        onClick={() => setMonthlyExpense(!monthlyExpense)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>${expenseTotal}</TableCell>
+                    <TableCell>${expenseExpectedTotal}</TableCell>
+                    <TableCell>
+                      ${expenseTotal - expenseExpectedTotal}
+                    </TableCell>
+                    <TableCell>To Date Amortized</TableCell>
+                    <TableCell>Expected Amortized</TableCell>
+                    <TableCell>Delta Amortized</TableCell>
+                  </TableRow>
 
-                      return (
-                        val.address.toLowerCase().indexOf(query) >= 0 ||
-                        val.city.toLowerCase().indexOf(query) >= 0 ||
-                        val.zip.toLowerCase().indexOf(query) >= 0 ||
-                        val.rent_status.toLowerCase().indexOf(query) >= 0 ||
-                        String(val.oldestOpenMR).toLowerCase().indexOf(query) >=
-                          0 ||
-                        String(val.late_date).toLowerCase().indexOf(query) >= 0
-                      );
-                    })
-                    .map((property, index) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={property.address}
-                        >
-                          <TableCell padding="none" size="small" align="center">
-                            {property.address}
-                            {property.unit !== "" ? " " + property.unit : ""}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.city}, {property.state}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.zip}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.rentalInfo.length !== 0
-                              ? property.rentalInfo[0].tenant_first_name
-                              : "None"}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {"$" + property.listed_rent}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            $
-                            {(
-                              parseInt(property.listed_rent) /
-                              parseInt(property.area)
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                  <TableRow>
+                    <TableCell size="medium">
+                      {new Date().getFullYear()} &nbsp;
+                      <img
+                        src={SortDown}
+                        onClick={() => setYearlyCashFlow(!yearlyCashFlow)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>To Date</TableCell>
+                    <TableCell>Expected</TableCell>
+                    <TableCell>Delta</TableCell>
+                    <TableCell>To Date Amortized</TableCell>
+                    <TableCell>Expected Amortized</TableCell>
+                    <TableCell>Delta Amortized</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Row>
