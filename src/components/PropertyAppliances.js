@@ -18,6 +18,7 @@ function PropertyAppliances(props) {
   const [applianceState, setApplianceState] = state;
   const appliances = Object.keys(applianceState);
   console.log(props);
+  console.log(appliances);
   const [newAppliance, setNewAppliance] = useState(null);
   const [applianceType, setApplianceType] = useState(null);
   const [applianceName, setApplianceName] = useState(null);

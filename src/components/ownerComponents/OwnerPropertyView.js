@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import PropertyCashFlow from "../PropertyCashFlow";
 import PropertyForm from "../PropertyForm";
@@ -23,6 +36,7 @@ import BlueArrowRight from "../../icons/BlueArrowRight.svg";
 import OpenDoc from "../../icons/OpenDoc.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import EditIconNew from "../../icons/EditIconNew.svg";
 import No_Image from "../../icons/No_Image_Available.jpeg";
 import { get, put } from "../../utils/api";
 import {
@@ -35,21 +49,117 @@ import {
   bluePillButton,
   redPillButton,
   smallImg,
+  subHeading,
 } from "../../utils/styles";
+
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px", // <-- arbitrary value
+    },
+  },
+});
+
 function OwnerPropertyView(props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const classes = useStyles();
   const property_uid = location.state.property_uid;
   // const { property_uid, back, reload, setStage } = props;
   const [property, setProperty] = useState({
     images: "[]",
   });
+
   const contactState = useState([]);
+  const applianceState = useState({
+    Microwave: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Dishwasher: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Refrigerator: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Washer: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Dryer: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Range: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+  });
   const [feeState, setFeeState] = useState([]);
+  const appliances = Object.keys(applianceState[0]);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [rentalInfo, setRentalInfo] = useState([]);
   const [cancel, setCancel] = useState(false);
   const [endEarlyDate, setEndEarlyDate] = useState("");
+  // sorting variables
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
   const fetchProperty = async () => {
     // const response = await get(`/propertyInfo?property_uid=${property_uid}`);
     const response = await get(
@@ -57,6 +167,10 @@ function OwnerPropertyView(props) {
     );
     console.log("property  in databse", response.result[0]);
     setProperty(response.result[0]);
+    applianceState[1](JSON.parse(response.result[0].appliances));
+    console.log(applianceState);
+    console.log(Object.keys(applianceState[0]));
+    // setAppliances(Object.keys(applianceState[0]));
     const res = await get(
       `/contracts?property_uid=${response.result[0].property_uid}`
     );
@@ -314,6 +428,241 @@ function OwnerPropertyView(props) {
     setShowDialog2(false);
   };
   console.log(pmID);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const propertiesHeadCell = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Property Images",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Street Address",
+    },
+    {
+      id: "city",
+      numeric: false,
+      label: "City,State",
+    },
+    {
+      id: "zip",
+      numeric: true,
+      label: "Zip",
+    },
+    {
+      id: "tenant",
+      numeric: false,
+      label: "Tenant",
+    },
+    {
+      id: "listed_rent",
+      numeric: true,
+      label: "Rent",
+    },
+    {
+      id: "listed_rent",
+      numeric: true,
+      label: " $/Sq Ft",
+    },
+    {
+      id: "num_apps",
+      numeric: false,
+      label: "Paid",
+    },
+    {
+      id: "property_type",
+      numeric: false,
+      label: "Type",
+    },
+    {
+      id: "num_beds",
+      numeric: true,
+      label: "Size",
+    },
+
+    {
+      id: "property_manager",
+      numeric: true,
+      label: "Property Manager",
+    },
+    {
+      id: "lease_end",
+      numeric: true,
+      label: "Lease End",
+    },
+  ];
+  function EnhancedTableHeadProperties(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {propertiesHeadCell.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                align="center"
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadProperties.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+
+  const maintenancesHeadCell = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Request Images",
+    },
+    {
+      id: "title",
+      numeric: false,
+      label: "Issue",
+    },
+    {
+      id: "request_created_date",
+      numeric: true,
+      label: "Date Reported",
+    },
+    {
+      id: "days_open",
+      numeric: false,
+      label: "Days Open",
+    },
+    {
+      id: "request_type",
+      numeric: true,
+      label: "Type",
+    },
+    {
+      id: "priority",
+      numeric: false,
+      label: "Priority",
+    },
+    {
+      id: "assigned_business",
+      numeric: false,
+      label: "Assigned",
+    },
+
+    {
+      id: "scheduled_date",
+      numeric: true,
+      label: "Closed Date",
+    },
+  ];
+  function EnhancedTableHeadMaintenance(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {maintenancesHeadCell.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                align="center"
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadMaintenance.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
       <ManagementContract
@@ -330,6 +679,11 @@ function OwnerPropertyView(props) {
       />
     ) : (
       <div className="w-100">
+        <Header
+          title="Property Detail"
+          // leftText="< Back"
+          // leftFn={headerBack}
+        />
         <ConfirmDialog
           title={"Are you sure you want to reject this Property Manager?"}
           isOpen={showDialog}
@@ -349,8 +703,6 @@ function OwnerPropertyView(props) {
             <SideBar />
           </div>
           <div className="w-100">
-            <br />
-            <Header title="Properties" leftText="< Back" leftFn={headerBack} />
             <Container>
               {editProperty ? (
                 <PropertyForm
@@ -391,6 +743,368 @@ function OwnerPropertyView(props) {
                 />
               ) : (
                 <div>
+                  <Row>
+                    <Col>
+                      <h1>Property Summary</h1>
+                    </Col>
+                    <Col>
+                      <img
+                        src={EditIconNew}
+                        onClick={() => setEditProperty(true)}
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="m-3">
+                    <Table classes={{ root: classes.customTable }} size="small">
+                      <EnhancedTableHeadProperties
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                      />{" "}
+                      <TableBody>
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={property.address}
+                        >
+                          <TableCell padding="none" size="small" align="center">
+                            {JSON.parse(property.images).length > 0 ? (
+                              <img
+                                src={JSON.parse(property.images)[0]}
+                                alt="Property"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.address}
+                            {property.unit !== "" ? " " + property.unit : ""}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.city}, {property.state}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.zip}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.rentalInfo.length !== 0
+                              ? property.rentalInfo[0].tenant_first_name
+                              : "None"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {"$" + property.listed_rent}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            $
+                            {(
+                              parseInt(property.listed_rent) /
+                              parseInt(property.area)
+                            ).toFixed(2)}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.owner_expected_revenue.length !== 0
+                              ? property.owner_expected_revenue[0]
+                                  .purchase_status
+                              : "None"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.property_type}
+                          </TableCell>
+
+                          <TableCell padding="none" size="small" align="center">
+                            {property.num_beds + "/" + property.num_baths}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.property_manager.length !== 0
+                              ? property.property_manager[0]
+                                  .manager_business_name
+                              : "None"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.owner_expected_revenue.length !== 0
+                              ? property.owner_expected_revenue[0].lease_end
+                              : "None"}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <h1>Maintenance and Repairs</h1>
+                    </Col>
+                  </Row>
+
+                  <Row className="m-3">
+                    <Table classes={{ root: classes.customTable }} size="small">
+                      <EnhancedTableHeadMaintenance
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        rowCount={property.maintenanceRequests.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          property.maintenanceRequests,
+                          getComparator(order, orderBy)
+                        ).map((request, index) => {
+                          return (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={request.address}
+                              onClick={() =>
+                                navigate(
+                                  `/owner-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                      property: request.address,
+                                    },
+                                  }
+                                )
+                              }
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {JSON.parse(request.images).length > 0 ? (
+                                  <img
+                                    src={JSON.parse(request.images)[0]}
+                                    onClick={() =>
+                                      navigate(
+                                        `/owner-repairs/${request.maintenance_request_uid}`,
+                                        {
+                                          state: {
+                                            repair: request,
+                                            property: request.address,
+                                          },
+                                        }
+                                      )
+                                    }
+                                    alt="Property"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                ) : (
+                                  ""
+                                )}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {request.title}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {request.request_created_date}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.days_open} days
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.request_type != null
+                                  ? request.request_type
+                                  : "None"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.priority}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.assigned_business != null
+                                  ? request.assigned_business
+                                  : "None"}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.scheduled_date != null
+                                  ? request.scheduled_date
+                                  : "Not Scheduled"}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <h1>Appliances</h1>
+                    </Col>
+                  </Row>
+                  <Row className="m-3">
+                    <Table
+                      striped
+                      bordered
+                      responsive
+                      size="small"
+                      style={subHeading}
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Appliance</TableCell>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Purchased From</TableCell>
+                          <TableCell>Purchased On</TableCell>
+                          <TableCell>Purchase Order Number</TableCell>
+                          <TableCell>Installed On</TableCell>
+                          <TableCell>Serial Number</TableCell>
+                          <TableCell>Model Number</TableCell>
+                          <TableCell>Warranty Till</TableCell>
+                          <TableCell>Warranty Info</TableCell>
+                          <TableCell>Images</TableCell>
+                        </TableRow>
+                      </TableHead>
+
+                      <TableBody>
+                        {appliances.map((appliance, i) => (
+                          <TableRow>
+                            <TableCell>{appliance}</TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["name"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["purchased_from"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["purchased"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["purchased_order"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["installed"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["serial_num"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["model_num"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["warranty_till"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["warranty_info"]}
+                            </TableCell>
+                            <TableCell>
+                              <div
+                                style={{
+                                  height: "50px",
+                                  position: "relative",
+                                }}
+                              >
+                                {applianceState[0][appliance]["images"] !==
+                                  undefined &&
+                                applianceState[0][appliance]["images"].length >
+                                  0 ? (
+                                  <div>
+                                    <img
+                                      src={
+                                        applianceState[0][appliance]["images"][
+                                          currentImg
+                                        ]
+                                      }
+                                      // className="w-50 h-50"
+                                      style={{
+                                        borderRadius: "4px",
+                                        objectFit: "contain",
+                                        width: "50px",
+                                        height: "50px",
+                                      }}
+                                      alt="Property"
+                                    />
+                                    <div
+                                      style={{
+                                        position: "absolute",
+                                        left: "-7px",
+                                        top: "10px",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={() =>
+                                        previousImg(
+                                          applianceState[0][appliance]["images"]
+                                        )
+                                      }
+                                    >
+                                      {"<"}
+                                    </div>
+                                    <div
+                                      style={{
+                                        position: "absolute",
+                                        right: "-2px",
+                                        top: "10px",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={() =>
+                                        nextImg(
+                                          applianceState[0][appliance]["images"]
+                                        )
+                                      }
+                                    >
+                                      {">"}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  "None"
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Row>
                   <div
                     style={{
                       ...tileImg,

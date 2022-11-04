@@ -22,6 +22,7 @@ import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
 import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
+import AddIcon from "../icons/AddIcon.svg";
 import { get } from "../utils/api";
 import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 
@@ -451,8 +452,18 @@ export default function OwnerDashboard2() {
               <Col>
                 <h1>Cash Flow Summary</h1>
               </Col>
-              <Col onClick={() => setStage("ADDEXPENSE")}>
-                <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1>
+              <Col>
+                <img
+                  src={AddIcon}
+                  onClick={() => setStage("ADDEXPENSE")}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "5rem",
+                  }}
+                />
+                {/* <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1> */}
               </Col>
             </Row>
             <Row className="m-3">
@@ -604,8 +615,18 @@ export default function OwnerDashboard2() {
               <Col>
                 <h1>Properties</h1>
               </Col>
-              <Col onClick={() => setStage("NEW")}>
-                <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1>
+              <Col>
+                <img
+                  src={AddIcon}
+                  onClick={() => setStage("NEW")}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "5rem",
+                  }}
+                />
+                {/* <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1> */}
               </Col>
             </Row>
 
@@ -740,8 +761,18 @@ export default function OwnerDashboard2() {
               <Col>
                 <h1>Maintenance and Repairs</h1>
               </Col>
-              <Col onClick={() => setStage("ADDREQUEST")}>
-                <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1>
+              <Col>
+                <img
+                  src={AddIcon}
+                  onClick={() => setStage("ADDREQUEST")}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "5rem",
+                  }}
+                />
+                {/* <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1> */}
               </Col>
             </Row>
 
@@ -866,16 +897,16 @@ export default function OwnerDashboard2() {
     </div>
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
+      <Header
+        title="Add a new Property"
+        leftText="< Back"
+        leftFn={() => setStage("LIST")}
+      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
-          <Header
-            title="Add a new Property"
-            leftText="< Back"
-            leftFn={() => setStage("LIST")}
-          />
           <OwnerPropertyForm
             edit
             cancel={() => setStage("LIST")}
@@ -886,16 +917,16 @@ export default function OwnerDashboard2() {
     </div>
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
+      <Header
+        title="Add Expense"
+        leftText="< Back"
+        leftFn={() => setStage("LIST")}
+      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
-          <Header
-            title="Add Expense"
-            leftText="< Back"
-            leftFn={() => setStage("LIST")}
-          />
           <OwnerCreateExpense
             properties={ownerData}
             cancel={() => setStage("LIST")}
@@ -908,8 +939,8 @@ export default function OwnerDashboard2() {
     <div className="OwnerDashboard2">
       <Header
         title="Add Repair Request"
-        // leftText="< Back"
-        // leftFn={() => setStage("LIST")}
+        leftText="< Back"
+        leftFn={() => setStage("LIST")}
       />
       <div className="flex-1">
         <div>
