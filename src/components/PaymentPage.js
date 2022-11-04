@@ -278,7 +278,11 @@ function PaymentPage(props) {
                         payment_notes={message}
                         payment_type={"PAYPAL"}
                 />
-
+                <ApplePay pay_purchase_id={purchase_uid}
+                          amount={totalSum}
+                          payment_notes={message}
+                          payment_type={"APPLEPAY"}
+                />
               </Col>
             </Row>
           </div>
