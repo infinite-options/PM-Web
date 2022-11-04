@@ -1,11 +1,32 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import moment from "moment";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import StripePayment from "../components/StripePayment.js";
+import { useNavigate } from "react-router-dom";
+import * as ReactBootStrap from "react-bootstrap";
+import Checkbox from "../Checkbox";
+import Header from "../Header";
+import SideBar from "./SideBar";
+import AppContext from "../../AppContext";
+import StripePayment from "../StripePayment.js";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import File from "../../icons/File.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import { post, get } from "../../utils/api";
 import {
   pillButton,
   smallPillButton,
@@ -19,18 +40,17 @@ import {
   subHeading,
   bluePillButton,
   greenPill,
-} from "../utils/styles";
-import ArrowDown from "../icons/ArrowDown.svg";
-import { useNavigate } from "react-router-dom";
-import Checkbox from "../components/Checkbox";
-import Header from "../components/Header";
-import { post, get } from "../utils/api";
-import AppContext from "../AppContext";
-import File from "../icons/File.svg";
-import SideBar from "../components/ownerComponents/SideBar";
-
+} from "../../utils/styles";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px", // <-- arbitrary value
+    },
+  },
+});
 function OwnerUtilities(props) {
   const navigate = useNavigate();
+  const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [stripePromise, setStripePromise] = useState(null);
@@ -76,6 +96,9 @@ function OwnerUtilities(props) {
   const requestDescriptionRef = React.createRef();
   const tagPriorityRef = React.createRef();
 
+  // sorting variables
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
   const [expenseUnique, setExpenseUnique] = useState("");
 
   const submitForm = () => {
@@ -430,10 +453,6 @@ function OwnerUtilities(props) {
   };
 
   const changeNewUtility = (event, field) => {
-    // console.log('as')
-    // console.log(event)
-    // console.log(field)
-    // console.log(event.target.checked)
     const changedUtility = { ...newUtility };
     if (event.target.type === "checkbox") {
       changedUtility[field] = event.target.checked;
@@ -504,58 +523,172 @@ function OwnerUtilities(props) {
     newFiles.splice(i, 1);
     setFiles(newFiles);
   };
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const headCells = [
+    {
+      id: "bill_utility_type",
+      numeric: false,
+      label: "Bill Type",
+    },
+    {
+      id: "description",
+      numeric: false,
+      label: "Description",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    {
+      id: "bill_algorithm",
+      numeric: false,
+      label: "Split Method",
+    },
+    {
+      id: "amount",
+      numeric: false,
+      label: "Amount",
+    },
+    {
+      id: "purchase_date",
+      numeric: false,
+      label: "Date Added",
+    },
+    {
+      id: "purchase_status",
+      numeric: false,
+      label: "Purchase Status",
+    },
+  ];
+  function EnhancedTableHead(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHead.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
   return (
     <div>
+      <Header
+        title="Utilities"
+        leftText={
+          editingUtility ||
+          expenseDetail ||
+          expenseDetailOwner ||
+          maintenanceExpenseDetail ||
+          payExpense
+            ? "< Back"
+            : ""
+        }
+        leftFn={() => {
+          setNewUtility(null);
+          setExpenseDetail(false);
+          setExpenseDetailOwner(false);
+          setMaintenanceExpenseDetail(false);
+          setPayment(null);
+          propertyState.forEach((prop) => (prop.checked = false));
+          setPropertyState(propertyState);
+          setTenantPay(false);
+          setOwnerPay(false);
+          setPayExpense(false);
+          setStripePayment(false);
+          setEditingUtility(false);
+        }}
+        rightText={
+          editingUtility ||
+          expenseDetail ||
+          expenseDetailOwner ||
+          maintenanceExpenseDetail ||
+          payExpense
+            ? ""
+            : "+ New"
+        }
+        rightFn={() => {
+          setNewUtility({ ...emptyUtility });
+          propertyState.forEach((prop) => (prop.checked = false));
+          setPropertyState(propertyState);
+          setTenantPay(false);
+          setOwnerPay(false);
+          setEditingUtility(true);
+        }}
+      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
-          <Header
-            title="Expenses"
-            leftText={
-              editingUtility ||
-              expenseDetail ||
-              expenseDetailOwner ||
-              maintenanceExpenseDetail ||
-              payExpense
-                ? "< Back"
-                : ""
-            }
-            leftFn={() => {
-              setNewUtility(null);
-              setExpenseDetail(false);
-              setExpenseDetailOwner(false);
-              setMaintenanceExpenseDetail(false);
-              setPayment(null);
-              propertyState.forEach((prop) => (prop.checked = false));
-              setPropertyState(propertyState);
-              setTenantPay(false);
-              setOwnerPay(false);
-              setPayExpense(false);
-              setStripePayment(false);
-              setEditingUtility(false);
-            }}
-            rightText={
-              editingUtility ||
-              expenseDetail ||
-              expenseDetailOwner ||
-              maintenanceExpenseDetail ||
-              payExpense
-                ? ""
-                : "+ New"
-            }
-            rightFn={() => {
-              setNewUtility({ ...emptyUtility });
-              propertyState.forEach((prop) => (prop.checked = false));
-              setPropertyState(propertyState);
-              setTenantPay(false);
-              setOwnerPay(false);
-              setEditingUtility(true);
-            }}
-          />
-
           <div>
             {newUtility !== null &&
             editingUtility &&
@@ -891,8 +1024,102 @@ function OwnerUtilities(props) {
             !payExpense ? (
               <div className="mx-2 my-2 p-3">
                 <div>
-                  <Row style={headings}>Utility Expenses Due From Owner</Row>
-                  {expenseUnique.map((expense) => {
+                  <Row style={headings}>Utilities Due From Owner</Row>
+                  <Row className="m-3">
+                    <Table classes={{ root: classes.customTable }} size="small">
+                      <EnhancedTableHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          expenseUnique,
+                          getComparator(order, orderBy)
+                        ).map((expense, index) => {
+                          return expense.purchase_type === "UTILITY" &&
+                            expense.payer.includes(user.user_uid) ? (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={expense.address}
+                              onClick={() => {
+                                setExpenseDetailOwner(true);
+                                setPayment(expense);
+                              }}
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.bill_utility_type}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.description}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {expense.address}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.bill_algorithm != null
+                                  ? expense.bill_algorithm
+                                  : "None"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {expense.purchase_date}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.purchase_status === "UNPAID" ? (
+                                  <Col className="mt-0" style={redPill}>
+                                    {expense.purchase_status}
+                                  </Col>
+                                ) : (
+                                  <Col className="mt-0" style={greenPill}>
+                                    {expense.purchase_status}
+                                  </Col>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            <Row style={headings}></Row>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                  {/* {expenseUnique.map((expense) => {
                     return expense.purchase_type === "UTILITY" &&
                       expense.payer.includes(user.user_uid) ? (
                       <div>
@@ -958,11 +1185,105 @@ function OwnerUtilities(props) {
                     ) : (
                       <Row style={headings}></Row>
                     );
-                  })}
+                  })} */}
                 </div>
                 <div>
-                  <Row style={headings}>Utility Expenses Due From Tenant</Row>
-                  {expenseUnique.map((expense) => {
+                  <Row style={headings}>Utilities Due From Tenant</Row>
+                  <Row className="m-3">
+                    <Table classes={{ root: classes.customTable }} size="small">
+                      <EnhancedTableHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          expenseUnique,
+                          getComparator(order, orderBy)
+                        ).map((expense, index) => {
+                          return expense.purchase_type === "UTILITY" &&
+                            !expense.payer.includes(user.user_uid) ? (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={expense.address}
+                              onClick={() => {
+                                setExpenseDetail(true);
+                                setPayment(expense);
+                              }}
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.bill_utility_type}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.description}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {expense.address}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.bill_algorithm != null
+                                  ? expense.bill_algorithm
+                                  : "None"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {expense.purchase_date}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.purchase_status === "UNPAID" ? (
+                                  <Col className="mt-0" style={redPill}>
+                                    {expense.purchase_status}
+                                  </Col>
+                                ) : (
+                                  <Col className="mt-0" style={greenPill}>
+                                    {expense.purchase_status}
+                                  </Col>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            <Row style={headings}></Row>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                  {/* {expenseUnique.map((expense) => {
                     return expense.purchase_type === "UTILITY" &&
                       !expense.payer.includes(user.user_uid) ? (
                       <div>
@@ -1024,10 +1345,105 @@ function OwnerUtilities(props) {
                     ) : (
                       <Row></Row>
                     );
-                  })}
+                  })} */}
                 </div>
                 <div>
-                  {expenseUnique.map((expense) => {
+                  <Row style={headings}> Maintenance Payments</Row>
+                  <Row className="m-3">
+                    <Table classes={{ root: classes.customTable }} size="small">
+                      <EnhancedTableHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          expenseUnique,
+                          getComparator(order, orderBy)
+                        ).map((expense, index) => {
+                          return expense.purchase_type === "MAINTENANCE" ||
+                            expense.purchase_type === "REPAIRS" ? (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={expense.address}
+                              onClick={() => {
+                                setExpenseDetail(true);
+                                setPayment(expense);
+                              }}
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.bill_utility_type}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.description}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {expense.address}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.bill_algorithm != null
+                                  ? expense.bill_algorithm
+                                  : "None"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {expense.purchase_date}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {expense.purchase_status === "UNPAID" ? (
+                                  <Col className="mt-0" style={redPill}>
+                                    {expense.purchase_status}
+                                  </Col>
+                                ) : (
+                                  <Col className="mt-0" style={greenPill}>
+                                    {expense.purchase_status}
+                                  </Col>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            <Row style={headings}></Row>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                  {/* {expenseUnique.map((expense) => {
                     return expense.purchase_type === "MAINTENANCE" ||
                       expense.purchase_type === "REPAIRS" ? (
                       <div>
@@ -1072,7 +1488,7 @@ function OwnerUtilities(props) {
                     ) : (
                       <div></div>
                     );
-                  })}
+                  })} */}
                 </div>
               </div>
             ) : newUtility === null &&
@@ -1082,7 +1498,9 @@ function OwnerUtilities(props) {
               !maintenanceExpenseDetail &&
               !payExpense ? (
               <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
-                <Row style={headings}>No expenses</Row>
+                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                  <ReactBootStrap.Spinner animation="border" role="status" />
+                </div>
               </div>
             ) : (
               ""

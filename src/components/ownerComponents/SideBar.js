@@ -69,7 +69,7 @@ function SideBar() {
                 isActive ? sidebarButtonsActive : sidebarButtons
               }
             >
-              Accounting
+              Utilities
             </NavLink>
             <NavLink
               to="/owner_original"

@@ -57,7 +57,7 @@ import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
 import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./pages/ManagerUtilities";
-import OwnerUtilities from "./pages/OwnerUtilities";
+import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
 import PropertyView from "./components/PropertyView";
 import TenantDuePayments from "./components/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
@@ -82,8 +82,8 @@ import OwnersTab from "./pages/OwnersTab";
 import MaintenencePage from "./pages/MaintenencePage";
 import ManagerLanding from "./pages/ManagerLanding";
 import ZellePayment from "./components/ZellePaymentPage";
-import OwnerRepairList from "./components/OwnerRepairList";
-import OwnerRepairRequest from "./components/OwnerRepairRequest";
+import OwnerRepairList from "./components/ownerComponents/OwnerRepairList";
+import OwnerRepairRequest from "./components/ownerComponents/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
 import ModifyExisiting from "./pages/ModifyExisiting";
 import PropertyInfo from "./pages/PropertyInfo";
@@ -95,6 +95,7 @@ import OwnerDocuments from "./components/OwnerDocuments";
 import OwnerProfile from "./components/OwnerProfile";
 import TenantProfile from "./pages/TenantProfile";
 import TenantProfile2 from "./pages/TenantProfile2";
+import OwnerPropertyView from "./components/ownerComponents/OwnerPropertyView";
 
 function App() {
   const [userData, setUserData] = React.useState({
@@ -291,6 +292,10 @@ function App() {
               element={<ManagerPropertyView />}
             />
             <Route path="owner-properties/:mp_id" element={<PropertyView />} />
+            <Route
+              path="propertyDetails/:mp_id"
+              element={<OwnerPropertyView />}
+            />
             <Route
               path="manager-properties/:mp_id/repairs"
               element={<ManagerRepairsList />}

@@ -9,11 +9,10 @@ import OwnerProfileTab from "./OwnerProfileTab";
 import OwnerProfile from "../components/OwnerProfile";
 import OwnerSwitchRole from "../components/OwnerSwitchRole";
 import OwnerContacts from "./OwnerContacts";
-import OwnerRepairList from "../components/OwnerRepairList";
-import OwnerRepairRequest from "../components/OwnerRepairRequest";
+import OwnerRepairList from "../components/ownerComponents/OwnerRepairList";
+import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 import OwnerDocuments from "../components/OwnerDocuments";
-
-import OwnerUtilities from "./OwnerUtilities";
+import OwnerUtilities from "../components/ownerComponents/OwnerUtilities";
 function OwnerHome(props) {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);

@@ -90,7 +90,6 @@ export default function MaintenancePage() {
       return;
     }
     const newRequest = {
-      // property_uid: propertyData.length !== 0 && propertyData[0].properties !==0? propertyData[0].properties[0].property_uid : "propertyData not found",
       property_uid: data,
       title: issueDescription,
       request_type: issueType,

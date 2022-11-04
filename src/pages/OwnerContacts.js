@@ -41,12 +41,12 @@ function OwnerContacts() {
 
   return (
     <div>
+      <Header title="Contacts" />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
-          <Header title="Contacts" />
           <div
             className="mx-2 my-2 p-3"
             style={{

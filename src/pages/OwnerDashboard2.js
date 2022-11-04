@@ -18,9 +18,12 @@ import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/ownerComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
-import PropertyForm from "../components/PropertyForm";
+import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
+import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
 import SortDown from "../icons/Sort-down.svg";
+import SortLeft from "../icons/Sort-left.svg";
 import { get } from "../utils/api";
+import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 
 const useStyles = makeStyles({
   customTable: {
@@ -50,8 +53,8 @@ export default function OwnerDashboard2() {
   const [monthlyCashFlow, setMonthlyCashFlow] = useState(false);
   const [yearlyCashFlow, setYearlyCashFlow] = useState(false);
   const [monthlyRevenue, setMonthlyRevenue] = useState(false);
-  const [yearlyRevenue, setYearlyRevenue] = useState(false);
   const [monthlyExpense, setMonthlyExpense] = useState(false);
+  const [yearlyRevenue, setYearlyRevenue] = useState(false);
   const [yearlyExpense, setYearlyExpense] = useState(false);
 
   const fetchOwnerDashboard = async () => {
@@ -437,18 +440,21 @@ export default function OwnerDashboard2() {
   ).toFixed(2);
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
-      <Header
-        title="Owner Dashboard"
-        rightText="+ New"
-        rightFn={() => setStage("NEW")}
-      />
+      <Header title="Owner Dashboard" />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         {ownerData.length > 1 ? (
           <div className="w-100">
-            <h1>Cash Flow Summary</h1>
+            <Row>
+              <Col>
+                <h1>Cash Flow Summary</h1>
+              </Col>
+              <Col onClick={() => setStage("ADDEXPENSE")}>
+                <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1>
+              </Col>
+            </Row>
             <Row className="m-3">
               <Table classes={{ root: classes.customTable }} size="small">
                 <TableHead>
@@ -467,6 +473,17 @@ export default function OwnerDashboard2() {
                       &nbsp;
                       <img
                         src={SortDown}
+                        hidden={monthlyCashFlow}
+                        onClick={() => setMonthlyCashFlow(!monthlyCashFlow)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!monthlyCashFlow}
                         onClick={() => setMonthlyCashFlow(!monthlyCashFlow)}
                         style={{
                           width: "10px",
@@ -487,6 +504,17 @@ export default function OwnerDashboard2() {
                       &nbsp; Revenue{" "}
                       <img
                         src={SortDown}
+                        hidden={monthlyRevenue}
+                        onClick={() => setMonthlyRevenue(!monthlyRevenue)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!monthlyRevenue}
                         onClick={() => setMonthlyRevenue(!monthlyRevenue)}
                         style={{
                           width: "10px",
@@ -509,6 +537,17 @@ export default function OwnerDashboard2() {
                       &nbsp; Expenses{" "}
                       <img
                         src={SortDown}
+                        hidden={monthlyExpense}
+                        onClick={() => setMonthlyExpense(!monthlyExpense)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!monthlyExpense}
                         onClick={() => setMonthlyExpense(!monthlyExpense)}
                         style={{
                           width: "10px",
@@ -533,6 +572,17 @@ export default function OwnerDashboard2() {
                       <img
                         src={SortDown}
                         onClick={() => setYearlyCashFlow(!yearlyCashFlow)}
+                        hidden={yearlyCashFlow}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        onClick={() => setYearlyCashFlow(!yearlyCashFlow)}
+                        hidden={!yearlyCashFlow}
                         style={{
                           width: "10px",
                           height: "10px",
@@ -550,7 +600,15 @@ export default function OwnerDashboard2() {
                 </TableBody>
               </Table>
             </Row>
-            <h1>Properties</h1>
+            <Row>
+              <Col>
+                <h1>Properties</h1>
+              </Col>
+              <Col onClick={() => setStage("NEW")}>
+                <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1>
+              </Col>
+            </Row>
+
             <Row className="w-100 m-3">
               <Col> Search by</Col>
 
@@ -602,7 +660,7 @@ export default function OwnerDashboard2() {
                                 src={JSON.parse(property.images)[0]}
                                 onClick={() => {
                                   navigate(
-                                    `/owner-properties/${property.property_uid}`,
+                                    `/propertyDetails/${property.property_uid}`,
                                     {
                                       state: {
                                         // property: property,
@@ -678,7 +736,15 @@ export default function OwnerDashboard2() {
                 </TableBody>
               </Table>
             </Row>
-            <h1>Maintenance and Repairs</h1>
+            <Row>
+              <Col>
+                <h1>Maintenance and Repairs</h1>
+              </Col>
+              <Col onClick={() => setStage("ADDREQUEST")}>
+                <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1>
+              </Col>
+            </Row>
+
             <Row className="m-3">
               <Table classes={{ root: classes.customTable }} size="small">
                 <EnhancedTableHeadMaintenance
@@ -806,12 +872,52 @@ export default function OwnerDashboard2() {
         </div>
         <div className="w-100">
           <Header
-            title="Properties"
+            title="Add a new Property"
             leftText="< Back"
             leftFn={() => setStage("LIST")}
           />
-          <PropertyForm
+          <OwnerPropertyForm
             edit
+            cancel={() => setStage("LIST")}
+            onSubmit={addProperty}
+          />
+        </div>
+      </div>
+    </div>
+  ) : stage === "ADDEXPENSE" ? (
+    <div className="OwnerDashboard2">
+      <div className="flex-1">
+        <div>
+          <SideBar />
+        </div>
+        <div className="w-100">
+          <Header
+            title="Add Expense"
+            leftText="< Back"
+            leftFn={() => setStage("LIST")}
+          />
+          <OwnerCreateExpense
+            properties={ownerData}
+            cancel={() => setStage("LIST")}
+            onSubmit={addProperty}
+          />
+        </div>
+      </div>
+    </div>
+  ) : stage === "ADDREQUEST" ? (
+    <div className="OwnerDashboard2">
+      <Header
+        title="Add Repair Request"
+        // leftText="< Back"
+        // leftFn={() => setStage("LIST")}
+      />
+      <div className="flex-1">
+        <div>
+          <SideBar />
+        </div>
+        <div className="w-100">
+          <OwnerRepairRequest
+            properties={ownerData}
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />
