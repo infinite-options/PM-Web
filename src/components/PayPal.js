@@ -38,6 +38,7 @@ export default function PayPal(props) {
         "enable-funding": "venmo"
     }
     const style = {
+        marginTop: "8px",
         shape: "pill"
     }
     // Sets up the transaction when a payment button is clicked
@@ -76,12 +77,14 @@ export default function PayPal(props) {
     }
 
     return (
-        <PayPalScriptProvider options={initialOptions}>
-            <PayPalButtons
-                style={style}
-                createOrder={createOrder}
-                onApprove={onApprove}
-            />
-        </PayPalScriptProvider>
+        <div className="paypal" style={style}>
+            <PayPalScriptProvider options={initialOptions}>
+                <PayPalButtons
+                    style={style}
+                    createOrder={createOrder}
+                    onApprove={onApprove}
+                />
+            </PayPalScriptProvider>
+        </div>
     )
 }

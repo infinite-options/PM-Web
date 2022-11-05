@@ -5,12 +5,14 @@ export default function ApplePay(props){
 
     const style = {
         "display": "inline-block",
+        "margin-top": "8px",
+        "cursor": "pointer",
         "-webkit-appearance": "-apple-pay-button",
         "-apple-pay-button-type": "plain",
         "-apple-pay-button-style": "black",
-        "border-radius": "25px",
-        "width": "500px",
-        "height": "200px"
+        "border-radius": "30px",
+        "width": "750px",
+        "height": "60px"
     }
 
     let displayButton = false
@@ -21,7 +23,7 @@ export default function ApplePay(props){
             const applepayButton = document.getElementById("apple-pay-button")
             applepayButton.addEventListener("click", handleClick)
         }
-    }, [])
+    }, [displayButton])
 
     function handleClick() {
         const paymentRequest = {
@@ -84,8 +86,8 @@ export default function ApplePay(props){
         session.begin();
     }
 
-    return(
-        <div>
+    return (
+        <div className="applepay">
             {displayButton && <div id="apple-pay-button" style={style} />}
         </div>
     )
