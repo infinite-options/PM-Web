@@ -1,8 +1,7 @@
-import React from "react";
-import axios from "axios";
+import React from "react"
+import axios from "axios"
 
 export default function ApplePay(props){
-
     const style = {
         "display": "inline-block",
         "margin-top": "8px",
@@ -14,7 +13,6 @@ export default function ApplePay(props){
         "width": "750px",
         "height": "60px"
     }
-
     let displayButton = false
     if(window.ApplePaySession && window.ApplePaySession.canMakePayments())
         displayButton = true
@@ -24,7 +22,6 @@ export default function ApplePay(props){
             applepayButton.addEventListener("click", handleClick)
         }
     }, [displayButton])
-
     function handleClick() {
         const paymentRequest = {
             currencyCode: 'USD',
@@ -46,46 +43,23 @@ export default function ApplePay(props){
                     merchantIdentifier: "merchant.com.infiniteoptions",
                     displayName: "Manifest",
                     initiative: "web",
-                    initiativeContext: "io-pm.netlify.app"
+                    //Replace domain with current url environment domain
+                    initiativeContext: "localhost"
                 },
                 json: true
             }
             const merchantSession = await axios.post("/apple_pay_session", payload)
             session.completeMerchantValidation(merchantSession.data)
         }
-
         session.onpaymentauthorized = event => {
-            console.log("ON PAYMENT AUTHORIZED")
-            // Define ApplePayPaymentAuthorizationResult
-            const result = {
-                "status": session.STATUS_SUCCESS
-            };
-            session.completePayment(result);
-        };
-
-        session.onpaymentmethodselected = event => {
-            console.log("ON PAYMENT METHOD SELECTED")
-            // Define ApplePayPaymentMethodUpdate based on the selected payment method.
-            // No updates or errors are needed, pass an empty object.
-            const update = {};
-            session.completePaymentMethodSelection(update);
-        };
-
-        session.onshippingmethodselected = event => {
-            console.log("ON SHIPPING METHOD SELECTED")
-            // Define ApplePayShippingMethodUpdate based on the selected shipping method.
-            // No updates or errors are needed, pass an empty object.
-            const update = {};
-            session.completeShippingMethodSelection(update);
-        };
-
+            const result = { "status": session.STATUS_SUCCESS }
+            session.completePayment(result)
+        }
         session.oncancel = event => {
-            // Payment cancelled by WebKit
-        };
-
-        session.begin();
+            console.log(event)
+        }
+        session.begin()
     }
-
     return (
         <div className="applepay">
             {displayButton && <div id="apple-pay-button" style={style} />}
