@@ -37,6 +37,7 @@ import OpenDoc from "../../icons/OpenDoc.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
+import AddIcon from "../../icons/AddIcon.svg";
 import SortDown from "../../icons/Sort-down.svg";
 import SortLeft from "../../icons/Sort-left.svg";
 import { get, put } from "../../utils/api";
@@ -1487,6 +1488,25 @@ function OwnerPropertyView(props) {
                   <Row>
                     <Col>
                       <h1>Maintenance and Repairs</h1>
+                    </Col>
+                    <Col>
+                      {" "}
+                      <img
+                        src={AddIcon}
+                        onClick={() =>
+                          navigate(`/${property_uid}/repairRequest`, {
+                            state: {
+                              property: property,
+                            },
+                          })
+                        }
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                      />
                     </Col>
                   </Row>
 

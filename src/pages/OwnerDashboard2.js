@@ -20,11 +20,11 @@ import Header from "../components/Header";
 import AppContext from "../AppContext";
 import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
 import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
+import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
 import AddIcon from "../icons/AddIcon.svg";
 import { get } from "../utils/api";
-import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 
 const useStyles = makeStyles({
   customTable: {

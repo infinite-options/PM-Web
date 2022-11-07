@@ -26,6 +26,7 @@ import ArrowDown from "../../icons/ArrowDown.svg";
 import File from "../../icons/File.svg";
 import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
+import AddIcon from "../../icons/AddIcon.svg";
 import { post, get } from "../../utils/api";
 import {
   pillButton,
@@ -666,23 +667,23 @@ function OwnerUtilities(props) {
           setStripePayment(false);
           setEditingUtility(false);
         }}
-        rightText={
-          editingUtility ||
-          expenseDetail ||
-          expenseDetailOwner ||
-          maintenanceExpenseDetail ||
-          payExpense
-            ? ""
-            : "+ New"
-        }
-        rightFn={() => {
-          setNewUtility({ ...emptyUtility });
-          propertyState.forEach((prop) => (prop.checked = false));
-          setPropertyState(propertyState);
-          setTenantPay(false);
-          setOwnerPay(false);
-          setEditingUtility(true);
-        }}
+        // rightText={
+        //   editingUtility ||
+        //   expenseDetail ||
+        //   expenseDetailOwner ||
+        //   maintenanceExpenseDetail ||
+        //   payExpense
+        //     ? ""
+        //     : "+ New"
+        // }
+        // rightFn={() => {
+        //   setNewUtility({ ...emptyUtility });
+        //   propertyState.forEach((prop) => (prop.checked = false));
+        //   setPropertyState(propertyState);
+        //   setTenantPay(false);
+        //   setOwnerPay(false);
+        //   setEditingUtility(true);
+        // }}
       />
       <div className="flex-1">
         <div>
@@ -1024,7 +1025,34 @@ function OwnerUtilities(props) {
             !payExpense ? (
               <div className="mx-2 my-2 p-3">
                 <div>
-                  <Row style={headings}>Utilities Due From Owner</Row>
+                  <Row style={headings}>
+                    <Col>
+                      {" "}
+                      <h3>Utilities Due From Owner </h3>
+                    </Col>
+
+                    <Col>
+                      <img
+                        src={AddIcon}
+                        onClick={() => {
+                          setNewUtility({ ...emptyUtility });
+                          propertyState.forEach(
+                            (prop) => (prop.checked = false)
+                          );
+                          setPropertyState(propertyState);
+                          setTenantPay(false);
+                          setOwnerPay(true);
+                          setEditingUtility(true);
+                        }}
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                      />
+                    </Col>
+                  </Row>
                   <Row className="m-3">
                     <Table classes={{ root: classes.customTable }} size="small">
                       <EnhancedTableHead
@@ -1188,7 +1216,32 @@ function OwnerUtilities(props) {
                   })} */}
                 </div>
                 <div>
-                  <Row style={headings}>Utilities Due From Tenant</Row>
+                  <Row style={headings}>
+                    <Col>
+                      <h3>Utilities Due From Tenant </h3>
+                    </Col>
+                    <Col>
+                      <img
+                        src={AddIcon}
+                        onClick={() => {
+                          setNewUtility({ ...emptyUtility });
+                          propertyState.forEach(
+                            (prop) => (prop.checked = false)
+                          );
+                          setPropertyState(propertyState);
+                          setTenantPay(true);
+                          setOwnerPay(false);
+                          setEditingUtility(true);
+                        }}
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                      />
+                    </Col>
+                  </Row>
                   <Row className="m-3">
                     <Table classes={{ root: classes.customTable }} size="small">
                       <EnhancedTableHead

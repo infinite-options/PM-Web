@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import {
   Table,
   TableRow,
@@ -18,6 +18,7 @@ import Header from "../Header";
 import SideBar from "./SideBar";
 import OwnerRepairRequest from "./OwnerRepairRequest";
 import AppContext from "../../AppContext";
+import AddIcon from "../../icons/AddIcon.svg";
 import { get } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
@@ -348,8 +349,8 @@ function OwnerRepairList(props) {
     <div>
       <Header
         title="Repairs"
-        rightText="+ New"
-        rightFn={() => setStage("ADDREQUEST")}
+        // rightText="+ New"
+        // rightFn={() => setStage("ADDREQUEST")}
       />
       <div className="flex-1">
         <div>
@@ -364,6 +365,27 @@ function OwnerRepairList(props) {
               opacity: 1,
             }}
           >
+            <Row>
+              <Col>
+                {" "}
+                <h3>Maintenance and Repairs </h3>
+              </Col>
+
+              <Col>
+                <img
+                  src={AddIcon}
+                  onClick={() => {
+                    setStage("ADDREQUEST");
+                  }}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "5rem",
+                  }}
+                />
+              </Col>
+            </Row>
             {repairIter.length > 1 ? (
               <Row className="m-3">
                 <Table classes={{ root: classes.customTable }} size="small">
