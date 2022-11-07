@@ -11,7 +11,7 @@ import OwnerSwitchRole from "../components/OwnerSwitchRole";
 import OwnerContacts from "./OwnerContacts";
 import OwnerRepairList from "../components/ownerComponents/OwnerRepairList";
 import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
-import OwnerDocuments from "../components/OwnerDocuments";
+import OwnerDocuments from "./OwnerDocuments";
 import OwnerUtilities from "../components/ownerComponents/OwnerUtilities";
 function OwnerHome(props) {
   const navigate = useNavigate();

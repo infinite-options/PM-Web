@@ -91,7 +91,7 @@ import AppliedDashboard from "./pages/AppliedDashboard";
 import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
 import ManagerDocuments from "./components/ManagerDocuments";
 import ManagerProfile from "./components/ManagerProfile";
-import OwnerDocuments from "./components/OwnerDocuments";
+import OwnerDocuments from "./pages/OwnerDocuments";
 import OwnerProfile from "./components/OwnerProfile";
 import TenantProfile from "./pages/TenantProfile";
 import TenantProfile2 from "./pages/TenantProfile2";

@@ -97,7 +97,7 @@ export default function OwnerDashboard2() {
     fetchOwnerDashboard();
     setStage("LIST");
   };
-  console.log(cashflowData);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -167,11 +167,6 @@ export default function OwnerDashboard2() {
       id: "listed_rent",
       numeric: true,
       label: " $/Sq Ft",
-    },
-    {
-      id: "num_apps",
-      numeric: false,
-      label: "Paid",
     },
     {
       id: "property_type",
@@ -1031,12 +1026,6 @@ export default function OwnerDashboard2() {
                             ).toFixed(2)}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {property.owner_expected_revenue.length !== 0
-                              ? property.owner_expected_revenue[0]
-                                  .purchase_status
-                              : "None"}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
                             {property.property_type}
                           </TableCell>
 
@@ -1050,8 +1039,8 @@ export default function OwnerDashboard2() {
                               : "None"}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {property.owner_expected_revenue.length !== 0
-                              ? property.owner_expected_revenue[0].lease_end
+                            {property.rentalInfo.length !== 0
+                              ? property.rentalInfo[0].lease_end
                               : "None"}
                           </TableCell>
                         </TableRow>
