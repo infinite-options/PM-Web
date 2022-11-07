@@ -121,6 +121,7 @@ function OwnerUtilities(props) {
     setStripePromise(stripePromise);
 
     response = await get(`/purchases?purchase_uid=${pid}`);
+    console.log("GET PURCHASE RESPONSE", response);
     setPurchase(response.result[0]);
     setTotalSum(response.result[0].amount_due);
     setAmount(response.result[0].amount_due - response.result[0].amount_paid);
@@ -261,7 +262,6 @@ function OwnerUtilities(props) {
     });
     console.log(output);
     setExpenseUnique(output);
-
     setExpenses(expense);
   };
   useEffect(() => {
@@ -348,7 +348,7 @@ function OwnerUtilities(props) {
       linked_bill_id: bill_uid,
       pur_property_id: properties_uid,
       payer: [user.user_uid],
-      receiver: newUtility.provider,
+      receiver: user.user_uid,
       purchase_type: "UTILITY",
       description: newUtility.service_name,
       amount_due: newUtility.charge,
@@ -384,7 +384,8 @@ function OwnerUtilities(props) {
       }
       if (tenantPay) {
         if (property.rental_status === "ACTIVE") {
-          let tenant_ids = property.tenants[0].map((t) => t.tenant_id);
+          console.log("property.tenants", property.rentalInfo);
+          let tenant_ids = property.rentalInfo[0].map((t) => t.tenant_id);
           new_purchase.payer = tenant_ids;
         } else {
           new_purchase.payer = [property.owner_id];
@@ -402,6 +403,7 @@ function OwnerUtilities(props) {
     setEditingUtility(false);
     setTenantPay(false);
     setOwnerPay(false);
+    PayBill(purchase_uid);
     setPayExpense(true);
   };
 
@@ -1114,7 +1116,7 @@ function OwnerUtilities(props) {
                                 size="small"
                                 align="center"
                               >
-                                ${expense.amount_due.toFixed(2)}
+                                ${expense.amount_due}
                               </TableCell>
                               <TableCell
                                 padding="none"
@@ -1303,7 +1305,7 @@ function OwnerUtilities(props) {
                                 size="small"
                                 align="center"
                               >
-                                ${expense.amount_due.toFixed(2)}
+                                ${expense.amount_due}
                               </TableCell>
                               <TableCell
                                 padding="none"
@@ -1463,7 +1465,7 @@ function OwnerUtilities(props) {
                                 size="small"
                                 align="center"
                               >
-                                ${expense.amount_due.toFixed(2)}
+                                ${expense.amount_due}
                               </TableCell>
                               <TableCell
                                 padding="none"
@@ -1597,7 +1599,7 @@ function OwnerUtilities(props) {
                     })
                   }
                 >
-                  ${payment.amount_due.toFixed(2)}
+                  ${payment.amount_due}
                 </Col>
               </Row>
               <Row className="my-2 mx-2" style={mediumBold}>
@@ -1738,7 +1740,7 @@ function OwnerUtilities(props) {
                     })
                   }
                 >
-                  ${payment.amount_due.toFixed(2)}
+                  ${payment.amount_due}
                 </Col>
               </Row>
               <Row className="my-2 mx-2" style={mediumBold}>
@@ -1872,7 +1874,7 @@ function OwnerUtilities(props) {
                     })
                   }
                 >
-                  ${payment.amount_due.toFixed(2)}
+                  ${payment.amount_due}
                 </Col>
               </Row>
               <Row className="my-2 mx-2" style={mediumBold}>
@@ -1991,11 +1993,12 @@ function OwnerUtilities(props) {
                       })
                     }
                   >
-                    ${payment.amount_due.toFixed(2)}
+                    ${purchase.amount_due}
                   </Col>
                 </Row>
                 <div className="mt-3" hidden={stripePayment}>
                   <Form.Group style={mediumBold}>
+                    {console.log(purchaseUID)}
                     <Form.Label>Amount</Form.Label>
                     {purchaseUID.length === 1 ? (
                       <Form.Control
