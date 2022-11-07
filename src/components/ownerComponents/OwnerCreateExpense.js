@@ -32,7 +32,7 @@ function OwnerCreateExpense(props) {
     let selectedProperty = JSON.parse(sp);
     if (category === "Mortgage") {
       let mortgage = [];
-      const files = JSON.parse(sp.images);
+      const files = selectedProperty.images;
       const newMortgage = {
         category: category,
         title: title,
@@ -58,7 +58,7 @@ function OwnerCreateExpense(props) {
           ? []
           : JSON.parse(selectedProperty.insurance);
       // console.log(insurance);
-      const files = JSON.parse(sp.images);
+      const files = selectedProperty.images;
       const newInsurance = {
         category: category,
         title: title,
@@ -83,7 +83,7 @@ function OwnerCreateExpense(props) {
           ? []
           : JSON.parse(selectedProperty.taxes);
       // console.log(taxes);
-      const files = JSON.parse(sp.images);
+      const files = selectedProperty.images;
       const newTax = {
         category: category,
         title: title,
@@ -226,7 +226,65 @@ function OwnerCreateExpense(props) {
           onChange={(e) => setAmount(e.target.value)}
         />
       </Form.Group>
-      <Form.Group className="mx-2 my-3">
+      {category === "Insurance" ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency
+          </Form.Label>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <option>Monthly</option>
+            <option>Annually</option>
+          </Form.Select>
+        </Form.Group>
+      ) : category === "Mortgage" ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency
+          </Form.Label>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <option>Weekly</option>
+            <option>Monthly</option>
+          </Form.Select>
+        </Form.Group>
+      ) : category === "Tax" ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency
+          </Form.Label>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <option>Monthly</option>
+            <option>Annually</option>
+          </Form.Select>
+        </Form.Group>
+      ) : (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency
+          </Form.Label>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <option>Monthly</option>
+            <option>Annually</option>
+            <option>One-time</option>
+          </Form.Select>
+        </Form.Group>
+      )}
+      {/* <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Frequency
         </Form.Label>
@@ -239,13 +297,46 @@ function OwnerCreateExpense(props) {
           <option>Annually</option>
           <option>One-time</option>
         </Form.Select>
-      </Form.Group>
+      </Form.Group> */}
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Frequency of payment
         </Form.Label>
 
-        {frequency === "One-time" ? (
+        {frequency === "Monthly" &&
+        (category === "Insurance" ||
+          category === "Mortgage" ||
+          category === "Tax") ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a month</option>
+            <option>Twice a month</option>
+          </Form.Select>
+        ) : frequency === "Annually" &&
+          (category === "Insurance" ||
+            category === "Mortgage" ||
+            category === "Tax") ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a year</option>
+            <option>Twice a year</option>
+          </Form.Select>
+        ) : frequency === "Weekly" && category === "Mortgage" ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a week</option>
+            <option>Every other week</option>
+          </Form.Select>
+        ) : frequency === "One-time" ? (
           <Form.Select
             style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
             value={frequencyOfPayment}
