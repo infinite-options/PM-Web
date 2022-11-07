@@ -39,6 +39,7 @@ export default function OwnerDashboard2() {
   const classes = useStyles();
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [ownerData, setOwnerData] = useState([]);
+  const [cashflowData, setCashflowData] = useState([]);
 
   const [stage, setStage] = useState("LIST");
   const [isLoading, setIsLoading] = useState(true);
@@ -64,9 +65,9 @@ export default function OwnerDashboard2() {
       return;
     }
     const response = await get("/ownerDashboard", access_token);
-    console.log("second");
-    console.log(response);
-    // setIsLoading(false);
+    const cashflowResponse = await get(
+      `/ownerCashflow?owner_id=${user.user_uid}`
+    );
 
     if (response.msg === "Token has expired") {
       console.log("here msg");
@@ -76,16 +77,15 @@ export default function OwnerDashboard2() {
     }
     setIsLoading(false);
     setOwnerData(response.result);
+    setCashflowData(cashflowResponse.result);
     let requests = [];
     response.result.forEach((res) => {
-      console.log(res);
       if (res.maintenanceRequests.length > 0) {
         res.maintenanceRequests.forEach((mr) => {
           requests.push(mr);
         });
       }
     });
-    console.log(requests);
     setMaintenanceRequests(requests);
   };
 
@@ -97,7 +97,7 @@ export default function OwnerDashboard2() {
     fetchOwnerDashboard();
     setStage("LIST");
   };
-
+  console.log(cashflowData);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -336,109 +336,71 @@ export default function OwnerDashboard2() {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
-  console.log(ownerData);
+
   let revenueTotal = 0;
+  revenueTotal =
+    cashflowData.rental_revenue +
+    cashflowData.extra_revenue +
+    cashflowData.utility_revenue;
 
-  for (const item of ownerData) {
-    if (
-      (item.rental_revenue !== undefined && item.rental_revenue !== 0) ||
-      (item.extraCharges_revenue !== undefined &&
-        item.extraCharges_revenue !== 0) ||
-      (item.utiltiy_revenue !== undefined && item.utiltiy_revenue !== 0)
-    ) {
-      revenueTotal =
-        revenueTotal +
-        item.rental_revenue +
-        item.extraCharges_revenue +
-        item.utility_revenue;
-    }
-  }
-  console.log(revenueTotal);
   let expenseTotal = 0;
-  for (const item of ownerData) {
-    if (
-      (item.maintenance_expenses !== undefined && item.maintenance_expenses) ||
-      (item.management_expenses !== undefined &&
-        item.management_expenses !== 0) ||
-      (item.insurance_expenses !== undefined &&
-        item.insurance_expenses !== 0) ||
-      (item.repairs_expenses !== undefined && item.repairs_expenses !== 0) ||
-      (item.mortgage_expenses !== undefined && item.mortgage_expenses !== 0) ||
-      (item.taxes_expenses !== undefined && item.taxes_expenses !== 0) ||
-      (item.utility_expenses !== 0 && item.utility_expenses !== undefined)
-    ) {
-      expenseTotal =
-        expenseTotal +
-        item.maintenance_expenses +
-        item.management_expenses +
-        item.repairs_expenses +
-        item.utility_expenses;
-    }
-  }
+  expenseTotal =
+    cashflowData.maintenance_expense +
+    cashflowData.management_expense +
+    cashflowData.repairs_expense +
+    cashflowData.utility_expense;
+  const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
 
-  console.log(expenseTotal, revenueTotal);
-  // let yearExpenseTotal = 0;
-  // for (const item of ownerData) {
-  //   console.log(item);
-  //   if (item.year_expense !== 0) {
-  //     console.log(item.year_expense);
-  //     yearExpenseTotal += item.year_expense;
-  //   }
-  // }
+  let yearExpenseTotal = 0;
+  yearExpenseTotal =
+    cashflowData.maintenance_year_expense +
+    cashflowData.management_year_expense +
+    cashflowData.repairs_year_expense +
+    cashflowData.utility_year_expense;
 
-  // let yearRevenueTotal = 0;
-  // for (const item of ownerData) {
-  //   if (item.year_revenue !== 0) {
-  //     console.log(item.year_revenue);
-  //     yearRevenueTotal += item.year_revenue;
-  //   }
-  // }
+  let yearRevenueTotal = 0;
+  yearRevenueTotal =
+    cashflowData.rental_year_revenue +
+    cashflowData.extra_year_revenue +
+    cashflowData.utility_year_revenue;
+  const yearCashFlow = (yearRevenueTotal - yearExpenseTotal).toFixed(2);
 
   let revenueExpectedTotal = 0;
+  revenueExpectedTotal =
+    cashflowData.rental_expected_revenue +
+    cashflowData.extra_expected_revenue +
+    cashflowData.utility_expected_revenue;
 
-  for (const item of ownerData) {
-    if (
-      (item.rental_expected_revenue !== undefined &&
-        item.rental_expected_revenue !== 0) ||
-      (item.extraCharges_expected_revenue !== undefined &&
-        item.extraCharges_expected_revenue !== 0) ||
-      (item.utility_expected_revenue !== undefined &&
-        item.utility_expected_revenue !== 0)
-    ) {
-      revenueExpectedTotal =
-        revenueExpectedTotal +
-        item.rental_expected_revenue +
-        item.extraCharges_expected_revenue +
-        item.utility_expected_revenue;
-    }
-  }
-  console.log(revenueExpectedTotal);
   let expenseExpectedTotal = 0;
-  for (const item of ownerData) {
-    if (
-      (item.maintenance_expected_expenses !== undefined &&
-        item.maintenance_expected_expenses) ||
-      (item.management_expected_expenses !== undefined &&
-        item.management_expected_expenses !== 0) ||
-      (item.repairs_expected_expenses !== undefined &&
-        item.repairs_expected_expenses !== 0) ||
-      (item.utility_expected_expenses !== 0 &&
-        item.utility_expected_expenses !== undefined)
-    ) {
-      expenseExpectedTotal =
-        expenseExpectedTotal +
-        item.maintenance_expected_expenses +
-        item.management_expected_expenses +
-        item.repairs_expected_expenses +
-        item.utility_expected_expenses;
-    }
-  }
-  console.log(revenueExpectedTotal, expenseExpectedTotal);
 
-  const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
+  expenseExpectedTotal =
+    cashflowData.maintenance_expected_expense +
+    cashflowData.management_expected_expense +
+    cashflowData.repairs_expected_expense +
+    cashflowData.utility_expected_expense;
+
   const cashFlowExpected = (
     revenueExpectedTotal - expenseExpectedTotal
   ).toFixed(2);
+
+  let yearRevenueExpectedTotal = 0;
+  yearRevenueExpectedTotal =
+    cashflowData.rental_year_expected_revenue +
+    cashflowData.extra_year_expected_revenue +
+    cashflowData.utility_year_expected_revenue;
+
+  let yearExpenseExpectedTotal = 0;
+
+  yearExpenseExpectedTotal =
+    cashflowData.maintenance_year_expected_expense +
+    cashflowData.management_year_expected_expense +
+    cashflowData.repairs_year_expected_expense +
+    cashflowData.utility_year_expected_expense;
+
+  const yearCashFlowExpected = (
+    revenueExpectedTotal - expenseExpectedTotal
+  ).toFixed(2);
+
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
       <Header title="Owner Dashboard" />
@@ -479,13 +441,17 @@ export default function OwnerDashboard2() {
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell size="large">
+                    <TableCell width="160px">
                       {new Date().toLocaleString("default", { month: "long" })}{" "}
                       &nbsp;
                       <img
                         src={SortDown}
                         hidden={monthlyCashFlow}
-                        onClick={() => setMonthlyCashFlow(!monthlyCashFlow)}
+                        onClick={() => {
+                          setMonthlyCashFlow(!monthlyCashFlow);
+                          setMonthlyRevenue(false);
+                          setMonthlyExpense(false);
+                        }}
                         style={{
                           width: "10px",
                           height: "10px",
@@ -495,7 +461,11 @@ export default function OwnerDashboard2() {
                       <img
                         src={SortLeft}
                         hidden={!monthlyCashFlow}
-                        onClick={() => setMonthlyCashFlow(!monthlyCashFlow)}
+                        onClick={() => {
+                          setMonthlyCashFlow(!monthlyCashFlow);
+                          setMonthlyRevenue(false);
+                          setMonthlyExpense(false);
+                        }}
                         style={{
                           width: "10px",
                           height: "10px",
@@ -503,15 +473,17 @@ export default function OwnerDashboard2() {
                         }}
                       />
                     </TableCell>
-                    <TableCell>${cashFlow}</TableCell>
-                    <TableCell>${cashFlowExpected}</TableCell>
-                    <TableCell>${cashFlow - cashFlowExpected}</TableCell>
-                    <TableCell>To Date Amortized</TableCell>
-                    <TableCell>Expected Amortized</TableCell>
-                    <TableCell>Delta Amortized</TableCell>
+                    <TableCell width="160px">${cashFlow}</TableCell>
+                    <TableCell width="160px">${cashFlowExpected}</TableCell>
+                    <TableCell width="160px">
+                      ${cashFlow - cashFlowExpected}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
                   </TableRow>
                   <TableRow hidden={!monthlyCashFlow}>
-                    <TableCell size="medium">
+                    <TableCell width="160px">
                       &nbsp; Revenue{" "}
                       <img
                         src={SortDown}
@@ -534,17 +506,71 @@ export default function OwnerDashboard2() {
                         }}
                       />
                     </TableCell>
-                    <TableCell>${revenueTotal}</TableCell>
-                    <TableCell>${revenueExpectedTotal}</TableCell>
-                    <TableCell>
+                    <TableCell width="160px">${revenueTotal}</TableCell>
+                    <TableCell width="160px">${revenueExpectedTotal}</TableCell>
+                    <TableCell width="160px">
                       ${revenueTotal - revenueExpectedTotal}
                     </TableCell>
-                    <TableCell>To Date Amortized</TableCell>
-                    <TableCell>Expected Amortized</TableCell>
-                    <TableCell>Delta Amortized</TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+
+                  <TableRow hidden={!monthlyRevenue}>
+                    <TableCell width="160px">&nbsp;&nbsp; Rent</TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.rental_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.rental_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.rental_revenue -
+                        cashflowData.rental_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!monthlyRevenue}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Extra Charges
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.extra_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.extra_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.extra_revenue -
+                        cashflowData.extra_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!monthlyRevenue}>
+                    <TableCell width="160px">&nbsp; &nbsp;Utility </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.utility_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.utility_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.utility_revenue -
+                        cashflowData.utility_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
                   </TableRow>
                   <TableRow hidden={!monthlyCashFlow}>
-                    <TableCell size="medium">
+                    <TableCell width="160px">
                       &nbsp; Expenses{" "}
                       <img
                         src={SortDown}
@@ -567,22 +593,98 @@ export default function OwnerDashboard2() {
                         }}
                       />
                     </TableCell>
-                    <TableCell>${expenseTotal}</TableCell>
-                    <TableCell>${expenseExpectedTotal}</TableCell>
-                    <TableCell>
+                    <TableCell width="160px">${expenseTotal}</TableCell>
+                    <TableCell width="160px">${expenseExpectedTotal}</TableCell>
+                    <TableCell width="160px">
                       ${expenseTotal - expenseExpectedTotal}
                     </TableCell>
-                    <TableCell>To Date Amortized</TableCell>
-                    <TableCell>Expected Amortized</TableCell>
-                    <TableCell>Delta Amortized</TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!monthlyExpense}>
+                    <TableCell width="160px">&nbsp;&nbsp; Management</TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.management_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.management_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.management_expense -
+                        cashflowData.management_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!monthlyExpense}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Maintenance
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.maintenance_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.maintenance_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.maintenance_expense -
+                        cashflowData.maintenance_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!monthlyExpense}>
+                    <TableCell width="160px">&nbsp; &nbsp;Repairs </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.repairs_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.repairs_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.repairs_expense -
+                        cashflowData.repairs_expected_expense}
+                    </TableCell>
+
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!monthlyExpense}>
+                    <TableCell width="160px">&nbsp; &nbsp;Utility </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.utility_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.utility_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.utility_expense -
+                        cashflowData.utility_expected_expense}
+                    </TableCell>
+
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
                   </TableRow>
 
                   <TableRow>
-                    <TableCell size="medium">
+                    <TableCell width="160px">
                       {new Date().getFullYear()} &nbsp;
                       <img
                         src={SortDown}
-                        onClick={() => setYearlyCashFlow(!yearlyCashFlow)}
+                        onClick={() => {
+                          setYearlyCashFlow(!yearlyCashFlow);
+                          setYearlyRevenue(false);
+                          setYearlyExpense(false);
+                        }}
                         hidden={yearlyCashFlow}
                         style={{
                           width: "10px",
@@ -592,7 +694,11 @@ export default function OwnerDashboard2() {
                       />
                       <img
                         src={SortLeft}
-                        onClick={() => setYearlyCashFlow(!yearlyCashFlow)}
+                        onClick={() => {
+                          setYearlyCashFlow(!yearlyCashFlow);
+                          setYearlyRevenue(false);
+                          setYearlyExpense(false);
+                        }}
                         hidden={!yearlyCashFlow}
                         style={{
                           width: "10px",
@@ -601,12 +707,209 @@ export default function OwnerDashboard2() {
                         }}
                       />
                     </TableCell>
-                    <TableCell>To Date</TableCell>
-                    <TableCell>Expected</TableCell>
-                    <TableCell>Delta</TableCell>
-                    <TableCell>To Date Amortized</TableCell>
-                    <TableCell>Expected Amortized</TableCell>
-                    <TableCell>Delta Amortized</TableCell>
+                    <TableCell width="160px">${yearCashFlow}</TableCell>
+                    <TableCell width="160px">${yearCashFlowExpected}</TableCell>
+                    <TableCell width="160px">
+                      ${yearCashFlow - yearCashFlowExpected}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyCashFlow}>
+                    <TableCell width="160px">
+                      &nbsp; Revenue{" "}
+                      <img
+                        src={SortDown}
+                        hidden={yearlyRevenue}
+                        onClick={() => setYearlyRevenue(!yearlyRevenue)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!yearlyRevenue}
+                        onClick={() => setYearlyRevenue(!yearlyRevenue)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="160px">${yearRevenueTotal}</TableCell>
+                    <TableCell width="160px">
+                      ${yearRevenueExpectedTotal}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${yearRevenueTotal - yearRevenueExpectedTotal}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyRevenue}>
+                    <TableCell width="160px">&nbsp;&nbsp; Rent</TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.rental_year_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.rental_year_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.rental_year_revenue -
+                        cashflowData.rental_year_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyRevenue}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Extra Charges
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.extra_year_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.extra_year_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.extra_year_revenue -
+                        cashflowData.extra_year_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyRevenue}>
+                    <TableCell width="160px">&nbsp; &nbsp;Utility </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.utility_year_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.utility_year_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.utility_year_revenue -
+                        cashflowData.utility_year_expected_revenue}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyCashFlow}>
+                    <TableCell width="160px">
+                      &nbsp; Expenses{" "}
+                      <img
+                        src={SortDown}
+                        hidden={yearlyExpense}
+                        onClick={() => setYearlyExpense(!yearlyExpense)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!yearlyExpense}
+                        onClick={() => setYearlyExpense(!yearlyExpense)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="160px">${yearExpenseTotal}</TableCell>
+                    <TableCell width="160px">
+                      ${yearExpenseExpectedTotal}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${yearExpenseTotal - yearExpenseExpectedTotal}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyExpense}>
+                    <TableCell width="160px">&nbsp;&nbsp; Management</TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.management_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.management_year_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.management_year_expense -
+                        cashflowData.management_year_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyExpense}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Maintenance
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.maintenance_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.maintenance_year_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.maintenance_year_expense -
+                        cashflowData.maintenance_year_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyExpense}>
+                    <TableCell width="160px">&nbsp; &nbsp;Repairs </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.repairs_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.repairs_year_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.repairs_year_expense -
+                        cashflowData.repairs_year_expected_expense}
+                    </TableCell>
+
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  <TableRow hidden={!yearlyExpense}>
+                    <TableCell width="160px">&nbsp; &nbsp;Utility </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.utility_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.utility_year_expected_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.utility_year_expense -
+                        cashflowData.utility_year_expected_expense}
+                    </TableCell>
+
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
