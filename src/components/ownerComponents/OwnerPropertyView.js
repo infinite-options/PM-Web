@@ -170,6 +170,11 @@ function OwnerPropertyView(props) {
       `/propertiesOwnerDetail?property_uid=${property_uid}`
     );
     console.log("property  in databse", response.result[0]);
+    const cashflowResponse = await get(
+      `/ownerCashflowProperty?property_id=${property_uid}`
+    );
+
+    setCashflowData(cashflowResponse.result);
     setProperty(response.result[0]);
     applianceState[1](JSON.parse(response.result[0].appliances));
     console.log(applianceState);
@@ -282,16 +287,9 @@ function OwnerPropertyView(props) {
       setCurrentImg(currentImg - 1);
     }
   };
-  const fetchCashflowInfo = async () => {
-    const cashflowResponse = await get(
-      `/ownerCashflowProperty?property_id=${property_uid}`
-    );
 
-    setCashflowData(cashflowResponse.result);
-  };
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchCashflowInfo();
   }, [
     editProperty,
     showCreateExpense,
@@ -729,7 +727,7 @@ function OwnerPropertyView(props) {
     cashflowData.utility_year_expected_expense;
 
   const yearCashFlowExpected = (
-    revenueExpectedTotal - expenseExpectedTotal
+    yearRevenueExpectedTotal - yearExpenseExpectedTotal
   ).toFixed(2);
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
@@ -748,7 +746,7 @@ function OwnerPropertyView(props) {
     ) : (
       <div className="w-100">
         <Header
-          title="Property Detail"
+          title="Property Details"
           // leftText="< Back"
           // leftFn={headerBack}
         />
@@ -3010,12 +3008,14 @@ function OwnerPropertyView(props) {
                 </div>
               )}
             </Container>
-          </div>{" "}
+          </div>
         </div>
       </div>
     )
   ) : (
-    <div></div>
+    <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+      <ReactBootStrap.Spinner animation="border" role="status" />
+    </div>
   );
 }
 
