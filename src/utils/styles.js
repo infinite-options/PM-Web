@@ -46,11 +46,11 @@ const redRight = {
 };
 const red = {
   color: "#E3441F",
-  font: "normal normal normal 11px/12px SFProDisplay-Regular",
+  font: "normal normal normal 13px SFProDisplay-Regular",
 };
 const green = {
   color: "#3DB727",
-  font: "normal normal normal 11px/12px SFProDisplay-Regular",
+  font: "normal normal normal 13px SFProDisplay-Regular",
 };
 const smallPillButton = {
   fontSize: "small",
