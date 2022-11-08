@@ -55,23 +55,33 @@ export default function OwnerDashboard2() {
 
   const [monthlyCashFlow, setMonthlyCashFlow] = useState(false);
   const [yearlyCashFlow, setYearlyCashFlow] = useState(false);
+
   const [monthlyRevenue, setMonthlyRevenue] = useState(false);
   const [monthlyRent, setMonthlyRent] = useState(false);
   const [monthlyExtra, setMonthlyExtra] = useState(false);
   const [monthlyUtility, setMonthlyUtility] = useState(false);
+
   const [monthlyExpense, setMonthlyExpense] = useState(false);
   const [monthlyManagement, setMonthlyManagement] = useState(false);
   const [monthlyMaintenance, setMonthlyMaintenance] = useState(false);
   const [monthlyRepairs, setMonthlyRepairs] = useState(false);
+  const [monthlyMortgage, setMonthlyMortgage] = useState(false);
+  const [monthlyTaxes, setMonthlyTaxes] = useState(false);
+  const [monthlyInsurance, setMonthlyInsurance] = useState(false);
   const [monthlyUtilityExpense, setMonthlyUtilityExpense] = useState(false);
+
   const [yearlyRevenue, setYearlyRevenue] = useState(false);
   const [yearlyRent, setYearlyRent] = useState(false);
   const [yearlyExtra, setYearlyExtra] = useState(false);
   const [yearlyUtility, setYearlyUtility] = useState(false);
+
   const [yearlyExpense, setYearlyExpense] = useState(false);
   const [yearlyManagement, setYearlyManagement] = useState(false);
   const [yearlyMaintenance, setYearlyMaintenance] = useState(false);
   const [yearlyRepairs, setYearlyRepairs] = useState(false);
+  const [yearlyMortgage, setYearlyMortgage] = useState(false);
+  const [yearlyTaxes, setYearlyTaxes] = useState(false);
+  const [yearlyInsurance, setYearlyInsurance] = useState(false);
   const [yearlyUtilityExpense, setYearlyUtilityExpense] = useState(false);
 
   const fetchOwnerDashboard = async () => {
@@ -359,7 +369,10 @@ export default function OwnerDashboard2() {
     cashflowData.maintenance_expense +
     cashflowData.management_expense +
     cashflowData.repairs_expense +
-    cashflowData.utility_expense;
+    cashflowData.utility_expense +
+    cashflowData.mortgage_expense +
+    cashflowData.taxes_expense +
+    cashflowData.insurance_expense;
   const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
 
   let yearExpenseTotal = 0;
@@ -367,7 +380,10 @@ export default function OwnerDashboard2() {
     cashflowData.maintenance_year_expense +
     cashflowData.management_year_expense +
     cashflowData.repairs_year_expense +
-    cashflowData.utility_year_expense;
+    cashflowData.utility_year_expense +
+    cashflowData.mortgage_year_expense +
+    cashflowData.taxes_year_expense +
+    cashflowData.insurance_year_expense;
 
   let yearRevenueTotal = 0;
   yearRevenueTotal =
@@ -388,7 +404,10 @@ export default function OwnerDashboard2() {
     cashflowData.maintenance_expected_expense +
     cashflowData.management_expected_expense +
     cashflowData.repairs_expected_expense +
-    cashflowData.utility_expected_expense;
+    cashflowData.utility_expected_expense +
+    cashflowData.mortgage_expense +
+    cashflowData.taxes_expense +
+    cashflowData.insurance_expense;
 
   const cashFlowExpected = (
     revenueExpectedTotal - expenseExpectedTotal
@@ -406,7 +425,10 @@ export default function OwnerDashboard2() {
     cashflowData.maintenance_year_expected_expense +
     cashflowData.management_year_expected_expense +
     cashflowData.repairs_year_expected_expense +
-    cashflowData.utility_year_expected_expense;
+    cashflowData.utility_year_expected_expense +
+    cashflowData.mortgage_year_expense +
+    cashflowData.taxes_year_expense +
+    cashflowData.insurance_year_expense;
 
   const yearCashFlowExpected = (
     yearRevenueExpectedTotal - yearExpenseExpectedTotal
@@ -472,6 +494,9 @@ export default function OwnerDashboard2() {
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
                           setMonthlyUtilityExpense(false);
+                          setMonthlyMortgage(false);
+                          setMonthlyTaxes(false);
+                          setMonthlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -493,6 +518,9 @@ export default function OwnerDashboard2() {
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
                           setMonthlyUtilityExpense(false);
+                          setMonthlyMortgage(false);
+                          setMonthlyTaxes(false);
+                          setMonthlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -800,6 +828,9 @@ export default function OwnerDashboard2() {
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
                           setMonthlyUtilityExpense(false);
+                          setMonthlyMortgage(false);
+                          setMonthlyTaxes(false);
+                          setMonthlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -816,6 +847,9 @@ export default function OwnerDashboard2() {
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
                           setMonthlyUtilityExpense(false);
+                          setMonthlyMortgage(false);
+                          setMonthlyTaxes(false);
+                          setMonthlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -1155,6 +1189,227 @@ export default function OwnerDashboard2() {
                         ""
                       );
                     })}
+                  <TableRow hidden={!monthlyExpense}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Mortgage{" "}
+                      <img
+                        src={SortDown}
+                        hidden={monthlyMortgage}
+                        onClick={() => setMonthlyMortgage(!monthlyMortgage)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!monthlyMortgage}
+                        onClick={() => setMonthlyMortgage(!monthlyMortgage)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.mortgage_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.mortgage_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.mortgage_expense -
+                        cashflowData.mortgage_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  {isLoading === false &&
+                    cashflowData.owner_property_expense.map(
+                      (expense, index) => {
+                        return expense.mortgages !== null ? (
+                          <TableRow hidden={!monthlyMortgage}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                              {expense.unit}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.mortgage_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.mortgage_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              $
+                              {expense.mortgage_expense -
+                                expense.mortgage_expense}
+                            </TableCell>
+                            <TableCell width="160px">
+                              To Date Amortized
+                            </TableCell>
+                            <TableCell width="160px">
+                              Expected Amortized
+                            </TableCell>
+                            <TableCell width="160px">Delta Amortized</TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
+                  <TableRow hidden={!monthlyExpense}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Taxes{" "}
+                      <img
+                        src={SortDown}
+                        hidden={monthlyTaxes}
+                        onClick={() => setMonthlyTaxes(!monthlyTaxes)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!monthlyTaxes}
+                        onClick={() => setMonthlyTaxes(!monthlyTaxes)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.taxes_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.taxes_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.taxes_expense - cashflowData.taxes_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  {isLoading === false &&
+                    cashflowData.owner_property_expense.map(
+                      (expense, index) => {
+                        return expense.taxes !== null ? (
+                          <TableRow hidden={!monthlyTaxes}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                              {expense.unit}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.taxes_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.taxes_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.taxes_expense - expense.taxes_expense}
+                            </TableCell>
+                            <TableCell width="160px">
+                              To Date Amortized
+                            </TableCell>
+                            <TableCell width="160px">
+                              Expected Amortized
+                            </TableCell>
+                            <TableCell width="160px">Delta Amortized</TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
+                  <TableRow hidden={!monthlyExpense}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Insurance{" "}
+                      <img
+                        src={SortDown}
+                        hidden={monthlyInsurance}
+                        onClick={() => setMonthlyInsurance(!monthlyInsurance)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!monthlyInsurance}
+                        onClick={() => setMonthlyInsurance(!monthlyInsurance)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.insurance_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.insurance_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.insurance_expense -
+                        cashflowData.insurance_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  {isLoading === false &&
+                    cashflowData.owner_property_expense.map(
+                      (expense, index) => {
+                        return expense.insurance !== null ? (
+                          <TableRow hidden={!monthlyInsurance}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                              {expense.unit}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.insurance_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.insurance_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              $
+                              {expense.insurance_expense -
+                                expense.insurance_expense}
+                            </TableCell>
+                            <TableCell width="160px">
+                              To Date Amortized
+                            </TableCell>
+                            <TableCell width="160px">
+                              Expected Amortized
+                            </TableCell>
+                            <TableCell width="160px">Delta Amortized</TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
 
                   <TableRow>
                     <TableCell width="160px">
@@ -1172,6 +1427,9 @@ export default function OwnerDashboard2() {
                           setYearlyMaintenance(false);
                           setYearlyRepairs(false);
                           setYearlyUtilityExpense(false);
+                          setYearlyMortgage(false);
+                          setYearlyTaxes(false);
+                          setYearlyInsurance(false);
                         }}
                         hidden={yearlyCashFlow}
                         style={{
@@ -1193,6 +1451,9 @@ export default function OwnerDashboard2() {
                           setYearlyMaintenance(false);
                           setYearlyRepairs(false);
                           setYearlyUtilityExpense(false);
+                          setYearlyMortgage(false);
+                          setYearlyTaxes(false);
+                          setYearlyInsurance(false);
                         }}
                         hidden={!yearlyCashFlow}
                         style={{
@@ -1502,6 +1763,9 @@ export default function OwnerDashboard2() {
                           setYearlyMaintenance(false);
                           setYearlyRepairs(false);
                           setYearlyUtilityExpense(false);
+                          setYearlyMortgage(false);
+                          setYearlyTaxes(false);
+                          setYearlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -1518,6 +1782,9 @@ export default function OwnerDashboard2() {
                           setYearlyMaintenance(false);
                           setYearlyRepairs(false);
                           setYearlyUtilityExpense(false);
+                          setYearlyMortgage(false);
+                          setYearlyTaxes(false);
+                          setYearlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -1577,7 +1844,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="160px">Delta Amortized</TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_year_expense.map((expense, index) => {
+                    cashflowData.owner_expense_yearly.map((expense, index) => {
                       return expense.purchase_type === "MANAGEMENT" ? (
                         <TableRow hidden={!yearlyManagement}>
                           <TableCell>
@@ -1655,7 +1922,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="160px">Delta Amortized</TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_year_expense.map((expense, index) => {
+                    cashflowData.owner_expense_yearly.map((expense, index) => {
                       return expense.purchase_type === "MAINTENANCE" ? (
                         <TableRow hidden={!yearlyMaintenance}>
                           <TableCell>
@@ -1734,7 +2001,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="160px">Delta Amortized</TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_year_expense.map((expense, index) => {
+                    cashflowData.owner_expense_yearly.map((expense, index) => {
                       return expense.purchase_type === "REPAIRS" ? (
                         <TableRow hidden={!yearlyRepairs}>
                           <TableCell>
@@ -1817,7 +2084,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="160px">Delta Amortized</TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_year_expense.map((expense, index) => {
+                    cashflowData.owner_expense_yearly.map((expense, index) => {
                       return expense.purchase_type === "UTILITY" ? (
                         <TableRow hidden={!yearlyUtilityExpense}>
                           <TableCell>
@@ -1855,6 +2122,231 @@ export default function OwnerDashboard2() {
                         ""
                       );
                     })}
+                  <TableRow hidden={!yearlyExpense}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Mortgage{" "}
+                      <img
+                        src={SortDown}
+                        hidden={yearlyMortgage}
+                        onClick={() => setYearlyMortgage(!yearlyMortgage)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!yearlyMortgage}
+                        onClick={() => setYearlyMortgage(!yearlyMortgage)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.mortgage_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.mortgage_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.mortgage_year_expense -
+                        cashflowData.mortgage_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  {isLoading === false &&
+                    cashflowData.owner_property_expense.map(
+                      (expense, index) => {
+                        return expense.mortgages !== null ? (
+                          <TableRow hidden={!yearlyMortgage}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                              {expense.unit}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.mortgage_year_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.mortgage_year_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              $
+                              {expense.mortgage_year_expense -
+                                expense.mortgage_year_expense}
+                            </TableCell>
+                            <TableCell width="160px">
+                              To Date Amortized
+                            </TableCell>
+                            <TableCell width="160px">
+                              Expected Amortized
+                            </TableCell>
+                            <TableCell width="160px">Delta Amortized</TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
+                  <TableRow hidden={!yearlyExpense}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Taxes{" "}
+                      <img
+                        src={SortDown}
+                        hidden={yearlyTaxes}
+                        onClick={() => setYearlyTaxes(!yearlyTaxes)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!yearlyTaxes}
+                        onClick={() => setYearlyTaxes(!yearlyTaxes)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.taxes_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.taxes_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.taxes_year_expense -
+                        cashflowData.taxes_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  {isLoading === false &&
+                    cashflowData.owner_property_expense.map(
+                      (expense, index) => {
+                        return expense.taxes !== null ? (
+                          <TableRow hidden={!yearlyTaxes}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                              {expense.unit}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.taxes_year_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.taxes_year_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              $
+                              {expense.taxes_year_expense -
+                                expense.taxes_year_expense}
+                            </TableCell>
+                            <TableCell width="160px">
+                              To Date Amortized
+                            </TableCell>
+                            <TableCell width="160px">
+                              Expected Amortized
+                            </TableCell>
+                            <TableCell width="160px">Delta Amortized</TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
+                  <TableRow hidden={!yearlyExpense}>
+                    <TableCell width="160px">
+                      &nbsp;&nbsp; Insurance{" "}
+                      <img
+                        src={SortDown}
+                        hidden={yearlyInsurance}
+                        onClick={() => setYearlyInsurance(!yearlyInsurance)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortLeft}
+                        hidden={!yearlyInsurance}
+                        onClick={() => setYearlyInsurance(!yearlyInsurance)}
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.insurance_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      ${cashflowData.insurance_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">
+                      $
+                      {cashflowData.insurance_year_expense -
+                        cashflowData.insurance_year_expense}
+                    </TableCell>
+                    <TableCell width="160px">To Date Amortized</TableCell>
+                    <TableCell width="160px">Expected Amortized</TableCell>
+                    <TableCell width="160px">Delta Amortized</TableCell>
+                  </TableRow>
+                  {isLoading === false &&
+                    cashflowData.owner_property_expense.map(
+                      (expense, index) => {
+                        return expense.insurance !== null ? (
+                          <TableRow hidden={!yearlyInsurance}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                              {expense.unit}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.insurance_year_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              ${expense.insurance_year_expense}
+                            </TableCell>
+
+                            <TableCell width="160px">
+                              $
+                              {expense.insurance_year_expense -
+                                expense.insurance_year_expense}
+                            </TableCell>
+                            <TableCell width="160px">
+                              To Date Amortized
+                            </TableCell>
+                            <TableCell width="160px">
+                              Expected Amortized
+                            </TableCell>
+                            <TableCell width="160px">Delta Amortized</TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
                 </TableBody>
               </Table>
             </Row>

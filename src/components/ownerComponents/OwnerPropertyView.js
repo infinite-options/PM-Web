@@ -51,7 +51,8 @@ import {
   bluePillButton,
   redPillButton,
   smallImg,
-  subHeading,
+  green,
+  red,
 } from "../../utils/styles";
 
 const useStyles = makeStyles({
@@ -69,6 +70,7 @@ function OwnerPropertyView(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const property_uid = location.state.property_uid;
+  const [isLoading, setIsLoading] = useState(true);
   // const { property_uid, back, reload, setStage } = props;
   const [property, setProperty] = useState({
     images: "[]",
@@ -175,6 +177,7 @@ function OwnerPropertyView(props) {
     );
 
     setCashflowData(cashflowResponse.result);
+    setIsLoading(false);
     setProperty(response.result[0]);
     applianceState[1](JSON.parse(response.result[0].appliances));
     console.log(applianceState);
@@ -251,10 +254,34 @@ function OwnerPropertyView(props) {
   const [cashflowData, setCashflowData] = useState([]);
   const [monthlyCashFlow, setMonthlyCashFlow] = useState(false);
   const [yearlyCashFlow, setYearlyCashFlow] = useState(false);
+
   const [monthlyRevenue, setMonthlyRevenue] = useState(false);
+  const [monthlyRent, setMonthlyRent] = useState(false);
+  const [monthlyExtra, setMonthlyExtra] = useState(false);
+  const [monthlyUtility, setMonthlyUtility] = useState(false);
+
   const [monthlyExpense, setMonthlyExpense] = useState(false);
+  const [monthlyManagement, setMonthlyManagement] = useState(false);
+  const [monthlyMaintenance, setMonthlyMaintenance] = useState(false);
+  const [monthlyRepairs, setMonthlyRepairs] = useState(false);
+  const [monthlyMortgage, setMonthlyMortgage] = useState(false);
+  const [monthlyTaxes, setMonthlyTaxes] = useState(false);
+  const [monthlyInsurance, setMonthlyInsurance] = useState(false);
+  const [monthlyUtilityExpense, setMonthlyUtilityExpense] = useState(false);
+
   const [yearlyRevenue, setYearlyRevenue] = useState(false);
+  const [yearlyRent, setYearlyRent] = useState(false);
+  const [yearlyExtra, setYearlyExtra] = useState(false);
+  const [yearlyUtility, setYearlyUtility] = useState(false);
+
   const [yearlyExpense, setYearlyExpense] = useState(false);
+  const [yearlyManagement, setYearlyManagement] = useState(false);
+  const [yearlyMaintenance, setYearlyMaintenance] = useState(false);
+  const [yearlyRepairs, setYearlyRepairs] = useState(false);
+  const [yearlyMortgage, setYearlyMortgage] = useState(false);
+  const [yearlyTaxes, setYearlyTaxes] = useState(false);
+  const [yearlyInsurance, setYearlyInsurance] = useState(false);
+  const [yearlyUtilityExpense, setYearlyUtilityExpense] = useState(false);
   console.log("contract", contracts);
   const headerBack = () => {
     editProperty
@@ -677,7 +704,10 @@ function OwnerPropertyView(props) {
     cashflowData.maintenance_expense +
     cashflowData.management_expense +
     cashflowData.repairs_expense +
-    cashflowData.utility_expense;
+    cashflowData.utility_expense +
+    cashflowData.mortgage_expense +
+    cashflowData.taxes_expense +
+    cashflowData.insurance_expense;
   const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
 
   let yearExpenseTotal = 0;
@@ -685,7 +715,10 @@ function OwnerPropertyView(props) {
     cashflowData.maintenance_year_expense +
     cashflowData.management_year_expense +
     cashflowData.repairs_year_expense +
-    cashflowData.utility_year_expense;
+    cashflowData.utility_year_expense +
+    cashflowData.mortgage_year_expense +
+    cashflowData.taxes_year_expense +
+    cashflowData.insurance_year_expense;
 
   let yearRevenueTotal = 0;
   yearRevenueTotal =
@@ -706,7 +739,10 @@ function OwnerPropertyView(props) {
     cashflowData.maintenance_expected_expense +
     cashflowData.management_expected_expense +
     cashflowData.repairs_expected_expense +
-    cashflowData.utility_expected_expense;
+    cashflowData.utility_expected_expense +
+    cashflowData.mortgage_expense +
+    cashflowData.taxes_expense +
+    cashflowData.insurance_expense;
 
   const cashFlowExpected = (
     revenueExpectedTotal - expenseExpectedTotal
@@ -724,7 +760,10 @@ function OwnerPropertyView(props) {
     cashflowData.maintenance_year_expected_expense +
     cashflowData.management_year_expected_expense +
     cashflowData.repairs_year_expected_expense +
-    cashflowData.utility_year_expected_expense;
+    cashflowData.utility_year_expected_expense +
+    cashflowData.mortgage_year_expense +
+    cashflowData.taxes_year_expense +
+    cashflowData.insurance_year_expense;
 
   const yearCashFlowExpected = (
     yearRevenueExpectedTotal - yearExpenseExpectedTotal
@@ -851,6 +890,16 @@ function OwnerPropertyView(props) {
                                 setMonthlyCashFlow(!monthlyCashFlow);
                                 setMonthlyRevenue(false);
                                 setMonthlyExpense(false);
+                                setMonthlyRent(false);
+                                setMonthlyExtra(false);
+                                setMonthlyUtility(false);
+                                setMonthlyManagement(false);
+                                setMonthlyMaintenance(false);
+                                setMonthlyRepairs(false);
+                                setMonthlyUtilityExpense(false);
+                                setMonthlyMortgage(false);
+                                setMonthlyTaxes(false);
+                                setMonthlyInsurance(false);
                               }}
                               style={{
                                 width: "10px",
@@ -865,6 +914,16 @@ function OwnerPropertyView(props) {
                                 setMonthlyCashFlow(!monthlyCashFlow);
                                 setMonthlyRevenue(false);
                                 setMonthlyExpense(false);
+                                setMonthlyRent(false);
+                                setMonthlyExtra(false);
+                                setMonthlyUtility(false);
+                                setMonthlyManagement(false);
+                                setMonthlyMaintenance(false);
+                                setMonthlyRepairs(false);
+                                setMonthlyUtilityExpense(false);
+                                setMonthlyMortgage(false);
+                                setMonthlyTaxes(false);
+                                setMonthlyInsurance(false);
                               }}
                               style={{
                                 width: "10px",
@@ -892,7 +951,12 @@ function OwnerPropertyView(props) {
                             <img
                               src={SortDown}
                               hidden={monthlyRevenue}
-                              onClick={() => setMonthlyRevenue(!monthlyRevenue)}
+                              onClick={() => {
+                                setMonthlyRevenue(!monthlyRevenue);
+                                setMonthlyRent(false);
+                                setMonthlyExtra(false);
+                                setMonthlyUtility(false);
+                              }}
                               style={{
                                 width: "10px",
                                 height: "10px",
@@ -902,7 +966,12 @@ function OwnerPropertyView(props) {
                             <img
                               src={SortLeft}
                               hidden={!monthlyRevenue}
-                              onClick={() => setMonthlyRevenue(!monthlyRevenue)}
+                              onClick={() => {
+                                setMonthlyRevenue(!monthlyRevenue);
+                                setMonthlyRent(false);
+                                setMonthlyExtra(false);
+                                setMonthlyUtility(false);
+                              }}
                               style={{
                                 width: "10px",
                                 height: "10px",
@@ -925,7 +994,29 @@ function OwnerPropertyView(props) {
                         </TableRow>
 
                         <TableRow hidden={!monthlyRevenue}>
-                          <TableCell width="160px">&nbsp;&nbsp; Rent</TableCell>
+                          <TableCell width="160px">
+                            &nbsp;&nbsp; Rent{" "}
+                            <img
+                              src={SortDown}
+                              hidden={monthlyRent}
+                              onClick={() => setMonthlyRent(!monthlyRent)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyRent}
+                              onClick={() => setMonthlyRent(!monthlyRent)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                          </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.rental_revenue}
                           </TableCell>
@@ -943,9 +1034,73 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_revenue.map((revenue, index) => {
+                            return revenue.purchase_type === "RENT" ? (
+                              <TableRow hidden={!monthlyRent}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                  {revenue.unit}
+                                </TableCell>
+                                {revenue.purchase_status === "PAID" ? (
+                                  <TableCell width="160px" style={green}>
+                                    ${revenue.amount_paid}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${revenue.amount_paid}
+                                  </TableCell>
+                                )}
+
+                                {revenue.purchase_status === "UNPAID" ? (
+                                  <TableCell width="160px" style={red}>
+                                    ${revenue.amount_due}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${revenue.amount_due}
+                                  </TableCell>
+                                )}
+                                <TableCell width="160px">
+                                  ${revenue.amount_paid - revenue.amount_due}
+                                </TableCell>
+                                <TableCell width="160px">
+                                  To Date Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Expected Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Delta Amortized
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
                         <TableRow hidden={!monthlyRevenue}>
                           <TableCell width="160px">
                             &nbsp;&nbsp; Extra Charges
+                            <img
+                              src={SortDown}
+                              hidden={monthlyExtra}
+                              onClick={() => setMonthlyExtra(!monthlyExtra)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyExtra}
+                              onClick={() => setMonthlyExtra(!monthlyExtra)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.extra_revenue}
@@ -964,9 +1119,73 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_revenue.map((revenue, index) => {
+                            return revenue.purchase_type === "EXTRA CHARGES" ? (
+                              <TableRow hidden={!monthlyExtra}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                  {revenue.unit}
+                                </TableCell>
+                                {revenue.purchase_status === "PAID" ? (
+                                  <TableCell width="160px" style={green}>
+                                    ${revenue.amount_paid}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${revenue.amount_paid}
+                                  </TableCell>
+                                )}
+
+                                {revenue.purchase_status === "UNPAID" ? (
+                                  <TableCell width="160px" style={red}>
+                                    ${revenue.amount_due}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${revenue.amount_due}
+                                  </TableCell>
+                                )}
+                                <TableCell width="160px">
+                                  ${revenue.amount_paid - revenue.amount_due}
+                                </TableCell>
+                                <TableCell width="160px">
+                                  To Date Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Expected Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Delta Amortized
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
                         <TableRow hidden={!monthlyRevenue}>
                           <TableCell width="160px">
-                            &nbsp; &nbsp;Utility{" "}
+                            &nbsp; &nbsp;Utility
+                            <img
+                              src={SortDown}
+                              hidden={monthlyUtility}
+                              onClick={() => setMonthlyUtility(!monthlyUtility)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyUtility}
+                              onClick={() => setMonthlyUtility(!monthlyUtility)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />{" "}
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.utility_revenue}
@@ -985,13 +1204,66 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_revenue.map((revenue, index) => {
+                            return revenue.purchase_type === "UTILITY" ? (
+                              <TableRow hidden={!monthlyUtility}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                  {revenue.unit}
+                                </TableCell>
+                                {revenue.purchase_status === "PAID" ? (
+                                  <TableCell width="160px" style={green}>
+                                    ${revenue.amount_paid}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${revenue.amount_paid}
+                                  </TableCell>
+                                )}
+
+                                {revenue.purchase_status === "UNPAID" ? (
+                                  <TableCell width="160px" style={red}>
+                                    ${revenue.amount_due}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${revenue.amount_due}
+                                  </TableCell>
+                                )}
+                                <TableCell width="160px">
+                                  ${revenue.amount_paid - revenue.amount_due}
+                                </TableCell>
+                                <TableCell width="160px">
+                                  To Date Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Expected Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Delta Amortized
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
                         <TableRow hidden={!monthlyCashFlow}>
                           <TableCell width="160px">
                             &nbsp; Expenses{" "}
                             <img
                               src={SortDown}
                               hidden={monthlyExpense}
-                              onClick={() => setMonthlyExpense(!monthlyExpense)}
+                              onClick={() => {
+                                setMonthlyExpense(!monthlyExpense);
+                                setMonthlyManagement(false);
+                                setMonthlyMaintenance(false);
+                                setMonthlyRepairs(false);
+                                setMonthlyUtilityExpense(false);
+                                setMonthlyMortgage(false);
+                                setMonthlyTaxes(false);
+                                setMonthlyInsurance(false);
+                              }}
                               style={{
                                 width: "10px",
                                 height: "10px",
@@ -1001,7 +1273,16 @@ function OwnerPropertyView(props) {
                             <img
                               src={SortLeft}
                               hidden={!monthlyExpense}
-                              onClick={() => setMonthlyExpense(!monthlyExpense)}
+                              onClick={() => {
+                                setMonthlyExpense(!monthlyExpense);
+                                setMonthlyManagement(false);
+                                setMonthlyMaintenance(false);
+                                setMonthlyRepairs(false);
+                                setMonthlyUtilityExpense(false);
+                                setMonthlyMortgage(false);
+                                setMonthlyTaxes(false);
+                                setMonthlyInsurance(false);
+                              }}
                               style={{
                                 width: "10px",
                                 height: "10px",
@@ -1025,6 +1306,30 @@ function OwnerPropertyView(props) {
                         <TableRow hidden={!monthlyExpense}>
                           <TableCell width="160px">
                             &nbsp;&nbsp; Management
+                            <img
+                              src={SortDown}
+                              hidden={monthlyManagement}
+                              onClick={() =>
+                                setMonthlyManagement(!monthlyManagement)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyManagement}
+                              onClick={() =>
+                                setMonthlyManagement(!monthlyManagement)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />{" "}
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.management_expense}
@@ -1043,9 +1348,77 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_expense.map((expense, index) => {
+                            return expense.purchase_type === "MANAGEMENT" ? (
+                              <TableRow hidden={!monthlyManagement}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                  {expense.unit}
+                                </TableCell>
+                                {expense.purchase_status === "PAID" ? (
+                                  <TableCell width="160px" style={green}>
+                                    ${expense.amount_paid}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${expense.amount_paid}
+                                  </TableCell>
+                                )}
+
+                                {expense.purchase_status === "UNPAID" ? (
+                                  <TableCell width="160px" style={red}>
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                )}
+                                <TableCell width="160px">
+                                  ${expense.amount_paid - expense.amount_due}
+                                </TableCell>
+                                <TableCell width="160px">
+                                  To Date Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Expected Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Delta Amortized
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
                         <TableRow hidden={!monthlyExpense}>
                           <TableCell width="160px">
                             &nbsp;&nbsp; Maintenance
+                            <img
+                              src={SortDown}
+                              hidden={monthlyMaintenance}
+                              onClick={() =>
+                                setMonthlyMaintenance(!monthlyMaintenance)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyMaintenance}
+                              onClick={() =>
+                                setMonthlyMaintenance(!monthlyMaintenance)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />{" "}
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.maintenance_expense}
@@ -1064,9 +1437,73 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_expense.map((expense, index) => {
+                            return expense.purchase_type === "MAINTENANCE" ? (
+                              <TableRow hidden={!monthlyMaintenance}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                  {expense.unit}
+                                </TableCell>
+                                {expense.purchase_status === "PAID" ? (
+                                  <TableCell width="160px" style={green}>
+                                    ${expense.amount_paid}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${expense.amount_paid}
+                                  </TableCell>
+                                )}
+
+                                {expense.purchase_status === "UNPAID" ? (
+                                  <TableCell width="160px" style={red}>
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                )}
+                                <TableCell width="160px">
+                                  ${expense.amount_paid - expense.amount_due}
+                                </TableCell>
+                                <TableCell width="160px">
+                                  To Date Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Expected Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Delta Amortized
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
                         <TableRow hidden={!monthlyExpense}>
                           <TableCell width="160px">
                             &nbsp; &nbsp;Repairs{" "}
+                            <img
+                              src={SortDown}
+                              hidden={monthlyRepairs}
+                              onClick={() => setMonthlyRepairs(!monthlyRepairs)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyRepairs}
+                              onClick={() => setMonthlyRepairs(!monthlyRepairs)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />{" "}
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.repairs_expense}
@@ -1086,9 +1523,77 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_expense.map((expense, index) => {
+                            return expense.purchase_type === "REPAIRS" ? (
+                              <TableRow hidden={!monthlyRepairs}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                  {expense.unit}
+                                </TableCell>
+                                {expense.purchase_status === "PAID" ? (
+                                  <TableCell width="160px" style={green}>
+                                    ${expense.amount_paid}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${expense.amount_paid}
+                                  </TableCell>
+                                )}
+
+                                {expense.purchase_status === "UNPAID" ? (
+                                  <TableCell width="160px" style={red}>
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                )}
+                                <TableCell width="160px">
+                                  ${expense.amount_paid - expense.amount_due}
+                                </TableCell>
+                                <TableCell width="160px">
+                                  To Date Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Expected Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Delta Amortized
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
                         <TableRow hidden={!monthlyExpense}>
                           <TableCell width="160px">
                             &nbsp; &nbsp;Utility{" "}
+                            <img
+                              src={SortDown}
+                              hidden={monthlyUtilityExpense}
+                              onClick={() =>
+                                setMonthlyUtilityExpense(!monthlyUtilityExpense)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyUtilityExpense}
+                              onClick={() =>
+                                setMonthlyUtilityExpense(!monthlyUtilityExpense)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />{" "}
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.utility_expense}
@@ -1108,6 +1613,295 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_expense.map((expense, index) => {
+                            return expense.purchase_type === "UTILITY" ? (
+                              <TableRow hidden={!monthlyUtilityExpense}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                  {expense.unit}
+                                </TableCell>
+                                {expense.purchase_status === "PAID" ? (
+                                  <TableCell width="160px" style={green}>
+                                    ${expense.amount_paid}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${expense.amount_paid}
+                                  </TableCell>
+                                )}
+
+                                {expense.purchase_status === "UNPAID" ? (
+                                  <TableCell width="160px" style={red}>
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="160px">
+                                    ${expense.amount_due}
+                                  </TableCell>
+                                )}
+                                <TableCell width="160px">
+                                  ${expense.amount_paid - expense.amount_due}
+                                </TableCell>
+                                <TableCell width="160px">
+                                  To Date Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Expected Amortized
+                                </TableCell>
+                                <TableCell width="160px">
+                                  Delta Amortized
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
+                        <TableRow hidden={!monthlyExpense}>
+                          <TableCell width="160px">
+                            &nbsp;&nbsp; Mortgage{" "}
+                            <img
+                              src={SortDown}
+                              hidden={monthlyMortgage}
+                              onClick={() =>
+                                setMonthlyMortgage(!monthlyMortgage)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyMortgage}
+                              onClick={() =>
+                                setMonthlyMortgage(!monthlyMortgage)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.mortgage_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.mortgage_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            $
+                            {cashflowData.mortgage_expense -
+                              cashflowData.mortgage_expense}
+                          </TableCell>
+                          <TableCell width="160px">To Date Amortized</TableCell>
+                          <TableCell width="160px">
+                            Expected Amortized
+                          </TableCell>
+                          <TableCell width="160px">Delta Amortized</TableCell>
+                        </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_property_expense.map(
+                            (expense, index) => {
+                              return expense.mortgages !== null ? (
+                                <TableRow hidden={!monthlyMortgage}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.mortgage_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.mortgage_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    $
+                                    {expense.mortgage_expense -
+                                      expense.mortgage_expense}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
+                        <TableRow hidden={!monthlyExpense}>
+                          <TableCell width="160px">
+                            &nbsp;&nbsp; Taxes{" "}
+                            <img
+                              src={SortDown}
+                              hidden={monthlyTaxes}
+                              onClick={() => setMonthlyTaxes(!monthlyTaxes)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyTaxes}
+                              onClick={() => setMonthlyTaxes(!monthlyTaxes)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.taxes_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.taxes_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            $
+                            {cashflowData.taxes_expense -
+                              cashflowData.taxes_expense}
+                          </TableCell>
+                          <TableCell width="160px">To Date Amortized</TableCell>
+                          <TableCell width="160px">
+                            Expected Amortized
+                          </TableCell>
+                          <TableCell width="160px">Delta Amortized</TableCell>
+                        </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_property_expense.map(
+                            (expense, index) => {
+                              return expense.taxes !== null ? (
+                                <TableRow hidden={!monthlyTaxes}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.taxes_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.taxes_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    $
+                                    {expense.taxes_expense -
+                                      expense.taxes_expense}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
+                        <TableRow hidden={!monthlyExpense}>
+                          <TableCell width="160px">
+                            &nbsp;&nbsp; Insurance{" "}
+                            <img
+                              src={SortDown}
+                              hidden={monthlyInsurance}
+                              onClick={() =>
+                                setMonthlyInsurance(!monthlyInsurance)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!monthlyInsurance}
+                              onClick={() =>
+                                setMonthlyInsurance(!monthlyInsurance)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.insurance_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.insurance_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            $
+                            {cashflowData.insurance_expense -
+                              cashflowData.insurance_expense}
+                          </TableCell>
+                          <TableCell width="160px">To Date Amortized</TableCell>
+                          <TableCell width="160px">
+                            Expected Amortized
+                          </TableCell>
+                          <TableCell width="160px">Delta Amortized</TableCell>
+                        </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_property_expense.map(
+                            (expense, index) => {
+                              return expense.insurance !== null ? (
+                                <TableRow hidden={!monthlyInsurance}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.insurance_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.insurance_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    $
+                                    {expense.insurance_expense -
+                                      expense.insurance_expense}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
 
                         <TableRow>
                           <TableCell width="160px">
@@ -1118,6 +1912,16 @@ function OwnerPropertyView(props) {
                                 setYearlyCashFlow(!yearlyCashFlow);
                                 setYearlyRevenue(false);
                                 setYearlyExpense(false);
+                                setYearlyRent(false);
+                                setYearlyExtra(false);
+                                setYearlyUtility(false);
+                                setYearlyManagement(false);
+                                setYearlyMaintenance(false);
+                                setYearlyRepairs(false);
+                                setYearlyUtilityExpense(false);
+                                setYearlyMortgage(false);
+                                setYearlyTaxes(false);
+                                setYearlyInsurance(false);
                               }}
                               hidden={yearlyCashFlow}
                               style={{
@@ -1132,6 +1936,16 @@ function OwnerPropertyView(props) {
                                 setYearlyCashFlow(!yearlyCashFlow);
                                 setYearlyRevenue(false);
                                 setYearlyExpense(false);
+                                setYearlyRent(false);
+                                setYearlyExtra(false);
+                                setYearlyUtility(false);
+                                setYearlyManagement(false);
+                                setYearlyMaintenance(false);
+                                setYearlyRepairs(false);
+                                setYearlyUtilityExpense(false);
+                                setYearlyMortgage(false);
+                                setYearlyTaxes(false);
+                                setYearlyInsurance(false);
                               }}
                               hidden={!yearlyCashFlow}
                               style={{
@@ -1160,7 +1974,12 @@ function OwnerPropertyView(props) {
                             <img
                               src={SortDown}
                               hidden={yearlyRevenue}
-                              onClick={() => setYearlyRevenue(!yearlyRevenue)}
+                              onClick={() => {
+                                setYearlyRevenue(!yearlyRevenue);
+                                setYearlyRent(false);
+                                setYearlyExtra(false);
+                                setYearlyUtility(false);
+                              }}
                               style={{
                                 width: "10px",
                                 height: "10px",
@@ -1170,7 +1989,12 @@ function OwnerPropertyView(props) {
                             <img
                               src={SortLeft}
                               hidden={!yearlyRevenue}
-                              onClick={() => setYearlyRevenue(!yearlyRevenue)}
+                              onClick={() => {
+                                setYearlyRevenue(!yearlyRevenue);
+                                setYearlyRent(false);
+                                setYearlyExtra(false);
+                                setYearlyUtility(false);
+                              }}
                               style={{
                                 width: "10px",
                                 height: "10px",
@@ -1194,7 +2018,29 @@ function OwnerPropertyView(props) {
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
                         <TableRow hidden={!yearlyRevenue}>
-                          <TableCell width="160px">&nbsp;&nbsp; Rent</TableCell>
+                          <TableCell width="160px">
+                            &nbsp;&nbsp; Rent{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyRent}
+                              onClick={() => setYearlyRent(!yearlyRent)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyRent}
+                              onClick={() => setYearlyRent(!yearlyRent)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                          </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.rental_year_revenue}
                           </TableCell>
@@ -1212,9 +2058,75 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_revenue_yearly.map(
+                            (revenue, index) => {
+                              return revenue.purchase_type === "RENT" ? (
+                                <TableRow hidden={!yearlyRent}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                    {revenue.unit}
+                                  </TableCell>
+                                  {revenue.purchase_status === "PAID" ? (
+                                    <TableCell width="160px" style={green}>
+                                      ${revenue.amount_paid}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${revenue.amount_paid}
+                                    </TableCell>
+                                  )}
+
+                                  {revenue.purchase_status === "UNPAID" ? (
+                                    <TableCell width="160px" style={red}>
+                                      ${revenue.amount_due}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${revenue.amount_due}
+                                    </TableCell>
+                                  )}
+                                  <TableCell width="160px">
+                                    ${revenue.amount_paid - revenue.amount_due}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
                         <TableRow hidden={!yearlyRevenue}>
                           <TableCell width="160px">
                             &nbsp;&nbsp; Extra Charges
+                            <img
+                              src={SortDown}
+                              hidden={yearlyExtra}
+                              onClick={() => setYearlyExtra(!yearlyExtra)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyExtra}
+                              onClick={() => setYearlyExtra(!yearlyExtra)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.extra_year_revenue}
@@ -1233,9 +2145,76 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_revenue_yearly.map(
+                            (revenue, index) => {
+                              return revenue.purchase_type ===
+                                "EXTRA CHARGES" ? (
+                                <TableRow hidden={!yearlyExtra}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                    {revenue.unit}
+                                  </TableCell>
+                                  {revenue.purchase_status === "PAID" ? (
+                                    <TableCell width="160px" style={green}>
+                                      ${revenue.amount_paid}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${revenue.amount_paid}
+                                    </TableCell>
+                                  )}
+
+                                  {revenue.purchase_status === "UNPAID" ? (
+                                    <TableCell width="160px" style={red}>
+                                      ${revenue.amount_due}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${revenue.amount_due}
+                                    </TableCell>
+                                  )}
+                                  <TableCell width="160px">
+                                    ${revenue.amount_paid - revenue.amount_due}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
                         <TableRow hidden={!yearlyRevenue}>
                           <TableCell width="160px">
                             &nbsp; &nbsp;Utility{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyUtility}
+                              onClick={() => setYearlyUtility(!yearlyUtility)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyUtility}
+                              onClick={() => setYearlyUtility(!yearlyUtility)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />{" "}
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.utility_year_revenue}
@@ -1254,13 +2233,68 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_revenue_yearly.map(
+                            (revenue, index) => {
+                              return revenue.purchase_type === "UTILITY" ? (
+                                <TableRow hidden={!yearlyUtility}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                    {revenue.unit}
+                                  </TableCell>
+                                  {revenue.purchase_status === "PAID" ? (
+                                    <TableCell width="160px" style={green}>
+                                      ${revenue.amount_paid}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${revenue.amount_paid}
+                                    </TableCell>
+                                  )}
+
+                                  {revenue.purchase_status === "UNPAID" ? (
+                                    <TableCell width="160px" style={red}>
+                                      ${revenue.amount_due}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${revenue.amount_due}
+                                    </TableCell>
+                                  )}
+                                  <TableCell width="160px">
+                                    ${revenue.amount_paid - revenue.amount_due}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
                         <TableRow hidden={!yearlyCashFlow}>
                           <TableCell width="160px">
                             &nbsp; Expenses{" "}
                             <img
                               src={SortDown}
                               hidden={yearlyExpense}
-                              onClick={() => setYearlyExpense(!yearlyExpense)}
+                              onClick={() => {
+                                setYearlyExpense(!yearlyExpense);
+                                setYearlyManagement(false);
+                                setYearlyMaintenance(false);
+                                setYearlyRepairs(false);
+                                setYearlyUtilityExpense(false);
+                                setYearlyMortgage(false);
+                                setYearlyTaxes(false);
+                                setYearlyInsurance(false);
+                              }}
                               style={{
                                 width: "10px",
                                 height: "10px",
@@ -1270,7 +2304,16 @@ function OwnerPropertyView(props) {
                             <img
                               src={SortLeft}
                               hidden={!yearlyExpense}
-                              onClick={() => setYearlyExpense(!yearlyExpense)}
+                              onClick={() => {
+                                setYearlyExpense(!yearlyExpense);
+                                setYearlyManagement(false);
+                                setYearlyMaintenance(false);
+                                setYearlyRepairs(false);
+                                setYearlyUtilityExpense(false);
+                                setYearlyMortgage(false);
+                                setYearlyTaxes(false);
+                                setYearlyInsurance(false);
+                              }}
                               style={{
                                 width: "10px",
                                 height: "10px",
@@ -1295,7 +2338,31 @@ function OwnerPropertyView(props) {
                         </TableRow>
                         <TableRow hidden={!yearlyExpense}>
                           <TableCell width="160px">
-                            &nbsp;&nbsp; Management
+                            &nbsp;&nbsp; Management{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyManagement}
+                              onClick={() =>
+                                setYearlyManagement(!yearlyManagement)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyManagement}
+                              onClick={() =>
+                                setYearlyManagement(!yearlyManagement)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.management_year_expense}
@@ -1314,9 +2381,79 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_expense_yearly.map(
+                            (expense, index) => {
+                              return expense.purchase_type === "MANAGEMENT" ? (
+                                <TableRow hidden={!yearlyManagement}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+                                  {expense.purchase_status === "PAID" ? (
+                                    <TableCell width="160px" style={green}>
+                                      ${expense.amount_paid}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${expense.amount_paid}
+                                    </TableCell>
+                                  )}
+
+                                  {expense.purchase_status === "UNPAID" ? (
+                                    <TableCell width="160px" style={red}>
+                                      ${expense.amount_due}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${expense.amount_due}
+                                    </TableCell>
+                                  )}
+                                  <TableCell width="160px">
+                                    ${expense.amount_paid - expense.amount_due}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
                         <TableRow hidden={!yearlyExpense}>
                           <TableCell width="160px">
-                            &nbsp;&nbsp; Maintenance
+                            &nbsp;&nbsp; Maintenance{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyMaintenance}
+                              onClick={() =>
+                                setYearlyMaintenance(!yearlyMaintenance)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyMaintenance}
+                              onClick={() =>
+                                setYearlyMaintenance(!yearlyMaintenance)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.maintenance_year_expense}
@@ -1335,9 +2472,75 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_expense_yearly.map(
+                            (expense, index) => {
+                              return expense.purchase_type === "MAINTENANCE" ? (
+                                <TableRow hidden={!yearlyMaintenance}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+                                  {expense.purchase_status === "PAID" ? (
+                                    <TableCell width="160px" style={green}>
+                                      ${expense.amount_paid}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${expense.amount_paid}
+                                    </TableCell>
+                                  )}
+
+                                  {expense.purchase_status === "UNPAID" ? (
+                                    <TableCell width="160px" style={red}>
+                                      ${expense.amount_due}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${expense.amount_due}
+                                    </TableCell>
+                                  )}
+                                  <TableCell width="160px">
+                                    ${expense.amount_paid - expense.amount_due}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
                         <TableRow hidden={!yearlyExpense}>
                           <TableCell width="160px">
                             &nbsp; &nbsp;Repairs{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyRepairs}
+                              onClick={() => setYearlyRepairs(!yearlyRepairs)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyRepairs}
+                              onClick={() => setYearlyRepairs(!yearlyRepairs)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.repairs_year_expense}
@@ -1357,9 +2560,79 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_expense_yearly.map(
+                            (expense, index) => {
+                              return expense.purchase_type === "REPAIRS" ? (
+                                <TableRow hidden={!yearlyRepairs}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+                                  {expense.purchase_status === "PAID" ? (
+                                    <TableCell width="160px" style={green}>
+                                      ${expense.amount_paid}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${expense.amount_paid}
+                                    </TableCell>
+                                  )}
+
+                                  {expense.purchase_status === "UNPAID" ? (
+                                    <TableCell width="160px" style={red}>
+                                      ${expense.amount_due}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${expense.amount_due}
+                                    </TableCell>
+                                  )}
+                                  <TableCell width="160px">
+                                    ${expense.amount_paid - expense.amount_due}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
                         <TableRow hidden={!yearlyExpense}>
                           <TableCell width="160px">
                             &nbsp; &nbsp;Utility{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyUtilityExpense}
+                              onClick={() =>
+                                setYearlyUtilityExpense(!yearlyUtilityExpense)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyUtilityExpense}
+                              onClick={() =>
+                                setYearlyUtilityExpense(!yearlyUtilityExpense)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
                           </TableCell>
                           <TableCell width="160px">
                             ${cashflowData.utility_year_expense}
@@ -1379,6 +2652,293 @@ function OwnerPropertyView(props) {
                           </TableCell>
                           <TableCell width="160px">Delta Amortized</TableCell>
                         </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_expense_yearly.map(
+                            (expense, index) => {
+                              return expense.purchase_type === "UTILITY" ? (
+                                <TableRow hidden={!yearlyUtilityExpense}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+                                  {expense.purchase_status === "PAID" ? (
+                                    <TableCell width="160px" style={green}>
+                                      ${expense.amount_paid}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${expense.amount_paid}
+                                    </TableCell>
+                                  )}
+
+                                  {expense.purchase_status === "UNPAID" ? (
+                                    <TableCell width="160px" style={red}>
+                                      ${expense.amount_due}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell width="160px">
+                                      ${expense.amount_due}
+                                    </TableCell>
+                                  )}
+                                  <TableCell width="160px">
+                                    ${expense.amount_paid - expense.amount_due}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
+                        <TableRow hidden={!yearlyExpense}>
+                          <TableCell width="160px">
+                            &nbsp;&nbsp; Mortgage{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyMortgage}
+                              onClick={() => setYearlyMortgage(!yearlyMortgage)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyMortgage}
+                              onClick={() => setYearlyMortgage(!yearlyMortgage)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.mortgage_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.mortgage_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            $
+                            {cashflowData.mortgage_year_expense -
+                              cashflowData.mortgage_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">To Date Amortized</TableCell>
+                          <TableCell width="160px">
+                            Expected Amortized
+                          </TableCell>
+                          <TableCell width="160px">Delta Amortized</TableCell>
+                        </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_property_expense.map(
+                            (expense, index) => {
+                              return expense.mortgages !== null ? (
+                                <TableRow hidden={!yearlyMortgage}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.mortgage_year_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.mortgage_year_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    $
+                                    {expense.mortgage_year_expense -
+                                      expense.mortgage_year_expense}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
+                        <TableRow hidden={!yearlyExpense}>
+                          <TableCell width="160px">
+                            &nbsp;&nbsp; Taxes{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyTaxes}
+                              onClick={() => setYearlyTaxes(!yearlyTaxes)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyTaxes}
+                              onClick={() => setYearlyTaxes(!yearlyTaxes)}
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.taxes_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.taxes_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            $
+                            {cashflowData.taxes_year_expense -
+                              cashflowData.taxes_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">To Date Amortized</TableCell>
+                          <TableCell width="160px">
+                            Expected Amortized
+                          </TableCell>
+                          <TableCell width="160px">Delta Amortized</TableCell>
+                        </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_property_expense.map(
+                            (expense, index) => {
+                              return expense.taxes !== null ? (
+                                <TableRow hidden={!yearlyTaxes}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.taxes_year_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.taxes_year_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    $
+                                    {expense.taxes_year_expense -
+                                      expense.taxes_year_expense}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
+                        <TableRow hidden={!yearlyExpense}>
+                          <TableCell width="160px">
+                            &nbsp;&nbsp; Insurance{" "}
+                            <img
+                              src={SortDown}
+                              hidden={yearlyInsurance}
+                              onClick={() =>
+                                setYearlyInsurance(!yearlyInsurance)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortLeft}
+                              hidden={!yearlyInsurance}
+                              onClick={() =>
+                                setYearlyInsurance(!yearlyInsurance)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.insurance_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            ${cashflowData.insurance_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">
+                            $
+                            {cashflowData.insurance_year_expense -
+                              cashflowData.insurance_year_expense}
+                          </TableCell>
+                          <TableCell width="160px">To Date Amortized</TableCell>
+                          <TableCell width="160px">
+                            Expected Amortized
+                          </TableCell>
+                          <TableCell width="160px">Delta Amortized</TableCell>
+                        </TableRow>
+                        {isLoading === false &&
+                          cashflowData.owner_property_expense.map(
+                            (expense, index) => {
+                              return expense.insurance !== null ? (
+                                <TableRow hidden={!yearlyInsurance}>
+                                  <TableCell>
+                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                    {expense.unit}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.insurance_year_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    ${expense.insurance_year_expense}
+                                  </TableCell>
+
+                                  <TableCell width="160px">
+                                    $
+                                    {expense.insurance_year_expense -
+                                      expense.insurance_year_expense}
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    To Date Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Expected Amortized
+                                  </TableCell>
+                                  <TableCell width="160px">
+                                    Delta Amortized
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                ""
+                              );
+                            }
+                          )}
                       </TableBody>
                     </Table>
                   </Row>
