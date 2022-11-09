@@ -25,60 +25,60 @@ function Footer(props) {
   };
 
   return (
-    <div
-      style={footerContainer}
-      className="d-flex align-items-center fixed-bottom"
-    >
-      <Col className="text-center" onClick={() => setTab("DASHBOARD")}>
-        <img
-          src={tab === "DASHBOARD" ? Dashboard_Blue : Dashboard_Gray}
-          alt="Dashboard"
-        />
-        <p style={tab === "DASHBOARD" ? smallBlue : smallGray} className="mb-0">
-          Dashboard
-        </p>
-      </Col>
-      <Col className="text-center" onClick={() => navigate("/tenantAvailableProperties")}>
-        <img
-            //TODO: Need a grey version for this image
-            src={tab === "SEARCH" ? SearchPM : SearchPM}
-            alt="Profile"
-            height = "33px"
-        />
-        <p style={tab === "SEARCH" ? smallBlue : smallGray} className="mb-0">
+      <div
+          style={footerContainer}
+          className="d-flex align-items-center fixed-bottom"
+      >
+        <Col className="text-center" onClick={() => setTab("DASHBOARD")}>
+          <img
+              src={tab === "DASHBOARD" ? Dashboard_Blue : Dashboard_Gray}
+              alt="Dashboard"
+          />
+          <p style={tab === "DASHBOARD" ? smallBlue : smallGray} className="mb-0">
+            Dashboard
+          </p>
+        </Col>
+        <Col className="text-center" onClick={() => navigate("/tenantAvailableProperties")}>
+          <img
+              //TODO: Need a grey version for this image
+              src={tab === "SEARCH" ? SearchPM : SearchPM}
+              alt="Profile"
+              height = "33px"
+          />
+          <p style={tab === "SEARCH" ? smallBlue : smallGray} className="mb-0">
 
-          Search
-        </p>
-      </Col>
-      <Col className="text-center" onClick={() => navigate(`/${profile.property_uid}/repairStatus`)}>
-        <img
-            // TODO: Need a grey version for this image
-            src={tab === "REPAIRS" ? RepairRequest : RepairRequest}
-            alt="Profile"
-            height = "33px"
-        />
-        <p style={tab === "REPAIRS" ? smallBlue : smallGray} className="mb-0">
+            Search
+          </p>
+        </Col>
+        <Col className="text-center" onClick={() => navigate(`/${profile.property_uid}/repairStatus`)}>
+          <img
+              // TODO: Need a grey version for this image
+              src={tab === "REPAIRS" ? RepairRequest : RepairRequest}
+              alt="Profile"
+              height = "33px"
+          />
+          <p style={tab === "REPAIRS" ? smallBlue : smallGray} className="mb-0">
 
-          Repairs
-        </p>
-      </Col>
-      <Col className="text-center" onClick={() => setTab("ROLES")}>
-        <img src={tab === "ROLES" ? Roles_Blue : Roles_Gray} alt="Roles" />
-        <p style={tab === "ROLES" ? smallBlue : smallGray} className="mb-0">
-          Roles
-        </p>
-      </Col>
-      <Col className="text-center" onClick={() => setTab("PROFILE")}>
-        <img
-            src={tab === "PROFILE" ? Profile_Blue : Profile_Gray}
-            alt="Profile"
-        />
-        <p style={tab === "PROFILE" ? smallBlue : smallGray} className="mb-0">
+            Repairs
+          </p>
+        </Col>
+        <Col className="text-center" onClick={() => setTab("ROLES")}>
+          <img src={tab === "ROLES" ? Roles_Blue : Roles_Gray} alt="Roles" />
+          <p style={tab === "ROLES" ? smallBlue : smallGray} className="mb-0">
+            Roles
+          </p>
+        </Col>
+        <Col className="text-center" onClick={() => setTab("PROFILE")}>
+          <img
+              src={tab === "PROFILE" ? Profile_Blue : Profile_Gray}
+              alt="Profile"
+          />
+          <p style={tab === "PROFILE" ? smallBlue : smallGray} className="mb-0">
 
-          Profile
-        </p>
-      </Col>
-    </div>
+            Profile
+          </p>
+        </Col>
+      </div>
   );
 }
 

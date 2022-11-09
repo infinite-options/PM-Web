@@ -222,7 +222,7 @@ function PaymentPage(props) {
                 ambassadorCode={this.state.ambassadorCode_applied}
               />
           */}
-          <div className="mt-5" hidden={stripePayment}>
+          <div style={{"margin": "0px 0px 100px 0px"}} className="mt-5" hidden={stripePayment}>
             {/*<Form.Group>*/}
             {/*  <Form.Label>Amount</Form.Label>*/}
             {/*  {purchaseUIDs.length === 1 ? (*/}
@@ -272,13 +272,16 @@ function PaymentPage(props) {
                 >
                   Pay with Stripe
                 </Button>
-
                 <PayPal pay_purchase_id={purchase_uid}
                         amount={totalSum}
                         payment_notes={message}
                         payment_type={"PAYPAL"}
                 />
-
+                <ApplePay pay_purchase_id={purchase_uid}
+                          amount={totalSum}
+                          payment_notes={message}
+                          payment_type={"APPLEPAY"}
+                />
               </Col>
             </Row>
           </div>
