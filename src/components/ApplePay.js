@@ -55,11 +55,10 @@ export default function ApplePay(props){
                     "merchantIdentifier": "merchant.com.infiniteoptions",
                     "displayName": "Manifest",
                     "initiative": "web",
-                    "initiativeContext": devDomain
+                    "initiativeContext": productionDomain
                 }
-                //Send post request to backend to receive a valid merchant session object
-                const merchantSession = await axios.post("/applepay", payload)
-                    .then(response => response.data)
+                //Send post request to backend so it can send post request to Apple Pay Gateway API endpoint
+                const merchantSession = await post("/applepay", payload)
                 //Confirm if merchant session object is valid to allow transaction
                 if(merchantSession && merchantSession.merchantSessionIdentifier)
                     session.completeMerchantValidation(merchantSession)
