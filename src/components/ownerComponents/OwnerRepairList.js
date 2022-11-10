@@ -294,6 +294,23 @@ function OwnerRepairList(props) {
       numeric: false,
       label: "Quote Status",
     },
+
+    {
+      id: "assigned_business",
+      numeric: false,
+      label: "Assigned",
+    },
+
+    {
+      id: "scheduled_date",
+      numeric: true,
+      label: "Closed Date",
+    },
+    {
+      id: "total_estimate",
+      numeric: true,
+      label: "Cost",
+    },
   ];
   function EnhancedTableHead(props) {
     const { order, orderBy, onRequestSort } = props;
@@ -460,6 +477,18 @@ function OwnerRepairList(props) {
                               ? `${repair.quotes_to_review} new quote(s) to review`
                               : "No new quotes"}
                           </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.assigned_business != null
+                              ? repair.assigned_business
+                              : "None"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.scheduled_date != null
+                              ? repair.scheduled_date
+                              : "Not Scheduled"}
+                          </TableCell>
+
+                          <TableCell>${repair.total_estimate}</TableCell>
                         </TableRow>
                       ));
                     })}
