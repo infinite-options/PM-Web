@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button } from "react-bootstrap";
 import { squareForm, pillButton, small, hidden, red } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
-import { post } from "../utils/api";
+import { post, put } from "../utils/api";
 
 function CreateExpense(props) {
   const { property, reload } = props;
@@ -11,42 +11,103 @@ function CreateExpense(props) {
   const [description, setDescription] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [frequency, setFrequency] = React.useState("Monthly");
-  const [frequencyOfPayment, setFrequencyOfPayment] = React.useState("");
+  const [frequencyOfPayment, setFrequencyOfPayment] =
+    React.useState("Once a month");
   const [date, setDate] = React.useState("");
-  // React.useEffect(() => {
-  //   if (frequency === "Monthly") {
-  //     const newFrequencyOfPayment = frequencyOfPayment.replace("year", "month");
-  //     setFrequencyOfPayment(newFrequencyOfPayment);
-  //   } else if (frequency === "Annually") {
-  //     const newFrequencyOfPayment = frequencyOfPayment.replace("month", "year");
-  //     setFrequencyOfPayment(newFrequencyOfPayment);
-  //   } else {
-  //     const newFrequencyOfPayment = "One-time";
-  //     setFrequencyOfPayment(newFrequencyOfPayment);
-  //   }
-  // }, [frequency]);
+
   const submitForm = async () => {
     if (amount === "") {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    const newExpense = {
-      pur_property_id: property.property_uid,
-      payer: property.owner_id,
-      receiver: property.property_uid,
-      purchase_type: category,
-      // title: title,
-      description: description,
-      amount_due: amount,
-      purchase_frequency: frequency,
-      payment_frequency: frequencyOfPayment,
-      next_payment: date,
-    };
+    if (category === "Mortgage") {
+      let mortgage = [];
+      const files = property.images;
+      const newMortgage = {
+        category: category,
+        title: title,
+        description: description,
+        amount: amount,
+        frequency: frequency,
+        frequency_of_payment: frequencyOfPayment,
+        next_date: date,
+      };
+      mortgage.push(newMortgage);
+      console.log(newMortgage);
+      // let formData = new FormData();
+      const updateMortgage = {
+        property_uid: property.property_uid,
+        mortgages: JSON.stringify(newMortgage),
+      };
 
-    console.log(newExpense);
-    const response = await post("/createExpenses", newExpense);
-    reload();
-    props.back();
+      const response = await put("/properties", updateMortgage, null, files);
+      reload();
+      props.back();
+    } else if (category === "Insurance") {
+      let insurance =
+        property.insurance == null ? [] : JSON.parse(property.insurance);
+      // console.log(insurance);
+      const files = property.images;
+      const newInsurance = {
+        category: category,
+        title: title,
+        description: description,
+        amount: amount,
+        frequency: frequency,
+        frequency_of_payment: frequencyOfPayment,
+        next_date: date,
+      };
+      insurance.push(newInsurance);
+      // console.log(insurance);
+      const updateInsurance = {
+        property_uid: property.property_uid,
+        insurance: JSON.stringify(insurance),
+      };
+
+      const response = await put("/properties", updateInsurance, null, files);
+      reload();
+      props.back();
+    } else if (category === "Tax") {
+      let taxes = property.taxes == null ? [] : JSON.parse(property.taxes);
+      // console.log(taxes);
+      const files = property.images;
+      const newTax = {
+        category: category,
+        title: title,
+        description: description,
+        amount: amount,
+        frequency: frequency,
+        frequency_of_payment: frequencyOfPayment,
+        next_date: date,
+      };
+      taxes.push(newTax);
+      // console.log(taxes);
+      const updateTaxes = {
+        property_uid: property.property_uid,
+        taxes: JSON.stringify(taxes),
+      };
+      const response = await put("/properties", updateTaxes, null, files);
+      reload();
+      props.back();
+    } else {
+      const newExpense = {
+        pur_property_id: property.property_uid,
+        payer: property.owner_id,
+        receiver: property.property_uid,
+        purchase_type: category,
+        // title: title,
+        description: description,
+        amount_due: amount,
+        purchase_frequency: frequency,
+        payment_frequency: frequencyOfPayment,
+        next_payment: date,
+      };
+
+      console.log(newExpense);
+      const response = await post("/createExpenses", newExpense);
+      reload();
+      props.back();
+    }
   };
   const [errorMessage, setErrorMessage] = React.useState("");
   const required =
@@ -72,26 +133,35 @@ function CreateExpense(props) {
           <option>Management</option>
           <option>Maintenance</option>
           <option>Repairs</option>
+          <option>Insurance</option>
+          <option>Mortgage</option>
+          <option>Tax</option>
         </Form.Select>
       </Form.Group>
-      {/* <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Title {title === "" ? required : ""}
-        </Form.Label>
-        <Form.Control
-          style={squareForm}
-          placeholder="Painting"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </Form.Group> */}
+      {category === "Insurance" ||
+      category === "Mortgage" ||
+      category === "Tax" ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Title {title === "" ? required : ""}
+          </Form.Label>
+          <Form.Control
+            style={squareForm}
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </Form.Group>
+      ) : (
+        ""
+      )}
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Description
         </Form.Label>
         <Form.Control
           style={squareForm}
-          placeholder="Apartment Maintenance"
+          placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -107,7 +177,7 @@ function CreateExpense(props) {
           onChange={(e) => setAmount(e.target.value)}
         />
       </Form.Group>
-      <Form.Group className="mx-2 my-3">
+      {/* <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Frequency
         </Form.Label>
@@ -120,13 +190,104 @@ function CreateExpense(props) {
           <option>Annually</option>
           <option>One-time</option>
         </Form.Select>
-      </Form.Group>
+      </Form.Group> */}
+      {category === "Insurance" ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency
+          </Form.Label>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <option>Monthly</option>
+            <option>Annually</option>
+          </Form.Select>
+        </Form.Group>
+      ) : category === "Mortgage" ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency
+          </Form.Label>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <option>Weekly</option>
+            <option>Monthly</option>
+          </Form.Select>
+        </Form.Group>
+      ) : category === "Tax" ? (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency
+          </Form.Label>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <option>Monthly</option>
+            <option>Annually</option>
+          </Form.Select>
+        </Form.Group>
+      ) : (
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency
+          </Form.Label>
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <option>Monthly</option>
+            <option>Annually</option>
+            <option>One-time</option>
+          </Form.Select>
+        </Form.Group>
+      )}
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Frequency of payment
         </Form.Label>
 
-        {frequency === "One-time" ? (
+        {frequency === "Monthly" &&
+        (category === "Insurance" ||
+          category === "Mortgage" ||
+          category === "Tax") ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a month</option>
+            <option>Twice a month</option>
+          </Form.Select>
+        ) : frequency === "Annually" &&
+          (category === "Insurance" ||
+            category === "Mortgage" ||
+            category === "Tax") ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a year</option>
+            <option>Twice a year</option>
+          </Form.Select>
+        ) : frequency === "Weekly" && category === "Mortgage" ? (
+          <Form.Select
+            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+            value={frequencyOfPayment}
+            onChange={(e) => setFrequencyOfPayment(e.target.value)}
+          >
+            <option>Once a week</option>
+            <option>Every other week</option>
+          </Form.Select>
+        ) : frequency === "One-time" ? (
           <Form.Select
             style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
             value={frequencyOfPayment}

@@ -18,7 +18,7 @@ function OwnerCreateExpense(props) {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [frequency, setFrequency] = useState("Monthly");
-  const [frequencyOfPayment, setFrequencyOfPayment] = useState("");
+  const [frequencyOfPayment, setFrequencyOfPayment] = useState("Once a month");
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [date, setDate] = useState("");
   const reload = () => {

@@ -1,5 +1,13 @@
 import React from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Table,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
@@ -7,15 +15,22 @@ import {
   pillButton,
   smallPillButton,
   squareForm,
-  gray,
   red,
   hidden,
   small,
-  mediumBold,
 } from "../utils/styles";
 
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
+
 function ManagerFees(props) {
-  // const [feeState, setFeeState] = props.state;
+  const classes = useStyles();
   const { feeState, setFeeState } = props;
   const [newFee, setNewFee] = React.useState(null);
   const [editingFee, setEditingFee] = React.useState(null);
@@ -76,19 +91,32 @@ function ManagerFees(props) {
     );
   return (
     <div>
-      {feeState.map((fee, i) => (
-        <Row key={i}>
-          <div
-            key={i}
-            className="p-1 mb-2"
-            style={{ boxShadow: " 0px 1px 6px #00000029", borderRadius: "5px" }}
-          >
-            <div className="d-flex">
-              <div className="flex-grow-1">
-                <h6 className="mb-1">{fee.fee_name}</h6>
-              </div>
-              {pageURL[3] !== "owner" ? (
-                <div>
+      <Table classes={{ root: classes.customTable }} size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Fee Name</TableCell>
+            <TableCell>Amount</TableCell>
+            <TableCell>Of</TableCell>
+            <TableCell>Frequency</TableCell>
+            {pageURL[3] !== "propertyDetails" ? (
+              <TableCell>Actions</TableCell>
+            ) : (
+              ""
+            )}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {feeState.map((fee, i) => (
+            <TableRow key={i}>
+              <TableCell>{fee.fee_name}</TableCell>
+              <TableCell>
+                {fee.fee_type === "%" ? `${fee.charge}%` : `$${fee.charge}`}
+              </TableCell>
+              <TableCell>{fee.fee_type === "%" ? `${fee.of}` : ""}</TableCell>
+              <TableCell>{fee.frequency}</TableCell>
+
+              {pageURL[3] !== "propertyDetails" ? (
+                <TableCell>
                   <img
                     src={EditIcon}
                     alt="Edit"
@@ -101,20 +129,15 @@ function ManagerFees(props) {
                     className="px-1 mx-2"
                     onClick={() => deleteFee(i)}
                   />
-                </div>
+                </TableCell>
               ) : (
                 ""
               )}
-            </div>
-            <p style={gray} className="mb-1">
-              {fee.fee_type === "%"
-                ? `${fee.charge}% of ${fee.of}`
-                : `$${fee.charge}`}{" "}
-              {fee.frequency}
-            </p>
-          </div>
-        </Row>
-      ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
       {newFee !== null ? (
         <Container>
           <Row className="my-3">
@@ -219,15 +242,16 @@ function ManagerFees(props) {
         ""
       )}
 
-      {(newFee === null) & (pageURL[3] !== "owner") ? (
+      {(newFee === null) & (pageURL[3] !== "propertyDetails") ? (
         <Button
           variant="outline-primary"
           style={smallPillButton}
           onClick={() => setNewFee({ ...emptyFee })}
         >
+          {console.log(pageURL)}
           Add Fee
         </Button>
-      ) : (newFee === null) & (pageURL[3] === "owner") ? (
+      ) : (newFee === null) & (pageURL[3] === "propertyDetails") ? (
         ""
       ) : (
         <div className="d-flex justify-content-center my-4">

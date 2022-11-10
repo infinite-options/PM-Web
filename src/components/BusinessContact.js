@@ -1,5 +1,13 @@
 import React from "react";
-import { Form, Container, Button } from "react-bootstrap";
+import { Form, Container, Button, Tab } from "react-bootstrap";
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Table,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from "../icons/EditIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import Phone from "../icons/Phone.svg";
@@ -12,11 +20,20 @@ import {
   red,
   small,
   hidden,
-  mediumImg,
   smallImg,
 } from "../utils/styles";
 
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
+
 function BusinessContact(props) {
+  const classes = useStyles();
   const [contactState, setContactState] = props.state;
   let pageURL = window.location.href.split("/");
   const [newContact, setNewContact] = React.useState(null);
@@ -83,60 +100,57 @@ function BusinessContact(props) {
     );
   return (
     <div>
-      {contactState.map((contact, i) => (
-        <div
-          className="p-1 mb-2"
-          style={{ boxShadow: " 0px 1px 6px #00000029", borderRadius: "5px" }}
-          key={i}
-        >
-          {console.log("businesscontact", contactState)}
-          <div className="d-flex">
-            <div className="flex-grow-1">
-              <h6 className="mb-1">
-                {contact.first_name} {contact.last_name} ({contact.company_role}
-                )
-              </h6>
-            </div>
-            {pageURL[3] !== "owner" ? (
-              <div>
-                <img
-                  src={EditIcon}
-                  alt="Edit"
-                  className="px-1 mx-2"
-                  onClick={() => editContact(i)}
-                />
-                <img
-                  src={DeleteIcon}
-                  alt="Delete"
-                  className="px-1 mx-2"
-                  onClick={() => deleteContact(i)}
-                />
-              </div>
-            ) : (
-              <div>
-                <a href={`tel:${contact.phone_number}`}>
-                  <img src={Phone} alt="Phone" style={smallImg} />
-                </a>
-                <a href={`mailto:${contact.email}`}>
-                  <img src={Message} alt="Message" style={smallImg} />
-                </a>
-              </div>
-            )}
-          </div>
-          <div className="d-flex">
-            <div className="me-4">
-              <p style={gray} className="mb-1">
-                {contact.phone_number}
-              </p>
-            </div>
-            <div>
-              <p style={gray} className="mb-1">
-                {contact.email}
-              </p>
-            </div>
-          </div>
-        </div>
-      ))}
+      <Table classes={{ root: classes.customTable }} size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Contact Name</TableCell>
+            <TableCell>Role</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Phone Number</TableCell>
+
+            <TableCell>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {contactState.map((contact, i) => (
+            <TableRow key={i}>
+              <TableCell>
+                {contact.first_name} {contact.last_name}
+              </TableCell>
+              <TableCell>{contact.company_role}</TableCell>
+              <TableCell>{contact.email}</TableCell>
+              <TableCell>{contact.phone_number}</TableCell>
+
+              {pageURL[3] !== "propertyDetails" ? (
+                <TableCell>
+                  <img
+                    src={EditIcon}
+                    alt="Edit"
+                    className="px-1 mx-2"
+                    onClick={() => editContact(i)}
+                  />
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete"
+                    className="px-1 mx-2"
+                    onClick={() => deleteContact(i)}
+                  />
+                </TableCell>
+              ) : (
+                <TableCell>
+                  <a href={`tel:${contact.phone_number}`}>
+                    <img src={Phone} alt="Phone" style={smallImg} />
+                  </a>
+                  <a href={`mailto:${contact.email}`}>
+                    <img src={Message} alt="Message" style={smallImg} />
+                  </a>
+                </TableCell>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
       {newContact !== null ? (
         <div>
           <Form.Group className="mx-2 my-3">
@@ -205,7 +219,7 @@ function BusinessContact(props) {
       ) : (
         ""
       )}
-      {pageURL[3] !== "owner" ? (
+      {pageURL[3] !== "propertyDetails" ? (
         newContact === null ? (
           <Button
             variant="outline-primary"
