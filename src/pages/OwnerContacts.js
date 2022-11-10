@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import {
   Table,
   TableRow,
@@ -16,12 +16,22 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../components/Header";
 import SideBar from "../components/ownerComponents/SideBar";
+import AppContext from "../AppContext";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import Mail from "../icons/Mail.svg";
-import AppContext from "../AppContext";
-import { get } from "../utils/api";
-import { smallImg, hidden, gray } from "../utils/styles";
+import AddIcon from "../icons/AddIcon.svg";
+import ArrowDown from "../icons/ArrowDown.svg";
+import { get, post } from "../utils/api";
+import {
+  smallImg,
+  hidden,
+  squareForm,
+  pillButton,
+  small,
+  red,
+  formLabel,
+} from "../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -37,6 +47,12 @@ function OwnerContacts() {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [propertyManagers, setPropertyManagers] = useState([]);
+  const [addContacts, setAddContacts] = useState(false);
+
+  const [contactName, setContactName] = useState("");
+  const [contactType, setContactType] = useState("MANAGEMENT");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactPhoneNumber, setContactPhoneNumber] = useState("");
 
   // search variables
   const [search, setSearch] = useState("");
@@ -50,7 +66,7 @@ function OwnerContacts() {
       return;
     }
 
-    const response = await get(`/businesses`);
+    const response = await get(`/contact?contact_created_by=${user.user_uid}`);
 
     if (response.msg === "Token has expired") {
       refresh();
@@ -59,11 +75,14 @@ function OwnerContacts() {
 
     console.log(response.result);
     setPropertyManagers(response.result);
-    console.log(JSON.parse(response.result[0].business_locations).length);
+    console.log(JSON.parse(response.result[0].contact_locations).length);
     // await getAlerts(properties_unique)
   };
 
-  useEffect(fetchContacts, [access_token]);
+  useEffect(() => {
+    fetchContacts();
+  }, [access_token]);
+
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -104,22 +123,22 @@ function OwnerContacts() {
 
   const contactsHeadCell = [
     {
-      id: "business_name",
+      id: "contact_name",
       numeric: false,
       label: "Business Name",
     },
     {
-      id: "business_type",
+      id: "contact_type",
       numeric: false,
       label: "Business Type",
     },
     {
-      id: "business_email",
+      id: "contact_email",
       numeric: false,
       label: "Email",
     },
     {
-      id: "business_phone_number",
+      id: "contact_phone_number",
       numeric: true,
       label: "Phone Number",
     },
@@ -175,6 +194,43 @@ function OwnerContacts() {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
+  const submitForm = async () => {
+    if (
+      contactType === "" ||
+      contactName === "" ||
+      contactEmail === "" ||
+      contactPhoneNumber === ""
+    ) {
+      setErrorMessage("Please fill out all fields");
+      return;
+    }
+
+    const newContact = {
+      type: contactType,
+      name: contactName,
+      email: contactEmail,
+      phone_number: contactPhoneNumber,
+      created_by: user.user_uid,
+    };
+
+    console.log(newContact);
+    const response = await post("/contact", newContact);
+    setContactName("");
+    setContactEmail("");
+    setContactPhoneNumber("");
+    setContactType("MANAGEMENT");
+    setAddContacts(false);
+    fetchContacts();
+  };
+  const [errorMessage, setErrorMessage] = useState("");
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
 
   return (
     <div>
@@ -184,130 +240,215 @@ function OwnerContacts() {
           <SideBar />
         </div>
         <div className="w-100">
-          <Row className="w-100 m-3">
-            <Col> Search by</Col>
+          {addContacts ? (
+            <Row>
+              <Col>
+                <h3>Create New Contact </h3>
+              </Col>
+              <Col></Col>
+            </Row>
+          ) : (
+            <Row>
+              <Col>
+                <h3>Contacts </h3>
+              </Col>
+              <Col>
+                <img
+                  src={AddIcon}
+                  onClick={() => setAddContacts(true)}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "5rem",
+                  }}
+                />
+              </Col>
+            </Row>
+          )}
 
-            <Col>
-              <input
-                type="text"
-                placeholder="Search"
-                onChange={(event) => {
-                  setSearch(event.target.value);
-                }}
-              />
-            </Col>
-          </Row>
-          <Row className="m-3">
-            <Table classes={{ root: classes.customTable }} size="small">
-              <EnhancedTableHeadContacts
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                rowCount={propertyManagers.length}
-              />{" "}
-              <TableBody>
-                {stableSort(propertyManagers, getComparator(order, orderBy))
-                  // for filtering
-                  .filter((val) => {
-                    const query = search.toLowerCase();
+          {addContacts ? (
+            <Row>
+              <Form.Group className="mx-2 mb-3">
+                <Form.Label as="h6">
+                  Contact Name
+                  {contactName === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mx-2 mb-3">
+                <Form.Label as="h6">
+                  Contact Type
+                  {contactType === "" ? required : ""}
+                </Form.Label>
+                <Form.Select
+                  style={{
+                    ...squareForm,
+                    backgroundImage: `url(${ArrowDown})`,
+                  }}
+                  value={contactType}
+                  onChange={(e) => setContactType(e.target.value)}
+                >
+                  <option>MANAGEMENT</option>
+                  <option>MAINTENANCE</option>
+                  <option>OTHER</option>
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mx-2 mb-3">
+                <Form.Label as="h6">
+                  Contact Email
+                  {contactEmail === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mx-2 mb-3">
+                <Form.Label as="h6">
+                  Contact Phone Number{" "}
+                  {contactPhoneNumber === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  value={contactPhoneNumber}
+                  onChange={(e) => setContactPhoneNumber(e.target.value)}
+                />
+              </Form.Group>
+              <div
+                className="text-center"
+                style={errorMessage === "" ? hidden : {}}
+              >
+                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+              </div>
+              <div className="d-flex justify-content-center my-4">
+                <Button
+                  variant="outline-primary"
+                  style={pillButton}
+                  onClick={() => setAddContacts(false)}
+                  className="mx-2"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  style={pillButton}
+                  onClick={() => submitForm()}
+                  className="mx-2"
+                >
+                  Save Expense
+                </Button>
+              </div>
+            </Row>
+          ) : (
+            <Row>
+              <Row className="w-100 m-3">
+                <Col> Search by</Col>
 
-                    return (
-                      val.business_name.toLowerCase().indexOf(query) >= 0 ||
-                      val.business_type.toLowerCase().indexOf(query) >= 0
-                    );
-                  })
-                  .map((property, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={property.business_name}
-                      >
-                        <TableCell padding="none" size="small" align="left">
-                          {property.business_name}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.business_type}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.business_email}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.business_phone_number}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          <div
-                            style={property.business_uid ? {} : hidden}
-                            onClick={stopPropagation}
+                <Col>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    onChange={(event) => {
+                      setSearch(event.target.value);
+                    }}
+                  />
+                </Col>
+              </Row>
+              <Row className="m-3">
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <EnhancedTableHeadContacts
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    rowCount={propertyManagers.length}
+                  />{" "}
+                  <TableBody>
+                    {stableSort(propertyManagers, getComparator(order, orderBy))
+                      // for filtering
+                      .filter((val) => {
+                        const query = search.toLowerCase();
+
+                        return (
+                          val.contact_name.toLowerCase().indexOf(query) >= 0 ||
+                          val.contact_type.toLowerCase().indexOf(query) >= 0
+                        );
+                      })
+                      .map((property, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={property.contact_name}
                           >
-                            <a href={`tel:${property.business_phone_number}`}>
-                              <img src={Phone} alt="Phone" style={smallImg} />
-                            </a>
-                            <a href={`mailto:${property.business_email}`}>
-                              <img
-                                src={Message}
-                                alt="Message"
-                                style={smallImg}
-                              />
-                            </a>
-                            <a href={`mailto:${property.business_email}`}>
-                              <img src={Mail} alt="Mail" style={smallImg} />
-                            </a>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </Row>
-          {/* <div
-            className="mx-2 my-2 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-          >
-            {propertyManagers.map((property, i) => (
-              <Container key={i} className="pt-1" style={{ height: "100px" }}>
-                <Row className="h-100">
-                  <Col className="ps-0">
-                    <div className="d-flex justify-content-between align-items-center">
-                      <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                        {property.business_name}
-                      </h5>
-                    </div>
-                    <div>
-                      <p style={gray} className="mt-1 mb-0">
-                        {property.business_type}
-                      </p>
-                    </div>
-                  </Col>
-                  <Col>
-                    <div className="d-flex  justify-content-end ">
-                      <div
-                        style={property.business_uid ? {} : hidden}
-                        onClick={stopPropagation}
-                      >
-                        <a href={`tel:${property.business_phone_number}`}>
-                          <img src={Phone} alt="Phone" style={smallImg} />
-                        </a>
-                        <a href={`mailto:${property.business_email}`}>
-                          <img src={Message} alt="Message" style={smallImg} />
-                        </a>
-                        <a href={`mailto:${property.business_email}`}>
-                          <img src={Mail} alt="Mail" style={smallImg} />
-                        </a>
-                      </div>
-                    </div>
-                  </Col>
-                  <hr />
-                </Row>
-              </Container>
-            ))}
-          </div> */}
+                            <TableCell padding="none" size="small" align="left">
+                              {property.contact_name}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {property.contact_type}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {property.contact_email}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {property.contact_phone_number}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              <div
+                                style={property.contact_uid ? {} : hidden}
+                                onClick={stopPropagation}
+                              >
+                                <a
+                                  href={`tel:${property.contact_phone_number}`}
+                                >
+                                  <img
+                                    src={Phone}
+                                    alt="Phone"
+                                    style={smallImg}
+                                  />
+                                </a>
+                                <a href={`mailto:${property.contact_email}`}>
+                                  <img
+                                    src={Message}
+                                    alt="Message"
+                                    style={smallImg}
+                                  />
+                                </a>
+                                <a href={`mailto:${property.contact_email}`}>
+                                  <img src={Mail} alt="Mail" style={smallImg} />
+                                </a>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </Row>
+            </Row>
+          )}
         </div>
       </div>
     </div>
