@@ -14,15 +14,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import Header from "../components/Header";
-import SideBar from "../components/ownerComponents/SideBar";
-import AppContext from "../AppContext";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import Mail from "../icons/Mail.svg";
-import AddIcon from "../icons/AddIcon.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
-import { get, post } from "../utils/api";
+import Header from "../Header";
+import SideBar from "./SideBar";
+import AppContext from "../../AppContext";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import Mail from "../../icons/Mail.svg";
+import AddIcon from "../../icons/AddIcon.svg";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import { get, post } from "../../utils/api";
 import {
   smallImg,
   hidden,
@@ -31,7 +31,7 @@ import {
   small,
   red,
   formLabel,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -238,7 +238,13 @@ function OwnerContacts() {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Header title="Contacts" />
           {addContacts ? (
             <Row>

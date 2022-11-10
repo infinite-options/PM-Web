@@ -91,7 +91,13 @@ function RepairRequest(props) {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Container className="pt-1 mb-4">
             <Row style={headings}>
               <div>New Repair Request</div>

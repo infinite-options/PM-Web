@@ -14,15 +14,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import SideBar from "../components/ownerComponents/SideBar";
-import GreyArrowRight from "../icons/GreyArrowRight.svg";
-import SortDown from "../icons/Sort-down.svg";
-import SortLeft from "../icons/Sort-left.svg";
-import OpenDoc from "../icons/OpenDocBlack.svg";
-import { mediumBold } from "../utils/styles";
-import { get } from "../utils/api";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import SideBar from "./SideBar";
+import GreyArrowRight from "../../icons/GreyArrowRight.svg";
+import SortDown from "../../icons/Sort-down.svg";
+import SortLeft from "../../icons/Sort-left.svg";
+import OpenDoc from "../../icons/OpenDocBlack.svg";
+import { mediumBold } from "../../utils/styles";
+import { get } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -106,7 +106,13 @@ function OwnerDocuments(props) {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Header title="Documents" />
           <Row className="m-3">
             {!isLoading ? (

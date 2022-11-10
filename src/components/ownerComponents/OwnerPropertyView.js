@@ -867,7 +867,13 @@ function OwnerPropertyView(props) {
           <div>
             <SideBar />
           </div>
-          <div className="w-100">
+          <div
+            className="w-100"
+            style={{
+              width: "calc(100vw - 13rem)",
+              position: "relative",
+            }}
+          >
             <Header
               title="Property Details"
               // leftText="< Back"
@@ -4426,25 +4432,35 @@ function OwnerPropertyView(props) {
                             <TableCell>
                               {applianceState[0][appliance]["warranty_info"]}
                             </TableCell>
-                            <TableCell>
-                              <div
-                                style={{
-                                  height: "50px",
-                                  position: "relative",
-                                }}
-                              >
-                                {applianceState[0][appliance]["images"] !==
-                                  undefined &&
-                                applianceState[0][appliance]["images"].length >
-                                  0 ? (
-                                  <div>
+
+                            {applianceState[0][appliance]["images"] !==
+                              undefined &&
+                            applianceState[0][appliance]["images"].length >
+                              0 ? (
+                              <TableCell>
+                                <Row className="d-flex justify-content-center align-items-center p-1">
+                                  <Col xs={2} className="p-0 m-0">
+                                    <img
+                                      style={{
+                                        width: "20px",
+                                        height: "20px",
+                                        float: "right",
+                                      }}
+                                      src={ArrowLeft}
+                                      onClick={() =>
+                                        previousImg(
+                                          applianceState[0][appliance]["images"]
+                                        )
+                                      }
+                                    />
+                                  </Col>
+                                  <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                     <img
                                       src={
                                         applianceState[0][appliance]["images"][
                                           currentImg
                                         ]
                                       }
-                                      // className="w-50 h-50"
                                       style={{
                                         borderRadius: "4px",
                                         objectFit: "contain",
@@ -4453,42 +4469,28 @@ function OwnerPropertyView(props) {
                                       }}
                                       alt="Property"
                                     />
-                                    <div
+                                  </Col>
+
+                                  <Col xs={2} className="p-0 m-0">
+                                    <img
                                       style={{
-                                        position: "absolute",
-                                        left: "-7px",
-                                        top: "10px",
-                                        cursor: "pointer",
+                                        width: "20px",
+                                        height: "20px",
+                                        float: "left",
                                       }}
-                                      onClick={() =>
-                                        previousImg(
-                                          applianceState[0][appliance]["images"]
-                                        )
-                                      }
-                                    >
-                                      {"<"}
-                                    </div>
-                                    <div
-                                      style={{
-                                        position: "absolute",
-                                        right: "-2px",
-                                        top: "10px",
-                                        cursor: "pointer",
-                                      }}
+                                      src={ArrowRight}
                                       onClick={() =>
                                         nextImg(
                                           applianceState[0][appliance]["images"]
                                         )
                                       }
-                                    >
-                                      {">"}
-                                    </div>
-                                  </div>
-                                ) : (
-                                  "None"
-                                )}
-                              </div>
-                            </TableCell>
+                                    />
+                                  </Col>
+                                </Row>
+                              </TableCell>
+                            ) : (
+                              <TableCell>None</TableCell>
+                            )}
                           </TableRow>
                         ))}
                       </TableBody>
@@ -4500,18 +4502,7 @@ function OwnerPropertyView(props) {
                         <Col>
                           <h3>Property Management Agreement</h3>
                         </Col>
-                        <Col xs={2}>
-                          <img
-                            src={AddIcon}
-                            onClick={() => setShowCreateExpense(true)}
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                              float: "right",
-                              marginRight: "5rem",
-                            }}
-                          />
-                        </Col>
+                        <Col xs={2}></Col>
                       </Row>{" "}
                       <Row className="m-3">
                         {property.management_status === "ACCEPTED" ||
@@ -4527,10 +4518,9 @@ function OwnerPropertyView(props) {
                                   <TableCell align="center">
                                     Business Name
                                   </TableCell>
-                                  <TableCell align="center">
-                                    Contract Details
-                                  </TableCell>
-
+                                  <TableCell>Contract Name</TableCell>
+                                  <TableCell>Start Date</TableCell>
+                                  <TableCell>End Date</TableCell>
                                   <TableCell align="center">Actions</TableCell>
                                 </TableRow>
                               </TableHead>
@@ -4539,73 +4529,40 @@ function OwnerPropertyView(props) {
                                   <TableCell>
                                     {property.managerInfo.manager_business_name}
                                   </TableCell>
-                                  <TableCell>
-                                    <Table
-                                      classes={{ root: classes.customTable }}
-                                      size="small"
-                                    >
-                                      <TableHead>
-                                        <TableRow>
-                                          <TableCell>Contract Name</TableCell>
-                                          <TableCell>Start Date</TableCell>
-                                          <TableCell>End Date</TableCell>
-                                          <TableCell>Documents</TableCell>
-                                        </TableRow>
-                                      </TableHead>
-                                      <TableBody>
-                                        {contracts.map((contract, i) =>
-                                          contract.business_uid ===
-                                          property.managerInfo.manager_id ? (
-                                            <TableRow>
-                                              {contract.contract_name !=
-                                              null ? (
-                                                <TableCell>
-                                                  {contract.contract_name}{" "}
-                                                </TableCell>
-                                              ) : (
-                                                <TableCell>
-                                                  Contract {i + 1}{" "}
-                                                </TableCell>
-                                              )}
-                                              <TableCell>
-                                                {contract.start_date}
-                                              </TableCell>
-                                              <TableCell>
-                                                {contract.end_date}
-                                              </TableCell>
 
-                                              <TableCell>
-                                                {JSON.parse(contract.documents)
-                                                  .length === 0
-                                                  ? ""
-                                                  : JSON.parse(
-                                                      contract.documents
-                                                    ).map((file) => {
-                                                      return (
-                                                        <Row>
-                                                          <Col>
-                                                            {file.description}
-                                                          </Col>
-                                                          <Col>
-                                                            <a
-                                                              href={file.link}
-                                                              target="_blank"
-                                                            >
-                                                              <img src={File} />
-                                                            </a>
-                                                          </Col>
-                                                        </Row>
-                                                      );
-                                                    })}
-                                              </TableCell>
-                                            </TableRow>
-                                          ) : (
-                                            ""
-                                          )
-                                        )}
-                                      </TableBody>
-                                    </Table>
-                                  </TableCell>
+                                  {contracts.map((contract, i) =>
+                                    contract.business_uid ===
+                                    property.managerInfo.manager_id ? (
+                                      contract.contract_name != null ? (
+                                        <TableCell>
+                                          {contract.contract_name}{" "}
+                                        </TableCell>
+                                      ) : (
+                                        <TableCell>Contract {i + 1} </TableCell>
+                                      )
+                                    ) : (
+                                      ""
+                                    )
+                                  )}
+
+                                  {contracts.map((contract, i) =>
+                                    contract.business_uid ===
+                                    property.managerInfo.manager_id ? (
+                                      <TableCell>
+                                        {contract.start_date}
+                                      </TableCell>
+                                    ) : (
+                                      ""
+                                    )
+                                  )}
+                                  {contracts.map((contract, i) =>
+                                    contract.business_uid ===
+                                    property.managerInfo.manager_id ? (
+                                      <TableCell>{contract.end_date}</TableCell>
+                                    ) : (
+                                      ""
+                                    )
+                                  )}
 
                                   <TableCell>
                                     <a
@@ -4634,6 +4591,57 @@ function OwnerPropertyView(props) {
                         ) : (
                           ""
                         )}
+                        <Row className="mt-1">
+                          <h5>Property Manager Documents</h5>
+                        </Row>
+                        <div>
+                          <Table
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Document Name</TableCell>
+                                <TableCell></TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {contracts.map((contract, i) =>
+                                contract.business_uid ===
+                                property.managerInfo.manager_id
+                                  ? JSON.parse(contract.documents).length === 0
+                                    ? ""
+                                    : JSON.parse(contract.documents).map(
+                                        (file) => {
+                                          return (
+                                            <TableRow>
+                                              <TableCell>
+                                                {file.description}
+                                              </TableCell>
+                                              <TableCell>
+                                                <a
+                                                  href={file.link}
+                                                  target="_blank"
+                                                >
+                                                  <img
+                                                    src={File}
+                                                    style={{
+                                                      width: "15px",
+                                                      height: "15px",
+                                                    }}
+                                                  />
+                                                </a>
+                                              </TableCell>
+                                            </TableRow>
+                                          );
+                                        }
+                                      )
+                                  : ""
+                              )}
+                            </TableBody>
+                          </Table>
+                        </div>
+
                         <Row className="mt-1">
                           <h5>Property Manager Fee Details</h5>
                         </Row>
@@ -4922,7 +4930,7 @@ function OwnerPropertyView(props) {
                         p.management_status === "REJECTED" ? (
                           ""
                         ) : p.management_status === "SENT" ? (
-                          <Row className="p-0 m-0">
+                          <Row>
                             <Table
                               classes={{ root: classes.customTable }}
                               size="small"
@@ -4932,10 +4940,9 @@ function OwnerPropertyView(props) {
                                   <TableCell align="center">
                                     Business Name
                                   </TableCell>
-                                  <TableCell align="center">
-                                    Contract Details
-                                  </TableCell>
-
+                                  <TableCell>Contract Name</TableCell>
+                                  <TableCell>Start Date</TableCell>
+                                  <TableCell>End Date</TableCell>
                                   <TableCell align="center">Actions</TableCell>
                                 </TableRow>
                               </TableHead>
@@ -4952,73 +4959,36 @@ function OwnerPropertyView(props) {
                                       Contract in Review
                                     </p>
                                   </TableCell>
-                                  <TableCell>
-                                    <Table
-                                      classes={{ root: classes.customTable }}
-                                      size="small"
-                                    >
-                                      <TableHead>
-                                        <TableRow>
-                                          <TableCell>Contract Name</TableCell>
-                                          <TableCell>Start Date</TableCell>
-                                          <TableCell>End Date</TableCell>
-                                          <TableCell>Documents</TableCell>
-                                        </TableRow>
-                                      </TableHead>
-                                      <TableBody>
-                                        {contracts.map((contract, i) =>
-                                          contract.business_uid ===
-                                          p.manager_id ? (
-                                            <TableRow>
-                                              {contract.contract_name !=
-                                              null ? (
-                                                <TableCell>
-                                                  {contract.contract_name}{" "}
-                                                </TableCell>
-                                              ) : (
-                                                <TableCell>
-                                                  Contract {i + 1}{" "}
-                                                </TableCell>
-                                              )}
-                                              <TableCell>
-                                                {contract.start_date}
-                                              </TableCell>
-                                              <TableCell>
-                                                {contract.end_date}
-                                              </TableCell>
+                                  {contracts.map((contract, i) =>
+                                    contract.business_uid === p.manager_id ? (
+                                      contract.contract_name != null ? (
+                                        <TableCell>
+                                          {contract.contract_name}{" "}
+                                        </TableCell>
+                                      ) : (
+                                        <TableCell>Contract {i + 1} </TableCell>
+                                      )
+                                    ) : (
+                                      ""
+                                    )
+                                  )}
 
-                                              <TableCell>
-                                                {JSON.parse(contract.documents)
-                                                  .length === 0
-                                                  ? ""
-                                                  : JSON.parse(
-                                                      contract.documents
-                                                    ).map((file) => {
-                                                      return (
-                                                        <Row>
-                                                          <Col>
-                                                            {file.description}
-                                                          </Col>
-                                                          <Col>
-                                                            <a
-                                                              href={file.link}
-                                                              target="_blank"
-                                                            >
-                                                              <img src={File} />
-                                                            </a>
-                                                          </Col>
-                                                        </Row>
-                                                      );
-                                                    })}
-                                              </TableCell>
-                                            </TableRow>
-                                          ) : (
-                                            ""
-                                          )
-                                        )}
-                                      </TableBody>
-                                    </Table>
-                                  </TableCell>
+                                  {contracts.map((contract, i) =>
+                                    contract.business_uid === p.manager_id ? (
+                                      <TableCell>
+                                        {contract.start_date}
+                                      </TableCell>
+                                    ) : (
+                                      ""
+                                    )
+                                  )}
+                                  {contracts.map((contract, i) =>
+                                    contract.business_uid === p.manager_id ? (
+                                      <TableCell>{contract.end_date}</TableCell>
+                                    ) : (
+                                      ""
+                                    )
+                                  )}
 
                                   <TableCell>
                                     <a
@@ -5043,6 +5013,57 @@ function OwnerPropertyView(props) {
                                 </TableRow>
                               </TableBody>
                             </Table>
+                            <Row className="mt-1">
+                              <h5>Property Manager Documents</h5>
+                            </Row>
+                            <div>
+                              <Table
+                                classes={{ root: classes.customTable }}
+                                size="small"
+                              >
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Document Name</TableCell>
+                                    <TableCell></TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {contracts.map((contract, i) =>
+                                    contract.business_uid === p.manager_id
+                                      ? JSON.parse(contract.documents)
+                                          .length === 0
+                                        ? ""
+                                        : JSON.parse(contract.documents).map(
+                                            (file) => {
+                                              return (
+                                                <TableRow>
+                                                  <TableCell>
+                                                    {file.description}
+                                                  </TableCell>
+                                                  <TableCell>
+                                                    <a
+                                                      href={file.link}
+                                                      target="_blank"
+                                                    >
+                                                      <img
+                                                        src={File}
+                                                        style={{
+                                                          width: "15px",
+                                                          height: "15px",
+                                                        }}
+                                                      />
+                                                    </a>
+                                                  </TableCell>
+                                                </TableRow>
+                                              );
+                                            }
+                                          )
+                                      : ""
+                                  )}
+                                </TableBody>
+                              </Table>
+                            </div>
+
                             <Row className="mt-1">
                               <h5>Property Manager Fee Details</h5>
                             </Row>
@@ -5130,10 +5151,9 @@ function OwnerPropertyView(props) {
                               <TableCell align="center">
                                 Business Name
                               </TableCell>
-                              <TableCell align="center">
-                                Contract Details
-                              </TableCell>
-
+                              <TableCell>Contract Name</TableCell>
+                              <TableCell>Start Date</TableCell>
+                              <TableCell>End Date</TableCell>
                               <TableCell align="center">Actions</TableCell>
                             </TableRow>
                           </TableHead>
@@ -5153,73 +5173,37 @@ function OwnerPropertyView(props) {
                                   Contract in Review
                                 </p>
                               </TableCell>
-                              <TableCell>
-                                <Table
-                                  classes={{ root: classes.customTable }}
-                                  size="small"
-                                >
-                                  <TableHead>
-                                    <TableRow>
-                                      <TableCell>Contract Name</TableCell>
-                                      <TableCell>Start Date</TableCell>
-                                      <TableCell>End Date</TableCell>
-                                      <TableCell>Documents</TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {contracts.map((contract, i) =>
-                                      contract.business_uid ===
-                                      property.property_manager[0]
-                                        .manager_id ? (
-                                        <TableRow>
-                                          {contract.contract_name != null ? (
-                                            <TableCell>
-                                              {contract.contract_name}{" "}
-                                            </TableCell>
-                                          ) : (
-                                            <TableCell>
-                                              Contract {i + 1}{" "}
-                                            </TableCell>
-                                          )}
-                                          <TableCell>
-                                            {contract.start_date}
-                                          </TableCell>
-                                          <TableCell>
-                                            {contract.end_date}
-                                          </TableCell>
+                              {contracts.map((contract, i) =>
+                                contract.business_uid ===
+                                property.property_manager[0].manager_id ? (
+                                  contract.contract_name != null ? (
+                                    <TableCell>
+                                      {contract.contract_name}{" "}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell>Contract {i + 1} </TableCell>
+                                  )
+                                ) : (
+                                  ""
+                                )
+                              )}
 
-                                          <TableCell>
-                                            {JSON.parse(contract.documents)
-                                              .length === 0
-                                              ? ""
-                                              : JSON.parse(
-                                                  contract.documents
-                                                ).map((file) => {
-                                                  return (
-                                                    <Row>
-                                                      <Col>
-                                                        {file.description}
-                                                      </Col>
-                                                      <Col>
-                                                        <a
-                                                          href={file.link}
-                                                          target="_blank"
-                                                        >
-                                                          <img src={File} />
-                                                        </a>
-                                                      </Col>
-                                                    </Row>
-                                                  );
-                                                })}
-                                          </TableCell>
-                                        </TableRow>
-                                      ) : (
-                                        ""
-                                      )
-                                    )}
-                                  </TableBody>
-                                </Table>
-                              </TableCell>
+                              {contracts.map((contract, i) =>
+                                contract.business_uid ===
+                                property.property_manager[0].manager_id ? (
+                                  <TableCell>{contract.start_date}</TableCell>
+                                ) : (
+                                  ""
+                                )
+                              )}
+                              {contracts.map((contract, i) =>
+                                contract.business_uid ===
+                                property.property_manager[0].manager_id ? (
+                                  <TableCell>{contract.end_date}</TableCell>
+                                ) : (
+                                  ""
+                                )
+                              )}
 
                               <TableCell>
                                 <a
@@ -5244,6 +5228,57 @@ function OwnerPropertyView(props) {
                             </TableRow>
                           </TableBody>
                         </Table>
+                        <Row className="mt-1">
+                          <h5>Property Manager Documents</h5>
+                        </Row>
+                        <div>
+                          <Table
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Document Name</TableCell>
+                                <TableCell></TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {contracts.map((contract, i) =>
+                                contract.business_uid ===
+                                property.property_manager[0].manager_id
+                                  ? JSON.parse(contract.documents).length === 0
+                                    ? ""
+                                    : JSON.parse(contract.documents).map(
+                                        (file) => {
+                                          return (
+                                            <TableRow>
+                                              <TableCell>
+                                                {file.description}
+                                              </TableCell>
+                                              <TableCell>
+                                                <a
+                                                  href={file.link}
+                                                  target="_blank"
+                                                >
+                                                  <img
+                                                    src={File}
+                                                    style={{
+                                                      width: "15px",
+                                                      height: "15px",
+                                                    }}
+                                                  />
+                                                </a>
+                                              </TableCell>
+                                            </TableRow>
+                                          );
+                                        }
+                                      )
+                                  : ""
+                              )}
+                            </TableBody>
+                          </Table>
+                        </div>
+
                         <Row className="mt-1">
                           <h5>Property Manager Fee Details</h5>
                         </Row>
@@ -5347,11 +5382,11 @@ function OwnerPropertyView(props) {
                       >
                         <TableHead>
                           <TableRow>
-                            <TableCell>Tenant Name</TableCell>
                             <TableCell>Lease Start Date</TableCell>
                             <TableCell>Lease End Date</TableCell>
                             <TableCell>Tenant Payments</TableCell>
                             <TableCell>Lease Docs</TableCell>
+                            <TableCell>Tenant Name</TableCell>
                             <TableCell>Actions</TableCell>
                           </TableRow>
                         </TableHead>
@@ -5359,16 +5394,6 @@ function OwnerPropertyView(props) {
                           {rentalInfo.map((rf) => {
                             return (
                               <TableRow>
-                                <TableCell>
-                                  {tenantInfo.map((tf) => {
-                                    return (
-                                      <p>
-                                        {" "}
-                                        {tf.tenantFirstName} {tf.tenantLastName}
-                                      </p>
-                                    );
-                                  })}
-                                </TableCell>
                                 <TableCell>{rf.lease_start}</TableCell>
                                 <TableCell>{rf.lease_end}</TableCell>
                                 <TableCell>
@@ -5400,6 +5425,16 @@ function OwnerPropertyView(props) {
                                           </a>
                                         </Col>
                                       </Row>
+                                    );
+                                  })}
+                                </TableCell>
+                                <TableCell>
+                                  {tenantInfo.map((tf) => {
+                                    return (
+                                      <p>
+                                        {" "}
+                                        {tf.tenantFirstName} {tf.tenantLastName}
+                                      </p>
                                     );
                                   })}
                                 </TableCell>

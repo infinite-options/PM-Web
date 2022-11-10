@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form } from "react-bootstrap";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import OwnerPaymentSelection from "../components/OwnerPaymentSelection";
-import SideBar from "./ownerComponents/SideBar";
-import { squareForm, red, gray, headings } from "../utils/styles";
-import { get, put } from "../utils/api";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import OwnerPaymentSelection from "../ownerComponents/OwnerPaymentSelection";
+import SideBar from "./SideBar";
+import { squareForm, red, gray, headings } from "../../utils/styles";
+import { get, put } from "../../utils/api";
 function OwnerProfile(props) {
   const context = useContext(AppContext);
   const { userData, refresh } = context;
@@ -118,7 +118,13 @@ function OwnerProfile(props) {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Header
             title="Profile"
             leftText={editProfile ? "Cancel" : ""}

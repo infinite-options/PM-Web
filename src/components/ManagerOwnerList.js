@@ -203,7 +203,13 @@ function ManagerOwnerList(props) {
         <div>
           <SideBar />
         </div>
-        <div className="w-100 m-3">
+        <div
+          className="w-100 m-3"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <br />
           {/* <Header
             title="Owner Info"

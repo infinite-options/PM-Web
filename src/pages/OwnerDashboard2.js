@@ -538,11 +538,17 @@ export default function OwnerDashboard2() {
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div style={{ width: "13rem" }}>
+        <div>
           <SideBar />
         </div>
         {ownerData.length > 1 ? (
-          <div className="w-100">
+          <div
+            className="w-100"
+            style={{
+              width: "calc(100vw - 13rem)",
+              position: "relative",
+            }}
+          >
             <Header title="Owner Dashboard" />
             <Row>
               <Col>
@@ -3728,7 +3734,13 @@ export default function OwnerDashboard2() {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Header
             title="Add a new Property"
             leftText="< Back"
@@ -3748,7 +3760,13 @@ export default function OwnerDashboard2() {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Header
             title="Add Expense"
             leftText="< Back"
@@ -3768,7 +3786,13 @@ export default function OwnerDashboard2() {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Header
             title="Add Repair Request"
             leftText="< Back"

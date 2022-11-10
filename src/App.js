@@ -5,7 +5,6 @@ import Landing from "./pages/LandingNavbar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProfileInfo from "./pages/ProfileInfo";
-import OwnerHome from "./pages/OwnerHome";
 import TenantHome from "./pages/TenantHome";
 import TenantAvailableProperties from "./pages/TenantAvailableProperties";
 import ApplyToProperty from "./pages/ApplyToProperty";
@@ -19,8 +18,8 @@ import RepairStatus from "./components/RepairStatus";
 import TenantDocuments from "./components/TenantDocuments";
 import RentPayment from "./components/RentPayment";
 import PaymentPage from "./components/PaymentPage";
-import OwnerRepairDetails from "./components/OwnerRepairDetails";
-import OwnerPaymentPage from "./components/OwnerPaymentPage";
+import OwnerRepairDetails from "./components/ownerComponents/OwnerRepairDetails";
+import OwnerPaymentPage from "./components/ownerComponents/OwnerPaymentPage";
 import PaymentHistory from "./components/PaymentHistory";
 import ScheduleRepairs from "./components/ScheduleRepairs";
 import { get } from "./utils/api";
@@ -43,7 +42,7 @@ import TenantDocumentUpload from "./pages/TenantDocumentUpload";
 import ReviewTenantProfile from "./pages/ReviewTenantprofile";
 import TenantPropertyView from "./pages/TenantPropertyView";
 import ReviewPropertyLease from "./pages/reviewPropertyLease";
-import OwnerContacts from "./pages/OwnerContacts";
+import OwnerContacts from "./components/ownerComponents/OwnerContacts";
 import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
 import ManagerPropertyView from "./pages/ManagerPropertyView";
@@ -61,7 +60,7 @@ import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
 import PropertyView from "./components/PropertyView";
 import TenantDuePayments from "./components/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
-import OwnerPaymentHistory from "./components/OwnerPaymentHistory";
+import OwnerPaymentHistory from "./components/ownerComponents/OwnerPaymentHistory";
 import ManagerOwnerList from "./components/ManagerOwnerList";
 import ManagerTenantList from "./components/ManagerTenantList";
 import ManagerApplianceList from "./components/ManagerApplianceList";
@@ -91,8 +90,8 @@ import AppliedDashboard from "./pages/AppliedDashboard";
 import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
 import ManagerDocuments from "./components/ManagerDocuments";
 import ManagerProfile from "./components/ManagerProfile";
-import OwnerDocuments from "./pages/OwnerDocuments";
-import OwnerProfile from "./components/OwnerProfile";
+import OwnerDocuments from "./components/ownerComponents/OwnerDocuments";
+import OwnerProfile from "./components/ownerComponents/OwnerProfile";
 import TenantProfile from "./pages/TenantProfile";
 import TenantProfile2 from "./pages/TenantProfile2";
 import OwnerPropertyView from "./components/ownerComponents/OwnerPropertyView";
@@ -135,13 +134,13 @@ function App() {
           <Route path="/">
             <Route index element={<Homepage />} />
             <Route
-                path="/.well-known/apple-developer-merchantid-domain-association.txt"
-                render={() => (
-                    <link
-                        rel="verification.txt file"
-                        href="%PUBLIC_URL%/.well-known/verification.txt"
-                    />
-                )}
+              path="/.well-known/apple-developer-merchantid-domain-association.txt"
+              render={() => (
+                <link
+                  rel="verification.txt file"
+                  href="%PUBLIC_URL%/.well-known/verification.txt"
+                />
+              )}
             />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
@@ -149,7 +148,6 @@ function App() {
             <Route path="modifyexisiting" element={<ModifyExisiting />} />
             <Route path="profileInfo" element={<ProfileInfo />} />
             <Route path="owner" element={<OwnerDashboard />} />
-            <Route path="owner_original" element={<OwnerHome />} />
             <Route path="maintenance" element={<MaintenanceHome />} />
             <Route path="scheduledJobs" element={<ScheduledJobs />} />
             <Route path="detailQuote" element={<DetailQuote />} />

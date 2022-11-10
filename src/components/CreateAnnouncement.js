@@ -312,7 +312,13 @@ function CreateAnnouncement(props) {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Header
             title="Announcements"
             leftText={editingAnnouncement || announcementDetail ? "< Back" : ""}

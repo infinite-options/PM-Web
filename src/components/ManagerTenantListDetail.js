@@ -232,8 +232,12 @@ function ManagerTenantListDetail(props) {
         <div>
           <SideBar />
         </div>
-        <div>
-          <br />
+        <div
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <div
             className="mx-2 my-2 p-3"
             style={{

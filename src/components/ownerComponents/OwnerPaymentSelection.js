@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
-import Checkbox from "./Checkbox";
-import { squareForm, hidden, gray, headings } from "../utils/styles";
+import Checkbox from "../Checkbox";
+import { squareForm, hidden, gray, headings } from "../../utils/styles";
 
 function OwnerPaymentSelection(props) {
   const { editProfile, paymentState, setPaymentState } = props;

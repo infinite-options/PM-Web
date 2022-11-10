@@ -102,7 +102,13 @@ function ManagerDocuments(props) {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Header title="Documents" />
           <div
             className="mx-2 my-2 p-3"
