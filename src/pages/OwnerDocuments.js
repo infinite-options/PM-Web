@@ -35,19 +35,13 @@ function OwnerDocuments(props) {
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const [activeLeaseDocuments, setActiveLeaseDocuments] = useState([]);
-  const [pastLeaseDocuments, setPastLeaseDocuments] = useState([]);
-  const [activeManagerDocuments, setActiveManagerDocuments] = useState([]);
-  const [pastManagerDocuments, setPastManagerDocuments] = useState([]);
+  const [documents, setDocuments] = useState([]);
+  const [activeLeaseDocuments, setActiveLeaseDocuments] = useState({});
+  const [pastLeaseDocuments, setPastLeaseDocuments] = useState({});
+  const [activeManagerDocuments, setActiveManagerDocuments] = useState({});
+  const [pastManagerDocuments, setPastManagerDocuments] = useState({});
 
-  const [expandActiveLeaseDocuments, setExpandActiveLeaseDocuments] =
-    useState(false);
-  const [expandPastLeaseDocuments, setExpandPastLeaseDocuments] =
-    useState(false);
-  const [expandActiveManagerDocuments, setExpandActiveManagerDocuments] =
-    useState(false);
-  const [expandPastManagerDocuments, setExpandPastManagerDocuments] =
-    useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfile = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
@@ -62,7 +56,10 @@ function OwnerDocuments(props) {
       refresh();
       return;
     }
+
+    setDocuments(response.result);
     let documents = response.result[0];
+
     var active_lease_docs = Object.keys(documents)
       .filter((key) => key.includes("active_lease_docs"))
       .reduce((cur, key) => {
@@ -92,6 +89,7 @@ function OwnerDocuments(props) {
       }, {});
     console.log(past_manager_docs);
     setPastManagerDocuments(past_manager_docs);
+    setIsLoading(false);
   };
   useEffect(() => {
     if (access_token === null) {
@@ -99,6 +97,8 @@ function OwnerDocuments(props) {
     }
     fetchProfile();
   }, [access_token]);
+  console.log(documents);
+  console.log(activeLeaseDocuments.length);
 
   return (
     <div>
@@ -109,20 +109,21 @@ function OwnerDocuments(props) {
         </div>
         <div className="w-100">
           <Row className="m-3">
-            <Table>
-              <TableHead></TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell width="380px">
-                    {" "}
-                    <h5>Active Lease Documents</h5>{" "}
-                  </TableCell>
-                  <TableCell width="180px">Expiry Date</TableCell>
-                  <TableCell width="180px">Created Date</TableCell>
-                  <TableCell width="180px">Created By</TableCell>
-                  <TableCell width="180px">Created For</TableCell>
-                  <TableCell width="180px">
-                    {/* <img
+            {!isLoading ? (
+              <Table>
+                <TableHead></TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell width="380px">
+                      {" "}
+                      <h5>Active Lease Documents</h5>{" "}
+                    </TableCell>
+                    <TableCell width="180px">Expiry Date</TableCell>
+                    <TableCell width="180px">Created Date</TableCell>
+                    <TableCell width="180px">Created By</TableCell>
+                    <TableCell width="180px">Created For</TableCell>
+                    <TableCell width="180px">
+                      {/* <img
                       src={SortDown}
                       hidden={expandActiveLeaseDocuments}
                       onClick={() => {
@@ -150,91 +151,93 @@ function OwnerDocuments(props) {
                         float: "right",
                       }}
                     /> */}
-                  </TableCell>
-                  <TableCell width="180px"></TableCell>
-                </TableRow>
-
-                {Object.values(activeLeaseDocuments)[0].length > 0 ? (
-                  Object.values(activeLeaseDocuments)[0].map((ald, i) => {
-                    return (
-                      <TableRow>
-                        <TableCell width="380px">
-                          {ald.description != "" ? (
-                            <p>{ald.description}</p>
-                          ) : (
-                            <p>Document {i + 1}</p>
-                          )}
-                        </TableCell>
-                        <TableCell width="180px">{ald.expiry_date}</TableCell>
-                        <TableCell width="180px">{ald.created_date}</TableCell>
-                        <TableCell width="180px">{ald.created_by}</TableCell>
-                        <TableCell width="180px">
-                          {Object.values(ald.created_for.first_name).includes(
-                            ","
-                          ) &&
-                          Object.values(ald.created_for.last_name).includes(
-                            ","
-                          ) ? (
-                            Object.values(
-                              ald.created_for.first_name.split(",")
-                            ).map((name, index) => {
-                              return (
-                                <p>
-                                  {
-                                    Object.values(
-                                      ald.created_for.first_name.split(",")
-                                    )[index]
-                                  }{" "}
-                                  {
-                                    Object.values(
-                                      ald.created_for.last_name.split(",")
-                                    )[index]
-                                  }
-                                </p>
-                              );
-                            })
-                          ) : (
-                            <p>
-                              {Object.values(ald.created_for.first_name)}{" "}
-                              {Object.values(ald.created_for.last_name)}
-                            </p>
-                          )}
-                        </TableCell>
-                        <TableCell width="180px">
-                          <a href={ald.link} target="_blank">
-                            <img
-                              src={OpenDoc}
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                float: "right",
-                              }}
-                            />
-                          </a>
-                        </TableCell>
-                        <TableCell width="180px"></TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell width="180px">
-                      <p>No documents</p>
                     </TableCell>
                     <TableCell width="180px"></TableCell>
-                    <TableCell width="180px"></TableCell>
                   </TableRow>
-                )}
-                <TableRow>
-                  <TableCell width="380px">
-                    <h5>Active Manager Documents </h5>
-                  </TableCell>
-                  <TableCell width="180px">Expiry Date</TableCell>
-                  <TableCell width="180px">Created Date</TableCell>
-                  <TableCell width="180px">Created By</TableCell>
-                  <TableCell width="180px">Created For</TableCell>
-                  <TableCell width="180px">
-                    {/* <img
+
+                  {Object.values(activeLeaseDocuments)[0].length > 0 ? (
+                    Object.values(activeLeaseDocuments)[0].map((ald, i) => {
+                      return (
+                        <TableRow>
+                          <TableCell width="380px">
+                            {ald.description != "" ? (
+                              <p>{ald.description}</p>
+                            ) : (
+                              <p>Document {i + 1}</p>
+                            )}
+                          </TableCell>
+                          <TableCell width="180px">{ald.expiry_date}</TableCell>
+                          <TableCell width="180px">
+                            {ald.created_date}
+                          </TableCell>
+                          <TableCell width="180px">{ald.created_by}</TableCell>
+                          <TableCell width="180px">
+                            {Object.values(ald.created_for.first_name).includes(
+                              ","
+                            ) &&
+                            Object.values(ald.created_for.last_name).includes(
+                              ","
+                            ) ? (
+                              Object.values(
+                                ald.created_for.first_name.split(",")
+                              ).map((name, index) => {
+                                return (
+                                  <p>
+                                    {
+                                      Object.values(
+                                        ald.created_for.first_name.split(",")
+                                      )[index]
+                                    }{" "}
+                                    {
+                                      Object.values(
+                                        ald.created_for.last_name.split(",")
+                                      )[index]
+                                    }
+                                  </p>
+                                );
+                              })
+                            ) : (
+                              <p>
+                                {Object.values(ald.created_for.first_name)}{" "}
+                                {Object.values(ald.created_for.last_name)}
+                              </p>
+                            )}
+                          </TableCell>
+                          <TableCell width="180px">
+                            <a href={ald.link} target="_blank">
+                              <img
+                                src={OpenDoc}
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                  float: "right",
+                                }}
+                              />
+                            </a>
+                          </TableCell>
+                          <TableCell width="180px"></TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell width="180px">
+                        <p>No documents</p>
+                      </TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                    </TableRow>
+                  )}
+                  <TableRow>
+                    <TableCell width="380px">
+                      <h5>Active Manager Documents </h5>
+                    </TableCell>
+                    <TableCell width="180px">Expiry Date</TableCell>
+                    <TableCell width="180px">Created Date</TableCell>
+                    <TableCell width="180px">Created By</TableCell>
+                    <TableCell width="180px">Created For</TableCell>
+                    <TableCell width="180px">
+                      {/* <img
                       src={SortDown}
                       hidden={expandActiveManagerDocuments}
                       onClick={() => {
@@ -262,60 +265,62 @@ function OwnerDocuments(props) {
                         float: "right",
                       }}
                     /> */}
-                  </TableCell>
-                  <TableCell width="180px"></TableCell>
-                </TableRow>
-                {Object.values(activeManagerDocuments)[0].length > 0 ? (
-                  Object.values(activeManagerDocuments)[0].map((amd, i) => {
-                    return (
-                      <TableRow>
-                        <TableCell width="380px">
-                          {amd.description != "" ? (
-                            <p>{amd.description}</p>
-                          ) : (
-                            <p>Document {i + 1}</p>
-                          )}
-                        </TableCell>
-                        <TableCell width="180px">{amd.expiry_date}</TableCell>
-                        <TableCell width="180px">{amd.created_date}</TableCell>
-                        <TableCell width="180px">{amd.created_by}</TableCell>
-                        <TableCell width="180px">{amd.created_for}</TableCell>
-                        <TableCell width="180px" xs={1}>
-                          <a href={amd.link} target="_blank">
-                            <img
-                              src={OpenDoc}
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                float: "right",
-                              }}
-                            />
-                          </a>
-                        </TableCell>
-                        <TableCell width="180px"></TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell width="180px">
-                      <p>No documents</p>
                     </TableCell>
                     <TableCell width="180px"></TableCell>
-                    <TableCell width="180px"></TableCell>
                   </TableRow>
-                )}
-                <TableRow>
-                  <TableCell width="380px">
-                    {" "}
-                    <h5>Past Lease Documents</h5>{" "}
-                  </TableCell>
-                  <TableCell width="180px">Expiry Date</TableCell>
-                  <TableCell width="180px">Created Date</TableCell>
-                  <TableCell width="180px">Created By</TableCell>
-                  <TableCell width="180px">Created For</TableCell>
-                  <TableCell width="180px">
-                    {/* <img
+                  {Object.values(activeManagerDocuments)[0].length > 0 ? (
+                    Object.values(activeManagerDocuments)[0].map((amd, i) => {
+                      return (
+                        <TableRow>
+                          <TableCell width="380px">
+                            {amd.description != "" ? (
+                              <p>{amd.description}</p>
+                            ) : (
+                              <p>Document {i + 1}</p>
+                            )}
+                          </TableCell>
+                          <TableCell width="180px">{amd.expiry_date}</TableCell>
+                          <TableCell width="180px">
+                            {amd.created_date}
+                          </TableCell>
+                          <TableCell width="180px">{amd.created_by}</TableCell>
+                          <TableCell width="180px">{amd.created_for}</TableCell>
+                          <TableCell width="180px" xs={1}>
+                            <a href={amd.link} target="_blank">
+                              <img
+                                src={OpenDoc}
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                  float: "right",
+                                }}
+                              />
+                            </a>
+                          </TableCell>
+                          <TableCell width="180px"></TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell width="180px">
+                        <p>No documents</p>
+                      </TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                    </TableRow>
+                  )}
+                  <TableRow>
+                    <TableCell width="380px">
+                      {" "}
+                      <h5>Past Lease Documents</h5>{" "}
+                    </TableCell>
+                    <TableCell width="180px">Expiry Date</TableCell>
+                    <TableCell width="180px">Created Date</TableCell>
+                    <TableCell width="180px">Created By</TableCell>
+                    <TableCell width="180px">Created For</TableCell>
+                    <TableCell width="180px">
+                      {/* <img
                       src={SortDown}
                       hidden={expandPastLeaseDocuments}
                       onClick={() => {
@@ -339,91 +344,93 @@ function OwnerDocuments(props) {
                         float: "right",
                       }}
                     />{" "} */}
-                  </TableCell>
-                  <TableCell width="180px"></TableCell>
-                </TableRow>
-                {Object.values(pastLeaseDocuments)[0].length > 0 ? (
-                  Object.values(pastLeaseDocuments)[0].map((pld, i) => {
-                    return (
-                      <TableRow>
-                        <TableCell width="380px">
-                          {pld.description != "" ? (
-                            <p>{pld.description}</p>
-                          ) : (
-                            <p>Document {i + 1}</p>
-                          )}
-                        </TableCell>
-                        <TableCell width="180px">{pld.expiry_date}</TableCell>
-                        <TableCell width="180px">{pld.created_date}</TableCell>
-                        <TableCell width="180px">{pld.created_by}</TableCell>
-                        <TableCell width="180px">
-                          {Object.values(pld.created_for.first_name).includes(
-                            ","
-                          ) &&
-                          Object.values(pld.created_for.last_name).includes(
-                            ","
-                          ) ? (
-                            Object.values(
-                              pld.created_for.first_name.split(",")
-                            ).map((name, index) => {
-                              return (
-                                <p>
-                                  {
-                                    Object.values(
-                                      pld.created_for.first_name.split(",")
-                                    )[index]
-                                  }{" "}
-                                  {
-                                    Object.values(
-                                      pld.created_for.last_name.split(",")
-                                    )[index]
-                                  }
-                                </p>
-                              );
-                            })
-                          ) : (
-                            <p>
-                              {Object.values(pld.created_for.first_name)}{" "}
-                              {Object.values(pld.created_for.last_name)}
-                            </p>
-                          )}
-                        </TableCell>
-                        <TableCell width="180px">
-                          <a href={pld.link} target="_blank">
-                            <img
-                              src={OpenDoc}
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                float: "right",
-                              }}
-                            />
-                          </a>
-                        </TableCell>
-                        <TableCell width="180px"></TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    {" "}
-                    <TableCell width="180px">
-                      <p>No documents</p>
                     </TableCell>
                     <TableCell width="180px"></TableCell>
-                    <TableCell width="180px"></TableCell>
                   </TableRow>
-                )}
-                <TableRow>
-                  <TableCell width="380px">
-                    <h5>Past Manager Documents</h5>{" "}
-                  </TableCell>
-                  <TableCell width="180px">Expiry Date</TableCell>
-                  <TableCell width="180px">Created Date</TableCell>
-                  <TableCell width="180px">Created By</TableCell>
-                  <TableCell width="180px">Created For</TableCell>
-                  <TableCell width="180px">
-                    {/* <img
+                  {Object.values(pastLeaseDocuments)[0].length > 0 ? (
+                    Object.values(pastLeaseDocuments)[0].map((pld, i) => {
+                      return (
+                        <TableRow>
+                          <TableCell width="380px">
+                            {pld.description != "" ? (
+                              <p>{pld.description}</p>
+                            ) : (
+                              <p>Document {i + 1}</p>
+                            )}
+                          </TableCell>
+                          <TableCell width="180px">{pld.expiry_date}</TableCell>
+                          <TableCell width="180px">
+                            {pld.created_date}
+                          </TableCell>
+                          <TableCell width="180px">{pld.created_by}</TableCell>
+                          <TableCell width="180px">
+                            {Object.values(pld.created_for.first_name).includes(
+                              ","
+                            ) &&
+                            Object.values(pld.created_for.last_name).includes(
+                              ","
+                            ) ? (
+                              Object.values(
+                                pld.created_for.first_name.split(",")
+                              ).map((name, index) => {
+                                return (
+                                  <p>
+                                    {
+                                      Object.values(
+                                        pld.created_for.first_name.split(",")
+                                      )[index]
+                                    }{" "}
+                                    {
+                                      Object.values(
+                                        pld.created_for.last_name.split(",")
+                                      )[index]
+                                    }
+                                  </p>
+                                );
+                              })
+                            ) : (
+                              <p>
+                                {Object.values(pld.created_for.first_name)}{" "}
+                                {Object.values(pld.created_for.last_name)}
+                              </p>
+                            )}
+                          </TableCell>
+                          <TableCell width="180px">
+                            <a href={pld.link} target="_blank">
+                              <img
+                                src={OpenDoc}
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                  float: "right",
+                                }}
+                              />
+                            </a>
+                          </TableCell>
+                          <TableCell width="180px"></TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      {" "}
+                      <TableCell width="180px">
+                        <p>No documents</p>
+                      </TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                    </TableRow>
+                  )}
+                  <TableRow>
+                    <TableCell width="380px">
+                      <h5>Past Manager Documents</h5>{" "}
+                    </TableCell>
+                    <TableCell width="180px">Expiry Date</TableCell>
+                    <TableCell width="180px">Created Date</TableCell>
+                    <TableCell width="180px">Created By</TableCell>
+                    <TableCell width="180px">Created For</TableCell>
+                    <TableCell width="180px">
+                      {/* <img
                       src={SortDown}
                       hidden={expandPastManagerDocuments}
                       onClick={() => {
@@ -451,52 +458,57 @@ function OwnerDocuments(props) {
                         float: "right",
                       }}
                     /> */}
-                  </TableCell>
-                  <TableCell width="180px"></TableCell>
-                </TableRow>
-
-                {Object.values(pastManagerDocuments)[0].length > 0 ? (
-                  Object.values(pastManagerDocuments)[0].map((pmd, i) => {
-                    return (
-                      <TableRow>
-                        <TableCell width="380px">
-                          {pmd.description != "" ? (
-                            <p>{pmd.description}</p>
-                          ) : (
-                            <p>Document {i + 1}</p>
-                          )}
-                        </TableCell>
-                        <TableCell width="180px">{pmd.expiry_date}</TableCell>
-                        <TableCell width="180px">{pmd.created_date}</TableCell>
-                        <TableCell width="180px">{pmd.created_by}</TableCell>
-                        <TableCell width="180px">{pmd.created_for}</TableCell>
-                        <TableCell width="180px">
-                          <a href={pmd.link} target="_blank">
-                            <img
-                              src={OpenDoc}
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                float: "right",
-                              }}
-                            />
-                          </a>
-                        </TableCell>
-                        <TableCell width="180px"></TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell width="180px">
-                      <p>No documents</p>
                     </TableCell>
                     <TableCell width="180px"></TableCell>
-                    <TableCell width="180px"></TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
+
+                  {Object.values(pastManagerDocuments)[0].length > 0 ? (
+                    Object.values(pastManagerDocuments)[0].map((pmd, i) => {
+                      return (
+                        <TableRow>
+                          <TableCell width="380px">
+                            {pmd.description != "" ? (
+                              <p>{pmd.description}</p>
+                            ) : (
+                              <p>Document {i + 1}</p>
+                            )}
+                          </TableCell>
+                          <TableCell width="180px">{pmd.expiry_date}</TableCell>
+                          <TableCell width="180px">
+                            {pmd.created_date}
+                          </TableCell>
+                          <TableCell width="180px">{pmd.created_by}</TableCell>
+                          <TableCell width="180px">{pmd.created_for}</TableCell>
+                          <TableCell width="180px">
+                            <a href={pmd.link} target="_blank">
+                              <img
+                                src={OpenDoc}
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                  float: "right",
+                                }}
+                              />
+                            </a>
+                          </TableCell>
+                          <TableCell width="180px"></TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell width="180px">
+                        <p>No documents</p>
+                      </TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            ) : (
+              <Row></Row>
+            )}
           </Row>
         </div>{" "}
       </div>
