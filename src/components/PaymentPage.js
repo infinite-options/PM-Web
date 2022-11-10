@@ -25,6 +25,8 @@ import {
   subHeading,
   squareForm,
 } from "../utils/styles";
+import PayPal from "./PayPal";
+import ApplePay from "./ApplePay";
 
 function PaymentPage(props) {
   const navigate = useNavigate();
@@ -67,33 +69,33 @@ function PaymentPage(props) {
       tempAllPurchases.push(response1.result[0]);
     }
     let response = await get(`/purchases?purchase_uid=${purchase_uid}`);
-    console.log("Print 1", response);
+    //console.log("Print 1", response);
     setPurchase(response.result[0]);
     // setAmount(response.result[0].amount_due - response.result[0].amount_paid);
     setAllPurchases(tempAllPurchases);
   }, []);
 
   const toggleKeys = async () => {
-    console.log("inside toggle keys");
+    //console.log("inside toggle keys");
     const url =
       message === "PMTEST"
         ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
         : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
-    console.log("response data ");
-    console.log(response);
+    //console.log("response data ");
+    //console.log(response);
     const responseData = await response.json();
-    console.log(responseData);
-    console.log("This is the responseData.publicKey");
-    console.log(responseData.publicKey);
-    console.log("type of responseData.publicKey");
-    console.log(typeof(responseData.publicKey));
+    //console.log(responseData);
+    //console.log("This is the responseData.publicKey");
+    //console.log(responseData.publicKey);
+    //console.log("type of responseData.publicKey");
+    //console.log(typeof(responseData.publicKey));
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
   };
 
   useEffect(() => {
-    console.log("allPurchases", allPurchases);
+    //console.log("allPurchases", allPurchases);
   }, [allPurchases]);
 
   useEffect(() => {
@@ -196,7 +198,7 @@ function PaymentPage(props) {
                 Pay Fees {purchase.description && `(${purchase.description})`}
               </div>
             )}
-            <div style={subHeading}>Max Payment: ${totalSum}</div>
+            {/*<div style={subHeading}>Max Payment: ${totalSum}</div>*/}
             {stripePayment ? (
               <div style={subHeading}>Amount to be paid: ${amount}</div>
             ) : null}
@@ -220,27 +222,27 @@ function PaymentPage(props) {
                 ambassadorCode={this.state.ambassadorCode_applied}
               />
           */}
-          <div className="mt-5" hidden={stripePayment}>
-            <Form.Group>
-              <Form.Label>Amount</Form.Label>
-              {purchaseUIDs.length === 1 ? (
-                <Form.Control
-                  placeholder={purchase.amount_due - purchase.amount_paid}
-                  style={squareForm}
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              ) : (
-                <Form.Control
-                  disabled
-                  placeholder={purchase.amount_due - purchase.amount_paid}
-                  style={squareForm}
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              )}
-            </Form.Group>
-
+          <div style={{"margin": "0px 0px 100px 0px"}} className="mt-5" hidden={stripePayment}>
+            {/*<Form.Group>*/}
+            {/*  <Form.Label>Amount</Form.Label>*/}
+            {/*  {purchaseUIDs.length === 1 ? (*/}
+            {/*    <Form.Control*/}
+            {/*      placeholder={purchase.amount_due - purchase.amount_paid}*/}
+            {/*      style={squareForm}*/}
+            {/*      value={amount}*/}
+            {/*      onChange={(e) => setAmount(e.target.value)}*/}
+            {/*    />*/}
+            {/*  ) : (*/}
+            {/*    <Form.Control*/}
+            {/*      disabled*/}
+            {/*      placeholder={purchase.amount_due - purchase.amount_paid}*/}
+            {/*      style={squareForm}*/}
+            {/*      value={amount}*/}
+            {/*      onChange={(e) => setAmount(e.target.value)}*/}
+            {/*    />*/}
+            {/*  )}*/}
+            {/*</Form.Group>*/}
+            <h2>Max Payment: ${totalSum}</h2>
             <Form.Group>
               <Form.Label>Message</Form.Label>
               <Form.Control
@@ -259,68 +261,28 @@ function PaymentPage(props) {
                 justifyContent: "space-between",
               }}
             >
-              {disabled ? (
-                <Row style={{ width: "80%", margin: " 10%" }}>
-                  Amount to be paid must be greater than 0 and less than or
-                  equal total:
-                </Row>
-              ) : null}
-              {purchaseUIDs.length > 1 ? (
-                <Row style={{ width: "80%", margin: " 10%" }}>
-                  Note: You may not change the payment amount if you have
-                  selected 2 or more bills to pay
-                </Row>
-              ) : null}
-              {disabled ? (
-                <Col>
-                  <Button
-                    className="mt-2 mb-2"
-                    variant="outline-primary"
-                    disabled
-                    style={bluePillButton}
-                  >
-                    Pay with Stripe
-                  </Button>
-                </Col>
-              ) : (
-                <Col>
-                  <Button
-                    className="mt-2 mb-2"
-                    variant="outline-primary"
+              <Col>
+                <Button className="mt-2 mb-2" variant="outline-primary"
                     onClick={() => {
                       //navigate("/tenant");
                       toggleKeys();
                       setStripePayment(true);
                     }}
                     style={bluePillButton}
-                  >
-                    Pay with Stripe
-                  </Button>
-                </Col>
-              )}
-              {disabled ? (
-                <Col>
-                  <Button
-                    className="mt-2 mb-2"
-                    variant="outline-primary"
-                    disabled
-                    style={pillButton}
-                  >
-                    Pay with PayPal
-                  </Button>
-                </Col>
-              ) : (
-                <Col>
-                  <Button
-                    className="mt-2 mb-2"
-                    variant="outline-primary"
-                    onClick={submitForm}
-                    style={pillButton}
-                  >
-                    Pay with PayPal
-                  </Button>
-                </Col>
-              )}
+                >
+                  Pay with Stripe
+                </Button>
+                <PayPal pay_purchase_id={purchase_uid}
+                        amount={totalSum}
+                        payment_notes={message}
+                        payment_type={"PAYPAL"}
+                />
+                <ApplePay pay_purchase_id={purchase_uid}
+                          amount={totalSum}
+                          payment_notes={message}
+                          payment_type={"APPLEPAY"}
+                />
+              </Col>
             </Row>
           </div>
 
@@ -342,7 +304,7 @@ function PaymentPage(props) {
                 message={message}
                 amount={amount}
               />
-              {console.log(allPurchases, amount, message)}
+              {/* console.log(allPurchases, amount, message) */}
               {/* <StripePayment cancel={cancel} submit={submit} purchase={purchase}
                 message={message} amount={amount}/> */}
             </Elements>

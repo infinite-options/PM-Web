@@ -134,6 +134,15 @@ function App() {
         <Routes>
           <Route path="/">
             <Route index element={<Homepage />} />
+            <Route
+                path="/.well-known/apple-developer-merchantid-domain-association.txt"
+                render={() => (
+                    <link
+                        rel="verification.txt file"
+                        href="%PUBLIC_URL%/.well-known/verification.txt"
+                    />
+                )}
+            />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="signupexisting" element={<SignupExisting />} />
