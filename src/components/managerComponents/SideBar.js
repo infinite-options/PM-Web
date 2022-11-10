@@ -11,7 +11,7 @@ function Sidebar() {
   const { userData, refresh } = useContext(AppContext);
 
   let sidebarButtonsActive = {
-    padding: "20px",
+    padding: "15px",
     color: "#c93667",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -20,7 +20,7 @@ function Sidebar() {
     fontWeight: "700",
   };
   let sidebarButtons = {
-    padding: "20px",
+    padding: "15px",
     color: "#000000",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -90,15 +90,6 @@ function Sidebar() {
               Utilities
             </NavLink>
             <NavLink
-              to="/manager_original"
-              className="sidebarButtons"
-              style={({ isActive }) =>
-                isActive ? sidebarButtonsActive : sidebarButtons
-              }
-            >
-              Reports
-            </NavLink>
-            <NavLink
               to="/manager-announcements"
               className="sidebarButtons"
               style={({ isActive }) =>
@@ -108,15 +99,6 @@ function Sidebar() {
               Announcements
             </NavLink>
             <NavLink
-              to="/manager-profile"
-              className="sidebarButtons"
-              style={({ isActive }) =>
-                isActive ? sidebarButtonsActive : sidebarButtons
-              }
-            >
-              Profile
-            </NavLink>
-            <NavLink
               to="/manager-documents"
               className="sidebarButtons"
               style={({ isActive }) =>
@@ -124,6 +106,15 @@ function Sidebar() {
               }
             >
               Documents
+            </NavLink>
+            <NavLink
+              to="/manager-profile"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Profile
             </NavLink>
           </div>
         </nav>

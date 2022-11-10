@@ -537,13 +537,13 @@ export default function OwnerDashboard2() {
 
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
-      <Header title="Owner Dashboard" />
       <div className="flex-1">
-        <div>
+        <div style={{ width: "13rem" }}>
           <SideBar />
         </div>
         {ownerData.length > 1 ? (
           <div className="w-100">
+            <Header title="Owner Dashboard" />
             <Row>
               <Col>
                 <h1>Cash Flow Summary</h1>
@@ -3724,16 +3724,16 @@ export default function OwnerDashboard2() {
     </div>
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
-      <Header
-        title="Add a new Property"
-        leftText="< Back"
-        leftFn={() => setStage("LIST")}
-      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
+          <Header
+            title="Add a new Property"
+            leftText="< Back"
+            leftFn={() => setStage("LIST")}
+          />
           <OwnerPropertyForm
             edit
             cancel={() => setStage("LIST")}
@@ -3744,16 +3744,16 @@ export default function OwnerDashboard2() {
     </div>
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
-      <Header
-        title="Add Expense"
-        leftText="< Back"
-        leftFn={() => setStage("LIST")}
-      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
+          <Header
+            title="Add Expense"
+            leftText="< Back"
+            leftFn={() => setStage("LIST")}
+          />
           <OwnerCreateExpense
             properties={ownerData}
             cancel={() => setStage("LIST")}
@@ -3764,16 +3764,16 @@ export default function OwnerDashboard2() {
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerDashboard2">
-      <Header
-        title="Add Repair Request"
-        leftText="< Back"
-        leftFn={() => setStage("LIST")}
-      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
+          <Header
+            title="Add Repair Request"
+            leftText="< Back"
+            leftFn={() => setStage("LIST")}
+          />
           <OwnerRepairRequest
             properties={ownerData}
             cancel={() => setStage("LIST")}

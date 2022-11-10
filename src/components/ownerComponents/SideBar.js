@@ -31,7 +31,7 @@ function SideBar() {
   return (
     <div style={{ width: "13rem" }}>
       <Row>
-        <nav class="sidebar">
+        <nav className="sidebar">
           <div className="sidebarLinks">
             <NavLink
               to="/owner"

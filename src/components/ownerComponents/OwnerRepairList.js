@@ -47,7 +47,7 @@ function OwnerRepairList(props) {
       navigate("/");
       return;
     }
-    const response = await get(`/propertiesOwner?owner_id=${user.user_uid}`);
+    const response = await get("/ownerDashboard", access_token);
 
     const properties = response.result;
     const pids = new Set();
@@ -89,6 +89,7 @@ function OwnerRepairList(props) {
       navigate("/");
     }
     fetchProperties();
+    fetchRepairs();
   }, [access_token]);
 
   const sort_repairs = (repairs) => {
@@ -205,12 +206,7 @@ function OwnerRepairList(props) {
     console.log("repairs_sorted", repairI, repairIT);
     setRepairIter(repairI);
   };
-  useEffect(() => {
-    if (access_token === null) {
-      navigate("/");
-    }
-    fetchRepairs();
-  }, [access_token]);
+
   // console.log(repairIter);
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
@@ -347,16 +343,16 @@ function OwnerRepairList(props) {
 
   return stage === "LIST" ? (
     <div>
-      <Header
-        title="Repairs"
-        // rightText="+ New"
-        // rightFn={() => setStage("ADDREQUEST")}
-      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
+          <Header
+            title="Repairs"
+            // rightText="+ New"
+            // rightFn={() => setStage("ADDREQUEST")}
+          />
           <div
             className="mx-2 my-2 p-3"
             style={{
@@ -475,12 +471,12 @@ function OwnerRepairList(props) {
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerReapirRequest">
-      <Header title="Add Repair Request" />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
+          <Header title="Add Repair Request" />
           <OwnerRepairRequest
             properties={properties}
             cancel={() => setStage("LIST")}

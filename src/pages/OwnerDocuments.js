@@ -102,12 +102,12 @@ function OwnerDocuments(props) {
 
   return (
     <div>
-      <Header title="Documents" />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
+          <Header title="Documents" />
           <Row className="m-3">
             {!isLoading ? (
               <Table>

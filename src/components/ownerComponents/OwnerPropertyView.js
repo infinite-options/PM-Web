@@ -849,11 +849,6 @@ function OwnerPropertyView(props) {
       />
     ) : (
       <div className="w-100">
-        <Header
-          title="Property Details"
-          // leftText="< Back"
-          // leftFn={headerBack}
-        />
         <ConfirmDialog
           title={"Are you sure you want to reject this Property Manager?"}
           isOpen={showDialog}
@@ -873,6 +868,11 @@ function OwnerPropertyView(props) {
             <SideBar />
           </div>
           <div className="w-100">
+            <Header
+              title="Property Details"
+              // leftText="< Back"
+              // leftFn={headerBack}
+            />
             <Container>
               {editProperty ? (
                 <PropertyForm

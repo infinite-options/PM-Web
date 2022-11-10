@@ -38,24 +38,24 @@ function LandingNavbar() {
     }
   };
 
-  const navigateToRole_original = (role) => {
-    // add navigation to correct role pages
-    console.log("role in navigatetorole", role);
-    console.log(`load ${role}`);
-    if (role === "OWNER") {
-      navigate("/owner_original");
-    } else if (role === "MANAGER") {
-      navigate("/manager_original");
-    } else if (role === "PM_EMPLOYEE") {
-      navigate("/manager");
-    } else if (role === "TENANT") {
-      navigate("/tenant_original");
-    } else if (role === "MAINTENANCE") {
-      navigate("/maintenance", { state: { roles: role } });
-    } else if (role === "MAINT_EMPLOYEE") {
-      navigate("/maintenance", { state: { roles: role } });
-    }
-  };
+  // const navigateToRole_original = (role) => {
+  //   // add navigation to correct role pages
+  //   console.log("role in navigatetorole", role);
+  //   console.log(`load ${role}`);
+  //   if (role === "OWNER") {
+  //     navigate("/owner_original");
+  //   } else if (role === "MANAGER") {
+  //     navigate("/manager_original");
+  //   } else if (role === "PM_EMPLOYEE") {
+  //     navigate("/manager");
+  //   } else if (role === "TENANT") {
+  //     navigate("/tenant_original");
+  //   } else if (role === "MAINTENANCE") {
+  //     navigate("/maintenance", { state: { roles: role } });
+  //   } else if (role === "MAINT_EMPLOYEE") {
+  //     navigate("/maintenance", { state: { roles: role } });
+  //   }
+  // };
 
   console.log("in landing navbar", availableRoles);
   const selectRole = () => {
@@ -97,13 +97,13 @@ function LandingNavbar() {
     setCurrentRole(role);
     navigateToRole(role);
   };
-  const roleSelection_original = (r) => {
-    let role = r;
-    setSelectedRole(role);
-    setCurrentRole(role);
-    navigateToRole_original(role);
-    console.log(role);
-  };
+  // const roleSelection_original = (r) => {
+  //   let role = r;
+  //   setSelectedRole(role);
+  //   setCurrentRole(role);
+  //   navigateToRole_original(role);
+  //   console.log(role);
+  // };
   React.useEffect(() => {
     if (userData.access_token !== null) {
       login();
@@ -386,7 +386,7 @@ function LandingNavbar() {
                   : ""}
               </div>
             </div>
-            <div
+            {/* <div
               style={{
                 display: "flex",
                 flexDirection: "row",
@@ -416,7 +416,7 @@ function LandingNavbar() {
                     </div>
                   ))
                 : ""}
-            </div>
+            </div> */}
           </nav>
         </Row>
       </Container>
