@@ -47,7 +47,7 @@ function OwnerRepairList(props) {
       navigate("/");
       return;
     }
-    const response = await get(`/propertiesOwner?owner_id=${user.user_uid}`);
+    const response = await get("/ownerDashboard", access_token);
 
     const properties = response.result;
     const pids = new Set();
@@ -89,6 +89,7 @@ function OwnerRepairList(props) {
       navigate("/");
     }
     fetchProperties();
+    fetchRepairs();
   }, [access_token]);
 
   const sort_repairs = (repairs) => {
@@ -205,12 +206,7 @@ function OwnerRepairList(props) {
     console.log("repairs_sorted", repairI, repairIT);
     setRepairIter(repairI);
   };
-  useEffect(() => {
-    if (access_token === null) {
-      navigate("/");
-    }
-    fetchRepairs();
-  }, [access_token]);
+
   // console.log(repairIter);
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
@@ -298,6 +294,23 @@ function OwnerRepairList(props) {
       numeric: false,
       label: "Quote Status",
     },
+
+    {
+      id: "assigned_business",
+      numeric: false,
+      label: "Assigned",
+    },
+
+    {
+      id: "scheduled_date",
+      numeric: true,
+      label: "Closed Date",
+    },
+    {
+      id: "total_estimate",
+      numeric: true,
+      label: "Cost",
+    },
   ];
   function EnhancedTableHead(props) {
     const { order, orderBy, onRequestSort } = props;
@@ -347,16 +360,22 @@ function OwnerRepairList(props) {
 
   return stage === "LIST" ? (
     <div>
-      <Header
-        title="Repairs"
-        // rightText="+ New"
-        // rightFn={() => setStage("ADDREQUEST")}
-      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
+          <Header
+            title="Repairs"
+            // rightText="+ New"
+            // rightFn={() => setStage("ADDREQUEST")}
+          />
           <div
             className="mx-2 my-2 p-3"
             style={{
@@ -458,6 +477,18 @@ function OwnerRepairList(props) {
                               ? `${repair.quotes_to_review} new quote(s) to review`
                               : "No new quotes"}
                           </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.assigned_business != null
+                              ? repair.assigned_business
+                              : "None"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.scheduled_date != null
+                              ? repair.scheduled_date
+                              : "Not Scheduled"}
+                          </TableCell>
+
+                          <TableCell>${repair.total_estimate}</TableCell>
                         </TableRow>
                       ));
                     })}
@@ -475,12 +506,12 @@ function OwnerRepairList(props) {
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerReapirRequest">
-      <Header title="Add Repair Request" />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
         <div className="w-100">
+          <Header title="Add Repair Request" />
           <OwnerRepairRequest
             properties={properties}
             cancel={() => setStage("LIST")}

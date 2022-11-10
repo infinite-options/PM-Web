@@ -2,22 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-
 import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "./Header";
-import Footer from "./Footer";
-import { get } from "../utils/api";
-import StripePayment from "./StripePayment";
-import ConfirmCheck from "../icons/confirmCheck.svg";
+import Header from "../Header";
+import { get } from "../../utils/api";
+import StripePayment from "../StripePayment";
+import ConfirmCheck from "../../icons/confirmCheck.svg";
 import {
   formLabel,
   bluePillButton,
   pillButton,
   squareForm,
   mediumBold,
-} from "../utils/styles";
-import OwnerFooter from "./OwnerFooter";
+} from "../../utils/styles";
+import OwnerFooter from "../OwnerFooter";
 
 function OwnerPaymentPage(props) {
   const navigate = useNavigate();

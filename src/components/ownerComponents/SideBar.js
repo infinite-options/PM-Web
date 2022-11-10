@@ -31,7 +31,7 @@ function SideBar() {
   return (
     <div style={{ width: "13rem" }}>
       <Row>
-        <nav class="sidebar">
+        <nav className="sidebar">
           <div className="sidebarLinks">
             <NavLink
               to="/owner"
@@ -71,14 +71,15 @@ function SideBar() {
             >
               Utilities
             </NavLink>
+
             <NavLink
-              to="/owner_original"
+              to="/owner-documents"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons
               }
             >
-              Reports
+              Documents
             </NavLink>
             <NavLink
               to="/owner-profile"
@@ -88,15 +89,6 @@ function SideBar() {
               }
             >
               Profile
-            </NavLink>
-            <NavLink
-              to="/owner-documents"
-              className="sidebarButtons"
-              style={({ isActive }) =>
-                isActive ? sidebarButtonsActive : sidebarButtons
-              }
-            >
-              Documents
             </NavLink>
           </div>
         </nav>

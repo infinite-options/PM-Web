@@ -129,7 +129,13 @@ export default function MaintenancePage() {
         <div>
           <SideBar />
         </div>
-        <div className="main-content2">
+        <div
+          className="main-content2"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <br />
           <h2>Mainenance Portal</h2>
           <h5>Current Tickets</h5>

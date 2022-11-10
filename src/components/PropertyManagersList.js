@@ -159,7 +159,13 @@ function PropertyManagersList(props) {
       <div>
         <SideBar />
       </div>
-      <div className="w-100">
+      <div
+        className="w-100"
+        style={{
+          width: "calc(100vw - 13rem)",
+          position: "relative",
+        }}
+      >
         {/* <Header
           title="Property Managers"
           leftText="< Back"
@@ -217,7 +223,13 @@ function PropertyManagersList(props) {
       <div>
         <SideBar />
       </div>
-      <div className="w-100">
+      <div
+        className="w-100"
+        style={{
+          width: "calc(100vw - 13rem)",
+          position: "relative",
+        }}
+      >
         <Header title="" leftText="< Back" leftFn={() => setStage("LIST")} />
         {console.log(selectedPropertyManagers)}
         <div

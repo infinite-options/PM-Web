@@ -1,15 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Checkbox from "../components/Checkbox";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import SideBar from "./ownerComponents/SideBar";
+import Checkbox from "../Checkbox";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import SideBar from "./SideBar";
 import {
   headings,
   pillButton,
@@ -22,9 +22,9 @@ import {
   tileImg,
   mediumBold,
   orangePill,
-} from "../utils/styles";
+} from "../../utils/styles";
 import { useParams } from "react-router";
-import { get, post, put } from "../utils/api";
+import { get, post, put } from "../../utils/api";
 
 function OwmerRepairDetails(props) {
   const { userData, refresh } = React.useContext(AppContext);
@@ -190,7 +190,13 @@ function OwmerRepairDetails(props) {
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <br />
           <Header
             title="Repairs"

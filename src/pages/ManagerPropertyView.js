@@ -306,8 +306,13 @@ function ManagerPropertyView(props) {
         <div>
           <SideBar />
         </div>
-        <div className="main-content">
-          <br />
+        <div
+          className="main-content"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Container className="pb-5 mb-5">
             {editProperty ? (
               <ManagerPropertyForm

@@ -644,54 +644,60 @@ function OwnerUtilities(props) {
   };
   return (
     <div>
-      <Header
-        title="Utilities"
-        leftText={
-          editingUtility ||
-          expenseDetail ||
-          expenseDetailOwner ||
-          maintenanceExpenseDetail ||
-          payExpense
-            ? "< Back"
-            : ""
-        }
-        leftFn={() => {
-          setNewUtility(null);
-          setExpenseDetail(false);
-          setExpenseDetailOwner(false);
-          setMaintenanceExpenseDetail(false);
-          setPayment(null);
-          propertyState.forEach((prop) => (prop.checked = false));
-          setPropertyState(propertyState);
-          setTenantPay(false);
-          setOwnerPay(false);
-          setPayExpense(false);
-          setStripePayment(false);
-          setEditingUtility(false);
-        }}
-        // rightText={
-        //   editingUtility ||
-        //   expenseDetail ||
-        //   expenseDetailOwner ||
-        //   maintenanceExpenseDetail ||
-        //   payExpense
-        //     ? ""
-        //     : "+ New"
-        // }
-        // rightFn={() => {
-        //   setNewUtility({ ...emptyUtility });
-        //   propertyState.forEach((prop) => (prop.checked = false));
-        //   setPropertyState(propertyState);
-        //   setTenantPay(false);
-        //   setOwnerPay(false);
-        //   setEditingUtility(true);
-        // }}
-      />
       <div className="flex-1">
         <div>
           <SideBar />
         </div>
-        <div className="w-100">
+        <div
+          className="w-100"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
+          <Header
+            title="Utilities"
+            leftText={
+              editingUtility ||
+              expenseDetail ||
+              expenseDetailOwner ||
+              maintenanceExpenseDetail ||
+              payExpense
+                ? "< Back"
+                : ""
+            }
+            leftFn={() => {
+              setNewUtility(null);
+              setExpenseDetail(false);
+              setExpenseDetailOwner(false);
+              setMaintenanceExpenseDetail(false);
+              setPayment(null);
+              propertyState.forEach((prop) => (prop.checked = false));
+              setPropertyState(propertyState);
+              setTenantPay(false);
+              setOwnerPay(false);
+              setPayExpense(false);
+              setStripePayment(false);
+              setEditingUtility(false);
+            }}
+            // rightText={
+            //   editingUtility ||
+            //   expenseDetail ||
+            //   expenseDetailOwner ||
+            //   maintenanceExpenseDetail ||
+            //   payExpense
+            //     ? ""
+            //     : "+ New"
+            // }
+            // rightFn={() => {
+            //   setNewUtility({ ...emptyUtility });
+            //   propertyState.forEach((prop) => (prop.checked = false));
+            //   setPropertyState(propertyState);
+            //   setTenantPay(false);
+            //   setOwnerPay(false);
+            //   setEditingUtility(true);
+            // }}
+          />
           <div>
             {newUtility !== null &&
             editingUtility &&

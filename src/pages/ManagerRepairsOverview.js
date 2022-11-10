@@ -272,7 +272,13 @@ function ManagerRepairsOverview(props) {
         <div>
           <SideBar />
         </div>
-        <div className="main-content">
+        <div
+          className="main-content"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <br />
           {/* <div
             className="mx-2 my-2 p-3"

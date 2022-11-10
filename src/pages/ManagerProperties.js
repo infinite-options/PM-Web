@@ -110,8 +110,13 @@ function ManagerProperties(props) {
         <div>
           <SideBar />
         </div>
-        <div className="main-content">
-          <br />
+        <div
+          className="main-content"
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <div
             className="mx-2 my-2 p-3"
             style={{

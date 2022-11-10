@@ -368,9 +368,12 @@ function ManagerTenantList(props) {
         <div>
           <SideBar />
         </div>
-        <div>
-          <br />
-
+        <div
+          style={{
+            width: "calc(100vw - 13rem)",
+            position: "relative",
+          }}
+        >
           <Row className="w-100 m-3">
             <Col> Search by</Col>
 
