@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import AppContext from "../AppContext";
+import AppContext from "../../AppContext";
 import {
   pillButton,
   squareForm,
@@ -11,18 +11,18 @@ import {
   red,
   small,
   mediumBold,
-} from "../utils/styles";
-import { post, put } from "../utils/api";
-import Heart from "../icons/Heart.svg";
-import Edit from "../icons/Edit.svg";
-import Checkbox from "./Checkbox";
-import PropertyAppliances from "./PropertyAppliances";
-import PropertyUtilities from "./PropertyUtilities";
-import PropertyImages from "./PropertyImages";
-import ArrowDown from "../icons/ArrowDown.svg";
-import ConfirmDialog2 from "./ConfirmDialog2";
+} from "../../utils/styles";
+import { post, put } from "../../utils/api";
+import Heart from "../../icons/Heart.svg";
+import Edit from "../../icons/Edit.svg";
+import Checkbox from "../Checkbox";
+import PropertyAppliances from "../PropertyAppliances";
+import PropertyUtilities from "../PropertyUtilities";
+import PropertyImages from "../PropertyImages";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import ConfirmDialog2 from "../ConfirmDialog2";
 
-function PropertyForm(props) {
+function OwnerPropertyForm(props) {
   const { userData } = useContext(AppContext);
   const { user } = userData;
   const applianceState = useState({
@@ -587,7 +587,7 @@ function PropertyForm(props) {
               </Form.Group>
             </Col>
           </div>
-          <div className="d-flex my-3 ">
+          <div className="d-flex my-3 ps-4">
             <Col>
               <Form.Group className="mx-2">
                 <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
@@ -933,4 +933,4 @@ function PropertyForm(props) {
   );
 }
 
-export default PropertyForm;
+export default OwnerPropertyForm;

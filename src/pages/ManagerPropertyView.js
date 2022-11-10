@@ -303,7 +303,7 @@ function ManagerPropertyView(props) {
         onCancel={onCancel}
       />
       <div className="flex-1">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         <div className="main-content">

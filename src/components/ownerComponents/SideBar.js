@@ -29,77 +29,75 @@ function SideBar() {
   };
 
   return (
-    <div>
+    <div style={{ width: "13rem" }}>
       <Row>
         <nav class="sidebar">
-          <div>
-            <div className="sidebarLinks">
-              <NavLink
-                to="/owner"
-                className="sidebarButtons"
-                activeClassName="sidebarButtonsActive"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Dashboard
-              </NavLink>
+          <div className="sidebarLinks">
+            <NavLink
+              to="/owner"
+              className="sidebarButtons"
+              activeClassName="sidebarButtonsActive"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Dashboard
+            </NavLink>
 
-              <NavLink
-                to="/search-pm"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Contacts
-              </NavLink>
-              <NavLink
-                to="/owner-repairs"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Maintenance
-              </NavLink>
-              <NavLink
-                to="/owner-utilities"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Accounting
-              </NavLink>
-              <NavLink
-                to="/owner_original"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Reports
-              </NavLink>
-              <NavLink
-                to="/owner-profile"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Profile
-              </NavLink>
-              <NavLink
-                to="/owner-documents"
-                className="sidebarButtons"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Documents
-              </NavLink>
-            </div>
+            <NavLink
+              to="/search-pm"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Contacts
+            </NavLink>
+            <NavLink
+              to="/owner-repairs"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Maintenance
+            </NavLink>
+            <NavLink
+              to="/owner-utilities"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Utilities
+            </NavLink>
+            <NavLink
+              to="/owner_original"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Reports
+            </NavLink>
+            <NavLink
+              to="/owner-profile"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Profile
+            </NavLink>
+            <NavLink
+              to="/owner-documents"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Documents
+            </NavLink>
           </div>
         </nav>
       </Row>

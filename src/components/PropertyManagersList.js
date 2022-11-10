@@ -75,7 +75,11 @@ function PropertyManagersList(props) {
 
           // alert("youve already rejected this Management Company");
           setShowDialog(true);
-          navigate(`/owner-properties/${property_uid}`);
+          navigate(`/propertyDetails/${property_uid}`, {
+            state: {
+              property_uid: property_uid,
+            },
+          });
         } else {
           console.log("here in else");
           const newProperty = {
@@ -92,7 +96,11 @@ function PropertyManagersList(props) {
           // }
           const response = await put("/properties", newProperty, null, files);
           //   setAddPropertyManager(false);
-          navigate(`/owner-properties/${property_uid}`);
+          navigate(`/propertyDetails/${property_uid}`, {
+            state: {
+              property_uid: property_uid,
+            },
+          });
           setStage("LIST");
         }
       }
@@ -139,7 +147,7 @@ function PropertyManagersList(props) {
         // }
         const response = await put("/properties", newProperty, null, files);
         // setAddPropertyManager(false);
-        // navigate(`/owner-properties/${property_uid}`);
+        // navigate(`/propertyDetails/${property_uid}`);
         setStage("LIST");
       }
       setStage("LIST");
@@ -148,14 +156,14 @@ function PropertyManagersList(props) {
 
   return stage === "LIST" ? (
     <div className="flex-1">
-      <div className="sidebar">
+      <div>
         <SideBar />
       </div>
       <div className="w-100">
         {/* <Header
           title="Property Managers"
           leftText="< Back"
-          leftFn={() => navigate(`/owner-properties/${property_uid}`)}
+          leftFn={() => navigate(`/propertyDetails/${property_uid}`)}
         /> */}
         <div>
           {propertyManagers.map((property, i) => (
@@ -206,7 +214,7 @@ function PropertyManagersList(props) {
     </div>
   ) : stage === "PMDETAILS" ? (
     <div className="flex-1">
-      <div className="sidebar">
+      <div>
         <SideBar />
       </div>
       <div className="w-100">

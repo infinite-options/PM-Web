@@ -8,14 +8,32 @@ import PayPal from "./PayPal";
 import Venmo from "./Venmo";
 import "../pages/maintenance.css"
 export default function TenantDuePayments(props) {
+  const [propertyData, setPropertyData] = React.useState([]);
+  const [tenantExpenses, setTenantExpenses] = React.useState([]);
+  const navigate = useNavigate();
+  const { userData, refresh } = useContext(AppContext);
+  const { access_token, user } = userData;
+  // const {paypal, setPaypal} = React.useState(false)
+  // const {zelle, setZelle} = React.useState(false)
 
-    const [propertyData, setPropertyData] = React.useState([]);
-    const [tenantExpenses, setTenantExpenses] = React.useState([]);
-    const navigate = useNavigate();
-    const { userData, refresh } = useContext(AppContext);
-    const { access_token, user } = userData;
-    // const {paypal, setPaypal} = React.useState(false)
-    // const {zelle, setZelle} = React.useState(false)
+  // const {ahc, setAhc} = React.useState(false)
+  // const {apple, setApple} = React.useState(false)
+  const [paymentOptions, setPaymentOptions] = React.useState([
+    { name: "paypal", isActive: false },
+    { name: "zelle", isActive: false },
+    { name: "ahc", isActive: false },
+    { name: "apple", isActive: false },
+  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const fetchTenantDashboard = async () => {
+    if (access_token === null || user.role.indexOf("TENANT") === -1) {
+      navigate("/");
+      return;
+    }
+    const response = await get("/tenantDashboard", access_token);
+    console.log("second");
+    console.log(response);
+    setIsLoading(false);
 
     // const {ahc, setAhc} = React.useState(false)
     // const {apple, setApple} = React.useState(false)
@@ -45,10 +63,16 @@ export default function TenantDuePayments(props) {
         setPropertyData(response);
         setTenantExpenses(response.result[0].properties[0].tenantExpenses);
 
-      };
-    useEffect(() => {
+
+      return;
+    }
+    setPropertyData(response);
+    setTenantExpenses(response.result[0].properties[0].tenantExpenses);
+  };
+  useEffect(() => {
     console.log("in use effect");
     fetchTenantDashboard();
+
     }, [paymentOptions]);
     const handlePaymentOption = (index)=>{
         console.log("payment choice called")
@@ -64,7 +88,6 @@ export default function TenantDuePayments(props) {
 
         setPaymentOptions(temp)
     }
-    console.log(paymentOptions)
 
 
 
@@ -132,5 +155,7 @@ export default function TenantDuePayments(props) {
                 </div>
             </div>
         </div>
-    )
+      </div>
+    </div>
+  );
 }

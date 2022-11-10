@@ -1,28 +1,38 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
-import { squareForm, pillButton, small, hidden, red } from "../utils/styles";
-import ArrowDown from "../icons/ArrowDown.svg";
-import { post, put } from "../utils/api";
+import {
+  squareForm,
+  pillButton,
+  small,
+  hidden,
+  red,
+  formLabel,
+} from "../../utils/styles";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import { post, put } from "../../utils/api";
 
-function CreateExpense(props) {
-  const { property, reload } = props;
-  const [category, setCategory] = React.useState("Management");
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [amount, setAmount] = React.useState("");
-  const [frequency, setFrequency] = React.useState("Monthly");
-  const [frequencyOfPayment, setFrequencyOfPayment] =
-    React.useState("Once a month");
-  const [date, setDate] = React.useState("");
-
-  const submitForm = async () => {
+function OwnerCreateExpense(props) {
+  const { properties } = props;
+  const [category, setCategory] = useState("Management");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
+  const [frequency, setFrequency] = useState("Monthly");
+  const [frequencyOfPayment, setFrequencyOfPayment] = useState("Once a month");
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [date, setDate] = useState("");
+  const reload = () => {
+    props.onSubmit();
+  };
+  const submitForm = async (sp) => {
     if (amount === "") {
       setErrorMessage("Please fill out all fields");
       return;
     }
+    let selectedProperty = JSON.parse(sp);
     if (category === "Mortgage") {
       let mortgage = [];
-      const files = property.images;
+      const files = selectedProperty.images;
       const newMortgage = {
         category: category,
         title: title,
@@ -36,18 +46,19 @@ function CreateExpense(props) {
       console.log(newMortgage);
       // let formData = new FormData();
       const updateMortgage = {
-        property_uid: property.property_uid,
+        property_uid: selectedProperty.property_uid,
         mortgages: JSON.stringify(newMortgage),
       };
 
       const response = await put("/properties", updateMortgage, null, files);
       reload();
-      props.back();
     } else if (category === "Insurance") {
       let insurance =
-        property.insurance == null ? [] : JSON.parse(property.insurance);
+        selectedProperty.insurance == null
+          ? []
+          : JSON.parse(selectedProperty.insurance);
       // console.log(insurance);
-      const files = property.images;
+      const files = selectedProperty.images;
       const newInsurance = {
         category: category,
         title: title,
@@ -60,17 +71,19 @@ function CreateExpense(props) {
       insurance.push(newInsurance);
       // console.log(insurance);
       const updateInsurance = {
-        property_uid: property.property_uid,
+        property_uid: selectedProperty.property_uid,
         insurance: JSON.stringify(insurance),
       };
 
       const response = await put("/properties", updateInsurance, null, files);
       reload();
-      props.back();
     } else if (category === "Tax") {
-      let taxes = property.taxes == null ? [] : JSON.parse(property.taxes);
+      let taxes =
+        selectedProperty.taxes == null
+          ? []
+          : JSON.parse(selectedProperty.taxes);
       // console.log(taxes);
-      const files = property.images;
+      const files = selectedProperty.images;
       const newTax = {
         category: category,
         title: title,
@@ -83,17 +96,16 @@ function CreateExpense(props) {
       taxes.push(newTax);
       // console.log(taxes);
       const updateTaxes = {
-        property_uid: property.property_uid,
+        property_uid: selectedProperty.property_uid,
         taxes: JSON.stringify(taxes),
       };
       const response = await put("/properties", updateTaxes, null, files);
       reload();
-      props.back();
     } else {
       const newExpense = {
-        pur_property_id: property.property_uid,
-        payer: property.owner_id,
-        receiver: property.property_uid,
+        pur_property_id: selectedProperty.property_uid,
+        payer: selectedProperty.owner_id,
+        receiver: selectedProperty.property_uid,
         purchase_type: category,
         // title: title,
         description: description,
@@ -106,10 +118,9 @@ function CreateExpense(props) {
       console.log(newExpense);
       const response = await post("/createExpenses", newExpense);
       reload();
-      props.back();
     }
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -121,6 +132,33 @@ function CreateExpense(props) {
   return (
     <div>
       <h5>Add New Expense Payment</h5>
+      <Form.Group
+        className="p-2"
+        style={{
+          background: "#F3F3F3 0% 0% no-repeat padding-box",
+          borderRadius: "5px",
+        }}
+      >
+        <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+          Property {required}
+        </Form.Label>
+        <Form.Select
+          style={squareForm}
+          value={selectedProperty}
+          onChange={(e) => setSelectedProperty(e.target.value)}
+        >
+          <option key="blankChoice" hidden value>
+            Search Your Properties
+          </option>
+          {properties.map((property, i) => (
+            <option key={i} value={JSON.stringify(property)}>
+              {property.address}
+              {property.unit !== "" ? " " + property.unit : ""},&nbsp;
+              {property.city},&nbsp;{property.state} {property.zip}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Category
@@ -155,6 +193,17 @@ function CreateExpense(props) {
       ) : (
         ""
       )}
+      {/* <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
+          Title {title === "" ? required : ""}
+        </Form.Label>
+        <Form.Control
+          style={squareForm}
+          placeholder="Painting"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </Form.Group> */}
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Description
@@ -177,20 +226,6 @@ function CreateExpense(props) {
           onChange={(e) => setAmount(e.target.value)}
         />
       </Form.Group>
-      {/* <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Frequency
-        </Form.Label>
-        <Form.Select
-          style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-          value={frequency}
-          onChange={(e) => setFrequency(e.target.value)}
-        >
-          <option>Monthly</option>
-          <option>Annually</option>
-          <option>One-time</option>
-        </Form.Select>
-      </Form.Group> */}
       {category === "Insurance" ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
@@ -249,6 +284,20 @@ function CreateExpense(props) {
           </Form.Select>
         </Form.Group>
       )}
+      {/* <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
+          Frequency
+        </Form.Label>
+        <Form.Select
+          style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+          value={frequency}
+          onChange={(e) => setFrequency(e.target.value)}
+        >
+          <option>Monthly</option>
+          <option>Annually</option>
+          <option>One-time</option>
+        </Form.Select>
+      </Form.Group> */}
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Frequency of payment
@@ -350,7 +399,7 @@ function CreateExpense(props) {
         <Button
           variant="outline-primary"
           style={pillButton}
-          onClick={submitForm}
+          onClick={() => submitForm(selectedProperty)}
           className="mx-2"
         >
           Save Expense
@@ -360,4 +409,4 @@ function CreateExpense(props) {
   );
 }
 
-export default CreateExpense;
+export default OwnerCreateExpense;

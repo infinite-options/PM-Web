@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "./Header";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
-import RepairImages from "./RepairImages";
-import { get, post } from "../utils/api";
-import SideBar from "./ownerComponents/SideBar";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
+import RepairImages from "../RepairImages";
+import { get, post } from "../../utils/api";
+import ArrowDown from "../../icons/ArrowDown.svg";
 import {
   headings,
   formLabel,
@@ -20,7 +17,7 @@ import {
   hidden,
   small,
   squareForm,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 const useStyles = makeStyles((theme) => ({
   priorityInactive: {
@@ -34,8 +31,11 @@ function OwnerRepairRequest(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
-  const properties = location.state.properties;
+  // const properties = location.state.properties;
+  const { properties } = props;
   const imageState = useState([]);
+
+  const [issueType, setIssueType] = useState("Plumbing");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
@@ -53,6 +53,7 @@ function OwnerRepairRequest(props) {
     const newRequest = {
       property_uid: selectedProperty.property_uid,
       title: title,
+      request_type: issueType,
       description: description,
       priority: priority,
       request_created_by: selectedProperty.owner_id,
@@ -67,14 +68,7 @@ function OwnerRepairRequest(props) {
         newRequest[key] = file.image;
       }
     }
-    // for (const file of imageState[0]) {
-    //   let key = file.coverPhoto ? `img_${i++}` : `img_${i++}`;
-    //   if (file.file !== null) {
-    //     newRequest[key] = file.file;
-    //   } else {
-    //     newRequest[key] = file.image;
-    //   }
-    // }
+
     console.log(newRequest);
     await post("/maintenanceRequests", newRequest, null, files);
     navigate("../owner-repairs");
@@ -94,16 +88,7 @@ function OwnerRepairRequest(props) {
   return (
     <div>
       <div className="flex-1">
-        <div className="sidebar">
-          <SideBar />
-        </div>
         <div className="w-100">
-          <br />
-          <Header
-            title="Repairs"
-            leftText="< Back"
-            leftFn={() => navigate("/owner-repairs")}
-          />
           <Container className="pt-1 mb-4">
             <Row style={headings}>
               <div>New Repair Request</div>
@@ -133,6 +118,22 @@ function OwnerRepairRequest(props) {
                     {property.city},&nbsp;{property.state} {property.zip}
                   </option>
                 ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Issue Type
+              </Form.Label>
+              <Form.Select
+                style={squareForm}
+                value={issueType}
+                onChange={(e) => setIssueType(e.target.value)}
+              >
+                <option>Plumbing</option>
+                <option>Landscape</option>
+                <option>Appliances</option>
+                <option>Electrical</option>
+                <option>Other</option>
               </Form.Select>
             </Form.Group>
             <Form>
@@ -266,7 +267,7 @@ function OwnerRepairRequest(props) {
                 <Col xs={4}>
                   <Button
                     variant="outline-primary"
-                    onClick={() => navigate("/tenant")}
+                    onClick={() => navigate("/owner")}
                     style={pillButton}
                   >
                     Cancel

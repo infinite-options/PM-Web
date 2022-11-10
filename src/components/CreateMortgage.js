@@ -154,7 +154,7 @@ function CreateMortgage(props) {
       </Form.Group>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
-          Payment Datent {date === "" ? required : ""}
+          Payment Date {date === "" ? required : ""}
         </Form.Label>
         <Form.Control
           style={squareForm}

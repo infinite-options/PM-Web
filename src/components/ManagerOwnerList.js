@@ -200,7 +200,7 @@ function ManagerOwnerList(props) {
   return (
     <div className="pb-5 mb-5 h-100">
       <div className="flex-1">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         <div className="w-100 m-3">

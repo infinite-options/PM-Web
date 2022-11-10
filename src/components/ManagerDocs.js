@@ -160,7 +160,12 @@ function ManagerDocs(props) {
               console.log(addPropertyManager);
               setAddPropertyManager(true);
               console.log(addPropertyManager);
-              setStage("PROPERTYMANAGERLISTS");
+              navigate("/pm-list", {
+                state: {
+                  property: property,
+                  property_uid: property.property_uid,
+                },
+              });
             }}
           >
             Change Property Manager

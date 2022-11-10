@@ -109,7 +109,7 @@ export default function ManagerDashboard() {
   useEffect(() => {
     console.log("in use effect");
     fetchTenantDashboard();
-  }, []);
+  }, [access_token]);
 
   const fetchTenantDetails = async (tenant_id) => {
     if (access_token === null) {
@@ -290,7 +290,7 @@ export default function ManagerDashboard() {
   return (
     <div>
       <div className="flex-1">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         {properties.length > 0 ? (

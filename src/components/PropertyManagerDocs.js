@@ -452,7 +452,8 @@ function PropertyManagerDocs(props) {
       ) : (
         ""
       )}
-      {property.management_status === "PM END EARLY" ? (
+      {activeContract !== null &&
+      property.management_status === "PM END EARLY" ? (
         <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
           <h6 className="d-flex justify-content-center" style={mediumBold}>
             You have requested to end the agreement early on{" "}
@@ -462,8 +463,9 @@ function PropertyManagerDocs(props) {
       ) : (
         ""
       )}
-
-      {property.management_status === "OWNER END EARLY" ? (
+      {console.log(activeContract)}
+      {activeContract !== null &&
+      property.management_status === "OWNER END EARLY" ? (
         <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
           <h6 className="d-flex justify-content-center" style={mediumBold}>
             Owner requested to end the agreement <br /> early on{" "}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import {
   Table,
@@ -27,14 +27,14 @@ const useStyles = makeStyles({
 function ManagerRepairsOverview(props) {
   const navigate = useNavigate();
   const classes = useStyles();
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const [repairIter, setRepairIter] = React.useState([]);
+  const [repairIter, setRepairIter] = useState([]);
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
 
   const sort_repairs = (repairs) => {
     const repairs_with_quotes = repairs.filter(
@@ -132,7 +132,7 @@ function ManagerRepairsOverview(props) {
     ]);
   };
 
-  React.useEffect(fetchRepairs, [access_token]);
+  useEffect(fetchRepairs, [access_token]);
   console.log(repairIter);
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
@@ -269,7 +269,7 @@ function ManagerRepairsOverview(props) {
   return (
     <div>
       <div className="flex-1">
-        <div className="sidebar">
+        <div>
           <SideBar />
         </div>
         <div className="main-content">

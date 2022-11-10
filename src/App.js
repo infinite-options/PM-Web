@@ -12,6 +12,8 @@ import ApplyToProperty from "./pages/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
+
+import CreateAnnouncement from "./components/CreateAnnouncement";
 import Emergency from "./components/TenantEmergency";
 import RepairStatus from "./components/RepairStatus";
 import TenantDocuments from "./components/TenantDocuments";
@@ -55,7 +57,7 @@ import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
 import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./pages/ManagerUtilities";
-import OwnerUtilities from "./pages/OwnerUtilities";
+import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
 import PropertyView from "./components/PropertyView";
 import TenantDuePayments from "./components/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
@@ -80,8 +82,8 @@ import OwnersTab from "./pages/OwnersTab";
 import MaintenencePage from "./pages/MaintenencePage";
 import ManagerLanding from "./pages/ManagerLanding";
 import ZellePayment from "./components/ZellePaymentPage";
-import OwnerRepairList from "./components/OwnerRepairList";
-import OwnerRepairRequest from "./components/OwnerRepairRequest";
+import OwnerRepairList from "./components/ownerComponents/OwnerRepairList";
+import OwnerRepairRequest from "./components/ownerComponents/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
 import ModifyExisiting from "./pages/ModifyExisiting";
 import PropertyInfo from "./pages/PropertyInfo";
@@ -89,10 +91,11 @@ import AppliedDashboard from "./pages/AppliedDashboard";
 import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
 import ManagerDocuments from "./components/ManagerDocuments";
 import ManagerProfile from "./components/ManagerProfile";
-import OwnerDocuments from "./components/OwnerDocuments";
+import OwnerDocuments from "./pages/OwnerDocuments";
 import OwnerProfile from "./components/OwnerProfile";
-import TenantProfile from "./pages/TenantProfile"
-import TenantProfile2 from "./pages/TenantProfile2"
+import TenantProfile from "./pages/TenantProfile";
+import TenantProfile2 from "./pages/TenantProfile2";
+import OwnerPropertyView from "./components/ownerComponents/OwnerPropertyView";
 
 function App() {
   const [userData, setUserData] = React.useState({
@@ -188,10 +191,7 @@ function App() {
               path="reviewTenantProfile/:property_uid"
               element={<ReviewTenantProfile />}
             />
-            <Route
-              path="profile-info"
-              element={<ProfileInfo />}
-            />
+            <Route path="profile-info" element={<ProfileInfo />} />
             <Route
               path="tenantPropertyView/:property_uid"
               element={<TenantPropertyView />}
@@ -214,6 +214,10 @@ function App() {
             <Route
               path="residentAnnouncements"
               element={<ResidentAnnouncements />}
+            />
+            <Route
+              path="manager-announcements"
+              element={<CreateAnnouncement />}
             />
             <Route
               path="detailAnnouncements"
@@ -255,14 +259,8 @@ function App() {
               path="ownerPaymentHistory"
               element={<OwnerPaymentHistory />}
             />
-            <Route
-              path="tenantProfile"
-              element={<TenantProfile />}
-            />
-            <Route
-              path="tenantProfile2"
-              element={<TenantProfile2 />}
-            />
+            <Route path="tenantProfile" element={<TenantProfile />} />
+            <Route path="tenantProfile2" element={<TenantProfile2 />} />
             <Route
               path="managerPaymentHistory"
               element={<ManagerPaymentHistory />}
@@ -303,6 +301,10 @@ function App() {
               element={<ManagerPropertyView />}
             />
             <Route path="owner-properties/:mp_id" element={<PropertyView />} />
+            <Route
+              path="propertyDetails/:mp_id"
+              element={<OwnerPropertyView />}
+            />
             <Route
               path="manager-properties/:mp_id/repairs"
               element={<ManagerRepairsList />}
