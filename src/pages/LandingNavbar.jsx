@@ -7,7 +7,7 @@ import MenuIcon from "../icons/MenuIcon.svg";
 import AppContext from "../AppContext";
 import Logout from "../components/Logout";
 import "./navbar.css";
-function Landing() {
+function LandingNavbar() {
   const [open, setOpen] = useState(false);
   const [openRoles, setOpenRoles] = useState(false);
   const navigate = useNavigate();
@@ -424,4 +424,4 @@ function Landing() {
   );
 }
 
-export default Landing;
+export default LandingNavbar;

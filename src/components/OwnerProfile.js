@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
+import OwnerPaymentSelection from "../components/OwnerPaymentSelection";
+import SideBar from "./ownerComponents/SideBar";
 import { squareForm, red, gray, headings } from "../utils/styles";
 import { get, put } from "../utils/api";
-import OwnerPaymentSelection from "../components/OwnerPaymentSelection";
-import Logout from "../components/Logout";
-import SideBar from "./ownerComponents/SideBar";
 function OwnerProfile(props) {
   const context = useContext(AppContext);
   const { userData, refresh } = context;
@@ -309,13 +308,6 @@ function OwnerProfile(props) {
             setPaymentState={setPaymentState}
             editProfile={editProfile}
           />
-          {editProfile ? (
-            ""
-          ) : (
-            <Row className="my-4">
-              <Logout />
-            </Row>
-          )}
         </div>
       </div>
     </div>
