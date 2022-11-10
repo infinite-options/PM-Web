@@ -3471,7 +3471,7 @@ export default function OwnerDashboard2() {
             </Row>
 
             <Row className="w-100 m-3">
-              <Col xs={2}> Search by</Col>
+              <Col> Search by</Col>
 
               <Col>
                 <input

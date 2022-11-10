@@ -348,7 +348,7 @@ function OwnerContacts() {
           ) : (
             <Row>
               <Row className="w-100 m-3">
-                <Col> Search by</Col>
+                <Col xs={2}> Search by</Col>
 
                 <Col>
                   <input
@@ -356,6 +356,11 @@ function OwnerContacts() {
                     placeholder="Search"
                     onChange={(event) => {
                       setSearch(event.target.value);
+                    }}
+                    style={{
+                      width: "400px",
+                      border: "1px solid black",
+                      padding: "5px",
                     }}
                   />
                 </Col>
