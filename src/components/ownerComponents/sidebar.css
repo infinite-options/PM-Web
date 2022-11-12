@@ -3,7 +3,8 @@
   flex-direction: row;
   background-color: #ffffff;
   position: fixed;
-  width:13rem;
+  width:10rem;
+  background-color: #229ebc;
 }
 .sidebarButtons {
   padding: 15px;
@@ -12,7 +13,9 @@
   text-transform: uppercase;
   font-family: Avenir-Light;
   cursor: pointer;
-  width: 13rem;
+  width: 10rem;
+  background-color: #229ebc;
+  height:100vh;
 }
 
 .sidebarLinks {
@@ -21,7 +24,9 @@
   /* position: absolute; */
   text-align: left;
   background-color: #ffffff;  
-  width: 13rem;
+  width: 10rem;  
+  height:60vh;
+  background-color: #229ebc;
 }
 
 .sidebarButtonsActive {
@@ -32,7 +37,8 @@
   font-family: Avenir-Light;
   cursor: pointer;
   font-weight: 700;
-  width: 13rem
+  width: 10rem;
+  background-color: #229ebc;
   
 }
 
@@ -44,7 +50,8 @@
   font-family: Avenir-Light;
   cursor: pointer;
   font-weight: 700;
-  width: 13rem
+  width: 10rem;
+  background-color: #229ebc;
 }
 
 

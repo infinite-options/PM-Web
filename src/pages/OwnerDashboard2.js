@@ -538,7 +538,7 @@ export default function OwnerDashboard2() {
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div>
+        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
           <SideBar />
         </div>
         {ownerData.length > 1 ? (
@@ -3731,7 +3731,7 @@ export default function OwnerDashboard2() {
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div>
+        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
           <SideBar />
         </div>
         <div
@@ -3757,7 +3757,7 @@ export default function OwnerDashboard2() {
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div>
+        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
           <SideBar />
         </div>
         <div
@@ -3783,7 +3783,7 @@ export default function OwnerDashboard2() {
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div>
+        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
           <SideBar />
         </div>
         <div

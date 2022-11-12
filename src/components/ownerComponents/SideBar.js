@@ -29,8 +29,10 @@ function SideBar() {
   };
 
   return (
-    <div style={{ width: "13rem" }}>
-      <Row>
+    <div style={{ width: "10rem", backgroundColor: "#229ebc", height: "100%" }}>
+      <Row
+        style={{ width: "10rem", backgroundColor: "#229ebc", height: "100%" }}
+      >
         <nav className="sidebar">
           <div className="sidebarLinks">
             <NavLink
