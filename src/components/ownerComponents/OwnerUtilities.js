@@ -161,7 +161,6 @@ function OwnerUtilities(props) {
     const response = await get("/ownerDashboard", access_token);
     console.log("second");
     console.log(response);
-    setIsLoading(false);
 
     if (response.msg === "Token has expired") {
       console.log("here msg");
@@ -263,6 +262,7 @@ function OwnerUtilities(props) {
     console.log(output);
     setExpenseUnique(output);
     setExpenses(expense);
+    setIsLoading(false);
   };
   useEffect(() => {
     console.log("in use effect");
@@ -698,464 +698,475 @@ function OwnerUtilities(props) {
             //   setEditingUtility(true);
             // }}
           />
-          <div>
-            {newUtility !== null &&
-            editingUtility &&
-            !expenseDetail &&
-            !maintenanceExpenseDetail &&
-            !expenseDetailOwner ? (
-              <div
-                className="mx-2 mt-2 p-3"
-                style={{
-                  background: "#FFFFFF 0% 0% no-repeat padding-box",
-                  borderRadius: "5px",
-                  opacity: 1,
-                }}
-              >
-                <Row className="my-4 text-center">
-                  <div style={headings}>New Expense</div>
-                </Row>
-                <Row className="mb-2">
-                  <Col>
-                    <Form.Group className="mx-2">
-                      <Form.Label style={mediumBold} className="mb-0 ms-2">
-                        Type {newUtility.service_name === "" ? required : ""}
-                      </Form.Label>
-                      <Form.Control
-                        style={squareForm}
-                        placeholder="Electricity"
-                        value={newUtility.service_name}
-                        onChange={(e) => changeNewUtility(e, "service_name")}
-                      />
-                    </Form.Group>
-                  </Col>
-
-                  <Col>
-                    <Form.Group className="mx-2">
-                      <Form.Label style={mediumBold} className="mb-0 ms-2">
-                        Amount {newUtility.charge === "" ? required : ""}
-                      </Form.Label>
-                      <Form.Control
-                        style={squareForm}
-                        type="number"
-                        placeholder="20"
-                        value={newUtility.charge}
-                        onChange={(e) => changeNewUtility(e, "charge")}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row className="mb-2">
-                  <Col>
-                    <Form.Group className="mx-2">
-                      <Form.Label style={mediumBold} className="mb-0 ms-2">
-                        Provider {newUtility.provider === "" ? required : ""}
-                      </Form.Label>
-                      <Form.Control
-                        style={squareForm}
-                        placeholder="Electricity"
-                        value={newUtility.provider}
-                        onChange={(e) => changeNewUtility(e, "provider")}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={6}>
-                    <Form.Group className="mx-2 mt-3 mb-2">
-                      <Form.Label style={mediumBold} className="mb-0 ms-2">
-                        Due by Date {newUtility.due_date === "" ? required : ""}
-                      </Form.Label>
-                      <Form.Control
-                        disabled={newUtility.add_to_rent}
-                        style={squareForm}
-                        type="date"
-                        value={newUtility.due_date}
-                        onChange={(e) => changeNewUtility(e, "due_date")}
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      className="mx-2 mb-3"
-                      controlId="formBasicCheckbox"
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        style={subHeading}
-                        label="Pay with next rent"
-                        onChange={(e) => changeNewUtility(e, "add_to_rent")}
-                      />
-                    </Form.Group>
-                    {/*<Checkbox type='BOX' checked={newUtility.add_to_rent ? 'checked' : ''}*/}
-                    {/*          onClick={(checked) => changeNewUtility(checked, 'add_to_rent')} />*/}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={6}>
-                    <Form.Group
-                      className="mx-2 mb-3"
-                      controlId="formBasicCheckbox"
-                    >
-                      <div
-                        className="d-flex mx-2 ps-2 align-items-center my-2"
-                        style={{
-                          font: "normal normal normal 18px Bahnschrift-Regular",
-                        }}
-                      >
-                        <Checkbox
-                          type="BOX"
-                          checked={tenantPay}
-                          onClick={() => setTenantPay(!tenantPay)}
-                        />
-                        <p className="ms-1 mb-1">Tenant</p>
-                      </div>
-                    </Form.Group>
-                  </Col>
-                  <Col xs={6}>
-                    <Form.Group
-                      className="mx-2 mb-3"
-                      controlId="formBasicCheckbox"
-                    >
-                      <div
-                        className="d-flex mx-2 ps-2 align-items-center my-2"
-                        style={{
-                          font: "normal normal normal 18px Bahnschrift-Regular",
-                        }}
-                      >
-                        {" "}
-                        <Checkbox
-                          type="BOX"
-                          checked={ownerPay}
-                          onClick={() => setOwnerPay(!ownerPay)}
-                        />
-                        <p className="ms-1 mb-1">Owner</p>
-                      </div>
-                    </Form.Group>
-                  </Col>
-                </Row>
-
-                <Row className="mx-1 mt-3 mb-2">
-                  <h6 style={mediumBold}>Properties</h6>
-                  {properties.map((property, i) => (
-                    <div
-                      key={i}
-                      className="d-flex mx-2 ps-2 align-items-center my-2"
-                      style={{
-                        font: "normal normal normal 18px Bahnschrift-Regular",
-                      }}
-                    >
-                      <Checkbox
-                        type="BOX"
-                        checked={propertyState[i].checked}
-                        onClick={() => toggleProperty(i)}
-                      />
-                      <p className="ms-1 mb-1">
-                        {property.address} {property.unit}
-                        ,&nbsp;{property.city},&nbsp;{property.state}&nbsp;{" "}
-                        {property.zip}
-                      </p>
-                    </div>
-                  ))}
-                </Row>
-
-                {/*Add Documents functionality*/}
-                <Row className="mx-1 mt-3 mb-2">
-                  <h6 style={mediumBold}>Documents</h6>
-                  {files.map((file, i) => (
-                    <div key={i}>
-                      <div className="d-flex justify-content-between align-items-end">
-                        <div>
-                          <h6 style={mediumBold}>{file.name}</h6>
-                          <p style={small} className="m-0">
-                            {file.description}
-                          </p>
-                        </div>
-                        <div>
-                          <img
-                            src={EditIcon}
-                            alt="Edit"
-                            className="px-1 mx-2"
-                            onClick={() => editDocument(i)}
-                          />
-                          <img
-                            src={DeleteIcon}
-                            alt="Delete"
-                            className="px-1 mx-2"
-                            onClick={() => deleteDocument(i)}
-                          />
-                          <a href={file.link} target="_blank">
-                            <img src={File} />
-                          </a>
-                        </div>
-                      </div>
-                      <hr style={{ opacity: 1 }} />
-                    </div>
-                  ))}
-                  {newFile !== null ? (
-                    <div>
-                      <Form.Group>
-                        <Form.Label style={mediumBold} className="mb-0 ms-2">
-                          Document Name
-                        </Form.Label>
-                        <Form.Control
-                          style={squareForm}
-                          value={newFile.name}
-                          placeholder="Name"
-                          onChange={(e) =>
-                            updateNewFile("name", e.target.value)
-                          }
-                        />
-                      </Form.Group>
-                      <Form.Group>
-                        <Form.Label style={mediumBold} className="mb-0 ms-2">
-                          Description
-                        </Form.Label>
-                        <Form.Control
-                          style={squareForm}
-                          value={newFile.description}
-                          placeholder="Description"
-                          onChange={(e) =>
-                            updateNewFile("description", e.target.value)
-                          }
-                        />
-                      </Form.Group>
-                      <div className="text-center my-3">
-                        <Button
-                          variant="outline-primary"
-                          style={smallPillButton}
-                          as="p"
-                          onClick={cancelDocumentEdit}
-                          className="mx-2"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          variant="outline-primary"
-                          style={smallPillButton}
-                          as="p"
-                          onClick={saveNewFile}
-                          className="mx-2"
-                        >
-                          Save Document
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <input
-                        id="file"
-                        type="file"
-                        accept="image/*,.pdf"
-                        onChange={addFile}
-                        className="d-none"
-                      />
-                      <label htmlFor="file">
-                        <Button
-                          variant="outline-primary"
-                          style={smallPillButton}
-                          as="p"
-                        >
-                          Add Document
-                        </Button>
-                      </label>
-                    </div>
-                  )}
-                  <Row>
-                    <Col>
-                      <Form.Group
-                        className="mx-2 my-3"
-                        hidden={
-                          propertyState.filter((p) => p.checked).length <= 1
-                        }
-                      >
-                        <Form.Label style={mediumBold} className="mb-0 ms-2">
-                          Split Method
-                        </Form.Label>
-                        <Form.Select
-                          style={{
-                            ...squareForm,
-                            backgroundImage: `url(${ArrowDown})`,
-                          }}
-                          value={newUtility.split_type}
-                          onChange={(e) => changeNewUtility(e, "split_type")}
-                        >
-                          <option value="No Split">No Split</option>
-                          <option value="Uniform">Uniform</option>
-                          <option value="Tenant">By Tenant Count</option>
-                          <option value="Area">By Square Footage</option>
-                        </Form.Select>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Row>
-
+          {isLoading ? (
+            <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center"></div>
+            </div>
+          ) : (
+            <div>
+              {newUtility !== null &&
+              editingUtility &&
+              !expenseDetail &&
+              !maintenanceExpenseDetail &&
+              !expenseDetailOwner ? (
                 <div
-                  className="text-center my-2"
-                  style={errorMessage === "" ? hidden : {}}
-                >
-                  <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
-                </div>
-                <div
-                  className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
+                  className="mx-2 mt-2 p-3"
                   style={{
                     background: "#FFFFFF 0% 0% no-repeat padding-box",
-
+                    borderRadius: "5px",
                     opacity: 1,
                   }}
                 >
-                  <Button
-                    variant="outline-primary"
-                    style={pillButton}
-                    onClick={cancelEdit}
-                    className="mx-2"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    style={pillButton}
-                    onClick={addUtility}
-                    className="mx-2"
-                  >
-                    Save
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              ""
-            )}
-            {expenses.length > 0 &&
-            expenseUnique.length > 0 &&
-            newUtility === null &&
-            !editingUtility &&
-            !expenseDetailOwner &&
-            !expenseDetail &&
-            !maintenanceExpenseDetail &&
-            !payExpense ? (
-              <div className="mx-2 my-2 p-3">
-                <div>
-                  <Row style={headings}>
+                  <Row className="my-4 text-center">
+                    <div style={headings}>New Expense</div>
+                  </Row>
+                  <Row className="mb-2">
                     <Col>
-                      {" "}
-                      <h3>Utilities Due From Owner </h3>
+                      <Form.Group className="mx-2">
+                        <Form.Label style={mediumBold} className="mb-0 ms-2">
+                          Type {newUtility.service_name === "" ? required : ""}
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="Electricity"
+                          value={newUtility.service_name}
+                          onChange={(e) => changeNewUtility(e, "service_name")}
+                        />
+                      </Form.Group>
                     </Col>
 
                     <Col>
-                      <img
-                        src={AddIcon}
-                        onClick={() => {
-                          setNewUtility({ ...emptyUtility });
-                          propertyState.forEach(
-                            (prop) => (prop.checked = false)
-                          );
-                          setPropertyState(propertyState);
-                          setTenantPay(false);
-                          setOwnerPay(true);
-                          setEditingUtility(true);
-                        }}
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          float: "right",
-                          marginRight: "5rem",
-                        }}
-                      />
+                      <Form.Group className="mx-2">
+                        <Form.Label style={mediumBold} className="mb-0 ms-2">
+                          Amount {newUtility.charge === "" ? required : ""}
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          type="number"
+                          placeholder="20"
+                          value={newUtility.charge}
+                          onChange={(e) => changeNewUtility(e, "charge")}
+                        />
+                      </Form.Group>
                     </Col>
                   </Row>
-                  <Row className="m-3">
-                    <Table classes={{ root: classes.customTable }} size="small">
-                      <EnhancedTableHead
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                        // rowCount="4"
-                      />{" "}
-                      <TableBody>
-                        {stableSort(
-                          expenseUnique,
-                          getComparator(order, orderBy)
-                        ).map((expense, index) => {
-                          return expense.purchase_type === "UTILITY" &&
-                            expense.payer.includes(user.user_uid) ? (
-                            <TableRow
-                              hover
-                              role="checkbox"
-                              tabIndex={-1}
-                              key={expense.address}
-                              onClick={() => {
-                                setExpenseDetailOwner(true);
-                                setPayment(expense);
-                              }}
-                            >
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.bill_utility_type}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.description}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {" "}
-                                {expense.address}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.bill_algorithm != null
-                                  ? expense.bill_algorithm
-                                  : "None"}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                ${expense.amount_due}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {" "}
-                                {expense.purchase_date}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.purchase_status === "UNPAID" ? (
-                                  <Col className="mt-0" style={redPill}>
-                                    {expense.purchase_status}
-                                  </Col>
-                                ) : (
-                                  <Col className="mt-0" style={greenPill}>
-                                    {expense.purchase_status}
-                                  </Col>
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ) : (
-                            <Row style={headings}></Row>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
+                  <Row className="mb-2">
+                    <Col>
+                      <Form.Group className="mx-2">
+                        <Form.Label style={mediumBold} className="mb-0 ms-2">
+                          Provider {newUtility.provider === "" ? required : ""}
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="Electricity"
+                          value={newUtility.provider}
+                          onChange={(e) => changeNewUtility(e, "provider")}
+                        />
+                      </Form.Group>
+                    </Col>
                   </Row>
-                  {/* {expenseUnique.map((expense) => {
+                  <Row>
+                    <Col xs={6}>
+                      <Form.Group className="mx-2 mt-3 mb-2">
+                        <Form.Label style={mediumBold} className="mb-0 ms-2">
+                          Due by Date{" "}
+                          {newUtility.due_date === "" ? required : ""}
+                        </Form.Label>
+                        <Form.Control
+                          disabled={newUtility.add_to_rent}
+                          style={squareForm}
+                          type="date"
+                          value={newUtility.due_date}
+                          onChange={(e) => changeNewUtility(e, "due_date")}
+                        />
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-2 mb-3"
+                        controlId="formBasicCheckbox"
+                      >
+                        <Form.Check
+                          type="checkbox"
+                          style={subHeading}
+                          label="Pay with next rent"
+                          onChange={(e) => changeNewUtility(e, "add_to_rent")}
+                        />
+                      </Form.Group>
+                      {/*<Checkbox type='BOX' checked={newUtility.add_to_rent ? 'checked' : ''}*/}
+                      {/*          onClick={(checked) => changeNewUtility(checked, 'add_to_rent')} />*/}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={6}>
+                      <Form.Group
+                        className="mx-2 mb-3"
+                        controlId="formBasicCheckbox"
+                      >
+                        <div
+                          className="d-flex mx-2 ps-2 align-items-center my-2"
+                          style={{
+                            font: "normal normal normal 18px Bahnschrift-Regular",
+                          }}
+                        >
+                          <Checkbox
+                            type="BOX"
+                            checked={tenantPay}
+                            onClick={() => setTenantPay(!tenantPay)}
+                          />
+                          <p className="ms-1 mb-1">Tenant</p>
+                        </div>
+                      </Form.Group>
+                    </Col>
+                    <Col xs={6}>
+                      <Form.Group
+                        className="mx-2 mb-3"
+                        controlId="formBasicCheckbox"
+                      >
+                        <div
+                          className="d-flex mx-2 ps-2 align-items-center my-2"
+                          style={{
+                            font: "normal normal normal 18px Bahnschrift-Regular",
+                          }}
+                        >
+                          {" "}
+                          <Checkbox
+                            type="BOX"
+                            checked={ownerPay}
+                            onClick={() => setOwnerPay(!ownerPay)}
+                          />
+                          <p className="ms-1 mb-1">Owner</p>
+                        </div>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+
+                  <Row className="mx-1 mt-3 mb-2">
+                    <h6 style={mediumBold}>Properties</h6>
+                    {properties.map((property, i) => (
+                      <div
+                        key={i}
+                        className="d-flex mx-2 ps-2 align-items-center my-2"
+                        style={{
+                          font: "normal normal normal 18px Bahnschrift-Regular",
+                        }}
+                      >
+                        <Checkbox
+                          type="BOX"
+                          checked={propertyState[i].checked}
+                          onClick={() => toggleProperty(i)}
+                        />
+                        <p className="ms-1 mb-1">
+                          {property.address} {property.unit}
+                          ,&nbsp;{property.city},&nbsp;{property.state}&nbsp;{" "}
+                          {property.zip}
+                        </p>
+                      </div>
+                    ))}
+                  </Row>
+
+                  {/*Add Documents functionality*/}
+                  <Row className="mx-1 mt-3 mb-2">
+                    <h6 style={mediumBold}>Documents</h6>
+                    {files.map((file, i) => (
+                      <div key={i}>
+                        <div className="d-flex justify-content-between align-items-end">
+                          <div>
+                            <h6 style={mediumBold}>{file.name}</h6>
+                            <p style={small} className="m-0">
+                              {file.description}
+                            </p>
+                          </div>
+                          <div>
+                            <img
+                              src={EditIcon}
+                              alt="Edit"
+                              className="px-1 mx-2"
+                              onClick={() => editDocument(i)}
+                            />
+                            <img
+                              src={DeleteIcon}
+                              alt="Delete"
+                              className="px-1 mx-2"
+                              onClick={() => deleteDocument(i)}
+                            />
+                            <a href={file.link} target="_blank">
+                              <img src={File} />
+                            </a>
+                          </div>
+                        </div>
+                        <hr style={{ opacity: 1 }} />
+                      </div>
+                    ))}
+                    {newFile !== null ? (
+                      <div>
+                        <Form.Group>
+                          <Form.Label style={mediumBold} className="mb-0 ms-2">
+                            Document Name
+                          </Form.Label>
+                          <Form.Control
+                            style={squareForm}
+                            value={newFile.name}
+                            placeholder="Name"
+                            onChange={(e) =>
+                              updateNewFile("name", e.target.value)
+                            }
+                          />
+                        </Form.Group>
+                        <Form.Group>
+                          <Form.Label style={mediumBold} className="mb-0 ms-2">
+                            Description
+                          </Form.Label>
+                          <Form.Control
+                            style={squareForm}
+                            value={newFile.description}
+                            placeholder="Description"
+                            onChange={(e) =>
+                              updateNewFile("description", e.target.value)
+                            }
+                          />
+                        </Form.Group>
+                        <div className="text-center my-3">
+                          <Button
+                            variant="outline-primary"
+                            style={smallPillButton}
+                            as="p"
+                            onClick={cancelDocumentEdit}
+                            className="mx-2"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="outline-primary"
+                            style={smallPillButton}
+                            as="p"
+                            onClick={saveNewFile}
+                            className="mx-2"
+                          >
+                            Save Document
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <input
+                          id="file"
+                          type="file"
+                          accept="image/*,.pdf"
+                          onChange={addFile}
+                          className="d-none"
+                        />
+                        <label htmlFor="file">
+                          <Button
+                            variant="outline-primary"
+                            style={smallPillButton}
+                            as="p"
+                          >
+                            Add Document
+                          </Button>
+                        </label>
+                      </div>
+                    )}
+                    <Row>
+                      <Col>
+                        <Form.Group
+                          className="mx-2 my-3"
+                          hidden={
+                            propertyState.filter((p) => p.checked).length <= 1
+                          }
+                        >
+                          <Form.Label style={mediumBold} className="mb-0 ms-2">
+                            Split Method
+                          </Form.Label>
+                          <Form.Select
+                            style={{
+                              ...squareForm,
+                              backgroundImage: `url(${ArrowDown})`,
+                            }}
+                            value={newUtility.split_type}
+                            onChange={(e) => changeNewUtility(e, "split_type")}
+                          >
+                            <option value="No Split">No Split</option>
+                            <option value="Uniform">Uniform</option>
+                            <option value="Tenant">By Tenant Count</option>
+                            <option value="Area">By Square Footage</option>
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </Row>
+
+                  <div
+                    className="text-center my-2"
+                    style={errorMessage === "" ? hidden : {}}
+                  >
+                    <p style={{ ...red, ...small }}>
+                      {errorMessage || "error"}
+                    </p>
+                  </div>
+                  <div
+                    className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
+                    style={{
+                      background: "#FFFFFF 0% 0% no-repeat padding-box",
+
+                      opacity: 1,
+                    }}
+                  >
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      onClick={cancelEdit}
+                      className="mx-2"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      onClick={addUtility}
+                      className="mx-2"
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+              {expenses.length > 0 &&
+              expenseUnique.length > 0 &&
+              newUtility === null &&
+              !editingUtility &&
+              !expenseDetailOwner &&
+              !expenseDetail &&
+              !maintenanceExpenseDetail &&
+              !payExpense ? (
+                <div className="mx-2 my-2 p-3">
+                  <div>
+                    <Row style={headings}>
+                      <Col>
+                        {" "}
+                        <h3>Utilities Due From Owner </h3>
+                      </Col>
+
+                      <Col>
+                        <img
+                          src={AddIcon}
+                          onClick={() => {
+                            setNewUtility({ ...emptyUtility });
+                            propertyState.forEach(
+                              (prop) => (prop.checked = false)
+                            );
+                            setPropertyState(propertyState);
+                            setTenantPay(false);
+                            setOwnerPay(true);
+                            setEditingUtility(true);
+                          }}
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            float: "right",
+                            marginRight: "5rem",
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="m-3">
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <EnhancedTableHead
+                          order={order}
+                          orderBy={orderBy}
+                          onRequestSort={handleRequestSort}
+                          // rowCount="4"
+                        />{" "}
+                        <TableBody>
+                          {stableSort(
+                            expenseUnique,
+                            getComparator(order, orderBy)
+                          ).map((expense, index) => {
+                            return expense.purchase_type === "UTILITY" &&
+                              expense.payer.includes(user.user_uid) ? (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={expense.address}
+                                onClick={() => {
+                                  setExpenseDetailOwner(true);
+                                  setPayment(expense);
+                                }}
+                              >
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.bill_utility_type}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.description}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {expense.address}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.bill_algorithm != null
+                                    ? expense.bill_algorithm
+                                    : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  ${expense.amount_due}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {expense.purchase_date}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.purchase_status === "UNPAID" ? (
+                                    <Col className="mt-0" style={redPill}>
+                                      {expense.purchase_status}
+                                    </Col>
+                                  ) : (
+                                    <Col className="mt-0" style={greenPill}>
+                                      {expense.purchase_status}
+                                    </Col>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              <Row style={headings}></Row>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </Row>
+                    {/* {expenseUnique.map((expense) => {
                     return expense.purchase_type === "UTILITY" &&
                       expense.payer.includes(user.user_uid) ? (
                       <div>
@@ -1222,129 +1233,132 @@ function OwnerUtilities(props) {
                       <Row style={headings}></Row>
                     );
                   })} */}
-                </div>
-                <div>
-                  <Row style={headings}>
-                    <Col>
-                      <h3>Utilities Due From Tenant </h3>
-                    </Col>
-                    <Col>
-                      <img
-                        src={AddIcon}
-                        onClick={() => {
-                          setNewUtility({ ...emptyUtility });
-                          propertyState.forEach(
-                            (prop) => (prop.checked = false)
-                          );
-                          setPropertyState(propertyState);
-                          setTenantPay(true);
-                          setOwnerPay(false);
-                          setEditingUtility(true);
-                        }}
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          float: "right",
-                          marginRight: "5rem",
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                  <Row className="m-3">
-                    <Table classes={{ root: classes.customTable }} size="small">
-                      <EnhancedTableHead
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                        // rowCount="4"
-                      />{" "}
-                      <TableBody>
-                        {stableSort(
-                          expenseUnique,
-                          getComparator(order, orderBy)
-                        ).map((expense, index) => {
-                          return expense.purchase_type === "UTILITY" &&
-                            !expense.payer.includes(user.user_uid) ? (
-                            <TableRow
-                              hover
-                              role="checkbox"
-                              tabIndex={-1}
-                              key={expense.address}
-                              onClick={() => {
-                                setExpenseDetail(true);
-                                setPayment(expense);
-                              }}
-                            >
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
+                  </div>
+                  <div>
+                    <Row style={headings}>
+                      <Col>
+                        <h3>Utilities Due From Tenant </h3>
+                      </Col>
+                      <Col>
+                        <img
+                          src={AddIcon}
+                          onClick={() => {
+                            setNewUtility({ ...emptyUtility });
+                            propertyState.forEach(
+                              (prop) => (prop.checked = false)
+                            );
+                            setPropertyState(propertyState);
+                            setTenantPay(true);
+                            setOwnerPay(false);
+                            setEditingUtility(true);
+                          }}
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            float: "right",
+                            marginRight: "5rem",
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="m-3">
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <EnhancedTableHead
+                          order={order}
+                          orderBy={orderBy}
+                          onRequestSort={handleRequestSort}
+                          // rowCount="4"
+                        />{" "}
+                        <TableBody>
+                          {stableSort(
+                            expenseUnique,
+                            getComparator(order, orderBy)
+                          ).map((expense, index) => {
+                            return expense.purchase_type === "UTILITY" &&
+                              !expense.payer.includes(user.user_uid) ? (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={expense.address}
+                                onClick={() => {
+                                  setExpenseDetail(true);
+                                  setPayment(expense);
+                                }}
                               >
-                                {expense.bill_utility_type}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.description}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {" "}
-                                {expense.address}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.bill_algorithm != null
-                                  ? expense.bill_algorithm
-                                  : "None"}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                ${expense.amount_due}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {" "}
-                                {expense.purchase_date}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.purchase_status === "UNPAID" ? (
-                                  <Col className="mt-0" style={redPill}>
-                                    {expense.purchase_status}
-                                  </Col>
-                                ) : (
-                                  <Col className="mt-0" style={greenPill}>
-                                    {expense.purchase_status}
-                                  </Col>
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ) : (
-                            <Row style={headings}></Row>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Row>
-                  {/* {expenseUnique.map((expense) => {
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.bill_utility_type}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.description}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {expense.address}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.bill_algorithm != null
+                                    ? expense.bill_algorithm
+                                    : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  ${expense.amount_due}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {expense.purchase_date}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.purchase_status === "UNPAID" ? (
+                                    <Col className="mt-0" style={redPill}>
+                                      {expense.purchase_status}
+                                    </Col>
+                                  ) : (
+                                    <Col className="mt-0" style={greenPill}>
+                                      {expense.purchase_status}
+                                    </Col>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              <Row style={headings}></Row>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </Row>
+                    {/* {expenseUnique.map((expense) => {
                     return expense.purchase_type === "UTILITY" &&
                       !expense.payer.includes(user.user_uid) ? (
                       <div>
@@ -1407,104 +1421,107 @@ function OwnerUtilities(props) {
                       <Row></Row>
                     );
                   })} */}
-                </div>
-                <div>
-                  <Row style={headings}> Maintenance Payments</Row>
-                  <Row className="m-3">
-                    <Table classes={{ root: classes.customTable }} size="small">
-                      <EnhancedTableHead
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                        // rowCount="4"
-                      />{" "}
-                      <TableBody>
-                        {stableSort(
-                          expenseUnique,
-                          getComparator(order, orderBy)
-                        ).map((expense, index) => {
-                          return expense.purchase_type === "MAINTENANCE" ||
-                            expense.purchase_type === "REPAIRS" ? (
-                            <TableRow
-                              hover
-                              role="checkbox"
-                              tabIndex={-1}
-                              key={expense.address}
-                              onClick={() => {
-                                setExpenseDetail(true);
-                                setPayment(expense);
-                              }}
-                            >
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
+                  </div>
+                  <div>
+                    <Row style={headings}> Maintenance Payments</Row>
+                    <Row className="m-3">
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <EnhancedTableHead
+                          order={order}
+                          orderBy={orderBy}
+                          onRequestSort={handleRequestSort}
+                          // rowCount="4"
+                        />{" "}
+                        <TableBody>
+                          {stableSort(
+                            expenseUnique,
+                            getComparator(order, orderBy)
+                          ).map((expense, index) => {
+                            return expense.purchase_type === "MAINTENANCE" ||
+                              expense.purchase_type === "REPAIRS" ? (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={expense.address}
+                                onClick={() => {
+                                  setExpenseDetail(true);
+                                  setPayment(expense);
+                                }}
                               >
-                                {expense.bill_utility_type}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.description}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {" "}
-                                {expense.address}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.bill_algorithm != null
-                                  ? expense.bill_algorithm
-                                  : "None"}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                ${expense.amount_due}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {" "}
-                                {expense.purchase_date}
-                              </TableCell>
-                              <TableCell
-                                padding="none"
-                                size="small"
-                                align="center"
-                              >
-                                {expense.purchase_status === "UNPAID" ? (
-                                  <Col className="mt-0" style={redPill}>
-                                    {expense.purchase_status}
-                                  </Col>
-                                ) : (
-                                  <Col className="mt-0" style={greenPill}>
-                                    {expense.purchase_status}
-                                  </Col>
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ) : (
-                            <Row style={headings}></Row>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Row>
-                  {/* {expenseUnique.map((expense) => {
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.bill_utility_type}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.description}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {expense.address}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.bill_algorithm != null
+                                    ? expense.bill_algorithm
+                                    : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  ${expense.amount_due}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {" "}
+                                  {expense.purchase_date}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.purchase_status === "UNPAID" ? (
+                                    <Col className="mt-0" style={redPill}>
+                                      {expense.purchase_status}
+                                    </Col>
+                                  ) : (
+                                    <Col className="mt-0" style={greenPill}>
+                                      {expense.purchase_status}
+                                    </Col>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              <Row style={headings}></Row>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </Row>
+                    {/* {expenseUnique.map((expense) => {
                     return expense.purchase_type === "MAINTENANCE" ||
                       expense.purchase_type === "REPAIRS" ? (
                       <div>
@@ -1550,23 +1567,47 @@ function OwnerUtilities(props) {
                       <div></div>
                     );
                   })} */}
+                  </div>
                 </div>
-              </div>
-            ) : newUtility === null &&
-              !editingUtility &&
-              !expenseDetail &&
-              !expenseDetailOwner &&
-              !maintenanceExpenseDetail &&
-              !payExpense ? (
-              <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
-                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                  <ReactBootStrap.Spinner animation="border" role="status" />
+              ) : newUtility === null &&
+                !editingUtility &&
+                !expenseDetail &&
+                !expenseDetailOwner &&
+                !maintenanceExpenseDetail &&
+                !payExpense ? (
+                <Row style={headings}>
+                  <Col>
+                    {" "}
+                    <h3>No utilities </h3>
+                  </Col>
+
+                  <Col>
+                    <img
+                      src={AddIcon}
+                      onClick={() => {
+                        setNewUtility({ ...emptyUtility });
+                        propertyState.forEach((prop) => (prop.checked = false));
+                        setPropertyState(propertyState);
+                        setTenantPay(false);
+                        setOwnerPay(false);
+                        setEditingUtility(true);
+                      }}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                    />
+                  </Col>
+                </Row>
+              ) : (
+                <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
+                  <div className="w-100 d-flex flex-column justify-content-center align-items-center"></div>
                 </div>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           {expenseDetail && !expenseDetailOwner && !maintenanceExpenseDetail ? (
             <div

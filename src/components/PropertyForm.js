@@ -1,5 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
+import ConfirmDialog2 from "./ConfirmDialog2";
+import Checkbox from "./Checkbox";
+import PropertyAppliances from "./PropertyAppliances";
+import PropertyUtilities from "./PropertyUtilities";
+import PropertyImages from "./PropertyImages";
+import Heart from "../icons/Heart.svg";
+import Edit from "../icons/Edit.svg";
+import ArrowDown from "../icons/ArrowDown.svg";
 import AppContext from "../AppContext";
 import {
   pillButton,
@@ -13,14 +22,6 @@ import {
   mediumBold,
 } from "../utils/styles";
 import { post, put } from "../utils/api";
-import Heart from "../icons/Heart.svg";
-import Edit from "../icons/Edit.svg";
-import Checkbox from "./Checkbox";
-import PropertyAppliances from "./PropertyAppliances";
-import PropertyUtilities from "./PropertyUtilities";
-import PropertyImages from "./PropertyImages";
-import ArrowDown from "../icons/ArrowDown.svg";
-import ConfirmDialog2 from "./ConfirmDialog2";
 
 function PropertyForm(props) {
   const { userData } = useContext(AppContext);
@@ -132,6 +133,7 @@ function PropertyForm(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const { property, edit, setEdit, hideEdit } = props;
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const onConfirm = () => {
     setShowDialog(false);
@@ -456,6 +458,7 @@ function PropertyForm(props) {
       console.log(newProperty[key]);
     }
     console.log(files);
+    setShowSpinner(true);
     if (property) {
       newProperty.owner_id = property.owner_id;
       newProperty.manager_id = property.manager_id;
@@ -501,6 +504,7 @@ function PropertyForm(props) {
       }
       const response = await post("/properties", newProperty, null, files);
     }
+    setShowSpinner(false);
     props.onSubmit();
   };
 
@@ -901,12 +905,20 @@ function PropertyForm(props) {
       {edit ? (
         <div>
           <PropertyImages state={imageState} />
+          {console.log("imageState", imageState)}
           <div
             className="text-center"
             style={errorMessage === "" ? hidden : {}}
           >
             <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
           <div className="text-center my-5">
             <Button
               variant="outline-primary"

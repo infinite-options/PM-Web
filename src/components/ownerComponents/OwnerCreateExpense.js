@@ -391,7 +391,7 @@ function OwnerCreateExpense(props) {
         <Button
           variant="outline-primary"
           style={pillButton}
-          onClick={props.back}
+          onClick={props.cancel}
           className="mx-2"
         >
           Cancel

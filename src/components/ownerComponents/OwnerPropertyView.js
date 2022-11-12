@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Carousel } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Table,
@@ -16,19 +16,17 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import PropertyForm from "../PropertyForm";
+import PropertyAppliances from "../PropertyAppliances";
 import CreateExpense from "../CreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerDocs from "../ManagerDocs";
 import ManagementContract from "../ManagementContract";
-import TenantAgreement from "../TenantAgreement";
 import ConfirmDialog from "../ConfirmDialog";
 import BusinessContact from "../BusinessContact";
 import ManagerFees from "../ManagerFees";
 import SideBar from "../ownerComponents/SideBar";
 import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
-import BlueArrowUp from "../../icons/BlueArrowUp.svg";
-import BlueArrowDown from "../../icons/BlueArrowDown.svg";
 import OpenDoc from "../../icons/OpenDoc.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -70,6 +68,17 @@ function OwnerPropertyView(props) {
   const [property, setProperty] = useState({
     images: "[]",
   });
+  const [imagesProperty, setImagesProperty] = useState([]);
+  function groupArr(data, n) {
+    console.log(data);
+    var group = [];
+    for (var i = 0, j = 0; i < data.length; i++) {
+      if (i >= n && i % n === 0) j++;
+      group[j] = group[j] || [];
+      group[j].push(data[i]);
+    }
+    return group;
+  }
 
   const contactState = useState([]);
   const applianceState = useState({
@@ -172,8 +181,9 @@ function OwnerPropertyView(props) {
     );
 
     setCashflowData(cashflowResponse.result);
-    setIsLoading(false);
     setProperty(response.result[0]);
+    setImagesProperty(JSON.parse(response.result[0].images));
+
     applianceState[1](JSON.parse(response.result[0].appliances));
     console.log(applianceState);
     console.log(Object.keys(applianceState[0]));
@@ -184,6 +194,7 @@ function OwnerPropertyView(props) {
 
     setContracts(res.result);
     setRentalInfo(response.result[0].rentalInfo);
+    setIsLoading(false);
     contactState[1](JSON.parse(res.result[0].assigned_contacts));
     let tenant = [];
     let ti = {};
@@ -224,20 +235,14 @@ function OwnerPropertyView(props) {
 
   const [pmID, setPmID] = useState("");
   const [currentImg, setCurrentImg] = useState(0);
-  const [expandDetails, setExpandDetails] = useState(false);
-
-  const [expandMaintenanceR, setExpandMaintenanceR] = useState(false);
   const [editProperty, setEditProperty] = useState(false);
+
+  const [editAppliances, setEditAppliances] = useState(false);
   const [contracts, setContracts] = useState([]);
   const [showCreateExpense, setShowCreateExpense] = useState(false);
   const [showCreateRevenue, setShowCreateRevenue] = useState(false);
-  const [expandManagerDocs, setExpandManagerDocs] = useState(false);
-  const [expandAddManagerDocs, setExpandAddManagerDocs] = useState(false);
 
-  const [expandTenantInfo, setExpandTenantInfo] = useState(false);
-  const [expandLeaseDocs, setExpandLeaseDocs] = useState(false);
   const [showManagementContract, setShowManagementContract] = useState(false);
-  const [showTenantAgreement, setShowTenantAgreement] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
   const [selectedAgreement, setSelectedAgreement] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
@@ -275,6 +280,7 @@ function OwnerPropertyView(props) {
   const [yearlyInsurance, setYearlyInsurance] = useState(false);
   const [yearlyUtilityExpense, setYearlyUtilityExpense] = useState(false);
   console.log("contract", contracts);
+
   const headerBack = () => {
     editProperty
       ? setEditProperty(false)
@@ -307,9 +313,7 @@ function OwnerPropertyView(props) {
     editProperty,
     showCreateExpense,
     showCreateRevenue,
-
     showManagementContract,
-    showTenantAgreement,
   ]);
 
   const reloadProperty = () => {
@@ -330,18 +334,6 @@ function OwnerPropertyView(props) {
     setShowManagementContract(false);
   };
 
-  const addAgreement = () => {
-    setSelectedAgreement(null);
-    setShowTenantAgreement(true);
-  };
-  const selectAgreement = (agreement) => {
-    setSelectedAgreement(agreement);
-    setShowTenantAgreement(true);
-  };
-  const closeAgreement = () => {
-    fetchProperty();
-    setShowTenantAgreement(false);
-  };
   const approvePropertyManager = async (pID) => {
     const files = JSON.parse(property.images);
     let pid = pID;
@@ -357,7 +349,6 @@ function OwnerPropertyView(props) {
       null,
       files
     );
-    setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
 
@@ -378,7 +369,6 @@ function OwnerPropertyView(props) {
       files
     );
     setShowDialog(false);
-    setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
 
@@ -399,7 +389,6 @@ function OwnerPropertyView(props) {
       files
     );
     setShowDialog2(false);
-    setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
   const acceptCancelAgreement = async () => {
@@ -411,7 +400,6 @@ function OwnerPropertyView(props) {
     };
 
     await put("/cancelAgreement", updatedManagementContract, null, files);
-    setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
 
@@ -424,7 +412,6 @@ function OwnerPropertyView(props) {
     };
 
     await put("/cancelAgreement", updatedManagementContract, null, files);
-    setExpandAddManagerDocs(!expandAddManagerDocs);
     reloadProperty();
   };
 
@@ -841,12 +828,6 @@ function OwnerPropertyView(props) {
         contract={selectedContract}
         reload={reloadProperty}
       />
-    ) : showTenantAgreement ? (
-      <TenantAgreement
-        back={closeAgreement}
-        property={property}
-        agreement={selectedAgreement}
-      />
     ) : (
       <div className="w-100">
         <ConfirmDialog
@@ -887,6 +868,12 @@ function OwnerPropertyView(props) {
                   setEdit={setEditProperty}
                   onSubmit={reloadProperty}
                 />
+              ) : editAppliances ? (
+                <PropertyAppliances
+                  state={applianceState}
+                  property={property}
+                  edit={editAppliances}
+                />
               ) : showCreateExpense ? (
                 <CreateExpense
                   property={property}
@@ -901,44 +888,36 @@ function OwnerPropertyView(props) {
                 />
               ) : (
                 <div>
-                  <Row className="d-flex justify-content-center align-items-center">
-                    <Col xs={2} onClick={previousImg}>
-                      <img
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          float: "right",
-                        }}
-                        src={ArrowLeft}
-                      />
-                    </Col>
-                    <Col className="d-flex justify-content-center align-items-center">
-                      {JSON.parse(property.images).length > 0 ? (
-                        <img
-                          src={JSON.parse(property.images)[currentImg]}
-                          style={{
-                            borderRadius: "4px",
-                            objectFit: "contain",
-                            width: "500px",
-                          }}
-                          alt="Property"
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </Col>
-
-                    <Col xs={2} onClick={nextImg}>
-                      <img
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          float: "left",
-                        }}
-                        src={ArrowRight}
-                      />
-                    </Col>
+                  {console.log(JSON.parse(property.images))}
+                  <Row className="m-3">
+                    {imagesProperty.length > 0 ? (
+                      <Carousel className="d-flex justify-content-center">
+                        {groupArr(imagesProperty, 4).map((images) => {
+                          return (
+                            <Carousel.Item className="d-flex justify-content-center">
+                              {images.map((image) => {
+                                return (
+                                  <img
+                                    src={image}
+                                    style={{
+                                      width: "200px",
+                                      height: "200px",
+                                      objectFit: "cover",
+                                      margin: "1rem",
+                                      padding: "1rem",
+                                    }}
+                                  />
+                                );
+                              })}
+                            </Carousel.Item>
+                          );
+                        })}
+                      </Carousel>
+                    ) : (
+                      ""
+                    )}
                   </Row>
+
                   <Row>
                     <Col>
                       <h3>Cashflow Summary</h3>
@@ -4382,6 +4361,18 @@ function OwnerPropertyView(props) {
                     <Col>
                       <h3>Appliances</h3>
                     </Col>
+                    <Col>
+                      <img
+                        src={EditIconNew}
+                        onClick={() => setEditAppliances(true)}
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                      />
+                    </Col>
                   </Row>
                   <Row className="m-3">
                     <Table classes={{ root: classes.customTable }} size="small">
@@ -4400,99 +4391,115 @@ function OwnerPropertyView(props) {
                           <TableCell>Images</TableCell>
                         </TableRow>
                       </TableHead>
-
+                      {console.log("appliances", appliances, applianceState)}
                       <TableBody>
-                        {appliances.map((appliance, i) => (
-                          <TableRow>
-                            <TableCell>{appliance}</TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["name"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["purchased_from"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["purchased"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["purchased_order"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["installed"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["serial_num"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["model_num"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["warranty_till"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["warranty_info"]}
-                            </TableCell>
-
-                            {applianceState[0][appliance]["images"] !==
-                              undefined &&
-                            applianceState[0][appliance]["images"].length >
-                              0 ? (
+                        {appliances.map((appliance, i) => {
+                          return applianceState[0][appliance]["available"] ==
+                            true ? (
+                            <TableRow>
+                              {console.log(
+                                applianceState[0][appliance]["available"]
+                              )}
+                              <TableCell>{appliance}</TableCell>
                               <TableCell>
-                                <Row className="d-flex justify-content-center align-items-center p-1">
-                                  <Col xs={2} className="p-0 m-0">
-                                    <img
-                                      style={{
-                                        width: "20px",
-                                        height: "20px",
-                                        float: "right",
-                                      }}
-                                      src={ArrowLeft}
-                                      onClick={() =>
-                                        previousImg(
-                                          applianceState[0][appliance]["images"]
-                                        )
-                                      }
-                                    />
-                                  </Col>
-                                  <Col className="d-flex justify-content-center align-items-center p-0 m-0">
-                                    <img
-                                      src={
-                                        applianceState[0][appliance]["images"][
-                                          currentImg
-                                        ]
-                                      }
-                                      style={{
-                                        borderRadius: "4px",
-                                        objectFit: "contain",
-                                        width: "50px",
-                                        height: "50px",
-                                      }}
-                                      alt="Property"
-                                    />
-                                  </Col>
-
-                                  <Col xs={2} className="p-0 m-0">
-                                    <img
-                                      style={{
-                                        width: "20px",
-                                        height: "20px",
-                                        float: "left",
-                                      }}
-                                      src={ArrowRight}
-                                      onClick={() =>
-                                        nextImg(
-                                          applianceState[0][appliance]["images"]
-                                        )
-                                      }
-                                    />
-                                  </Col>
-                                </Row>
+                                {applianceState[0][appliance]["name"]}
                               </TableCell>
-                            ) : (
-                              <TableCell>None</TableCell>
-                            )}
-                          </TableRow>
-                        ))}
+                              <TableCell>
+                                {applianceState[0][appliance]["purchased_from"]}
+                              </TableCell>
+                              <TableCell>
+                                {applianceState[0][appliance]["purchased"]}
+                              </TableCell>
+                              <TableCell>
+                                {
+                                  applianceState[0][appliance][
+                                    "purchased_order"
+                                  ]
+                                }
+                              </TableCell>
+                              <TableCell>
+                                {applianceState[0][appliance]["installed"]}
+                              </TableCell>
+                              <TableCell>
+                                {applianceState[0][appliance]["serial_num"]}
+                              </TableCell>
+                              <TableCell>
+                                {applianceState[0][appliance]["model_num"]}
+                              </TableCell>
+                              <TableCell>
+                                {applianceState[0][appliance]["warranty_till"]}
+                              </TableCell>
+                              <TableCell>
+                                {applianceState[0][appliance]["warranty_info"]}
+                              </TableCell>
+
+                              {applianceState[0][appliance]["images"] !==
+                                undefined &&
+                              applianceState[0][appliance]["images"].length >
+                                0 ? (
+                                <TableCell>
+                                  <Row className="d-flex justify-content-center align-items-center p-1">
+                                    <Col xs={2} className="p-0 m-0">
+                                      <img
+                                        style={{
+                                          width: "20px",
+                                          height: "20px",
+                                          float: "right",
+                                        }}
+                                        src={ArrowLeft}
+                                        onClick={() =>
+                                          previousImg(
+                                            applianceState[0][appliance][
+                                              "images"
+                                            ]
+                                          )
+                                        }
+                                      />
+                                    </Col>
+                                    <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                                      <img
+                                        src={
+                                          applianceState[0][appliance][
+                                            "images"
+                                          ][currentImg]
+                                        }
+                                        style={{
+                                          borderRadius: "4px",
+                                          objectFit: "contain",
+                                          width: "50px",
+                                          height: "50px",
+                                        }}
+                                        alt="Property"
+                                      />
+                                    </Col>
+
+                                    <Col xs={2} className="p-0 m-0">
+                                      <img
+                                        style={{
+                                          width: "20px",
+                                          height: "20px",
+                                          float: "left",
+                                        }}
+                                        src={ArrowRight}
+                                        onClick={() =>
+                                          nextImg(
+                                            applianceState[0][appliance][
+                                              "images"
+                                            ]
+                                          )
+                                        }
+                                      />
+                                    </Col>
+                                  </Row>
+                                </TableCell>
+                              ) : (
+                                <TableCell>None</TableCell>
+                              )}
+                            </TableRow>
+                          ) : (
+                            ""
+                          );
+                        })}
                       </TableBody>
                     </Table>
                   </Row>
