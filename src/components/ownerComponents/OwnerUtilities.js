@@ -110,21 +110,23 @@ function OwnerUtilities(props) {
   };
 
   const PayBill = async (pid) => {
+    let response = await get(`/purchases?purchase_uid=${pid}`);
+    console.log("GET PURCHASE RESPONSE", response);
+    setPurchase(response.result[0]);
+    setTotalSum(response.result[0].amount_due);
+    setAmount(response.result[0].amount_due - response.result[0].amount_paid);
+  };
+
+  const toggleKeys = async () => {
     const url =
       message === "PMTEST"
         ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
         : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
     const responseData = await response.json();
-    console.log(responseData.PUBLISHABLE_KEY);
-    const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);
+    console.log(responseData.publicKey);
+    const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
-
-    response = await get(`/purchases?purchase_uid=${pid}`);
-    console.log("GET PURCHASE RESPONSE", response);
-    setPurchase(response.result[0]);
-    setTotalSum(response.result[0].amount_due);
-    setAmount(response.result[0].amount_due - response.result[0].amount_paid);
   };
 
   useEffect(() => {
@@ -135,7 +137,10 @@ function OwnerUtilities(props) {
     }
   }, [amount]);
 
-  const cancel = () => setStripePayment(false);
+  const cancel = () => {
+    setStripePayment(false);
+    fetchProperties();
+  };
   const submit = () => {
     cancel();
     setPayExpense(false);
@@ -2068,7 +2073,7 @@ function OwnerUtilities(props) {
                   <Form.Group style={mediumBold}>
                     <Form.Label>Message</Form.Label>
                     <Form.Control
-                      placeholder="M4METEST"
+                      placeholder="PMTEST"
                       style={squareForm}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
@@ -2102,6 +2107,7 @@ function OwnerUtilities(props) {
                           onClick={() => {
                             //navigate("/tenant");
                             setStripePayment(true);
+                            toggleKeys();
                           }}
                           style={bluePillButton}
                         >

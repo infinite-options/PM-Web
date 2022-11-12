@@ -48,8 +48,8 @@ function OwnerPaymentPage(props) {
 
   React.useEffect(async () => {
     // const url = useLiveStripeKey
-    //   ? "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/LIVE"
-    //   : "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/stripe_key/M4METEST";
+    //   ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
+    //   : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     // let response = await fetch(url);
     // const responseData = await response.json();
     // const stripePromise = loadStripe(responseData.publicKey);
@@ -73,8 +73,8 @@ function OwnerPaymentPage(props) {
         : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
     const responseData = await response.json();
-    console.log(responseData.PUBLISHABLE_KEY);
-    const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);
+    console.log(responseData.publicKey);
+    const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
   };
   useEffect(() => {

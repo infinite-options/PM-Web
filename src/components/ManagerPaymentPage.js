@@ -78,8 +78,8 @@ function ManagerPaymentPage(props) {
         : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
     const responseData = await response.json();
-    console.log(responseData.PUBLISHABLE_KEY);
-    const stripePromise = loadStripe(responseData.PUBLISHABLE_KEY);
+    console.log(responseData.publicKey);
+    const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
   };
   useEffect(() => {

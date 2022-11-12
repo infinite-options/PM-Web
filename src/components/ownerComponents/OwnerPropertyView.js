@@ -69,7 +69,6 @@ function OwnerPropertyView(props) {
   });
   const [imagesProperty, setImagesProperty] = useState([]);
   function groupArr(data, n) {
-    console.log(data);
     var group = [];
     for (var i = 0, j = 0; i < data.length; i++) {
       if (i >= n && i % n === 0) j++;
@@ -170,11 +169,9 @@ function OwnerPropertyView(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const fetchProperty = async () => {
-    // const response = await get(`/propertyInfo?property_uid=${property_uid}`);
     const response = await get(
       `/propertiesOwnerDetail?property_uid=${property_uid}`
     );
-    console.log("property  in databse", response.result[0]);
     const cashflowResponse = await get(
       `/ownerCashflowProperty?property_id=${property_uid}`
     );
@@ -182,11 +179,8 @@ function OwnerPropertyView(props) {
     setCashflowData(cashflowResponse.result);
     setProperty(response.result[0]);
     setImagesProperty(JSON.parse(response.result[0].images));
-
+    console.log(JSON.parse(response.result[0].images));
     applianceState[1](JSON.parse(response.result[0].appliances));
-    console.log(applianceState);
-    console.log(Object.keys(applianceState[0]));
-    // setAppliances(Object.keys(applianceState[0]));
     const res = await get(
       `/contracts?property_uid=${response.result[0].property_uid}`
     );
@@ -203,17 +197,14 @@ function OwnerPropertyView(props) {
         let tenant_lns = rentalInfo.tenant_last_name.split(",");
         let tenant_emails = rentalInfo.tenant_email.split(",");
         let tenant_phones = rentalInfo.tenant_phone_number.split(",");
-        console.log("tennat", tenant_fns);
         for (let i = 0; i < tenant_fns.length; i++) {
           ti["tenantFirstName"] = tenant_fns[i];
           ti["tenantLastName"] = tenant_lns[i];
           ti["tenantEmail"] = tenant_emails[i];
           ti["tenantPhoneNumber"] = tenant_phones[i];
-          console.log("tennat", ti);
           tenant.push(ti);
           ti = {};
         }
-        console.log("tennat", tenant);
       } else {
         ti = {
           tenantFirstName: rentalInfo.tenant_first_name,
@@ -221,11 +212,9 @@ function OwnerPropertyView(props) {
           tenantEmail: rentalInfo.tenant_email,
           tenantPhoneNumber: rentalInfo.tenant_phone_number,
         };
-        console.log("tennat", ti);
         tenant.push(ti);
       }
     });
-    console.log("tennat", tenant);
     setTenantInfo(tenant);
   };
   useState(() => {
@@ -310,6 +299,7 @@ function OwnerPropertyView(props) {
 
   const reloadProperty = () => {
     setEditProperty(false);
+    window.scrollTo(0, 0);
     fetchProperty();
   };
 
@@ -334,7 +324,7 @@ function OwnerPropertyView(props) {
       management_status: "ACCEPTED",
       manager_id: pid,
     };
-    console.log(files);
+
     const response2 = await put(
       "/properties",
       updatedManagementContract,
@@ -413,7 +403,6 @@ function OwnerPropertyView(props) {
   const onCancel2 = () => {
     setShowDialog2(false);
   };
-  console.log(pmID);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -4532,9 +4521,6 @@ function OwnerPropertyView(props) {
                             return applianceState[0][appliance]["available"] ==
                               true ? (
                               <TableRow>
-                                {console.log(
-                                  applianceState[0][appliance]["available"]
-                                )}
                                 <TableCell>{appliance}</TableCell>
                                 <TableCell>
                                   {applianceState[0][appliance]["name"]}
