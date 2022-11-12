@@ -402,9 +402,6 @@ function PropertyForm(props) {
     if (property) {
       loadProperty();
     }
-    if (edit) {
-      window.scrollTo(0, 0);
-    }
   }, [edit, property]);
 
   const submitForm = async () => {
@@ -535,7 +532,6 @@ function PropertyForm(props) {
     currency: "USD",
   });
 
-  console.log(activeDate);
   return (
     <div
       className="d-flex flex-column w-100 mx-2 p-2 m-0"
@@ -591,7 +587,7 @@ function PropertyForm(props) {
               </Form.Group>
             </Col>
           </div>
-          <div className="d-flex my-3 ">
+          <div className="d-flex my-3 ps-4">
             <Col>
               <Form.Group className="mx-2">
                 <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
@@ -672,66 +668,73 @@ function PropertyForm(props) {
           <p>{description}</p>
         </Row>
       )}
-      {edit ? (
-        <Form.Group className="mx-2 my-3 ps-4">
-          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-            Type
-          </Form.Label>
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-          >
-            <option>Apartment</option>
-            <option>Condo</option>
-            <option>House</option>
-            <option>Townhome</option>
-          </Form.Select>
-        </Form.Group>
-      ) : (
-        <Row className="mx-2">
-          <h6>Type</h6>
-          <p>{type}</p>
-        </Row>
-      )}
+
       {edit ? (
         <div className="d-flex my-3 ps-4">
-          <Form.Group className="mx-2">
-            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-              Bedroom {numBeds === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="2"
-              value={numBeds}
-              onChange={(e) => setNumBeds(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2">
-            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-              Bath {numBaths === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="1.5"
-              value={numBaths}
-              onChange={(e) => setNumBaths(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2">
-            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-              Sq. Ft. {area === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              placeholder="1100"
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
-            />
-          </Form.Group>
+          <Col>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                Type
+              </Form.Label>
+              <Form.Select
+                style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+              >
+                <option>Apartment</option>
+                <option>Condo</option>
+                <option>House</option>
+                <option>Townhome</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                Bedroom {numBeds === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="2"
+                value={numBeds}
+                onChange={(e) => setNumBeds(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                Bath {numBaths === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="1.5"
+                value={numBaths}
+                onChange={(e) => setNumBaths(e.target.value)}
+              />
+            </Form.Group>
+          </Col>{" "}
+          <Col>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                Sq. Ft. {area === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="1100"
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
         </div>
       ) : (
         <Row className="mx-2">
+          <Col>
+            <h6>Type</h6>
+            <p>{type}</p>
+          </Col>
+
           <Col>
             <h6>Bedroom</h6>
             <p>{numBeds}</p>
@@ -746,68 +749,87 @@ function PropertyForm(props) {
           </Col>
         </Row>
       )}
+
       {edit ? (
-        <Form.Group className="mx-2 my-3 ps-4">
-          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-            Active Date {activeDate === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            type="date"
-            // placeholder="2000"
-            value={activeDate}
-            onChange={(e) => setActiveDate(e.target.value)}
-          />
-        </Form.Group>
+        <div className="d-flex my-3 ps-4">
+          <Col>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                Active Date {activeDate === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={{
+                  borderRadius: "5px",
+                  border: "1px solid #707070",
+                  height: "2.4rem",
+                }}
+                type="date"
+                value={activeDate}
+                onChange={(e) => setActiveDate(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                Monthly Rent {rent === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="2000"
+                value={rent}
+                onChange={(e) => setRent(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+                Deposit {deposit === "" ? required : ""}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="2000"
+                value={deposit}
+                onChange={(e) => setDeposit(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        </div>
       ) : (
         <Row className="mx-2">
-          <h6>Active Date</h6>
-          <p>{activeDate}</p>
+          <Col>
+            <h6>Active Date</h6>
+            <p>{activeDate}</p>
+          </Col>
+
+          <Col>
+            <h6>Monthly Rent</h6>
+            <p>{formatter.format(rent)}</p>
+          </Col>
+          <Col>
+            <h6>Deposit</h6>
+            <p>{formatter.format(deposit)}</p>
+          </Col>
         </Row>
       )}
-      {edit ? (
-        <Form.Group className="mx-2 my-3 ps-4">
-          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-            Monthly Rent {rent === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="2000"
-            value={rent}
-            onChange={(e) => setRent(e.target.value)}
-          />
-        </Form.Group>
-      ) : (
-        <Row className="mx-2">
-          <h6>Monthly Rent</h6>
-          <p>{formatter.format(rent)}</p>
-        </Row>
-      )}
-      {edit ? (
-        <Form.Group className="mx-2 my-3 ps-4">
-          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-            Deposit {deposit === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="2000"
-            value={deposit}
-            onChange={(e) => setDeposit(e.target.value)}
-          />
-        </Form.Group>
-      ) : (
-        <Row className="mx-2">
-          <h6>Deposit</h6>
-          <p>{formatter.format(deposit)}</p>
-        </Row>
-      )}
-      <PropertyAppliances
-        state={applianceState}
-        property={property}
-        edit={edit}
-      />
-      <PropertyUtilities state={utilityState} edit={edit} />
-      <Container style={({ paddingLeft: "0px" }, mediumBold)} className="my-3">
+      <div className="d-flex my-3 ps-4">
+        <PropertyAppliances
+          state={applianceState}
+          property={property}
+          edit={edit}
+        />
+      </div>
+
+      <div className="d-flex my-3 ps-4">
+        {" "}
+        <PropertyUtilities state={utilityState} edit={edit} />
+      </div>
+
+      <Container
+        style={({ paddingLeft: "0px" }, mediumBold)}
+        className="my-3 ps-4"
+      >
         <h6>Pets Allowed</h6>
         <Row>
           <Col className="d-flex ps-4">
@@ -840,7 +862,7 @@ function PropertyForm(props) {
           </Col>
         </Row>
       </Container>
-      <Container className="my-3">
+      <Container className="my-3 ps-4">
         <h6>Deposit can be used for last month's rent</h6>
         <Row>
           <Col className="d-flex ps-4">
@@ -903,7 +925,7 @@ function PropertyForm(props) {
         </Container>
       )}
       {edit ? (
-        <div>
+        <div className="my-3 ps-4">
           <PropertyImages state={imageState} />
           {console.log("imageState", imageState)}
           <div

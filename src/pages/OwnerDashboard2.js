@@ -538,7 +538,7 @@ export default function OwnerDashboard2() {
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div>
+        <div style={{ backgroundColor: "#229ebc", height: "100vh" }}>
           <SideBar />
         </div>
         {ownerData.length > 1 ? (
