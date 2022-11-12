@@ -4,7 +4,13 @@ import { post } from "../utils/api"
 import { useNavigate } from "react-router-dom"
 
 export default function ApplePay(props){
+    //Variables for switching between environments
+    const devDomain = "localhost"
+    const productionDomain = "io-pm.netlify.app"
+    //Declare variables for logic
     const navigate = useNavigate()
+    const squareAccessToken = "Bearer EAAAEMJDU7WRzz9il44dJuZkk59PznNk_G2GthYYn3eY2Y0XKL41Qmc79rkpEYli"
+    const squareCreatePaymentURL = "https://connect.squareupsandbox.com/v2/payments"
     //Style the Apple Pay button
     const style = {
         "display": "inline-block",
@@ -44,38 +50,64 @@ export default function ApplePay(props){
         function handleClick() {
             //Create a new Apple Pay session
             const session = new window.ApplePaySession(8, paymentRequest)
-            //Variables for switching between environments
-            const devDomain = "localhost"
-            const productionDomain = "io-pm.netlify.app"
             //Validate merchant for Apple Pay transaction
             session.onvalidatemerchant = async (event) => {
                 //Create payload for backend to use in a post request to Apple Pay Gateway API endpoint
-                const payload = {
+                const data = {
                     "url": event.validationURL,
                     "merchantIdentifier": "merchant.com.infiniteoptions",
                     "displayName": "Manifest",
                     "initiative": "web",
                     "initiativeContext": productionDomain
                 }
-                //Send post request to backend so it can send post request to Apple Pay Gateway API endpoint
-                const merchantSession = await post("/applepay", payload)
-                //Confirm if merchant session object is valid to allow transaction
-                if(merchantSession && merchantSession.merchantSessionIdentifier)
+                try{
+                    //Send post request to backend so it can send post request to Apple Pay Gateway API endpoint
+                    const merchantSession = await axios.post("/applepay", data)
+                        .then(response => response.data)
+                    //Confirm if merchant session object is valid to allow transaction
                     session.completeMerchantValidation(merchantSession)
-                //Otherwise, end Apple Pay session
-                else
+                }
+                //Abort session if any error occurs
+                catch(error){
                     session.abort()
+                }
             }
             //If merchant session object is accepted, confirm payment has authorization for transaction
-            session.onpaymentauthorized = event => {
-                //Confirm status of authorization
-                const result = { "status": session.STATUS_SUCCESS }
-                session.completePayment(result)
-                //Pass transaction info for updating database
-                const charge_id = event.payment.token.transactionIdentifier
-                updateDatabase(charge_id)
-                //Take user back to tenant dashboard with payments updated
-                navigateToTenantDashBoard()
+            session.onpaymentauthorized = async (event) => {
+                //Declare post request data for Square Payments API endpoint
+                const config = {
+                    headers: {
+                        "Authorization": squareAccessToken,
+                        "Square-Version": "2022-10-19",
+                        "Content-Type": "application/json"
+                    }
+                }
+                const data = {
+                    "idempotency_key": props.pay_purchase_id,
+                    "source_id": "cnon:card-nonce-ok",
+                    "amount_money": {
+                        "amount": props.amount,
+                        "currency": "USD"
+                    }
+                }
+                try {
+                    //Retrieve payment object from square endpoint
+                    const payment = await axios.post(squareCreatePaymentURL, data, config)
+                        .then(response => response.data.payment)
+                    //Confirm status of authorization
+                    if(payment.status === "COMPLETED") {
+                        const result = { "status": session.STATUS_SUCCESS }
+                        session.completePayment(result)
+                        //Pass transaction info for updating database
+                        updateDatabase(payment.id)
+                        //Take user back to tenant dashboard with payments updated
+                        navigateToTenantDashBoard()
+                    }
+                }
+                //Abort session if any error occurs
+                catch(error){
+                    session.abort()
+                }
             }
             //Ends Apple Pay session
             session.oncancel = event => {
