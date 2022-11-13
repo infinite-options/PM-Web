@@ -12,7 +12,7 @@ function Header(props) {
   const textButton = {
     background: "none",
     border: "none",
-    color: "#007AFF",
+    color: "#000000",
   };
   return (
     <Container fluid style={headerContainer} className={className}>
@@ -35,7 +35,7 @@ function Header(props) {
             style={{
               font: "normal normal 600 17px/20px SFProText-Semibold",
               letterSpacing: "0px",
-              color: "#007AFF",
+              color: "#000000",
             }}
           >
             {props.title}

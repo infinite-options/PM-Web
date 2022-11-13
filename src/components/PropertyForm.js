@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Switch } from "@material-ui/core";
 import * as ReactBootStrap from "react-bootstrap";
 import ConfirmDialog2 from "./ConfirmDialog2";
 import Checkbox from "./Checkbox";
@@ -135,7 +136,6 @@ function PropertyForm(props) {
   const onConfirm = () => {
     setShowDialog(false);
   };
-
   const loadProperty = () => {
     setAddress(property.address);
     setUnit(property.unit);
@@ -823,12 +823,29 @@ function PropertyForm(props) {
         <PropertyUtilities state={utilityState} edit={edit} />
       </div>
 
-      <Container
-        style={({ paddingLeft: "0px" }, mediumBold)}
-        className="my-3 ps-4"
-      >
-        <h6>Pets Allowed</h6>
-        <Row>
+      <Container className="d-dlex my-3 ps-4">
+        <Col className="p-2">
+          <h6>Pets Allowed</h6>
+        </Col>
+        <Col>
+          <Switch
+            checked={petsAllowed}
+            onChange={
+              edit
+                ? (e) => {
+                    petsAllowed == 1
+                      ? setPetsAllowed(false)
+                      : setPetsAllowed(true);
+                  }
+                : () => {
+                    setShowDialog(true);
+                  }
+            }
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        </Col>
+
+        {/* <Row>
           <Col className="d-flex ps-4">
             <Checkbox
               type="CIRCLE"
@@ -857,11 +874,32 @@ function PropertyForm(props) {
             />
             <p className="ms-1 mb-1">No</p>
           </Col>
-        </Row>
+        </Row> */}
       </Container>
-      <Container className="my-3 ps-4">
-        <h6>Deposit can be used for last month's rent</h6>
-        <Row>
+      <Container className="d-flex my-3 ps-4">
+        <Col className="p-2">
+          <h6>Deposit can be used for last month's rent</h6>
+        </Col>
+        <Col>
+          {" "}
+          <Switch
+            checked={depositForRent}
+            onChange={
+              edit
+                ? (e) => {
+                    depositForRent == 1
+                      ? setDepositForRent(false)
+                      : setDepositForRent(true);
+                  }
+                : () => {
+                    setShowDialog(true);
+                  }
+            }
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        </Col>
+
+        {/* <Row>
           <Col className="d-flex ps-4">
             <Checkbox
               type="CIRCLE"
@@ -890,7 +928,7 @@ function PropertyForm(props) {
             />
             <p className="ms-1 mb-1">No</p>
           </Col>
-        </Row>
+        </Row> */}
       </Container>
 
       {edit ? (
@@ -943,7 +981,13 @@ function PropertyForm(props) {
               variant="outline-primary"
               style={pillButton}
               className="mx-2"
-              onClick={property ? () => setEdit(false) : props.cancel}
+              onClick={
+                property
+                  ? () => {
+                      props.onSubmit();
+                    }
+                  : props.cancel
+              }
             >
               Cancel
             </Button>

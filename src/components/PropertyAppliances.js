@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Checkbox from "./Checkbox";
 import ApplianceImages from "./ApplianceImages";
+import AddIcon from "../icons/AddIcon.svg";
 import { Container, Form, Button, Row, Col, Table } from "react-bootstrap";
 import {
   squareForm,
@@ -337,6 +338,22 @@ function PropertyAppliances(props) {
           <h6 style={mediumBold} className="mt-2">
             Appliances
           </h6>
+        </Col>
+        <Col>
+          {newAppliance === null ? (
+            <img
+              src={AddIcon}
+              onClick={() => setNewAppliance("")}
+              style={{
+                width: "15px",
+                height: "15px",
+                float: "right",
+                marginRight: "5rem",
+              }}
+            />
+          ) : (
+            ""
+          )}
         </Col>
         {!edit ? (
           <Col className="d-flex justify-content-end mb-1">
@@ -820,17 +837,7 @@ function PropertyAppliances(props) {
       {!edit ? (
         ""
       ) : newAppliance === null ? (
-        <div
-          className="d-flex ps-2 align-items-center"
-          onClick={() => setNewAppliance("")}
-        >
-          <div style={hidden}>
-            <Checkbox type="BOX" />
-          </div>
-          <p className="ms-1 mb-1" style={blue}>
-            Add Other +
-          </p>
-        </div>
+        ""
       ) : (
         <div>
           <div className="d-flex ps-2 align-items-center">
