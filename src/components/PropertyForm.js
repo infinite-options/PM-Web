@@ -823,7 +823,7 @@ function PropertyForm(props) {
         <PropertyUtilities state={utilityState} edit={edit} />
       </div>
 
-      <Container className="d-dlex my-3 ps-4">
+      <Container className="d-flex my-3 ps-4">
         <Col className="p-2">
           <h6>Pets Allowed</h6>
         </Col>
@@ -844,37 +844,6 @@ function PropertyForm(props) {
             inputProps={{ "aria-label": "controlled" }}
           />
         </Col>
-
-        {/* <Row>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={petsAllowed}
-              onClick={
-                edit
-                  ? () => setPetsAllowed(true)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">Yes</p>
-          </Col>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={!petsAllowed}
-              onClick={
-                edit
-                  ? () => setPetsAllowed(false)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">No</p>
-          </Col>
-        </Row> */}
       </Container>
       <Container className="d-flex my-3 ps-4">
         <Col className="p-2">
