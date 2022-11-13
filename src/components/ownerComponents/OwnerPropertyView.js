@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col, Button, Form, Carousel } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  Carousel,
+  Card,
+  Stack,
+} from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Table,
@@ -9,6 +18,7 @@ import {
   TableHead,
   TableSortLabel,
   Box,
+  Grid,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
@@ -77,7 +87,21 @@ function OwnerPropertyView(props) {
     }
     return group;
   }
+  function groupIntoThrees(children) {
+    const output = [];
+    let currentGroup = [];
 
+    children.forEach((child, index) => {
+      currentGroup.push(child);
+
+      if (index % 3 === 2) {
+        output.push(currentGroup);
+        currentGroup = [];
+      }
+    });
+
+    return output;
+  }
   const contactState = useState([]);
   const applianceState = useState({
     Microwave: {
@@ -269,13 +293,13 @@ function OwnerPropertyView(props) {
 
   const headerBack = () => {
     editProperty
-      ? setEditProperty(false)
+      ? reloadProperty()
       : showCreateExpense
       ? setShowCreateExpense(false)
       : showCreateRevenue
       ? setShowCreateRevenue(false)
       : navigate("../owner");
-    navigate("../owner");
+    // navigate("../owner");
   };
 
   const nextImg = () => {
@@ -838,8 +862,8 @@ function OwnerPropertyView(props) {
           >
             <Header
               title="Property Details"
-              // leftText="< Back"
-              // leftFn={headerBack}
+              leftText="< Back"
+              leftFn={headerBack}
             />
             <Container>
               {editProperty ? (
@@ -863,27 +887,36 @@ function OwnerPropertyView(props) {
                 />
               ) : (
                 <div>
-                  {console.log(JSON.parse(property.images))}
                   <Row className="m-3">
                     {imagesProperty.length > 0 ? (
                       <Carousel className="d-flex justify-content-center">
-                        {groupArr(imagesProperty, 4).map((images) => {
+                        {groupArr(imagesProperty, 3).map((imagesGroup) => {
                           return (
-                            <Carousel.Item className="d-flex justify-content-center">
-                              {images.map((image) => {
-                                return (
-                                  <img
-                                    src={image}
-                                    style={{
-                                      width: "200px",
-                                      height: "200px",
-                                      objectFit: "cover",
-                                      margin: "1rem",
-                                      padding: "1rem",
-                                    }}
-                                  />
-                                );
-                              })}
+                            <Carousel.Item>
+                              <Container className="d-flex flex-row justify-content-center align-items-center">
+                                {imagesGroup.map((c) => {
+                                  return (
+                                    <Grid
+                                      item
+                                      xs={4}
+                                      md={4}
+                                      justifyContent="center"
+                                      alignItems="center"
+                                    >
+                                      <img
+                                        src={c}
+                                        style={{
+                                          width: "200px",
+                                          height: "200px",
+                                          objectFit: "cover",
+                                          margin: "1rem",
+                                          padding: "1rem",
+                                        }}
+                                      />
+                                    </Grid>
+                                  );
+                                })}
+                              </Container>
                             </Carousel.Item>
                           );
                         })}
