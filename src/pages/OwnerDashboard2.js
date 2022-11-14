@@ -19,6 +19,8 @@ import SideBar from "../components/ownerComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
 import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
+
+import OwnerPropertyView from "../components/ownerComponents/OwnerPropertyView";
 import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
 import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 import SortDown from "../icons/Sort-down.svg";
@@ -102,7 +104,7 @@ export default function OwnerDashboard2() {
 
       return;
     }
-    setIsLoading(false);
+
     setOwnerData(response.result);
     let requests = [];
     response.result.forEach((res) => {
@@ -113,6 +115,7 @@ export default function OwnerDashboard2() {
       }
     });
     setMaintenanceRequests(requests);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -537,12 +540,11 @@ export default function OwnerDashboard2() {
 
   return stage === "LIST" ? (
     <div className="OwnerDashboard2">
-      <div className="flex-1">
-        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
-          <SideBar />
-        </div>
-
-        {ownerData.length > 0 ? (
+      {!isLoading && ownerData.length > 1 ? (
+        <div className="flex-1">
+          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+            <SideBar />
+          </div>
           <div
             className="w-100"
             style={{
@@ -3524,23 +3526,18 @@ export default function OwnerDashboard2() {
                           role="checkbox"
                           tabIndex={-1}
                           key={property.address}
+                          onClick={() => {
+                            navigate(
+                              `/propertyDetails/${property.property_uid}`,
+                              {
+                                state: {
+                                  property_uid: property.property_uid,
+                                },
+                              }
+                            );
+                          }}
                         >
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {JSON.parse(property.images).length > 0 ? (
                               <img
                                 src={JSON.parse(property.images)[0]}
@@ -3556,195 +3553,45 @@ export default function OwnerDashboard2() {
                               ""
                             )}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {property.address}
                             {property.unit !== "" ? " " + property.unit : ""}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {property.city}, {property.state}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {property.zip}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {property.rentalInfo.length !== 0
                               ? property.rentalInfo[0].tenant_first_name
                               : "None"}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {"$" + property.listed_rent}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             $
                             {(
                               parseInt(property.listed_rent) /
                               parseInt(property.area)
                             ).toFixed(2)}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {property.property_type}
                           </TableCell>
 
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {property.num_beds + "/" + property.num_baths}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {property.property_manager.length !== 0
                               ? property.property_manager[0]
                                   .manager_business_name
                               : "None"}
                           </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              navigate(
-                                `/propertyDetails/${property.property_uid}`,
-                                {
-                                  state: {
-                                    // property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                            padding="none"
-                            size="small"
-                            align="center"
-                          >
+                          <TableCell padding="none" size="small" align="center">
                             {property.rentalInfo.length !== 0
                               ? property.rentalInfo[0].lease_end
                               : "None"}
@@ -3878,7 +3725,27 @@ export default function OwnerDashboard2() {
               <Row className="m-3">No maintenance requests and repairs</Row>
             )}
           </div>
-        ) : ownerData.length == 0 ? (
+        </div>
+      ) : !isLoading && ownerData.length == 1 ? (
+        <div className="flex-1">
+          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+            <SideBar />
+          </div>
+          <div
+            className="w-100"
+            style={{
+              width: "calc(100vw - 13rem)",
+              position: "relative",
+            }}
+          >
+            <OwnerPropertyView property_uid={ownerData[0].property_uid} />
+          </div>
+        </div>
+      ) : !isLoading && ownerData.length == 0 ? (
+        <div className="flex-1">
+          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+            <SideBar />
+          </div>
           <div
             className="w-100"
             style={{
@@ -3909,12 +3776,17 @@ export default function OwnerDashboard2() {
               </Col>
             </Row>
           </div>
-        ) : (
+        </div>
+      ) : (
+        <div className="flex-1">
+          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+            <SideBar />
+          </div>
           <div className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">

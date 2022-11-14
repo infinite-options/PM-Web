@@ -247,16 +247,34 @@ function OwnerContacts() {
         >
           <Header title="Contacts" />
           {addContacts ? (
-            <Row>
+            <Row className="m-3">
               <Col>
                 <h3>Create New Contact </h3>
               </Col>
               <Col></Col>
             </Row>
-          ) : (
-            <Row>
+          ) : propertyManagers.length > 0 && !addContacts ? (
+            <Row className="m-3">
               <Col>
                 <h3>Contacts </h3>
+              </Col>
+              <Col>
+                <img
+                  src={AddIcon}
+                  onClick={() => setAddContacts(true)}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "5rem",
+                  }}
+                />
+              </Col>
+            </Row>
+          ) : (
+            <Row className="m-3">
+              <Col>
+                <h3>Add Contact </h3>
               </Col>
               <Col>
                 <img
@@ -347,11 +365,11 @@ function OwnerContacts() {
                   onClick={() => submitForm()}
                   className="mx-2"
                 >
-                  Save Expense
+                  Save Contact
                 </Button>
               </div>
             </Row>
-          ) : (
+          ) : propertyManagers.length > 0 && !addContacts ? (
             <Row>
               <Row className="w-100 m-3">
                 <Col xs={2}> Search by</Col>
@@ -459,6 +477,8 @@ function OwnerContacts() {
                 </Table>
               </Row>
             </Row>
+          ) : (
+            <Row></Row>
           )}
         </div>
       </div>

@@ -70,7 +70,9 @@ function OwnerPropertyView(props) {
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const property_uid = location.state.property_uid;
+  console.log(location.state);
+  const property_uid =
+    location.state === null ? props.property_uid : location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
   // const { property_uid, back, reload, setStage } = props;
   const [property, setProperty] = useState({
@@ -854,9 +856,14 @@ function OwnerPropertyView(props) {
           onCancel={onCancel2}
         />
         <div className="flex-1">
-          <div>
-            <SideBar />
-          </div>
+          {location.state == null ? (
+            ""
+          ) : (
+            <div>
+              <SideBar />
+            </div>
+          )}
+
           <div
             className="w-100"
             style={{
@@ -866,7 +873,7 @@ function OwnerPropertyView(props) {
           >
             <Header
               title="Property Details"
-              leftText="< Back"
+              leftText={location.state == null ? "" : "< Back"}
               leftFn={headerBack}
             />
             <Container>
