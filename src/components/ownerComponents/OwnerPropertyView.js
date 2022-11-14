@@ -5,7 +5,6 @@ import {
   Col,
   Button,
   Form,
-  Carousel,
   Card,
   Stack,
 } from "react-bootstrap";
@@ -20,6 +19,7 @@ import {
   Box,
   Grid,
 } from "@material-ui/core";
+import Carousel from "react-multi-carousel";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -55,6 +55,7 @@ import {
   green,
   red,
 } from "../../utils/styles";
+import "react-multi-carousel/lib/styles.css";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -81,7 +82,25 @@ function OwnerPropertyView(props) {
   const [imagesProperty, setImagesProperty] = useState([]);
 
   const [showControls, setShowControls] = useState(true);
-
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 4,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 4,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 4,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 4,
+    },
+  };
   function groupArr(data, n) {
     var group = [];
     for (var i = 0, j = 0; i < data.length; i++) {
@@ -207,7 +226,7 @@ function OwnerPropertyView(props) {
     setCashflowData(cashflowResponse.result);
     setProperty(response.result[0]);
     setImagesProperty(JSON.parse(response.result[0].images));
-    let show = JSON.parse(response.result[0].images).length < 4 ? false : true;
+    let show = JSON.parse(response.result[0].images).length < 5 ? false : true;
     setShowControls(show);
     console.log(JSON.parse(response.result[0].images));
     applianceState[1](JSON.parse(response.result[0].appliances));
@@ -898,7 +917,7 @@ function OwnerPropertyView(props) {
                 />
               ) : (
                 <div>
-                  <Row className="m-3">
+                  {/* <Row className="m-3">
                     {imagesProperty.length > 0 ? (
                       <Carousel
                         key={Date.now()}
@@ -906,7 +925,7 @@ function OwnerPropertyView(props) {
                         controls={showControls}
                         indicators={showControls}
                       >
-                        {groupArr(imagesProperty, 3).map((imagesGroup) => {
+                        {groupArr(imagesProperty, 4).map((imagesGroup) => {
                           return (
                             <Carousel.Item key={Date.now()}>
                               <Container className="d-flex flex-row justify-content-center align-items-center">
@@ -933,6 +952,48 @@ function OwnerPropertyView(props) {
                                 })}
                               </Container>
                             </Carousel.Item>
+                          );
+                        })}
+                      </Carousel>
+                    ) : (
+                      ""
+                    )}
+                  </Row> */}
+                  {/* <Row>
+                    {imagesProperty.length > 0
+                      ? imagesProperty.map((imagesGroup) => {
+                          return (
+                            <Carousel key={Date.now()} responsive={responsive}>
+                              <img
+                                key={Date.now()}
+                                src={`${imagesGroup}?${Date.now()}`}
+                                style={{
+                                  width: "200px",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                  margin: "1rem",
+                                  padding: "1rem",
+                                }}
+                              />
+                            </Carousel>
+                          );
+                        })
+                      : ""}
+                  </Row> */}
+                  <Row className=" m-3">
+                    {imagesProperty.length > 0 ? (
+                      <Carousel responsive={responsive}>
+                        {imagesProperty.map((imagesGroup) => {
+                          return (
+                            <img
+                              key={Date.now()}
+                              src={`${imagesGroup}?${Date.now()}`}
+                              style={{
+                                width: "200px",
+                                height: "200px",
+                                objectFit: "cover",
+                              }}
+                            />
                           );
                         })}
                       </Carousel>
@@ -4257,6 +4318,10 @@ function OwnerPropertyView(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() => {
+                                window.scrollTo(0, 1500);
+                                setEditProperty(true);
+                              }}
                             >
                               {JSON.parse(property.images).length > 0 ? (
                                 <img
@@ -4280,6 +4345,10 @@ function OwnerPropertyView(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() => {
+                                window.scrollTo(0, 0);
+                                setEditProperty(true);
+                              }}
                             >
                               {property.address}
                               {property.unit !== "" ? " " + property.unit : ""}
@@ -4288,6 +4357,10 @@ function OwnerPropertyView(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() => {
+                                window.scrollTo(0, 0);
+                                setEditProperty(true);
+                              }}
                             >
                               {property.city}, {property.state}
                             </TableCell>
@@ -4295,6 +4368,10 @@ function OwnerPropertyView(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() => {
+                                window.scrollTo(0, 0);
+                                setEditProperty(true);
+                              }}
                             >
                               {property.zip}
                             </TableCell>
@@ -4311,6 +4388,10 @@ function OwnerPropertyView(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() => {
+                                window.scrollTo(0, 800);
+                                setEditProperty(true);
+                              }}
                             >
                               {"$" + property.listed_rent}
                             </TableCell>
@@ -4318,6 +4399,10 @@ function OwnerPropertyView(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() => {
+                                window.scrollTo(0, 800);
+                                setEditProperty(true);
+                              }}
                             >
                               $
                               {(
@@ -4330,6 +4415,10 @@ function OwnerPropertyView(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() => {
+                                window.scrollTo(0, 800);
+                                setEditProperty(true);
+                              }}
                             >
                               {property.property_type}
                             </TableCell>
@@ -4338,6 +4427,10 @@ function OwnerPropertyView(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              onClick={() => {
+                                window.scrollTo(0, 800);
+                                setEditProperty(true);
+                              }}
                             >
                               {property.num_beds + "/" + property.num_baths}
                             </TableCell>
@@ -4573,7 +4666,12 @@ function OwnerPropertyView(props) {
                               true ||
                               applianceState[0][appliance]["available"] ==
                                 "True" ? (
-                              <TableRow>
+                              <TableRow
+                                onClick={() => {
+                                  window.scrollTo(0, 1000);
+                                  setEditProperty(true);
+                                }}
+                              >
                                 <TableCell>{appliance}</TableCell>
                                 <TableCell>
                                   {applianceState[0][appliance]["name"]}
@@ -4625,30 +4723,14 @@ function OwnerPropertyView(props) {
                                   0 ? (
                                   <TableCell>
                                     <Row className="d-flex justify-content-center align-items-center p-1">
-                                      <Col xs={2} className="p-0 m-0">
-                                        <img
-                                          style={{
-                                            width: "20px",
-                                            height: "20px",
-                                            float: "right",
-                                          }}
-                                          src={ArrowLeft}
-                                          onClick={() =>
-                                            previousImg(
-                                              applianceState[0][appliance][
-                                                "images"
-                                              ]
-                                            )
-                                          }
-                                        />
-                                      </Col>
                                       <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                         <img
-                                          src={
+                                          key={Date.now()}
+                                          src={`${
                                             applianceState[0][appliance][
                                               "images"
                                             ][currentImg]
-                                          }
+                                          }?${Date.now()}`}
                                           style={{
                                             borderRadius: "4px",
                                             objectFit: "contain",
@@ -4656,24 +4738,6 @@ function OwnerPropertyView(props) {
                                             height: "50px",
                                           }}
                                           alt="Property"
-                                        />
-                                      </Col>
-
-                                      <Col xs={2} className="p-0 m-0">
-                                        <img
-                                          style={{
-                                            width: "20px",
-                                            height: "20px",
-                                            float: "left",
-                                          }}
-                                          src={ArrowRight}
-                                          onClick={() =>
-                                            nextImg(
-                                              applianceState[0][appliance][
-                                                "images"
-                                              ]
-                                            )
-                                          }
                                         />
                                       </Col>
                                     </Row>
@@ -5606,101 +5670,107 @@ function OwnerPropertyView(props) {
                     </Col>
                     <Col></Col>
                   </Row>
+
                   <Row className="m-3">
                     {rentalInfo.length > 0 ? (
-                      <Table
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Lease Start Date</TableCell>
-                            <TableCell>Lease End Date</TableCell>
-                            <TableCell>Tenant Payments</TableCell>
-                            <TableCell>Lease Docs</TableCell>
-                            <TableCell>Tenant Name</TableCell>
-                            <TableCell>Actions</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rentalInfo.map((rf) => {
-                            return (
-                              <TableRow>
-                                <TableCell>{rf.lease_start}</TableCell>
-                                <TableCell>{rf.lease_end}</TableCell>
-                                <TableCell>
-                                  {JSON.parse(rf.rent_payments).map((rp) => {
-                                    return (
-                                      <Row className="d-flex align-items-center p-2">
-                                        {rp.fee_name}: ${rp.charge}
-                                      </Row>
-                                    );
-                                  })}
-                                </TableCell>
-                                <TableCell>
-                                  {JSON.parse(rf.documents).map((rp) => {
-                                    return (
-                                      <Row className="d-flex align-items-center p-2">
-                                        <Col
-                                          className=" d-flex align-items-left"
-                                          style={{
-                                            font: "normal normal 600 18px Bahnschrift-Regular",
-                                            color: "#007AFF",
-                                            textDecoration: "underline",
-                                          }}
-                                        >
-                                          {rp.description}
-                                        </Col>
-                                        <Col className=" d-flex justify-content-end">
-                                          <a href={rp.link} target="_blank">
-                                            <img src={OpenDoc} />
-                                          </a>
-                                        </Col>
-                                      </Row>
-                                    );
-                                  })}
-                                </TableCell>
-                                <TableCell>
-                                  {tenantInfo.map((tf) => {
-                                    return (
-                                      <p>
-                                        {" "}
-                                        {tf.tenantFirstName} {tf.tenantLastName}
-                                      </p>
-                                    );
-                                  })}
-                                </TableCell>
-                                <TableCell>
-                                  {tenantInfo.map((tf) => {
-                                    return (
-                                      <Row>
-                                        <Col className="d-flex justify-content-end">
-                                          <a
-                                            href={`tel:${tf.tenantPhoneNumber}`}
+                      <div>
+                        <Table
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Lease Start Date</TableCell>
+                              <TableCell>Lease End Date</TableCell>
+                              <TableCell>Tenant Payments</TableCell>
+                              <TableCell>Lease Docs</TableCell>
+                              <TableCell>Tenant Name</TableCell>
+                              <TableCell>Actions</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {rentalInfo.map((rf) => {
+                              return (
+                                <TableRow>
+                                  <TableCell>{rf.lease_start}</TableCell>
+                                  <TableCell>{rf.lease_end}</TableCell>
+                                  <TableCell>
+                                    {JSON.parse(rf.rent_payments).map((rp) => {
+                                      return (
+                                        <Row className="d-flex align-items-center p-2">
+                                          {rp.fee_name}: ${rp.charge}
+                                        </Row>
+                                      );
+                                    })}
+                                  </TableCell>
+                                  <TableCell>
+                                    {JSON.parse(rf.documents).map((rp) => {
+                                      return (
+                                        <Row className="d-flex align-items-center p-2">
+                                          <Col
+                                            className=" d-flex align-items-left"
+                                            style={{
+                                              font: "normal normal 600 18px Bahnschrift-Regular",
+                                              color: "#007AFF",
+                                              textDecoration: "underline",
+                                            }}
                                           >
-                                            <img
-                                              src={Phone}
-                                              alt="Phone"
-                                              style={smallImg}
-                                            />
-                                          </a>
-                                          <a href={`mailto:${tf.tenantEmail}`}>
-                                            <img
-                                              src={Message}
-                                              alt="Message"
-                                              style={smallImg}
-                                            />
-                                          </a>
-                                        </Col>
-                                      </Row>
-                                    );
-                                  })}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
+                                            {rp.description}
+                                          </Col>
+                                          <Col className=" d-flex justify-content-end">
+                                            <a href={rp.link} target="_blank">
+                                              <img src={OpenDoc} />
+                                            </a>
+                                          </Col>
+                                        </Row>
+                                      );
+                                    })}
+                                  </TableCell>
+                                  <TableCell>
+                                    {tenantInfo.map((tf) => {
+                                      return (
+                                        <p>
+                                          {" "}
+                                          {tf.tenantFirstName}{" "}
+                                          {tf.tenantLastName}
+                                        </p>
+                                      );
+                                    })}
+                                  </TableCell>
+                                  <TableCell>
+                                    {tenantInfo.map((tf) => {
+                                      return (
+                                        <Row>
+                                          <Col className="d-flex justify-content-end">
+                                            <a
+                                              href={`tel:${tf.tenantPhoneNumber}`}
+                                            >
+                                              <img
+                                                src={Phone}
+                                                alt="Phone"
+                                                style={smallImg}
+                                              />
+                                            </a>
+                                            <a
+                                              href={`mailto:${tf.tenantEmail}`}
+                                            >
+                                              <img
+                                                src={Message}
+                                                alt="Message"
+                                                style={smallImg}
+                                              />
+                                            </a>
+                                          </Col>
+                                        </Row>
+                                      );
+                                    })}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </div>
                     ) : (
                       <div>Not rented</div>
                     )}

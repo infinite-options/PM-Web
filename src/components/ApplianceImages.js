@@ -64,7 +64,19 @@ function ApplianceImages(props) {
             }}
             key={i}
           >
-            <img src={file.image} style={{ ...tileImg, objectFit: "cover" }} />
+            {file.file === null ? (
+              <img
+                key={Date.now()}
+                src={`${file.image}?${Date.now()}`}
+                style={{ ...tileImg, objectFit: "cover" }}
+              />
+            ) : (
+              <img
+                key={Date.now()}
+                src={file.image}
+                style={{ ...tileImg, objectFit: "cover" }}
+              />
+            )}
             <img
               src={DeleteIcon}
               alt="Delete"
