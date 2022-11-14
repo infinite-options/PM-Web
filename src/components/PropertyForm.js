@@ -887,37 +887,6 @@ function PropertyForm(props) {
             inputProps={{ "aria-label": "controlled" }}
           />
         </Col>
-
-        {/* <Row>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={depositForRent}
-              onClick={
-                edit
-                  ? () => setDepositForRent(true)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">Yes</p>
-          </Col>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={!depositForRent}
-              onClick={
-                edit
-                  ? () => setDepositForRent(false)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">No</p>
-          </Col>
-        </Row> */}
       </Container>
       <Container className="d-flex my-3 ps-4">
         <Col className="p-2">

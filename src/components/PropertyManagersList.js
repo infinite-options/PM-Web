@@ -166,12 +166,18 @@ function PropertyManagersList(props) {
           position: "relative",
         }}
       >
-        {/* <Header
+        <Header
           title="Property Managers"
           leftText="< Back"
-          leftFn={() => navigate(`/propertyDetails/${property_uid}`)}
-        /> */}
-        <div>
+          leftFn={() =>
+            navigate(`/propertyDetails/${property.property_uid}`, {
+              state: {
+                property_uid: property.property_uid,
+              },
+            })
+          }
+        />
+        <Row className="m-3">
           {propertyManagers.map((property, i) => (
             <Container key={i} className="pt-1" style={{ height: "100px" }}>
               <Row
@@ -215,7 +221,7 @@ function PropertyManagersList(props) {
               </Row>
             </Container>
           ))}
-        </div>
+        </Row>
       </div>
     </div>
   ) : stage === "PMDETAILS" ? (
