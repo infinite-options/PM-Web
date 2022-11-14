@@ -901,13 +901,14 @@ function OwnerPropertyView(props) {
                   <Row className="m-3">
                     {imagesProperty.length > 0 ? (
                       <Carousel
+                        key={Date.now()}
                         className="d-flex justify-content-center"
                         controls={showControls}
                         indicators={showControls}
                       >
                         {groupArr(imagesProperty, 3).map((imagesGroup) => {
                           return (
-                            <Carousel.Item>
+                            <Carousel.Item key={Date.now()}>
                               <Container className="d-flex flex-row justify-content-center align-items-center">
                                 {imagesGroup.map((c) => {
                                   return (
@@ -917,7 +918,8 @@ function OwnerPropertyView(props) {
                                       alignItems="center"
                                     >
                                       <img
-                                        src={c}
+                                        key={Date.now()}
+                                        src={`${c}?${Date.now()}`}
                                         style={{
                                           width: "200px",
                                           height: "200px",
@@ -4258,7 +4260,10 @@ function OwnerPropertyView(props) {
                             >
                               {JSON.parse(property.images).length > 0 ? (
                                 <img
-                                  src={JSON.parse(property.images)[0]}
+                                  key={Date.now()}
+                                  src={`${
+                                    JSON.parse(property.images)[0]
+                                  }?${Date.now()}`}
                                   alt="Property"
                                   style={{
                                     borderRadius: "4px",

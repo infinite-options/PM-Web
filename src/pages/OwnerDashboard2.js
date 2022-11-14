@@ -3540,7 +3540,10 @@ export default function OwnerDashboard2() {
                           <TableCell padding="none" size="small" align="center">
                             {JSON.parse(property.images).length > 0 ? (
                               <img
-                                src={JSON.parse(property.images)[0]}
+                                key={Date.now()}
+                                src={`${
+                                  JSON.parse(property.images)[0]
+                                }?${Date.now()}`}
                                 alt="Property"
                                 style={{
                                   borderRadius: "4px",
