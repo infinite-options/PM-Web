@@ -542,7 +542,7 @@ export default function OwnerDashboard2() {
           <SideBar />
         </div>
 
-        {ownerData.length > 1 ? (
+        {ownerData.length > 0 ? (
           <div
             className="w-100"
             style={{
@@ -551,7 +551,7 @@ export default function OwnerDashboard2() {
             }}
           >
             <Header title="Owner Dashboard" />
-            <Row>
+            <Row className="m-3">
               <Col>
                 <h1>Cash Flow Summary</h1>
               </Col>
@@ -3458,7 +3458,7 @@ export default function OwnerDashboard2() {
                 </TableBody>
               </Table>
             </Row>
-            <Row>
+            <Row className="m-3">
               <Col>
                 <h1>Properties</h1>
               </Col>
@@ -3473,7 +3473,6 @@ export default function OwnerDashboard2() {
                     marginRight: "5rem",
                   }}
                 />
-                {/* <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1> */}
               </Col>
             </Row>
 
@@ -3756,7 +3755,7 @@ export default function OwnerDashboard2() {
                 </TableBody>
               </Table>
             </Row>
-            <Row>
+            <Row className="m-3">
               <Col>
                 <h1>Maintenance and Repairs</h1>
               </Col>
@@ -3774,106 +3773,140 @@ export default function OwnerDashboard2() {
                 {/* <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1> */}
               </Col>
             </Row>
-
-            <Row className="m-3">
-              <Table classes={{ root: classes.customTable }} size="small">
-                <EnhancedTableHeadMaintenance
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                  rowCount={maintenanceRequests.length}
-                />{" "}
-                <TableBody>
-                  {stableSort(
-                    maintenanceRequests,
-                    getComparator(order, orderBy)
-                  ).map((request, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={request.address}
-                        onClick={() =>
-                          navigate(
-                            `/owner-repairs/${request.maintenance_request_uid}`,
-                            {
-                              state: {
-                                repair: request,
-                                property: request.address,
-                              },
-                            }
-                          )
-                        }
-                      >
-                        <TableCell padding="none" size="small" align="center">
-                          {JSON.parse(request.images).length > 0 ? (
-                            <img
-                              src={JSON.parse(request.images)[0]}
-                              onClick={() =>
-                                navigate(
-                                  `/owner-repairs/${request.maintenance_request_uid}`,
-                                  {
-                                    state: {
-                                      repair: request,
-                                      property: request.address,
-                                    },
-                                  }
-                                )
+            {maintenanceRequests.length > 0 ? (
+              <Row className="m-3">
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <EnhancedTableHeadMaintenance
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    rowCount={maintenanceRequests.length}
+                  />{" "}
+                  <TableBody>
+                    {stableSort(
+                      maintenanceRequests,
+                      getComparator(order, orderBy)
+                    ).map((request, index) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={request.address}
+                          onClick={() =>
+                            navigate(
+                              `/owner-repairs/${request.maintenance_request_uid}`,
+                              {
+                                state: {
+                                  repair: request,
+                                  property: request.address,
+                                },
                               }
-                              alt="Property"
-                              style={{
-                                borderRadius: "4px",
-                                objectFit: "cover",
-                                width: "100px",
-                                height: "100px",
-                              }}
-                            />
-                          ) : (
-                            ""
-                          )}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {request.address}
-                          {request.unit !== "" ? " " + request.unit : ""}
-                          {request.city}, {request.state} {request.zip}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {" "}
-                          {request.title}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {" "}
-                          {request.request_created_date}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {request.days_open} days
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {request.request_type != null
-                            ? request.request_type
-                            : "None"}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {request.priority}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {request.assigned_business != null
-                            ? request.assigned_business
-                            : "None"}
-                        </TableCell>
+                            )
+                          }
+                        >
+                          <TableCell padding="none" size="small" align="center">
+                            {JSON.parse(request.images).length > 0 ? (
+                              <img
+                                src={JSON.parse(request.images)[0]}
+                                onClick={() =>
+                                  navigate(
+                                    `/owner-repairs/${request.maintenance_request_uid}`,
+                                    {
+                                      state: {
+                                        repair: request,
+                                        property: request.address,
+                                      },
+                                    }
+                                  )
+                                }
+                                alt="Property"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.address}
+                            {request.unit !== "" ? " " + request.unit : ""}
+                            {request.city}, {request.state} {request.zip}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {" "}
+                            {request.title}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {" "}
+                            {request.request_created_date}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.days_open} days
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.request_type != null
+                              ? request.request_type
+                              : "None"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.priority}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.assigned_business != null
+                              ? request.assigned_business
+                              : "None"}
+                          </TableCell>
 
-                        <TableCell padding="none" size="small" align="center">
-                          {request.scheduled_date != null
-                            ? request.scheduled_date
-                            : "Not Scheduled"}
-                        </TableCell>
-                        <TableCell>${request.total_estimate}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.scheduled_date != null
+                              ? request.scheduled_date
+                              : "Not Scheduled"}
+                          </TableCell>
+                          <TableCell>${request.total_estimate}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </Row>
+            ) : (
+              <Row className="m-3">No maintenance requests and repairs</Row>
+            )}
+          </div>
+        ) : ownerData.length == 0 ? (
+          <div
+            className="w-100"
+            style={{
+              width: "calc(100vw - 13rem)",
+              position: "relative",
+            }}
+          >
+            <Header title="Owner Dashboard" />
+            <Row className="m-3">
+              <h1>Welcome to Manifest My Space</h1>
+            </Row>
+            <Row className="m-3">
+              {console.log("here")}
+              <Col>
+                <h1>Add a new Property</h1>
+              </Col>
+              <Col>
+                <img
+                  src={AddIcon}
+                  onClick={() => setStage("NEW")}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "5rem",
+                  }}
+                />
+              </Col>
             </Row>
           </div>
         ) : (
