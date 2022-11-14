@@ -197,11 +197,10 @@ function OwmerRepairDetails(props) {
             position: "relative",
           }}
         >
-          <br />
           <Header
             title="Repairs"
             leftText={"< Back"}
-            leftFn={() => navigate("/owner")}
+            leftFn={() => navigate(-1)}
           />
 
           <div

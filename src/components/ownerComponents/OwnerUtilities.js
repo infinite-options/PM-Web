@@ -1580,7 +1580,7 @@ function OwnerUtilities(props) {
                 !expenseDetailOwner &&
                 !maintenanceExpenseDetail &&
                 !payExpense ? (
-                <Row style={headings}>
+                <Row style={headings} className="m-3">
                   <Col>
                     {" "}
                     <h3>No utilities </h3>

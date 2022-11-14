@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Checkbox from "./Checkbox";
 import ApplianceImages from "./ApplianceImages";
+import ConfirmDialog from "../components/ConfirmDialog";
 import AddIcon from "../icons/AddIcon.svg";
+import MinusIcon from "../icons/MinusIcon.svg";
 import { Container, Form, Button, Row, Col, Table } from "react-bootstrap";
 import {
   squareForm,
@@ -15,11 +18,24 @@ import {
 import { put } from "../utils/api";
 
 function PropertyAppliances(props) {
+  const navigate = useNavigate();
   const { state, edit, property } = props;
+  const [applianceRem, setApplianceRem] = useState("");
   const [applianceState, setApplianceState] = state;
   const appliances = Object.keys(applianceState);
+  const og_appliances = [
+    "Dryer",
+    "Range",
+    "Washer",
+    "Microwave",
+    "Dishwasher",
+    "Refrigerator",
+  ];
   console.log(props);
   console.log(appliances);
+  const [showDialog, setShowDialog] = useState(false);
+  const [hide, setHide] = useState(false);
+  const [removedApps, setRemovedApps] = useState([]);
   const [newAppliance, setNewAppliance] = useState(null);
   const [applianceType, setApplianceType] = useState(null);
   const [applianceName, setApplianceName] = useState(null);
@@ -88,6 +104,29 @@ function PropertyAppliances(props) {
     // setApplianceImages(applianceState[appliance]["images"]);
   };
 
+  const onCancel = () => {
+    setShowDialog(false);
+  };
+  const removeappliance = async (app) => {
+    let rem_app = {
+      property_uid: property.property_uid,
+      appliance: applianceRem,
+    };
+    let i = 0;
+    let files = imageState[0];
+    for (const file of imageState[0]) {
+      let key = `img_${app}_${i++}`;
+      console.log(key);
+      if (file.file !== null) {
+        rem_app[key] = file.file;
+      } else {
+        rem_app[key] = file.image;
+      }
+    }
+    const response = await put("/RemoveAppliance", rem_app, null, files);
+
+    setShowDialog(false);
+  };
   const showApplianceDetailNoEdit = (appliance, x) => {
     console.log(x);
     console.log(currentAppliance);
@@ -280,17 +319,27 @@ function PropertyAppliances(props) {
     const newApplianceState = { ...applianceState };
     console.log(newApplianceState[newAppliance]);
     newApplianceState[newAppliance] = {};
-    newApplianceState[newAppliance]["available"] = true;
-    newApplianceState[newAppliance]["model_num"] = applianceModelNum;
-    newApplianceState[newAppliance]["name"] = applianceName;
-    newApplianceState[newAppliance]["purchased"] = appliancePurchasedOn;
-    newApplianceState[newAppliance]["purchased_from"] = appliancePurchasedFrom;
+    newApplianceState[newAppliance]["available"] = "True";
+    newApplianceState[newAppliance]["model_num"] =
+      applianceModelNum == null ? "" : applianceModelNum;
+    newApplianceState[newAppliance]["name"] =
+      applianceName == null ? "" : applianceName;
+    newApplianceState[newAppliance]["purchased"] =
+      appliancePurchasedOn == null ? "" : appliancePurchasedOn;
+    newApplianceState[newAppliance]["purchased_from"] =
+      appliancePurchasedFrom == null ? "" : appliancePurchasedFrom;
     newApplianceState[newAppliance]["purchased_order"] =
-      appliancePurchasesOrderNumber;
-    newApplianceState[newAppliance]["installed"] = applianceInstalledOn;
-    newApplianceState[newAppliance]["serial_num"] = applianceSerialNum;
-    newApplianceState[newAppliance]["warranty_info"] = applianceWarrantyInfo;
-    newApplianceState[newAppliance]["warranty_till"] = applianceWarrantyTill;
+      appliancePurchasesOrderNumber == null
+        ? ""
+        : appliancePurchasesOrderNumber;
+    newApplianceState[newAppliance]["installed"] =
+      applianceInstalledOn == null ? "" : applianceInstalledOn;
+    newApplianceState[newAppliance]["serial_num"] =
+      applianceSerialNum == null ? "" : applianceSerialNum;
+    newApplianceState[newAppliance]["warranty_info"] =
+      applianceWarrantyInfo == null ? "" : applianceWarrantyInfo;
+    newApplianceState[newAppliance]["warranty_till"] =
+      applianceWarrantyTill == null ? "" : applianceWarrantyTill;
     setApplianceState(newApplianceState);
     if (property) {
       let newProperty = {
@@ -333,6 +382,12 @@ function PropertyAppliances(props) {
 
   return (
     <Container style={({ padding: "0px" }, mediumBold)} className="my-4">
+      <ConfirmDialog
+        title={"Are you sure you want to delete this appliance?"}
+        isOpen={showDialog}
+        onConfirm={removeappliance}
+        onCancel={onCancel}
+      />
       <Row className="d-flex">
         <Col className="d-flex">
           <h6 style={mediumBold} className="mt-2">
@@ -380,7 +435,6 @@ function PropertyAppliances(props) {
           ""
         )}
       </Row>
-
       <Row className="d-flex flex-column justify-content-left">
         {!tableView &&
           appliances.map((appliance, i) => (
@@ -407,6 +461,25 @@ function PropertyAppliances(props) {
                   }
                 >
                   <p className="ms-1 mb-1">{appliance}</p>
+                </Col>
+                <Col>
+                  {!og_appliances.includes(appliance) ? (
+                    <img
+                      src={MinusIcon}
+                      onClick={() => {
+                        setShowDialog(true);
+                        setApplianceRem(appliance);
+                      }}
+                      style={{
+                        width: "15px",
+                        height: "15px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </Col>
               </Row>
               <Row>
@@ -840,6 +913,7 @@ function PropertyAppliances(props) {
         ""
       ) : (
         <div>
+          {console.log("here  enter new appliance")}
           <div className="d-flex ps-2 align-items-center">
             <Checkbox type="BOX" checked={true} />
             <Form.Control
