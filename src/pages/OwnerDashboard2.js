@@ -18,14 +18,12 @@ import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/ownerComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
-import ConfirmDialog from "../components/ConfirmDialog";
 import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
 import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
 import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
 import AddIcon from "../icons/AddIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
 import { get, put } from "../utils/api";
 import { green, red } from "../utils/styles";
 
@@ -54,7 +52,6 @@ export default function OwnerDashboard2() {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-  const [showDialog, setShowDialog] = useState(false);
   const [propertyID, setPropertyID] = useState("");
   const [monthlyCashFlow, setMonthlyCashFlow] = useState(false);
   const [yearlyCashFlow, setYearlyCashFlow] = useState(false);
@@ -126,16 +123,7 @@ export default function OwnerDashboard2() {
     fetchOwnerDashboard();
     setStage("LIST");
   };
-  const deleteProperty = async () => {
-    let pid = propertyID;
-    console.log(pid);
-    const response = await put(`/RemovePropertyOwner?property_uid=${pid}`);
-    setShowDialog(false);
-    fetchOwnerDashboard();
-  };
-  const onCancel = () => {
-    setShowDialog(false);
-  };
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -226,11 +214,6 @@ export default function OwnerDashboard2() {
       id: "lease_end",
       numeric: true,
       label: "Lease End",
-    },
-    {
-      id: "actions",
-      numeric: true,
-      label: "Remove Property",
     },
   ];
   function EnhancedTableHeadProperties(props) {
@@ -558,12 +541,7 @@ export default function OwnerDashboard2() {
         <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
           <SideBar />
         </div>
-        <ConfirmDialog
-          title={"Are you sure you want to remove this property?"}
-          isOpen={showDialog}
-          onConfirm={deleteProperty}
-          onCancel={onCancel}
-        />
+
         {ownerData.length > 1 ? (
           <div
             className="w-100"
@@ -3771,15 +3749,6 @@ export default function OwnerDashboard2() {
                             {property.rentalInfo.length !== 0
                               ? property.rentalInfo[0].lease_end
                               : "None"}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            <img
-                              src={DeleteIcon}
-                              onClick={() => {
-                                setPropertyID(property.property_uid);
-                                setShowDialog(true);
-                              }}
-                            />
                           </TableCell>
                         </TableRow>
                       );

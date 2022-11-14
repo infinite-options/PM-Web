@@ -55,7 +55,6 @@ import {
   green,
   red,
 } from "../../utils/styles";
-
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -78,6 +77,9 @@ function OwnerPropertyView(props) {
     images: "[]",
   });
   const [imagesProperty, setImagesProperty] = useState([]);
+
+  const [showControls, setShowControls] = useState(true);
+
   function groupArr(data, n) {
     var group = [];
     for (var i = 0, j = 0; i < data.length; i++) {
@@ -203,6 +205,8 @@ function OwnerPropertyView(props) {
     setCashflowData(cashflowResponse.result);
     setProperty(response.result[0]);
     setImagesProperty(JSON.parse(response.result[0].images));
+    let show = JSON.parse(response.result[0].images).length < 4 ? false : true;
+    setShowControls(show);
     console.log(JSON.parse(response.result[0].images));
     applianceState[1](JSON.parse(response.result[0].appliances));
     const res = await get(
@@ -889,7 +893,11 @@ function OwnerPropertyView(props) {
                 <div>
                   <Row className="m-3">
                     {imagesProperty.length > 0 ? (
-                      <Carousel className="d-flex justify-content-center">
+                      <Carousel
+                        className="d-flex justify-content-center"
+                        controls={showControls}
+                        indicators={showControls}
+                      >
                         {groupArr(imagesProperty, 3).map((imagesGroup) => {
                           return (
                             <Carousel.Item>
@@ -898,8 +906,6 @@ function OwnerPropertyView(props) {
                                   return (
                                     <Grid
                                       item
-                                      xs={4}
-                                      md={4}
                                       justifyContent="center"
                                       alignItems="center"
                                     >

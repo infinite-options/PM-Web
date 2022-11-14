@@ -1,8 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Switch } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
 import * as ReactBootStrap from "react-bootstrap";
 import ConfirmDialog2 from "./ConfirmDialog2";
+import ConfirmDialog from "../components/ConfirmDialog";
 import Checkbox from "./Checkbox";
 import PropertyAppliances from "./PropertyAppliances";
 import PropertyUtilities from "./PropertyUtilities";
@@ -10,6 +12,7 @@ import PropertyImages from "./PropertyImages";
 import Heart from "../icons/Heart.svg";
 import Edit from "../icons/Edit.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
+import DeleteIcon from "../icons/DeleteIcon.svg";
 import AppContext from "../AppContext";
 import {
   pillButton,
@@ -22,6 +25,7 @@ import {
 import { post, put } from "../utils/api";
 
 function PropertyForm(props) {
+  const navigate = useNavigate();
   const { userData } = useContext(AppContext);
   const { user } = userData;
   const applianceState = useState({
@@ -130,6 +134,7 @@ function PropertyForm(props) {
   const [availableToRent, setAvailableToRent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
+  const [showDialog2, setShowDialog2] = useState(false);
   const { property, edit, setEdit, hideEdit } = props;
   const [showSpinner, setShowSpinner] = useState(false);
 
@@ -528,7 +533,16 @@ function PropertyForm(props) {
     style: "currency",
     currency: "USD",
   });
-
+  const deleteProperty = async () => {
+    let pid = property.property_uid;
+    console.log(pid);
+    const response = await put(`/RemovePropertyOwner?property_uid=${pid}`);
+    setShowDialog2(false);
+    navigate("../owner");
+  };
+  const onCancel = () => {
+    setShowDialog2(false);
+  };
   return (
     <div
       className="d-flex flex-column w-100 mx-2 p-2 m-0"
@@ -538,6 +552,12 @@ function PropertyForm(props) {
         opacity: 1,
       }}
     >
+      <ConfirmDialog
+        title={"Are you sure you want to remove this property?"}
+        isOpen={showDialog2}
+        onConfirm={deleteProperty}
+        onCancel={onCancel}
+      />
       <ConfirmDialog2
         title={"Can't edit here. Click on the edit icon to make any changes"}
         isOpen={showDialog}
@@ -898,6 +918,19 @@ function PropertyForm(props) {
             <p className="ms-1 mb-1">No</p>
           </Col>
         </Row> */}
+      </Container>
+      <Container className="d-flex my-3 ps-4">
+        <Col className="p-2">
+          <h6>Remove the property </h6>
+        </Col>
+        <Col>
+          <img
+            src={DeleteIcon}
+            onClick={() => {
+              setShowDialog2(true);
+            }}
+          />
+        </Col>
       </Container>
 
       {edit ? (
