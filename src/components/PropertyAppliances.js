@@ -280,17 +280,27 @@ function PropertyAppliances(props) {
     const newApplianceState = { ...applianceState };
     console.log(newApplianceState[newAppliance]);
     newApplianceState[newAppliance] = {};
-    newApplianceState[newAppliance]["available"] = true;
-    newApplianceState[newAppliance]["model_num"] = applianceModelNum;
-    newApplianceState[newAppliance]["name"] = applianceName;
-    newApplianceState[newAppliance]["purchased"] = appliancePurchasedOn;
-    newApplianceState[newAppliance]["purchased_from"] = appliancePurchasedFrom;
+    newApplianceState[newAppliance]["available"] = "True";
+    newApplianceState[newAppliance]["model_num"] =
+      applianceModelNum == null ? "" : applianceModelNum;
+    newApplianceState[newAppliance]["name"] =
+      applianceName == null ? "" : applianceName;
+    newApplianceState[newAppliance]["purchased"] =
+      appliancePurchasedOn == null ? "" : appliancePurchasedOn;
+    newApplianceState[newAppliance]["purchased_from"] =
+      appliancePurchasedFrom == null ? "" : appliancePurchasedFrom;
     newApplianceState[newAppliance]["purchased_order"] =
-      appliancePurchasesOrderNumber;
-    newApplianceState[newAppliance]["installed"] = applianceInstalledOn;
-    newApplianceState[newAppliance]["serial_num"] = applianceSerialNum;
-    newApplianceState[newAppliance]["warranty_info"] = applianceWarrantyInfo;
-    newApplianceState[newAppliance]["warranty_till"] = applianceWarrantyTill;
+      appliancePurchasesOrderNumber == null
+        ? ""
+        : appliancePurchasesOrderNumber;
+    newApplianceState[newAppliance]["installed"] =
+      applianceInstalledOn == null ? "" : applianceInstalledOn;
+    newApplianceState[newAppliance]["serial_num"] =
+      applianceSerialNum == null ? "" : applianceSerialNum;
+    newApplianceState[newAppliance]["warranty_info"] =
+      applianceWarrantyInfo == null ? "" : applianceWarrantyInfo;
+    newApplianceState[newAppliance]["warranty_till"] =
+      applianceWarrantyTill == null ? "" : applianceWarrantyTill;
     setApplianceState(newApplianceState);
     if (property) {
       let newProperty = {

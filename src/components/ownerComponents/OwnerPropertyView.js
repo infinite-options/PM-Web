@@ -4565,7 +4565,9 @@ function OwnerPropertyView(props) {
                         <TableBody>
                           {appliances.map((appliance, i) => {
                             return applianceState[0][appliance]["available"] ==
-                              true ? (
+                              true ||
+                              applianceState[0][appliance]["available"] ==
+                                "True" ? (
                               <TableRow>
                                 <TableCell>{appliance}</TableCell>
                                 <TableCell>
