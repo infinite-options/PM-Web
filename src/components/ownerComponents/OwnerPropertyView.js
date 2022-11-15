@@ -4341,7 +4341,7 @@ function OwnerPropertyView(props) {
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={property.address}
+                            key={property.property_uid}
                           >
                             <TableCell
                               padding="none"
@@ -4534,7 +4534,7 @@ function OwnerPropertyView(props) {
                                   hover
                                   role="checkbox"
                                   tabIndex={-1}
-                                  key={request.address}
+                                  key={request.maintenance_request_uid}
                                   onClick={() =>
                                     navigate(
                                       `/owner-repairs/${request.maintenance_request_uid}`,

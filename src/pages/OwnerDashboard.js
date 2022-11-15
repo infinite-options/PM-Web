@@ -276,6 +276,12 @@ export default function OwnerDashboard2() {
       numeric: false,
       label: "Address",
     },
+    ,
+    {
+      id: "request_status",
+      numeric: false,
+      label: "Status",
+    },
     {
       id: "title",
       numeric: false,
@@ -3529,7 +3535,7 @@ export default function OwnerDashboard2() {
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={property.address}
+                          key={property.property_uid}
                           onClick={() => {
                             navigate(
                               `/propertyDetails/${property.property_uid}`,
@@ -3646,7 +3652,7 @@ export default function OwnerDashboard2() {
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={request.address}
+                          key={request.maintenance_request_uid}
                           onClick={() =>
                             navigate(
                               `/owner-repairs/${request.maintenance_request_uid}`,
@@ -3687,9 +3693,12 @@ export default function OwnerDashboard2() {
                             )}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {request.address}
-                            {request.unit !== "" ? " " + request.unit : ""}
+                            {request.address}{" "}
+                            {request.unit !== "" ? " " + request.unit : ""}{" "}
                             {request.city}, {request.state} {request.zip}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.request_status}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {" "}
