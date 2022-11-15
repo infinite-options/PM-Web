@@ -12,6 +12,9 @@ function Sidebar() {
 
   let sidebarButtonsActive = {
     paddingRight: "20px",
+
+    maxHeight: "4rem",
+    minHeight: "3rem",
     color: "#c93667",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -21,6 +24,9 @@ function Sidebar() {
   };
   let sidebarButtons = {
     paddingRight: "20px",
+
+    maxHeight: "4rem",
+    minHeight: "3rem",
     color: "#000000",
     textDecoration: "none",
     textTransform: "uppercase",

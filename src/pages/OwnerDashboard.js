@@ -546,6 +546,7 @@ export default function OwnerDashboard2() {
             style={{
               backgroundColor: "#229ebc",
               minHeight: "100%",
+              width: "11rem",
             }}
           >
             <SideBar />

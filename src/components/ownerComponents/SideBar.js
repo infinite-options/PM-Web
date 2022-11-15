@@ -6,6 +6,9 @@ import "./sideBar.css";
 function SideBar() {
   let sidebarButtonsActive = {
     paddingRight: "20px",
+    maxHeight: "4rem",
+    minHeight: "3rem",
+
     color: "#c93667",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -15,6 +18,9 @@ function SideBar() {
   };
   let sidebarButtons = {
     paddingRight: "20px",
+    maxHeight: "4rem",
+    minHeight: "3rem",
+
     color: "#000000",
     textDecoration: "none",
     textTransform: "uppercase",
