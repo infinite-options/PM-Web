@@ -30,7 +30,9 @@ import {
   pillButton,
   blue,
   editButton,
-  squareForm, payNowButton, bluePillButton,
+  squareForm,
+  payNowButton,
+  bluePillButton,
 } from "../utils/styles";
 import { relativeTimeRounding } from "moment";
 import Calendar from "react-calendar";
@@ -63,12 +65,17 @@ function DetailRepairStatus(props) {
   const [dateString1, setDateString1] = useState("");
   const [showAccept, setShowAccept] = useState(false);
   const [scheduledTime, setScheduledTime] = useState("");
-  const [timeArr, setTimeArr] = useState(["9:00", "10:00", "12:00", "3:00", "5:00"]);
+  const [timeArr, setTimeArr] = useState([
+    "9:00",
+    "10:00",
+    "12:00",
+    "3:00",
+    "5:00",
+  ]);
   const [timeAASlotsTenant, setTimeAASlotsTenant] = useState([]);
   const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 
-
-  function toggleCalVisible(){
+  function toggleCalVisible() {
     setCalVisible(!calVisible);
   }
 
@@ -84,11 +91,11 @@ function DetailRepairStatus(props) {
 
   const dateFormat1 = (date) => {
     return (
-        doubleDigitMonth(date) +
-        "/" +
-        doubleDigitDay(date) +
-        "/" +
-        date.getFullYear()
+      doubleDigitMonth(date) +
+      "/" +
+      doubleDigitDay(date) +
+      "/" +
+      date.getFullYear()
     );
   };
 
@@ -111,8 +118,8 @@ function DetailRepairStatus(props) {
     };
     console.log("dateformat2", date);
     console.log(
-        "dateformat2",
-        months[doubleDigitMonth(date)] +
+      "dateformat2",
+      months[doubleDigitMonth(date)] +
         " " +
         doubleDigitDay(date) +
         ", " +
@@ -120,12 +127,12 @@ function DetailRepairStatus(props) {
         " "
     );
     return (
-        months[doubleDigitMonth(date)] +
-        " " +
-        doubleDigitDay(date) +
-        ", " +
-        date.getFullYear() +
-        " "
+      months[doubleDigitMonth(date)] +
+      " " +
+      doubleDigitDay(date) +
+      ", " +
+      date.getFullYear() +
+      " "
     );
   };
 
@@ -133,19 +140,19 @@ function DetailRepairStatus(props) {
   const dateFormat3 = (date) => {
     console.log("dateformat3", date);
     console.log(
-        "dateformat3",
-        date.getFullYear() +
+      "dateformat3",
+      date.getFullYear() +
         "-" +
         doubleDigitMonth(date) +
         "-" +
         doubleDigitDay(date)
     );
     return (
-        date.getFullYear() +
-        "-" +
-        doubleDigitMonth(date) +
-        "-" +
-        doubleDigitDay(date)
+      date.getFullYear() +
+      "-" +
+      doubleDigitMonth(date) +
+      "-" +
+      doubleDigitDay(date)
     );
   };
   const dateStringChange = (date) => {
@@ -155,14 +162,13 @@ function DetailRepairStatus(props) {
     // setDateHasBeenChanged(true);
   };
 
-
-  function dateChange(e){
+  function dateChange(e) {
     setDate(e);
     console.log("here", e);
     dateStringChange(e);
   }
 
-  function selectTime(e){
+  function selectTime(e) {
     setScheduledTime(e);
     console.log("here", e);
   }
@@ -172,9 +178,12 @@ function DetailRepairStatus(props) {
       maintenance_request_uid: maintenance_request_uid,
       request_status: "SCHEDULED",
       scheduled_date: apiDateString,
-      scheduled_time: scheduledTime
-    }
-    const response = await put(`/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`, payload);
+      scheduled_time: scheduledTime,
+    };
+    const response = await put(
+      `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`,
+      payload
+    );
   };
 
   const acceptRepairAppt = async () => {
@@ -182,50 +191,56 @@ function DetailRepairStatus(props) {
       maintenance_request_uid: maintenance_request_uid,
       request_status: "CONFIRMED",
       scheduled_date: repairsDetail[0].scheduled_date,
-      scheduled_time: repairsDetail[0].scheduled_time
-    }
-    const response = await put(`/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`, payload);
+      scheduled_time: repairsDetail[0].scheduled_time,
+    };
+    const response = await put(
+      `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`,
+      payload
+    );
   };
 
   function displayMessage() {
-    if(repairsDetail.length == 0) return "loading"
-    else if(apiDateString !== "" & scheduledTime !== "") {
-      if(!showAccept) setShowAccept(true);
-      return "This Repair is currently scheduled for " + apiDateString + " at " + scheduledTime;
-    }
-    else return "Repair Request is not yet scheduled."
+    if (repairsDetail.length == 0) return "loading";
+    else if ((apiDateString !== "") & (scheduledTime !== "")) {
+      if (!showAccept) setShowAccept(true);
+      return (
+        "This Repair is currently scheduled for " +
+        apiDateString +
+        " at " +
+        scheduledTime
+      );
+    } else return "Repair Request is not yet scheduled.";
   }
 
   useEffect(() => {
-
-      setTimeAASlotsTenant([]);
+    setTimeAASlotsTenant([]);
     axios
-        .get(
-            BASE_URL +
-            "/AvailableAppointmentsTenant/" +
-            // dateString +
-            apiDateString +
-            "/" +
-            // quotes.event_duration +
-            "01:59:59"+
-            "/" +
-            // quotes.rentalInfo[0].tenant_id +
-            user.user_uid +
-            "/" +
-            "08:00" +
-            "," +
-            "20:00"
-        )
-          .then((res) => {
-            console.log("This is the information we got" + res);
+      .get(
+        BASE_URL +
+          "/AvailableAppointmentsTenant/" +
+          // dateString +
+          apiDateString +
+          "/" +
+          // quotes.event_duration +
+          "01:59:59" +
+          "/" +
+          // quotes.rentalInfo[0].tenant_id +
+          user.user_uid +
+          "/" +
+          "08:00" +
+          "," +
+          "20:00"
+      )
+      .then((res) => {
+        console.log("This is the information we got" + res);
 
-            res.data.result.map((r) => {
-              timeAASlotsTenant.push(r["begin_time"]);
-            });
-            setTimeAASlotsTenant(timeAASlotsTenant);
-          });
-          console.log("Here are teh available time slots ", timeAASlotsTenant);
-  },[apiDateString]);
+        res.data.result.map((r) => {
+          timeAASlotsTenant.push(r["begin_time"]);
+        });
+        setTimeAASlotsTenant(timeAASlotsTenant);
+      });
+    console.log("Here are teh available time slots ", timeAASlotsTenant);
+  }, [apiDateString]);
 
   useEffect(() => {
     if (repairsDetail !== undefined) {
@@ -377,14 +392,6 @@ function DetailRepairStatus(props) {
                         alt="repair"
                       />
                     ) : JSON.parse(repair.images).length > 1 ? (
-                      // <div>
-
-                      // {console.log(repairsImages.length)}
-                      // {repairsImages.map((img) => {
-                      //    return <img src = {img} style = {{width: "350px", height: "198px", borderRadius: "5px", objectFit: "cover"}}></img>
-
-                      // })}
-                      // </div>
                       <Carousel>
                         {repairsImages.map((img) => {
                           return (
@@ -403,25 +410,6 @@ function DetailRepairStatus(props) {
                             </Carousel.Item>
                           );
                         })}
-                        {/* {imageState[0].length > 0
-                          ? imageState[0].map((img) => {
-                              return (
-                                <Carousel.Item>
-                                  <Image
-                                    src={JSON.parse(img.image)}
-                                    style={{
-                                      objectFit: "cover",
-                                      width: "350px",
-                                      height: " 198px",
-                                      border: "1px solid #C4C4C4",
-                                      borderRadius: "5px",
-                                    }}
-                                    alt="repair"
-                                  />
-                                </Carousel.Item>
-                              );
-                            })
-                          : null} */}
                       </Carousel>
                     ) : (
                       <img
@@ -484,15 +472,6 @@ function DetailRepairStatus(props) {
                         <option value="High">High Priority</option>
                         <option value="Medium">Medium Priority</option>
                         <option value="Low">Low Priority</option>
-                        {/* {properties.map((property, i) => (
-                        <option key={i} value={JSON.stringify(property)}>
-                          {property.property.address} {property.property.unit}
-                          ,&nbsp;
-                          {property.property.city}
-                          ,&nbsp;
-                          {property.property.state}&nbsp; {property.property.zip}
-                        </option>
-                      ))} */}
                       </Form.Select>
                     </Form.Group>
                   ) : (
@@ -626,43 +605,59 @@ function DetailRepairStatus(props) {
           })}
         </div>
       )}
-      {calVisible ?
-          <div>
-      <Calendar
-          calendarType="US"
-          // onClickDay={(e) => {
-          //     setTimeAASlots([]);
-          //     dateChange(e);
-          // }}
-            onClickDay = {(e) => dateChange(e)}
-          // value={date}
-          // minDate={minDate}
-          // next2Label={null}
-          // prev2Label={null}
-      />
+      {calVisible ? (
+        <div>
+          <Calendar
+            calendarType="US"
+            // onClickDay={(e) => {
+            //     setTimeAASlots([]);
+            //     dateChange(e);
+            // }}
+            onClickDay={(e) => dateChange(e)}
+            // value={date}
+            // minDate={minDate}
+            // next2Label={null}
+            // prev2Label={null}
+          />
           {/*{timeArr.map((time) =>*/}
           {/*      <button onClick={() => setScheduledTime(time)} style = {bluePillButton}>{time}</button>)}*/}
-            {timeAASlotsTenant.map((time) =>
-                <button onClick={() => setScheduledTime(time)} style = {bluePillButton}>{time}</button>)}
-          </div>
-          : ""}
-
-
-
+          {timeAASlotsTenant.map((time) => (
+            <button
+              onClick={() => setScheduledTime(time)}
+              style={bluePillButton}
+            >
+              {time}
+            </button>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
 
       {displayMessage()}
-      {showAccept ? <button
+      {showAccept ? (
+        <button
           style={payNowButton}
           onClick={acceptRepairAppt}
-          children = "Accept"/> : ""}
+          children="Accept"
+        />
+      ) : (
+        ""
+      )}
       <button
-          style={payNowButton}
-          onClick={toggleCalVisible}
-          children = "Reschedule"/>
-      {showAccept ? <button
+        style={payNowButton}
+        onClick={toggleCalVisible}
+        children="Reschedule"
+      />
+      {showAccept ? (
+        <button
           style={payNowButton}
           onClick={putRepairAppt}
-          children = "Confirm"/> : ""}
+          children="Confirm"
+        />
+      ) : (
+        ""
+      )}
 
       {repairsDetail && pmNotes ? (
         <div>

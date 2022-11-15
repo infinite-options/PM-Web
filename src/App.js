@@ -11,7 +11,6 @@ import ApplyToProperty from "./pages/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
-
 import CreateAnnouncement from "./components/CreateAnnouncement";
 import Emergency from "./components/TenantEmergency";
 import RepairStatus from "./components/RepairStatus";
@@ -33,9 +32,7 @@ import RescheduleRepair from "./components/RescheduleRepair";
 import JobsCompleted from "./components/JobsCompleted";
 import QuotesRejectedM from "./components/QuotesRejectedM";
 import QuotesRejectedPM from "./components/QuotesRejectedPM";
-import PMRepairRequestDetail from "./components/PMRepairRequestDetail";
 import DetailQuoteRequest from "./components/DetailQuoteRequest";
-import PMRepairRequest from "./components/PMRepairRequest";
 import QuotesAccepted from "./components/QuotesAccepted";
 import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
 import TenantDocumentUpload from "./pages/TenantDocumentUpload";
@@ -273,11 +270,6 @@ function App() {
               path="/:property_uid/:maintenance_request_uid/detailRepairStatus"
               element={<DetailRepairStatus />}
             />
-            <Route
-              path="pmRepairRequestDetail"
-              element={<PMRepairRequestDetail />}
-            />
-            <Route path="pmRepairRequest" element={<PMRepairRequest />} />
             <Route path="manager-properties" element={<ManagerProperties />} />
             <Route path="/owner-list" element={<ManagerOwnerList />} />
             <Route path="/tenant-list" element={<ManagerTenantList />} />

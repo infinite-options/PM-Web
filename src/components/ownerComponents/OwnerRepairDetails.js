@@ -1,55 +1,80 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { useParams } from "react-router";
+import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
 import Checkbox from "../Checkbox";
+import Carousel from "react-multi-carousel";
+import { makeStyles } from "@material-ui/core/styles";
 import HighPriority from "../../icons/highPriority.svg";
 import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
 import AppContext from "../../AppContext";
 import Header from "../Header";
+import RepairImages from "../RepairImages";
+import SideBar from "./SideBar";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
-import SideBar from "./SideBar";
+import RepairImg from "../../icons/RepairImg.svg";
 import {
   headings,
-  pillButton,
+  editButton,
   subHeading,
   subText,
   redPillButton,
   formLabel,
   bluePillButton,
   blue,
-  tileImg,
   mediumBold,
   orangePill,
 } from "../../utils/styles";
-import { useParams } from "react-router";
-import { get, post, put } from "../../utils/api";
-
+import { get, put } from "../../utils/api";
+import "react-multi-carousel/lib/styles.css";
+const useStyles = makeStyles((theme) => ({
+  priorityInactive: {
+    opacity: "0.5",
+  },
+  priorityActive: {
+    opacity: "1",
+  },
+}));
 function OwmerRepairDetails(props) {
-  const { userData, refresh } = React.useContext(AppContext);
+  const classes = useStyles();
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 3,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 3,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 3,
+    },
+  };
+  const imageState = useState([]);
+  const { userData, refresh } = useContext(AppContext);
   const { access_token } = userData;
   const location = useLocation();
   const navigate = useNavigate();
-  const [morePictures, setMorePictures] = useState(false);
-  const [morePicturesNotes, setMorePicturesNotes] = useState(
-    "Can you please share more pictures regarding the request?"
-  );
+  const [isEditing, setIsEditing] = useState(false);
   const [canReschedule, setCanReschedule] = useState(false);
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [quotes, setQuotes] = useState([]);
-
+  const [repairsDetail, setRepairsDetail] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
-  const { mp_id, rr_id } = useParams();
-
+  const [isLoading, setIsLoading] = useState(true);
   const repair = location.state.repair;
-  const property = location.state.property;
-  console.log(repair, property);
-  // console.log(mp_id, rr_id)
 
   const fetchBusinesses = async () => {
     if (access_token === null) {
@@ -59,6 +84,9 @@ function OwmerRepairDetails(props) {
 
     const businesses_request = await get(
       "/businesses?business_type=MAINTENANCE"
+    );
+    const request_response = await get(
+      `/maintenanceRequests?maintenance_request_uid=${repair.maintenance_request_uid}`
     );
     if (businesses_request.msg === "Token has expired") {
       refresh();
@@ -72,79 +100,76 @@ function OwmerRepairDetails(props) {
     // console.log(repair)
     // console.log(businesses)
     setBusinesses(businesses);
-    setTitle(repair.title);
-    setDescription(repair.description);
-    setPriority(repair.priority);
-    setCanReschedule(repair.can_reschedule === 1);
+    console.log(request_response.result[0]);
+    setRepairsDetail(request_response.result[0]);
+    setTitle(request_response.result[0].title);
+    setDescription(request_response.result[0].description);
+    setPriority(request_response.result[0].priority);
+    setCanReschedule(request_response.result[0].can_reschedule === 1);
+    const files = [];
+    const images = JSON.parse(request_response.result[0].images);
+    for (let i = 0; i < images.length; i++) {
+      files.push({
+        index: i,
+        image: images[i],
+        file: null,
+        coverPhoto: i === 0,
+      });
+    }
+    imageState[1](files);
 
-    // const quotes_request = await get(`/maintenanceQuotes`);
-    // if (quotes_request.msg === 'Token has expired') {
-    //     refresh();
-    //     return;
-    // }
     const response = await get(
       `/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`
     );
     // console.log(response.result)
     setQuotes(response.result);
+    setIsLoading(false);
   };
 
-  React.useEffect(fetchBusinesses, [access_token]);
+  useEffect(fetchBusinesses, [access_token]);
+  const updateRepair = async () => {
+    let newRepair = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      title: title,
+      priority: priority,
+      can_reschedule: true,
+      assigned_business: repair.assigned_business,
+      notes: repair.notes,
+      request_status:
+        repair.request_status === "INFO" ? "PROCESSING" : repair.request_status,
+      description: description,
+      scheduled_date: repair.scheduled_date,
+      assigned_worker: repair.assigned_worker,
+    };
 
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
+
+    console.log(newRepair);
+    const res = await put("/maintenanceRequests", newRepair, null, files);
+
+    fetchBusinesses();
+    setIsEditing(false);
+  };
   const toggleBusiness = (index) => {
     const newBusinesses = [...businesses];
     newBusinesses[index].quote_requested =
       !newBusinesses[index].quote_requested;
     setBusinesses(newBusinesses);
   };
-
-  const sendQuotesRequest = async () => {
-    const business_ids = businesses
-      .filter((b) => b.quote_requested)
-      .map((b) => b.business_uid);
-    if (business_ids.length === 0) {
-      alert("No businesses Selected");
-      return;
-    }
-    // for (const id of business_ids){
-    //     const quote_details = {
-    //         maintenance_request_uid: repair.maintenance_request_uid,
-    //         business_uid: id
-    //     }
-    //     // console.log(quote_details)
-    //     const response = await post("/maintenanceQuotes", quote_details);
-    //     const result = response.result
-    //     // console.log(result)
-    // }
-
-    console.log("Quotes Requested from", business_ids);
-    const quote_details = {
-      linked_request_uid: repair.maintenance_request_uid,
-      quote_business_uid: business_ids,
-    };
-    const response = await post("/maintenanceQuotes", quote_details);
-    const result = response.result;
-    setRequestQuote(false);
-  };
-
-  const updateRepair = async () => {
-    const newRepair = {
-      maintenance_request_uid: repair.maintenance_request_uid,
-      title: title,
-      description: description,
-      priority: priority,
-      can_reschedule: canReschedule ? 1 : 0,
-      request_status: repair.request_status,
-    };
-
-    console.log("Repair Object to be updated", newRepair);
-    const response = await post(
-      "/maintenanceRequests",
-      newRepair,
-      access_token
-    );
-    console.log(response.result);
-    fetchBusinesses();
+  function editRepair() {
+    setIsEditing(true);
+  }
+  const reload = () => {
+    setIsEditing(false);
   };
 
   const acceptQuote = async (quote) => {
@@ -165,25 +190,6 @@ function OwmerRepairDetails(props) {
     fetchBusinesses();
   };
 
-  const requestMorePictures = async (quote) => {
-    const newRepair = {
-      maintenance_request_uid: repair.maintenance_request_uid,
-      request_status: "INFO",
-      notes: morePicturesNotes,
-    };
-
-    console.log("Repair Object to be updated");
-    console.log(newRepair);
-    const response = await put(
-      "/maintenanceRequests",
-      newRepair,
-      null,
-      newRepair
-    );
-    setMorePictures(false);
-    fetchBusinesses();
-  };
-
   return (
     <div>
       <div className="flex-1">
@@ -191,7 +197,6 @@ function OwmerRepairDetails(props) {
           <SideBar />
         </div>
         <div
-          className="w-100"
           style={{
             width: "calc(100vw - 13rem)",
             position: "relative",
@@ -201,115 +206,235 @@ function OwmerRepairDetails(props) {
             title="Repairs"
             leftText={"< Back"}
             leftFn={() => navigate(-1)}
+            rightText="Edit"
+            rightFn={() => editRepair()}
           />
 
-          <div
-            className="mx-2 my-2 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-            hidden={scheduleMaintenance || requestQuote}
-          >
-            <Row style={headings}>
-              <Col>{title}</Col>
-              <Col xs={4}>
-                {priority === "High" ? (
-                  <img src={HighPriority} />
-                ) : priority === "Medium" ? (
-                  <img src={MediumPriority} />
-                ) : (
-                  <img src={LowPriority} />
-                )}
-              </Col>
-              <Row>
-                <p style={subHeading} className="mt-2 mb-0">
-                  {property}
-                </p>
-              </Row>
+          {repairsDetail === [] || isLoading === true ? (
+            <Row className="mt-2 mb-2">
+              <div style={blue}></div>
             </Row>
-
-            <div className="mx-1 pt-2">
+          ) : (
+            <div
+              className="mx-2 my-2 p-3"
+              style={{
+                background: "#FFFFFF 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+              hidden={scheduleMaintenance || requestQuote}
+            >
+              {}
+              {JSON.parse(repairsDetail.images).length === 0 ? (
+                <Row className=" m-3">
+                  <img
+                    src={RepairImg}
+                    style={{
+                      objectFit: "contain",
+                      width: "350px",
+                      height: " 198px",
+                    }}
+                    alt="repair"
+                  />
+                </Row>
+              ) : JSON.parse(repairsDetail.images).length > 1 ? (
+                <Row className=" m-3">
+                  <Carousel responsive={responsive}>
+                    {JSON.parse(repairsDetail.images).map((images) => {
+                      return (
+                        <img
+                          src={`${images}?${Date.now()}`}
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            objectFit: "cover",
+                          }}
+                          alt="repair"
+                        />
+                      );
+                    })}
+                  </Carousel>
+                </Row>
+              ) : (
+                <Row className=" m-3">
+                  <img
+                    src={JSON.parse(repairsDetail.images)}
+                    //className="w-100 h-100"
+                    style={{
+                      objectFit: "cover",
+                      width: "350px",
+                      height: " 198px",
+                      border: "1px solid #C4C4C4",
+                      borderRadius: "5px",
+                    }}
+                    alt="repair"
+                  />
+                </Row>
+              )}
+              {isEditing ? (
+                <Row>
+                  <RepairImages state={imageState} />
+                </Row>
+              ) : null}
               <Row
-                style={{
-                  background: "#F3F3F3 0% 0% no-repeat padding-box",
-                  borderRadius: "10px",
-                  opacity: 1,
-                }}
                 className="my-4 p-2"
+                style={
+                  (headings,
+                  {
+                    background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  })
+                }
               >
-                <div style={subHeading}>Description</div>
-                <div style={subText}>{repair.description}</div>
-              </Row>
-              <Row
-                className="pt-1 mb-4"
-                style={{
-                  background: "#F3F3F3 0% 0% no-repeat padding-box",
-                  borderRadius: "10px",
-                  opacity: 1,
-                }}
-              >
-                <div className="pt-1 mb-2" style={subHeading}>
-                  Pictures from tenant
-                </div>
-
-                <div className="d-flex overflow-auto mb-3">
-                  {JSON.parse(repair.images).map((file, i) => (
-                    <div
-                      className="mx-2"
-                      style={{
-                        position: "relative",
-                        minHeight: "100px",
-                        minWidth: "100px",
-                        height: "100px",
-                        width: "100px",
-                      }}
-                      key={i}
-                    >
-                      <img
-                        src={file}
-                        style={{ ...tileImg, objectFit: "cover" }}
-                      />
+                <Col>
+                  {isEditing ? (
+                    ((<RepairImages />),
+                    (
+                      <input
+                        style={{ margin: "10px 0px" }}
+                        defaultValue={title}
+                        onChange={(e) => {
+                          setTitle(e.target.value);
+                        }}
+                      ></input>
+                    ))
+                  ) : (
+                    <div style={headings}>
+                      <div style={subHeading}>Title</div>
+                      {title}
                     </div>
-                  ))}
+                  )}
+                </Col>
+              </Row>
+
+              <Row className="mt-2 mb-0">
+                <div style={subText}>
+                  {repair.address} {repair.unit}, {repair.city}, {repair.state}{" "}
+                  {repair.zip}
                 </div>
               </Row>
 
-              <Row
-                className="pt-1 mb-4"
-                style={{
-                  background: "#F3F3F3 0% 0% no-repeat padding-box",
-                  borderRadius: "10px",
-                  opacity: 1,
-                }}
-              >
-                <div style={subHeading} className="pt-1 mb-2">
-                  Tenant can reschedule this job as needed
-                </div>
-                <Col className="pt-1 mx-2">
-                  <Row>
-                    <Checkbox type="CIRCLE" checked={canReschedule} /> Yes
-                  </Row>
-                </Col>
-                <Col className="pt-1 mx-2">
-                  <Row>
-                    <Checkbox type="CIRCLE" checked={!canReschedule} /> No
-                  </Row>
-                </Col>
-              </Row>
-              <Row hidden={true} className="pt-1">
-                <Col className="d-flex flex-row justify-content-evenly">
-                  <Button
-                    style={bluePillButton}
-                    onClick={() => setScheduleMaintenance(true)}
+              {isEditing ? (
+                <Row className="mt-2" style={{ padding: "7px 0px" }}>
+                  <Col xs={4}>
+                    <img
+                      src={HighPriority}
+                      onClick={() => setPriority("High")}
+                      className={
+                        priority === "High"
+                          ? `${classes.priorityActive}`
+                          : `${classes.priorityInactive}`
+                      }
+                    />
+                  </Col>
+                  <Col xs={4}>
+                    <img
+                      src={MediumPriority}
+                      onClick={() => setPriority("Medium")}
+                      className={
+                        priority === "Medium"
+                          ? `${classes.priorityActive}`
+                          : `${classes.priorityInactive}`
+                      }
+                    />
+                  </Col>
+                  <Col xs={4}>
+                    <img
+                      src={LowPriority}
+                      onClick={() => setPriority("Low")}
+                      className={
+                        priority === "Low"
+                          ? `${classes.priorityActive}`
+                          : `${classes.priorityInactive}`
+                      }
+                    />
+                  </Col>
+                </Row>
+              ) : (
+                <Row className="mt-2" style={{ padding: "7px 0px" }}>
+                  <Col>
+                    {priority === "High" ? (
+                      <img src={HighPriority} />
+                    ) : priority === "Medium" ? (
+                      <img src={MediumPriority} />
+                    ) : (
+                      <img src={LowPriority} />
+                    )}
+                  </Col>
+                </Row>
+              )}
+
+              <div className="mx-1 pt-2">
+                <Row
+                  style={{
+                    background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                  className="my-4 p-2"
+                >
+                  <div style={subHeading}>Description</div>
+                  {isEditing ? (
+                    <input
+                      defaultValue={description}
+                      style={{ width: "80vw" }}
+                      onChange={(e) => {
+                        console.log(e);
+                        setDescription(e.target.value);
+                      }}
+                    ></input>
+                  ) : (
+                    <Row className="mt-2">
+                      <div style={subText}>{repair.description}</div>
+                    </Row>
+                  )}
+                </Row>
+
+                <Row
+                  className="pt-1 mb-4"
+                  style={{
+                    background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <div style={subHeading} className="pt-1 mb-2">
+                    Tenant can reschedule this job as needed
+                  </div>
+                  <Col className="pt-1 mx-2">
+                    <Row>
+                      <Checkbox type="CIRCLE" checked={canReschedule} /> Yes
+                    </Row>
+                  </Col>
+                  <Col className="pt-1 mx-2">
+                    <Row>
+                      <Checkbox type="CIRCLE" checked={!canReschedule} /> No
+                    </Row>
+                  </Col>
+                </Row>
+                {isEditing ? (
+                  <button
+                    style={{ ...editButton, margin: "5% 25%" }}
+                    // onClick={() => setIsEditing(false)}
+                    onClick={() => updateRepair()}
                   >
-                    Schedule Maintenance
-                  </Button>
-                </Col>
-              </Row>
+                    Done
+                  </button>
+                ) : null}
+                <Row hidden={true} className="pt-1">
+                  <Col className="d-flex flex-row justify-content-evenly">
+                    <Button
+                      style={bluePillButton}
+                      onClick={() => setScheduleMaintenance(true)}
+                    >
+                      Schedule Maintenance
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
             </div>
-          </div>
+          )}
 
           <div
             className="mx-2 my-2 p-3"
@@ -320,7 +445,7 @@ function OwmerRepairDetails(props) {
             }}
             hidden={!requestQuote}
           >
-            <Row style={headings}>
+            <Row className="mt-4">
               <Col>{repair.title}</Col>
               <Col xs={4}>
                 {repair.priority === "High" ? (
@@ -332,6 +457,7 @@ function OwmerRepairDetails(props) {
                 )}
               </Col>
             </Row>
+
             <Row style={subHeading}>
               <div>Select businesses to request a quote:</div>
             </Row>

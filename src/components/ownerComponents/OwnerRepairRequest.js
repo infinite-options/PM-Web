@@ -71,7 +71,7 @@ function OwnerRepairRequest(props) {
 
     console.log(newRequest);
     await post("/maintenanceRequests", newRequest, null, files);
-    navigate("../owner-repairs");
+    navigate(-1);
 
     //props.onSubmit();
   };
