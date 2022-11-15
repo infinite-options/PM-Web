@@ -1,17 +1,11 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import { get } from "../../utils/api";
-import AppContext from "../../AppContext";
-import "./sidebar.css";
+import "./sideBar.css";
 
 function SideBar() {
-  const navigate = useNavigate();
-  const { userData, refresh } = useContext(AppContext);
-
   let sidebarButtonsActive = {
-    padding: "20px",
+    paddingRight: "20px",
     color: "#c93667",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -20,7 +14,7 @@ function SideBar() {
     fontWeight: "700",
   };
   let sidebarButtons = {
-    padding: "20px",
+    paddingRight: "20px",
     color: "#000000",
     textDecoration: "none",
     textTransform: "uppercase",
