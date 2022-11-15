@@ -54,7 +54,6 @@ export default function OwnerDashboard2() {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-  const [propertyID, setPropertyID] = useState("");
   const [monthlyCashFlow, setMonthlyCashFlow] = useState(false);
   const [yearlyCashFlow, setYearlyCashFlow] = useState(false);
 
