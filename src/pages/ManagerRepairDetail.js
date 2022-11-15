@@ -188,15 +188,19 @@ function ManagerRepairDetail(props) {
       request_status: "INFO",
       notes: morePicturesNotes,
     };
-
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        newRepair[key] = file.file;
+      } else {
+        newRepair[key] = file.image;
+      }
+    }
     console.log("Repair Object to be updated");
     console.log(newRepair);
-    const response = await put(
-      "/maintenanceRequests",
-      newRepair,
-      null,
-      newRepair
-    );
+    const response = await put("/maintenanceRequests", newRepair, null, files);
     setMorePictures(false);
     fetchBusinesses();
   };

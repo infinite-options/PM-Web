@@ -1,17 +1,14 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import { get } from "../../utils/api";
-import AppContext from "../../AppContext";
-import "./sidebar.css";
+import "./sideBar.css";
 
 function SideBar() {
-  const navigate = useNavigate();
-  const { userData, refresh } = useContext(AppContext);
-
   let sidebarButtonsActive = {
-    padding: "20px",
+    paddingRight: "20px",
+    maxHeight: "4rem",
+    minHeight: "3rem",
+
     color: "#c93667",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -20,7 +17,10 @@ function SideBar() {
     fontWeight: "700",
   };
   let sidebarButtons = {
-    padding: "20px",
+    paddingRight: "20px",
+    maxHeight: "4rem",
+    minHeight: "3rem",
+
     color: "#000000",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -29,9 +29,21 @@ function SideBar() {
   };
 
   return (
-    <div style={{ width: "10rem", backgroundColor: "#229ebc", height: "100%" }}>
+    <div
+      style={{
+        width: "10rem",
+        backgroundColor: "#229ebc",
+        height: "100%",
+        paddingRight: "20px",
+      }}
+    >
       <Row
-        style={{ width: "10rem", backgroundColor: "#229ebc", height: "100%" }}
+        style={{
+          width: "10rem",
+          backgroundColor: "#229ebc",
+          height: "100%",
+          paddingRight: "20px",
+        }}
       >
         <nav className="sidebar">
           <div className="sidebarLinks">

@@ -11,7 +11,10 @@ function Sidebar() {
   const { userData, refresh } = useContext(AppContext);
 
   let sidebarButtonsActive = {
-    padding: "15px",
+    paddingRight: "20px",
+
+    maxHeight: "4rem",
+    minHeight: "3rem",
     color: "#c93667",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -20,7 +23,10 @@ function Sidebar() {
     fontWeight: "700",
   };
   let sidebarButtons = {
-    padding: "15px",
+    paddingRight: "20px",
+
+    maxHeight: "4rem",
+    minHeight: "3rem",
     color: "#000000",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -29,8 +35,22 @@ function Sidebar() {
   };
 
   return (
-    <div style={{ width: "13rem" }}>
-      <Row>
+    <div
+      style={{
+        width: "10rem",
+        backgroundColor: "#229ebc",
+        height: "100%",
+        paddingRight: "20px",
+      }}
+    >
+      <Row
+        style={{
+          width: "10rem",
+          backgroundColor: "#229ebc",
+          height: "100%",
+          paddingRight: "20px",
+        }}
+      >
         <nav class="sidebar">
           <div className="sidebarLinks">
             <NavLink

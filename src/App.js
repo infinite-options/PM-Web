@@ -11,7 +11,6 @@ import ApplyToProperty from "./pages/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
-
 import CreateAnnouncement from "./components/CreateAnnouncement";
 import Emergency from "./components/TenantEmergency";
 import RepairStatus from "./components/RepairStatus";
@@ -33,9 +32,7 @@ import RescheduleRepair from "./components/RescheduleRepair";
 import JobsCompleted from "./components/JobsCompleted";
 import QuotesRejectedM from "./components/QuotesRejectedM";
 import QuotesRejectedPM from "./components/QuotesRejectedPM";
-import PMRepairRequestDetail from "./components/PMRepairRequestDetail";
 import DetailQuoteRequest from "./components/DetailQuoteRequest";
-import PMRepairRequest from "./components/PMRepairRequest";
 import QuotesAccepted from "./components/QuotesAccepted";
 import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
 import TenantDocumentUpload from "./pages/TenantDocumentUpload";
@@ -64,7 +61,6 @@ import OwnerPaymentHistory from "./components/ownerComponents/OwnerPaymentHistor
 import ManagerOwnerList from "./components/ManagerOwnerList";
 import ManagerTenantList from "./components/ManagerTenantList";
 import ManagerApplianceList from "./components/ManagerApplianceList";
-import ApplianceList from "./components/ApplianceList";
 import ManagerRepairInfo from "./pages/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
@@ -72,7 +68,7 @@ import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
 // import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
 import TenantDashboard from "./pages/TenantFirstPageView"; // new tenant first page view
 import ActualTenantDashboard from "./pages/TenantDashboard2"; // new tenant first page view
-import OwnerDashboard from "./pages/OwnerDashboard2"; //updated owner dashboard
+import OwnerDashboard from "./pages/OwnerDashboard"; //updated owner dashboard
 import ManagerDashboard from "./pages/ManagerDashboard"; //updated owner dashboard
 import Homepage from "./pages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
@@ -198,10 +194,6 @@ function App() {
               path="reviewPropertyLease/:property_uid"
               element={<ReviewPropertyLease />}
             />
-            {/*<Route*/}
-            {/*  path="leaseApplicationStatus"*/}
-            {/*  element={<LeaseApplicationStatus />}*/}
-            {/*/>*/}
             <Route path="manager" element={<ManagerDashboard />} />
             <Route path="managerLanding" element={<ManagerLanding />} />
             <Route path="manager_original" element={<ManagerHome />} />
@@ -273,11 +265,6 @@ function App() {
               path="/:property_uid/:maintenance_request_uid/detailRepairStatus"
               element={<DetailRepairStatus />}
             />
-            <Route
-              path="pmRepairRequestDetail"
-              element={<PMRepairRequestDetail />}
-            />
-            <Route path="pmRepairRequest" element={<PMRepairRequest />} />
             <Route path="manager-properties" element={<ManagerProperties />} />
             <Route path="/owner-list" element={<ManagerOwnerList />} />
             <Route path="/tenant-list" element={<ManagerTenantList />} />
@@ -289,10 +276,6 @@ function App() {
             <Route
               path="/appliances/:mp_id"
               element={<ManagerApplianceList />}
-            />
-            <Route
-              path="/owner-appliances/:mp_id"
-              element={<ApplianceList />}
             />
             <Route
               path="manager-properties/:mp_id"

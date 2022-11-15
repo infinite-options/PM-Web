@@ -138,7 +138,7 @@ function PropertyImages(props) {
         <img src={Heart} className="me-1" />a picture to make it the cover
         picture for this property
       </p>
-      {console.log("errorMessage", errorMessage)}
+
       <div className="text-center" style={errorMessage === "" ? hidden : {}}>
         <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
       </div>

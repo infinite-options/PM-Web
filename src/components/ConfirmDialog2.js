@@ -9,7 +9,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 function ConfirmDialog2(props) {
   const { title, isOpen, onConfirm } = props;
-  console.log(props);
+
   return (
     <div>
       <Dialog

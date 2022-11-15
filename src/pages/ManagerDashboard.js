@@ -344,22 +344,22 @@ export default function ManagerDashboard() {
                           role="checkbox"
                           tabIndex={-1}
                           key={property.address}
+                          onClick={() => {
+                            navigate(
+                              `/manager-properties/${property.property_uid}`,
+                              {
+                                state: {
+                                  property: property,
+                                  property_uid: property.property_uid,
+                                },
+                              }
+                            );
+                          }}
                         >
                           <TableCell padding="none" size="small" align="center">
                             {JSON.parse(property.images).length > 0 ? (
                               <img
                                 src={JSON.parse(property.images)[0]}
-                                onClick={() => {
-                                  navigate(
-                                    `/manager-properties/${property.property_uid}`,
-                                    {
-                                      state: {
-                                        property: property,
-                                        property_uid: property.property_uid,
-                                      },
-                                    }
-                                  );
-                                }}
                                 alt="Property"
                                 style={{
                                   borderRadius: "4px",

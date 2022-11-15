@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Container, Form, Button, Row, Col } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "./Checkbox";
 import ApplianceImages from "./ApplianceImages";
 import ConfirmDialog from "../components/ConfirmDialog";
 import AddIcon from "../icons/AddIcon.svg";
 import MinusIcon from "../icons/MinusIcon.svg";
-import { Container, Form, Button, Row, Col, Table } from "react-bootstrap";
-import {
-  squareForm,
-  pillButton,
-  blue,
-  hidden,
-  mediumBold,
-  bluePillButton,
-  subHeading,
-} from "../utils/styles";
+import { squareForm, pillButton, mediumBold } from "../utils/styles";
 import { put } from "../utils/api";
 
 function PropertyAppliances(props) {
@@ -31,11 +24,8 @@ function PropertyAppliances(props) {
     "Dishwasher",
     "Refrigerator",
   ];
-  console.log(props);
-  console.log(appliances);
+
   const [showDialog, setShowDialog] = useState(false);
-  const [hide, setHide] = useState(false);
-  const [removedApps, setRemovedApps] = useState([]);
   const [newAppliance, setNewAppliance] = useState(null);
   const [applianceType, setApplianceType] = useState(null);
   const [applianceName, setApplianceName] = useState(null);
@@ -48,23 +38,14 @@ function PropertyAppliances(props) {
   const [applianceInstalledOn, setApplianceInstalledOn] = useState(null);
   const [applianceWarrantyTill, setApplianceWarrantyTill] = useState(null);
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
-  const [applianceImages, setApplianceImages] = useState(null);
-
-  const [currentImg, setCurrentImg] = useState(0);
   const imageState = useState([]);
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [showDetailsNoEdit, setShowDetailsNoEdit] = useState(false);
-  const [tableView, setTableView] = useState(false);
-  const [currentAppliance, setCurrentAppliance] = useState([]);
+  const [showSpinner, setShowSpinner] = useState(false);
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
-    // console.log(newApplianceState);
     newApplianceState[appliance]["available"] =
       !newApplianceState[appliance]["available"];
-    // console.log(newApplianceState);
-    // setAddApplianceInfo(true);
-    // setShowDetails(true);
     setApplianceType(appliance);
     setApplianceState(newApplianceState);
   };
@@ -72,6 +53,7 @@ function PropertyAppliances(props) {
   const showApplianceDetail = (appliance) => {
     setApplianceType(appliance);
     setShowDetails(!showDetails);
+
     setAddApplianceInfo(!addApplianceInfo);
     setApplianceType(appliance);
     setApplianceState(applianceState);
@@ -88,7 +70,7 @@ function PropertyAppliances(props) {
     setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
     if (applianceState[appliance]["images"] !== undefined) {
       const files = [];
-      setApplianceImages(applianceState[appliance]["images"]);
+
       const images = applianceState[appliance]["images"];
       for (let i = 0; i < images.length; i++) {
         files.push({
@@ -100,8 +82,6 @@ function PropertyAppliances(props) {
       }
       imageState[1](files);
     }
-
-    // setApplianceImages(applianceState[appliance]["images"]);
   };
 
   const onCancel = () => {
@@ -116,7 +96,6 @@ function PropertyAppliances(props) {
     let files = imageState[0];
     for (const file of imageState[0]) {
       let key = `img_${app}_${i++}`;
-      console.log(key);
       if (file.file !== null) {
         rem_app[key] = file.file;
       } else {
@@ -127,113 +106,17 @@ function PropertyAppliances(props) {
 
     setShowDialog(false);
   };
-  const showApplianceDetailNoEdit = (appliance, x) => {
-    console.log(x);
-    console.log(currentAppliance);
-    if (currentAppliance.includes(x)) {
-      console.log("in if");
-      if (currentAppliance.length === 1) {
-        let ap = [];
-        console.log(ap);
-        setCurrentAppliance(ap);
-      } else {
-        let ap = currentAppliance.filter((item) => item !== x);
-        console.log(ap);
-        setCurrentAppliance(ap);
-      }
-    } else {
-      console.log("in else");
-      let ap = currentAppliance.filter((item, i) => item !== x);
-      console.log(ap);
-      ap.push(x);
-      console.log(ap);
-      setCurrentAppliance(ap);
-    }
-    setApplianceType(appliance);
-    setShowDetailsNoEdit(true);
-    setAddApplianceInfo(true);
-    setApplianceType(appliance);
-    setApplianceState(applianceState);
-    setApplianceName(applianceState[appliance]["name"]);
-    setAppliancePurchasedOn(applianceState[appliance]["purchased"]);
-    setAppliancePurchasedFrom(applianceState[appliance]["purchased_from"]);
-    setAppliancePurchasesOrderNumber(
-      applianceState[appliance]["purchased_order"]
-    );
-    setApplianceInstalledOn(applianceState[appliance]["installed"]);
-    setApplianceSerialNum(applianceState[appliance]["serial_num"]);
-    setApplianceModelNum(applianceState[appliance]["model_num"]);
-    setApplianceWarrantyTill(applianceState[appliance]["warranty_till"]);
-    setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
 
-    if (applianceState[appliance]["images"] !== undefined) {
-      const files = [];
-      setApplianceImages(applianceState[appliance]["images"]);
-      const images = applianceState[appliance]["images"];
-      for (let i = 0; i < images.length; i++) {
-        files.push({
-          index: i,
-          image: images[i],
-          file: null,
-          coverPhoto: i === 0,
-        });
-      }
-      imageState[1](files);
-    }
-  };
-  const nextImg = (api) => {
-    console.log(api);
-    if (currentImg === api.length - 1) {
-      setCurrentImg(0);
-    } else {
-      setCurrentImg(currentImg + 1);
-    }
-    console.log(currentImg);
-  };
-  const previousImg = (api) => {
-    console.log(api);
-    if (currentImg === 0) {
-      setCurrentImg(api.length - 1);
-    } else {
-      setCurrentImg(currentImg - 1);
-    }
-    console.log(currentImg);
-  };
   const Capitalize = (str) => {
-    console.log(typeof str);
     return (
       str.toString().charAt(0).toUpperCase() +
       str.toString().slice(1).toLowerCase()
     );
   };
 
-  const toggleList = (x) => {
-    console.log(x);
-    console.log(currentAppliance);
-    if (currentAppliance.includes(x)) {
-      console.log("in if");
-      if (currentAppliance.length === 1) {
-        let ap = [];
-        console.log(ap);
-        setCurrentAppliance(ap);
-      } else {
-        let ap = currentAppliance.filter((item) => item !== x);
-        console.log(ap);
-        setCurrentAppliance(ap);
-      }
-    } else {
-      console.log("in else");
-      let ap = currentAppliance.filter((item, i) => item !== x);
-      console.log(ap);
-      ap.push(x);
-      console.log(ap);
-      setCurrentAppliance(ap);
-    }
-  };
-
   const updateAppliance = async (appliance) => {
     const newApplianceState = { ...applianceState };
-    console.log(newApplianceState);
+
     newApplianceState[appliance]["available"] = Capitalize(
       newApplianceState[appliance]["available"]
     );
@@ -251,7 +134,6 @@ function PropertyAppliances(props) {
       newApplianceState[appliance]["images"] = imageState[0];
     }
 
-    console.log(newApplianceState[appliance]);
     if (property) {
       let newProperty = {
         property_uid: property.property_uid,
@@ -259,19 +141,21 @@ function PropertyAppliances(props) {
           [appliance]: newApplianceState[appliance],
         }),
       };
+
+      const files = imageState[0];
       let i = 0;
-      let files = imageState[0];
       for (const file of imageState[0]) {
-        let key = `img_${appliance}_${i++}`;
-        console.log(key);
+        let key = file.coverPhoto
+          ? `img_${appliance}_cover`
+          : `img_${appliance}_${i++}`;
         if (file.file !== null) {
           newProperty[key] = file.file;
         } else {
           newProperty[key] = file.image;
         }
       }
+      setShowSpinner(true);
 
-      console.log(newProperty);
       const response = await put("/appliances", newProperty, null, files);
     }
 
@@ -289,16 +173,12 @@ function PropertyAppliances(props) {
     setApplianceWarrantyTill("");
     setApplianceWarrantyInfo("");
     setApplianceType("");
+    setShowSpinner(false);
   };
 
   const cancelAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
-    console.log(newApplianceState);
-    // newApplianceState[appliance]["available"] = false;
-    console.log(newApplianceState);
-    console.log(imageState);
     imageState[0] = [];
-    console.log(imageState);
     setAddApplianceInfo(false);
     setShowDetails(false);
     setApplianceState(newApplianceState);
@@ -312,12 +192,10 @@ function PropertyAppliances(props) {
     setApplianceWarrantyTill("");
     setApplianceWarrantyInfo("");
     setApplianceType("");
-    setApplianceImages("");
   };
 
   const addAppliance = async () => {
     const newApplianceState = { ...applianceState };
-    console.log(newApplianceState[newAppliance]);
     newApplianceState[newAppliance] = {};
     newApplianceState[newAppliance]["available"] = "True";
     newApplianceState[newAppliance]["model_num"] =
@@ -354,20 +232,18 @@ function PropertyAppliances(props) {
         let key = file.coverPhoto
           ? `img_${newAppliance}_${i++}`
           : `img_${newAppliance}_${i++}`;
-        console.log(key);
+
         if (file.file !== null) {
           newProperty[key] = file.file;
         } else {
           newProperty[key] = file.image;
         }
       }
-      console.log(newApplianceState);
 
-      console.log(newProperty);
       const response = await put("/appliances", newProperty, null, files);
     }
     imageState[0] = [];
-    console.log(newApplianceState);
+
     setNewAppliance(null);
     setApplianceName("");
     setAppliancePurchasedOn("");
@@ -410,510 +286,240 @@ function PropertyAppliances(props) {
             ""
           )}
         </Col>
-        {!edit ? (
-          <Col className="d-flex justify-content-end mb-1">
-            <Button
-              style={bluePillButton}
-              onClick={() => {
-                setTableView(!tableView);
-                setApplianceType("");
-                setApplianceName("");
-                setAppliancePurchasedFrom("");
-                setAppliancePurchasesOrderNumber("");
-                setAppliancePurchasedOn("");
-                setApplianceSerialNum("");
-                setApplianceModelNum("");
-                setApplianceWarrantyTill("");
-                setApplianceWarrantyInfo("");
-                setApplianceType("");
-              }}
-            >
-              {!tableView ? "Table View" : "List View"}
-            </Button>
-          </Col>
-        ) : (
-          ""
-        )}
       </Row>
       <Row className="d-flex flex-column justify-content-left">
-        {!tableView &&
-          appliances.map((appliance, i) => (
-            <Row className="d-flex flex-column ps-2 align-items-center" key={i}>
-              <Row>
-                <Col xs={1}>
-                  <Checkbox
-                    type="BOX"
-                    checked={applianceState[appliance]["available"]}
-                    onClick={edit ? () => toggleAppliance(appliance) : () => {}}
+        {appliances.map((appliance, i) => (
+          <Row className="d-flex flex-column ps-2 align-items-center" key={i}>
+            <Row>
+              <Col xs={1}>
+                <Checkbox
+                  type="BOX"
+                  checked={applianceState[appliance]["available"]}
+                  onClick={edit ? () => toggleAppliance(appliance) : () => {}}
+                />
+              </Col>
+              <Col
+                style={{ cursor: "pointer" }}
+                onClick={
+                  edit
+                    ? () => {
+                        showApplianceDetail(appliance);
+                      }
+                    : () => {}
+                }
+              >
+                <p className="ms-1 mb-1">{appliance}</p>
+              </Col>
+              <Col xs={1}>
+                {!og_appliances.includes(appliance) ? (
+                  <img
+                    src={MinusIcon}
+                    onClick={() => {
+                      setShowDialog(true);
+                      setApplianceRem(appliance);
+                    }}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                      float: "right",
+                      marginRight: "5rem",
+                    }}
                   />
-                </Col>
-                <Col
-                  style={{ cursor: "pointer" }}
-                  onClick={
-                    edit
-                      ? () => {
-                          showApplianceDetail(appliance);
+                ) : (
+                  ""
+                )}
+              </Col>
+            </Row>
+            <Row>
+              {addApplianceInfo == true &&
+              showDetails == true &&
+              (applianceState[appliance]["available"] == true ||
+                applianceState[appliance]["available"] == "True") &&
+              applianceType == appliance ? (
+                <Row>
+                  <Row className="mx-4 p-0">
+                    <Col>Name</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        type="text"
+                        value={
+                          applianceName || applianceState[appliance]["name"]
                         }
-                      : () => {
-                          showApplianceDetailNoEdit(appliance, i);
-                          // toggleList(i);
+                        placeholder="Appliance Name"
+                        onChange={(e) => setApplianceName(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Purchased From</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          appliancePurchasedFrom ||
+                          applianceState[appliance]["purchased_from"]
                         }
-                  }
-                >
-                  <p className="ms-1 mb-1">{appliance}</p>
-                </Col>
-                <Col>
-                  {!og_appliances.includes(appliance) ? (
-                    <img
-                      src={MinusIcon}
-                      onClick={() => {
-                        setShowDialog(true);
-                        setApplianceRem(appliance);
-                      }}
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                        float: "right",
-                        marginRight: "5rem",
-                      }}
-                    />
+                        placeholder="Purchased From"
+                        onChange={(e) =>
+                          setAppliancePurchasedFrom(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Purchased On</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        type="date"
+                        value={
+                          appliancePurchasedOn ||
+                          applianceState[appliance]["purchased"]
+                        }
+                        onChange={(e) =>
+                          setAppliancePurchasedOn(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Purchase Order Number</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          appliancePurchasesOrderNumber ||
+                          applianceState[appliance]["purchased_order"]
+                        }
+                        placeholder="Purchase Order Number"
+                        onChange={(e) =>
+                          setAppliancePurchasesOrderNumber(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Installed On</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        type="date"
+                        value={
+                          applianceInstalledOn ||
+                          applianceState[appliance]["installed"]
+                        }
+                        onChange={(e) =>
+                          setApplianceInstalledOn(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Serial Number</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          applianceSerialNum ||
+                          applianceState[appliance]["serial_num"]
+                        }
+                        placeholder="Serial Number"
+                        onChange={(e) => setApplianceSerialNum(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Model Number</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          applianceModelNum ||
+                          applianceState[appliance]["model_num"]
+                        }
+                        placeholder="Model Number"
+                        onChange={(e) => setApplianceModelNum(e.target.value)}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Warranty Till</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        type="date"
+                        value={
+                          applianceWarrantyTill ||
+                          applianceState[appliance]["warranty_till"]
+                        }
+                        onChange={(e) =>
+                          setApplianceWarrantyTill(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mx-4 mt-1 p-0">
+                    <Col>Warranty Info</Col>
+                    <Col>
+                      <Form.Control
+                        style={squareForm}
+                        value={
+                          applianceWarrantyInfo ||
+                          applianceState[appliance]["warranty_info"]
+                        }
+                        placeholder="Warranty Info"
+                        onChange={(e) =>
+                          setApplianceWarrantyInfo(e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+
+                  {property ? <ApplianceImages state={imageState} /> : ""}
+                  {showSpinner ? (
+                    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                      <ReactBootStrap.Spinner
+                        animation="border"
+                        role="status"
+                      />
+                    </div>
                   ) : (
                     ""
                   )}
-                </Col>
-              </Row>
-              <Row>
-                {addApplianceInfo &&
-                showDetails &&
-                applianceState[appliance]["available"] == true &&
-                applianceType == appliance ? (
-                  <Row>
-                    <Row className="mx-4 p-0">
-                      <Col>Name</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          type="text"
-                          value={
-                            applianceName || applianceState[appliance]["name"]
-                          }
-                          placeholder="Appliance Name"
-                          onChange={(e) => setApplianceName(e.target.value)}
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mx-4 mt-1 p-0">
-                      <Col>Purchased From</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            appliancePurchasedFrom ||
-                            applianceState[appliance]["purchased_from"]
-                          }
-                          placeholder="Purchased From"
-                          onChange={(e) =>
-                            setAppliancePurchasedFrom(e.target.value)
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mx-4 mt-1 p-0">
-                      <Col>Purchased On</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          type="date"
-                          value={
-                            appliancePurchasedOn ||
-                            applianceState[appliance]["purchased"]
-                          }
-                          onChange={(e) =>
-                            setAppliancePurchasedOn(e.target.value)
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mx-4 mt-1 p-0">
-                      <Col>Purchase Order Number</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            appliancePurchasesOrderNumber ||
-                            applianceState[appliance]["purchased_order"]
-                          }
-                          placeholder="Purchase Order Number"
-                          onChange={(e) =>
-                            setAppliancePurchasesOrderNumber(e.target.value)
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mx-4 mt-1 p-0">
-                      <Col>Installed On</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          type="date"
-                          value={
-                            applianceInstalledOn ||
-                            applianceState[appliance]["installed"]
-                          }
-                          onChange={(e) =>
-                            setApplianceInstalledOn(e.target.value)
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mx-4 mt-1 p-0">
-                      <Col>Serial Number</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            applianceSerialNum ||
-                            applianceState[appliance]["serial_num"]
-                          }
-                          placeholder="Serial Number"
-                          onChange={(e) =>
-                            setApplianceSerialNum(e.target.value)
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mx-4 mt-1 p-0">
-                      <Col>Model Number</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            applianceModelNum ||
-                            applianceState[appliance]["model_num"]
-                          }
-                          placeholder="Model Number"
-                          onChange={(e) => setApplianceModelNum(e.target.value)}
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mx-4 mt-1 p-0">
-                      <Col>Warranty Till</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          type="date"
-                          value={
-                            applianceWarrantyTill ||
-                            applianceState[appliance]["warranty_till"]
-                          }
-                          onChange={(e) =>
-                            setApplianceWarrantyTill(e.target.value)
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mx-4 mt-1 p-0">
-                      <Col>Warranty Info</Col>
-                      <Col>
-                        <Form.Control
-                          style={squareForm}
-                          value={
-                            applianceWarrantyInfo ||
-                            applianceState[appliance]["warranty_info"]
-                          }
-                          placeholder="Warranty Info"
-                          onChange={(e) =>
-                            setApplianceWarrantyInfo(e.target.value)
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    {property ? <ApplianceImages state={imageState} /> : ""}
-
-                    <div className="text-center my-3">
-                      <Button
-                        variant="outline-primary"
-                        style={pillButton}
-                        className="mx-2"
-                        onClick={() => cancelAppliance(appliance)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        variant="outline-primary"
-                        style={pillButton}
-                        className="mx-2"
-                        onClick={
-                          edit ? () => updateAppliance(appliance) : () => {}
-                        }
-                      >
-                        Save
-                      </Button>
-                    </div>
-                  </Row>
-                ) : null}
-              </Row>
-              <Row>
-                {addApplianceInfo &&
-                !tableView &&
-                currentAppliance.includes(i) &&
-                showDetailsNoEdit &&
-                applianceState[appliance]["available"] == true ? (
-                  <Row>
-                    <Row className="mx-2 p-0">
-                      <Col>Name</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["name"]}</p>
-                      </Col>
-                    </Row>
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Purchased From</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["purchased_from"]}</p>
-                      </Col>
-                    </Row>
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Purchased On</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["purchased"]}</p>
-                      </Col>
-                    </Row>
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Purchase Order Number</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["purchased_order"]}</p>
-                      </Col>
-                    </Row>
-
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Installed On</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["installed"]}</p>
-                      </Col>
-                    </Row>
-
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Serial Number</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["serial_num"]}</p>
-                      </Col>
-                    </Row>
-
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Model Number</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["model_num"]}</p>
-                      </Col>
-                    </Row>
-
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Warranty Till</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["warranty_till"]}</p>
-                      </Col>
-                    </Row>
-
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Warranty Info</Col>
-                      <Col className="d-flex justify-content-end">
-                        <p>{applianceState[appliance]["warranty_info"]}</p>
-                      </Col>
-                    </Row>
-                    <Row className="mx-2 mt-1 p-0">
-                      <Col xs={7}>Images</Col>
-                      <Col className="d-flex justify-content-end">
-                        <div
-                          style={{
-                            height: "50px",
-                            position: "relative",
-                          }}
-                        >
-                          {applianceState[appliance]["images"] !== undefined &&
-                          applianceState[appliance]["images"].length > 0 ? (
-                            <div>
-                              {console.log(
-                                applianceState[appliance]["images"][currentImg]
-                              )}
-                              <img
-                                src={
-                                  applianceState[appliance]["images"][
-                                    currentImg
-                                  ]
-                                }
-                                // className="w-50 h-50"
-                                style={{
-                                  borderRadius: "4px",
-                                  objectFit: "contain",
-                                  width: "50px",
-                                  height: "50px",
-                                }}
-                                alt="Property"
-                              />
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  left: "-15px",
-                                  top: "10px",
-                                  cursor: "pointer",
-                                }}
-                                onClick={() =>
-                                  previousImg(
-                                    applianceState[appliance]["images"]
-                                  )
-                                }
-                              >
-                                {"<"}
-                              </div>
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  right: "-15px",
-                                  top: "10px",
-                                  cursor: "pointer",
-                                }}
-                                onClick={() =>
-                                  nextImg(applianceState[appliance]["images"])
-                                }
-                              >
-                                {">"}
-                              </div>
-                            </div>
-                          ) : (
-                            "None"
-                          )}
-                        </div>
-                      </Col>
-                    </Row>
-                  </Row>
-                ) : null}
-              </Row>
-            </Row>
-          ))}
-      </Row>
-      <Row className="mt-2">
-        {tableView ? (
-          <Table striped bordered responsive size="sm" style={subHeading}>
-            <thead>
-              <tr>
-                <th>Appliance</th>
-                <th>Name</th>
-                <th>Purchased From</th>
-                <th>Purchased On</th>
-                <th>Purchase Order Number</th>
-                <th>Installed On</th>
-                <th>Serial Number</th>
-                <th>Model Number</th>
-                <th>Warranty Till</th>
-                <th>Warranty Info</th>
-                <th>Images</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {appliances.map((appliance, i) => (
-                <tr>
-                  <td>{appliance}</td>
-                  <td>{applianceName || applianceState[appliance]["name"]}</td>
-                  <td>
-                    {appliancePurchasedFrom ||
-                      applianceState[appliance]["purchased_from"]}
-                  </td>
-                  <td>
-                    {appliancePurchasedOn ||
-                      applianceState[appliance]["purchased"]}
-                  </td>
-                  <td>
-                    {appliancePurchasesOrderNumber ||
-                      applianceState[appliance]["purchased_order"]}
-                  </td>
-                  <td>
-                    {applianceInstalledOn ||
-                      applianceState[appliance]["installed"]}
-                  </td>
-                  <td>
-                    {applianceSerialNum ||
-                      applianceState[appliance]["serial_num"]}
-                  </td>
-                  <td>
-                    {applianceModelNum ||
-                      applianceState[appliance]["model_num"]}
-                  </td>
-                  <td>
-                    {applianceWarrantyTill ||
-                      applianceState[appliance]["warranty_till"]}
-                  </td>
-                  <td>
-                    {applianceWarrantyInfo ||
-                      applianceState[appliance]["warranty_info"]}
-                  </td>
-                  <td>
-                    <div
-                      style={{
-                        height: "50px",
-                        position: "relative",
-                      }}
+                  <div className="text-center my-3">
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      className="mx-2"
+                      onClick={() => cancelAppliance(appliance)}
                     >
-                      {applianceState[appliance]["images"] !== undefined &&
-                      applianceState[appliance]["images"].length > 0 ? (
-                        <div>
-                          <img
-                            src={
-                              applianceState[appliance]["images"][currentImg]
-                            }
-                            // className="w-50 h-50"
-                            style={{
-                              borderRadius: "4px",
-                              objectFit: "contain",
-                              width: "50px",
-                              height: "50px",
-                            }}
-                            alt="Property"
-                          />
-                          <div
-                            style={{
-                              position: "absolute",
-                              left: "-7px",
-                              top: "10px",
-                              cursor: "pointer",
-                            }}
-                            onClick={() =>
-                              previousImg(applianceState[appliance]["images"])
-                            }
-                          >
-                            {"<"}
-                          </div>
-                          <div
-                            style={{
-                              position: "absolute",
-                              right: "-2px",
-                              top: "10px",
-                              cursor: "pointer",
-                            }}
-                            onClick={() =>
-                              nextImg(applianceState[appliance]["images"])
-                            }
-                          >
-                            {">"}
-                          </div>
-                        </div>
-                      ) : (
-                        "None"
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        ) : null}
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      className="mx-2"
+                      onClick={
+                        edit ? () => updateAppliance(appliance) : () => {}
+                      }
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </Row>
+              ) : null}
+            </Row>
+          </Row>
+        ))}
       </Row>
+
       {!edit ? (
         ""
       ) : newAppliance === null ? (
         ""
       ) : (
         <div>
-          {console.log("here  enter new appliance")}
           <div className="d-flex ps-2 align-items-center">
             <Checkbox type="BOX" checked={true} />
             <Form.Control
@@ -1032,7 +638,15 @@ function PropertyAppliances(props) {
               </Col>
             </Row>
           </Row>
+
           {property ? <ApplianceImages state={imageState} /> : ""}
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
           <div className="text-center my-3">
             <Button
               variant="outline-primary"
