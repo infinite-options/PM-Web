@@ -5,8 +5,6 @@ import AppContext from "../AppContext";
 import Header from "../components/Header";
 import PropertyForm from "../components/PropertyForm";
 import PropertyView from "../components/PropertyView";
-import OwnerContacts from "./OwnerContacts";
-import ApplianceList from "../components/ApplianceList";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import { get } from "../utils/api";
@@ -314,15 +312,6 @@ function OwnerProperties(props) {
   ) : stage === "PROPERTYMANAGERLISTS" ? (
     <div className="flex-grow-1">
       <PropertyManagersList
-        property={selectedProperty}
-        property_uid={selectedProperty.property_uid}
-        back={() => setStage("PROPERTY")}
-        reload={fetchProperties}
-      />
-    </div>
-  ) : stage === "APPLIANCELISTS" ? (
-    <div className="flex-grow-1">
-      <ApplianceList
         property={selectedProperty}
         property_uid={selectedProperty.property_uid}
         back={() => setStage("PROPERTY")}

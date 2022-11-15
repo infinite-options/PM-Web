@@ -6,12 +6,9 @@ import PropertyCashFlow from "./PropertyCashFlow";
 import PropertyForm from "./PropertyForm";
 import CreateExpense from "./CreateExpense";
 import CreateRevenue from "./CreateRevenue";
-import CreateTax from "./CreateTax";
-import CreateMortgage from "./CreateMortgage";
 import ManagerDocs from "./ManagerDocs";
 import ManagementContract from "./ManagementContract";
 import TenantAgreement from "./TenantAgreement";
-import CreateInsurance from "./CreateInsurance";
 import ConfirmDialog from "./ConfirmDialog";
 import BusinessContact from "./BusinessContact";
 import ManagerFees from "./ManagerFees";
@@ -375,24 +372,6 @@ function PropertyView(props) {
                   property={property}
                   reload={reloadProperty}
                   back={() => setShowCreateRevenue(false)}
-                />
-              ) : showCreateTax ? (
-                <CreateTax
-                  property={property}
-                  reload={reloadProperty}
-                  back={() => setShowCreateTax(false)}
-                />
-              ) : showCreateMortgage ? (
-                <CreateMortgage
-                  property={property}
-                  reload={reloadProperty}
-                  back={() => setShowCreateMortgage(false)}
-                />
-              ) : showCreateInsurance ? (
-                <CreateInsurance
-                  property={property}
-                  reload={reloadProperty}
-                  back={() => setShowCreateInsurance(false)}
                 />
               ) : (
                 <div>

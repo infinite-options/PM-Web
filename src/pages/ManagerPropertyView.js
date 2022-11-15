@@ -3,11 +3,8 @@ import { Col, Container, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import ManagerPropertyCashFlow from "../components/ManagerPropertyCashFlow";
-import CreateInsurance from "../components/CreateInsurance";
 import CreateExpense from "../components/CreateExpense";
 import CreateRevenue from "../components/CreateRevenue";
-import CreateTax from "../components/CreateTax";
-import CreateMortgage from "../components/CreateMortgage";
 import ManagerTenantApplications from "../components/ManagerTenantApplications";
 import ManagerTenantProfileView from "./ManagerTenantProfileView";
 import PropertyManagerDocs from "../components/PropertyManagerDocs";
@@ -338,24 +335,6 @@ function ManagerPropertyView(props) {
                 property={property}
                 reload={reloadProperty}
                 back={() => setShowCreateRevenue(false)}
-              />
-            ) : showCreateTax ? (
-              <CreateTax
-                property={property}
-                reload={reloadProperty}
-                back={() => setShowCreateTax(false)}
-              />
-            ) : showCreateMortgage ? (
-              <CreateMortgage
-                property={property}
-                reload={reloadProperty}
-                back={() => setShowCreateMortgage(false)}
-              />
-            ) : showCreateInsurance ? (
-              <CreateInsurance
-                property={property}
-                reload={reloadProperty}
-                back={() => setShowCreateInsurance(false)}
               />
             ) : (
               <div>

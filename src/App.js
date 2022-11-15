@@ -61,7 +61,6 @@ import OwnerPaymentHistory from "./components/ownerComponents/OwnerPaymentHistor
 import ManagerOwnerList from "./components/ManagerOwnerList";
 import ManagerTenantList from "./components/ManagerTenantList";
 import ManagerApplianceList from "./components/ManagerApplianceList";
-import ApplianceList from "./components/ApplianceList";
 import ManagerRepairInfo from "./pages/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/ManagerPaymentPage";
@@ -69,7 +68,7 @@ import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
 // import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
 import TenantDashboard from "./pages/TenantFirstPageView"; // new tenant first page view
 import ActualTenantDashboard from "./pages/TenantDashboard2"; // new tenant first page view
-import OwnerDashboard from "./pages/OwnerDashboard2"; //updated owner dashboard
+import OwnerDashboard from "./pages/OwnerDashboard"; //updated owner dashboard
 import ManagerDashboard from "./pages/ManagerDashboard"; //updated owner dashboard
 import Homepage from "./pages/Homepage";
 import LandingNavbar from "./pages/LandingNavbar";
@@ -195,10 +194,6 @@ function App() {
               path="reviewPropertyLease/:property_uid"
               element={<ReviewPropertyLease />}
             />
-            {/*<Route*/}
-            {/*  path="leaseApplicationStatus"*/}
-            {/*  element={<LeaseApplicationStatus />}*/}
-            {/*/>*/}
             <Route path="manager" element={<ManagerDashboard />} />
             <Route path="managerLanding" element={<ManagerLanding />} />
             <Route path="manager_original" element={<ManagerHome />} />
@@ -281,10 +276,6 @@ function App() {
             <Route
               path="/appliances/:mp_id"
               element={<ManagerApplianceList />}
-            />
-            <Route
-              path="/owner-appliances/:mp_id"
-              element={<ApplianceList />}
             />
             <Route
               path="manager-properties/:mp_id"
