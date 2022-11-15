@@ -228,7 +228,7 @@ function OwnerPropertyView(props) {
     setImagesProperty(JSON.parse(response.result[0].images));
     let show = JSON.parse(response.result[0].images).length < 5 ? false : true;
     setShowControls(show);
-    console.log(JSON.parse(response.result[0].images));
+    console.log(response.result[0]);
     applianceState[1](JSON.parse(response.result[0].appliances));
     const res = await get(
       `/contracts?property_uid=${response.result[0].property_uid}`
@@ -237,7 +237,11 @@ function OwnerPropertyView(props) {
     setContracts(res.result);
     setRentalInfo(response.result[0].rentalInfo);
     setIsLoading(false);
-    contactState[1](JSON.parse(res.result[0].assigned_contacts));
+    console.log(res.result[0]);
+    if (res.result[0] !== undefined) {
+      contactState[1](JSON.parse(res.result[0].assigned_contacts));
+    }
+
     let tenant = [];
     let ti = {};
     response.result[0].rentalInfo.map((rentalInfo) => {

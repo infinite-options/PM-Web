@@ -252,87 +252,93 @@ function LandingNavbar() {
         </Row>
         <Row>
           <nav class="headerNav">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                width: "100%",
-              }}
-            >
-              <div>
-                {open ? (
-                  <img
-                    src={MenuIcon}
-                    class="nav-icon"
-                    onClick={() => {
-                      handleClick();
-                    }}
-                  />
-                ) : (
-                  <img
-                    src={MenuIcon}
-                    class="nav-icon"
-                    onClick={() => {
-                      handleClick();
-                    }}
-                  />
-                )}
+            {" "}
+            {user == null ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: "100%",
+                }}
+              >
+                <div>
+                  {open ? (
+                    <img
+                      src={MenuIcon}
+                      class="nav-icon"
+                      onClick={() => {
+                        handleClick();
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={MenuIcon}
+                      class="nav-icon"
+                      onClick={() => {
+                        handleClick();
+                      }}
+                    />
+                  )}
+                </div>
+
+                <div className={open ? "nav-links active" : "nav-links"}>
+                  <Link to="/" class="navButtons" onClick={closeMenuProjects}>
+                    Home
+                  </Link>
+                  <Link
+                    to="/buyparts"
+                    class="navButtons"
+                    onClick={closeMenuProjects}
+                  >
+                    Contact
+                  </Link>
+                  <Link
+                    to="/OwnersTab"
+                    class="navButtons"
+                    onClick={closeMenuProjects}
+                  >
+                    Owners
+                  </Link>
+                  <Link
+                    to="/managerLanding"
+                    class="navButtons"
+                    onClick={closeMenuProjects}
+                  >
+                    Property Managers
+                  </Link>
+                  <Link
+                    to="/renterLanding"
+                    class="navButtons"
+                    onClick={closeMenuProjects}
+                  >
+                    Renters
+                  </Link>
+                  <Link
+                    to="/addparts"
+                    class="navButtons"
+                    onClick={closeMenuProjects}
+                  >
+                    Maintenace
+                  </Link>
+                  <Link
+                    to="/inventory"
+                    class="navButtons"
+                    onClick={closeMenuProjects}
+                  >
+                    Investors
+                  </Link>
+                  <Link
+                    to="/editpart"
+                    class="navButtons"
+                    onClick={closeMenuProjects}
+                  >
+                    Blog
+                  </Link>
+                </div>
               </div>
-              <div className={open ? "nav-links active" : "nav-links"}>
-                <Link to="/" class="navButtons" onClick={closeMenuProjects}>
-                  Home
-                </Link>
-                <Link
-                  to="/buyparts"
-                  class="navButtons"
-                  onClick={closeMenuProjects}
-                >
-                  Contact
-                </Link>
-                <Link
-                  to="/OwnersTab"
-                  class="navButtons"
-                  onClick={closeMenuProjects}
-                >
-                  Owners
-                </Link>
-                <Link
-                  to="/managerLanding"
-                  class="navButtons"
-                  onClick={closeMenuProjects}
-                >
-                  Property Managers
-                </Link>
-                <Link
-                  to="/renterLanding"
-                  class="navButtons"
-                  onClick={closeMenuProjects}
-                >
-                  Renters
-                </Link>
-                <Link
-                  to="/addparts"
-                  class="navButtons"
-                  onClick={closeMenuProjects}
-                >
-                  Maintenace
-                </Link>
-                <Link
-                  to="/inventory"
-                  class="navButtons"
-                  onClick={closeMenuProjects}
-                >
-                  Investors
-                </Link>
-                <Link
-                  to="/editpart"
-                  class="navButtons"
-                  onClick={closeMenuProjects}
-                >
-                  Blog
-                </Link>
-              </div>
-            </div>
+            ) : (
+              ""
+            )}
             <div
               style={{
                 display: "flex",
