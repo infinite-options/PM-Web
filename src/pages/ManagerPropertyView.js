@@ -70,7 +70,13 @@ function ManagerPropertyView(props) {
       manager_id: management_buid,
       early_end_date: endEarlyDate,
     };
-
+    for (let i = -1; i < files.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      updatedManagementContract[key] = files[i + 1];
+    }
     await put("/cancelAgreement", updatedManagementContract, null, files);
     setExpandManagerDocs(false);
     setShowDialog(false);

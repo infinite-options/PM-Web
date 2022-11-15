@@ -31,6 +31,7 @@ function OwnerRepairRequest(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
+  let pageURL = window.location.href.split("/");
   // const properties = location.state.properties;
   const { properties } = props;
   const imageState = useState([]);
@@ -71,9 +72,8 @@ function OwnerRepairRequest(props) {
 
     console.log(newRequest);
     await post("/maintenanceRequests", newRequest, null, files);
-    navigate(-1);
 
-    //props.onSubmit();
+    props.onSubmit();
   };
 
   const required =
@@ -273,7 +273,7 @@ function OwnerRepairRequest(props) {
                 <Col xs={4}>
                   <Button
                     variant="outline-primary"
-                    onClick={() => navigate("/owner")}
+                    onClick={() => props.cancel()}
                     style={pillButton}
                   >
                     Cancel

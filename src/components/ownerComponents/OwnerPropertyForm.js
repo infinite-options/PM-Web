@@ -827,7 +827,8 @@ function OwnerPropertyForm(props) {
         <Col className="p-2">
           <h6>Pets Allowed</h6>
         </Col>
-        <Col>
+        <Col className="d-flex">
+          <p className="p-2">No</p>
           <Switch
             checked={petsAllowed}
             onChange={
@@ -843,6 +844,7 @@ function OwnerPropertyForm(props) {
             }
             inputProps={{ "aria-label": "controlled" }}
           />
+          <p className="p-2">Yes</p>
         </Col>
         {/* <Row>
           <Col className="d-flex ps-4">
@@ -879,8 +881,8 @@ function OwnerPropertyForm(props) {
         <Col className="p-2">
           <h6>Deposit can be used for last month's rent</h6>
         </Col>
-        <Col>
-          {" "}
+        <Col className="d-flex">
+          <p className="p-2">No</p>
           <Switch
             checked={depositForRent}
             onChange={
@@ -895,7 +897,8 @@ function OwnerPropertyForm(props) {
                   }
             }
             inputProps={{ "aria-label": "controlled" }}
-          />
+          />{" "}
+          <p className="p-2">Yes</p>
         </Col>
         {/* <Row>
           <Col className="d-flex ps-4">

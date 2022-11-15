@@ -845,7 +845,8 @@ function PropertyForm(props) {
         <Col className="p-2">
           <h6>Pets Allowed</h6>
         </Col>
-        <Col>
+        <Col className="d-flex">
+          <p className="p-2">No</p>
           <Switch
             checked={petsAllowed}
             onChange={
@@ -862,13 +863,14 @@ function PropertyForm(props) {
             inputProps={{ "aria-label": "controlled" }}
           />
         </Col>
+        <p className="p-2">Yes</p>
       </Container>
       <Container className="d-flex my-3 ps-4">
         <Col className="p-2">
           <h6>Deposit can be used for last month's rent</h6>
         </Col>
-        <Col>
-          {" "}
+        <Col className="d-flex">
+          <p className="p-2">No</p>
           <Switch
             checked={depositForRent}
             onChange={
@@ -884,6 +886,7 @@ function PropertyForm(props) {
             }
             inputProps={{ "aria-label": "controlled" }}
           />
+          <p className="p-2">Yes</p>
         </Col>
       </Container>
       <Container className="d-flex my-3 ps-4">

@@ -276,6 +276,12 @@ export default function OwnerDashboard2() {
       numeric: false,
       label: "Address",
     },
+    ,
+    {
+      id: "request_status",
+      numeric: false,
+      label: "Status",
+    },
     {
       id: "title",
       numeric: false,
@@ -3529,7 +3535,7 @@ export default function OwnerDashboard2() {
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={property.address}
+                          key={property.property_uid}
                           onClick={() => {
                             navigate(
                               `/propertyDetails/${property.property_uid}`,
@@ -3646,7 +3652,7 @@ export default function OwnerDashboard2() {
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={request.address}
+                          key={request.maintenance_request_uid}
                           onClick={() =>
                             navigate(
                               `/owner-repairs/${request.maintenance_request_uid}`,
@@ -3687,9 +3693,12 @@ export default function OwnerDashboard2() {
                             )}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {request.address}
-                            {request.unit !== "" ? " " + request.unit : ""}
+                            {request.address}{" "}
+                            {request.unit !== "" ? " " + request.unit : ""}{" "}
                             {request.city}, {request.state} {request.zip}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.request_status}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {" "}
@@ -3735,11 +3744,16 @@ export default function OwnerDashboard2() {
         </div>
       ) : !isLoading && ownerData.length == 1 ? (
         <div className="flex-1">
-          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+          <div
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
             <SideBar />
           </div>
           <div
-            className="w-100"
             style={{
               width: "calc(100vw - 13rem)",
               position: "relative",
@@ -3750,11 +3764,16 @@ export default function OwnerDashboard2() {
         </div>
       ) : !isLoading && ownerData.length == 0 ? (
         <div className="flex-1">
-          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+          <div
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
             <SideBar />
           </div>
           <div
-            className="w-100"
             style={{
               width: "calc(100vw - 13rem)",
               position: "relative",
@@ -3786,7 +3805,13 @@ export default function OwnerDashboard2() {
         </div>
       ) : (
         <div className="flex-1">
-          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+          <div
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
             <SideBar />
           </div>
           <div className="w-100 d-flex flex-column justify-content-center align-items-center">
@@ -3798,11 +3823,16 @@ export default function OwnerDashboard2() {
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+        <div
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
           <SideBar />
         </div>
         <div
-          className="w-100"
           style={{
             width: "calc(100vw - 13rem)",
             position: "relative",
@@ -3824,11 +3854,16 @@ export default function OwnerDashboard2() {
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+        <div
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
           <SideBar />
         </div>
         <div
-          className="w-100"
           style={{
             width: "calc(100vw - 13rem)",
             position: "relative",
@@ -3850,11 +3885,16 @@ export default function OwnerDashboard2() {
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+        <div
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
           <SideBar />
         </div>
         <div
-          className="w-100"
           style={{
             width: "calc(100vw - 13rem)",
             position: "relative",

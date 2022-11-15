@@ -54,6 +54,7 @@ function OwnerContacts() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhoneNumber, setContactPhoneNumber] = useState("");
 
+  const [isLoading, setIsLoading] = useState(true);
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
@@ -75,6 +76,8 @@ function OwnerContacts() {
 
     console.log(response.result);
     setPropertyManagers(response.result);
+
+    setIsLoading(false);
     console.log(JSON.parse(response.result[0].contact_locations).length);
     // await getAlerts(properties_unique)
   };
@@ -246,239 +249,265 @@ function OwnerContacts() {
           }}
         >
           <Header title="Contacts" />
-          {addContacts ? (
-            <Row className="m-3">
-              <Col>
-                <h3>Create New Contact </h3>
-              </Col>
-              <Col></Col>
-            </Row>
-          ) : propertyManagers.length > 0 && !addContacts ? (
-            <Row className="m-3">
-              <Col>
-                <h3>Contacts </h3>
-              </Col>
-              <Col>
-                <img
-                  src={AddIcon}
-                  onClick={() => setAddContacts(true)}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    float: "right",
-                    marginRight: "5rem",
-                  }}
-                />
-              </Col>
-            </Row>
-          ) : (
-            <Row className="m-3">
-              <Col>
-                <h3>Add Contact </h3>
-              </Col>
-              <Col>
-                <img
-                  src={AddIcon}
-                  onClick={() => setAddContacts(true)}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    float: "right",
-                    marginRight: "5rem",
-                  }}
-                />
-              </Col>
-            </Row>
-          )}
+          {!isLoading ? (
+            <div>
+              {addContacts ? (
+                <Row className="m-3">
+                  <Col>
+                    <h3>Create New Contact </h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+              ) : propertyManagers.length > 0 && !addContacts ? (
+                <Row className="m-3">
+                  <Col>
+                    <h3>Contacts </h3>
+                  </Col>
+                  <Col>
+                    <img
+                      src={AddIcon}
+                      onClick={() => setAddContacts(true)}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                    />
+                  </Col>
+                </Row>
+              ) : (
+                <Row className="m-3">
+                  <Col>
+                    <h3>Add Contact </h3>
+                  </Col>
+                  <Col>
+                    <img
+                      src={AddIcon}
+                      onClick={() => setAddContacts(true)}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                    />
+                  </Col>
+                </Row>
+              )}
 
-          {addContacts ? (
-            <Row>
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6">
-                  Contact Name
-                  {contactName === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  value={contactName}
-                  onChange={(e) => setContactName(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6">
-                  Contact Type
-                  {contactType === "" ? required : ""}
-                </Form.Label>
-                <Form.Select
-                  style={{
-                    ...squareForm,
-                    backgroundImage: `url(${ArrowDown})`,
-                  }}
-                  value={contactType}
-                  onChange={(e) => setContactType(e.target.value)}
-                >
-                  <option>MANAGEMENT</option>
-                  <option>MAINTENANCE</option>
-                  <option>OTHER</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6">
-                  Contact Email
-                  {contactEmail === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  value={contactEmail}
-                  onChange={(e) => setContactEmail(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mx-2 mb-3">
-                <Form.Label as="h6">
-                  Contact Phone Number{" "}
-                  {contactPhoneNumber === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  value={contactPhoneNumber}
-                  onChange={(e) => setContactPhoneNumber(e.target.value)}
-                />
-              </Form.Group>
-              <div
-                className="text-center"
-                style={errorMessage === "" ? hidden : {}}
-              >
-                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
-              </div>
-              <div className="d-flex justify-content-center my-4">
-                <Button
-                  variant="outline-primary"
-                  style={pillButton}
-                  onClick={() => setAddContacts(false)}
-                  className="mx-2"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  style={pillButton}
-                  onClick={() => submitForm()}
-                  className="mx-2"
-                >
-                  Save Contact
-                </Button>
-              </div>
-            </Row>
-          ) : propertyManagers.length > 0 && !addContacts ? (
-            <Row>
-              <Row className="w-100 m-3">
-                <Col xs={2}> Search by</Col>
+              {addContacts ? (
+                <Row>
+                  <Form.Group className="mx-2 mb-3">
+                    <Form.Label as="h6">
+                      Contact Name
+                      {contactName === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mx-2 mb-3">
+                    <Form.Label as="h6">
+                      Contact Type
+                      {contactType === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Select
+                      style={{
+                        ...squareForm,
+                        backgroundImage: `url(${ArrowDown})`,
+                      }}
+                      value={contactType}
+                      onChange={(e) => setContactType(e.target.value)}
+                    >
+                      <option>MANAGEMENT</option>
+                      <option>MAINTENANCE</option>
+                      <option>OTHER</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mx-2 mb-3">
+                    <Form.Label as="h6">
+                      Contact Email
+                      {contactEmail === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mx-2 mb-3">
+                    <Form.Label as="h6">
+                      Contact Phone Number{" "}
+                      {contactPhoneNumber === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={contactPhoneNumber}
+                      onChange={(e) => setContactPhoneNumber(e.target.value)}
+                    />
+                  </Form.Group>
+                  <div
+                    className="text-center"
+                    style={errorMessage === "" ? hidden : {}}
+                  >
+                    <p style={{ ...red, ...small }}>
+                      {errorMessage || "error"}
+                    </p>
+                  </div>
+                  <div className="d-flex justify-content-center my-4">
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      onClick={() => setAddContacts(false)}
+                      className="mx-2"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      onClick={() => submitForm()}
+                      className="mx-2"
+                    >
+                      Save Contact
+                    </Button>
+                  </div>
+                </Row>
+              ) : propertyManagers.length > 0 && !addContacts ? (
+                <Row>
+                  <Row className="w-100 m-3">
+                    <Col xs={2}> Search by</Col>
 
-                <Col>
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    onChange={(event) => {
-                      setSearch(event.target.value);
-                    }}
-                    style={{
-                      width: "400px",
-                      border: "1px solid black",
-                      padding: "5px",
-                    }}
-                  />
-                </Col>
-              </Row>
-              <Row className="m-3">
-                <Table classes={{ root: classes.customTable }} size="small">
-                  <EnhancedTableHeadContacts
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                    rowCount={propertyManagers.length}
-                  />{" "}
-                  <TableBody>
-                    {stableSort(propertyManagers, getComparator(order, orderBy))
-                      // for filtering
-                      .filter((val) => {
-                        const query = search.toLowerCase();
+                    <Col>
+                      <input
+                        type="text"
+                        placeholder="Search"
+                        onChange={(event) => {
+                          setSearch(event.target.value);
+                        }}
+                        style={{
+                          width: "400px",
+                          border: "1px solid black",
+                          padding: "5px",
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="m-3">
+                    <Table classes={{ root: classes.customTable }} size="small">
+                      <EnhancedTableHeadContacts
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        rowCount={propertyManagers.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          propertyManagers,
+                          getComparator(order, orderBy)
+                        )
+                          // for filtering
+                          .filter((val) => {
+                            const query = search.toLowerCase();
 
-                        return (
-                          val.contact_name.toLowerCase().indexOf(query) >= 0 ||
-                          val.contact_type.toLowerCase().indexOf(query) >= 0
-                        );
-                      })
-                      .map((property, index) => {
-                        return (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={property.contact_name}
-                          >
-                            <TableCell padding="none" size="small" align="left">
-                              {property.contact_name}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {property.contact_type}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {property.contact_email}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {property.contact_phone_number}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              <div
-                                style={property.contact_uid ? {} : hidden}
-                                onClick={stopPropagation}
+                            return (
+                              val.contact_name.toLowerCase().indexOf(query) >=
+                                0 ||
+                              val.contact_type.toLowerCase().indexOf(query) >= 0
+                            );
+                          })
+                          .map((property, index) => {
+                            return (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={property.contact_name}
                               >
-                                <a
-                                  href={`tel:${property.contact_phone_number}`}
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="left"
                                 >
-                                  <img
-                                    src={Phone}
-                                    alt="Phone"
-                                    style={smallImg}
-                                  />
-                                </a>
-                                <a href={`mailto:${property.contact_email}`}>
-                                  <img
-                                    src={Message}
-                                    alt="Message"
-                                    style={smallImg}
-                                  />
-                                </a>
-                                <a href={`mailto:${property.contact_email}`}>
-                                  <img src={Mail} alt="Mail" style={smallImg} />
-                                </a>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                  </TableBody>
-                </Table>
-              </Row>
-            </Row>
+                                  {property.contact_name}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {property.contact_type}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {property.contact_email}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {property.contact_phone_number}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  <div
+                                    style={property.contact_uid ? {} : hidden}
+                                    onClick={stopPropagation}
+                                  >
+                                    <a
+                                      href={`tel:${property.contact_phone_number}`}
+                                    >
+                                      <img
+                                        src={Phone}
+                                        alt="Phone"
+                                        style={smallImg}
+                                      />
+                                    </a>
+                                    <a
+                                      href={`mailto:${property.contact_email}`}
+                                    >
+                                      <img
+                                        src={Message}
+                                        alt="Message"
+                                        style={smallImg}
+                                      />
+                                    </a>
+                                    <a
+                                      href={`mailto:${property.contact_email}`}
+                                    >
+                                      <img
+                                        src={Mail}
+                                        alt="Mail"
+                                        style={smallImg}
+                                      />
+                                    </a>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </Row>
+              ) : (
+                <Row></Row>
+              )}
+            </div>
           ) : (
-            <Row></Row>
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
           )}
         </div>
       </div>

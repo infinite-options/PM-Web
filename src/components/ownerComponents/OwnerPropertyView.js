@@ -377,6 +377,13 @@ function OwnerPropertyView(props) {
       management_status: "ACCEPTED",
       manager_id: pid,
     };
+    for (let i = -1; i < files.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      updatedManagementContract[key] = files[i + 1];
+    }
 
     const response2 = await put(
       "/properties",
@@ -396,7 +403,13 @@ function OwnerPropertyView(props) {
       management_status: "REJECTED",
       manager_id: pid,
     };
-    // }
+    for (let i = -1; i < files.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      updatedManagementContract[key] = files[i + 1];
+    }
     const response2 = await put(
       "/properties",
       updatedManagementContract,
@@ -416,7 +429,13 @@ function OwnerPropertyView(props) {
       manager_id: pid,
       early_end_date: endEarlyDate,
     };
-
+    for (let i = -1; i < files.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      updatedManagementContract[key] = files[i + 1];
+    }
     const response2 = await put(
       "/cancelAgreement",
       updatedManagementContract,
@@ -433,7 +452,13 @@ function OwnerPropertyView(props) {
       management_status: "OWNER ACCEPTED",
       manager_id: property.managerInfo.manager_id,
     };
-
+    for (let i = -1; i < files.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      updatedManagementContract[key] = files[i + 1];
+    }
     await put("/cancelAgreement", updatedManagementContract, null, files);
     reloadProperty();
   };
@@ -1006,7 +1031,7 @@ function OwnerPropertyView(props) {
                     )}
                   </Row>
 
-                  <Row>
+                  <Row className="m-3">
                     <Col>
                       <h3>Cashflow Summary</h3>
                     </Col>
@@ -4279,7 +4304,7 @@ function OwnerPropertyView(props) {
                       </Table>
                     </div>
                   </Row>
-                  <Row>
+                  <Row className="m-3">
                     <Col>
                       <h3>Property Summary</h3>
                     </Col>
@@ -4316,7 +4341,7 @@ function OwnerPropertyView(props) {
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={property.address}
+                            key={property.property_uid}
                           >
                             <TableCell
                               padding="none"
@@ -4462,7 +4487,7 @@ function OwnerPropertyView(props) {
                       </Table>
                     </div>
                   </Row>
-                  <Row>
+                  <Row className="m-3">
                     <Col>
                       <h3>Maintenance and Repairs</h3>
                     </Col>
@@ -4509,7 +4534,7 @@ function OwnerPropertyView(props) {
                                   hover
                                   role="checkbox"
                                   tabIndex={-1}
-                                  key={request.address}
+                                  key={request.maintenance_request_uid}
                                   onClick={() =>
                                     navigate(
                                       `/owner-repairs/${request.maintenance_request_uid}`,
@@ -4622,7 +4647,7 @@ function OwnerPropertyView(props) {
                       <div>No maintenance or repair requests</div>
                     )}
                   </Row>
-                  <Row>
+                  <Row className="m-3">
                     <Col>
                       <h3>Appliances</h3>
                     </Col>
@@ -4763,7 +4788,7 @@ function OwnerPropertyView(props) {
                   </Row>
                   {Object.keys(property.managerInfo).length !== 0 ? (
                     <div>
-                      <Row>
+                      <Row className="m-3">
                         <Col>
                           <h3>Property Management Agreement</h3>
                         </Col>
@@ -5075,7 +5100,7 @@ function OwnerPropertyView(props) {
                   ) : (
                     ""
                   )}
-                  <Row>
+                  <Row className="m-3">
                     <Col>
                       <h3>
                         {Object.keys(property.managerInfo).length == 0
@@ -5671,7 +5696,7 @@ function OwnerPropertyView(props) {
                       // setStage={setStage}
                     />
                   </Row>
-                  <Row>
+                  <Row className="m-3">
                     <Col>
                       <h3>Tenant Info</h3>
                     </Col>
