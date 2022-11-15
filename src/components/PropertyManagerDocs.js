@@ -94,6 +94,13 @@ function PropertyManagerDocs(props) {
       management_status: "PM ACCEPTED",
       manager_id: management_buid,
     };
+    for (let i = -1; i < files.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      updatedManagementContract[key] = files[i + 1];
+    }
 
     await put("/cancelAgreement", updatedManagementContract, null, files);
     setExpandManagerDocs(false);
@@ -114,7 +121,13 @@ function PropertyManagerDocs(props) {
       management_status: "PM REJECTED",
       manager_id: management_buid,
     };
-
+    for (let i = -1; i < files.length - 1; i++) {
+      let key = `img_${i}`;
+      if (i === -1) {
+        key = "img_cover";
+      }
+      updatedManagementContract[key] = files[i + 1];
+    }
     await put("/cancelAgreement", updatedManagementContract, null, files);
     setExpandManagerDocs(false);
     fetchProperty();

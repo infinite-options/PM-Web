@@ -53,13 +53,13 @@ function ManagerDocs(props) {
             manager_id: business_uid,
             management_status: "FORWARDED",
           };
-          // for (let i = -1; i < files.length - 1; i++) {
-          //   let key = `img_${i}`;
-          //   if (i === -1) {
-          //     key = "img_cover";
-          //   }
-          //   newProperty[key] = files[i + 1];
-          // }
+          for (let i = -1; i < files.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            newProperty[key] = files[i + 1];
+          }
           const response = await put("/properties", newProperty, null, files);
           setAddPropertyManager(false);
           reload();
@@ -71,13 +71,13 @@ function ManagerDocs(props) {
         manager_id: business_uid,
         management_status: "FORWARDED",
       };
-      // for (let i = -1; i < files.length - 1; i++) {
-      //   let key = `img_${i}`;
-      //   if (i === -1) {
-      //     key = "img_cover";
-      //   }
-      //   newProperty[key] = files[i + 1];
-      // }
+      for (let i = -1; i < files.length - 1; i++) {
+        let key = `img_${i}`;
+        if (i === -1) {
+          key = "img_cover";
+        }
+        newProperty[key] = files[i + 1];
+      }
       const response = await put("/properties", newProperty, null, files);
       setAddPropertyManager(false);
       reload();
@@ -97,13 +97,13 @@ function ManagerDocs(props) {
           manager_id: business_uid,
           management_status: "FORWARDED",
         };
-        // for (let i = -1; i < files.length - 1; i++) {
-        //   let key = `img_${i}`;
-        //   if (i === -1) {
-        //     key = "img_cover";
-        //   }
-        //   newProperty[key] = files[i + 1];
-        // }
+        for (let i = -1; i < files.length - 1; i++) {
+          let key = `img_${i}`;
+          if (i === -1) {
+            key = "img_cover";
+          }
+          newProperty[key] = files[i + 1];
+        }
         const response = await put("/properties", newProperty, null, files);
         setAddPropertyManager(false);
         reload();

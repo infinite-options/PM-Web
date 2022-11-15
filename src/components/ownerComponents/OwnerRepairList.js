@@ -31,7 +31,9 @@ const useStyles = makeStyles({
 function OwnerRepairList(props) {
   const classes = useStyles();
   const navigate = useNavigate();
+
   const [properties, setProperties] = useState([]);
+
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [repairIter, setRepairIter] = useState([]);
@@ -238,7 +240,11 @@ function OwnerRepairList(props) {
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
-
+  const addRequest = () => {
+    fetchProperties();
+    fetchRepairs();
+    setStage("LIST");
+  };
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -424,7 +430,23 @@ function OwnerRepairList(props) {
                           row.repairs_list,
                           getComparator(order, orderBy)
                         ).map((repair, j) => (
-                          <TableRow hover role="checkbox" tabIndex={-1} key={j}>
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={j}
+                            onClick={() => {
+                              navigate(
+                                `/owner-repairs/${repair.maintenance_request_uid}`,
+                                {
+                                  state: {
+                                    repair: repair,
+                                    property: repair.address,
+                                  },
+                                }
+                              );
+                            }}
+                          >
                             <TableCell
                               padding="none"
                               size="small"
@@ -434,17 +456,7 @@ function OwnerRepairList(props) {
                                 <img
                                   src={JSON.parse(repair.images)[0]}
                                   // onClick={() => selectRepair(repair)}
-                                  onClick={() => {
-                                    navigate(
-                                      `/owner-repairs/${repair.maintenance_request_uid}`,
-                                      {
-                                        state: {
-                                          repair: repair,
-                                          property: repair.address,
-                                        },
-                                      }
-                                    );
-                                  }}
+
                                   alt="repair"
                                   style={{
                                     borderRadius: "4px",
@@ -568,7 +580,7 @@ function OwnerRepairList(props) {
           <OwnerRepairRequest
             properties={properties}
             cancel={() => setStage("LIST")}
-            // onSubmit={addRequest}
+            onSubmit={addRequest}
           />
         </div>
       </div>

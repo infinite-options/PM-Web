@@ -70,7 +70,11 @@ function RepairRequest(props) {
     console.log(files);
     await post("/maintenanceRequests", newRequest, null, files);
     // navigate(`/${property_uid}/repairStatus`);
-    navigate("../");
+    navigate(`/propertyDetails/${property_uid}`, {
+      state: {
+        property_uid: property_uid,
+      },
+    });
     //props.onSubmit();
   };
 
@@ -85,8 +89,6 @@ function RepairRequest(props) {
 
   return (
     <div>
-      <Header title="Repair Request Form" />
-
       <div className="flex-1">
         <div>
           <SideBar />
@@ -98,6 +100,7 @@ function RepairRequest(props) {
             position: "relative",
           }}
         >
+          <Header title="Repair Request Form" />
           <Container className="pt-1 mb-4">
             <Row style={headings}>
               <div>New Repair Request</div>
@@ -267,7 +270,13 @@ function RepairRequest(props) {
                 <Col xs={4}>
                   <Button
                     variant="outline-primary"
-                    onClick={() => navigate("/owner")}
+                    onClick={() =>
+                      navigate(`/propertyDetails/${property_uid}`, {
+                        state: {
+                          property_uid: property_uid,
+                        },
+                      })
+                    }
                     style={pillButton}
                   >
                     Cancel

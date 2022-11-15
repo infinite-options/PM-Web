@@ -2143,7 +2143,7 @@ function OwnerUtilities(props) {
                         className="mt-2 mb-2"
                         variant="outline-primary"
                         onClick={() => {
-                          setPayExpense(false);
+                          submit();
                         }}
                         style={bluePillButton}
                       >

@@ -3735,11 +3735,16 @@ export default function OwnerDashboard2() {
         </div>
       ) : !isLoading && ownerData.length == 1 ? (
         <div className="flex-1">
-          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+          <div
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
             <SideBar />
           </div>
           <div
-            className="w-100"
             style={{
               width: "calc(100vw - 13rem)",
               position: "relative",
@@ -3750,11 +3755,16 @@ export default function OwnerDashboard2() {
         </div>
       ) : !isLoading && ownerData.length == 0 ? (
         <div className="flex-1">
-          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+          <div
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
             <SideBar />
           </div>
           <div
-            className="w-100"
             style={{
               width: "calc(100vw - 13rem)",
               position: "relative",
@@ -3786,7 +3796,13 @@ export default function OwnerDashboard2() {
         </div>
       ) : (
         <div className="flex-1">
-          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+          <div
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
             <SideBar />
           </div>
           <div className="w-100 d-flex flex-column justify-content-center align-items-center">
@@ -3798,11 +3814,16 @@ export default function OwnerDashboard2() {
   ) : stage === "NEW" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+        <div
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
           <SideBar />
         </div>
         <div
-          className="w-100"
           style={{
             width: "calc(100vw - 13rem)",
             position: "relative",
@@ -3824,11 +3845,16 @@ export default function OwnerDashboard2() {
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+        <div
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
           <SideBar />
         </div>
         <div
-          className="w-100"
           style={{
             width: "calc(100vw - 13rem)",
             position: "relative",
@@ -3850,11 +3876,16 @@ export default function OwnerDashboard2() {
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
-        <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+        <div
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
           <SideBar />
         </div>
         <div
-          className="w-100"
           style={{
             width: "calc(100vw - 13rem)",
             position: "relative",
