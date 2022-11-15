@@ -4726,6 +4726,9 @@ function OwnerPropertyView(props) {
                                 applianceState[0][appliance]["images"].length >
                                   0 ? (
                                   <TableCell>
+                                    {console.log(
+                                      applianceState[0][appliance]["images"][0]
+                                    )}
                                     <Row className="d-flex justify-content-center align-items-center p-1">
                                       <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                         <img
@@ -4733,7 +4736,7 @@ function OwnerPropertyView(props) {
                                           src={`${
                                             applianceState[0][appliance][
                                               "images"
-                                            ][currentImg]
+                                            ][0]
                                           }?${Date.now()}`}
                                           style={{
                                             borderRadius: "4px",
