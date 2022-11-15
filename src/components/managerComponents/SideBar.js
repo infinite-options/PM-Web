@@ -6,13 +6,12 @@ import { get } from "../../utils/api";
 import AppContext from "../../AppContext";
 import "./sidebar.css";
 
-function Sidebar() {
+function SideBar() {
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
 
   let sidebarButtonsActive = {
     paddingRight: "20px",
-
     maxHeight: "4rem",
     minHeight: "3rem",
     color: "#c93667",
@@ -24,7 +23,6 @@ function Sidebar() {
   };
   let sidebarButtons = {
     paddingRight: "20px",
-
     maxHeight: "4rem",
     minHeight: "3rem",
     color: "#000000",
@@ -35,22 +33,8 @@ function Sidebar() {
   };
 
   return (
-    <div
-      style={{
-        width: "10rem",
-        backgroundColor: "#229ebc",
-        height: "100%",
-        paddingRight: "20px",
-      }}
-    >
-      <Row
-        style={{
-          width: "10rem",
-          backgroundColor: "#229ebc",
-          height: "100%",
-          paddingRight: "20px",
-        }}
-      >
+    <div style={{ width: "11rem", height: "100%" }}>
+      <Row style={{ width: "11rem", height: "100%" }}>
         <nav class="sidebar">
           <div className="sidebarLinks">
             <NavLink
@@ -143,4 +127,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default SideBar;
