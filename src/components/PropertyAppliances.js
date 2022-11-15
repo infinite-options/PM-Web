@@ -24,8 +24,7 @@ function PropertyAppliances(props) {
     "Dishwasher",
     "Refrigerator",
   ];
-  console.log(props);
-  console.log(appliances);
+
   const [showDialog, setShowDialog] = useState(false);
   const [newAppliance, setNewAppliance] = useState(null);
   const [applianceType, setApplianceType] = useState(null);
@@ -39,37 +38,22 @@ function PropertyAppliances(props) {
   const [applianceInstalledOn, setApplianceInstalledOn] = useState(null);
   const [applianceWarrantyTill, setApplianceWarrantyTill] = useState(null);
   const [applianceWarrantyInfo, setApplianceWarrantyInfo] = useState(null);
-  const [applianceImages, setApplianceImages] = useState(null);
-
-  const [currentImg, setCurrentImg] = useState(0);
   const imageState = useState([]);
   const [addApplianceInfo, setAddApplianceInfo] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [currentAppliance, setCurrentAppliance] = useState([]);
   const [showSpinner, setShowSpinner] = useState(false);
-
   const toggleAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
-    // console.log(newApplianceState);
     newApplianceState[appliance]["available"] =
       !newApplianceState[appliance]["available"];
-    // console.log(newApplianceState);
-    // setAddApplianceInfo(true);
-    // setShowDetails(true);
     setApplianceType(appliance);
     setApplianceState(newApplianceState);
   };
 
   const showApplianceDetail = (appliance) => {
     setApplianceType(appliance);
-    setCurrentAppliance(appliance);
     setShowDetails(!showDetails);
-    console.log(
-      "showappliancedetails",
-      appliance,
-      showDetails,
-      addApplianceInfo
-    );
+
     setAddApplianceInfo(!addApplianceInfo);
     setApplianceType(appliance);
     setApplianceState(applianceState);
@@ -86,7 +70,7 @@ function PropertyAppliances(props) {
     setApplianceWarrantyInfo(applianceState[appliance]["warranty_info"]);
     if (applianceState[appliance]["images"] !== undefined) {
       const files = [];
-      setApplianceImages(applianceState[appliance]["images"]);
+
       const images = applianceState[appliance]["images"];
       for (let i = 0; i < images.length; i++) {
         files.push({
@@ -98,8 +82,6 @@ function PropertyAppliances(props) {
       }
       imageState[1](files);
     }
-
-    // setApplianceImages(applianceState[appliance]["images"]);
   };
 
   const onCancel = () => {
@@ -114,7 +96,6 @@ function PropertyAppliances(props) {
     let files = imageState[0];
     for (const file of imageState[0]) {
       let key = `img_${app}_${i++}`;
-      console.log(key);
       if (file.file !== null) {
         rem_app[key] = file.file;
       } else {
@@ -127,7 +108,6 @@ function PropertyAppliances(props) {
   };
 
   const Capitalize = (str) => {
-    console.log(typeof str);
     return (
       str.toString().charAt(0).toUpperCase() +
       str.toString().slice(1).toLowerCase()
@@ -136,7 +116,7 @@ function PropertyAppliances(props) {
 
   const updateAppliance = async (appliance) => {
     const newApplianceState = { ...applianceState };
-    console.log(newApplianceState);
+
     newApplianceState[appliance]["available"] = Capitalize(
       newApplianceState[appliance]["available"]
     );
@@ -154,7 +134,6 @@ function PropertyAppliances(props) {
       newApplianceState[appliance]["images"] = imageState[0];
     }
 
-    console.log(newApplianceState[appliance]);
     if (property) {
       let newProperty = {
         property_uid: property.property_uid,
@@ -174,11 +153,9 @@ function PropertyAppliances(props) {
         } else {
           newProperty[key] = file.image;
         }
-        console.log(newProperty[key]);
       }
       setShowSpinner(true);
 
-      console.log(newProperty);
       const response = await put("/appliances", newProperty, null, files);
     }
 
@@ -201,12 +178,7 @@ function PropertyAppliances(props) {
 
   const cancelAppliance = (appliance) => {
     const newApplianceState = { ...applianceState };
-    console.log(newApplianceState);
-    // newApplianceState[appliance]["available"] = false;
-    console.log(newApplianceState);
-    console.log(imageState);
     imageState[0] = [];
-    console.log(imageState);
     setAddApplianceInfo(false);
     setShowDetails(false);
     setApplianceState(newApplianceState);
@@ -220,12 +192,10 @@ function PropertyAppliances(props) {
     setApplianceWarrantyTill("");
     setApplianceWarrantyInfo("");
     setApplianceType("");
-    setApplianceImages("");
   };
 
   const addAppliance = async () => {
     const newApplianceState = { ...applianceState };
-    console.log(newApplianceState[newAppliance]);
     newApplianceState[newAppliance] = {};
     newApplianceState[newAppliance]["available"] = "True";
     newApplianceState[newAppliance]["model_num"] =
@@ -262,20 +232,18 @@ function PropertyAppliances(props) {
         let key = file.coverPhoto
           ? `img_${newAppliance}_${i++}`
           : `img_${newAppliance}_${i++}`;
-        console.log(key);
+
         if (file.file !== null) {
           newProperty[key] = file.file;
         } else {
           newProperty[key] = file.image;
         }
       }
-      console.log(newApplianceState);
 
-      console.log(newProperty);
       const response = await put("/appliances", newProperty, null, files);
     }
     imageState[0] = [];
-    console.log(newApplianceState);
+
     setNewAppliance(null);
     setApplianceName("");
     setAppliancePurchasedOn("");
@@ -335,7 +303,6 @@ function PropertyAppliances(props) {
                 onClick={
                   edit
                     ? () => {
-                        console.log("toggle");
                         showApplianceDetail(appliance);
                       }
                     : () => {}
@@ -553,7 +520,6 @@ function PropertyAppliances(props) {
         ""
       ) : (
         <div>
-          {console.log("here  enter new appliance")}
           <div className="d-flex ps-2 align-items-center">
             <Checkbox type="BOX" checked={true} />
             <Form.Control
