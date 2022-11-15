@@ -542,7 +542,12 @@ export default function OwnerDashboard2() {
     <div className="OwnerDashboard2">
       {!isLoading && ownerData.length > 1 ? (
         <div className="flex-1">
-          <div style={{ backgroundColor: "#229ebc", minHeight: "100%" }}>
+          <div
+            style={{
+              backgroundColor: "#229ebc",
+              minHeight: "100%",
+            }}
+          >
             <SideBar />
           </div>
           <div

@@ -1,13 +1,15 @@
-.sidebar{
+.sidebar {
   display: flex;
   flex-direction: row;
   background-color: #ffffff;
   position: fixed;
-  width:10rem;
+  width: 10.75rem;
   background-color: #229ebc;
+  padding-right: 20px;
 }
+
 .sidebarButtons {
-  
+
   color: #000000;
   text-decoration: none;
   text-transform: uppercase;
@@ -15,7 +17,7 @@
   cursor: pointer;
   width: 10rem;
   background-color: #229ebc;
-  height:100vh;
+  height: 100vh;
   text-align: right;
   padding-right: 15px;
 }
@@ -25,27 +27,30 @@
   flex-direction: column;
   /* position: absolute; */
   text-align: right;
-  background-color: #ffffff;  
-  width: 10rem;  
-  height:60vh;
+  background-color: #ffffff;
+  width: 10rem;
+  height: 60vh;
   background-color: #229ebc;
+
+  padding-right: 20px;
 }
 
 .sidebarButtonsActive {
-  
+
   color: #c93667;
   text-decoration: none;
   text-transform: uppercase;
   font-family: Avenir-Light;
   cursor: pointer;
   font-weight: 700;
-  width: 10rem;text-align: right;
+  width: 10rem;
+  text-align: right;
   /* background-color: #229ebc; */
-  
+
 }
 
 .sidebarButtons:hover {
-  
+
   color: #c93667;
   text-decoration: none;
   text-transform: uppercase;
@@ -55,5 +60,3 @@
   width: 10rem;
   /* background-color: #229ebc; */
 }
-
-

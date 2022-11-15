@@ -3,8 +3,9 @@
   flex-direction: row;
   background-color: #ffffff;
   position: fixed;
-  width: 10rem;
+  width: 10.75rem;
   background-color: #229ebc;
+  padding-right: 20px;
 }
 
 .sidebarButtons {
@@ -30,6 +31,8 @@
   width: 10rem;
   height: 60vh;
   background-color: #229ebc;
+
+  padding-right: 20px;
 }
 
 .sidebarButtonsActive {
