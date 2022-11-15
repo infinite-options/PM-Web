@@ -544,14 +544,13 @@ export default function OwnerDashboard2() {
           <div
             style={{
               backgroundColor: "#229ebc",
-              minHeight: "100%",
               width: "11rem",
+              minHeight: "100%",
             }}
           >
             <SideBar />
           </div>
           <div
-            className="w-100"
             style={{
               width: "calc(100vw - 13rem)",
               position: "relative",
