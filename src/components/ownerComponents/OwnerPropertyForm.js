@@ -1,7 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Switch } from "@material-ui/core";
+import * as ReactBootStrap from "react-bootstrap";
+import PropertyAppliances from "../PropertyAppliances";
+import PropertyUtilities from "../PropertyUtilities";
+import PropertyImages from "../PropertyImages";
+import ConfirmDialog2 from "../ConfirmDialog2";
 import AppContext from "../../AppContext";
+import Edit from "../../icons/Edit.svg";
+import ArrowDown from "../../icons/ArrowDown.svg";
 import {
   pillButton,
   squareForm,
@@ -14,14 +21,6 @@ import {
   mediumBold,
 } from "../../utils/styles";
 import { post, put } from "../../utils/api";
-import Heart from "../../icons/Heart.svg";
-import Edit from "../../icons/Edit.svg";
-import Checkbox from "../Checkbox";
-import PropertyAppliances from "../PropertyAppliances";
-import PropertyUtilities from "../PropertyUtilities";
-import PropertyImages from "../PropertyImages";
-import ArrowDown from "../../icons/ArrowDown.svg";
-import ConfirmDialog2 from "../ConfirmDialog2";
 
 function OwnerPropertyForm(props) {
   const { userData } = useContext(AppContext);
@@ -132,6 +131,7 @@ function OwnerPropertyForm(props) {
   const [availableToRent, setAvailableToRent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
   const { property, edit, setEdit, hideEdit } = props;
 
   const onConfirm = () => {
@@ -457,6 +457,7 @@ function OwnerPropertyForm(props) {
       console.log(newProperty[key]);
     }
     console.log(files);
+    setShowSpinner(true);
     if (property) {
       newProperty.owner_id = property.owner_id;
       newProperty.manager_id = property.manager_id;
@@ -502,6 +503,7 @@ function OwnerPropertyForm(props) {
       }
       const response = await post("/properties", newProperty, null, files);
     }
+    setShowSpinner(false);
     props.onSubmit();
   };
 
@@ -969,6 +971,13 @@ function OwnerPropertyForm(props) {
           >
             <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
           <div className="text-center my-5">
             <Button
               variant="outline-primary"

@@ -1,13 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Form,
-  Card,
-  Stack,
-} from "react-bootstrap";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Table,
@@ -43,8 +35,8 @@ import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import SortDown from "../../icons/Sort-down.svg";
 import SortLeft from "../../icons/Sort-left.svg";
-import ArrowLeft from "../../icons/Arrow-Left.svg";
-import ArrowRight from "../../icons/Arrow-Right.svg";
+import PropertyIcon from "../../icons/PropertyIcon.svg";
+import RepairImg from "../../icons/RepairImg.svg";
 import { get, put } from "../../utils/api";
 import {
   squareForm,
@@ -94,11 +86,11 @@ function OwnerPropertyView(props) {
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 4,
+      items: 2,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 4,
+      items: 1,
     },
   };
   function groupArr(data, n) {
@@ -329,21 +321,6 @@ function OwnerPropertyView(props) {
       ? setShowCreateRevenue(false)
       : navigate("../owner");
     // navigate("../owner");
-  };
-
-  const nextImg = () => {
-    if (currentImg === JSON.parse(property.images).length - 1) {
-      setCurrentImg(0);
-    } else {
-      setCurrentImg(currentImg + 1);
-    }
-  };
-  const previousImg = () => {
-    if (currentImg === 0) {
-      setCurrentImg(JSON.parse(property.images).length - 1);
-    } else {
-      setCurrentImg(currentImg - 1);
-    }
   };
 
   useEffect(() => {
@@ -946,53 +923,23 @@ function OwnerPropertyView(props) {
                 />
               ) : (
                 <div>
-                  {/* <Row className="m-3">
+                  <Row
+                    className=" d-flex align-items-center justify-content-center m-3"
+                    style={{
+                      width: "calc(100vw - 13rem)",
+                      position: "relative",
+                    }}
+                  >
                     {imagesProperty.length > 0 ? (
                       <Carousel
-                        key={Date.now()}
-                        className="d-flex justify-content-center"
-                        controls={showControls}
-                        indicators={showControls}
+                        responsive={responsive}
+                        infinite={true}
+                        arrows={true}
+                        className=" d-flex align-items-center justify-content-center"
                       >
-                        {groupArr(imagesProperty, 4).map((imagesGroup) => {
+                        {imagesProperty.map((imagesGroup) => {
                           return (
-                            <Carousel.Item key={Date.now()}>
-                              <Container className="d-flex flex-row justify-content-center align-items-center">
-                                {imagesGroup.map((c) => {
-                                  return (
-                                    <Grid
-                                      item
-                                      justifyContent="center"
-                                      alignItems="center"
-                                    >
-                                      <img
-                                        key={Date.now()}
-                                        src={`${c}?${Date.now()}`}
-                                        style={{
-                                          width: "200px",
-                                          height: "200px",
-                                          objectFit: "cover",
-                                          margin: "1rem",
-                                          padding: "1rem",
-                                        }}
-                                      />
-                                    </Grid>
-                                  );
-                                })}
-                              </Container>
-                            </Carousel.Item>
-                          );
-                        })}
-                      </Carousel>
-                    ) : (
-                      ""
-                    )}
-                  </Row> */}
-                  {/* <Row>
-                    {imagesProperty.length > 0
-                      ? imagesProperty.map((imagesGroup) => {
-                          return (
-                            <Carousel key={Date.now()} responsive={responsive}>
+                            <div className="d-flex align-items-center justify-content-center">
                               <img
                                 key={Date.now()}
                                 src={`${imagesGroup}?${Date.now()}`}
@@ -1000,29 +947,9 @@ function OwnerPropertyView(props) {
                                   width: "200px",
                                   height: "200px",
                                   objectFit: "cover",
-                                  margin: "1rem",
-                                  padding: "1rem",
                                 }}
                               />
-                            </Carousel>
-                          );
-                        })
-                      : ""}
-                  </Row> */}
-                  <Row className=" m-3">
-                    {imagesProperty.length > 0 ? (
-                      <Carousel responsive={responsive}>
-                        {imagesProperty.map((imagesGroup) => {
-                          return (
-                            <img
-                              key={Date.now()}
-                              src={`${imagesGroup}?${Date.now()}`}
-                              style={{
-                                width: "200px",
-                                height: "200px",
-                                objectFit: "cover",
-                              }}
-                            />
+                            </div>
                           );
                         })}
                       </Carousel>
@@ -4367,7 +4294,16 @@ function OwnerPropertyView(props) {
                                   }}
                                 />
                               ) : (
-                                ""
+                                <img
+                                  src={PropertyIcon}
+                                  alt="Property"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
                               )}
                             </TableCell>
                             <TableCell
@@ -4555,18 +4491,7 @@ function OwnerPropertyView(props) {
                                     {JSON.parse(request.images).length > 0 ? (
                                       <img
                                         src={JSON.parse(request.images)[0]}
-                                        onClick={() =>
-                                          navigate(
-                                            `/owner-repairs/${request.maintenance_request_uid}`,
-                                            {
-                                              state: {
-                                                repair: request,
-                                                property: request.address,
-                                              },
-                                            }
-                                          )
-                                        }
-                                        alt="Property"
+                                        alt="Repair"
                                         style={{
                                           borderRadius: "4px",
                                           objectFit: "cover",
@@ -4575,7 +4500,16 @@ function OwnerPropertyView(props) {
                                         }}
                                       />
                                     ) : (
-                                      ""
+                                      <img
+                                        src={RepairImg}
+                                        alt="Repair"
+                                        style={{
+                                          borderRadius: "4px",
+                                          objectFit: "cover",
+                                          width: "100px",
+                                          height: "100px",
+                                        }}
+                                      />
                                     )}
                                   </TableCell>
 
@@ -4789,17 +4723,16 @@ function OwnerPropertyView(props) {
                   {Object.keys(property.managerInfo).length !== 0 ? (
                     <div>
                       <Row className="m-3">
-                        <Col>
-                          <h3>Property Management Agreement</h3>
-                        </Col>
-                        <Col xs={2}></Col>
-                      </Row>
-
-                      <Row className="m-3">
                         {property.management_status === "ACCEPTED" ||
                         property.management_status === "OWNER END EARLY" ||
                         property.management_status === "PM END EARLY" ? (
                           <div>
+                            <Row>
+                              <Col>
+                                <h3>Property Management Agreement</h3>
+                              </Col>
+                              <Col xs={2}></Col>
+                            </Row>
                             <Table
                               classes={{ root: classes.customTable }}
                               size="small"
@@ -4882,70 +4815,79 @@ function OwnerPropertyView(props) {
                         ) : (
                           ""
                         )}
-                        <Row className="mt-1">
-                          <h5>Property Manager Documents</h5>
-                        </Row>
-                        <div>
-                          <Table
-                            classes={{ root: classes.customTable }}
-                            size="small"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>Document Name</TableCell>
-                                <TableCell></TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {contracts.map((contract, i) =>
-                                contract.business_uid ===
-                                property.managerInfo.manager_id
-                                  ? JSON.parse(contract.documents).length === 0
-                                    ? ""
-                                    : JSON.parse(contract.documents).map(
-                                        (file) => {
-                                          return (
-                                            <TableRow>
-                                              <TableCell>
-                                                {file.description}
-                                              </TableCell>
-                                              <TableCell>
-                                                <a
-                                                  href={file.link}
-                                                  target="_blank"
-                                                >
-                                                  <img
-                                                    src={File}
-                                                    style={{
-                                                      width: "15px",
-                                                      height: "15px",
-                                                    }}
-                                                  />
-                                                </a>
-                                              </TableCell>
-                                            </TableRow>
-                                          );
-                                        }
-                                      )
-                                  : ""
-                              )}
-                            </TableBody>
-                          </Table>
-                        </div>
+                        {property.management_status === "ACCEPTED" ||
+                        property.management_status === "OWNER END EARLY" ||
+                        property.management_status === "PM END EARLY" ? (
+                          <div>
+                            <Row className="mt-1">
+                              <h5>Property Manager Documents</h5>
+                            </Row>
+                            <div>
+                              <Table
+                                classes={{ root: classes.customTable }}
+                                size="small"
+                              >
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Document Name</TableCell>
+                                    <TableCell></TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {contracts.map((contract, i) =>
+                                    contract.business_uid ===
+                                    property.managerInfo.manager_id
+                                      ? JSON.parse(contract.documents)
+                                          .length === 0
+                                        ? ""
+                                        : JSON.parse(contract.documents).map(
+                                            (file) => {
+                                              return (
+                                                <TableRow>
+                                                  <TableCell>
+                                                    {file.description}
+                                                  </TableCell>
+                                                  <TableCell>
+                                                    <a
+                                                      href={file.link}
+                                                      target="_blank"
+                                                    >
+                                                      <img
+                                                        src={File}
+                                                        style={{
+                                                          width: "15px",
+                                                          height: "15px",
+                                                        }}
+                                                      />
+                                                    </a>
+                                                  </TableCell>
+                                                </TableRow>
+                                              );
+                                            }
+                                          )
+                                      : ""
+                                  )}
+                                </TableBody>
+                              </Table>
+                            </div>
 
-                        <Row className="mt-1">
-                          <h5>Property Manager Fee Details</h5>
-                        </Row>
-                        {contracts.map((contract, i) =>
-                          contract.business_uid ===
-                          property.managerInfo.manager_id ? (
-                            <ManagerFees
-                              feeState={JSON.parse(contract.contract_fees)}
-                              setFeeState={setFeeState}
-                            />
-                          ) : (
-                            ""
-                          )
+                            <Row className="mt-1">
+                              <h5>Property Manager Fee Details</h5>
+                            </Row>
+                            {contracts.map((contract, i) =>
+                              contract.business_uid ===
+                              property.managerInfo.manager_id ? (
+                                <ManagerFees
+                                  feeState={JSON.parse(contract.contract_fees)}
+                                  setFeeState={setFeeState}
+                                />
+                              ) : (
+                                ""
+                              )
+                            )}
+                          </div>
+                        ) : (
+                          ""
                         )}
 
                         {contracts.map((contract, i) =>
@@ -5103,7 +5045,8 @@ function OwnerPropertyView(props) {
                   <Row className="m-3">
                     <Col>
                       <h3>
-                        {Object.keys(property.managerInfo).length == 0
+                        {Object.keys(property.managerInfo).length == 0 ||
+                        property.management_status === "END EARLY"
                           ? "Select a Property Manager"
                           : "Change Property Manager"}
                       </h3>
@@ -5130,7 +5073,7 @@ function OwnerPropertyView(props) {
                           ""
                         ) : p.management_status === "FORWARDED" ? (
                           <Row className="p-0 m-0">
-                            <Row className="d-flex justify-content-between mt-3">
+                            <Row className="d-flex justify-content-between mt-3 mx-2">
                               <Col
                                 xs={8}
                                 className="d-flex justify-content-start flex-column"

@@ -19,6 +19,7 @@ import SideBar from "./SideBar";
 import OwnerRepairRequest from "./OwnerRepairRequest";
 import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
+import RepairImg from "../../icons/RepairImg.svg";
 import { get } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
@@ -466,7 +467,16 @@ function OwnerRepairList(props) {
                                   }}
                                 />
                               ) : (
-                                ""
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
                               )}
                             </TableCell>
                             <TableCell
