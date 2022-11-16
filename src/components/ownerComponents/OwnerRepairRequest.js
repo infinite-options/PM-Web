@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
+import RepairImages from "../RepairImages";
 import HighPriority from "../../icons/highPriority.svg";
 import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
-import RepairImages from "../RepairImages";
 import { get, post } from "../../utils/api";
-import ArrowDown from "../../icons/ArrowDown.svg";
 import {
   headings,
   formLabel,
@@ -41,9 +41,8 @@ function OwnerRepairRequest(props) {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
   const [selectedProperty, setSelectedProperty] = useState(null);
-
+  const [showSpinner, setShowSpinner] = useState(false);
   const submitForm = async (sp) => {
     if (title === "" || description === "" || priority === "") {
       setErrorMessage("Please fill out all fields");
@@ -71,8 +70,11 @@ function OwnerRepairRequest(props) {
     }
 
     console.log(newRequest);
+
+    setShowSpinner(true);
     await post("/maintenanceRequests", newRequest, null, files);
 
+    setShowSpinner(false);
     props.onSubmit();
   };
 
@@ -254,6 +256,13 @@ function OwnerRepairRequest(props) {
               >
                 <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
               </div>
+              {showSpinner ? (
+                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                  <ReactBootStrap.Spinner animation="border" role="status" />
+                </div>
+              ) : (
+                ""
+              )}
               <Row
                 style={{
                   display: "text",

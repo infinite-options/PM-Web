@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Landing_logo from "../icons/Landing_logo.png";
 import { Link } from "react-router-dom";
-import MenuIcon from "../icons/MenuIcon.svg";
 import AppContext from "../AppContext";
 import Logout from "../components/Logout";
+import Landing_logo from "../icons/Landing_logo.png";
+import MenuIcon from "../icons/MenuIcon.svg";
 import "./navbar.css";
 function LandingNavbar() {
   const [open, setOpen] = useState(false);

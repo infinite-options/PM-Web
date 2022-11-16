@@ -19,15 +19,16 @@ import SideBar from "../components/ownerComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
 import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
-
 import OwnerPropertyView from "../components/ownerComponents/OwnerPropertyView";
 import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
 import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
 import AddIcon from "../icons/AddIcon.svg";
+import PropertyIcon from "../icons/PropertyIcon.svg";
+import RepairImg from "../icons/RepairImg.svg";
 import { get, put } from "../utils/api";
-import { green, red } from "../utils/styles";
+import { green, red, blue, xSmall } from "../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -107,7 +108,35 @@ export default function OwnerDashboard2() {
       return;
     }
 
-    setOwnerData(response.result);
+    let pu = response.result;
+    pu.forEach((property) => {
+      const forwarded = property.property_manager.filter(
+        (item) => item.management_status === "FORWARDED"
+      );
+      const sent = property.property_manager.filter(
+        (item) => item.management_status === "SENT"
+      );
+      const refused = property.property_manager.filter(
+        (item) => item.management_status === "REFUSED"
+      );
+
+      const pmendearly = property.property_manager.filter(
+        (item) => item.management_status === "PM END EARLY"
+      );
+      const ownerendearly = property.property_manager.filter(
+        (item) => item.management_status === "OWNER END EARLY"
+      );
+      property.management = {
+        forwarded: forwarded.length,
+        sent: sent.length,
+        refused: refused.length,
+        pmendearly: pmendearly.length,
+        ownerendearly: ownerendearly.length,
+      };
+    });
+    console.log(pu);
+    setOwnerData(pu);
+
     let requests = [];
     response.result.forEach((res) => {
       if (res.maintenanceRequests.length > 0) {
@@ -124,6 +153,9 @@ export default function OwnerDashboard2() {
     console.log("in use effect");
     fetchOwnerDashboard();
   }, [access_token]);
+
+  useEffect(() => {});
+
   const addProperty = () => {
     fetchOwnerDashboard();
     setStage("LIST");
@@ -3603,7 +3635,16 @@ export default function OwnerDashboard2() {
                                 }}
                               />
                             ) : (
-                              ""
+                              <img
+                                src={PropertyIcon}
+                                alt="Property"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
                             )}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
@@ -3639,10 +3680,68 @@ export default function OwnerDashboard2() {
                             {property.num_beds + "/" + property.num_baths}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {property.property_manager.length !== 0
+                            {property.property_manager.length !== 0 &&
+                            (property.management_status == "ACCEPTED" ||
+                              property.management_status == "PM END EARLY" ||
+                              property.management_status == "OWNER END EARLY")
                               ? property.property_manager[0]
                                   .manager_business_name
                               : "None"}
+                            <div className="d-flex align-items-center flex-column">
+                              {property.management.forwarded > 0 ? (
+                                <div
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {property.management.forwarded} Property
+                                  Manager Selected
+                                </div>
+                              ) : (
+                                ""
+                              )}
+
+                              {property.management.sent > 0 ? (
+                                <div
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {property.management.sent} Contract in Review
+                                </div>
+                              ) : (
+                                ""
+                              )}
+
+                              {property.management.refused > 0 ? (
+                                <div
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {property.management.refused} PM declined
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                              {property.management.pmendearly > 0 ? (
+                                <div
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  PM requested end early
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                              {property.management.ownerendearly > 0 ? (
+                                <div
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  Owner requested early
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                            </div>
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {property.rentalInfo.length !== 0
@@ -3714,18 +3813,7 @@ export default function OwnerDashboard2() {
                                 src={`${
                                   JSON.parse(request.images)[0]
                                 }?${Date.now()}`}
-                                onClick={() =>
-                                  navigate(
-                                    `/owner-repairs/${request.maintenance_request_uid}`,
-                                    {
-                                      state: {
-                                        repair: request,
-                                        property: request.address,
-                                      },
-                                    }
-                                  )
-                                }
-                                alt="Property"
+                                alt="RepairImg"
                                 style={{
                                   borderRadius: "4px",
                                   objectFit: "cover",
@@ -3734,7 +3822,16 @@ export default function OwnerDashboard2() {
                                 }}
                               />
                             ) : (
-                              ""
+                              <img
+                                src={RepairImg}
+                                alt="Repair"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
                             )}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">

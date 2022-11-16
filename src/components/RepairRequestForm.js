@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useParams } from "react-router";
 import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
 import Header from "../components/Header";
 import SideBar from "../components/ownerComponents/SideBar";
 import RepairImages from "./RepairImages";
@@ -42,6 +43,7 @@ function RepairRequest(props) {
   const [priority, setPriority] = useState("");
   const [issueType, setIssueType] = useState("Plumbing");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const submitForm = async () => {
     if (title === "" || description === "" || priority === "") {
@@ -68,13 +70,16 @@ function RepairRequest(props) {
       }
     }
     console.log(files);
+    setShowSpinner(true);
     await post("/maintenanceRequests", newRequest, null, files);
     // navigate(`/${property_uid}/repairStatus`);
+    setShowSpinner(false);
     navigate(`/propertyDetails/${property_uid}`, {
       state: {
         property_uid: property_uid,
       },
     });
+
     //props.onSubmit();
   };
 
@@ -251,6 +256,13 @@ function RepairRequest(props) {
               >
                 <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
               </div>
+              {showSpinner ? (
+                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                  <ReactBootStrap.Spinner animation="border" role="status" />
+                </div>
+              ) : (
+                ""
+              )}
               <Row
                 style={{
                   display: "text",
