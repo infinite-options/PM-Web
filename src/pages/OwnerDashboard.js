@@ -52,8 +52,11 @@ export default function OwnerDashboard2() {
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
+
+  const [orderMaintenance, setOrderMaintenance] = useState("asc");
+  const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
   const [monthlyCashFlow, setMonthlyCashFlow] = useState(false);
   const [yearlyCashFlow, setYearlyCashFlow] = useState(false);
 
@@ -265,6 +268,40 @@ export default function OwnerDashboard2() {
     rowCount: PropTypes.number.isRequired,
   };
 
+  const handleRequestSortMaintenance = (event, property) => {
+    const isAsc = orderMaintenanceBy === property && orderMaintenance === "asc";
+    setOrderMaintenance(isAsc ? "desc" : "asc");
+    setOrderMaintenanceBy(property);
+  };
+
+  function descendingComparatorMaintenance(a, b, orderMaintenanceBy) {
+    if (b[orderMaintenanceBy] < a[orderMaintenanceBy]) {
+      return -1;
+    }
+    if (b[orderMaintenanceBy] > a[orderMaintenanceBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparatorMaintenance(orderMaintenance, orderMaintenanceBy) {
+    return orderMaintenance === "desc"
+      ? (a, b) => descendingComparatorMaintenance(a, b, orderMaintenanceBy)
+      : (a, b) => -descendingComparatorMaintenance(a, b, orderMaintenanceBy);
+  }
+
+  function stableSortMaintenance(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const orderMaintenance = comparator(a[0], b[0]);
+      if (orderMaintenance !== 0) {
+        return orderMaintenance;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
   const maintenancesHeadCell = [
     {
       id: "images",
@@ -325,7 +362,7 @@ export default function OwnerDashboard2() {
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
-    const { order, orderBy, onRequestSort } = props;
+    const { orderMaintenance, orderMaintenanceBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
@@ -338,18 +375,22 @@ export default function OwnerDashboard2() {
               key={headCell.id}
               align="center"
               size="small"
-              sortDirection={orderBy === headCell.id ? order : false}
+              sortDirection={
+                orderMaintenanceBy === headCell.id ? orderMaintenance : false
+              }
             >
               <TableSortLabel
                 align="center"
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
+                active={orderMaintenanceBy === headCell.id}
+                direction={
+                  orderMaintenanceBy === headCell.id ? orderMaintenance : "asc"
+                }
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
-                {orderBy === headCell.id ? (
+                {orderMaintenanceBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
+                    {orderMaintenance === "desc"
                       ? "sorted descending"
                       : "sorted ascending"}
                   </Box>
@@ -366,8 +407,8 @@ export default function OwnerDashboard2() {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-    orderBy: PropTypes.string.isRequired,
+    orderMaintenance: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderMaintenanceBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
 
@@ -3550,7 +3591,6 @@ export default function OwnerDashboard2() {
                           <TableCell padding="none" size="small" align="center">
                             {JSON.parse(property.images).length > 0 ? (
                               <img
-                                key={Date.now()}
                                 src={`${
                                   JSON.parse(property.images)[0]
                                 }?${Date.now()}`}
@@ -3637,15 +3677,18 @@ export default function OwnerDashboard2() {
               <Row className="m-3">
                 <Table classes={{ root: classes.customTable }} size="small">
                   <EnhancedTableHeadMaintenance
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
+                    orderMaintenance={orderMaintenance}
+                    orderMaintenanceBy={orderMaintenanceBy}
+                    onRequestSort={handleRequestSortMaintenance}
                     rowCount={maintenanceRequests.length}
                   />{" "}
                   <TableBody>
-                    {stableSort(
+                    {stableSortMaintenance(
                       maintenanceRequests,
-                      getComparator(order, orderBy)
+                      getComparatorMaintenance(
+                        orderMaintenance,
+                        orderMaintenanceBy
+                      )
                     ).map((request, index) => {
                       return (
                         <TableRow
@@ -3668,7 +3711,9 @@ export default function OwnerDashboard2() {
                           <TableCell padding="none" size="small" align="center">
                             {JSON.parse(request.images).length > 0 ? (
                               <img
-                                src={JSON.parse(request.images)[0]}
+                                src={`${
+                                  JSON.parse(request.images)[0]
+                                }?${Date.now()}`}
                                 onClick={() =>
                                   navigate(
                                     `/owner-repairs/${request.maintenance_request_uid}`,
