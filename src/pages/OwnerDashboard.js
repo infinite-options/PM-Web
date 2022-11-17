@@ -221,6 +221,12 @@ export default function OwnerDashboard2() {
       numeric: false,
       label: "Tenant",
     },
+
+    {
+      id: "rent_paid",
+      numeric: true,
+      label: "Rent Status",
+    },
     {
       id: "listed_rent",
       numeric: true,
@@ -3660,6 +3666,12 @@ export default function OwnerDashboard2() {
                           <TableCell padding="none" size="small" align="center">
                             {property.rentalInfo.length !== 0
                               ? property.rentalInfo[0].tenant_first_name
+                              : "None"}
+                          </TableCell>
+
+                          <TableCell padding="none" size="small" align="center">
+                            {property.rent_paid !== ""
+                              ? property.rent_paid
                               : "None"}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
