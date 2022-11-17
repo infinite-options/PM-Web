@@ -11,6 +11,7 @@ import {
   Image,
   Form,
 } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import moment from "moment";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -65,6 +66,7 @@ function DetailRepairStatus(props) {
   const [dateString1, setDateString1] = useState("");
   const [showAccept, setShowAccept] = useState(false);
   const [scheduledTime, setScheduledTime] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
   const [timeArr, setTimeArr] = useState([
     "9:00",
     "10:00",
@@ -346,8 +348,10 @@ function DetailRepairStatus(props) {
     }
 
     console.log(newRepair);
+    setShowSpinner(true);
     const res = await put("/maintenanceRequests", newRepair, null, files);
     console.log(res);
+    setShowSpinner(false);
     reload();
     // setIsEditing(false);
   };
@@ -667,7 +671,13 @@ function DetailRepairStatus(props) {
           <div style={{ ...subHeading, marginLeft: "20px" }}>{pmNotes}</div>
         </div>
       ) : null}
-
+      {showSpinner ? (
+        <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+          <ReactBootStrap.Spinner animation="border" role="status" />
+        </div>
+      ) : (
+        ""
+      )}
       {isEditing ? (
         <button
           style={{ ...editButton, margin: "5% 25%" }}

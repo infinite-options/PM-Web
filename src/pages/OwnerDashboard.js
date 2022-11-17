@@ -233,7 +233,7 @@ export default function OwnerDashboard2() {
       label: "Rent",
     },
     {
-      id: "listed_rent",
+      id: "per_sqft",
       numeric: true,
       label: " $/Sq Ft",
     },
@@ -3666,23 +3666,19 @@ export default function OwnerDashboard2() {
                           <TableCell padding="none" size="small" align="center">
                             {property.rentalInfo.length !== 0
                               ? property.rentalInfo[0].tenant_first_name
-                              : "None"}
+                              : "Not Rented"}
                           </TableCell>
 
                           <TableCell padding="none" size="small" align="center">
                             {property.rent_paid !== ""
                               ? property.rent_paid
-                              : "None"}
+                              : "Not Rented"}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {"$" + property.listed_rent}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            $
-                            {(
-                              parseInt(property.listed_rent) /
-                              parseInt(property.area)
-                            ).toFixed(2)}
+                            ${property.per_sqft}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {property.property_type}
@@ -3748,7 +3744,7 @@ export default function OwnerDashboard2() {
                                   style={{ ...blue, ...xSmall }}
                                   className="mb-0"
                                 >
-                                  Owner requested early
+                                  Owner requested end early
                                 </div>
                               ) : (
                                 ""

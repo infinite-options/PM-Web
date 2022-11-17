@@ -530,7 +530,7 @@ function OwnerPropertyView(props) {
       label: "Rent",
     },
     {
-      id: "listed_rent",
+      id: "per_sqft",
       numeric: true,
       label: " $/Sq Ft",
     },
@@ -4383,11 +4383,7 @@ function OwnerPropertyView(props) {
                                 setEditProperty(true);
                               }}
                             >
-                              $
-                              {(
-                                parseInt(property.listed_rent) /
-                                parseInt(property.area)
-                              ).toFixed(2)}
+                              ${property.per_sqft}
                             </TableCell>
 
                             <TableCell

@@ -1,13 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
-import Checkbox from "../Checkbox";
+import * as ReactBootStrap from "react-bootstrap";
 import Carousel from "react-multi-carousel";
 import { makeStyles } from "@material-ui/core/styles";
-import HighPriority from "../../icons/highPriority.svg";
-import MediumPriority from "../../icons/mediumPriority.svg";
-import LowPriority from "../../icons/lowPriority.svg";
+import Checkbox from "../Checkbox";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import RepairImages from "../RepairImages";
@@ -15,6 +12,9 @@ import SideBar from "./SideBar";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import RepairImg from "../../icons/RepairImg.svg";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
 import {
   headings,
   editButton,
@@ -74,6 +74,7 @@ function OwmerRepairDetails(props) {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [showSpinner, setShowSpinner] = useState(false);
   const repair = location.state.repair;
 
   const fetchBusinesses = async () => {
@@ -152,10 +153,10 @@ function OwmerRepairDetails(props) {
         newRepair[key] = file.image;
       }
     }
-
+    setShowSpinner(true);
     console.log(newRepair);
     const res = await put("/maintenanceRequests", newRepair, null, files);
-
+    setShowSpinner(false);
     fetchBusinesses();
     setIsEditing(false);
   };
@@ -413,6 +414,13 @@ function OwmerRepairDetails(props) {
                     </Row>
                   </Col>
                 </Row>
+                {showSpinner ? (
+                  <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                    <ReactBootStrap.Spinner animation="border" role="status" />
+                  </div>
+                ) : (
+                  ""
+                )}
                 {isEditing ? (
                   <button
                     style={{ ...editButton, margin: "5% 25%" }}
