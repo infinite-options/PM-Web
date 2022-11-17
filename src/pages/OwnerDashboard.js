@@ -3959,7 +3959,7 @@ export default function OwnerDashboard2() {
               <Col>
                 <h1>Add a new Property</h1>
               </Col>
-              <Col>
+              <Col xs={2}>
                 <img
                   src={AddIcon}
                   onClick={() => setStage("NEW")}
@@ -3972,9 +3972,9 @@ export default function OwnerDashboard2() {
                 />
               </Col>
             </Row>
-          </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <OwnerFooter />
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <OwnerFooter />
+            </div>
           </div>
         </div>
       ) : (
