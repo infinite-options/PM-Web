@@ -3930,12 +3930,7 @@ export default function OwnerDashboard2() {
           >
             <SideBar />
           </div>
-          <div
-            style={{
-              width: "calc(100vw - 13rem)",
-              position: "relative",
-            }}
-          >
+          <div className="w-100 mb-5">
             <OwnerPropertyView property_uid={ownerData[0].property_uid} />
           </div>
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
@@ -3954,12 +3949,7 @@ export default function OwnerDashboard2() {
           >
             <SideBar />
           </div>
-          <div
-            style={{
-              width: "calc(100vw - 13rem)",
-              position: "relative",
-            }}
-          >
+          <div className="w-100 mb-5">
             <Header title="Owner Dashboard" />
             <Row className="m-3">
               <h1>Welcome to Manifest My Space</h1>
@@ -4021,7 +4011,7 @@ export default function OwnerDashboard2() {
         >
           <SideBar />
         </div>
-        <div className="w-100">
+        <div className="w-100 mb-5">
           <Header
             title="Add a new Property"
             leftText="< Back"
@@ -4051,7 +4041,7 @@ export default function OwnerDashboard2() {
         >
           <SideBar />
         </div>
-        <div className="w-100">
+        <div className="w-100 mb-5">
           <Header
             title="Add Expense"
             leftText="< Back"
@@ -4081,7 +4071,7 @@ export default function OwnerDashboard2() {
         >
           <SideBar />
         </div>
-        <div className="w-100">
+        <div className="w-100 mb-5">
           <Header
             title="Add Repair Request"
             leftText="< Back"
