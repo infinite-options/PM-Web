@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import Header from "../Header";
-import OwnerFooter from "../OwnerFooter";
+import OwnerFooter from "./OwnerFooter";
 import { get } from "../../utils/api";
 import AppContext from "../../AppContext";
 import moment from "moment";

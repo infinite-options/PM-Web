@@ -22,6 +22,7 @@ import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
 import OwnerPropertyView from "../components/ownerComponents/OwnerPropertyView";
 import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
 import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
+import OwnerFooter from "../components/ownerComponents/OwnerFooter";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
 import AddIcon from "../icons/AddIcon.svg";
@@ -89,6 +90,20 @@ export default function OwnerDashboard2() {
   const [yearlyInsurance, setYearlyInsurance] = useState(false);
   const [yearlyUtilityExpense, setYearlyUtilityExpense] = useState(false);
 
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   const fetchOwnerDashboard = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
       navigate("/");
@@ -233,7 +248,7 @@ export default function OwnerDashboard2() {
       label: "Rent",
     },
     {
-      id: "listed_rent",
+      id: "per_sqft",
       numeric: true,
       label: " $/Sq Ft",
     },
@@ -627,6 +642,7 @@ export default function OwnerDashboard2() {
       {!isLoading && ownerData.length > 1 ? (
         <div className="flex-1">
           <div
+            hidden={!responsive.showSidebar}
             style={{
               backgroundColor: "#229ebc",
               width: "11rem",
@@ -635,12 +651,7 @@ export default function OwnerDashboard2() {
           >
             <SideBar />
           </div>
-          <div
-            style={{
-              width: "calc(100vw - 13rem)",
-              position: "relative",
-            }}
-          >
+          <div className="w-100 mb-5">
             <Header title="Owner Dashboard" />
             <Row className="m-3">
               <Col>
@@ -654,14 +665,18 @@ export default function OwnerDashboard2() {
                     width: "30px",
                     height: "30px",
                     float: "right",
-                    marginRight: "5rem",
+                    marginRight: "3rem",
                   }}
                 />
-                {/* <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1> */}
+                {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
               </Col>
             </Row>
             <Row className="m-3">
-              <Table classes={{ root: classes.customTable }} size="small">
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
                 <TableHead>
                   <TableCell></TableCell>
                   <TableCell align="right">To Date</TableCell>
@@ -3561,14 +3576,14 @@ export default function OwnerDashboard2() {
                     width: "30px",
                     height: "30px",
                     float: "right",
-                    marginRight: "5rem",
+                    marginRight: "3rem",
                   }}
                 />
               </Col>
             </Row>
 
             <Row className="w-100 m-3">
-              <Col> Search by</Col>
+              <Col xs={2}> Search by</Col>
 
               <Col>
                 <input
@@ -3585,8 +3600,12 @@ export default function OwnerDashboard2() {
                 />
               </Col>
             </Row>
-            <Row className="m-3">
-              <Table classes={{ root: classes.customTable }} size="small">
+            <Row className="m-3" style={{ overflow: "scroll" }}>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
                 <EnhancedTableHeadProperties
                   order={order}
                   orderBy={orderBy}
@@ -3666,23 +3685,19 @@ export default function OwnerDashboard2() {
                           <TableCell padding="none" size="small" align="center">
                             {property.rentalInfo.length !== 0
                               ? property.rentalInfo[0].tenant_first_name
-                              : "None"}
+                              : "Not Rented"}
                           </TableCell>
 
                           <TableCell padding="none" size="small" align="center">
                             {property.rent_paid !== ""
                               ? property.rent_paid
-                              : "None"}
+                              : "Not Rented"}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {"$" + property.listed_rent}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            $
-                            {(
-                              parseInt(property.listed_rent) /
-                              parseInt(property.area)
-                            ).toFixed(2)}
+                            ${property.per_sqft}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {property.property_type}
@@ -3748,7 +3763,7 @@ export default function OwnerDashboard2() {
                                   style={{ ...blue, ...xSmall }}
                                   className="mb-0"
                                 >
-                                  Owner requested early
+                                  Owner requested end early
                                 </div>
                               ) : (
                                 ""
@@ -3778,15 +3793,19 @@ export default function OwnerDashboard2() {
                     width: "30px",
                     height: "30px",
                     float: "right",
-                    marginRight: "5rem",
+                    marginRight: "3rem",
                   }}
                 />
-                {/* <h1 style={{ float: "right", marginRight: "5rem" }}>+</h1> */}
+                {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
               </Col>
             </Row>
             {maintenanceRequests.length > 0 ? (
-              <Row className="m-3">
-                <Table classes={{ root: classes.customTable }} size="small">
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
                   <EnhancedTableHeadMaintenance
                     orderMaintenance={orderMaintenance}
                     orderMaintenanceBy={orderMaintenanceBy}
@@ -3895,10 +3914,14 @@ export default function OwnerDashboard2() {
               <Row className="m-3">No maintenance requests and repairs</Row>
             )}
           </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       ) : !isLoading && ownerData.length == 1 ? (
         <div className="flex-1">
           <div
+            hidden={!responsive.showSidebar}
             style={{
               backgroundColor: "#229ebc",
               width: "11rem",
@@ -3907,18 +3930,17 @@ export default function OwnerDashboard2() {
           >
             <SideBar />
           </div>
-          <div
-            style={{
-              width: "calc(100vw - 13rem)",
-              position: "relative",
-            }}
-          >
+          <div className="w-100 mb-5">
             <OwnerPropertyView property_uid={ownerData[0].property_uid} />
+          </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
           </div>
         </div>
       ) : !isLoading && ownerData.length == 0 ? (
         <div className="flex-1">
           <div
+            hidden={!responsive.showSidebar}
             style={{
               backgroundColor: "#229ebc",
               width: "11rem",
@@ -3927,12 +3949,7 @@ export default function OwnerDashboard2() {
           >
             <SideBar />
           </div>
-          <div
-            style={{
-              width: "calc(100vw - 13rem)",
-              position: "relative",
-            }}
-          >
+          <div className="w-100 mb-5">
             <Header title="Owner Dashboard" />
             <Row className="m-3">
               <h1>Welcome to Manifest My Space</h1>
@@ -3950,16 +3967,20 @@ export default function OwnerDashboard2() {
                     width: "30px",
                     height: "30px",
                     float: "right",
-                    marginRight: "5rem",
+                    marginRight: "3rem",
                   }}
                 />
               </Col>
             </Row>
           </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       ) : (
         <div className="flex-1">
           <div
+            hidden={!responsive.showSidebar}
             style={{
               backgroundColor: "#229ebc",
               width: "11rem",
@@ -3971,6 +3992,9 @@ export default function OwnerDashboard2() {
           <div className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
           </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       )}
     </div>
@@ -3978,6 +4002,7 @@ export default function OwnerDashboard2() {
     <div className="OwnerDashboard2">
       <div className="flex-1">
         <div
+          hidden={!responsive.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             width: "11rem",
@@ -3986,12 +4011,7 @@ export default function OwnerDashboard2() {
         >
           <SideBar />
         </div>
-        <div
-          style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
-          }}
-        >
+        <div className="w-100 mb-5">
           <Header
             title="Add a new Property"
             leftText="< Back"
@@ -4003,12 +4023,16 @@ export default function OwnerDashboard2() {
             onSubmit={addProperty}
           />
         </div>
+        <div hidden={responsive.showSidebar}>
+          <OwnerFooter />
+        </div>
       </div>
     </div>
   ) : stage === "ADDEXPENSE" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
         <div
+          hidden={!responsive.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             width: "11rem",
@@ -4017,12 +4041,7 @@ export default function OwnerDashboard2() {
         >
           <SideBar />
         </div>
-        <div
-          style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
-          }}
-        >
+        <div className="w-100 mb-5">
           <Header
             title="Add Expense"
             leftText="< Back"
@@ -4034,12 +4053,16 @@ export default function OwnerDashboard2() {
             onSubmit={addProperty}
           />
         </div>
+        <div hidden={responsive.showSidebar}>
+          <OwnerFooter />
+        </div>
       </div>
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerDashboard2">
       <div className="flex-1">
         <div
+          hidden={!responsive.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             width: "11rem",
@@ -4048,12 +4071,7 @@ export default function OwnerDashboard2() {
         >
           <SideBar />
         </div>
-        <div
-          style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
-          }}
-        >
+        <div className="w-100 mb-5">
           <Header
             title="Add Repair Request"
             leftText="< Back"
@@ -4064,6 +4082,9 @@ export default function OwnerDashboard2() {
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
           />
+        </div>
+        <div hidden={responsive.showSidebar}>
+          <OwnerFooter />
         </div>
       </div>
     </div>

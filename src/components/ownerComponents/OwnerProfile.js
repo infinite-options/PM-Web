@@ -5,6 +5,7 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import OwnerPaymentSelection from "../ownerComponents/OwnerPaymentSelection";
 import SideBar from "./SideBar";
+import OwnerFooter from "./OwnerFooter";
 import { squareForm, red, gray, headings } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 function OwnerProfile(props) {
@@ -29,7 +30,20 @@ function OwnerProfile(props) {
     accountNumber: "",
     routingNumber: "",
   });
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
   const loadProfile = (profile) => {
     setProfileInfo(profile);
     setFirstName(profile.owner_first_name);
@@ -115,16 +129,17 @@ function OwnerProfile(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           <Header
             title="Profile"
             leftText={editProfile ? "Cancel" : ""}
@@ -314,6 +329,9 @@ function OwnerProfile(props) {
             setPaymentState={setPaymentState}
             editProfile={editProfile}
           />
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+            <OwnerFooter />
+          </div>
         </div>
       </div>
     </div>

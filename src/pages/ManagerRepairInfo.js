@@ -1,14 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "../components/Checkbox";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
+import HighPriority from "../icons/highPriority.svg";
+import MediumPriority from "../icons/mediumPriority.svg";
+import LowPriority from "../icons/lowPriority.svg";
 import {
   headings,
   pillButton,
@@ -24,7 +26,6 @@ import {
   gray,
   mediumBold,
 } from "../utils/styles";
-import { useParams } from "react-router";
 import { get, post, put } from "../utils/api";
 
 function ManagerRepairInfo(props) {
@@ -48,6 +49,7 @@ function ManagerRepairInfo(props) {
   const [priority, setPriority] = useState("");
   const { mp_id, rr_id } = useParams();
 
+  const [showSpinner, setShowSpinner] = useState(false);
   const repair = location.state.repair;
   const property = location.state.property;
   const fetchBusinesses = async () => {
@@ -195,8 +197,9 @@ function ManagerRepairInfo(props) {
         newRepair[key] = file.image;
       }
     }
-
+    setShowSpinner(true);
     const response = await put("/maintenanceRequests", newRepair, null, files);
+    setShowSpinner(false);
     setMorePictures(false);
     fetchBusinesses();
   };
@@ -465,7 +468,13 @@ function ManagerRepairInfo(props) {
                     as="textarea"
                   />
                 </Form.Group>
-
+                {showSpinner ? (
+                  <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                    <ReactBootStrap.Spinner animation="border" role="status" />
+                  </div>
+                ) : (
+                  ""
+                )}
                 <Row className="pt-1 mb-2">
                   <Col className="d-flex flex-row justify-content-evenly">
                     <Button

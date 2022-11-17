@@ -20,6 +20,7 @@ import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "../Checkbox";
 import Header from "../Header";
 import SideBar from "./SideBar";
+import OwnerFooter from "./OwnerFooter";
 import AppContext from "../../AppContext";
 import StripePayment from "../StripePayment.js";
 import ArrowDown from "../../icons/ArrowDown.svg";
@@ -101,6 +102,21 @@ function OwnerUtilities(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [expenseUnique, setExpenseUnique] = useState("");
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
 
   const submitForm = () => {
     const requestTitle = requestTitleRef.current.value;
@@ -650,16 +666,17 @@ function OwnerUtilities(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           <Header
             title="Utilities"
             leftText={
@@ -705,7 +722,9 @@ function OwnerUtilities(props) {
           />
           {isLoading ? (
             <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
-              <div className="w-100 d-flex flex-column justify-content-center align-items-center"></div>
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                <ReactBootStrap.Spinner animation="border" role="status" />
+              </div>
             </div>
           ) : (
             <div>
@@ -1074,8 +1093,9 @@ function OwnerUtilities(props) {
                         />
                       </Col>
                     </Row>
-                    <Row className="m-3">
+                    <Row className="m-3" style={{ overflow: "scroll" }}>
                       <Table
+                        responsive="md"
                         classes={{ root: classes.customTable }}
                         size="small"
                       >
@@ -1266,8 +1286,9 @@ function OwnerUtilities(props) {
                         />
                       </Col>
                     </Row>
-                    <Row className="m-3">
+                    <Row className="m-3" style={{ overflow: "scroll" }}>
                       <Table
+                        responsive="md"
                         classes={{ root: classes.customTable }}
                         size="small"
                       >
@@ -1429,8 +1450,9 @@ function OwnerUtilities(props) {
                   </div>
                   <div>
                     <Row style={headings}> Maintenance Payments</Row>
-                    <Row className="m-3">
+                    <Row className="m-3" style={{ overflow: "scroll" }}>
                       <Table
+                        responsive="md"
                         classes={{ root: classes.customTable }}
                         size="small"
                       >
@@ -2168,6 +2190,9 @@ function OwnerUtilities(props) {
           ) : (
             ""
           )}
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ import {
   squareForm,
   mediumBold,
 } from "../../utils/styles";
-import OwnerFooter from "../OwnerFooter";
+import OwnerFooter from "./OwnerFooter";
 
 function OwnerPaymentPage(props) {
   const navigate = useNavigate();

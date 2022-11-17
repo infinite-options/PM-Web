@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import SideBar from "./SideBar";
+import OwnerFooter from "./OwnerFooter";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -60,6 +61,21 @@ function OwnerContacts() {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
 
   const fetchContacts = async () => {
     if (access_token === null) {
@@ -238,16 +254,17 @@ function OwnerContacts() {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           <Header title="Contacts" />
           {!isLoading ? (
             <div>
@@ -259,7 +276,7 @@ function OwnerContacts() {
                   <Col></Col>
                 </Row>
               ) : propertyManagers.length > 0 && !addContacts ? (
-                <Row className="m-3">
+                <Row className="w-100 m-3">
                   <Col>
                     <h3>Contacts </h3>
                   </Col>
@@ -277,7 +294,7 @@ function OwnerContacts() {
                   </Col>
                 </Row>
               ) : (
-                <Row className="m-3">
+                <Row className="w-100 m-3">
                   <Col>
                     <h3>Add Contact </h3>
                   </Col>
@@ -297,7 +314,7 @@ function OwnerContacts() {
               )}
 
               {addContacts ? (
-                <Row>
+                <Row className="m-3">
                   <Form.Group className="mx-2 mb-3">
                     <Form.Label as="h6">
                       Contact Name
@@ -377,7 +394,7 @@ function OwnerContacts() {
                   </div>
                 </Row>
               ) : propertyManagers.length > 0 && !addContacts ? (
-                <Row>
+                <Row className="m-3">
                   <Row className="w-100 m-3">
                     <Col xs={2}> Search by</Col>
 
@@ -396,8 +413,12 @@ function OwnerContacts() {
                       />
                     </Col>
                   </Row>
-                  <Row className="m-3">
-                    <Table classes={{ root: classes.customTable }} size="small">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
                       <EnhancedTableHeadContacts
                         order={order}
                         orderBy={orderBy}
@@ -510,6 +531,9 @@ function OwnerContacts() {
             </div>
           )}
         </div>
+      </div>
+      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+        <OwnerFooter />
       </div>
     </div>
   );
