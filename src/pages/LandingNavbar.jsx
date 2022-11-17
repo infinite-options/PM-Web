@@ -74,18 +74,18 @@ function LandingNavbar() {
     MAINTENANCE: "Property Maintenance (Owner)",
     MAINT_EMPLOYEE: "Property Maintenance (Employee)",
   };
-  React.useState(() => {}, []);
+
   const handleClick = () => {
     console.log("here handleclick");
     setOpen(!open);
   };
   const handleClickRoles = () => {
-    console.log("here handleclick");
+    console.log("here handleclickroles");
     setOpenRoles(!openRoles);
   };
 
   const closeMenu = () => {
-    setOpen(false);
+    setOpenRoles(false);
   };
 
   const closeMenuProjects = () => {
@@ -127,21 +127,28 @@ function LandingNavbar() {
   };
   return (
     <div className="d-flex flex-column ">
-      <Container fluid className="w-100">
-        <Row style={{ backgroundColor: "#229ebc", paddingTop: "2rem" }}>
+      <div fluid className="w-100">
+        <div
+          style={{ backgroundColor: "#229ebc", paddingTop: "2rem" }}
+          class="baseNav"
+        >
           <Col xs={4}></Col>
           <Col className="d-flex justify-content-center align-items-center">
             <img
               src={Landing_logo}
               onClick={() => navigate("/")}
-              style={{ height: "100%", maxWidth: "70%", objectFit: "contain" }}
+              style={{
+                height: "100%",
+                maxWidth: "60%",
+                objectFit: "contain",
+              }}
               alt="Manifest logo"
             />
           </Col>
           {user == null ? (
-            <Col xs={4}>
-              <Row
-                className="d-flex justify-content-center align-items-center"
+            <Col className="buttonNav">
+              <div
+                className="buttonNavButtons"
                 style={{
                   padding: "5px",
                 }}
@@ -159,9 +166,9 @@ function LandingNavbar() {
                 >
                   Login
                 </Button>
-              </Row>
-              <Row
-                className="d-flex justify-content-center align-items-center"
+              </div>
+              <div
+                className="buttonNavButtons"
                 style={{
                   padding: "5px",
                 }}
@@ -179,9 +186,9 @@ function LandingNavbar() {
                 >
                   Signup
                 </Button>
-              </Row>
-              <Row
-                className="d-flex justify-content-center align-items-center"
+              </div>
+              <div
+                className="buttonNavButtons"
                 style={{
                   padding: "5px",
                 }}
@@ -199,12 +206,12 @@ function LandingNavbar() {
                 >
                   Modify Existing
                 </Button>
-              </Row>
+              </div>
             </Col>
           ) : (
-            <Col xs={4}>
-              <Row
-                className="d-flex justify-content-center align-items-center"
+            <Col className="buttonNav">
+              <div
+                className="buttonNavButtons"
                 style={{
                   padding: "5px",
                 }}
@@ -222,13 +229,13 @@ function LandingNavbar() {
                 >
                   {user.first_name} {user.last_name}
                 </Button>
-              </Row>
+              </div>
 
-              <Row className="d-flex justify-content-center align-items-center">
+              <div className="buttonNavButtons">
                 <Logout />
-              </Row>
-              <Row
-                className="d-flex justify-content-center align-items-center"
+              </div>
+              <div
+                className="buttonNavButtons"
                 style={{
                   padding: "5px",
                 }}
@@ -246,11 +253,11 @@ function LandingNavbar() {
                 >
                   Modify Existing
                 </Button>
-              </Row>
+              </div>
             </Col>
           )}
-        </Row>
-        <Row>
+        </div>
+        <Row className="w-100 m-0">
           <nav class="headerNav">
             {" "}
             {user == null ? (
@@ -343,7 +350,6 @@ function LandingNavbar() {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                width: "100%",
               }}
             >
               {user != null ? (
@@ -380,6 +386,7 @@ function LandingNavbar() {
                             role === currentRole.toUpperCase()
                               ? roleSelection(role)
                               : roleSelection(role);
+                            closeMenu();
                           }}
                           class="navButtons"
                         >
@@ -425,7 +432,7 @@ function LandingNavbar() {
             </div> */}
           </nav>
         </Row>
-      </Container>
+      </div>
     </div>
   );
 }
