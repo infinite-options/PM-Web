@@ -276,7 +276,7 @@ function OwnerContacts() {
                   <Col></Col>
                 </Row>
               ) : propertyManagers.length > 0 && !addContacts ? (
-                <Row className="m-3">
+                <Row className="w-100 m-3">
                   <Col>
                     <h3>Contacts </h3>
                   </Col>
@@ -294,7 +294,7 @@ function OwnerContacts() {
                   </Col>
                 </Row>
               ) : (
-                <Row className="m-3">
+                <Row className="w-100 m-3">
                   <Col>
                     <h3>Add Contact </h3>
                   </Col>
@@ -394,7 +394,7 @@ function OwnerContacts() {
                   </div>
                 </Row>
               ) : propertyManagers.length > 0 && !addContacts ? (
-                <Row>
+                <Row className="m-3">
                   <Row className="w-100 m-3">
                     <Col xs={2}> Search by</Col>
 
@@ -530,10 +530,10 @@ function OwnerContacts() {
               <ReactBootStrap.Spinner animation="border" role="status" />
             </div>
           )}
-          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-            <OwnerFooter />
-          </div>
         </div>
+      </div>
+      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+        <OwnerFooter />
       </div>
     </div>
   );

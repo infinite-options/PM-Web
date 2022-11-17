@@ -722,7 +722,9 @@ function OwnerUtilities(props) {
           />
           {isLoading ? (
             <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
-              <div className="w-100 d-flex flex-column justify-content-center align-items-center"></div>
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                <ReactBootStrap.Spinner animation="border" role="status" />
+              </div>
             </div>
           ) : (
             <div>
