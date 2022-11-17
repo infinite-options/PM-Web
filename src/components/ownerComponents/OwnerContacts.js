@@ -314,7 +314,7 @@ function OwnerContacts() {
               )}
 
               {addContacts ? (
-                <Row>
+                <Row className="m-3">
                   <Form.Group className="mx-2 mb-3">
                     <Form.Label as="h6">
                       Contact Name
@@ -530,9 +530,9 @@ function OwnerContacts() {
               <ReactBootStrap.Spinner animation="border" role="status" />
             </div>
           )}
-        </div>
-        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-          <OwnerFooter />
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       </div>
     </div>

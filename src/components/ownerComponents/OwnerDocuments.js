@@ -11,15 +11,10 @@ import {
   Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import * as ReactBootStrap from "react-bootstrap";
-import PropTypes from "prop-types";
-import { visuallyHidden } from "@mui/utils";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
-import GreyArrowRight from "../../icons/GreyArrowRight.svg";
-import SortDown from "../../icons/Sort-down.svg";
-import SortLeft from "../../icons/Sort-left.svg";
+import OwnerFooter from "./OwnerFooter";
 import OpenDoc from "../../icons/OpenDocBlack.svg";
 import { mediumBold } from "../../utils/styles";
 import { get } from "../../utils/api";
@@ -42,6 +37,21 @@ function OwnerDocuments(props) {
   const [pastManagerDocuments, setPastManagerDocuments] = useState({});
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
 
   const fetchProfile = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
@@ -103,20 +113,25 @@ function OwnerDocuments(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           <Header title="Documents" />
-          <Row className="m-3">
+          <Row className="m-3" style={{ overflow: "scroll" }}>
             {!isLoading ? (
-              <Table>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
                 <TableHead></TableHead>
                 <TableBody>
                   <TableRow>
@@ -516,6 +531,9 @@ function OwnerDocuments(props) {
               <Row></Row>
             )}
           </Row>
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>{" "}
       </div>
     </div>
