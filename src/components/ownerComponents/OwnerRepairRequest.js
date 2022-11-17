@@ -88,210 +88,196 @@ function OwnerRepairRequest(props) {
     );
 
   return (
-    <div>
-      <div className="flex-1">
-        <div
-          className="w-100"
+    <div className="d-flex flex-column w-100 mx-2 p-2 m-0">
+      <Row style={headings}>
+        <div>New Repair Request</div>
+      </Row>
+      <Form.Group
+        className="p-2"
+        style={{
+          background: "#F3F3F3 0% 0% no-repeat padding-box",
+          borderRadius: "5px",
+        }}
+      >
+        <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+          Property {required}
+        </Form.Label>
+        <Form.Select
+          style={squareForm}
+          value={selectedProperty}
+          onChange={(e) => setSelectedProperty(e.target.value)}
+        >
+          <option key="blankChoice" hidden value>
+            Search Your Properties
+          </option>
+          {properties.map((property, i) => (
+            <option key={i} value={JSON.stringify(property)}>
+              {property.address}
+              {property.unit !== "" ? " " + property.unit : ""},&nbsp;
+              {property.city},&nbsp;{property.state} {property.zip}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+      <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
+          Issue Type
+        </Form.Label>
+        <Form.Select
+          style={squareForm}
+          value={issueType}
+          onChange={(e) => setIssueType(e.target.value)}
+        >
+          <option>Plumbing</option>
+          <option>Landscape</option>
+          <option>Appliances</option>
+          <option>Electrical</option>
+          <option>Other</option>
+        </Form.Select>
+      </Form.Group>
+      <Form>
+        <Form.Group
+          className="mt-3 mb-4 p-2"
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
           }}
         >
-          <Container className="pt-1 mb-4">
-            <Row style={headings}>
-              <div>New Repair Request</div>
-            </Row>
-            <Form.Group
-              className="p-2"
-              style={{
-                background: "#F3F3F3 0% 0% no-repeat padding-box",
-                borderRadius: "5px",
-              }}
-            >
-              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                Property {required}
-              </Form.Label>
-              <Form.Select
-                style={squareForm}
-                value={selectedProperty}
-                onChange={(e) => setSelectedProperty(e.target.value)}
-              >
-                <option key="blankChoice" hidden value>
-                  Search Your Properties
-                </option>
-                {properties.map((property, i) => (
-                  <option key={i} value={JSON.stringify(property)}>
-                    {property.address}
-                    {property.unit !== "" ? " " + property.unit : ""},&nbsp;
-                    {property.city},&nbsp;{property.state} {property.zip}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Issue Type
-              </Form.Label>
-              <Form.Select
-                style={squareForm}
-                value={issueType}
-                onChange={(e) => setIssueType(e.target.value)}
-              >
-                <option>Plumbing</option>
-                <option>Landscape</option>
-                <option>Appliances</option>
-                <option>Electrical</option>
-                <option>Other</option>
-              </Form.Select>
-            </Form.Group>
-            <Form>
-              <Form.Group
-                className="mt-3 mb-4 p-2"
-                style={{
-                  background: "#F3F3F3 0% 0% no-repeat padding-box",
-                  borderRadius: "5px",
-                }}
-              >
-                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                  Title {required}
-                </Form.Label>
-                <Form.Control
-                  style={{ borderRadius: 0 }}
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Enter Title"
-                />
-              </Form.Group>
-              <Form.Group
-                className="mt-3 mb-4 p-2"
-                style={{
-                  background: "#F3F3F3 0% 0% no-repeat padding-box",
-                  borderRadius: "5px",
-                }}
-              >
-                <Form.Label style={formLabel} as="h5" className="mt-2 mb-1">
-                  Tags {required}
-                </Form.Label>
-                <Row
-                  className="mt-2 mb-2"
-                  style={{
-                    display: "text",
-                    flexDirection: "row",
-                    textAlign: "center",
-                  }}
-                >
-                  <Col xs={4}>
-                    <img
-                      src={HighPriority}
-                      onClick={() => setPriority("High")}
-                      className={
-                        priority === "High"
-                          ? `${classes.priorityActive}`
-                          : `${classes.priorityInactive}`
-                      }
-                      //style={{ opacity: "0.5" }}
-                    />
-                  </Col>
-                  <Col xs={4}>
-                    <img
-                      src={MediumPriority}
-                      onClick={() => setPriority("Medium")}
-                      className={
-                        priority === "Medium"
-                          ? `${classes.priorityActive}`
-                          : `${classes.priorityInactive}`
-                      }
-                      //style={{ opacity: "0.5" }}
-                    />
-                  </Col>
-                  <Col xs={4}>
-                    <img
-                      src={LowPriority}
-                      onClick={() => setPriority("Low")}
-                      className={
-                        priority === "Low"
-                          ? `${classes.priorityActive}`
-                          : `${classes.priorityInactive}`
-                      }
-                      //style={{ opacity: "0.5" }}
-                    />
-                  </Col>
-                </Row>
-              </Form.Group>
-              <Form.Group
-                className="mt-3 mb-4 p-2"
-                style={{
-                  background: "#F3F3F3 0% 0% no-repeat padding-box",
-                  borderRadius: "5px",
-                }}
-              >
-                <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                  Description {required}
-                </Form.Label>
-                <Form.Control
-                  style={{ borderRadius: 0 }}
-                  as="textarea"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter Description"
-                />
-              </Form.Group>
-              <Form.Group
-                className="mt-3 mb-4 p-2"
-                style={{
-                  background: "#F3F3F3 0% 0% no-repeat padding-box",
-                  borderRadius: "5px",
-                }}
-              >
-                <Form.Label style={formLabel} as="h5" className="ms-1 mb-3">
-                  Add images
-                </Form.Label>
-                <RepairImages state={imageState} />
-              </Form.Group>
-            </Form>
-            <div className="text-center mt-5">
-              <div
-                className="text-center"
-                style={errorMessage === "" ? hidden : {}}
-              >
-                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
-              </div>
-              {showSpinner ? (
-                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                  <ReactBootStrap.Spinner animation="border" role="status" />
-                </div>
-              ) : (
-                ""
-              )}
-              <Row
-                style={{
-                  display: "text",
-                  flexDirection: "row",
-                  textAlign: "center",
-                }}
-              >
-                <Col>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => submitForm(selectedProperty)}
-                    style={bluePillButton}
-                  >
-                    Send Repair Request
-                  </Button>
-                </Col>
-                <Col xs={4}>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => props.cancel()}
-                    style={pillButton}
-                  >
-                    Cancel
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          </Container>
+          <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+            Title {required}
+          </Form.Label>
+          <Form.Control
+            style={{ borderRadius: 0 }}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter Title"
+          />
+        </Form.Group>
+        <Form.Group
+          className="mt-3 mb-4 p-2"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+          }}
+        >
+          <Form.Label style={formLabel} as="h5" className="mt-2 mb-1">
+            Tags {required}
+          </Form.Label>
+          <Row
+            className="mt-2 mb-2"
+            style={{
+              display: "text",
+              flexDirection: "row",
+              textAlign: "center",
+            }}
+          >
+            <Col xs={4}>
+              <img
+                src={HighPriority}
+                onClick={() => setPriority("High")}
+                className={
+                  priority === "High"
+                    ? `${classes.priorityActive}`
+                    : `${classes.priorityInactive}`
+                }
+                //style={{ opacity: "0.5" }}
+              />
+            </Col>
+            <Col xs={4}>
+              <img
+                src={MediumPriority}
+                onClick={() => setPriority("Medium")}
+                className={
+                  priority === "Medium"
+                    ? `${classes.priorityActive}`
+                    : `${classes.priorityInactive}`
+                }
+                //style={{ opacity: "0.5" }}
+              />
+            </Col>
+            <Col xs={4}>
+              <img
+                src={LowPriority}
+                onClick={() => setPriority("Low")}
+                className={
+                  priority === "Low"
+                    ? `${classes.priorityActive}`
+                    : `${classes.priorityInactive}`
+                }
+                //style={{ opacity: "0.5" }}
+              />
+            </Col>
+          </Row>
+        </Form.Group>
+        <Form.Group
+          className="mt-3 mb-4 p-2"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+          }}
+        >
+          <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+            Description {required}
+          </Form.Label>
+          <Form.Control
+            style={{ borderRadius: 0 }}
+            as="textarea"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter Description"
+          />
+        </Form.Group>
+        <Form.Group
+          className="mt-3 mb-4 p-2"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+          }}
+        >
+          <Form.Label style={formLabel} as="h5" className="ms-1 mb-3">
+            Add images
+          </Form.Label>
+          <RepairImages state={imageState} />
+        </Form.Group>
+      </Form>
+      <div className="text-center mt-5">
+        <div className="text-center" style={errorMessage === "" ? hidden : {}}>
+          <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
         </div>
+        {showSpinner ? (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        ) : (
+          ""
+        )}
+        <Row
+          style={{
+            display: "text",
+            flexDirection: "row",
+            textAlign: "center",
+            marginBottom: "5rem",
+          }}
+        >
+          <Col>
+            <Button
+              variant="outline-primary"
+              onClick={() => submitForm(selectedProperty)}
+              style={bluePillButton}
+            >
+              Send Repair Request
+            </Button>
+          </Col>
+          <Col xs={4}>
+            <Button
+              variant="outline-primary"
+              onClick={() => props.cancel()}
+              style={pillButton}
+            >
+              Cancel
+            </Button>
+          </Col>
+        </Row>
       </div>
     </div>
   );

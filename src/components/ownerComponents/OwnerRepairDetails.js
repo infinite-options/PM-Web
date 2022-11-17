@@ -9,6 +9,7 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import RepairImages from "../RepairImages";
 import SideBar from "./SideBar";
+import OwnerFooter from "./OwnerFooter";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import RepairImg from "../../icons/RepairImg.svg";
@@ -57,6 +58,20 @@ function OwmerRepairDetails(props) {
       breakpoint: { max: 464, min: 0 },
       items: 3,
     },
+  };
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
   };
   const imageState = useState([]);
   const { userData, refresh } = useContext(AppContext);
@@ -194,15 +209,17 @@ function OwmerRepairDetails(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           <Header
             title="Repairs"
             leftText={"< Back"}
@@ -772,6 +789,9 @@ function OwmerRepairDetails(props) {
                   ))}
               </div>
             )}
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       </div>
     </div>

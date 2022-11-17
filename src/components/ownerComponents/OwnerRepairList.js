@@ -16,6 +16,7 @@ import { visuallyHidden } from "@mui/utils";
 import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
 import SideBar from "./SideBar";
+import OwnerFooter from "./OwnerFooter";
 import OwnerRepairRequest from "./OwnerRepairRequest";
 import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
@@ -45,7 +46,20 @@ function OwnerRepairList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [isLoading, setIsLoading] = useState(true);
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
   const fetchProperties = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
       navigate("/");
@@ -371,16 +385,17 @@ function OwnerRepairList(props) {
   return stage === "LIST" ? (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           <Header
             title="Repairs"
             // rightText="+ New"
@@ -417,8 +432,12 @@ function OwnerRepairList(props) {
             </Row>
             {!isLoading ? (
               repairIter.length > 1 ? (
-                <Row className="m-3">
-                  <Table classes={{ root: classes.customTable }} size="small">
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
                     <EnhancedTableHead
                       order={order}
                       orderBy={orderBy}
@@ -577,21 +596,34 @@ function OwnerRepairList(props) {
             )}
           </div>
         </div>
+        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+          <OwnerFooter />
+        </div>
       </div>
     </div>
   ) : stage === "ADDREQUEST" ? (
     <div className="OwnerReapirRequest">
       <div className="flex-1">
-        <div>
+        <div
+          hidden={!responsiveSidebar.showSidebar}
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
           <SideBar />
         </div>
-        <div className="w-100">
+        <div className="w-100 mb-5">
           <Header title="Add Repair Request" />
           <OwnerRepairRequest
             properties={properties}
             cancel={() => setStage("LIST")}
             onSubmit={addRequest}
           />
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       </div>
     </div>
