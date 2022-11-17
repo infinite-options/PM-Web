@@ -17,6 +17,7 @@ import * as ReactBootStrap from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
+import OwnerFooter from "./OwnerFooter";
 import PropertyForm from "../PropertyForm";
 import CreateExpense from "../CreateExpense";
 import CreateRevenue from "../CreateRevenue";
@@ -25,7 +26,7 @@ import ManagementContract from "../ManagementContract";
 import ConfirmDialog from "../ConfirmDialog";
 import BusinessContact from "../BusinessContact";
 import ManagerFees from "../ManagerFees";
-import SideBar from "../ownerComponents/SideBar";
+import SideBar from "./SideBar";
 import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
 import OpenDoc from "../../icons/OpenDoc.svg";
@@ -93,6 +94,22 @@ function OwnerPropertyView(props) {
       items: 1,
     },
   };
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
+
   function groupArr(data, n) {
     var group = [];
     for (var i = 0, j = 0; i < data.length; i++) {
@@ -889,24 +906,25 @@ function OwnerPropertyView(props) {
           {location.state == null ? (
             ""
           ) : (
-            <div>
+            <div
+              hidden={!responsiveSidebar.showSidebar}
+              style={{
+                backgroundColor: "#229ebc",
+                width: "11rem",
+                minHeight: "100%",
+              }}
+            >
               <SideBar />
             </div>
           )}
 
-          <div
-            className="w-100"
-            style={{
-              width: "calc(100vw - 13rem)",
-              position: "relative",
-            }}
-          >
+          <div className="w-100">
             <Header
               title="Property Details"
               leftText={location.state == null ? "" : "< Back"}
               leftFn={headerBack}
             />
-            <Container>
+            <div>
               {editProperty ? (
                 <PropertyForm
                   property={property}
@@ -927,14 +945,8 @@ function OwnerPropertyView(props) {
                   back={() => setShowCreateRevenue(false)}
                 />
               ) : (
-                <div>
-                  <Row
-                    className=" d-flex align-items-center justify-content-center m-3"
-                    style={{
-                      width: "calc(100vw - 13rem)",
-                      position: "relative",
-                    }}
-                  >
+                <div className="w-100">
+                  <Row className=" d-flex align-items-center justify-content-center m-3">
                     {imagesProperty.length > 0 ? (
                       <Carousel
                         responsive={responsive}
@@ -980,9 +992,10 @@ function OwnerPropertyView(props) {
                       />
                     </Col>
                   </Row>
-                  <Row className="m-3">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     <div>
                       <Table
+                        responsive="md"
                         classes={{ root: classes.customTable }}
                         size="small"
                       >
@@ -4257,11 +4270,12 @@ function OwnerPropertyView(props) {
                     </Col>
                   </Row>
 
-                  <Row className="m-3">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     <div>
                       <Table
                         classes={{ root: classes.customTable }}
                         size="small"
+                        responsive="md"
                       >
                         <EnhancedTableHeadProperties
                           order={order}
@@ -4457,12 +4471,13 @@ function OwnerPropertyView(props) {
                       />
                     </Col>
                   </Row>
-                  <Row className="m-3">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     {property.maintenanceRequests.length > 0 ? (
                       <div>
                         <Table
                           classes={{ root: classes.customTable }}
                           size="small"
+                          responsive="md"
                         >
                           <EnhancedTableHeadMaintenance
                             order={order}
@@ -4611,9 +4626,10 @@ function OwnerPropertyView(props) {
                       />
                     </Col>
                   </Row>
-                  <Row className="m-3">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     <div>
                       <Table
+                        responsive="md"
                         classes={{ root: classes.customTable }}
                         size="small"
                       >
@@ -4732,7 +4748,7 @@ function OwnerPropertyView(props) {
                   </Row>
                   {Object.keys(property.managerInfo).length !== 0 ? (
                     <div>
-                      <Row className="m-3">
+                      <Row className="m-3" style={{ overflow: "scroll" }}>
                         {property.management_status === "ACCEPTED" ||
                         property.management_status === "OWNER END EARLY" ||
                         property.management_status === "PM END EARLY" ? (
@@ -4744,6 +4760,7 @@ function OwnerPropertyView(props) {
                               <Col xs={2}></Col>
                             </Row>
                             <Table
+                              responsive="md"
                               classes={{ root: classes.customTable }}
                               size="small"
                             >
@@ -4834,6 +4851,7 @@ function OwnerPropertyView(props) {
                             </Row>
                             <div>
                               <Table
+                                responsive="md"
                                 classes={{ root: classes.customTable }}
                                 size="small"
                               >
@@ -5074,7 +5092,7 @@ function OwnerPropertyView(props) {
                       /> */}
                     </Col>
                   </Row>
-                  <Row className="m-3">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     {property.property_manager.length == 0 ? (
                       ""
                     ) : property.property_manager.length > 1 ? (
@@ -5211,8 +5229,9 @@ function OwnerPropertyView(props) {
                         p.management_status === "REJECTED" ? (
                           ""
                         ) : p.management_status === "SENT" ? (
-                          <Row>
+                          <Row style={{ overflow: "scroll" }}>
                             <Table
+                              responsive="md"
                               classes={{ root: classes.customTable }}
                               size="small"
                             >
@@ -5299,6 +5318,7 @@ function OwnerPropertyView(props) {
                             </Row>
                             <div>
                               <Table
+                                responsive="md"
                                 classes={{ root: classes.customTable }}
                                 size="small"
                               >
@@ -5424,6 +5444,7 @@ function OwnerPropertyView(props) {
                       "SENT" ? (
                       <Row>
                         <Table
+                          responsive="md"
                           classes={{ root: classes.customTable }}
                           size="small"
                         >
@@ -5514,6 +5535,7 @@ function OwnerPropertyView(props) {
                         </Row>
                         <div>
                           <Table
+                            responsive="md"
                             classes={{ root: classes.customTable }}
                             size="small"
                           >
@@ -5656,10 +5678,11 @@ function OwnerPropertyView(props) {
                     <Col></Col>
                   </Row>
 
-                  <Row className="m-3">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     {rentalInfo.length > 0 ? (
                       <div>
                         <Table
+                          responsive="md"
                           classes={{ root: classes.customTable }}
                           size="small"
                         >
@@ -5762,7 +5785,10 @@ function OwnerPropertyView(props) {
                   </Row>
                 </div>
               )}
-            </Container>
+            </div>
+          </div>
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
           </div>
         </div>
       </div>

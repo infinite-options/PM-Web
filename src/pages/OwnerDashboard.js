@@ -3938,6 +3938,9 @@ export default function OwnerDashboard2() {
           >
             <OwnerPropertyView property_uid={ownerData[0].property_uid} />
           </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       ) : !isLoading && ownerData.length == 0 ? (
         <div className="flex-1">
@@ -3980,6 +3983,9 @@ export default function OwnerDashboard2() {
               </Col>
             </Row>
           </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       ) : (
         <div className="flex-1">
@@ -3995,6 +4001,9 @@ export default function OwnerDashboard2() {
           </div>
           <div className="w-100 d-flex flex-column justify-content-center align-items-center">
             <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
           </div>
         </div>
       )}
