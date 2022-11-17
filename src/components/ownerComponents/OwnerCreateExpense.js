@@ -130,7 +130,7 @@ function OwnerCreateExpense(props) {
       ""
     );
   return (
-    <div>
+    <div className="m-3">
       <h5>Add New Expense Payment</h5>
       <Form.Group
         className="p-2"
