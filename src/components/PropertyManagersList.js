@@ -19,6 +19,7 @@ import {
   pillButton,
 } from "../utils/styles";
 import SideBar from "./ownerComponents/SideBar";
+import OwnerFooter from "./ownerComponents/OwnerFooter";
 
 function PropertyManagersList(props) {
   const navigate = useNavigate();
@@ -37,6 +38,22 @@ function PropertyManagersList(props) {
   const [selectedPropertyManagers, setSelectedPropertyManagers] =
     useState(null);
   const [stage, setStage] = React.useState("LIST");
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
+
   const fetchProperties = async () => {
     if (access_token === null) {
       navigate("/");
@@ -156,16 +173,17 @@ function PropertyManagersList(props) {
 
   return stage === "LIST" ? (
     <div className="flex-1">
-      <div>
-        <SideBar />
-      </div>
       <div
-        className="w-100"
+        hidden={!responsiveSidebar.showSidebar}
         style={{
-          width: "calc(100vw - 13rem)",
-          position: "relative",
+          backgroundColor: "#229ebc",
+          width: "11rem",
+          minHeight: "100%",
         }}
       >
+        <SideBar />
+      </div>
+      <div className="w-100  mb-5">
         <Header
           title="Property Managers"
           leftText="< Back"
@@ -222,22 +240,26 @@ function PropertyManagersList(props) {
             </Container>
           ))}
         </Row>
+        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+          <OwnerFooter />
+        </div>
       </div>
     </div>
   ) : stage === "PMDETAILS" ? (
     <div className="flex-1">
-      <div>
-        <SideBar />
-      </div>
       <div
-        className="w-100"
+        hidden={!responsiveSidebar.showSidebar}
         style={{
-          width: "calc(100vw - 13rem)",
-          position: "relative",
+          backgroundColor: "#229ebc",
+          width: "11rem",
+          minHeight: "100%",
         }}
       >
+        <SideBar />
+      </div>
+      <div className="w-100  mb-5">
         <Header title="" leftText="< Back" leftFn={() => setStage("LIST")} />
-        {console.log(selectedPropertyManagers)}
+
         <div
           className="mx-2 my-2 p-3"
           style={{
@@ -395,6 +417,9 @@ function PropertyManagersList(props) {
               Request Quote from PM
             </Button>
           </div>
+        </div>
+        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+          <OwnerFooter />
         </div>
       </div>
     </div>

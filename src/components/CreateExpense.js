@@ -119,7 +119,7 @@ function CreateExpense(props) {
       ""
     );
   return (
-    <div>
+    <div className="mx-3 mb-5">
       <h5>Add New Expense Payment</h5>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
@@ -338,7 +338,7 @@ function CreateExpense(props) {
       <div className="text-center" style={errorMessage === "" ? hidden : {}}>
         <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
       </div>
-      <div className="d-flex justify-content-center my-4">
+      <div className="d-flex justify-content-center mt-2 mb-5">
         <Button
           variant="outline-primary"
           style={pillButton}

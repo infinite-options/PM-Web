@@ -862,8 +862,8 @@ function PropertyForm(props) {
             }
             inputProps={{ "aria-label": "controlled" }}
           />
+          <p className="p-2">Yes</p>
         </Col>
-        <p className="p-2">Yes</p>
       </Container>
       <Container className="d-flex my-3 ps-4">
         <Col className="p-2">

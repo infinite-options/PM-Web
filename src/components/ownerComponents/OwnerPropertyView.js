@@ -110,30 +110,6 @@ function OwnerPropertyView(props) {
     showSidebar: width > 1023,
   };
 
-  function groupArr(data, n) {
-    var group = [];
-    for (var i = 0, j = 0; i < data.length; i++) {
-      if (i >= n && i % n === 0) j++;
-      group[j] = group[j] || [];
-      group[j].push(data[i]);
-    }
-    return group;
-  }
-  function groupIntoThrees(children) {
-    const output = [];
-    let currentGroup = [];
-
-    children.forEach((child, index) => {
-      currentGroup.push(child);
-
-      if (index % 3 === 2) {
-        output.push(currentGroup);
-        currentGroup = [];
-      }
-    });
-
-    return output;
-  }
   const contactState = useState([]);
   const applianceState = useState({
     Microwave: {
@@ -902,7 +878,7 @@ function OwnerPropertyView(props) {
           onConfirm={cancelAgreement}
           onCancel={onCancel2}
         />
-        <div className="flex-1">
+        <div className="flex-1 mb-5">
           {location.state == null ? (
             ""
           ) : (
@@ -918,13 +894,13 @@ function OwnerPropertyView(props) {
             </div>
           )}
 
-          <div className="w-100">
+          <div className="w-100 mb-5">
             <Header
               title="Property Details"
               leftText={location.state == null ? "" : "< Back"}
               leftFn={headerBack}
             />
-            <div>
+            <div className="w-100 mb-5">
               {editProperty ? (
                 <PropertyForm
                   property={property}
@@ -945,7 +921,7 @@ function OwnerPropertyView(props) {
                   back={() => setShowCreateRevenue(false)}
                 />
               ) : (
-                <div className="w-100">
+                <div className="w-100 my-5">
                   <Row className=" d-flex align-items-center justify-content-center m-3">
                     {imagesProperty.length > 0 ? (
                       <Carousel
@@ -5787,9 +5763,9 @@ function OwnerPropertyView(props) {
               )}
             </div>
           </div>
-          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-            <OwnerFooter />
-          </div>
+        </div>
+        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+          <OwnerFooter />
         </div>
       </div>
     )

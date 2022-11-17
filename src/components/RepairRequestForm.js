@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useParams } from "react-router";
@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Header from "../components/Header";
 import SideBar from "../components/ownerComponents/SideBar";
+import OwnerFooter from "../components/ownerComponents/OwnerFooter";
 import RepairImages from "./RepairImages";
 import HighPriority from "../icons/highPriority.svg";
 import MediumPriority from "../icons/mediumPriority.svg";
@@ -44,6 +45,21 @@ function RepairRequest(props) {
   const [issueType, setIssueType] = useState("Plumbing");
   const [errorMessage, setErrorMessage] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
 
   const submitForm = async () => {
     if (title === "" || description === "" || priority === "") {
@@ -95,17 +111,28 @@ function RepairRequest(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
-          <Header title="Repair Request Form" />
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
+          <Header
+            title="Repair Request Form"
+            leftText={"< Back"}
+            leftFn={() => {
+              navigate(`/propertyDetails/${property_uid}`, {
+                state: {
+                  property_uid: property_uid,
+                },
+              });
+            }}
+          />
           <Container className="pt-1 mb-4">
             <Row style={headings}>
               <div>New Repair Request</div>
@@ -268,6 +295,7 @@ function RepairRequest(props) {
                   display: "text",
                   flexDirection: "row",
                   textAlign: "center",
+                  marginBottom: "3rem",
                 }}
               >
                 <Col>
@@ -298,6 +326,9 @@ function RepairRequest(props) {
             </div>
           </Container>
         </div>
+      </div>
+      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+        <OwnerFooter />
       </div>
     </div>
   );
