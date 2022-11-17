@@ -595,9 +595,9 @@ function OwnerRepairList(props) {
               </div>
             )}
           </div>
-        </div>
-        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-          <OwnerFooter />
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       </div>
     </div>
