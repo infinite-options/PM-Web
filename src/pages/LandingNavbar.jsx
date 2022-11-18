@@ -159,7 +159,7 @@ function LandingNavbar() {
                     borderColor: "white",
                     borderRadius: "10px",
                     color: "black",
-                    width: "10rem",
+                    maxWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={login}
@@ -179,7 +179,7 @@ function LandingNavbar() {
                     borderColor: "#fb8500",
                     borderRadius: "10px",
                     color: "white",
-                    width: "10rem",
+                    maxWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={signup}
@@ -199,7 +199,7 @@ function LandingNavbar() {
                     borderColor: "white",
                     borderRadius: "10px",
                     color: "black",
-                    width: "10rem",
+                    maxWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={signupexisting}
@@ -222,7 +222,7 @@ function LandingNavbar() {
                     borderColor: "white",
                     borderRadius: "10px",
                     color: "black",
-                    width: "10rem",
+                    maxWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={() => navigate("/")}
@@ -246,7 +246,7 @@ function LandingNavbar() {
                     borderColor: "white",
                     borderRadius: "10px",
                     color: "black",
-                    width: "10rem",
+                    maxWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={modifyexisiting}

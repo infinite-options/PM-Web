@@ -1,8 +1,8 @@
 import React from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import ArrowDown from "../../icons/ArrowDown.svg";
 import {
   pillButton,
   smallPillButton,
@@ -11,7 +11,7 @@ import {
   red,
   hidden,
   small,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 function ManagerTenantRentPayments(props) {
   // const [feeState, setFeeState] = props.state;

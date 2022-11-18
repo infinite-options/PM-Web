@@ -15,12 +15,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import SideBar from "./managerComponents/SideBar";
-import Header from "../components/Header";
-import AppContext from "../AppContext";
-import { get, put } from "../utils/api";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
+import SideBar from "./SideBar";
+import AppContext from "../../AppContext";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import { get, put } from "../../utils/api";
 import {
   mediumBold,
   subText,
@@ -28,7 +27,7 @@ import {
   hidden,
   redPill,
   greenPill,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {

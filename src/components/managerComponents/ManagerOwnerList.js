@@ -13,12 +13,12 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import SideBar from "./managerComponents/SideBar";
-import Header from "../components/Header";
-import AppContext from "../AppContext";
-import { get, put } from "../utils/api";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
+import SideBar from "./SideBar";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import { get, put } from "../../utils/api";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
 import {
   mediumBold,
   xSmall,
@@ -27,7 +27,7 @@ import {
   hidden,
   gray,
   pillButton,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {

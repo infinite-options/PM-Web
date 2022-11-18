@@ -66,7 +66,9 @@ function OwnerRepairList(props) {
       return;
     }
     const response = await get("/ownerDashboard", access_token);
-
+    const maint_response = await get(
+      `/maintenanceRequestsandQuotes?owner_id=${user.user_uid}`
+    );
     const properties = response.result;
     const pids = new Set();
     const properties_unique = [];
@@ -100,51 +102,6 @@ function OwnerRepairList(props) {
       }
     });
 
-    setProperties(properties_unique);
-  };
-  useEffect(() => {
-    if (access_token === null) {
-      navigate("/");
-    }
-    fetchProperties();
-    fetchRepairs();
-  }, [access_token]);
-
-  const sort_repairs = (repairs) => {
-    const repairs_with_quotes = repairs.filter(
-      (repair) => repair.quotes_to_review > 0
-    );
-    repairs_with_quotes.sort(
-      (a, b) => b.priority_n - a.priority_n || b.days_since - a.days_since
-    );
-    const repairs_without_quotes = repairs.filter(
-      (repair) => repair.quotes_to_review === 0
-    );
-    repairs_without_quotes.sort(
-      (a, b) => b.priority_n - a.priority_n || b.days_since - a.days_since
-    );
-    return [...repairs_with_quotes, ...repairs_without_quotes];
-  };
-
-  const sort_repairs_address = (repairs) => {
-    repairs.forEach((repair, i) => {
-      console.log("");
-    });
-  };
-
-  const fetchRepairs = async () => {
-    if (access_token === null || user.role.indexOf("OWNER") === -1) {
-      navigate("/");
-      return;
-    }
-    const response = await get(
-      `/maintenanceRequestsandQuotes?owner_id=${user.user_uid}`
-    );
-    if (response.msg === "Token has expired") {
-      refresh();
-      return;
-    }
-
     let repairI = [];
     let repairIT = [];
     let new_repairs = [];
@@ -157,10 +114,10 @@ function OwnerRepairList(props) {
     let processingrepairs = "";
     let scheduledrepairs = "";
     let completedrepairs = "";
-    for (let r = 0; r < response.result.length; r++) {
-      console.log(response.result[r]);
+    for (let r = 0; r < maint_response.result.length; r++) {
+      console.log(maint_response.result[r]);
 
-      let repairs = response.result[r].maintenanceRequests;
+      let repairs = maint_response.result[r].maintenanceRequests;
       repairs.forEach((repair, i) => {
         console.log(repair);
         const request_created_date = new Date(
@@ -225,6 +182,36 @@ function OwnerRepairList(props) {
     setRepairIter(repairI);
 
     setIsLoading(false);
+
+    setProperties(properties_unique);
+  };
+  useEffect(() => {
+    if (access_token === null) {
+      navigate("/");
+    }
+    fetchProperties();
+  }, [access_token]);
+
+  const sort_repairs = (repairs) => {
+    const repairs_with_quotes = repairs.filter(
+      (repair) => repair.quotes_to_review > 0
+    );
+    repairs_with_quotes.sort(
+      (a, b) => b.priority_n - a.priority_n || b.days_since - a.days_since
+    );
+    const repairs_without_quotes = repairs.filter(
+      (repair) => repair.quotes_to_review === 0
+    );
+    repairs_without_quotes.sort(
+      (a, b) => b.priority_n - a.priority_n || b.days_since - a.days_since
+    );
+    return [...repairs_with_quotes, ...repairs_without_quotes];
+  };
+
+  const sort_repairs_address = (repairs) => {
+    repairs.forEach((repair, i) => {
+      console.log("");
+    });
   };
 
   // console.log(repairIter);
@@ -257,7 +244,7 @@ function OwnerRepairList(props) {
   }
   const addRequest = () => {
     fetchProperties();
-    fetchRepairs();
+
     setStage("LIST");
   };
   function stableSort(array, comparator) {

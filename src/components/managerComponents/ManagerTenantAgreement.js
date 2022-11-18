@@ -1,9 +1,13 @@
 import React from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "../components/Header";
-import File from "../icons/File.svg";
-import BusinessContact from "../components/BusinessContact";
-import { put, post } from "../utils/api";
+import Header from "../Header";
+import BusinessContact from "../BusinessContact";
+import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import File from "../../icons/File.svg";
+import { put, post } from "../../utils/api";
 import {
   small,
   hidden,
@@ -12,16 +16,9 @@ import {
   mediumBold,
   smallPillButton,
   bluePillButton,
-  redPillButton,
-  pillButton,
-} from "../utils/styles";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
-import ManagerTenantRentPayments from "../components/ManagerTenantRentPayments";
-import ArrowDown from "../icons/ArrowDown.svg";
-import tenantAgreement from "../components/TenantAgreement";
+} from "../../utils/styles";
 
-import SideBar from "../components/managerComponents/SideBar";
+import SideBar from "./SideBar";
 
 function ManagerTenantAgreement(props) {
   const {

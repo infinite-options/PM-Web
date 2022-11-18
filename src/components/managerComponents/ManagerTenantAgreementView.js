@@ -1,10 +1,10 @@
 import React from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "../components/Header";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import OpenDoc from "../icons/OpenDoc.svg";
-import { put, post, get } from "../utils/api";
+import Header from "../Header";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import OpenDoc from "../../icons/OpenDoc.svg";
+import { put, post, get } from "../../utils/api";
 import {
   small,
   smallImg,
@@ -16,7 +16,7 @@ import {
   redPillButton,
   pillButton,
   gray,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 function ManagerTenantAgreementView(props) {
   const {

@@ -9,8 +9,13 @@ import {
   TableSortLabel,
   Box,
 } from "@material-ui/core";
+import { useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import No_Image from "../../icons/No_Image_Available.jpeg";
+import { get } from "../../utils/api";
 import {
   blue,
   gray,
@@ -19,12 +24,7 @@ import {
   redPill,
   tileImg,
   xSmall,
-} from "../utils/styles";
-import Header from "../components/Header";
-import { useLocation, useNavigate } from "react-router-dom";
-import { get } from "../utils/api";
-import AppContext from "../AppContext";
-import No_Image from "../icons/No_Image_Available.jpeg";
+} from "../../utils/styles";
 
 function ManagerRepairsList(props) {
   const navigate = useNavigate();

@@ -40,31 +40,30 @@ import ReviewTenantProfile from "./pages/ReviewTenantprofile";
 import TenantPropertyView from "./pages/TenantPropertyView";
 import ReviewPropertyLease from "./pages/reviewPropertyLease";
 import OwnerContacts from "./components/ownerComponents/OwnerContacts";
-import ManagerHome from "./pages/ManagerHome";
 import ManagerProperties from "./pages/ManagerProperties";
-import ManagerPropertyView from "./pages/ManagerPropertyView";
-import ManagerRepairsList from "./pages/ManagerRepairsList";
-import ManagerResidentAnnouncements from "./pages/ManagerResidentAnnoucements";
+import ManagerPropertyView from "./components/managerComponents/ManagerPropertyView";
+import ManagerRepairsList from "./components/managerComponents/ManagerRepairsList";
+import ManagerResidentAnnouncements from "./components/managerComponents/ManagerResidentAnnoucements";
 import ManagerEmergency from "./pages/ManagerEmergency";
-import ManagerRepairDetail from "./pages/ManagerRepairDetail";
+import ManagerRepairDetail from "./components/managerComponents/ManagerRepairDetail";
 import SignupExisting from "./pages/SignUpExisiting";
-import ManagerRepairsOverview from "./pages/ManagerRepairsOverview";
+import ManagerRepairsOverview from "./components/managerComponents/ManagerRepairsOverview";
 import MaintenanceQuotesSent from "./pages/MaintenanceQuotesSent";
 import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
-import ManagerUtilities from "./pages/ManagerUtilities";
+import ManagerUtilities from "./components/managerComponents/ManagerUtilities";
 import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
 import PropertyView from "./components/PropertyView";
 import TenantDuePayments from "./components/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 import OwnerPaymentHistory from "./components/ownerComponents/OwnerPaymentHistory";
-import ManagerOwnerList from "./components/ManagerOwnerList";
-import ManagerTenantList from "./components/ManagerTenantList";
+import ManagerOwnerList from "./components/managerComponents/ManagerOwnerList";
+import ManagerTenantList from "./components/managerComponents/ManagerTenantList";
 import ManagerApplianceList from "./components/ManagerApplianceList";
-import ManagerRepairInfo from "./pages/ManagerRepairInfo";
+import ManagerRepairInfo from "./components/managerComponents/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
-import ManagerPaymentPage from "./components/ManagerPaymentPage";
-import ManagerPaymentHistory from "./components/ManagerPaymentHistory";
+import ManagerPaymentPage from "./components/managerComponents/ManagerPaymentPage";
+import ManagerPaymentHistory from "./components/managerComponents/ManagerPaymentHistory";
 // import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
 import TenantDashboard from "./pages/TenantFirstPageView"; // new tenant first page view
 import ActualTenantDashboard from "./pages/TenantDashboard2"; // new tenant first page view
@@ -83,9 +82,9 @@ import PropertyManagersList from "./components/PropertyManagersList";
 import ModifyExisiting from "./pages/ModifyExisiting";
 import PropertyInfo from "./pages/PropertyInfo";
 import AppliedDashboard from "./pages/AppliedDashboard";
-import ManagerTenantListDetail from "./components/ManagerTenantListDetail";
-import ManagerDocuments from "./components/ManagerDocuments";
-import ManagerProfile from "./components/ManagerProfile";
+import ManagerTenantListDetail from "./components/managerComponents/ManagerTenantListDetail";
+import ManagerDocuments from "./components/managerComponents/ManagerDocuments";
+import ManagerProfile from "./components/managerComponents/ManagerProfile";
 import OwnerDocuments from "./components/ownerComponents/OwnerDocuments";
 import OwnerProfile from "./components/ownerComponents/OwnerProfile";
 import TenantProfile from "./pages/TenantProfile";
@@ -196,7 +195,6 @@ function App() {
             />
             <Route path="manager" element={<ManagerDashboard />} />
             <Route path="managerLanding" element={<ManagerLanding />} />
-            <Route path="manager_original" element={<ManagerHome />} />
             <Route
               path="/:property_uid/repairRequest"
               element={<RepairRequest />}

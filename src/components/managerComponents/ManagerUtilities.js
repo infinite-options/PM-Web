@@ -1,11 +1,19 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import moment from "moment";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
+import { useNavigate, useLocation } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import StripePayment from "../components/StripePayment.js";
+import StripePayment from "../StripePayment.js";
+import SideBar from "./SideBar";
+import Checkbox from "../Checkbox";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import File from "../../icons/File.svg";
+import { post, get } from "../../utils/api";
 import {
   pillButton,
   smallPillButton,
@@ -19,15 +27,7 @@ import {
   subHeading,
   bluePillButton,
   greenPill,
-} from "../utils/styles";
-import ArrowDown from "../icons/ArrowDown.svg";
-import { useNavigate, useLocation } from "react-router-dom";
-import Checkbox from "../components/Checkbox";
-import Header from "../components/Header";
-import { post, get } from "../utils/api";
-import AppContext from "../AppContext";
-import File from "../icons/File.svg";
-import SideBar from "../components/managerComponents/SideBar";
+} from "../../utils/styles";
 
 function ManagerUtilities(props) {
   const navigate = useNavigate();

@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Form } from "react-bootstrap";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import ManagerPaymentSelection from "../components/ManagerPaymentSelection";
-import { get, put } from "../utils/api";
-import { squareForm, gray, headings } from "../utils/styles";
-import Logout from "./Logout";
-import SideBar from "./managerComponents/SideBar";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import ManagerPaymentSelection from "./ManagerPaymentSelection";
+import Logout from "../Logout";
+import SideBar from "./SideBar";
+import { get, put } from "../../utils/api";
+import { squareForm, gray, headings } from "../../utils/styles";
 function ManagerProfile(props) {
   const context = useContext(AppContext);
   const { userData, refresh } = context;

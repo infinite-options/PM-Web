@@ -13,9 +13,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { useLocation, useNavigate } from "react-router-dom";
-import { get } from "../utils/api";
-import AppContext from "../AppContext";
-import SideBar from "../components/managerComponents/SideBar";
+import { get } from "../../utils/api";
+import AppContext from "../../AppContext";
+import SideBar from "./SideBar";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {

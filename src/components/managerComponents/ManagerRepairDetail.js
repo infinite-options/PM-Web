@@ -3,14 +3,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import * as ReactBootStrap from "react-bootstrap";
 import { useParams } from "react-router";
-import Checkbox from "../components/Checkbox";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
+import SideBar from "./SideBar";
+import Checkbox from "../Checkbox";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
 import {
   headings,
   pillButton,
@@ -24,10 +25,9 @@ import {
   squareForm,
   orangePill,
   mediumBold,
-} from "../utils/styles";
-import { get, post, put } from "../utils/api";
+} from "../../utils/styles";
+import { get, post, put } from "../../utils/api";
 
-import SideBar from "../components/managerComponents/SideBar";
 function ManagerRepairDetail(props) {
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token } = userData;

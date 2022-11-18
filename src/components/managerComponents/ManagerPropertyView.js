@@ -1,24 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import ManagerPropertyCashFlow from "../components/ManagerPropertyCashFlow";
-import CreateExpense from "../components/CreateExpense";
-import CreateRevenue from "../components/CreateRevenue";
-import ManagerTenantApplications from "../components/ManagerTenantApplications";
-import ManagerTenantProfileView from "./ManagerTenantProfileView";
-import PropertyManagerDocs from "../components/PropertyManagerDocs";
-import AppContext from "../AppContext";
-import ManagerManagementContract from "../components/ManagerManagementContract";
+import Header from "../Header";
+import ManagerPropertyCashFlow from "../ManagerPropertyCashFlow";
+import CreateExpense from "../CreateExpense";
+import CreateRevenue from "../CreateRevenue";
+import ManagerTenantApplications from "./ManagerTenantApplications";
+import ManagerTenantProfileView from "../../pages/ManagerTenantProfileView";
+import PropertyManagerDocs from "../PropertyManagerDocs";
+import AppContext from "../../AppContext";
+import ManagerManagementContract from "../ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
-import ConfirmDialog from "../components/ConfirmDialog";
-import ManagerRentalHistory from "../components/ManagerRentalHistory";
-import ManagerPropertyForm from "../components/ManagerPropertyForm";
+import ConfirmDialog from "../ConfirmDialog";
+import ManagerRentalHistory from "./ManagerRentalHistory";
+import ManagerPropertyForm from "./ManagerPropertyForm";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
-import BlueArrowUp from "../icons/BlueArrowUp.svg";
-import BlueArrowDown from "../icons/BlueArrowDown.svg";
-import BlueArrowRight from "../icons/BlueArrowRight.svg";
-import No_Image from "../icons/No_Image_Available.jpeg";
+import SideBar from "./SideBar";
+import BlueArrowUp from "../../icons/BlueArrowUp.svg";
+import BlueArrowDown from "../../icons/BlueArrowDown.svg";
+import BlueArrowRight from "../../icons/BlueArrowRight.svg";
+import No_Image from "../../icons/No_Image_Available.jpeg";
 import {
   tileImg,
   greenPill,
@@ -26,9 +27,8 @@ import {
   redPill,
   orangePill,
   bluePill,
-} from "../utils/styles";
-import { get, put } from "../utils/api";
-import SideBar from "../components/managerComponents/SideBar";
+} from "../../utils/styles";
+import { get, put } from "../../utils/api";
 
 function ManagerPropertyView(props) {
   const navigate = useNavigate();
