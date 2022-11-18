@@ -404,7 +404,7 @@ function OwmerRepairDetails(props) {
                     ></input>
                   ) : (
                     <Row className="mt-2">
-                      <div style={subText}>{repair.description}</div>
+                      <div style={subText}>{description}</div>
                     </Row>
                   )}
                 </Row>

@@ -243,8 +243,12 @@ function OwnerDocuments(props) {
                   ) : (
                     <TableRow>
                       <TableCell width="180px">
-                        <p>No documents</p>
+                        <p className="mx-3">No documents</p>
                       </TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                     </TableRow>
@@ -325,8 +329,12 @@ function OwnerDocuments(props) {
                   ) : (
                     <TableRow>
                       <TableCell width="180px">
-                        <p>No documents</p>
+                        <p className="mx-3">No documents</p>
                       </TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                     </TableRow>
@@ -436,8 +444,12 @@ function OwnerDocuments(props) {
                     <TableRow>
                       {" "}
                       <TableCell width="180px">
-                        <p>No documents</p>
+                        <p className="mx-3">No documents</p>
                       </TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                     </TableRow>
@@ -519,8 +531,12 @@ function OwnerDocuments(props) {
                   ) : (
                     <TableRow>
                       <TableCell width="180px">
-                        <p>No documents</p>
+                        <p className="mx-3">No documents</p>
                       </TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                     </TableRow>

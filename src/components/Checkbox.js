@@ -8,7 +8,6 @@ class Checkbox extends React.Component {
     this.state = {
       checked: this.props.checked,
     };
-    console.log(this.state.checked);
   }
 
   componentDidUpdate(prevProps) {
@@ -19,12 +18,12 @@ class Checkbox extends React.Component {
   onClick = () => {
     if (this.props.onClick !== undefined) {
       this.props.onClick(!this.state.checked);
-      console.log(this.state.checked);
+      // console.log(this.state.checked);
     }
 
     if (this.props.checked === undefined) {
       this.setState({ checked: !this.state.checked });
-      console.log(this.state.checked);
+      // console.log(this.state.checked);
     }
   };
 

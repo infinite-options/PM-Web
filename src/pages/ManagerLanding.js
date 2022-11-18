@@ -51,7 +51,10 @@ export default function renderLanding() {
           >
             The Manifest Software Solution
           </div>
-          <img src={ManagerLanding} style={{ padding: "2rem" }} />
+          <img
+            src={ManagerLanding}
+            style={{ padding: "2rem", width: "100%" }}
+          />
         </Col>
         <Col></Col>
       </Row>
