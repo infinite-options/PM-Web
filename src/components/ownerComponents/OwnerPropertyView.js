@@ -3767,7 +3767,7 @@ function OwnerPropertyView(props) {
                             </TableCell>
                           </TableRow>
                           {isLoading === false &&
-                            cashflowData.owner_utility_year_expense_individual.map(
+                            cashflowData.owner_utility_expense_yearly.map(
                               (expense, index) => {
                                 return expense.purchase_type === "UTILITY" ? (
                                   <TableRow hidden={!yearlyUtilityExpense}>
