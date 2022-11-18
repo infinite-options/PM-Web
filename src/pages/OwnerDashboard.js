@@ -1730,82 +1730,89 @@ export default function OwnerDashboard2() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_expense.map((expense, index) => {
-                      return expense.purchase_type === "UTILITY" ? (
-                        <TableRow hidden={!monthlyUtilityExpense}>
-                          <TableCell>
-                            &nbsp;&nbsp;&nbsp; {expense.address} {expense.unit}
-                            <br />
-                            &nbsp;&nbsp;&nbsp; {expense.description} <br />
-                            &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" ? (
-                            <TableCell
-                              width="180px"
-                              align="right"
-                              style={green}
-                            >
-                              ${expense.amount_paid.toFixed(2)}
+                    cashflowData.owner_utility_expense_individual.map(
+                      (expense, index) => {
+                        return expense.purchase_type === "UTILITY" ? (
+                          <TableRow hidden={!monthlyUtilityExpense}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                              {expense.unit}
+                              <br />
+                              &nbsp;&nbsp;&nbsp; {expense.description} <br />
+                              &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_paid.toFixed(2)}
-                            </TableCell>
-                          )}
-
-                          {expense.purchase_status === "UNPAID" ? (
-                            <TableCell width="180px" align="right" style={red}>
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(expense.amount_paid - expense.amount_due).toFixed(
-                              2
+                            {expense.purchase_status === "PAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={green}
+                              >
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
                             )}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_paid / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_status === "UNPAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_due / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_frequency == "Annually" ? (
+
+                            {expense.purchase_status === "UNPAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={red}
+                              >
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            )}
                             <TableCell width="180px" align="right">
                               $
                               {(
-                                (expense.amount_paid - expense.amount_due) /
-                                12
+                                expense.amount_paid - expense.amount_due
                               ).toFixed(2)}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ) : (
-                        ""
-                      );
-                    })}
+                            {expense.purchase_status === "PAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_paid / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_status === "UNPAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_due / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  (expense.amount_paid - expense.amount_due) /
+                                  12
+                                ).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
                   <TableRow hidden={!monthlyExpense}>
                     <TableCell width="180px">
                       &nbsp;&nbsp; Mortgage{" "}
@@ -3166,82 +3173,89 @@ export default function OwnerDashboard2() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_expense_yearly.map((expense, index) => {
-                      return expense.purchase_type === "UTILITY" ? (
-                        <TableRow hidden={!yearlyUtilityExpense}>
-                          <TableCell>
-                            &nbsp;&nbsp;&nbsp; {expense.address} {expense.unit}
-                            <br />
-                            &nbsp;&nbsp;&nbsp; {expense.description} <br />
-                            &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" ? (
-                            <TableCell
-                              width="180px"
-                              align="right"
-                              style={green}
-                            >
-                              ${expense.amount_paid.toFixed(2)}
+                    cashflowData.owner_utility_year_expense_individual.map(
+                      (expense, index) => {
+                        return expense.purchase_type === "UTILITY" ? (
+                          <TableRow hidden={!yearlyUtilityExpense}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                              {expense.unit}
+                              <br />
+                              &nbsp;&nbsp;&nbsp; {expense.description} <br />
+                              &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_paid.toFixed(2)}
-                            </TableCell>
-                          )}
-
-                          {expense.purchase_status === "UNPAID" ? (
-                            <TableCell width="180px" align="right" style={red}>
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(expense.amount_paid - expense.amount_due).toFixed(
-                              2
+                            {expense.purchase_status === "PAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={green}
+                              >
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
                             )}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_paid / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_status === "UNPAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_due / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_frequency == "Annually" ? (
+
+                            {expense.purchase_status === "UNPAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={red}
+                              >
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            )}
                             <TableCell width="180px" align="right">
                               $
                               {(
-                                (expense.amount_paid - expense.amount_due) /
-                                12
+                                expense.amount_paid - expense.amount_due
                               ).toFixed(2)}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ) : (
-                        ""
-                      );
-                    })}
+                            {expense.purchase_status === "PAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_paid / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_status === "UNPAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_due / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  (expense.amount_paid - expense.amount_due) /
+                                  12
+                                ).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
                   <TableRow hidden={!yearlyExpense}>
                     <TableCell width="180px">
                       &nbsp;&nbsp; Mortgage{" "}

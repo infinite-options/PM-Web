@@ -81,7 +81,7 @@ function OwnerUtilities(props) {
     service_name: "",
     charge: "",
     properties: [],
-    split_type: "No Split",
+    split_type: "Uniform",
     due_date: "",
     add_to_rent: false,
   };
@@ -180,9 +180,6 @@ function OwnerUtilities(props) {
     }
 
     const response = await get("/ownerDashboard", access_token);
-    console.log("second");
-    console.log(response);
-
     if (response.msg === "Token has expired") {
       console.log("here msg");
       refresh();
@@ -199,7 +196,7 @@ function OwnerUtilities(props) {
     const mr = [];
     properties.forEach((property) => {
       if (pids.has(property.property_uid)) {
-        console.log("here in if");
+        // console.log("here in if");
         // properties_unique[properties_unique.length-1].tenants.push(property)
         const index = properties_unique.findIndex(
           (item) => item.property_uid === property.property_uid
@@ -208,18 +205,18 @@ function OwnerUtilities(props) {
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          console.log("here", property);
+          // console.log("here", property);
           properties_unique[index].tenants.push(property);
         }
       } else {
-        console.log("here in else");
+        // console.log("here in else");
         pids.add(property.property_uid);
         properties_unique.push(property);
         if (
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          console.log("here", property);
+          // console.log("here", property);
           properties_unique[properties_unique.length - 1].tenants = [property];
         }
       }
@@ -229,16 +226,16 @@ function OwnerUtilities(props) {
     let expense = [];
     properties_unique.forEach((property) => {
       if (property.expenses.length > 0) {
-        console.log("has expense");
+        // console.log("has expense");
         property.expenses.forEach((ex) => {
-          console.log("has expense", ex);
+          // console.log("has expense", ex);
           expense.push(ex);
         });
       }
     });
 
-    console.log(expense);
-    console.log(properties_unique);
+    // console.log(expense);
+    // console.log(properties_unique);
     const grouped = groupBy(expense, "purchase_uid");
     const keys = Object.keys(grouped);
     var output = [];
@@ -280,24 +277,19 @@ function OwnerUtilities(props) {
       });
       output.push(out);
     });
-    console.log(output);
+    // console.log(output);
     setExpenseUnique(output);
     setExpenses(expense);
     setIsLoading(false);
   };
   useEffect(() => {
-    console.log("in use effect");
+    // console.log("in use effect");
     fetchProperties();
   }, []);
-  console.log(expenseUnique);
+  // console.log(expenseUnique);
 
   const splitFees = (newUtility) => {
     let charge = parseFloat(newUtility.charge);
-    if (newUtility.split_type === "No Split") {
-      let count = newUtility.properties.length;
-      let charge_per = charge;
-      newUtility.properties.forEach((p) => (p.charge = charge_per));
-    }
 
     if (newUtility.split_type === "Uniform") {
       let count = newUtility.properties.length;
@@ -369,7 +361,7 @@ function OwnerUtilities(props) {
       linked_bill_id: bill_uid,
       pur_property_id: properties_uid,
       payer: [user.user_uid],
-      receiver: user.user_uid,
+      receiver: newUtility.provider,
       purchase_type: "UTILITY",
       description: newUtility.service_name,
       amount_due: newUtility.charge,
@@ -384,7 +376,9 @@ function OwnerUtilities(props) {
     setPurchaseUID(response_pm.purchase_uid);
     console.log(response_pm);
     splitFees(newUtility);
+    console.log(tenantPay, ownerPay);
     for (const property of newUtility.properties) {
+      console.log("in for loop");
       console.log(property);
       const new_purchase = {
         linked_bill_id: bill_uid,
@@ -405,9 +399,9 @@ function OwnerUtilities(props) {
       }
       if (tenantPay) {
         if (property.rental_status === "ACTIVE") {
-          console.log("property.tenants", property.rentalInfo);
-          let tenant_ids = property.rentalInfo[0].map((t) => t.tenant_id);
-          new_purchase.payer = tenant_ids;
+          console.log("property.tenants", property.rentalInfo[0]);
+          let tenant_ids = property.rentalInfo[0].tenant_id;
+          new_purchase.payer = [tenant_ids];
         } else {
           new_purchase.payer = [property.owner_id];
         }
@@ -443,12 +437,12 @@ function OwnerUtilities(props) {
         setErrorMessage("Please fill out all fields");
         return;
       }
-      let due_date = new Date(newUtility.due_date);
-      let current_date = new Date();
-      if (current_date >= due_date) {
-        setErrorMessage("Select a Due by Date later than current date");
-        return;
-      }
+      // let due_date = new Date(newUtility.due_date);
+      // let current_date = new Date();
+      // if (current_date >= due_date) {
+      //   setErrorMessage("Select a Due by Date later than current date");
+      //   return;
+      // }
     }
 
     setErrorMessage("");
@@ -601,6 +595,16 @@ function OwnerUtilities(props) {
       id: "bill_algorithm",
       numeric: false,
       label: "Split Method",
+    },
+    {
+      id: "payer",
+      numeric: false,
+      label: "Payer",
+    },
+    {
+      id: "receiver",
+      numeric: false,
+      label: "Payee",
     },
     {
       id: "amount",
@@ -834,7 +838,10 @@ function OwnerUtilities(props) {
                           <Checkbox
                             type="BOX"
                             checked={tenantPay}
-                            onClick={() => setTenantPay(!tenantPay)}
+                            onClick={() => {
+                              setTenantPay(!tenantPay);
+                              setOwnerPay(false);
+                            }}
                           />
                           <p className="ms-1 mb-1">Tenant</p>
                         </div>
@@ -855,7 +862,10 @@ function OwnerUtilities(props) {
                           <Checkbox
                             type="BOX"
                             checked={ownerPay}
-                            onClick={() => setOwnerPay(!ownerPay)}
+                            onClick={() => {
+                              setOwnerPay(!ownerPay);
+                              setTenantPay(false);
+                            }}
                           />
                           <p className="ms-1 mb-1">Owner</p>
                         </div>
@@ -1008,7 +1018,6 @@ function OwnerUtilities(props) {
                             value={newUtility.split_type}
                             onChange={(e) => changeNewUtility(e, "split_type")}
                           >
-                            <option value="No Split">No Split</option>
                             <option value="Uniform">Uniform</option>
                             <option value="Tenant">By Tenant Count</option>
                             <option value="Area">By Square Footage</option>
@@ -1111,7 +1120,8 @@ function OwnerUtilities(props) {
                             getComparator(order, orderBy)
                           ).map((expense, index) => {
                             return expense.purchase_type === "UTILITY" &&
-                              expense.payer.includes(user.user_uid) ? (
+                              expense.payer.includes(user.user_uid) &&
+                              expense.receiver !== user.user_uid ? (
                               <TableRow
                                 hover
                                 role="checkbox"
@@ -1122,6 +1132,13 @@ function OwnerUtilities(props) {
                                   setPayment(expense);
                                 }}
                               >
+                                {console.log(
+                                  "purchase",
+                                  expense.purchase_uid,
+                                  user.user_uid,
+                                  expense.receiver,
+                                  expense.receiver !== user.user_uid
+                                )}
                                 <TableCell
                                   padding="none"
                                   size="small"
@@ -1142,7 +1159,11 @@ function OwnerUtilities(props) {
                                   align="center"
                                 >
                                   {" "}
-                                  {expense.address}
+                                  {expense.address
+                                    .split(";")
+                                    .map((addressMap) => {
+                                      return <p>{addressMap}</p>;
+                                    })}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1152,6 +1173,20 @@ function OwnerUtilities(props) {
                                   {expense.bill_algorithm != null
                                     ? expense.bill_algorithm
                                     : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.payer}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.receiver}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1345,6 +1380,20 @@ function OwnerUtilities(props) {
                                   {expense.bill_algorithm != null
                                     ? expense.bill_algorithm
                                     : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.payer}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.receiver}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
