@@ -638,7 +638,7 @@ export default function OwnerDashboard2() {
   console.log(cashflowData);
 
   return stage === "LIST" ? (
-    <div className="OwnerDashboard2">
+    <div className="w-100 overflow-hidden">
       {!isLoading && ownerData.length > 1 ? (
         <div className="flex-1">
           <div
@@ -671,7 +671,7 @@ export default function OwnerDashboard2() {
                 {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
               </Col>
             </Row>
-            <Row className="m-3">
+            <Row className="m-3" style={{ overflow: "scroll" }}>
               <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}

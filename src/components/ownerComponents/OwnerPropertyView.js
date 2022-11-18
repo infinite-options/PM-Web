@@ -255,9 +255,9 @@ function OwnerPropertyView(props) {
     });
     setTenantInfo(tenant);
   };
-  useState(() => {
+  useEffect(() => {
     fetchProperty();
-  });
+  }, []);
 
   const [pmID, setPmID] = useState("");
   const [currentImg, setCurrentImg] = useState(0);
