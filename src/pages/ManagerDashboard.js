@@ -3829,11 +3829,23 @@ export default function ManagerDashboard() {
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            padding="none"
+                            size="small"
+                            align="center"
+                            onClick={() => {
+                              navigate(
+                                `/manager-properties/${property.property_uid}`,
+                                {
+                                  state: {
+                                    property: property,
+                                    property_uid: property.property_uid,
+                                  },
+                                }
+                              );
+                            }}
+                          >
                             {property.num_apps}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.rent_status}
                           </TableCell>
                           <TableCell
                             padding="none"
@@ -3851,10 +3863,9 @@ export default function ManagerDashboard() {
                               );
                             }}
                           >
-                            {property.rent_paid !== ""
-                              ? property.rent_paid
-                              : "Not Rented"}
+                            {property.rent_status}
                           </TableCell>
+
                           <TableCell
                             padding="none"
                             size="small"

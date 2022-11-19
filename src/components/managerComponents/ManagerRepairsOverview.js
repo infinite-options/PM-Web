@@ -13,9 +13,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { useLocation, useNavigate } from "react-router-dom";
-import { get } from "../../utils/api";
 import AppContext from "../../AppContext";
 import SideBar from "./SideBar";
+import Header from "../Header";
+import ManagerFooter from "./ManagerFooter";
+import RepairImg from "../../icons/RepairImg.svg";
+import { get } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -35,7 +38,20 @@ function ManagerRepairsOverview(props) {
   // sorting variables
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   const sort_repairs = (repairs) => {
     const repairs_with_quotes = repairs.filter(
       (repair) => repair.quotes_to_review > 0
@@ -269,17 +285,17 @@ function ManagerRepairsOverview(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="main-content"
+          hidden={!responsive.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
-          <br />
+          <SideBar />
+        </div>
+        <div className="w-100">
           {/* <div
             className="mx-2 my-2 p-3"
             style={{
@@ -413,8 +429,21 @@ function ManagerRepairsOverview(props) {
                 )
             )}
           </div> */}
+          <Header title="Maintenance and Repairs" />
           <Row className="m-3">
-            <Table classes={{ root: classes.customTable }} size="small">
+            <Col>
+              <h1>Maintenance and Repairs</h1>
+            </Col>
+            <Col>
+              {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+            </Col>
+          </Row>
+          <Row className="m-3" style={{ overflow: "scroll" }}>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -449,7 +478,16 @@ function ManagerRepairsOverview(props) {
                             }}
                           />
                         ) : (
-                          ""
+                          <img
+                            src={RepairImg}
+                            alt="Repair"
+                            style={{
+                              borderRadius: "4px",
+                              objectFit: "cover",
+                              width: "100px",
+                              height: "100px",
+                            }}
+                          />
                         )}
                       </TableCell>
                       <TableCell padding="none" size="small" align="center">
@@ -490,6 +528,9 @@ function ManagerRepairsOverview(props) {
             </Table>
           </Row>
         </div>
+      </div>
+      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+        <ManagerFooter />
       </div>
     </div>
   );

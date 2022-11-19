@@ -16,9 +16,12 @@ import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import SideBar from "./SideBar";
+import Header from "../Header";
+import ManagerFooter from "./ManagerFooter";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
+import RepairImg from "../../icons/RepairImg.svg";
 import { get, put } from "../../utils/api";
 import {
   mediumBold,
@@ -58,6 +61,21 @@ function ManagerTenantList(props) {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
 
   const fetchTenants = async () => {
     if (access_token === null) {
@@ -362,17 +380,29 @@ function ManagerTenantList(props) {
   };
 
   return (
-    <div>
+    <div className="w-100 overflow-hidden">
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
+          hidden={!responsive.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+
+        <div className="w-100 mb-5">
+          <Header title="Tenants" />
+          <Row className="m-3">
+            <Col>
+              <h1>Tenants</h1>
+            </Col>
+            <Col>
+              {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+            </Col>
+          </Row>
           <Row className="w-100 m-3">
             <Col> Search by</Col>
 
@@ -386,8 +416,12 @@ function ManagerTenantList(props) {
               />
             </Col>
           </Row>
-          <Row className="m-3">
-            <Table classes={{ root: classes.customTable }} size="small">
+          <Row className="m-3" style={{ overflow: "scroll" }}>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -409,31 +443,32 @@ function ManagerTenantList(props) {
                   })
                   .map((tenant, index) => {
                     return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        <TableCell
-                          padding="none"
-                          size="small"
-                          align="center"
-                          onClick={() => {
-                            setSelectedTenant(tenant);
-                            setUserPayments(tenant.user_payments);
-                            setMaintenanceRequests(tenant.user_repairRequests);
-                            setShowDetails(!showDetails);
-                            navigate(`./${tenant.tenant_id}`, {
-                              state: {
-                                // maintenanceRequests: maintenanceRequests,
-                                // userPayments: userPayments,
-                                // rentDetails: rentDetails,
-                                // selectedTenant: selectedTenant,
-                                // dueDate: dueDate,
-                                // lateAfter: lateAfter,
-                                // lateFee: lateFee,
-                                // lateFeePer: lateFeePer,
-                                selectedTenant: tenant,
-                              },
-                            });
-                          }}
-                        >
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={index}
+                        onClick={() => {
+                          setSelectedTenant(tenant);
+                          setUserPayments(tenant.user_payments);
+                          setMaintenanceRequests(tenant.user_repairRequests);
+                          setShowDetails(!showDetails);
+                          navigate(`./${tenant.tenant_id}`, {
+                            state: {
+                              // maintenanceRequests: maintenanceRequests,
+                              // userPayments: userPayments,
+                              // rentDetails: rentDetails,
+                              // selectedTenant: selectedTenant,
+                              // dueDate: dueDate,
+                              // lateAfter: lateAfter,
+                              // lateFee: lateFee,
+                              // lateFeePer: lateFeePer,
+                              selectedTenant: tenant,
+                            },
+                          });
+                        }}
+                      >
+                        <TableCell padding="none" size="small" align="center">
                           {tenant.tenant_first_name} {tenant.tenant_last_name}
                         </TableCell>
                         <TableCell padding="none" size="small" align="center">
@@ -700,8 +735,12 @@ function ManagerTenantList(props) {
                     overflow: "scroll",
                   }}
                 >
-                  <Row className="m-3">
-                    <Table classes={{ root: classes.customTable }} size="small">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
                       <EnhancedTableHead2
                         order={order}
                         orderBy={orderBy}
@@ -742,7 +781,16 @@ function ManagerTenantList(props) {
                                   }}
                                 />
                               ) : (
-                                ""
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
                               )}
                             </TableCell>
 
@@ -883,6 +931,9 @@ function ManagerTenantList(props) {
             </div>
           ) : null}
         </div>
+      </div>
+      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+        <ManagerFooter />
       </div>
     </div>
   );

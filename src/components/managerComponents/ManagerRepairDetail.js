@@ -7,6 +7,7 @@ import SideBar from "./SideBar";
 import Checkbox from "../Checkbox";
 import AppContext from "../../AppContext";
 import Header from "../Header";
+import ManagerFooter from "./ManagerFooter";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import HighPriority from "../../icons/highPriority.svg";
@@ -50,6 +51,21 @@ function ManagerRepairDetail(props) {
 
   const [showSpinner, setShowSpinner] = useState(false);
   const repair = location.state.repair;
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   // const { repair, back } = props;
 
   // console.log(repair)
@@ -211,16 +227,17 @@ function ManagerRepairDetail(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsive.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100">
           <Header
             title="Repairs"
             leftText={
@@ -910,6 +927,9 @@ function ManagerRepairDetail(props) {
               </div>
             )}
         </div>
+      </div>
+      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+        <ManagerFooter />
       </div>
     </div>
   );

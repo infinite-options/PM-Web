@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import SideBar from "./SideBar";
 import Header from "../Header";
+import ManagerFooter from "./ManagerFooter";
 import AppContext from "../../AppContext";
 import { get, put } from "../../utils/api";
 import Phone from "../../icons/Phone.svg";
@@ -50,6 +51,20 @@ function ManagerOwnerList(props) {
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   const fetchProperties = async () => {
     if (access_token === null) {
       navigate("/");
@@ -200,97 +215,32 @@ function ManagerOwnerList(props) {
   return (
     <div className="pb-5 mb-5 h-100">
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100 m-3"
+          hidden={!responsive.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
-          <br />
-          {/* <Header
-            title="Owner Info"
-            leftText="<Back"
-            leftFn={() => navigate("/manager")}
-          /> */}
-          {/* <Row className="w-100 m-3">
-            {owners.map((owner, i) => (
-              <Container
-                key={i}
-                className="p-3 mb-2"
-                style={{
-                  boxShadow: " 0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                <Row
-                  onClick={() => {
-                    setShowDetails(!showDetails);
-                    setSelectedOwner(owner);
-                  }}
-                >
-                  <Col className="ps-0" xs={8}>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                        {owner.owner_first_name} {owner.owner_last_name}
-                      </h5>
-                    </div>
-                  </Col>
-                  <Col>
-                    <div className="d-flex  justify-content-end ">
-                      <div
-                        style={owner.owner_id ? {} : hidden}
-                        onClick={stopPropagation}
-                      >
-                        <a href={`tel:${owner.owner_phone_number}`}>
-                          <img src={Phone} alt="Phone" style={smallImg} />
-                        </a>
-                        <a href={`mailto:${owner.owner_email}`}>
-                          <img src={Message} alt="Message" style={smallImg} />
-                        </a>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-                <Row
-                  style={{
-                    font: "normal normal 600 16px/22px Bahnschrift-Regular",
-                    color: "#007AFF",
-                  }}
-                >
-                  {owner.properties.length} Properties
-                </Row>
-                {showDetails && selectedOwner.owner_id === owner.owner_id ? (
-                  <Row className="mx-2">
-                    {selectedOwner.properties.map((property, i) => {
-                      return (
-                        <Row
-                          className="p-1"
-                          style={{
-                            background:
-                              i % 2 === 0
-                                ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                : "#F3F3F3 0% 0% no-repeat padding-box",
-                            font: "normal normal normal 16px Bahnschrift-Regular",
-                          }}
-                        >
-                          {property.address}
-                          {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-                          {property.city}, {property.state} {property.zip}
-                        </Row>
-                      );
-                    })}
-                  </Row>
-                ) : null}
-              </Container>
-            ))}
-          </Row>  */}
+          <SideBar />
+        </div>
+        <div className="w-100  mb-5">
+          <Header title="Owners" />
           <Row className="m-3">
-            <Table classes={{ root: classes.customTable }} size="small">
+            <Col>
+              <h1>Owners</h1>
+            </Col>
+            <Col>
+              {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+            </Col>
+          </Row>
+          <Row className="m-3" style={{ overflow: "scroll" }}>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -308,16 +258,17 @@ function ManagerOwnerList(props) {
                   })
                   .map((owner, index) => {
                     return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        <TableCell
-                          padding="none"
-                          size="small"
-                          align="center"
-                          onClick={() => {
-                            setShowDetails(!showDetails);
-                            setSelectedOwner(owner);
-                          }}
-                        >
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={index}
+                        onClick={() => {
+                          setShowDetails(!showDetails);
+                          setSelectedOwner(owner);
+                        }}
+                      >
+                        <TableCell padding="none" size="small" align="center">
                           {owner.owner_first_name} {owner.owner_last_name}
                         </TableCell>
 
@@ -398,6 +349,9 @@ function ManagerOwnerList(props) {
             </Row>
           ) : null} */}
         </div>
+      </div>
+      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+        <ManagerFooter />
       </div>
     </div>
   );
