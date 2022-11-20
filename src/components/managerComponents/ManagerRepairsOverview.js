@@ -17,7 +17,9 @@ import AppContext from "../../AppContext";
 import SideBar from "./SideBar";
 import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
+import ManagerRepairRequest from "./ManagerRepairRequest";
 import RepairImg from "../../icons/RepairImg.svg";
+import AddIcon from "../../icons/AddIcon.svg";
 import { get } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
@@ -33,6 +35,8 @@ function ManagerRepairsOverview(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [repairIter, setRepairIter] = useState([]);
+  const [properties, setProperties] = useState([]);
+  const [stage, setStage] = useState("LIST");
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
@@ -49,7 +53,7 @@ function ManagerRepairsOverview(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
   const sort_repairs = (repairs) => {
@@ -87,14 +91,34 @@ function ManagerRepairsOverview(props) {
     } else {
       management_buid = management_businesses[0].business_uid;
     }
-
-    const response = await get(
-      `/maintenanceRequestsandQuotes?manager_id=${management_buid}`
+    const responseProperties = await get("/managerDashboard", access_token);
+    const properties = responseProperties.result.filter(
+      (property) => property.management_status !== "REJECTED"
     );
-    if (response.msg === "Token has expired") {
+
+    let properties_unique = [];
+    const pids = new Set();
+    properties.forEach((property) => {
+      if (pids.has(property.property_uid)) {
+        const index = properties_unique.findIndex(
+          (item) => item.property_uid === property.property_uid
+        );
+        properties_unique[index].tenants.push(property);
+      } else {
+        pids.add(property.property_uid);
+        properties_unique.push(property);
+        properties_unique[properties_unique.length - 1].tenants = [property];
+      }
+    });
+    if (responseProperties.msg === "Token has expired") {
       refresh();
       return;
     }
+    setProperties(properties);
+    const response = await get(
+      `/maintenanceRequestsandQuotes?manager_id=${management_buid}`
+    );
+
     let repairs = response.result;
     console.log(repairs);
     repairs.forEach((repair, i) => {
@@ -154,6 +178,11 @@ function ManagerRepairsOverview(props) {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
+  };
+  const addRequest = () => {
+    fetchRepairs();
+
+    setStage("LIST");
   };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -282,11 +311,11 @@ function ManagerRepairsOverview(props) {
     // rowCount: PropTypes.number.isRequired,
   };
 
-  return (
+  return stage === "LIST" ? (
     <div>
       <div className="flex-1">
         <div
-          hidden={!responsive.showSidebar}
+          hidden={!responsiveSidebar.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             width: "11rem",
@@ -295,7 +324,7 @@ function ManagerRepairsOverview(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100">
+        <div className="w-100 mb-5">
           {/* <div
             className="mx-2 my-2 p-3"
             style={{
@@ -432,10 +461,21 @@ function ManagerRepairsOverview(props) {
           <Header title="Maintenance and Repairs" />
           <Row className="m-3">
             <Col>
-              <h1>Maintenance and Repairs</h1>
+              <h3>Maintenance and Repairs</h3>
             </Col>
             <Col>
-              {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+              <img
+                src={AddIcon}
+                onClick={() => {
+                  setStage("ADDREQUEST");
+                }}
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  float: "right",
+                  marginRight: "5rem",
+                }}
+              />
             </Col>
           </Row>
           <Row className="m-3" style={{ overflow: "scroll" }}>
@@ -529,10 +569,38 @@ function ManagerRepairsOverview(props) {
           </Row>
         </div>
       </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
         <ManagerFooter />
       </div>
     </div>
+  ) : stage === "ADDREQUEST" ? (
+    <div className="OwnerReapirRequest">
+      <div className="flex-1">
+        <div
+          hidden={!responsiveSidebar.showSidebar}
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
+          <Header title="Add Repair Request" />
+          <ManagerRepairRequest
+            properties={properties}
+            cancel={() => setStage("LIST")}
+            onSubmit={addRequest}
+          />
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <ManagerFooter />
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
+    ""
   );
 }
 

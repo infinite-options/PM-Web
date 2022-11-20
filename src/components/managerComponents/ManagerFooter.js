@@ -7,6 +7,9 @@ import Contacts_Gray from "../../icons/Contacts_Gray.svg";
 import Repairs_Gray from "../../icons/Repairs_Gray.svg";
 import Profile_Gray from "../../icons/Profile_Gray.svg";
 import Expenses_Gray from "../../icons/Expenses_Gray.svg";
+import Documents from "../../icons/Tenants.svg";
+import Announcements from "../../icons/announcements.svg";
+import Roles_Gray from "../../icons/Roles_Gray.svg";
 
 function ManagerFooter(props) {
   const navigate = useNavigate();
@@ -40,7 +43,7 @@ function ManagerFooter(props) {
             navigate("/tenant-list");
           }}
         >
-          <img src={Contacts_Gray} alt="Contacts" />
+          <img src={Roles_Gray} alt="Contacts" />
           <p style={smallGray} className="mb-0">
             Tenants
           </p>
@@ -85,7 +88,11 @@ function ManagerFooter(props) {
             navigate("/manager-announcements");
           }}
         >
-          <img src={Expenses_Gray} alt="EXPENSES" />
+          <img
+            src={Announcements}
+            alt="Announcements"
+            style={{ width: "30px", height: "30px" }}
+          />
           <p style={smallGray} className="mb-0">
             Announcements
           </p>
@@ -96,7 +103,11 @@ function ManagerFooter(props) {
             navigate("/manager-documents");
           }}
         >
-          <img src={Profile_Gray} alt="Profile" />
+          <img
+            src={Documents}
+            alt="documents"
+            style={{ width: "30px", height: "30px" }}
+          />
           <p style={smallGray} className="mb-0">
             Documents
           </p>

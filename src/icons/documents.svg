@@ -8,13 +8,11 @@
     <g id="Group_1" data-name="Group 1">
       <g id="Mask_Group_2" data-name="Mask Group 2" clip-path="url(#clip-path)">
         <g id="backup_table_black_24dp">
-          <g id="Group_10" data-name="Group 10">
-            <rect id="Rectangle_9" data-name="Rectangle 9" width="50" height="50" transform="translate(0.5)" fill="none"/>
-          </g>
+          
           <g id="Group_12" data-name="Group 12" transform="translate(4.167 4.167)">
             <g id="Group_11" data-name="Group 11">
-              <path id="Path_11" data-name="Path 11" d="M41.667,12.5V41.667H12.5v4.167H41.667a4.179,4.179,0,0,0,4.167-4.167V12.5Z" transform="translate(-4.167 -4.167)" fill="#007aff"/>
-              <path id="Path_12" data-name="Path 12" d="M33.333,4.167h-25A4.179,4.179,0,0,0,4.167,8.333v25A4.179,4.179,0,0,0,8.333,37.5h25A4.179,4.179,0,0,0,37.5,33.333v-25A4.179,4.179,0,0,0,33.333,4.167ZM18.75,33.333H8.333V22.917H18.75Zm14.583,0H22.917V22.917H33.333Zm0-14.583h-25V8.333h25Z" transform="translate(-4.167 -4.167)" fill="#007aff"/>
+              <path id="Path_11" data-name="Path 11" d="M41.667,12.5V41.667H12.5v4.167H41.667a4.179,4.179,0,0,0,4.167-4.167V12.5Z" transform="translate(-4.167 -4.167)" fill="#c4c4c4"/>
+              <path id="Path_12" data-name="Path 12" d="M33.333,4.167h-25A4.179,4.179,0,0,0,4.167,8.333v25A4.179,4.179,0,0,0,8.333,37.5h25A4.179,4.179,0,0,0,37.5,33.333v-25A4.179,4.179,0,0,0,33.333,4.167ZM18.75,33.333H8.333V22.917H18.75Zm14.583,0H22.917V22.917H33.333Zm0-14.583h-25V8.333h25Z" transform="translate(-4.167 -4.167)" fill="#c4c4c4"/>
             </g>
           </g>
         </g>

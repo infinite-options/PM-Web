@@ -8,6 +8,7 @@ import Repairs_Gray from "../../icons/Repairs_Gray.svg";
 import Profile_Gray from "../../icons/Profile_Gray.svg";
 import Expenses_Gray from "../../icons/Expenses_Gray.svg";
 
+import Documents from "../../icons/Tenants.svg";
 function OwnerFooter(props) {
   const navigate = useNavigate();
   const footerContainer = {
@@ -74,7 +75,11 @@ function OwnerFooter(props) {
             navigate("/owner-documents");
           }}
         >
-          <img src={Profile_Gray} alt="Profile" />
+          <img
+            src={Documents}
+            alt="Documents"
+            style={{ width: "30px", height: "30px" }}
+          />
           <p style={smallGray} className="mb-0">
             Documents
           </p>
