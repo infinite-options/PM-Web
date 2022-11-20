@@ -179,9 +179,9 @@ function OwnerDocuments(props) {
                         <TableRow>
                           <TableCell width="380px">
                             {ald.description != "" ? (
-                              <p>{ald.description}</p>
+                              <p className="mx-3">{ald.description}</p>
                             ) : (
-                              <p>Document {i + 1}</p>
+                              <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
                           <TableCell width="180px">{ald.expiry_date}</TableCell>
@@ -296,9 +296,9 @@ function OwnerDocuments(props) {
                         <TableRow>
                           <TableCell width="380px">
                             {amd.description != "" ? (
-                              <p>{amd.description}</p>
+                              <p className="mx-3">{amd.description}</p>
                             ) : (
-                              <p>Document {i + 1}</p>
+                              <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
                           <TableCell width="180px">{amd.expiry_date}</TableCell>
@@ -379,9 +379,9 @@ function OwnerDocuments(props) {
                         <TableRow>
                           <TableCell width="380px">
                             {pld.description != "" ? (
-                              <p>{pld.description}</p>
+                              <p className="mx-3">{pld.description}</p>
                             ) : (
-                              <p>Document {i + 1}</p>
+                              <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
                           <TableCell width="180px">{pld.expiry_date}</TableCell>
@@ -498,9 +498,9 @@ function OwnerDocuments(props) {
                         <TableRow>
                           <TableCell width="380px">
                             {pmd.description != "" ? (
-                              <p>{pmd.description}</p>
+                              <p className="mx-3">{pmd.description}</p>
                             ) : (
-                              <p>Document {i + 1}</p>
+                              <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
                           <TableCell width="180px">{pmd.expiry_date}</TableCell>

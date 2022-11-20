@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import * as ReactBootStrap from "react-bootstrap";
 import RepairImages from "../RepairImages";
+import AppContext from "../../AppContext";
 import HighPriority from "../../icons/highPriority.svg";
 import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
@@ -27,10 +28,12 @@ const useStyles = makeStyles((theme) => ({
     opacity: "1",
   },
 }));
-function OwnerRepairRequest(props) {
+function ManagerRepairRequest(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const location = useLocation();
+
+  const { userData, refresh } = useContext(AppContext);
+  const { access_token, user } = userData;
   let pageURL = window.location.href.split("/");
   // const properties = location.state.properties;
   const { properties } = props;
@@ -48,6 +51,24 @@ function OwnerRepairRequest(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
+    if (access_token === null) {
+      navigate("/");
+      return;
+    }
+
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length < 1) {
+      console.log("No associated PM Businesses");
+      return;
+    } else if (management_businesses.length > 1) {
+      console.log("Multiple associated PM Businesses");
+      management_buid = management_businesses[0].business_uid;
+    } else {
+      management_buid = management_businesses[0].business_uid;
+    }
     let selectedProperty = JSON.parse(sp);
     console.log(typeof JSON.parse(sp));
     const newRequest = {
@@ -56,7 +77,7 @@ function OwnerRepairRequest(props) {
       request_type: issueType,
       description: description,
       priority: priority,
-      request_created_by: selectedProperty.owner_id,
+      request_created_by: management_buid,
     };
     const files = imageState[0];
     let i = 0;
@@ -86,7 +107,19 @@ function OwnerRepairRequest(props) {
     ) : (
       ""
     );
+  function decycle(obj, stack = []) {
+    if (!obj || typeof obj !== "object") return obj;
 
+    if (stack.includes(obj)) return null;
+
+    let s = stack.concat([obj]);
+
+    return Array.isArray(obj)
+      ? obj.map((x) => decycle(x, s))
+      : Object.fromEntries(
+          Object.entries(obj).map(([k, v]) => [k, decycle(v, s)])
+        );
+  }
   return (
     <div className="d-flex flex-column w-100 p-2 overflow-hidden">
       <Row style={headings} className="m-2">
@@ -111,7 +144,7 @@ function OwnerRepairRequest(props) {
             Search Your Properties
           </option>
           {properties.map((property, i) => (
-            <option key={i} value={JSON.stringify(property)}>
+            <option key={i} value={JSON.stringify(decycle(property))}>
               {property.address}
               {property.unit !== "" ? " " + property.unit : ""},&nbsp;
               {property.city},&nbsp;{property.state} {property.zip}
@@ -283,4 +316,4 @@ function OwnerRepairRequest(props) {
   );
 }
 
-export default OwnerRepairRequest;
+export default ManagerRepairRequest;

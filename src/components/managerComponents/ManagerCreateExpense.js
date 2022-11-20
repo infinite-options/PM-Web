@@ -1,5 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import AppContext from "../../AppContext";
+import ArrowDown from "../../icons/ArrowDown.svg";
 import {
   squareForm,
   pillButton,
@@ -8,10 +11,12 @@ import {
   red,
   formLabel,
 } from "../../utils/styles";
-import ArrowDown from "../../icons/ArrowDown.svg";
 import { post, put } from "../../utils/api";
 
-function OwnerCreateExpense(props) {
+function ManagerCreateExpense(props) {
+  const navigate = useNavigate();
+  const { userData, refresh } = useContext(AppContext);
+  const { access_token, user } = userData;
   const { properties } = props;
   const [category, setCategory] = useState("Management");
   const [title, setTitle] = useState("");
@@ -29,97 +34,129 @@ function OwnerCreateExpense(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    let selectedProperty = JSON.parse(sp);
-    if (category === "Mortgage") {
-      let mortgage = [];
-      const files = selectedProperty.images;
-      const newMortgage = {
-        category: category,
-        title: title,
-        description: description,
-        amount: amount,
-        frequency: frequency,
-        frequency_of_payment: frequencyOfPayment,
-        next_date: date,
-      };
-      mortgage.push(newMortgage);
-      console.log(newMortgage);
-      // let formData = new FormData();
-      const updateMortgage = {
-        property_uid: selectedProperty.property_uid,
-        mortgages: JSON.stringify(newMortgage),
-      };
-
-      const response = await put("/properties", updateMortgage, null, files);
-      reload();
-    } else if (category === "Insurance") {
-      let insurance =
-        selectedProperty.insurance == null
-          ? []
-          : JSON.parse(selectedProperty.insurance);
-      // console.log(insurance);
-      const files = selectedProperty.images;
-      const newInsurance = {
-        category: category,
-        title: title,
-        description: description,
-        amount: amount,
-        frequency: frequency,
-        frequency_of_payment: frequencyOfPayment,
-        next_date: date,
-      };
-      insurance.push(newInsurance);
-      // console.log(insurance);
-      const updateInsurance = {
-        property_uid: selectedProperty.property_uid,
-        insurance: JSON.stringify(insurance),
-      };
-
-      const response = await put("/properties", updateInsurance, null, files);
-      reload();
-    } else if (category === "Tax") {
-      let taxes =
-        selectedProperty.taxes == null
-          ? []
-          : JSON.parse(selectedProperty.taxes);
-      // console.log(taxes);
-      const files = selectedProperty.images;
-      const newTax = {
-        category: category,
-        title: title,
-        description: description,
-        amount: amount,
-        frequency: frequency,
-        frequency_of_payment: frequencyOfPayment,
-        next_date: date,
-      };
-      taxes.push(newTax);
-      // console.log(taxes);
-      const updateTaxes = {
-        property_uid: selectedProperty.property_uid,
-        taxes: JSON.stringify(taxes),
-      };
-      const response = await put("/properties", updateTaxes, null, files);
-      reload();
-    } else {
-      const newExpense = {
-        pur_property_id: selectedProperty.property_uid,
-        payer: selectedProperty.owner_id,
-        receiver: selectedProperty.property_uid,
-        purchase_type: category,
-        // title: title,
-        description: description,
-        amount_due: amount,
-        purchase_frequency: frequency,
-        payment_frequency: frequencyOfPayment,
-        next_payment: date,
-      };
-
-      console.log(newExpense);
-      const response = await post("/createExpenses", newExpense);
-      reload();
+    if (access_token === null) {
+      navigate("/");
+      return;
     }
+
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length < 1) {
+      console.log("No associated PM Businesses");
+      return;
+    } else if (management_businesses.length > 1) {
+      console.log("Multiple associated PM Businesses");
+      management_buid = management_businesses[0].business_uid;
+    } else {
+      management_buid = management_businesses[0].business_uid;
+    }
+    let selectedProperty = JSON.parse(sp);
+    // if (category === "Mortgage") {
+    //   let mortgage = [];
+    //   const files = selectedProperty.images;
+    //   const newMortgage = {
+    //     category: category,
+    //     title: title,
+    //     description: description,
+    //     amount: amount,
+    //     frequency: frequency,
+    //     frequency_of_payment: frequencyOfPayment,
+    //     next_date: date,
+    //   };
+    //   mortgage.push(newMortgage);
+    //   console.log(newMortgage);
+    //   // let formData = new FormData();
+    //   const updateMortgage = {
+    //     property_uid: selectedProperty.property_uid,
+    //     mortgages: JSON.stringify(newMortgage),
+    //   };
+
+    //   const response = await put("/properties", updateMortgage, null, files);
+    //   reload();
+    // } else if (category === "Insurance") {
+    //   let insurance =
+    //     selectedProperty.insurance == null
+    //       ? []
+    //       : JSON.parse(selectedProperty.insurance);
+    //   // console.log(insurance);
+    //   const files = selectedProperty.images;
+    //   const newInsurance = {
+    //     category: category,
+    //     title: title,
+    //     description: description,
+    //     amount: amount,
+    //     frequency: frequency,
+    //     frequency_of_payment: frequencyOfPayment,
+    //     next_date: date,
+    //   };
+    //   insurance.push(newInsurance);
+    //   // console.log(insurance);
+    //   const updateInsurance = {
+    //     property_uid: selectedProperty.property_uid,
+    //     insurance: JSON.stringify(insurance),
+    //   };
+
+    //   const response = await put("/properties", updateInsurance, null, files);
+    //   reload();
+    // } else if (category === "Tax") {
+    //   let taxes =
+    //     selectedProperty.taxes == null
+    //       ? []
+    //       : JSON.parse(selectedProperty.taxes);
+    //   // console.log(taxes);
+    //   const files = selectedProperty.images;
+    //   const newTax = {
+    //     category: category,
+    //     title: title,
+    //     description: description,
+    //     amount: amount,
+    //     frequency: frequency,
+    //     frequency_of_payment: frequencyOfPayment,
+    //     next_date: date,
+    //   };
+    //   taxes.push(newTax);
+    //   // console.log(taxes);
+    //   const updateTaxes = {
+    //     property_uid: selectedProperty.property_uid,
+    //     taxes: JSON.stringify(taxes),
+    //   };
+    //   const response = await put("/properties", updateTaxes, null, files);
+    //   reload();
+    // } else {
+    const newExpense = {
+      pur_property_id: selectedProperty.property_uid,
+      payer: management_buid,
+      receiver: selectedProperty.property_uid,
+      purchase_type: category,
+      // title: title,
+      description: description,
+      amount_due: amount,
+      purchase_frequency: frequency,
+      payment_frequency: frequencyOfPayment,
+      next_payment: date,
+    };
+
+    console.log(newExpense);
+    const response = await post("/createExpenses", newExpense);
+    reload();
+    // }
   };
+  function decycle(obj, stack = []) {
+    if (!obj || typeof obj !== "object") return obj;
+
+    if (stack.includes(obj)) return null;
+
+    let s = stack.concat([obj]);
+
+    return Array.isArray(obj)
+      ? obj.map((x) => decycle(x, s))
+      : Object.fromEntries(
+          Object.entries(obj).map(([k, v]) => [k, decycle(v, s)])
+        );
+  }
+
   const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
@@ -151,7 +188,7 @@ function OwnerCreateExpense(props) {
             Search Your Properties
           </option>
           {properties.map((property, i) => (
-            <option key={i} value={JSON.stringify(property)}>
+            <option key={i} value={JSON.stringify(decycle(property))}>
               {property.address}
               {property.unit !== "" ? " " + property.unit : ""},&nbsp;
               {property.city},&nbsp;{property.state} {property.zip}
@@ -171,9 +208,9 @@ function OwnerCreateExpense(props) {
           <option>Management</option>
           <option>Maintenance</option>
           <option>Repairs</option>
-          <option>Insurance</option>
+          {/* <option>Insurance</option>
           <option>Mortgage</option>
-          <option>Tax</option>
+          <option>Tax</option> */}
         </Form.Select>
       </Form.Group>
       {category === "Insurance" ||
@@ -383,7 +420,6 @@ function OwnerCreateExpense(props) {
           />
         </Form.Group>
       )}
-
       <div className="text-center" style={errorMessage === "" ? hidden : {}}>
         <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
       </div>
@@ -409,4 +445,4 @@ function OwnerCreateExpense(props) {
   );
 }
 
-export default OwnerCreateExpense;
+export default ManagerCreateExpense;

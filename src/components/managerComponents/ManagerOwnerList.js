@@ -20,15 +20,7 @@ import AppContext from "../../AppContext";
 import { get, put } from "../../utils/api";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
-import {
-  mediumBold,
-  xSmall,
-  blue,
-  smallImg,
-  hidden,
-  gray,
-  pillButton,
-} from "../../utils/styles";
+import { smallImg, hidden } from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -283,8 +275,20 @@ function ManagerOwnerList(props) {
                           {owner.properties.map((property, i) => {
                             return (
                               <Row
+                                onClick={() => {
+                                  navigate(
+                                    `/manager-properties/${property.property_uid}`,
+                                    {
+                                      state: {
+                                        property: property,
+                                        property_uid: property.property_uid,
+                                      },
+                                    }
+                                  );
+                                }}
                                 className="p-1"
                                 style={{
+                                  cursor: "pointer",
                                   background:
                                     i % 2 === 0
                                       ? "#FFFFFF 0% 0% no-repeat padding-box"
@@ -326,28 +330,6 @@ function ManagerOwnerList(props) {
               </TableBody>
             </Table>
           </Row>
-          {/* {showDetails ? (
-            <Row className="mx-2">
-              {selectedOwner.properties.map((property, i) => {
-                return (
-                  <Row
-                    className="p-1"
-                    style={{
-                      background:
-                        i % 2 === 0
-                          ? "#FFFFFF 0% 0% no-repeat padding-box"
-                          : "#F3F3F3 0% 0% no-repeat padding-box",
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
-                  >
-                    {property.address}
-                    {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-                    {property.city}, {property.state} {property.zip}
-                  </Row>
-                );
-              })}
-            </Row>
-          ) : null} */}
         </div>
       </div>
       <div hidden={responsive.showSidebar} className="w-100 mt-3">

@@ -19,8 +19,8 @@ import SideBar from "../components/managerComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
 import ManagerPropertyView from "../components/managerComponents/ManagerPropertyView";
-import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
-import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
+import ManagerCreateExpense from "../components/managerComponents/ManagerCreateExpense";
+import ManagerRepairRequest from "../components/managerComponents/ManagerRepairRequest";
 import ManagerFooter from "../components/managerComponents/ManagerFooter";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
@@ -262,25 +262,38 @@ export default function ManagerDashboard() {
       numeric: false,
       label: "Street Address",
     },
-    {
-      id: "city",
-      numeric: false,
-      label: "City,State",
-    },
+    // {
+    //   id: "city",
+    //   numeric: false,
+    //   label: "City,State",
+    // },
     {
       id: "zip",
       numeric: true,
       label: "Zip",
     },
+
+    {
+      id: "owner_first_name",
+      numeric: false,
+      label: "Owner",
+    },
+
+    {
+      id: "num_apps",
+      numeric: false,
+      label: "Apps",
+    },
+
     {
       id: "tenant",
       numeric: false,
       label: "Tenant",
     },
     {
-      id: "num_apps",
-      numeric: false,
-      label: "Apps",
+      id: "lease_end",
+      numeric: true,
+      label: "Lease End",
     },
     {
       id: "rent_status",
@@ -288,15 +301,45 @@ export default function ManagerDashboard() {
       label: "Rent Status",
     },
     {
+      id: "late_date",
+      numeric: true,
+      label: "Days Late",
+    },
+    {
+      id: "new_mr",
+      numeric: true,
+      label: "OP",
+    },
+    {
+      id: "process_mr",
+      numeric: true,
+      label: "PR",
+    },
+    {
+      id: "quote_received_mr",
+      numeric: true,
+      label: "QR",
+    },
+    {
+      id: "quotes_accepted_mr",
+      numeric: true,
+      label: "IP",
+    },
+    // {
+    //   id: "oldestOpenMR",
+    //   numeric: true,
+    //   label: "Longest duration",
+    // },
+    {
       id: "listed_rent",
       numeric: true,
       label: "Rent",
     },
-    {
-      id: "per_sqft",
-      numeric: true,
-      label: " $/Sq Ft",
-    },
+    // {
+    //   id: "per_sqft",
+    //   numeric: true,
+    //   label: " $/Sq Ft",
+    // },
     {
       id: "property_type",
       numeric: false,
@@ -306,12 +349,6 @@ export default function ManagerDashboard() {
       id: "num_beds",
       numeric: true,
       label: "Size",
-    },
-
-    {
-      id: "lease_end",
-      numeric: true,
-      label: "Lease End",
     },
   ];
   function EnhancedTableHeadProperties(props) {
@@ -3656,7 +3693,7 @@ export default function ManagerDashboard() {
             </Row>
             <Row className="m-3" style={{ overflow: "scroll" }}>
               <Table
-                responsive="md"
+                responsive="xl"
                 classes={{ root: classes.customTable }}
                 size="small"
               >
@@ -3748,9 +3785,12 @@ export default function ManagerDashboard() {
                             }}
                           >
                             {property.address}
-                            {property.unit !== "" ? " " + property.unit : ""}
+                            {property.unit !== ""
+                              ? " " + property.unit
+                              : ""}{" "}
+                            {property.city}, {property.state}
                           </TableCell>
-                          <TableCell
+                          {/* <TableCell
                             padding="none"
                             size="small"
                             align="center"
@@ -3767,7 +3807,7 @@ export default function ManagerDashboard() {
                             }}
                           >
                             {property.city}, {property.state}
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell
                             padding="none"
                             size="small"
@@ -3785,6 +3825,35 @@ export default function ManagerDashboard() {
                             }}
                           >
                             {property.zip}
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            size="small"
+                            align="center"
+                            onClick={() => {
+                              navigate(`/owner-list`);
+                            }}
+                          >
+                            {property.owner_first_name}{" "}
+                            {property.owner_last_name}
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            size="small"
+                            align="center"
+                            onClick={() => {
+                              navigate(
+                                `/manager-properties/${property.property_uid}`,
+                                {
+                                  state: {
+                                    property: property,
+                                    property_uid: property.property_uid,
+                                  },
+                                }
+                              );
+                            }}
+                          >
+                            {property.num_apps}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {property.rentalInfo !== "NOT RENTED" ? (
@@ -3829,6 +3898,7 @@ export default function ManagerDashboard() {
                               </div>
                             </div>
                           </TableCell>
+
                           <TableCell
                             padding="none"
                             size="small"
@@ -3845,25 +3915,9 @@ export default function ManagerDashboard() {
                               );
                             }}
                           >
-                            {property.num_apps}
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={() => {
-                              navigate(
-                                `/manager-properties/${property.property_uid}`,
-                                {
-                                  state: {
-                                    property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                          >
-                            {property.rent_status}
+                            {property.rentalInfo.length !== 0
+                              ? property.rentalInfo[0].lease_end
+                              : "None"}
                           </TableCell>
 
                           <TableCell
@@ -3882,8 +3936,34 @@ export default function ManagerDashboard() {
                               );
                             }}
                           >
-                            {"$" + property.listed_rent}
+                            {property.rent_status}
                           </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.late_date != "Not Applicable" ? (
+                              <div>{property.late_date} days</div>
+                            ) : (
+                              <div>{property.late_date}</div>
+                            )}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.new_mr}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.process_mr}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.quote_received_mr}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.quote_accepted_mr}
+                          </TableCell>
+                          {/* <TableCell padding="none" size="small" align="center">
+                            {property.oldestOpenMR != "Not Applicable" ? (
+                              <div>{property.oldestOpenMR} days</div>
+                            ) : (
+                              <div>{property.oldestOpenMR}</div>
+                            )}
+                          </TableCell> */}
                           <TableCell
                             padding="none"
                             size="small"
@@ -3900,8 +3980,9 @@ export default function ManagerDashboard() {
                               );
                             }}
                           >
-                            ${property.per_sqft}
+                            {"$" + property.listed_rent}
                           </TableCell>
+
                           <TableCell
                             padding="none"
                             size="small"
@@ -3938,27 +4019,6 @@ export default function ManagerDashboard() {
                             }}
                           >
                             {property.num_beds + "/" + property.num_baths}
-                          </TableCell>
-
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={() => {
-                              navigate(
-                                `/manager-properties/${property.property_uid}`,
-                                {
-                                  state: {
-                                    property: property,
-                                    property_uid: property.property_uid,
-                                  },
-                                }
-                              );
-                            }}
-                          >
-                            {property.rentalInfo.length !== 0
-                              ? property.rentalInfo[0].lease_end
-                              : "None"}
                           </TableCell>
                         </TableRow>
                       );
@@ -4202,7 +4262,7 @@ export default function ManagerDashboard() {
             leftText="< Back"
             leftFn={() => setStage("LIST")}
           />
-          <OwnerCreateExpense
+          <ManagerCreateExpense
             properties={managerData}
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
@@ -4232,7 +4292,7 @@ export default function ManagerDashboard() {
             leftText="< Back"
             leftFn={() => setStage("LIST")}
           />
-          <OwnerRepairRequest
+          <ManagerRepairRequest
             properties={managerData}
             cancel={() => setStage("LIST")}
             onSubmit={addProperty}
