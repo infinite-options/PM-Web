@@ -1,13 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import ConfirmDialog from "./ConfirmDialog";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+  Grid,
+} from "@material-ui/core";
+import Carousel from "react-multi-carousel";
+import { makeStyles } from "@material-ui/core/styles";
 import MessageDialog from "./MessageDialog";
+import AppContext from "../AppContext";
 import File from "../icons/File.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
-import AppContext from "../AppContext";
 import Edit from "../icons/Edit.svg";
+import EditIcon from "../icons/EditIcon.svg";
+import DeleteIcon from "../icons/DeleteIcon.svg";
 import { get, put } from "../utils/api";
 import {
   mediumBold,
@@ -18,11 +31,20 @@ import {
   squareForm,
   small,
 } from "../utils/styles";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function PropertyManagerDocs(props) {
+  const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   console.log(user);
+  let pageURL = window.location.href.split("/");
 
   const navigate = useNavigate();
   const {
@@ -165,6 +187,7 @@ function PropertyManagerDocs(props) {
 
     setContracts(response.result);
   }, []);
+
   useEffect(async () => {
     const response = await get(`/businesses?business_type=MANAGEMENT`);
     setBusinesses(response.result);
@@ -198,178 +221,181 @@ function PropertyManagerDocs(props) {
         property.management_status === "END EARLY") &&
       activeContract ? (
         <Row className="mx-2">
-          <Row className="flex-grow-1 my-2">
-            <Col
-              className=" d-flex align-items-left"
-              style={{
-                font: "normal normal 600 18px Bahnschrift-Regular",
-              }}
+          <div>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
             >
-              Owner: {property.owner[0].owner_first_name}{" "}
-              {property.owner[0].owner_last_name}
-            </Col>
-            <Col className="d-flex justify-content-end">
-              <a href={`tel:${property.owner[0].owner_phone_number}`}>
-                <img src={Phone} alt="Phone" style={smallImg} />
-              </a>
-              <a onClick={() => setShowMessageForm(true)}>
-                {/*  href={`mailto:${property.owner[0].owner_email}`}> */}
-                <img src={Message} alt="Message" style={smallImg} />
-              </a>
-            </Col>
-            {console.log(property.owner_id)}
-          </Row>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Owner Name</TableCell>
+                  <TableCell align="center">Contract Name</TableCell>
+                  <TableCell align="center">Start Date</TableCell>
+                  <TableCell align="center">End Date</TableCell>
+                  <TableCell align="center">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    {property.owner[0].owner_first_name}{" "}
+                    {property.owner[0].owner_last_name}
+                  </TableCell>
 
-          <Row className="flex-grow-1">
-            <Col className=" d-flex align-items-left">
-              <p>
-                {activeContract.contract_name
-                  ? activeContract.contract_name
-                  : "Unnamed Contract"}
-              </p>
-            </Col>
-            <Col className="d-flex justify-content-end">
-              <img
-                src={Edit}
-                alt="Edit"
-                style={{ width: "15px", height: "25px" }}
-                onClick={() => selectContract(activeContract)}
-              />
-            </Col>
-          </Row>
-          <Row className="mt-1">
-            <Col
-              style={{
-                font: "normal normal 600 18px Bahnschrift-Regular",
-              }}
-            >
-              Contract Length
-            </Col>
-          </Row>
-          <Row className="mt-1">
-            <Col
-              className=" d-flex align-items-left"
-              style={{
-                font: "normal normal 600 18px Bahnschrift-Regular",
-              }}
-            >
-              Start Date
-            </Col>
-            <Col className=" d-flex justify-content-end">
-              <h6
-                style={{
-                  font: "normal normal normal 16px Bahnschrift-Regular",
-                }}
-              >
-                {activeContract.start_date}
-              </h6>
-            </Col>
-          </Row>
-          <Row className="mb-1">
-            <Col
-              className=" d-flex align-items-left"
-              style={{
-                font: "normal normal 600 18px Bahnschrift-Regular",
-              }}
-            >
-              End Date
-            </Col>
-            <Col className=" d-flex justify-content-end">
-              <h6
-                style={{
-                  font: "normal normal normal 16px Bahnschrift-Regular",
-                }}
-              >
-                {activeContract.end_date}
-              </h6>
-            </Col>
-          </Row>
+                  <TableCell>
+                    <Row>
+                      <Col>
+                        {" "}
+                        {activeContract.contract_name
+                          ? activeContract.contract_name
+                          : "Unnamed Contract"}
+                      </Col>
+                      <Col xs={2}>
+                        <img
+                          src={Edit}
+                          alt="Edit"
+                          style={{ width: "15px", height: "25px" }}
+                          onClick={() => selectContract(activeContract)}
+                        />
+                      </Col>
+                    </Row>
+                  </TableCell>
 
-          <Row className="my-1">
-            <Row className="mt-1">
-              <Col
-                style={{
-                  font: "normal normal 600 18px Bahnschrift-Regular",
-                }}
-              >
-                Fees Charged
-              </Col>
-            </Row>
-            {activeContract.fees.map((fee, i) => (
-              <div key={i}>
-                <Row className="mt-1">
-                  <Col
-                    style={{
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
-                  >
-                    {fee.fee_name}
-                  </Col>
-                  <Col className="d-flex justify-content-end">
-                    <p style={gray} className="mb-1">
+                  <TableCell>{activeContract.start_date}</TableCell>
+                  <TableCell>{activeContract.end_date}</TableCell>
+
+                  <TableCell>
+                    <Row>
+                      <Col className="d-flex justify-content-center">
+                        {" "}
+                        <a href={`tel:${property.owner[0].owner_phone_number}`}>
+                          <img src={Phone} alt="Phone" style={smallImg} />
+                        </a>
+                      </Col>
+                      <Col className="d-flex justify-content-center">
+                        <a onClick={() => setShowMessageForm(true)}>
+                          {/*  href={`mailto:${property.owner[0].owner_email}`}> */}
+                          <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                      </Col>
+                    </Row>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+
+          <div className="my-4">
+            <h5>Property Manager Fee Details</h5>
+
+            <Table classes={{ root: classes.customTable }} size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Fee Name</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Of</TableCell>
+                  <TableCell>Frequency</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {activeContract.fees.map((fee, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{fee.fee_name}</TableCell>
+                    <TableCell>
                       {fee.fee_type === "%"
-                        ? `${fee.charge}% of ${fee.of}`
-                        : `$${fee.charge}`}{" "}
-                      {fee.frequency}
-                    </p>
-                  </Col>
-                </Row>
-                {/*<hr className="mt-1" />*/}
-              </div>
-            ))}
-          </Row>
+                        ? `${fee.charge}%`
+                        : `$${fee.charge}`}
+                    </TableCell>
+                    <TableCell>
+                      {fee.fee_type === "%" ? `${fee.of}` : ""}
+                    </TableCell>
+                    <TableCell>{fee.frequency}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
           {activeContract.contacts.length === 0 ? (
             ""
           ) : (
-            <Row className="my-4">
-              <h6>Contact Details</h6>
-              {activeContract.contacts.map((contact, i) => (
-                <div key={i}>
-                  <Row>
-                    <Col>
-                      <p className="mb-1">
-                        {contact.first_name} {contact.last_name} (
-                        {contact.company_role})
-                      </p>
-                    </Col>
-                    <Col>
-                      <p style={gray} className="mb-1">
-                        {contact.phone_number}
-                      </p>
-                    </Col>
-                    <Col>
-                      <p style={gray} className="mb-1">
-                        {contact.email}
-                      </p>
-                    </Col>
-                  </Row>
-                </div>
-              ))}
-            </Row>
+            <div className="my-4">
+              <h5>Contact Details</h5>
+
+              <Table classes={{ root: classes.customTable }} size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Contact Name</TableCell>
+                    <TableCell>Role</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Phone Number</TableCell>
+
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {activeContract.contacts.map((contact, i) => (
+                    <TableRow key={i}>
+                      <TableCell>
+                        {contact.first_name} {contact.last_name}
+                      </TableCell>
+                      <TableCell>{contact.company_role}</TableCell>
+                      <TableCell>{contact.email}</TableCell>
+                      <TableCell>{contact.phone_number}</TableCell>
+                      <TableCell>
+                        <a href={`tel:${contact.phone_number}`}>
+                          <img src={Phone} alt="Phone" style={smallImg} />
+                        </a>
+                        <a href={`mailto:${contact.email}`}>
+                          <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
           {activeContract.docs.length === 0 ? (
             ""
           ) : (
-            <Row className="my-3">
-              <h6>Contract Documents</h6>
-              {activeContract.docs.map((file, i) => (
-                <div key={i}>
-                  <div className="d-flex justify-content-between align-items-end">
-                    <div>
-                      <p className="mb-1">{file.name}</p>
-                      <p style={small} className="m-0">
-                        {file.description}
-                      </p>
-                    </div>
-                    <div>
-                      <a href={file.link} target="_blank">
-                        <img src={File} />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Row>
+            <div className="my-3">
+              <h5>Contract Documents</h5>
+
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Document Name</TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {activeContract.docs.map((file) => {
+                    return (
+                      <TableRow>
+                        <TableCell>{file.description}</TableCell>
+                        <TableCell>
+                          <a href={file.link} target="_blank">
+                            <img
+                              src={File}
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                              }}
+                            />
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </Row>
       ) : (

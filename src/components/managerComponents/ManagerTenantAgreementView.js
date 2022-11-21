@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "../Header";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import OpenDoc from "../../icons/OpenDoc.svg";
@@ -11,59 +18,89 @@ import {
   red,
   squareForm,
   mediumBold,
-  smallPillButton,
   bluePillButton,
   redPillButton,
-  pillButton,
-  gray,
 } from "../../utils/styles";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function ManagerTenantAgreementView(props) {
+  const classes = useStyles();
   const {
     back,
     property,
     renewLease,
     selectedAgreement,
     acceptedTenantApplications,
-    setAcceptedTenantApplications,
   } = props;
 
-  const [tenantID, setTenantID] = React.useState("");
-  const [startDate, setStartDate] = React.useState("");
-  const [endDate, setEndDate] = React.useState("");
-  const [feeState, setFeeState] = React.useState([]);
-  const [contactState, setContactState] = React.useState([]);
-  const [files, setFiles] = React.useState([]);
+  const [tenantInfo, setTenantInfo] = useState([]);
+  const [tenantID, setTenantID] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [feeState, setFeeState] = useState([]);
+  const [contactState, setContactState] = useState([]);
+  const [files, setFiles] = useState([]);
 
-  const [dueDate, setDueDate] = React.useState("1");
-  const [lateAfter, setLateAfter] = React.useState("");
-  const [lateFee, setLateFee] = React.useState("");
-  const [lateFeePer, setLateFeePer] = React.useState("");
+  const [dueDate, setDueDate] = useState("1");
+  const [lateAfter, setLateAfter] = useState("");
+  const [lateFee, setLateFee] = useState("");
+  const [lateFeePer, setLateFeePer] = useState("");
 
-  const [available, setAvailable] = React.useState("");
-  // const [renewLease, setRenewLease] = React.useState(false)
-  const [terminateLease, setTerminateLease] = React.useState(false);
-  const [lastDate, setLastDate] = React.useState("");
-  const [tenantEndEarly, setTenantEndEarly] = React.useState(false);
-  const [agreements, setAgreements] = React.useState([]);
-  const [agreement, setAgreement] = React.useState([]);
+  const [available, setAvailable] = useState("");
+  // const [renewLease, setRenewLease] = useState(false)
+  const [terminateLease, setTerminateLease] = useState(false);
+  const [lastDate, setLastDate] = useState("");
+  const [tenantEndEarly, setTenantEndEarly] = useState(false);
+  const [agreements, setAgreements] = useState([]);
+  const [agreement, setAgreement] = useState([]);
 
-  const loadAgreement = (agreement) => {
-    // console.log(agreement)
-    // console.log(contactState)
-    // console.log(typeof contactState)
-    setTenantID(agreement.tenant_id);
-    setStartDate(agreement.lease_start);
-    setEndDate(agreement.lease_end);
-    setFeeState(JSON.parse(agreement.rent_payments));
-    // contactState[1](JSON.parse(agreement.assigned_contacts));
-    setContactState(JSON.parse(agreement.assigned_contacts));
-    setFiles(JSON.parse(agreement.documents));
-    setAvailable(agreement.available_topay);
-    setDueDate(agreement.due_by);
-    setLateAfter(agreement.late_by);
-    setLateFee(agreement.late_fee);
-    setLateFeePer(agreement.perDay_late_fee);
+  const loadAgreement = (agg) => {
+    let tenant = [];
+    let ti = {};
+    console.log("selectedagg", agg);
+
+    if (agg.tenant_first_name.includes(",")) {
+      let tenant_fns = agg.tenant_first_name.split(",");
+      let tenant_lns = agg.tenant_last_name.split(",");
+      let tenant_emails = agg.tenant_email.split(",");
+      let tenant_phones = agg.tenant_phone_number.split(",");
+      for (let i = 0; i < tenant_fns.length; i++) {
+        ti["tenantFirstName"] = tenant_fns[i];
+        ti["tenantLastName"] = tenant_lns[i];
+        ti["tenantEmail"] = tenant_emails[i];
+        ti["tenantPhoneNumber"] = tenant_phones[i];
+        tenant.push(ti);
+        ti = {};
+      }
+    } else {
+      ti = {
+        tenantFirstName: agg.tenant_first_name,
+        tenantLastName: agg.tenant_last_name,
+        tenantEmail: agg.tenant_email,
+        tenantPhoneNumber: agg.tenant_phone_number,
+      };
+      tenant.push(ti);
+    }
+
+    setTenantInfo(tenant);
+    setTenantID(agg.tenant_id);
+    setStartDate(agg.lease_start);
+    setEndDate(agg.lease_end);
+    setFeeState(JSON.parse(agg.rent_payments));
+    // contactState[1](JSON.parse(agg.assigned_contacts));
+    setContactState(JSON.parse(agg.assigned_contacts));
+    setFiles(JSON.parse(agg.documents));
+    setAvailable(agg.available_topay);
+    setDueDate(agg.due_by);
+    setLateAfter(agg.late_by);
+    setLateFee(agg.late_fee);
+    setLateFeePer(agg.perDay_late_fee);
 
     let app = property.applications.filter(
       (a) => a.application_status === "TENANT END EARLY"
@@ -72,24 +109,12 @@ function ManagerTenantAgreementView(props) {
       setTenantEndEarly(true);
     }
   };
-  React.useEffect(async () => {
-    // if (agreement) {
-    //   loadAgreement();
-    // }
-    // const response = await get(
-    //   `/rentals?rental_property_id=${property.property_uid}`
-    // );
-    // setAgreements(response.result);
-    // let agreement = response.result[0];
-    // console.log(agreement);
-    // setAgreement(agreement);
+  useEffect(async () => {
     setAgreement(selectedAgreement);
     loadAgreement(selectedAgreement);
-    console.log(selectedAgreement);
   }, []);
-  console.log(agreement);
 
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -138,7 +163,6 @@ function ManagerTenantAgreementView(props) {
     const response = await put("/endEarly", request_body);
     back();
   };
-  console.log(agreement, acceptedTenantApplications);
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
@@ -156,155 +180,216 @@ function ManagerTenantAgreementView(props) {
   return (
     <div className="mb-2 pb-2">
       {agreement ? (
-        <Container className="d-flex flex-column my-2">
-          <Row className="d-flex my-2">
-            <Col className="d-flex justify-content-start">
-              Tenant: {agreement.tenant_first_name} {agreement.tenant_last_name}
-            </Col>
-            <Col className="d-flex justify-content-end">
-              <a href={`tel:${agreement.tenant_phone_number}`}>
-                <img src={Phone} alt="Phone" style={smallImg} />
-              </a>
-              <a href={`mailto:${agreement.tenant_email}`}>
-                <img src={Message} alt="Message" style={smallImg} />
-              </a>
-            </Col>
-          </Row>
-          <Row className="my-4">
-            <h6 style={mediumBold}>Rent Payments</h6>
-            {feeState.map((fee, i) => (
-              <Row key={i}>
-                <Col className="d-flex justify-content-start">
-                  <h6 className="mb-1">{fee.fee_name}</h6>
-                </Col>
-                <Col className="d-flex justify-content-end">
-                  <h6
-                    style={{
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
-                    className="mb-1"
-                  >
-                    {fee.fee_type === "%"
-                      ? `${fee.charge}% of ${fee.of}`
-                      : `$${fee.charge}`}{" "}
-                    {fee.frequency}
-                  </h6>
-                </Col>
-              </Row>
-            ))}
-          </Row>
-          <Row className="my-3">
-            <h6 style={mediumBold}>Lease Length</h6>
-            <Row>
-              <Col className="d-flex justify-content-start flex-column">
-                <h6>Lease Start Date</h6>
-                <h6>Lease End Date</h6>
-                <h6>Rent Due</h6>
-                <h6>Late After</h6>
-                <h6>Late Fee</h6>
-                <h6>Per Day Late Fee</h6>
-              </Col>
-              <Col className="d-flex flex-column ">
-                <h6
-                  className="d-flex justify-content-end"
-                  style={{
-                    font: "normal normal normal 16px Bahnschrift-Regular",
-                  }}
-                >
-                  {agreement.lease_start}
-                </h6>
+        <div>
+          <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Tenant Name</TableCell>
+                  <TableCell align="center">Email</TableCell>
+                  <TableCell align="center">Phone Number</TableCell>
+                  <TableCell align="center">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    {tenantInfo.map((tf) => {
+                      return (
+                        <p>
+                          {" "}
+                          {tf.tenantFirstName} {tf.tenantLastName}
+                        </p>
+                      );
+                    })}
+                  </TableCell>
 
-                <h6
-                  className="d-flex justify-content-end"
-                  style={{
-                    font: "normal normal normal 16px Bahnschrift-Regular",
-                  }}
-                >
-                  {agreement.lease_end}
-                </h6>
-                <h6
-                  className="d-flex justify-content-end"
-                  style={{
-                    font: "normal normal normal 16px Bahnschrift-Regular",
-                  }}
-                >
-                  {`${ordinal_suffix_of(dueDate)} of the month`}
-                </h6>
-                <h6
-                  className="d-flex justify-content-end"
-                  style={{
-                    font: "normal normal normal 16px Bahnschrift-Regular",
-                  }}
-                >
-                  {lateAfter} days
-                </h6>
-                <h6
-                  className="d-flex justify-content-end"
-                  style={{
-                    font: "normal normal normal 16px Bahnschrift-Regular",
-                  }}
-                >
-                  ${lateFee}
-                </h6>
-                <h6
-                  className="d-flex justify-content-end"
-                  style={{
-                    font: "normal normal normal 16px Bahnschrift-Regular",
-                  }}
-                >
-                  ${lateFeePer}
-                </h6>
-              </Col>
-            </Row>
+                  <TableCell>
+                    {" "}
+                    {tenantInfo.map((tf) => {
+                      return <p> {tf.tenantEmail}</p>;
+                    })}
+                  </TableCell>
+
+                  <TableCell>
+                    {" "}
+                    {tenantInfo.map((tf) => {
+                      return <p> {tf.tenantPhoneNumber}</p>;
+                    })}
+                  </TableCell>
+
+                  <TableCell>
+                    {tenantInfo.map((tf) => {
+                      return (
+                        <Row className="mb-2">
+                          <Col className="d-flex justify-content-center">
+                            {" "}
+                            <a href={`tel:${tf.tenantPhoneNumber}`}>
+                              <img src={Phone} alt="Phone" style={smallImg} />
+                            </a>
+                          </Col>
+                          <Col className="d-flex justify-content-center">
+                            <a href={`mailto:${tf.tenantEmail}`}>
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
+                          </Col>
+                        </Row>
+                      );
+                    })}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Row>
+          <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+            <h5>Lease Details</h5>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Lease Start</TableCell>
+                  <TableCell>Lease End</TableCell>
+                  <TableCell>Rent Due</TableCell>
+                  <TableCell>Later after</TableCell>
+                  <TableCell>Late Fee</TableCell>
+                  <TableCell>Per Day Late Fee</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>{agreement.lease_start}</TableCell>
+
+                  <TableCell>{agreement.lease_end}</TableCell>
+
+                  <TableCell>
+                    {`${ordinal_suffix_of(dueDate)} of the month`}
+                  </TableCell>
+
+                  <TableCell>{lateAfter} days</TableCell>
+                  <TableCell> ${lateFee}</TableCell>
+                  <TableCell> ${lateFeePer}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </Row>
 
-          <Row className="mb-4" hidden={contactState.length === 0}>
+          <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+            <h5>Lease Payments</h5>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Fee Name</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Of</TableCell>
+                  <TableCell>Frequency</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {feeState.map((fee, i) => (
+                  <TableRow>
+                    <TableCell>{fee.fee_name}</TableCell>
+
+                    <TableCell>
+                      {fee.fee_type === "%"
+                        ? `${fee.charge}%`
+                        : `$${fee.charge}`}
+                    </TableCell>
+
+                    <TableCell>
+                      {fee.fee_type === "%" ? `${fee.of}` : ""}
+                    </TableCell>
+
+                    <TableCell>{fee.frequency}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Row>
+
+          <Row className="mb-4 m-3" hidden={contactState.length === 0}>
             <h5 style={mediumBold}>Contact Details</h5>
-            {contactState.map((contact, i) => (
-              <Row key={i}>
-                <h6 className="d-flex mb-1">
-                  {contact.first_name} {contact.last_name} (
-                  {contact.company_role})
-                </h6>
-              </Row>
-            ))}
-          </Row>
-          <Row>
-            <h5 style={mediumBold}>Lease Documents</h5>
-          </Row>
-          <Row
-            className="d-flex justify-content-center m-2"
-            hidden={files.length === 0}
-          >
-            {files.map((file, i) => (
-              <Row
-                key={i}
-                className="d-flex align-items-center p-2"
-                style={{
-                  boxShadow: "0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                }}
-              >
-                <Col>
-                  <h6
-                    className=" d-flex align-items-left"
-                    style={{
-                      font: "normal normal 600 18px Bahnschrift-Regular",
-                      color: "#007AFF",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    {file.description}
-                  </h6>
-                </Col>
+            <Table classes={{ root: classes.customTable }} size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Contact Name</TableCell>
+                  <TableCell>Role</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Phone Number</TableCell>
 
-                <Col className="d-flex justify-content-end">
-                  <a href={file.link} target="_blank">
-                    <img src={OpenDoc} />
-                  </a>
-                </Col>
-              </Row>
-            ))}
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {contactState.map((contact, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      {contact.first_name} {contact.last_name}
+                    </TableCell>
+                    <TableCell>{contact.company_role}</TableCell>
+                    <TableCell>{contact.email}</TableCell>
+                    <TableCell>{contact.phone_number}</TableCell>
+                    <TableCell>
+                      <a href={`tel:${contact.phone_number}`}>
+                        <img src={Phone} alt="Phone" style={smallImg} />
+                      </a>
+                      <a href={`mailto:${contact.email}`}>
+                        <img src={Message} alt="Message" style={smallImg} />
+                      </a>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Row>
+          <Row className="m-3" hidden={files.length === 0}>
+            <h5 style={mediumBold}>Lease Documents</h5>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Document Name</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {files.map((file) => {
+                  return (
+                    <TableRow>
+                      <TableCell>{file.description}</TableCell>
+                      <TableCell>
+                        <a href={file.link} target="_blank">
+                          <img
+                            src={OpenDoc}
+                            style={{
+                              width: "15px",
+                              height: "15px",
+                            }}
+                          />
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           </Row>
 
           <Row
@@ -403,9 +488,9 @@ function ManagerTenantAgreementView(props) {
           ) : (
             ""
           )}
-        </Container>
+        </div>
       ) : (
-        "No Active Lease Agreements"
+        <Row className="m-3">No Active Lease Agreements</Row>
       )}
     </div>
   );

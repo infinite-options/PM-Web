@@ -1,8 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+  Grid,
+} from "@material-ui/core";
+import Carousel from "react-multi-carousel";
+import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
-import ManagerPropertyCashFlow from "../ManagerPropertyCashFlow";
+import ManagerFooter from "./ManagerFooter";
 import CreateExpense from "../CreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerTenantApplications from "./ManagerTenantApplications";
@@ -16,10 +31,16 @@ import ManagerRentalHistory from "./ManagerRentalHistory";
 import ManagerPropertyForm from "./ManagerPropertyForm";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
 import SideBar from "./SideBar";
-import BlueArrowUp from "../../icons/BlueArrowUp.svg";
-import BlueArrowDown from "../../icons/BlueArrowDown.svg";
-import BlueArrowRight from "../../icons/BlueArrowRight.svg";
-import No_Image from "../../icons/No_Image_Available.jpeg";
+import File from "../../icons/File.svg";
+import OpenDoc from "../../icons/OpenDoc.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import EditIconNew from "../../icons/EditIconNew.svg";
+import AddIcon from "../../icons/AddIcon.svg";
+import SortDown from "../../icons/Sort-down.svg";
+import SortLeft from "../../icons/Sort-left.svg";
+import PropertyIcon from "../../icons/PropertyIcon.svg";
+import RepairImg from "../../icons/RepairImg.svg";
 import {
   tileImg,
   greenPill,
@@ -29,27 +50,216 @@ import {
   bluePill,
 } from "../../utils/styles";
 import { get, put } from "../../utils/api";
+import BlueArrowUp from "../../icons/BlueArrowUp.svg";
+import BlueArrowDown from "../../icons/BlueArrowDown.svg";
+import BlueArrowRight from "../../icons/BlueArrowRight.svg";
+import No_Image from "../../icons/No_Image_Available.jpeg";
+import "react-multi-carousel/lib/styles.css";
+
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 
 function ManagerPropertyView(props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   // const property = location.state.property
   // const { mp_id } = useParams();
   const property_uid = location.state.property_uid;
-
+  const [isLoading, setIsLoading] = useState(true);
   const [property, setProperty] = useState({ images: "[]" });
   const [hideEdit, setHideEdit] = useState(true);
   const [recentMaintenanceRequests, setRecentMaintenanceRequests] = useState(
     []
   );
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 4,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 4,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
+
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
   const [pastMaintenanceRequests, setPastMaintenanceRequests] = useState([]);
-
   const [showDialog, setShowDialog] = useState(false);
-
   const [cancel, setCancel] = useState(false);
   const [endEarlyDate, setEndEarlyDate] = useState("");
+
+  const applianceState = useState({
+    Microwave: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Dishwasher: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Refrigerator: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Washer: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Dryer: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+    Range: {
+      available: false,
+      name: "",
+      purchased: "",
+      purchased_from: "",
+      purchased_order: "",
+      installed: "",
+      serial_num: "",
+      model_num: "",
+      warranty_till: "",
+      warranty_info: "",
+      images: [],
+    },
+  });
+  const appliances = Object.keys(applianceState[0]);
+
+  const [imagesProperty, setImagesProperty] = useState([]);
+
+  const [showControls, setShowControls] = useState(true);
+  const [currentImg, setCurrentImg] = useState(0);
+  const [expandDetails, setExpandDetails] = useState(false);
+  const [editProperty, setEditProperty] = useState(false);
+  const [expandMaintenanceR, setExpandMaintenanceR] = useState(false);
+  const [expandManagerDocs, setExpandManagerDocs] = useState(false);
+  const [expandLeaseDocs, setExpandLeaseDocs] = useState(false);
+  const [showManagementContract, setShowManagementContract] = useState(false);
+  const [showTenantAgreement, setShowTenantAgreement] = useState(false);
+  const [selectedContract, setSelectedContract] = useState(null);
+  const [selectedAgreement, setSelectedAgreement] = useState(null);
+  const [acceptedTenantApplications, setAcceptedTenantApplications] = useState(
+    []
+  );
+  const [showTenantProfile, setShowTenantProfile] = useState(false);
+  const [selectedTenantApplication, setSelectedTenantApplication] =
+    useState(null);
+  const [showCreateExpense, setShowCreateExpense] = useState(false);
+  const [showCreateRevenue, setShowCreateRevenue] = useState(false);
+  const [showCreateTax, setShowCreateTax] = useState(false);
+  const [showCreateMortgage, setShowCreateMortgage] = useState(false);
+  const [showCreateInsurance, setShowCreateInsurance] = useState(false);
+  // sorting variables
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
+  const [cashflowData, setCashflowData] = useState([]);
+  const [monthlyCashFlow, setMonthlyCashFlow] = useState(false);
+  const [yearlyCashFlow, setYearlyCashFlow] = useState(false);
+
+  const [monthlyRevenue, setMonthlyRevenue] = useState(false);
+  const [monthlyRent, setMonthlyRent] = useState(false);
+  const [monthlyExtra, setMonthlyExtra] = useState(false);
+  const [monthlyUtility, setMonthlyUtility] = useState(false);
+
+  const [monthlyExpense, setMonthlyExpense] = useState(false);
+  const [monthlyManagement, setMonthlyManagement] = useState(false);
+  const [monthlyMaintenance, setMonthlyMaintenance] = useState(false);
+  const [monthlyRepairs, setMonthlyRepairs] = useState(false);
+  const [monthlyMortgage, setMonthlyMortgage] = useState(false);
+  const [monthlyTaxes, setMonthlyTaxes] = useState(false);
+  const [monthlyInsurance, setMonthlyInsurance] = useState(false);
+  const [monthlyUtilityExpense, setMonthlyUtilityExpense] = useState(false);
+
+  const [yearlyRevenue, setYearlyRevenue] = useState(false);
+  const [yearlyRent, setYearlyRent] = useState(false);
+  const [yearlyExtra, setYearlyExtra] = useState(false);
+  const [yearlyUtility, setYearlyUtility] = useState(false);
+
+  const [yearlyExpense, setYearlyExpense] = useState(false);
+  const [yearlyManagement, setYearlyManagement] = useState(false);
+  const [yearlyMaintenance, setYearlyMaintenance] = useState(false);
+  const [yearlyRepairs, setYearlyRepairs] = useState(false);
+  const [yearlyMortgage, setYearlyMortgage] = useState(false);
+  const [yearlyTaxes, setYearlyTaxes] = useState(false);
+  const [yearlyInsurance, setYearlyInsurance] = useState(false);
+  const [yearlyUtilityExpense, setYearlyUtilityExpense] = useState(false);
+
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
@@ -86,10 +296,19 @@ function ManagerPropertyView(props) {
     setShowDialog(false);
   };
   const fetchProperty = async () => {
-    // const response = await get(`/propertiesOwnerDetail?property_uid=${property_uid}`);
     const response = await get(
       `/propertiesManagerDetail?property_uid=${property_uid}`
     );
+    const cashflowResponse = await get(
+      `/ownerCashflowProperty?property_id=${property_uid}&owner_id=${user.user_uid}`
+    );
+
+    setCashflowData(cashflowResponse.result);
+    setImagesProperty(JSON.parse(response.result[0].images));
+    let show = JSON.parse(response.result[0].images).length < 5 ? false : true;
+    setShowControls(show);
+    console.log(response.result[0]);
+    applianceState[1](JSON.parse(response.result[0].appliances));
     const property_details = response.result[0];
 
     property_details.tenants = property_details.rentalInfo.filter(
@@ -152,81 +371,25 @@ function ManagerPropertyView(props) {
     fetchProperty();
   });
 
-  const [currentImg, setCurrentImg] = useState(0);
-  const [expandDetails, setExpandDetails] = useState(false);
-  const [editProperty, setEditProperty] = useState(false);
-  const [expandMaintenanceR, setExpandMaintenanceR] = useState(false);
-  const [expandManagerDocs, setExpandManagerDocs] = useState(false);
-  const [expandLeaseDocs, setExpandLeaseDocs] = useState(false);
-  const [showManagementContract, setShowManagementContract] = useState(false);
-  const [showTenantAgreement, setShowTenantAgreement] = useState(false);
-  const [selectedContract, setSelectedContract] = useState(null);
-  const [selectedAgreement, setSelectedAgreement] = useState(null);
-  const [acceptedTenantApplications, setAcceptedTenantApplications] = useState(
-    []
-  );
-  const [showTenantProfile, setShowTenantProfile] = useState(false);
-  const [selectedTenantApplication, setSelectedTenantApplication] =
-    useState(null);
-  const [showCreateExpense, setShowCreateExpense] = useState(false);
-  const [showCreateRevenue, setShowCreateRevenue] = useState(false);
-  const [showCreateTax, setShowCreateTax] = useState(false);
-  const [showCreateMortgage, setShowCreateMortgage] = useState(false);
-  const [showCreateInsurance, setShowCreateInsurance] = useState(false);
-
-  const nextImg = () => {
-    if (currentImg === JSON.parse(property.images).length - 1) {
-      setCurrentImg(0);
-    } else {
-      setCurrentImg(currentImg + 1);
-    }
-  };
-  const previousImg = () => {
-    if (currentImg === 0) {
-      setCurrentImg(JSON.parse(property.images).length - 1);
-    } else {
-      setCurrentImg(currentImg - 1);
-    }
-  };
-
   const headerBack = () => {
-    showCreateExpense
+    editProperty
+      ? reloadProperty()
+      : showCreateExpense
       ? setShowCreateExpense(false)
       : showCreateRevenue
       ? setShowCreateRevenue(false)
-      : showCreateTax
-      ? setShowCreateTax(false)
-      : showCreateMortgage
-      ? setShowCreateMortgage(false)
-      : showCreateInsurance
-      ? setShowCreateInsurance(false)
-      : back();
-    navigate("../manager-properties");
+      : navigate("../manager");
   };
 
-  const back = () => {
-    fetchProperty();
-    navigate("../manager-properties");
-  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [
     editProperty,
     showCreateExpense,
     showCreateRevenue,
-    showCreateTax,
-    showCreateMortgage,
-    showCreateInsurance,
     showManagementContract,
     showTenantAgreement,
   ]);
-  const cashFlowState = {
-    setShowCreateExpense,
-    setShowCreateRevenue,
-    setShowCreateTax,
-    setShowCreateMortgage,
-    setShowCreateInsurance,
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -261,6 +424,7 @@ function ManagerPropertyView(props) {
 
   const reloadProperty = () => {
     setEditProperty(false);
+    window.scrollTo(0, 0);
     fetchProperty();
   };
 
@@ -282,41 +446,340 @@ function ManagerPropertyView(props) {
     setShowTenantAgreement(true);
     setSelectedAgreement(agreement);
   };
-  return showManagementContract ? (
-    <ManagerManagementContract
-      back={closeContract}
-      property={property}
-      contract={selectedContract}
-      reload={reloadProperty}
-    />
-  ) : showTenantAgreement ? (
-    <ManagerTenantAgreement
-      back={closeAgreement}
-      property={property}
-      agreement={selectedAgreement}
-      acceptedTenantApplications={acceptedTenantApplications}
-      setAcceptedTenantApplications={setAcceptedTenantApplications}
-    />
-  ) : (
-    <div style={{ background: "#E9E9E9 0% 0% no-repeat padding-box" }}>
-      <ConfirmDialog
-        title={"Are you sure you want to cancel the agreement?"}
-        isOpen={showDialog}
-        onConfirm={cancelAgreement}
-        onCancel={onCancel}
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const maintenancesHeadCell = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Request Images",
+    },
+    {
+      id: "title",
+      numeric: false,
+      label: "Issue",
+    },
+    {
+      id: "request_created_date",
+      numeric: true,
+      label: "Date Reported",
+    },
+    {
+      id: "days_open",
+      numeric: false,
+      label: "Days Open",
+    },
+    {
+      id: "request_type",
+      numeric: true,
+      label: "Type",
+    },
+    {
+      id: "priority",
+      numeric: false,
+      label: "Priority",
+    },
+    {
+      id: "assigned_business",
+      numeric: false,
+      label: "Assigned",
+    },
+
+    {
+      id: "scheduled_date",
+      numeric: true,
+      label: "Closed Date",
+    },
+  ];
+  function EnhancedTableHeadMaintenance(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {maintenancesHeadCell.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                align="center"
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadMaintenance.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+  let revenueTotal = 0;
+  revenueTotal = (
+    cashflowData.rental_revenue +
+    cashflowData.extra_revenue +
+    cashflowData.utility_revenue
+  ).toFixed(2);
+
+  let expenseTotal = 0;
+  expenseTotal = (
+    cashflowData.maintenance_expense +
+    cashflowData.management_expense +
+    cashflowData.repairs_expense +
+    cashflowData.utility_expense +
+    cashflowData.mortgage_expense +
+    cashflowData.taxes_expense +
+    cashflowData.insurance_expense
+  ).toFixed(2);
+  const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
+
+  let revenueTotalAmortized = 0;
+  revenueTotalAmortized = (
+    cashflowData.amortized_rental_revenue +
+    cashflowData.amortized_extra_revenue +
+    cashflowData.amortized_utility_revenue
+  ).toFixed(2);
+
+  let expenseTotalAmortized = 0;
+  expenseTotalAmortized = (
+    cashflowData.amortized_maintenance_expense +
+    cashflowData.amortized_management_expense +
+    cashflowData.amortized_repairs_expense +
+    cashflowData.amortized_utility_expense +
+    cashflowData.amortized_mortgage_expense +
+    cashflowData.amortized_taxes_expense +
+    cashflowData.amortized_insurance_expense
+  ).toFixed(2);
+  const cashFlowAmortized = (
+    revenueTotalAmortized - expenseTotalAmortized
+  ).toFixed(2);
+
+  let yearExpenseTotal = 0;
+  yearExpenseTotal = (
+    cashflowData.maintenance_year_expense +
+    cashflowData.management_year_expense +
+    cashflowData.repairs_year_expense +
+    cashflowData.utility_year_expense +
+    cashflowData.mortgage_year_expense +
+    cashflowData.taxes_year_expense +
+    cashflowData.insurance_year_expense
+  ).toFixed(2);
+
+  let yearRevenueTotal = 0;
+  yearRevenueTotal = (
+    cashflowData.rental_year_revenue +
+    cashflowData.extra_year_revenue +
+    cashflowData.utility_year_revenue
+  ).toFixed(2);
+  const yearCashFlow = (yearRevenueTotal - yearExpenseTotal).toFixed(2);
+
+  let yearExpenseTotalAmortized = 0;
+  yearExpenseTotalAmortized = (
+    cashflowData.amortized_maintenance_year_expense +
+    cashflowData.amortized_management_year_expense +
+    cashflowData.amortized_repairs_year_expense +
+    cashflowData.amortized_utility_year_expense +
+    cashflowData.amortized_mortgage_year_expense +
+    cashflowData.amortized_taxes_year_expense +
+    cashflowData.amortized_insurance_year_expense
+  ).toFixed(2);
+
+  let yearRevenueTotalAmortized = 0;
+  yearRevenueTotalAmortized = (
+    cashflowData.amortized_rental_year_revenue +
+    cashflowData.amortized_extra_year_revenue +
+    cashflowData.amortized_utility_year_revenue
+  ).toFixed(2);
+  const yearCashFlowAmortized = (
+    yearRevenueTotalAmortized - yearExpenseTotalAmortized
+  ).toFixed(2);
+
+  let revenueExpectedTotal = 0;
+  revenueExpectedTotal = (
+    cashflowData.rental_expected_revenue +
+    cashflowData.extra_expected_revenue +
+    cashflowData.utility_expected_revenue
+  ).toFixed(2);
+
+  let expenseExpectedTotal = 0;
+
+  expenseExpectedTotal = (
+    cashflowData.maintenance_expected_expense +
+    cashflowData.management_expected_expense +
+    cashflowData.repairs_expected_expense +
+    cashflowData.utility_expected_expense +
+    cashflowData.mortgage_expense +
+    cashflowData.taxes_expense +
+    cashflowData.insurance_expense
+  ).toFixed(2);
+
+  const cashFlowExpected = (
+    revenueExpectedTotal - expenseExpectedTotal
+  ).toFixed(2);
+
+  let revenueExpectedTotalAmortized = 0;
+  revenueExpectedTotalAmortized = (
+    cashflowData.amortized_rental_expected_revenue +
+    cashflowData.amortized_extra_expected_revenue +
+    cashflowData.amortized_utility_expected_revenue
+  ).toFixed(2);
+
+  let expenseExpectedTotalAmortized = 0;
+  expenseExpectedTotalAmortized = (
+    cashflowData.amortized_maintenance_expected_expense +
+    cashflowData.amortized_management_expected_expense +
+    cashflowData.amortized_repairs_expected_expense +
+    cashflowData.amortized_utility_expected_expense +
+    cashflowData.amortized_mortgage_expense +
+    cashflowData.amortized_taxes_expense +
+    cashflowData.amortized_insurance_expense
+  ).toFixed(2);
+
+  const cashFlowExpectedAmortized = (
+    revenueExpectedTotalAmortized - expenseExpectedTotalAmortized
+  ).toFixed(2);
+
+  let yearRevenueExpectedTotal = 0;
+  yearRevenueExpectedTotal = (
+    cashflowData.rental_year_expected_revenue +
+    cashflowData.extra_year_expected_revenue +
+    cashflowData.utility_year_expected_revenue
+  ).toFixed(2);
+
+  let yearExpenseExpectedTotal = 0;
+  yearExpenseExpectedTotal = (
+    cashflowData.maintenance_year_expected_expense +
+    cashflowData.management_year_expected_expense +
+    cashflowData.repairs_year_expected_expense +
+    cashflowData.utility_year_expected_expense +
+    cashflowData.mortgage_year_expense +
+    cashflowData.taxes_year_expense +
+    cashflowData.insurance_year_expense
+  ).toFixed(2);
+
+  const yearCashFlowExpected = (
+    yearRevenueExpectedTotal - yearExpenseExpectedTotal
+  ).toFixed(2);
+
+  let yearRevenueExpectedTotalAmortized = 0;
+  yearRevenueExpectedTotalAmortized = (
+    cashflowData.amortized_rental_year_expected_revenue +
+    cashflowData.amortized_extra_year_expected_revenue +
+    cashflowData.amortized_utility_year_expected_revenue
+  ).toFixed(2);
+
+  let yearExpenseExpectedTotalAmortized = 0;
+  yearExpenseExpectedTotalAmortized = (
+    cashflowData.amortized_maintenance_year_expected_expense +
+    cashflowData.amortized_management_year_expected_expense +
+    cashflowData.amortized_repairs_year_expected_expense +
+    cashflowData.amortized_utility_year_expected_expense +
+    cashflowData.amortized_mortgage_year_expense +
+    cashflowData.amortized_taxes_year_expense +
+    cashflowData.amortized_insurance_year_expense
+  ).toFixed(2);
+
+  const yearCashFlowExpectedAmortized = (
+    yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
+  ).toFixed(2);
+
+  return Object.keys(property).length > 1 ? (
+    showManagementContract ? (
+      <ManagerManagementContract
+        back={closeContract}
+        property={property}
+        contract={selectedContract}
+        reload={reloadProperty}
       />
-      <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
-        <div
-          className="main-content"
-          style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
-          }}
-        >
-          <Container className="pb-5 mb-5">
+    ) : showTenantAgreement ? (
+      <ManagerTenantAgreement
+        back={closeAgreement}
+        property={property}
+        agreement={selectedAgreement}
+        acceptedTenantApplications={acceptedTenantApplications}
+        setAcceptedTenantApplications={setAcceptedTenantApplications}
+      />
+    ) : (
+      <div>
+        <ConfirmDialog
+          title={"Are you sure you want to cancel the agreement?"}
+          isOpen={showDialog}
+          onConfirm={cancelAgreement}
+          onCancel={onCancel}
+        />
+        <div className="flex-1">
+          <div
+            hidden={!responsiveSidebar.showSidebar}
+            style={{
+              backgroundColor: "#229ebc",
+              width: "11rem",
+              minHeight: "100%",
+            }}
+          >
+            <SideBar />
+          </div>
+          <div className="w-100 mb-5 overflow-hidden">
+            <Header
+              title="Property Details"
+              leftText={location.state == null ? "" : "< Back"}
+              leftFn={headerBack}
+            />
+
             {editProperty ? (
               <ManagerPropertyForm
                 property={property}
@@ -343,437 +806,555 @@ function ManagerPropertyView(props) {
                 back={() => setShowCreateRevenue(false)}
               />
             ) : (
-              <div>
-                <div>
-                  <div
-                    className="mx-2 my-2 p-3"
-                    style={{
-                      background: "#FFFFFF 0% 0% no-repeat padding-box",
-                      borderRadius: "10px",
-                      opacity: 1,
-                    }}
-                  >
-                    <div
-                      style={{
-                        ...tileImg,
-                        height: "200px",
-                        position: "relative",
-                      }}
+              <div className="w-100 my-5">
+                <Row className=" d-flex align-items-center justify-content-center m-3">
+                  {imagesProperty.length > 0 ? (
+                    <Carousel
+                      responsive={responsive}
+                      infinite={true}
+                      arrows={true}
+                      className=" d-flex align-items-center justify-content-center"
                     >
-                      {property.images.length > 0 ? (
-                        <img
-                          src={JSON.parse(property.images)[currentImg]}
-                          className="w-100 h-100"
-                          style={{ borderRadius: "4px", objectFit: "contain" }}
-                          alt="Property"
-                        />
-                      ) : (
-                        ""
-                      )}
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: "5px",
-                          top: "90px",
-                        }}
-                        onClick={previousImg}
-                      >
-                        {"<"}
-                      </div>
-                      <div
-                        style={{
-                          position: "absolute",
-                          right: "5px",
-                          top: "90px",
-                        }}
-                        onClick={nextImg}
-                      >
-                        {">"}
-                      </div>
-                    </div>
-                    <Row>
-                      <Col>
-                        <h5 className="mt-2 mb-0" style={mediumBold}>
-                          ${property.listed_rent}/mo
-                        </h5>
-                      </Col>
-                      <Col>
-                        <div className="d-flex mt-2 mb-0 justify-content-end">
-                          {property.rental_status === "ACTIVE" ? (
-                            <p style={greenPill} className="mb-0">
-                              Rented
-                            </p>
-                          ) : property.rental_status === "PROCESSING" ? (
-                            <p style={bluePill} className="mb-0">
-                              Processing
-                            </p>
-                          ) : property.management_status === "FORWARDED" ? (
-                            <p style={redPill} className="mb-0">
-                              New
-                            </p>
-                          ) : property.management_status === "SENT" ? (
-                            <p style={orangePill} className="mb-0">
-                              Processing
-                            </p>
-                          ) : (
-                            <p style={orangePill} className="mb-0">
-                              Not Rented
-                            </p>
-                          )}
-                        </div>
-                      </Col>
-                    </Row>
-
-                    <p
-                      style={{
-                        font: "normal normal normal 20px Bahnschrift-Regular",
-                        letterSpacing: "0px",
-                        color: "#000000",
-                      }}
-                      className="mt-1 mb-2"
-                    >
-                      {property.address}
-                      {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-                      {property.city}, {property.state} {property.zip}
-                    </p>
-                    <ManagerPropertyCashFlow
-                      property={property}
-                      state={cashFlowState}
-                    />
-                  </div>
-
-                  {property.rental_status === "ACTIVE" ? (
-                    <ManagerRentalHistory property={property} />
+                      {imagesProperty.map((imagesGroup) => {
+                        return (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <img
+                              key={Date.now()}
+                              src={`${imagesGroup}?${Date.now()}`}
+                              style={{
+                                width: "200px",
+                                height: "200px",
+                                objectFit: "cover",
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </Carousel>
                   ) : (
-                    <ManagerTenantApplications
-                      property={property}
-                      createNewTenantAgreement={createNewTenantAgreement}
-                      selectTenantApplication={selectTenantApplication}
-                    />
+                    ""
                   )}
-                  <div
-                    className="mx-2 my-2 py-3"
-                    style={{
-                      background: "#FFFFFF 0% 0% no-repeat padding-box",
-                      borderRadius: "10px",
-                      opacity: 1,
-                    }}
-                  >
-                    <div
-                      style={mediumBold}
-                      className=" d-flex flex-column justify-content-center align-items-center"
-                    >
-                      <div className="d-flex mt-1">
-                        <h6 style={mediumBold} className="mb-1">
-                          Property Details
-                        </h6>
-                      </div>
-                      {expandDetails ? (
-                        <ManagerPropertyForm
-                          property={property}
-                          edit={editProperty}
-                          setEdit={setEditProperty}
-                          hideEdit={hideEdit}
-                          onSubmit={reloadProperty}
-                        />
-                      ) : (
-                        ""
-                      )}
-                      <div className="d-flex mt-1">
-                        <img
-                          onClick={() => setExpandDetails(!expandDetails)}
-                          src={expandDetails ? BlueArrowUp : BlueArrowDown}
-                          alt="Expand"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="mx-2 my-2 py-3"
-                    style={{
-                      background: "#FFFFFF 0% 0% no-repeat padding-box",
-                      borderRadius: "10px",
-                      opacity: 1,
-                    }}
-                  >
-                    <div
-                      style={mediumBold}
-                      className="d-flex flex-column justify-content-center align-items-center"
-                    >
-                      <div className="d-flex mt-1">
-                        <h6 style={mediumBold} className="mb-1">
-                          Property Owner Agreement
-                        </h6>
-                      </div>
-                      {expandManagerDocs ? (
-                        <PropertyManagerDocs
-                          property={property}
-                          fetchProperty={fetchProperty}
-                          addDocument={addContract}
-                          selectContract={selectContract}
-                          setExpandManagerDocs={setExpandManagerDocs}
-                          setShowDialog={setShowDialog}
-                          endEarlyDate={endEarlyDate}
-                          setEndEarlyDate={setEndEarlyDate}
-                          cancel={cancel}
-                          setCancel={setCancel}
-                          reload={""}
-                        />
-                      ) : (
-                        ""
-                      )}
-                      <div className="d-flex mt-1">
-                        <img
-                          onClick={() =>
-                            setExpandManagerDocs(!expandManagerDocs)
-                          }
-                          src={expandManagerDocs ? BlueArrowUp : BlueArrowDown}
-                          alt="Expand"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                </Row>
+                <Row className="m-3">
+                  <Col>
+                    <h3>Property Summary</h3>
+                  </Col>
+                  <Col>
+                    <img
+                      src={EditIconNew}
+                      onClick={() => {
+                        window.scrollTo(0, 0);
+                        setEditProperty(true);
+                      }}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                    />
+                  </Col>
+                </Row>
 
-                  <div
-                    className="mx-2 my-2 p-3"
-                    style={{
-                      background: "#FFFFFF 0% 0% no-repeat padding-box",
-                      borderRadius: "10px",
-                      opacity: 1,
-                    }}
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
                   >
-                    <div
-                      style={mediumBold}
-                      className=" d-flex flex-column justify-content-center align-items-center"
-                      onClick={() => setExpandLeaseDocs(!expandLeaseDocs)}
-                    >
-                      <div className="d-flex mt-1">
-                        <h6 style={mediumBold} className="mb-1">
-                          Tenant Info
-                        </h6>
-                      </div>
-                      {expandLeaseDocs ? (
-                        // <ManagerLeaseDocs property={property} addDocument={addAgreement} selectAgreement={selectAgreement}/>
-                        <ManagerTenantAgreementView
-                          back={closeAgreement}
-                          property={property}
-                          selectedAgreement={selectedAgreement}
-                          renewLease={renewLease}
-                          acceptedTenantApplications={
-                            acceptedTenantApplications
-                          }
-                          setAcceptedTenantApplications={
-                            setAcceptedTenantApplications
-                          }
-                        />
-                      ) : (
-                        ""
-                      )}
-                      <div className="d-flex mt-1">
-                        <img
-                          src={expandLeaseDocs ? BlueArrowUp : BlueArrowDown}
-                          alt="Expand"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell> Property Images</TableCell>
+                        <TableCell>Street Address</TableCell>
+                        <TableCell>City,State</TableCell>
+                        <TableCell>Zip</TableCell>
+                        <TableCell>Owner</TableCell>
+                        <TableCell>Tenant</TableCell>{" "}
+                        <TableCell>Rent Status</TableCell>
+                        <TableCell>Lease End</TableCell>
+                        <TableCell>Rent</TableCell> <TableCell>Type</TableCell>{" "}
+                        <TableCell>Size</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={property.property_uid}
+                      >
+                        <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
+                          onClick={() => {
+                            window.scrollTo(0, 1500);
+                            setEditProperty(true);
+                          }}
+                        >
+                          {JSON.parse(property.images).length > 0 ? (
+                            <img
+                              key={Date.now()}
+                              src={`${
+                                JSON.parse(property.images)[0]
+                              }?${Date.now()}`}
+                              alt="Property"
+                              style={{
+                                borderRadius: "4px",
+                                objectFit: "cover",
+                                width: "100px",
+                                height: "100px",
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={PropertyIcon}
+                              alt="Property"
+                              style={{
+                                borderRadius: "4px",
+                                objectFit: "cover",
+                                width: "100px",
+                                height: "100px",
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
+                          onClick={() => {
+                            window.scrollTo(0, 0);
+                            setEditProperty(true);
+                          }}
+                        >
+                          {property.address}
+                          {property.unit !== "" ? " " + property.unit : ""}
+                        </TableCell>
+                        <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
+                          onClick={() => {
+                            window.scrollTo(0, 0);
+                            setEditProperty(true);
+                          }}
+                        >
+                          {property.city}, {property.state}
+                        </TableCell>
+                        <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
+                          onClick={() => {
+                            window.scrollTo(0, 0);
+                            setEditProperty(true);
+                          }}
+                        >
+                          {property.zip}
+                        </TableCell>
 
-                <div
-                  className="mx-2 my-2 p-3"
-                  style={{
-                    background: "#FFFFFF 0% 0% no-repeat padding-box",
-                    borderRadius: "10px",
-                    opacity: 1,
-                  }}
-                >
-                  <div
-                    style={mediumBold}
-                    className=" d-flex flex-column justify-content-center align-items-center"
-                  >
-                    <div className="d-flex mt-1">
-                      <h6 style={mediumBold} className="mb-1">
-                        Recent Maintenance Requests
-                      </h6>
-                    </div>
-                    <div style={{ maxHeight: "220px", overflow: "scroll" }}>
-                      {recentMaintenanceRequests.length > 0 ? (
-                        recentMaintenanceRequests.map((mr) => {
+                        <TableCell padding="none" size="small" align="center">
+                          {property.property_manager.length !== 0
+                            ? property.property_manager[0].manager_business_name
+                            : "None"}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.rentalInfo.length !== 0
+                            ? property.rentalInfo[0].tenant_first_name
+                            : "None"}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.rent_paid !== ""
+                            ? property.rent_paid
+                            : "None"}
+                        </TableCell>
+                        <TableCell padding="none" size="small" align="center">
+                          {property.rentalInfo.length !== 0
+                            ? property.rentalInfo[0].lease_end
+                            : "None"}
+                        </TableCell>
+                        <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
+                          onClick={() => {
+                            window.scrollTo(0, 800);
+                            setEditProperty(true);
+                          }}
+                        >
+                          {"$" + property.listed_rent}
+                        </TableCell>
+
+                        <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
+                          onClick={() => {
+                            window.scrollTo(0, 800);
+                            setEditProperty(true);
+                          }}
+                        >
+                          {property.property_type}
+                        </TableCell>
+
+                        <TableCell
+                          padding="none"
+                          size="small"
+                          align="center"
+                          onClick={() => {
+                            window.scrollTo(0, 800);
+                            setEditProperty(true);
+                          }}
+                        >
+                          {property.num_beds + "/" + property.num_baths}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+
+                <Row className="m-3">
+                  <Col>
+                    <h3>Property Owner Agreement</h3>
+                  </Col>
+                  <Col xs={2}></Col>
+                </Row>
+                <Row style={{ overflow: "scroll" }}>
+                  {" "}
+                  <PropertyManagerDocs
+                    property={property}
+                    fetchProperty={fetchProperty}
+                    addDocument={addContract}
+                    selectContract={selectContract}
+                    setExpandManagerDocs={setExpandManagerDocs}
+                    setShowDialog={setShowDialog}
+                    endEarlyDate={endEarlyDate}
+                    setEndEarlyDate={setEndEarlyDate}
+                    cancel={cancel}
+                    setCancel={setCancel}
+                    reload={""}
+                  />
+                </Row>
+
+                <Row className="m-3">
+                  <Col>
+                    <h3>Tenant Info</h3>
+                  </Col>
+                  <Col xs={2}></Col>
+                </Row>
+                <Row style={{ overflow: "scroll" }}>
+                  <ManagerTenantAgreementView
+                    back={closeAgreement}
+                    property={property}
+                    selectedAgreement={selectedAgreement}
+                    renewLease={renewLease}
+                    acceptedTenantApplications={acceptedTenantApplications}
+                    setAcceptedTenantApplications={
+                      setAcceptedTenantApplications
+                    }
+                  />
+                </Row>
+
+                {property.rental_status === "ACTIVE" ? (
+                  <ManagerRentalHistory property={property} />
+                ) : (
+                  <ManagerTenantApplications
+                    property={property}
+                    createNewTenantAgreement={createNewTenantAgreement}
+                    selectTenantApplication={selectTenantApplication}
+                  />
+                )}
+                <Row className="m-3">
+                  <Col>
+                    <h3>Maintenance and Repair Requests</h3>
+                  </Col>
+                  <Col xs={2}>
+                    {" "}
+                    <img
+                      src={AddIcon}
+                      onClick={() =>
+                        navigate(`/${property_uid}/repairRequest`, {
+                          state: {
+                            property: property,
+                          },
+                        })
+                      }
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  {property.maintenanceRequests.length > 0 ? (
+                    <Table
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                      responsive="md"
+                    >
+                      <EnhancedTableHeadMaintenance
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        rowCount={property.maintenanceRequests.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          property.maintenanceRequests,
+                          getComparator(order, orderBy)
+                        ).map((request, index) => {
                           return (
-                            <Row className="mx-2 mb-4">
-                              <Col xs={3}>
-                                <div style={tileImg}>
-                                  {JSON.parse(mr.images).length > 0 ? (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={request.maintenance_request_uid}
+                              onClick={() => {
+                                navigate(
+                                  `../manager-repairs/${request.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: request,
+                                    },
+                                  }
+                                );
+                              }}
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {JSON.parse(request.images).length > 0 ? (
+                                  <img
+                                    src={JSON.parse(request.images)[0]}
+                                    alt="Repair"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={RepairImg}
+                                    alt="Repair"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                )}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {request.title}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {request.request_created_date}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.days_open} days
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.request_type != null
+                                  ? request.request_type
+                                  : "None"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.priority}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.assigned_business != null
+                                  ? request.assigned_business
+                                  : "None"}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.scheduled_date != null
+                                  ? request.scheduled_date
+                                  : "Not Scheduled"}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <div>No maintenance or repair requests</div>
+                  )}
+                </Row>
+                <Row className="m-3">
+                  <Col>
+                    <h3>Appliances</h3>
+                  </Col>
+                  <Col>
+                    <img
+                      src={EditIconNew}
+                      onClick={() => {
+                        window.scrollTo(0, 1000);
+                        setEditProperty(true);
+                      }}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Appliance</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Purchased From</TableCell>
+                        <TableCell>Purchased On</TableCell>
+                        <TableCell>Purchase Order Number</TableCell>
+                        <TableCell>Installed On</TableCell>
+                        <TableCell>Serial Number</TableCell>
+                        <TableCell>Model Number</TableCell>
+                        <TableCell>Warranty Till</TableCell>
+                        <TableCell>Warranty Info</TableCell>
+                        <TableCell>Images</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    {console.log("appliances", appliances, applianceState)}
+                    <TableBody>
+                      {appliances.map((appliance, i) => {
+                        return applianceState[0][appliance]["available"] ==
+                          true ||
+                          applianceState[0][appliance]["available"] ==
+                            "True" ? (
+                          <TableRow
+                            onClick={() => {
+                              window.scrollTo(0, 1000);
+                              setEditProperty(true);
+                            }}
+                          >
+                            <TableCell>{appliance}</TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["name"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["purchased_from"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["purchased"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["purchased_order"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["installed"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["serial_num"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["model_num"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["warranty_till"]}
+                            </TableCell>
+                            <TableCell>
+                              {applianceState[0][appliance]["warranty_info"]}
+                            </TableCell>
+
+                            {applianceState[0][appliance]["images"] !==
+                              undefined &&
+                            applianceState[0][appliance]["images"].length >
+                              0 ? (
+                              <TableCell>
+                                {console.log(
+                                  applianceState[0][appliance]["images"][0]
+                                )}
+                                <Row className="d-flex justify-content-center align-items-center p-1">
+                                  <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                     <img
-                                      src={JSON.parse(mr.images)[0]}
-                                      alt="Repair Image"
-                                      className="h-100 w-100"
-                                      style={{
-                                        objectFit: "cover",
-                                        height: "50px",
-                                        width: "50px",
-                                      }}
-                                    />
-                                  ) : (
-                                    <img
-                                      src={No_Image}
-                                      alt="No Repair Image"
-                                      className="h-100 w-100"
+                                      key={Date.now()}
+                                      src={`${
+                                        applianceState[0][appliance][
+                                          "images"
+                                        ][0]
+                                      }?${Date.now()}`}
                                       style={{
                                         borderRadius: "4px",
-                                        objectFit: "cover",
-                                        height: "50px",
+                                        objectFit: "contain",
                                         width: "50px",
+                                        height: "50px",
                                       }}
+                                      alt="Property"
                                     />
-                                  )}
-                                </div>
-                              </Col>
-                              <Col>
-                                <Row
-                                  style={{
-                                    font: "normal normal normal 14px Bahnschrift-Regular",
-                                  }}
-                                >
-                                  {mr.title}
+                                  </Col>
                                 </Row>
-                                <Row
-                                  className="mb-2"
-                                  style={{
-                                    font: "normal normal normal 12px Bahnschrift-Regular",
-                                  }}
-                                >
-                                  {mr.description}
-                                </Row>
-                                <Row>
-                                  <hr opacity={1} />
-                                </Row>
-
-                                {mr.request_status === "COMPLETED" ? (
-                                  <Row
-                                    style={{
-                                      font: "normal normal normal 12px Bahnschrift-Regular",
-                                      color: "#007AFF",
-                                    }}
-                                  >
-                                    Completed on:{" "}
-                                    {new Date(
-                                      mr.scheduled_date
-                                    ).toLocaleDateString("en-us", {
-                                      year: "numeric",
-                                      month: "short",
-                                      day: "numeric",
-                                    })}
-                                  </Row>
-                                ) : mr.request_status === "SCHEDULED" ? (
-                                  <Row
-                                    style={{
-                                      font: "normal normal normal 12px Bahnschrift-Regular",
-                                      color: "#E3441F",
-                                    }}
-                                  >
-                                    Scheduled for:{" "}
-                                    {new Date(
-                                      mr.scheduled_date
-                                    ).toLocaleDateString("en-us", {
-                                      year: "numeric",
-                                      month: "short",
-                                      day: "numeric",
-                                    })}
-                                  </Row>
-                                ) : (
-                                  <Row
-                                    style={{
-                                      font: "normal normal normal 12px Bahnschrift-Regular",
-                                      color: "#007AFF",
-                                    }}
-                                  >
-                                    Requested on:{" "}
-                                    {new Date(
-                                      mr.request_created_date.split(" ")[0]
-                                    ).toLocaleDateString("en-us", {
-                                      year: "numeric",
-                                      month: "short",
-                                      day: "numeric",
-                                    })}
-                                  </Row>
-                                )}
-                              </Col>
-                            </Row>
-                          );
-                        })
-                      ) : (
-                        <div style={mediumBold} className="d-flex mt-3">
-                          No requests in past 30 days
-                        </div>
-                      )}
-                    </div>
-                    {pastMaintenanceRequests.length > 0 ? (
-                      <div
-                        style={
-                          (mediumBold, { color: "#007AFF", cursor: "pointer" })
-                        }
-                        className="d-flex mt-3"
-                        onClick={() => {
-                          navigate("./repairs", {
-                            state: { property: property },
-                          });
-                        }}
-                      >
-                        <div className="d-flex mt-1  align-items-center">
-                          <h6 style={mediumBold} className="mb-1">
-                            Past Maintenance Requests
-                          </h6>
-                          &nbsp; &nbsp;
-                          <div className="d-flex align-items-center">
-                            <img src={BlueArrowRight} alt="Expand" />
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div></div>
-                    )}
-                  </div>
-                </div>
-                <div
-                  className="mx-2 my-2 p-3"
-                  style={{
-                    background: "#FFFFFF 0% 0% no-repeat padding-box",
-                    border: " 1px solid #007AFF",
-                    borderRadius: "5px",
-                    opacity: 1,
-                  }}
-                >
-                  <div
-                    style={
-                      (mediumBold, { color: "#007AFF", cursor: "pointer" })
-                    }
-                    onClick={() => {
-                      navigate(`/appliances/${property.property_uid}`, {
-                        state: {
-                          property: property,
-                          property_uid: property.property_uid,
-                        },
-                      });
-                    }}
-                    className=" d-flex flex-row justify-content-center align-items-center"
-                  >
-                    <div className="d-flex mt-1  align-items-center">
-                      <h6 style={mediumBold} className="mb-1">
-                        List of Appliances
-                      </h6>
-                      &nbsp; &nbsp;
-                      <div className="d-flex align-items-center">
-                        <img src={BlueArrowRight} alt="Expand" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                              </TableCell>
+                            ) : (
+                              <TableCell>None</TableCell>
+                            )}
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
               </div>
             )}
-          </Container>
+          </div>
+        </div>
+        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+          <ManagerFooter />
         </div>
       </div>
+    )
+  ) : (
+    <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+      <ReactBootStrap.Spinner animation="border" role="status" />
     </div>
   );
 }
