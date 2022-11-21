@@ -1,8 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
-import { useParams } from "react-router";
+import Carousel from "react-multi-carousel";
+import RepairImages from "../RepairImages";
 import SideBar from "./SideBar";
 import Checkbox from "../Checkbox";
 import AppContext from "../../AppContext";
@@ -13,6 +22,8 @@ import Message from "../../icons/Message.svg";
 import HighPriority from "../../icons/highPriority.svg";
 import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
+import RepairImg from "../../icons/RepairImg.svg";
+import OpenDoc from "../../icons/OpenDoc.svg";
 import {
   headings,
   pillButton,
@@ -26,14 +37,23 @@ import {
   squareForm,
   orangePill,
   mediumBold,
+  smallImg,
 } from "../../utils/styles";
 import { get, post, put } from "../../utils/api";
 
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px", // <-- arbitrary value
+    },
+  },
+});
 function ManagerRepairDetail(props) {
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token } = userData;
   const location = useLocation();
   const navigate = useNavigate();
+  const classes = useStyles();
   const [morePictures, setMorePictures] = useState(false);
   const [morePicturesNotes, setMorePicturesNotes] = useState(
     "Can you please share more pictures regarding the request?"
@@ -47,11 +67,30 @@ function ManagerRepairDetail(props) {
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [issueType, setIssueType] = useState("");
   const [priority, setPriority] = useState("");
-
+  const [tenantInfo, setTenantInfo] = useState([]);
   const [showSpinner, setShowSpinner] = useState(false);
   const repair = location.state.repair;
-
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 3,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 3,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 3,
+    },
+  };
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -63,7 +102,7 @@ function ManagerRepairDetail(props) {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
   // const { repair, back } = props;
@@ -80,6 +119,9 @@ function ManagerRepairDetail(props) {
     const businesses_request = await get(
       "/businesses?business_type=MAINTENANCE"
     );
+    const request_response = await get(
+      `/maintenanceRequests?maintenance_request_uid=${repair.maintenance_request_uid}`
+    );
     if (businesses_request.msg === "Token has expired") {
       refresh();
       return;
@@ -92,10 +134,39 @@ function ManagerRepairDetail(props) {
     // console.log(repair)
     // console.log(businesses)
     setBusinesses(businesses);
-    setTitle(repair.title);
-    setDescription(repair.description);
-    setPriority(repair.priority);
-    setCanReschedule(repair.can_reschedule === 1);
+    setTitle(request_response.result[0].title);
+    setDescription(request_response.result[0].description);
+    setIssueType(request_response.result[0].request_type);
+    setPriority(request_response.result[0].priority);
+    setCanReschedule(request_response.result[0].can_reschedule === 1);
+    let tenant = [];
+    let ti = {};
+    repair.rentalInfo.map((rentalInfo) => {
+      if (rentalInfo.tenant_first_name.includes(",")) {
+        let tenant_fns = rentalInfo.tenant_first_name.split(",");
+        let tenant_lns = rentalInfo.tenant_last_name.split(",");
+        let tenant_emails = rentalInfo.tenant_email.split(",");
+        let tenant_phones = rentalInfo.tenant_phone_number.split(",");
+        for (let i = 0; i < tenant_fns.length; i++) {
+          ti["tenantFirstName"] = tenant_fns[i];
+          ti["tenantLastName"] = tenant_lns[i];
+          ti["tenantEmail"] = tenant_emails[i];
+          ti["tenantPhoneNumber"] = tenant_phones[i];
+          tenant.push(ti);
+          ti = {};
+        }
+      } else {
+        ti = {
+          tenantFirstName: rentalInfo.tenant_first_name,
+          tenantLastName: rentalInfo.tenant_last_name,
+          tenantEmail: rentalInfo.tenant_email,
+          tenantPhoneNumber: rentalInfo.tenant_phone_number,
+        };
+        tenant.push(ti);
+      }
+    });
+
+    setTenantInfo(tenant);
     const files = [];
     const images = JSON.parse(repair.images);
     for (let i = 0; i < images.length; i++) {
@@ -154,6 +225,7 @@ function ManagerRepairDetail(props) {
       maintenance_request_uid: repair.maintenance_request_uid,
       title: title,
       description: description,
+      request_type: issueType,
       priority: priority,
       can_reschedule: canReschedule ? 1 : 0,
       request_status: repair.request_status,
@@ -175,6 +247,7 @@ function ManagerRepairDetail(props) {
     console.log(response.result);
     setTitle(title);
     setDescription(description);
+    setIssueType(issueType);
     setPriority(priority);
     setCanReschedule(canReschedule ? 1 : 0);
     setEdit(false);
@@ -228,7 +301,7 @@ function ManagerRepairDetail(props) {
     <div>
       <div className="flex-1">
         <div
-          hidden={!responsive.showSidebar}
+          hidden={!responsiveSidebar.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             width: "11rem",
@@ -262,6 +335,52 @@ function ManagerRepairDetail(props) {
             hidden={scheduleMaintenance || requestQuote}
           >
             <Row style={headings}>
+              {JSON.parse(repair.images).length === 0 ? (
+                <Row className=" m-3">
+                  <img
+                    src={RepairImg}
+                    style={{
+                      objectFit: "contain",
+                      width: "350px",
+                      height: " 198px",
+                    }}
+                    alt="repair"
+                  />
+                </Row>
+              ) : JSON.parse(repair.images).length > 1 ? (
+                <Row className=" m-3">
+                  <Carousel responsive={responsive}>
+                    {JSON.parse(repair.images).map((images) => {
+                      return (
+                        <img
+                          src={`${images}?${Date.now()}`}
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            objectFit: "cover",
+                          }}
+                          alt="repair"
+                        />
+                      );
+                    })}
+                  </Carousel>
+                </Row>
+              ) : (
+                <Row className=" m-3">
+                  <img
+                    src={JSON.parse(repair.images)}
+                    //className="w-100 h-100"
+                    style={{
+                      objectFit: "cover",
+                      width: "350px",
+                      height: " 198px",
+                      border: "1px solid #C4C4C4",
+                      borderRadius: "5px",
+                    }}
+                    alt="repair"
+                  />
+                </Row>
+              )}
               <Col>{title}</Col>
               <Col xs={4}>
                 {priority === "High" ? (
@@ -300,6 +419,30 @@ function ManagerRepairDetail(props) {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                     />
+                  </Form.Group>
+                </Row>
+                <Row
+                  style={{
+                    background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Issue Type
+                    </Form.Label>
+                    <Form.Select
+                      style={squareForm}
+                      value={issueType}
+                      onChange={(e) => setIssueType(e.target.value)}
+                    >
+                      <option>Plumbing</option>
+                      <option>Landscape</option>
+                      <option>Appliances</option>
+                      <option>Electrical</option>
+                      <option>Other</option>
+                    </Form.Select>
                   </Form.Group>
                 </Row>
                 <Row
@@ -425,8 +568,19 @@ function ManagerRepairDetail(props) {
                     opacity: 1,
                   }}
                 >
+                  <div style={subHeading}>Request Type</div>
+                  <div style={subText}>{issueType}</div>
+                </Row>
+                <Row
+                  className="pt-1 mb-4"
+                  style={{
+                    background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
                   <div style={subHeading}>Description</div>
-                  <div style={subText}>{repair.description}</div>
+                  <div style={subText}>{description}</div>
                 </Row>
                 <Row
                   className="pt-1 mb-4"
@@ -562,6 +716,178 @@ function ManagerRepairDetail(props) {
                     </Row>
                   </Col>
                 </Row>
+                <Row
+                  className="pt-1 mb-4"
+                  style={{
+                    background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                    overflow: "scroll",
+                  }}
+                >
+                  <div style={subHeading} className="pt-1 mb-2">
+                    Owner Info
+                  </div>
+                  {console.log(repair)}
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center">Owner Name</TableCell>
+                        <TableCell align="center">Email</TableCell>
+                        <TableCell align="center">Phone Number</TableCell>
+                        <TableCell align="center">Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="center">
+                          {repair.owner[0].owner_first_name}{" "}
+                          {repair.owner[0].owner_last_name}
+                        </TableCell>
+                        <TableCell align="center">
+                          {repair.owner[0].owner_email}
+                        </TableCell>
+                        <TableCell align="center">
+                          {repair.owner[0].owner_phone_number}
+                        </TableCell>
+                        <TableCell align="center">
+                          <a href={`tel:${repair.owner[0].owner_phone_number}`}>
+                            <img src={Phone} alt="Phone" style={smallImg} />
+                          </a>
+                          <a href={`mailto:${repair.owner[0].owner_email}`}>
+                            <img src={Message} alt="Message" style={smallImg} />
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+                {repair.rentalInfo !== "Not Rented" ? (
+                  <Row
+                    className="pt-1 mb-4"
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                      overflow: "scroll",
+                    }}
+                  >
+                    {" "}
+                    <div style={subHeading} className="pt-1 mb-2">
+                      Tenant Info
+                    </div>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="center">Lease Start Date</TableCell>
+                          <TableCell align="center">Lease End Date</TableCell>
+                          <TableCell align="center">Tenant Payments</TableCell>
+                          <TableCell align="center">Lease Docs</TableCell>
+                          <TableCell align="center">Tenant Name</TableCell>
+                          <TableCell align="center">Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {repair.rentalInfo.map((rf) => {
+                          return (
+                            <TableRow>
+                              <TableCell align="center">
+                                {rf.lease_start}
+                              </TableCell>
+                              <TableCell align="center">
+                                {rf.lease_end}
+                              </TableCell>
+                              <TableCell align="center">
+                                {JSON.parse(rf.rent_payments).map((rp) => {
+                                  return (
+                                    <Row className="d-flex justify-content-center align-items-center p-2">
+                                      {rp.fee_name}: ${rp.charge}
+                                    </Row>
+                                  );
+                                })}
+                              </TableCell>
+                              <TableCell align="center">
+                                {JSON.parse(rf.documents).map((rp) => {
+                                  return (
+                                    <Row className="d-flex justify-content-center align-items-center p-2">
+                                      <Col
+                                        className=" d-flex align-items-left"
+                                        style={{
+                                          font: "normal normal 600 18px Bahnschrift-Regular",
+                                          color: "#007AFF",
+                                          textDecoration: "underline",
+                                        }}
+                                      >
+                                        {rp.description}
+                                      </Col>
+                                      <Col className=" d-flex justify-content-end">
+                                        <a href={rp.link} target="_blank">
+                                          <img src={OpenDoc} />
+                                        </a>
+                                      </Col>
+                                    </Row>
+                                  );
+                                })}
+                              </TableCell>
+                              <TableCell align="center">
+                                {tenantInfo.map((tf) => {
+                                  return (
+                                    <p>
+                                      {" "}
+                                      {tf.tenantFirstName} {tf.tenantLastName}
+                                    </p>
+                                  );
+                                })}
+                              </TableCell>
+                              <TableCell align="center">
+                                {tenantInfo.map((tf) => {
+                                  return (
+                                    <Row>
+                                      <Col className="d-flex justify-content-center">
+                                        <a href={`tel:${tf.tenantPhoneNumber}`}>
+                                          <img
+                                            src={Phone}
+                                            alt="Phone"
+                                            style={smallImg}
+                                          />
+                                        </a>
+                                        <a href={`mailto:${tf.tenantEmail}`}>
+                                          <img
+                                            src={Message}
+                                            alt="Message"
+                                            style={smallImg}
+                                          />
+                                        </a>
+                                      </Col>
+                                    </Row>
+                                  );
+                                })}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                ) : (
+                  <Row
+                    className="pt-1 mb-4"
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                      overflow: "scroll",
+                    }}
+                  >
+                    {" "}
+                    Not Rented
+                  </Row>
+                )}
+
                 <Row hidden={true} className="pt-1">
                   <Col className="d-flex flex-row justify-content-evenly">
                     <Button
@@ -928,7 +1254,7 @@ function ManagerRepairDetail(props) {
             )}
         </div>
       </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
         <ManagerFooter />
       </div>
     </div>

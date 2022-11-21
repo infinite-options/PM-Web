@@ -3856,7 +3856,7 @@ export default function ManagerDashboard() {
                             {property.num_apps}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {property.rentalInfo !== "NOT RENTED" ? (
+                            {property.rentalInfo !== "Not Rented" ? (
                               property.rentalInfo.map((tf, i) => {
                                 return (
                                   <div

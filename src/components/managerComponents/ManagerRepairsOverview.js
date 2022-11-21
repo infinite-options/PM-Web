@@ -496,19 +496,25 @@ function ManagerRepairsOverview(props) {
                     row.repairs_list,
                     getComparator(order, orderBy)
                   ).map((repair, j) => (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={j}>
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={j}
+                      onClick={() => {
+                        navigate(`./${repair.maintenance_request_uid}`, {
+                          state: {
+                            repair: repair,
+                          },
+                        });
+                      }}
+                    >
                       <TableCell padding="none" size="small" align="center">
                         {JSON.parse(repair.images).length > 0 ? (
                           <img
                             src={JSON.parse(repair.images)[0]}
                             // onClick={() => selectRepair(repair)}
-                            onClick={() => {
-                              navigate(`./${repair.maintenance_request_uid}`, {
-                                state: {
-                                  repair: repair,
-                                },
-                              });
-                            }}
+
                             alt="repair"
                             style={{
                               borderRadius: "4px",
