@@ -299,7 +299,7 @@ function ManagerRepairDetail(props) {
 
   return (
     <div>
-      <div className="flex-1">
+      <div className="flex-1 mb-5">
         <div
           hidden={!responsiveSidebar.showSidebar}
           style={{
@@ -310,7 +310,7 @@ function ManagerRepairDetail(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100">
+        <div className="w-100 mb-5">
           <Header
             title="Repairs"
             leftText={
@@ -331,7 +331,7 @@ function ManagerRepairDetail(props) {
           <br />
 
           <div
-            className="mx-2 my-2 p-3"
+            className="mx-2 my-4 p-3"
             hidden={scheduleMaintenance || requestQuote}
           >
             <Row style={headings}>
@@ -534,7 +534,7 @@ function ManagerRepairDetail(props) {
                     </Col>
                   </Row>
                 </Row>
-                <Row className="pt-1 mb-2">
+                <Row className="pt-1 mb-4">
                   <Col className="d-flex flex-row justify-content-evenly">
                     <Button
                       style={bluePillButton}
@@ -916,7 +916,7 @@ function ManagerRepairDetail(props) {
           </div>
 
           <div
-            className="mx-2 my-2 p-3"
+            className="mx-2 mt-2 mb-5 p-3"
             style={{
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               borderRadius: "10px",
@@ -991,7 +991,7 @@ function ManagerRepairDetail(props) {
                   </Row>
                 ))}
             </div>
-            <Row className="mt-4">
+            <Row className="mt-4 mb-4">
               <Col className="d-flex justify-content-evenly">
                 <Button style={bluePillButton} onClick={sendQuotesRequest}>
                   Send Quote Request to Maintenace
@@ -1048,7 +1048,7 @@ function ManagerRepairDetail(props) {
             !requestQuote &&
             quotes &&
             quotes.length > 0 && (
-              <div className="pb-4">
+              <div className="pb-4 mb-4">
                 {quotes &&
                   quotes.length > 0 &&
                   quotes.map((quote, i) => (
