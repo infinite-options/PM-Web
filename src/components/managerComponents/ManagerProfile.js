@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Form } from "react-bootstrap";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import ManagerPaymentSelection from "../components/ManagerPaymentSelection";
-import { get, put } from "../utils/api";
-import { squareForm, gray, headings } from "../utils/styles";
-import Logout from "./Logout";
-import SideBar from "./managerComponents/SideBar";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import ManagerPaymentSelection from "./ManagerPaymentSelection";
+import ManagerFooter from "./ManagerFooter";
+import SideBar from "./SideBar";
+import { get, put } from "../../utils/api";
+import { squareForm, gray, headings } from "../../utils/styles";
 function ManagerProfile(props) {
   const context = useContext(AppContext);
   const { userData, refresh } = context;
@@ -34,7 +34,20 @@ function ManagerProfile(props) {
   // const locationState = useState([]);
   const [feeState, setFeeState] = useState([]);
   const [locationState, setLocationState] = useState([]);
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
   const loadProfile = (profile) => {
     setProfileInfo(profile);
     setCompanyName(profile.business_name);
@@ -129,16 +142,17 @@ function ManagerProfile(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           <Header
             title="Profile"
             leftText={editProfile ? "Cancel" : ""}
@@ -147,7 +161,14 @@ function ManagerProfile(props) {
             rightFn={() => (editProfile ? saveProfile() : setEditProfile(true))}
           />
           {editProfile ? (
-            <div className="mx-3 my-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <div className="my-3">
                 <Row className="mb-4" style={headings}>
                   <div>Personal Details</div>
@@ -261,7 +282,14 @@ function ManagerProfile(props) {
               </div>
             </div>
           ) : (
-            <div className="mx-3 my-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="mb-4" style={headings}>
                 <div>Personal Details</div>
               </Row>
@@ -329,31 +357,6 @@ function ManagerProfile(props) {
                     </p>
                   </Col>
                 </Row>
-
-                {/*<Container>*/}
-                {/*  <Row>*/}
-                {/*    <Col>*/}
-                {/*      <h6>* &nbsp; SSN</h6>*/}
-                {/*    </Col>*/}
-                {/*    <Col>*/}
-                {/*      <p style={gray}>*/}
-                {/*        {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}*/}
-                {/*      </p>*/}
-                {/*    </Col>*/}
-                {/*  </Row>*/}
-                {/*  <Row>*/}
-                {/*    <Col>*/}
-                {/*      <h6>* &nbsp; EIN</h6>*/}
-                {/*    </Col>*/}
-                {/*    <Col>*/}
-                {/*      <p style={gray}>*/}
-                {/*        {einNumber && einNumber !== "NULL"*/}
-                {/*          ? ssn*/}
-                {/*          : "No EIN Provided"}*/}
-                {/*      </p>*/}
-                {/*    </Col>*/}
-                {/*  </Row>*/}
-                {/*</Container>*/}
               </div>
             </div>
           )}
@@ -364,18 +367,9 @@ function ManagerProfile(props) {
             editProfile={editProfile}
           />
 
-          {/*<ManagerFees state={feeState}/>*/}
-          {/*<ManagerLocations state={locationState}/>*/}
-          {/*<ManagerFees feeState={feeState} setFeeState={setFeeState}/>*/}
-          {/*<ManagerLocations locationState={locationState} setLocationState={setLocationState}/>*/}
-
-          {editProfile ? (
-            ""
-          ) : (
-            <Row className="my-4">
-              <Logout />
-            </Row>
-          )}
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+            <ManagerFooter />
+          </div>
         </div>{" "}
       </div>{" "}
     </div>

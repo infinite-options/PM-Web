@@ -1,6 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import AppContext from "../AppContext";
+import Checkbox from "../Checkbox";
+import PropertyAppliances from "../PropertyAppliances";
+import PropertyUtilities from "../PropertyUtilities";
+import PropertyImages from "../PropertyImages";
+import ConfirmDialog2 from "../ConfirmDialog2";
+import AppContext from "../../AppContext";
+import Heart from "../../icons/Heart.svg";
+import Edit from "../../icons/Edit.svg";
 import {
   pillButton,
   squareForm,
@@ -12,16 +19,8 @@ import {
   mediumBold,
   smallImg,
   small,
-} from "../utils/styles";
-import { post, put } from "../utils/api";
-import Heart from "../icons/Heart.svg";
-import Edit from "../icons/Edit.svg";
-import Checkbox from "./Checkbox";
-import PropertyAppliances from "./PropertyAppliances";
-import PropertyUtilities from "./PropertyUtilities";
-import PropertyImages from "./PropertyImages";
-
-import ConfirmDialog2 from "./ConfirmDialog2";
+} from "../../utils/styles";
+import { post, put } from "../../utils/api";
 
 function ManagerPropertyForm(props) {
   const { userData } = useContext(AppContext);

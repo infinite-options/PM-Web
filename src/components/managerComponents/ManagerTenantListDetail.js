@@ -15,9 +15,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import moment from "moment";
-import SideBar from "./managerComponents/SideBar";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
+import SideBar from "./SideBar";
+import Header from "../Header";
+import ManagerFooter from "./ManagerFooter";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import RepairImg from "../../icons/RepairImg.svg";
 import {
   mediumBold,
   subText,
@@ -25,7 +28,7 @@ import {
   hidden,
   redPill,
   greenPill,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -45,7 +48,20 @@ function ManagerTenantListDetail(props) {
   const [showDL, setShowDL] = useState(true);
   const [showSSN, setShowSSN] = useState(true);
   const selectedTenant = location.state.selectedTenant;
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
@@ -229,15 +245,22 @@ function ManagerTenantListDetail(props) {
   return (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
+          hidden={!responsive.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
+          <Header
+            title="Tenant Details"
+            leftText="< Back"
+            leftFn={() => navigate(-1)}
+          />
           <div
             className="mx-2 my-2 p-3"
             style={{
@@ -589,8 +612,12 @@ function ManagerTenantListDetail(props) {
                   overflow: "scroll",
                 }}
               >
-                <Row className="m-3">
-                  <Table classes={{ root: classes.customTable }} size="small">
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
                     <EnhancedTableHead
                       order={order}
                       orderBy={orderBy}
@@ -627,7 +654,16 @@ function ManagerTenantListDetail(props) {
                                 }}
                               />
                             ) : (
-                              ""
+                              <img
+                                src={RepairImg}
+                                alt="Repair"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
                             )}
                           </TableCell>
 
@@ -672,6 +708,9 @@ function ManagerTenantListDetail(props) {
             )}
           </div>
         </div>
+      </div>
+      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+        <ManagerFooter />
       </div>
     </div>
   );

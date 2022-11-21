@@ -1,18 +1,18 @@
 import React from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
+import AppContext from "../../AppContext";
+import Checkbox from "../Checkbox";
+import BlueArrowUp from "../../icons/BlueArrowUp.svg";
+import BlueArrowDown from "../../icons/BlueArrowDown.svg";
+import File from "../../icons/File.svg";
 import {
   mediumBold,
   headings,
   subText,
   bluePillButton,
   underline,
-} from "../utils/styles";
-import BlueArrowUp from "../icons/BlueArrowUp.svg";
-import BlueArrowDown from "../icons/BlueArrowDown.svg";
-import { get, put } from "../utils/api";
-import AppContext from "../AppContext";
-import Checkbox from "./Checkbox";
-import File from "../icons/File.svg";
+} from "../../utils/styles";
+import { get, put } from "../../utils/api";
 
 function ManagerTenantApplications(props) {
   const { userData, refresh } = React.useContext(AppContext);

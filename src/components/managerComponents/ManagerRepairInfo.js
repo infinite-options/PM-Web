@@ -3,14 +3,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import * as ReactBootStrap from "react-bootstrap";
-import Checkbox from "../components/Checkbox";
-import AppContext from "../AppContext";
-import Header from "../components/Header";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import HighPriority from "../icons/highPriority.svg";
-import MediumPriority from "../icons/mediumPriority.svg";
-import LowPriority from "../icons/lowPriority.svg";
+import Checkbox from "../Checkbox";
+import AppContext from "../../AppContext";
+import Header from "../Header";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import HighPriority from "../../icons/highPriority.svg";
+import MediumPriority from "../../icons/mediumPriority.svg";
+import LowPriority from "../../icons/lowPriority.svg";
 import {
   headings,
   pillButton,
@@ -25,8 +25,8 @@ import {
   orangePill,
   gray,
   mediumBold,
-} from "../utils/styles";
-import { get, post, put } from "../utils/api";
+} from "../../utils/styles";
+import { get, post, put } from "../../utils/api";
 
 function ManagerRepairInfo(props) {
   const { userData, refresh } = React.useContext(AppContext);

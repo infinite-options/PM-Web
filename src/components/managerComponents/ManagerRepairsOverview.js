@@ -13,9 +13,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { useLocation, useNavigate } from "react-router-dom";
-import { get } from "../utils/api";
-import AppContext from "../AppContext";
-import SideBar from "../components/managerComponents/SideBar";
+import AppContext from "../../AppContext";
+import SideBar from "./SideBar";
+import Header from "../Header";
+import ManagerFooter from "./ManagerFooter";
+import ManagerRepairRequest from "./ManagerRepairRequest";
+import RepairImg from "../../icons/RepairImg.svg";
+import AddIcon from "../../icons/AddIcon.svg";
+import { get } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -30,12 +35,27 @@ function ManagerRepairsOverview(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [repairIter, setRepairIter] = useState([]);
+  const [properties, setProperties] = useState([]);
+  const [stage, setStage] = useState("LIST");
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
   const sort_repairs = (repairs) => {
     const repairs_with_quotes = repairs.filter(
       (repair) => repair.quotes_to_review > 0
@@ -71,14 +91,34 @@ function ManagerRepairsOverview(props) {
     } else {
       management_buid = management_businesses[0].business_uid;
     }
-
-    const response = await get(
-      `/maintenanceRequestsandQuotes?manager_id=${management_buid}`
+    const responseProperties = await get("/managerDashboard", access_token);
+    const properties = responseProperties.result.filter(
+      (property) => property.management_status !== "REJECTED"
     );
-    if (response.msg === "Token has expired") {
+
+    let properties_unique = [];
+    const pids = new Set();
+    properties.forEach((property) => {
+      if (pids.has(property.property_uid)) {
+        const index = properties_unique.findIndex(
+          (item) => item.property_uid === property.property_uid
+        );
+        properties_unique[index].tenants.push(property);
+      } else {
+        pids.add(property.property_uid);
+        properties_unique.push(property);
+        properties_unique[properties_unique.length - 1].tenants = [property];
+      }
+    });
+    if (responseProperties.msg === "Token has expired") {
       refresh();
       return;
     }
+    setProperties(properties);
+    const response = await get(
+      `/maintenanceRequestsandQuotes?manager_id=${management_buid}`
+    );
+
     let repairs = response.result;
     console.log(repairs);
     repairs.forEach((repair, i) => {
@@ -138,6 +178,11 @@ function ManagerRepairsOverview(props) {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
+  };
+  const addRequest = () => {
+    fetchRepairs();
+
+    setStage("LIST");
   };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -266,20 +311,20 @@ function ManagerRepairsOverview(props) {
     // rowCount: PropTypes.number.isRequired,
   };
 
-  return (
+  return stage === "LIST" ? (
     <div>
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="main-content"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
-          <br />
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           {/* <div
             className="mx-2 my-2 p-3"
             style={{
@@ -413,8 +458,32 @@ function ManagerRepairsOverview(props) {
                 )
             )}
           </div> */}
+          <Header title="Maintenance and Repairs" />
           <Row className="m-3">
-            <Table classes={{ root: classes.customTable }} size="small">
+            <Col>
+              <h3>Maintenance and Repairs</h3>
+            </Col>
+            <Col>
+              <img
+                src={AddIcon}
+                onClick={() => {
+                  setStage("ADDREQUEST");
+                }}
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  float: "right",
+                  marginRight: "5rem",
+                }}
+              />
+            </Col>
+          </Row>
+          <Row className="m-3" style={{ overflow: "scroll" }}>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -427,19 +496,25 @@ function ManagerRepairsOverview(props) {
                     row.repairs_list,
                     getComparator(order, orderBy)
                   ).map((repair, j) => (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={j}>
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={j}
+                      onClick={() => {
+                        navigate(`./${repair.maintenance_request_uid}`, {
+                          state: {
+                            repair: repair,
+                          },
+                        });
+                      }}
+                    >
                       <TableCell padding="none" size="small" align="center">
                         {JSON.parse(repair.images).length > 0 ? (
                           <img
                             src={JSON.parse(repair.images)[0]}
                             // onClick={() => selectRepair(repair)}
-                            onClick={() => {
-                              navigate(`./${repair.maintenance_request_uid}`, {
-                                state: {
-                                  repair: repair,
-                                },
-                              });
-                            }}
+
                             alt="repair"
                             style={{
                               borderRadius: "4px",
@@ -449,7 +524,16 @@ function ManagerRepairsOverview(props) {
                             }}
                           />
                         ) : (
-                          ""
+                          <img
+                            src={RepairImg}
+                            alt="Repair"
+                            style={{
+                              borderRadius: "4px",
+                              objectFit: "cover",
+                              width: "100px",
+                              height: "100px",
+                            }}
+                          />
                         )}
                       </TableCell>
                       <TableCell padding="none" size="small" align="center">
@@ -491,7 +575,38 @@ function ManagerRepairsOverview(props) {
           </Row>
         </div>
       </div>
+      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+        <ManagerFooter />
+      </div>
     </div>
+  ) : stage === "ADDREQUEST" ? (
+    <div className="OwnerReapirRequest">
+      <div className="flex-1">
+        <div
+          hidden={!responsiveSidebar.showSidebar}
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
+          <Header title="Add Repair Request" />
+          <ManagerRepairRequest
+            properties={properties}
+            cancel={() => setStage("LIST")}
+            onSubmit={addRequest}
+          />
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <ManagerFooter />
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
+    ""
   );
 }
 

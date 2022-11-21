@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import Header from "./Header";
-import { get } from "../utils/api";
-import AppContext from "../AppContext";
+import Header from "../Header";
+import { get } from "../../utils/api";
+import AppContext from "../../AppContext";
 import moment from "moment";
 
-import { subHeading, subText, blueRight, redRight } from "../utils/styles";
+import { subHeading, subText, blueRight, redRight } from "../../utils/styles";
 import ManagerFooter from "./ManagerFooter";
 
 function ManagerPaymentHistory(props) {

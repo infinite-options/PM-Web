@@ -133,7 +133,7 @@ function CreateAnnouncement(props) {
       property_uid: "",
     };
     properties_unique.forEach((property) => {
-      if (property.rentalInfo !== "NOT RENTED") {
+      if (property.rentalInfo !== "Not Rented") {
         property.rentalInfo.forEach((tenant) => {
           tenant_details = {
             tenant_id: tenant.tenant_id,
@@ -188,12 +188,12 @@ function CreateAnnouncement(props) {
     let receiver_properties_id = [];
     if (byProperty) {
       newAnnouncement.properties.forEach((prop) =>
-        prop.rentalInfo !== "NOT RENTED"
+        prop.rentalInfo !== "Not Rented"
           ? prop.rentalInfo.map((tf, i) => receiver_uid.push(tf.tenant_id))
           : ""
       );
       newAnnouncement.properties.forEach((prop) =>
-        prop.rentalInfo !== "NOT RENTED"
+        prop.rentalInfo !== "Not Rented"
           ? receiver_properties_id.push(prop.property_uid)
           : ""
       );
@@ -482,7 +482,7 @@ function CreateAnnouncement(props) {
                         </div>
 
                         <div className="d-flex mx-2 ps-2 justify-content-left align-items-left my-2 flex-column">
-                          {property.rentalInfo !== "NOT RENTED" ? (
+                          {property.rentalInfo !== "Not Rented" ? (
                             property.rentalInfo.map((tf, i) => {
                               return (
                                 <div>

@@ -1,8 +1,15 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { gray, green, red, mediumBold, small, xSmall } from "../utils/styles";
-import BlueArrowUp from "../icons/BlueArrowUp.svg";
-import BlueArrowDown from "../icons/BlueArrowDown.svg";
+import BlueArrowUp from "../../icons/BlueArrowUp.svg";
+import BlueArrowDown from "../..//icons/BlueArrowDown.svg";
+import {
+  gray,
+  green,
+  red,
+  mediumBold,
+  small,
+  xSmall,
+} from "../../utils/styles";
 
 function ManagerRentalHistory(props) {
   const { property } = props;

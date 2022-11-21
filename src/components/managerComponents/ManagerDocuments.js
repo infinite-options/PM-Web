@@ -12,7 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
-import OwnerFooter from "./OwnerFooter";
+import ManagerFooter from "./ManagerFooter";
 import OpenDoc from "../../icons/OpenDocBlack.svg";
 import { get } from "../../utils/api";
 const useStyles = makeStyles({
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     },
   },
 });
-function OwnerDocuments(props) {
+function ManagerDocuments(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
@@ -51,11 +51,28 @@ function OwnerDocuments(props) {
   };
 
   const fetchProfile = async () => {
-    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+    if (access_token === null) {
       navigate("/");
       return;
     }
-    const response = await get(`/ownerDocuments?owner_id=${user.user_uid}`);
+
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length < 1) {
+      console.log("No associated PM Businesses");
+      return;
+    } else if (management_businesses.length > 1) {
+      console.log("Multiple associated PM Businesses");
+      management_buid = management_businesses[0].business_uid;
+    } else {
+      management_buid = management_businesses[0].business_uid;
+    }
+    const response = await get(
+      `/managerDocuments?manager_id=${management_buid}`
+    );
+    setDocuments(response.result);
     console.log(response.result[0]);
 
     if (response.msg === "Token has expired") {
@@ -63,10 +80,7 @@ function OwnerDocuments(props) {
       refresh();
       return;
     }
-
-    setDocuments(response.result);
     let documents = response.result[0];
-
     var active_lease_docs = Object.keys(documents)
       .filter((key) => key.includes("active_lease_docs"))
       .reduce((cur, key) => {
@@ -545,7 +559,7 @@ function OwnerDocuments(props) {
             )}
           </Row>
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-            <OwnerFooter />
+            <ManagerFooter />
           </div>
         </div>{" "}
       </div>
@@ -553,4 +567,4 @@ function OwnerDocuments(props) {
   );
 }
 
-export default OwnerDocuments;
+export default ManagerDocuments;

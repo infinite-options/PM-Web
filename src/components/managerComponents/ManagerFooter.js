@@ -7,9 +7,11 @@ import Contacts_Gray from "../../icons/Contacts_Gray.svg";
 import Repairs_Gray from "../../icons/Repairs_Gray.svg";
 import Profile_Gray from "../../icons/Profile_Gray.svg";
 import Expenses_Gray from "../../icons/Expenses_Gray.svg";
-
 import Documents from "../../icons/Tenants.svg";
-function OwnerFooter(props) {
+import Announcements from "../../icons/announcements.svg";
+import Roles_Gray from "../../icons/Roles_Gray.svg";
+
+function ManagerFooter(props) {
   const navigate = useNavigate();
   const footerContainer = {
     backgroundColor: "#F5F5F5",
@@ -27,7 +29,7 @@ function OwnerFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/owner");
+            navigate("/manager");
           }}
         >
           <img src={Dashboard_Gray} alt="Dashboard" />
@@ -38,18 +40,29 @@ function OwnerFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/search-pm");
+            navigate("/tenant-list");
           }}
         >
-          <img src={Contacts_Gray} alt="Contacts" />
+          <img src={Roles_Gray} alt="Contacts" />
           <p style={smallGray} className="mb-0">
-            Contacts
+            Tenants
           </p>
         </Col>
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/owner-repairs");
+            navigate("/owner-list");
+          }}
+        >
+          <img src={Contacts_Gray} alt="Contacts" />
+          <p style={smallGray} className="mb-0">
+            Owners
+          </p>
+        </Col>
+        <Col
+          className="text-center"
+          onClick={() => {
+            navigate("/manager-repairs");
           }}
         >
           <img src={Repairs_Gray} alt="Repairs" />
@@ -61,7 +74,7 @@ function OwnerFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/owner-utilities");
+            navigate("/manager-utilities");
           }}
         >
           <img src={Expenses_Gray} alt="EXPENSES" />
@@ -72,12 +85,27 @@ function OwnerFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/owner-documents");
+            navigate("/manager-announcements");
+          }}
+        >
+          <img
+            src={Announcements}
+            alt="Announcements"
+            style={{ width: "30px", height: "30px" }}
+          />
+          <p style={smallGray} className="mb-0">
+            Announcements
+          </p>
+        </Col>
+        <Col
+          className="text-center"
+          onClick={() => {
+            navigate("/manager-documents");
           }}
         >
           <img
             src={Documents}
-            alt="Documents"
+            alt="documents"
             style={{ width: "30px", height: "30px" }}
           />
           <p style={smallGray} className="mb-0">
@@ -87,7 +115,7 @@ function OwnerFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/owner-profile");
+            navigate("/manager-profile");
           }}
         >
           <img src={Profile_Gray} alt="Profile" />
@@ -100,4 +128,4 @@ function OwnerFooter(props) {
   );
 }
 
-export default OwnerFooter;
+export default ManagerFooter;
