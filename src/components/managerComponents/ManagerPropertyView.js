@@ -21,10 +21,10 @@ import ManagerFooter from "./ManagerFooter";
 import CreateExpense from "../CreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerTenantApplications from "./ManagerTenantApplications";
-import ManagerTenantProfileView from "../../pages/ManagerTenantProfileView";
+import ManagerTenantProfileView from "./ManagerTenantProfileView";
 import PropertyManagerDocs from "../PropertyManagerDocs";
 import AppContext from "../../AppContext";
-import ManagerManagementContract from "../ManagerManagementContract";
+import ManagerManagementContract from "./ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
 import ConfirmDialog from "../ConfirmDialog";
 import ManagerRentalHistory from "./ManagerRentalHistory";
@@ -374,6 +374,8 @@ function ManagerPropertyView(props) {
   const headerBack = () => {
     editProperty
       ? reloadProperty()
+      : showTenantProfile
+      ? setShowTenantProfile(false)
       : showCreateExpense
       ? setShowCreateExpense(false)
       : showCreateRevenue
@@ -1291,15 +1293,24 @@ function ManagerPropertyView(props) {
                     </TableBody>
                   </Table>
                 </Row>
-                {property.rental_status === "ACTIVE" ? (
+                {/* {property.rental_status === "ACTIVE" ? (
                   <ManagerRentalHistory property={property} />
-                ) : (
+                ) : ( */}
+                <Row className="m-3">
+                  <Col>
+                    <h3>Tenant Applications</h3>
+                  </Col>
+                  <Col xs={2}></Col>
+                </Row>
+                <Row style={{ overflow: "scroll" }}>
                   <ManagerTenantApplications
                     property={property}
                     createNewTenantAgreement={createNewTenantAgreement}
                     selectTenantApplication={selectTenantApplication}
                   />
-                )}
+                </Row>
+
+                {/* )} */}
                 <Row className="m-3">
                   <Col>
                     <h3>Tenant Info</h3>

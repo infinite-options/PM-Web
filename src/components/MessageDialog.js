@@ -20,7 +20,6 @@ function ConfirmDialog(props) {
     requestCreatedBy,
     userMessaged,
   } = props;
-  console.log(props);
   const [messageSubject, setMessageSubject] = useState("");
   const [messageDetails, setMessageDetails] = useState("");
 

@@ -489,7 +489,7 @@ function ManagerTenantAgreementView(props) {
           )}
         </div>
       ) : (
-        <Row className="m-3">No Active Lease Agreements</Row>
+        <Row className="mx-5">No Active Lease Agreements</Row>
       )}
     </div>
   );
