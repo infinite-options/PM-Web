@@ -19,7 +19,7 @@ import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import OwnerFooter from "./OwnerFooter";
 import PropertyForm from "../PropertyForm";
-import CreateExpense from "../CreateExpense";
+import OwnerCreateExpense from "./OwnerCreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerDocs from "../ManagerDocs";
 import ManagementContract from "../ManagementContract";
@@ -919,10 +919,10 @@ function OwnerPropertyView(props) {
                   onSubmit={reloadProperty}
                 />
               ) : showCreateExpense ? (
-                <CreateExpense
-                  property={property}
-                  reload={reloadProperty}
-                  back={() => setShowCreateExpense(false)}
+                <OwnerCreateExpense
+                  properties={property}
+                  cancel={() => setShowCreateExpense(false)}
+                  onSubmit={reloadProperty}
                 />
               ) : showCreateRevenue ? (
                 <CreateRevenue
