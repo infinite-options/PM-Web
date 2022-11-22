@@ -48,8 +48,8 @@ function OwnerRepairRequest(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    let selectedProperty = JSON.parse(sp);
-    console.log(typeof JSON.parse(sp));
+    let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
+
     const newRequest = {
       property_uid: selectedProperty.property_uid,
       title: title,
@@ -102,22 +102,32 @@ function OwnerRepairRequest(props) {
         <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
           Property {required}
         </Form.Label>
-        <Form.Select
-          style={squareForm}
-          value={selectedProperty}
-          onChange={(e) => setSelectedProperty(e.target.value)}
-        >
-          <option key="blankChoice" hidden value>
-            Search Your Properties
-          </option>
-          {properties.map((property, i) => (
-            <option key={i} value={JSON.stringify(property)}>
-              {property.address}
-              {property.unit !== "" ? " " + property.unit : ""},&nbsp;
-              {property.city},&nbsp;{property.state} {property.zip}
+        {properties.length > 0 ? (
+          <Form.Select
+            style={squareForm}
+            value={selectedProperty}
+            onChange={(e) => setSelectedProperty(e.target.value)}
+          >
+            <option key="blankChoice" hidden value>
+              Search Your Properties
             </option>
-          ))}
-        </Form.Select>
+            {properties.map((property, i) => (
+              <option key={i} value={JSON.stringify(property)}>
+                {property.address}
+                {property.unit !== "" ? " " + property.unit : ""},&nbsp;
+                {property.city},&nbsp;{property.state} {property.zip}
+              </option>
+            ))}
+          </Form.Select>
+        ) : (
+          <Row style={formLabel} as="h5" className="ms-1 mb-0">
+            {properties.address} {properties.unit}
+            ,&nbsp;
+            {properties.city}
+            ,&nbsp;
+            {properties.state}&nbsp; {properties.zip}
+          </Row>
+        )}
       </Form.Group>
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">

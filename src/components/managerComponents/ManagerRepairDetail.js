@@ -320,9 +320,7 @@ function ManagerRepairDetail(props) {
                 ? null
                 : "< Back"
             }
-            leftFn={() =>
-              edit ? setEdit(false) : navigate("/manager-repairs")
-            }
+            leftFn={() => (edit ? setEdit(false) : navigate(-1))}
             rightText={
               scheduleMaintenance || requestQuote ? null : edit ? null : "Edit"
             }

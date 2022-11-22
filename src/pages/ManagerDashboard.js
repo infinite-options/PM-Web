@@ -4033,7 +4033,10 @@ export default function ManagerDashboard() {
               <Col>
                 <img
                   src={AddIcon}
-                  onClick={() => setStage("ADDREQUEST")}
+                  onClick={() => {
+                    window.scrollTo(0, 0);
+                    setStage("ADDREQUEST");
+                  }}
                   style={{
                     width: "30px",
                     height: "30px",
@@ -4199,24 +4202,7 @@ export default function ManagerDashboard() {
             <Row className="m-3">
               <h1>Welcome to Manifest My Space</h1>
             </Row>
-            {/* <Row className="m-3">
-              {console.log("here")}
-              <Col>
-                <h1>Add a new Property</h1>
-              </Col>
-              <Col xs={2}>
-                <img
-                  src={AddIcon}
-                  onClick={() => setStage("NEW")}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    float: "right",
-                    marginRight: "3rem",
-                  }}
-                />
-              </Col>
-            </Row> */}
+
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <ManagerFooter />
             </div>

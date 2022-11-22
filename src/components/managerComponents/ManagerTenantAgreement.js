@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../Header";
 import BusinessContact from "../BusinessContact";
 import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
+import ManagerFooter from "./ManagerFooter";
+import SideBar from "./SideBar";
 import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
 import ArrowDown from "../../icons/ArrowDown.svg";
@@ -18,8 +20,6 @@ import {
   bluePillButton,
 } from "../../utils/styles";
 
-import SideBar from "./SideBar";
-
 function ManagerTenantAgreement(props) {
   const {
     back,
@@ -29,30 +29,43 @@ function ManagerTenantAgreement(props) {
     setAcceptedTenantApplications,
   } = props;
   console.log("here");
-  const [tenantID, setTenantID] = React.useState("");
-  const [startDate, setStartDate] = React.useState("");
-  const [endDate, setEndDate] = React.useState("");
-  const [feeState, setFeeState] = React.useState([]);
-  const contactState = React.useState([]);
-  const [files, setFiles] = React.useState([]);
+  const [tenantID, setTenantID] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [feeState, setFeeState] = useState([]);
+  const contactState = useState([]);
+  const [files, setFiles] = useState([]);
 
-  const [newFile, setNewFile] = React.useState(null);
-  const [editingDoc, setEditingDoc] = React.useState(null);
+  const [newFile, setNewFile] = useState(null);
+  const [editingDoc, setEditingDoc] = useState(null);
 
-  const [dueDate, setDueDate] = React.useState("1");
-  const [lateAfter, setLateAfter] = React.useState("");
-  const [lateFee, setLateFee] = React.useState("");
-  const [lateFeePer, setLateFeePer] = React.useState("");
-  const [available, setAvailable] = React.useState("");
+  const [dueDate, setDueDate] = useState("1");
+  const [lateAfter, setLateAfter] = useState("");
+  const [lateFee, setLateFee] = useState("");
+  const [lateFeePer, setLateFeePer] = useState("");
+  const [available, setAvailable] = useState("");
 
-  const [adultOccupants, setAdultOccupants] = React.useState("");
-  const [childrenOccupants, setChildrenOccupants] = React.useState("");
+  const [adultOccupants, setAdultOccupants] = useState("");
+  const [childrenOccupants, setChildrenOccupants] = useState("");
   // const addFile = (e) => {
   //     const newFiles = [...files];
   //     newFiles.push(e.target.files[0]);
   //     setFiles(newFiles);
   // }
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
 
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
   const addFile = (e) => {
     const file = e.target.files[0];
     const newFile = {
@@ -112,7 +125,7 @@ function ManagerTenantAgreement(props) {
     setAdultOccupants(agreement.adult_occupants);
     setChildrenOccupants(agreement.children_occupants);
   };
-  React.useEffect(() => {
+  useEffect(() => {
     if (agreement) {
       loadAgreement();
     }
@@ -155,7 +168,7 @@ function ManagerTenantAgreement(props) {
     }
     back();
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -313,30 +326,24 @@ function ManagerTenantAgreement(props) {
   };
   return (
     <div className="flex-1">
-      <div>
-        <SideBar />
-      </div>
       <div
-        className="w-100"
+        hidden={!responsiveSidebar.showSidebar}
         style={{
-          width: "calc(100vw - 13rem)",
-          position: "relative",
+          backgroundColor: "#229ebc",
+          width: "11rem",
+          minHeight: "100%",
         }}
       >
+        <SideBar />
+      </div>
+      <div className="w-100 mb-5 overflow-hidden">
         <Header
           title="Tenant Agreement"
-          // leftText="< Back"
-          // leftFn={back}
+          leftText="< Back"
+          leftFn={back}
           rightText=""
         />
-        <div
-          className="mx-2 my-2 p-3"
-          style={{
-            background: "#FFFFFF 0% 0% no-repeat padding-box",
-            borderRadius: "10px",
-            opacity: 1,
-          }}
-        >
+        <div className=" w-100 mx-2 my-2 p-3">
           <div className="mb-4">
             <h5 style={mediumBold}>Tenant(s)</h5>
             {acceptedTenantApplications &&
@@ -646,15 +653,6 @@ function ManagerTenantAgreement(props) {
             </Col>
           </Row>
 
-          {/*<Row className="pt-1 mt-3 mb-2" hidden={agreement === null}>*/}
-          {/*    <Col className='d-flex flex-row justify-content-evenly'>*/}
-          {/*        <Button style={redPillButton} variant="outline-primary"*/}
-          {/*                onClick={() => terminateLeaseAgreement()}>*/}
-          {/*            Terminate Lease*/}
-          {/*        </Button>*/}
-          {/*    </Col>*/}
-          {/*</Row>*/}
-
           <Row className="pt-1 mt-3 mb-2" hidden={agreement === null}>
             <Col className="d-flex flex-row justify-content-evenly">
               <Button
@@ -666,6 +664,10 @@ function ManagerTenantAgreement(props) {
               </Button>
             </Col>
           </Row>
+        </div>
+
+        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
+          <ManagerFooter />
         </div>
       </div>
     </div>

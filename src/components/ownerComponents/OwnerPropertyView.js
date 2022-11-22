@@ -19,10 +19,11 @@ import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import OwnerFooter from "./OwnerFooter";
 import PropertyForm from "../PropertyForm";
-import CreateExpense from "../CreateExpense";
+import OwnerCreateExpense from "./OwnerCreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerDocs from "../ManagerDocs";
 import ManagementContract from "../ManagementContract";
+import OwnerRepairRequest from "./OwnerRepairRequest";
 import ConfirmDialog from "../ConfirmDialog";
 import BusinessContact from "../BusinessContact";
 import ManagerFees from "../ManagerFees";
@@ -73,7 +74,7 @@ function OwnerPropertyView(props) {
     images: "[]",
   });
   const [imagesProperty, setImagesProperty] = useState([]);
-
+  const [showAddRequest, setShowAddRequest] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const responsive = {
     superLargeDesktop: {
@@ -308,6 +309,8 @@ function OwnerPropertyView(props) {
   const headerBack = () => {
     editProperty
       ? reloadProperty()
+      : showAddRequest
+      ? setShowAddRequest(false)
       : showCreateExpense
       ? setShowCreateExpense(false)
       : showCreateRevenue
@@ -322,6 +325,7 @@ function OwnerPropertyView(props) {
 
   const reloadProperty = () => {
     setEditProperty(false);
+    setShowAddRequest(false);
     window.scrollTo(0, 0);
     fetchProperty();
   };
@@ -908,11 +912,17 @@ function OwnerPropertyView(props) {
                   setEdit={setEditProperty}
                   onSubmit={reloadProperty}
                 />
+              ) : showAddRequest ? (
+                <OwnerRepairRequest
+                  properties={property}
+                  cancel={() => setShowAddRequest(false)}
+                  onSubmit={reloadProperty}
+                />
               ) : showCreateExpense ? (
-                <CreateExpense
-                  property={property}
-                  reload={reloadProperty}
-                  back={() => setShowCreateExpense(false)}
+                <OwnerCreateExpense
+                  properties={property}
+                  cancel={() => setShowCreateExpense(false)}
+                  onSubmit={reloadProperty}
                 />
               ) : showCreateRevenue ? (
                 <CreateRevenue
@@ -4434,13 +4444,10 @@ function OwnerPropertyView(props) {
                       {" "}
                       <img
                         src={AddIcon}
-                        onClick={() =>
-                          navigate(`/${property_uid}/repairRequest`, {
-                            state: {
-                              property: property,
-                            },
-                          })
-                        }
+                        onClick={() => {
+                          window.scrollTo(0, 0);
+                          setShowAddRequest(true);
+                        }}
                         style={{
                           width: "30px",
                           height: "30px",

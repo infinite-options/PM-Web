@@ -404,7 +404,7 @@ function ManagerUtilities(props) {
       console.log(property);
       const new_purchase = {
         linked_bill_id: bill_uid,
-        pur_property_id: property.property_uid,
+        pur_property_id: [property.property_uid],
         payer: "",
         receiver: management_buid,
         purchase_type: "UTILITY",
