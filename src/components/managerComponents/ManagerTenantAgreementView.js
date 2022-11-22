@@ -8,6 +8,7 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import OpenDoc from "../../icons/OpenDoc.svg";
@@ -38,29 +39,29 @@ function ManagerTenantAgreementView(props) {
     selectedAgreement,
     acceptedTenantApplications,
   } = props;
+  console.log(selectedAgreement);
 
+  console.log(selectedAgreement == null);
   const [tenantInfo, setTenantInfo] = useState([]);
-  const [tenantID, setTenantID] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
   const [feeState, setFeeState] = useState([]);
   const [contactState, setContactState] = useState([]);
   const [files, setFiles] = useState([]);
 
-  const [dueDate, setDueDate] = useState("1");
-  const [lateAfter, setLateAfter] = useState("");
-  const [lateFee, setLateFee] = useState("");
-  const [lateFeePer, setLateFeePer] = useState("");
-
-  const [available, setAvailable] = useState("");
   // const [renewLease, setRenewLease] = useState(false)
   const [terminateLease, setTerminateLease] = useState(false);
   const [lastDate, setLastDate] = useState("");
   const [tenantEndEarly, setTenantEndEarly] = useState(false);
-  const [agreements, setAgreements] = useState([]);
   const [agreement, setAgreement] = useState([]);
 
-  const loadAgreement = (agg) => {
+  const loadAgreement = async (agg) => {
+    console.log("load agreement");
+
+    console.log("in useeffect");
+    setAgreement(agg);
+    setIsLoading(false);
+    // loadAgreement(agg);
     let tenant = [];
     let ti = {};
     console.log("selectedagg", agg);
@@ -89,18 +90,10 @@ function ManagerTenantAgreementView(props) {
     }
 
     setTenantInfo(tenant);
-    setTenantID(agg.tenant_id);
-    setStartDate(agg.lease_start);
-    setEndDate(agg.lease_end);
     setFeeState(JSON.parse(agg.rent_payments));
     // contactState[1](JSON.parse(agg.assigned_contacts));
     setContactState(JSON.parse(agg.assigned_contacts));
     setFiles(JSON.parse(agg.documents));
-    setAvailable(agg.available_topay);
-    setDueDate(agg.due_by);
-    setLateAfter(agg.late_by);
-    setLateFee(agg.late_fee);
-    setLateFeePer(agg.perDay_late_fee);
 
     let app = property.applications.filter(
       (a) => a.application_status === "TENANT END EARLY"
@@ -109,10 +102,9 @@ function ManagerTenantAgreementView(props) {
       setTenantEndEarly(true);
     }
   };
-  useEffect(async () => {
-    setAgreement(selectedAgreement);
+  useEffect(() => {
     loadAgreement(selectedAgreement);
-  }, []);
+  }, [selectedAgreement]);
 
   const [errorMessage, setErrorMessage] = useState("");
   const required =
@@ -177,7 +169,13 @@ function ManagerTenantAgreementView(props) {
     }
     return i + "th";
   }
-  return (
+  return isLoading ? (
+    <div>
+      <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+        <ReactBootStrap.Spinner animation="border" role="status" />
+      </div>
+    </div>
+  ) : (
     <div className="mb-2 pb-2">
       {agreement ? (
         <div>
@@ -256,6 +254,7 @@ function ManagerTenantAgreementView(props) {
               classes={{ root: classes.customTable }}
               size="small"
             >
+              {console.log(agreement)}
               <TableHead>
                 <TableRow>
                   <TableCell>Lease Start</TableCell>
@@ -273,12 +272,12 @@ function ManagerTenantAgreementView(props) {
                   <TableCell>{agreement.lease_end}</TableCell>
 
                   <TableCell>
-                    {`${ordinal_suffix_of(dueDate)} of the month`}
+                    {`${ordinal_suffix_of(agreement.due_by)} of the month`}
                   </TableCell>
 
-                  <TableCell>{lateAfter} days</TableCell>
-                  <TableCell> ${lateFee}</TableCell>
-                  <TableCell> ${lateFeePer}</TableCell>
+                  <TableCell>{agreement.late_by} days</TableCell>
+                  <TableCell> ${agreement.late_fee}</TableCell>
+                  <TableCell> ${agreement.perDay_late_fee}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

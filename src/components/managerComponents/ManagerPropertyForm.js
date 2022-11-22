@@ -1,23 +1,20 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Switch } from "@material-ui/core";
+import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "../Checkbox";
 import PropertyAppliances from "../PropertyAppliances";
 import PropertyUtilities from "../PropertyUtilities";
 import PropertyImages from "../PropertyImages";
 import ConfirmDialog2 from "../ConfirmDialog2";
 import AppContext from "../../AppContext";
-import Heart from "../../icons/Heart.svg";
 import Edit from "../../icons/Edit.svg";
 import {
   pillButton,
   squareForm,
-  tileImg,
-  xSmall,
-  bold,
   hidden,
   red,
   mediumBold,
-  smallImg,
   small,
 } from "../../utils/styles";
 import { post, put } from "../../utils/api";
@@ -129,6 +126,7 @@ function ManagerPropertyForm(props) {
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [depositForRent, setDepositForRent] = useState(false);
 
+  const [showSpinner, setShowSpinner] = useState(false);
   const [availableToRent, setAvailableToRent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
@@ -222,6 +220,8 @@ function ManagerPropertyForm(props) {
         newProperty[key] = file.image;
       }
     }
+
+    setShowSpinner(true);
     if (property) {
       newProperty.owner_id = property.owner_id;
       newProperty.manager_id = property.manager_id;
@@ -268,7 +268,10 @@ function ManagerPropertyForm(props) {
       }
       const response = await post("/properties", newProperty, null, files);
     }
+
+    setShowSpinner(false);
     setEdit(false);
+
     props.onSubmit();
   };
 
@@ -550,10 +553,30 @@ function ManagerPropertyForm(props) {
         edit={edit}
       />
       <PropertyUtilities state={utilityState} edit={edit} />
-      <Container className="my-3">
-        <h6>Pets Allowed</h6>
-        <Row>
-          <Col className="d-flex ps-4">
+      <Container className="d-flex my-3 ps-4">
+        <Col className="p-2">
+          <h6>Pets Allowed</h6>
+        </Col>
+        <Col className="d-flex">
+          <p className="p-2">No</p>
+          <Switch
+            checked={petsAllowed}
+            onChange={
+              edit
+                ? (e) => {
+                    petsAllowed == 1
+                      ? setPetsAllowed(false)
+                      : setPetsAllowed(true);
+                  }
+                : () => {
+                    setShowDialog(true);
+                  }
+            }
+            inputProps={{ "aria-label": "controlled" }}
+          />
+          <p className="p-2">Yes</p>
+        </Col>
+        {/* <Col className="d-flex ps-4">
             <Checkbox
               type="CIRCLE"
               checked={petsAllowed}
@@ -580,79 +603,58 @@ function ManagerPropertyForm(props) {
               }
             />
             <p className="ms-1 mb-1">No</p>
-          </Col>
-        </Row>
+          </Col> */}
       </Container>
-      <Container className="my-3">
-        <h6>Deposit can be used for last month's rent</h6>
-        <Row>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={depositForRent}
-              onClick={
-                edit
-                  ? () => setDepositForRent(true)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">Yes</p>
-          </Col>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={!depositForRent}
-              onClick={
-                edit
-                  ? () => setDepositForRent(false)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">No</p>
-          </Col>
-        </Row>
+      <Container className="d-flex my-3 ps-4">
+        <Col className="p-2">
+          <h6>Deposit can be used for last month's rent</h6>
+        </Col>
+        <Col className="d-flex">
+          <p className="p-2">No</p>
+          <Switch
+            checked={depositForRent}
+            onChange={
+              edit
+                ? (e) => {
+                    depositForRent == 1
+                      ? setDepositForRent(false)
+                      : setDepositForRent(true);
+                  }
+                : () => {
+                    setShowDialog(true);
+                  }
+            }
+            inputProps={{ "aria-label": "controlled" }}
+          />{" "}
+          <p className="p-2">Yes</p>
+        </Col>
       </Container>
 
       {edit ? (
-        <Container
-          style={({ paddingLeft: "0px" }, mediumBold)}
-          className="my-3"
-        >
-          <h6>Available to Rent</h6>
-          <Row>
-            <Col className="d-flex ps-4">
-              <Checkbox
-                type="CIRCLE"
-                checked={availableToRent}
-                onClick={
-                  edit
-                    ? () => setAvailableToRent(true)
-                    : () => {
-                        setShowDialog(true);
-                      }
-                }
-              />
-              <p className="ms-1 mb-1">Yes</p>
-            </Col>
-            <Col className="d-flex ps-4">
-              <Checkbox
-                type="CIRCLE"
-                checked={!availableToRent}
-                onClick={
-                  edit
-                    ? () => setAvailableToRent(false)
-                    : () => {
-                        setShowDialog(true);
-                      }
-                }
-              />
-              <p className="ms-1 mb-1">No</p>
-            </Col>
-          </Row>
+        <Container className="d-flex my-3 ps-4">
+          <Col className="p-2">
+            <h6>Available to Rent</h6>
+          </Col>
+
+          <Col className="d-flex">
+            <p className="p-2">No</p>
+            <Switch
+              checked={availableToRent}
+              onChange={
+                edit
+                  ? (e) => {
+                      availableToRent == 1
+                        ? setAvailableToRent(false)
+                        : setAvailableToRent(true);
+                    }
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
+              inputProps={{ "aria-label": "controlled" }}
+            />{" "}
+            <p className="p-2">Yes</p>
+          </Col>
         </Container>
       ) : (
         <Container className="my-3">

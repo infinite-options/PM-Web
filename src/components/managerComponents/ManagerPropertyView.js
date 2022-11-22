@@ -1013,58 +1013,6 @@ function ManagerPropertyView(props) {
                     </TableBody>
                   </Table>
                 </Row>
-
-                <Row className="m-3">
-                  <Col>
-                    <h3>Property Owner Agreement</h3>
-                  </Col>
-                  <Col xs={2}></Col>
-                </Row>
-                <Row style={{ overflow: "scroll" }}>
-                  {" "}
-                  <PropertyManagerDocs
-                    property={property}
-                    fetchProperty={fetchProperty}
-                    addDocument={addContract}
-                    selectContract={selectContract}
-                    setExpandManagerDocs={setExpandManagerDocs}
-                    setShowDialog={setShowDialog}
-                    endEarlyDate={endEarlyDate}
-                    setEndEarlyDate={setEndEarlyDate}
-                    cancel={cancel}
-                    setCancel={setCancel}
-                    reload={""}
-                  />
-                </Row>
-
-                <Row className="m-3">
-                  <Col>
-                    <h3>Tenant Info</h3>
-                  </Col>
-                  <Col xs={2}></Col>
-                </Row>
-                <Row style={{ overflow: "scroll" }}>
-                  <ManagerTenantAgreementView
-                    back={closeAgreement}
-                    property={property}
-                    selectedAgreement={selectedAgreement}
-                    renewLease={renewLease}
-                    acceptedTenantApplications={acceptedTenantApplications}
-                    setAcceptedTenantApplications={
-                      setAcceptedTenantApplications
-                    }
-                  />
-                </Row>
-
-                {property.rental_status === "ACTIVE" ? (
-                  <ManagerRentalHistory property={property} />
-                ) : (
-                  <ManagerTenantApplications
-                    property={property}
-                    createNewTenantAgreement={createNewTenantAgreement}
-                    selectTenantApplication={selectTenantApplication}
-                  />
-                )}
                 <Row className="m-3">
                   <Col>
                     <h3>Maintenance and Repair Requests</h3>
@@ -1342,6 +1290,56 @@ function ManagerPropertyView(props) {
                       })}
                     </TableBody>
                   </Table>
+                </Row>
+                {property.rental_status === "ACTIVE" ? (
+                  <ManagerRentalHistory property={property} />
+                ) : (
+                  <ManagerTenantApplications
+                    property={property}
+                    createNewTenantAgreement={createNewTenantAgreement}
+                    selectTenantApplication={selectTenantApplication}
+                  />
+                )}
+                <Row className="m-3">
+                  <Col>
+                    <h3>Tenant Info</h3>
+                  </Col>
+                  <Col xs={2}></Col>
+                </Row>
+                <Row style={{ overflow: "scroll" }}>
+                  <ManagerTenantAgreementView
+                    back={closeAgreement}
+                    property={property}
+                    selectedAgreement={selectedAgreement}
+                    renewLease={renewLease}
+                    acceptedTenantApplications={acceptedTenantApplications}
+                    setAcceptedTenantApplications={
+                      setAcceptedTenantApplications
+                    }
+                  />
+                </Row>
+
+                <Row className="m-3">
+                  <Col>
+                    <h3>Property Owner Agreement</h3>
+                  </Col>
+                  <Col xs={2}></Col>
+                </Row>
+                <Row style={{ overflow: "scroll" }}>
+                  {" "}
+                  <PropertyManagerDocs
+                    property={property}
+                    fetchProperty={fetchProperty}
+                    addDocument={addContract}
+                    selectContract={selectContract}
+                    setExpandManagerDocs={setExpandManagerDocs}
+                    setShowDialog={setShowDialog}
+                    endEarlyDate={endEarlyDate}
+                    setEndEarlyDate={setEndEarlyDate}
+                    cancel={cancel}
+                    setCancel={setCancel}
+                    reload={""}
+                  />
                 </Row>
               </div>
             )}
