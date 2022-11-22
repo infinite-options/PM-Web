@@ -27,7 +27,7 @@ import AppContext from "../../AppContext";
 import ManagerManagementContract from "./ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
 import ConfirmDialog from "../ConfirmDialog";
-import ManagerRentalHistory from "./ManagerRentalHistory";
+import ManagerRepairRequest from "./ManagerRepairRequest";
 import ManagerPropertyForm from "./ManagerPropertyForm";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
 import SideBar from "./SideBar";
@@ -116,6 +116,8 @@ function ManagerPropertyView(props) {
   };
   const [pastMaintenanceRequests, setPastMaintenanceRequests] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
+
+  const [showAddRequest, setShowAddRequest] = useState(false);
   const [cancel, setCancel] = useState(false);
   const [endEarlyDate, setEndEarlyDate] = useState("");
 
@@ -376,6 +378,8 @@ function ManagerPropertyView(props) {
       ? reloadProperty()
       : showTenantProfile
       ? setShowTenantProfile(false)
+      : showAddRequest
+      ? setShowAddRequest(false)
       : showCreateExpense
       ? setShowCreateExpense(false)
       : showCreateRevenue
@@ -426,6 +430,7 @@ function ManagerPropertyView(props) {
 
   const reloadProperty = () => {
     setEditProperty(false);
+    setShowAddRequest(false);
     window.scrollTo(0, 0);
     fetchProperty();
   };
@@ -795,6 +800,12 @@ function ManagerPropertyView(props) {
                 back={closeTenantApplication}
                 application={selectedTenantApplication}
               />
+            ) : showAddRequest ? (
+              <ManagerRepairRequest
+                properties={property}
+                cancel={() => setShowAddRequest(false)}
+                onSubmit={reloadProperty}
+              />
             ) : showCreateExpense ? (
               <CreateExpense
                 property={property}
@@ -1023,12 +1034,13 @@ function ManagerPropertyView(props) {
                     {" "}
                     <img
                       src={AddIcon}
-                      onClick={() =>
-                        navigate(`/${property_uid}/repairRequest`, {
-                          state: {
-                            property: property,
-                          },
-                        })
+                      onClick={
+                        () => setShowAddRequest(true)
+                        // navigate(`/${property_uid}/repairRequest`, {
+                        //   state: {
+                        //     property: property,
+                        //   },
+                        // })
                       }
                       style={{
                         width: "30px",
@@ -1293,24 +1305,25 @@ function ManagerPropertyView(props) {
                     </TableBody>
                   </Table>
                 </Row>
-                {/* {property.rental_status === "ACTIVE" ? (
-                  <ManagerRentalHistory property={property} />
-                ) : ( */}
-                <Row className="m-3">
-                  <Col>
-                    <h3>Tenant Applications</h3>
-                  </Col>
-                  <Col xs={2}></Col>
-                </Row>
-                <Row style={{ overflow: "scroll" }}>
-                  <ManagerTenantApplications
-                    property={property}
-                    createNewTenantAgreement={createNewTenantAgreement}
-                    selectTenantApplication={selectTenantApplication}
-                  />
-                </Row>
-
-                {/* )} */}
+                {property.rental_status === "ACTIVE" ? (
+                  ""
+                ) : (
+                  <Row>
+                    <Row className="m-3">
+                      <Col>
+                        <h3>Tenant Applications</h3>
+                      </Col>
+                      <Col xs={2}></Col>
+                    </Row>
+                    <Row style={{ overflow: "scroll" }}>
+                      <ManagerTenantApplications
+                        property={property}
+                        createNewTenantAgreement={createNewTenantAgreement}
+                        selectTenantApplication={selectTenantApplication}
+                      />
+                    </Row>
+                  </Row>
+                )}
                 <Row className="m-3">
                   <Col>
                     <h3>Tenant Info</h3>

@@ -4033,7 +4033,10 @@ export default function ManagerDashboard() {
               <Col>
                 <img
                   src={AddIcon}
-                  onClick={() => setStage("ADDREQUEST")}
+                  onClick={() => {
+                    window.scrollTo(0, 0);
+                    setStage("ADDREQUEST");
+                  }}
                   style={{
                     width: "30px",
                     height: "30px",

@@ -296,6 +296,11 @@ function ManagerTenantAgreementView(props) {
                   <TableCell>Amount</TableCell>
                   <TableCell>Of</TableCell>
                   <TableCell>Frequency</TableCell>
+                  <TableCell>Available to Pay</TableCell>
+                  <TableCell>Due Date</TableCell>
+                  <TableCell>Late After</TableCell>
+                  <TableCell>Late Fee</TableCell>
+                  <TableCell>Late Fee Pe Day</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -314,6 +319,17 @@ function ManagerTenantAgreementView(props) {
                     </TableCell>
 
                     <TableCell>{fee.frequency}</TableCell>
+                    <TableCell>{`${ordinal_suffix_of(
+                      fee.available_topay
+                    )} of the month`}</TableCell>
+                    <TableCell>
+                      {fee.due_by == ""
+                        ? `1st of the month`
+                        : `${ordinal_suffix_of(fee.due_by)} of the month`}
+                    </TableCell>
+                    <TableCell>{fee.late_by} days</TableCell>
+                    <TableCell>${fee.late_fee}</TableCell>
+                    <TableCell>${fee.perDay_late_fee}/day</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

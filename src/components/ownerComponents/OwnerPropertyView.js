@@ -23,6 +23,7 @@ import CreateExpense from "../CreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerDocs from "../ManagerDocs";
 import ManagementContract from "../ManagementContract";
+import OwnerRepairRequest from "./OwnerRepairRequest";
 import ConfirmDialog from "../ConfirmDialog";
 import BusinessContact from "../BusinessContact";
 import ManagerFees from "../ManagerFees";
@@ -73,7 +74,7 @@ function OwnerPropertyView(props) {
     images: "[]",
   });
   const [imagesProperty, setImagesProperty] = useState([]);
-
+  const [showAddRequest, setShowAddRequest] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const responsive = {
     superLargeDesktop: {
@@ -308,6 +309,8 @@ function OwnerPropertyView(props) {
   const headerBack = () => {
     editProperty
       ? reloadProperty()
+      : showAddRequest
+      ? setShowAddRequest(false)
       : showCreateExpense
       ? setShowCreateExpense(false)
       : showCreateRevenue
@@ -322,6 +325,7 @@ function OwnerPropertyView(props) {
 
   const reloadProperty = () => {
     setEditProperty(false);
+    setShowAddRequest(false);
     window.scrollTo(0, 0);
     fetchProperty();
   };
@@ -906,6 +910,12 @@ function OwnerPropertyView(props) {
                   property={property}
                   edit={editProperty}
                   setEdit={setEditProperty}
+                  onSubmit={reloadProperty}
+                />
+              ) : showAddRequest ? (
+                <OwnerRepairRequest
+                  properties={property}
+                  cancel={() => setShowAddRequest(false)}
                   onSubmit={reloadProperty}
                 />
               ) : showCreateExpense ? (
@@ -4434,13 +4444,10 @@ function OwnerPropertyView(props) {
                       {" "}
                       <img
                         src={AddIcon}
-                        onClick={() =>
-                          navigate(`/${property_uid}/repairRequest`, {
-                            state: {
-                              property: property,
-                            },
-                          })
-                        }
+                        onClick={() => {
+                          window.scrollTo(0, 0);
+                          setShowAddRequest(true);
+                        }}
                         style={{
                           width: "30px",
                           height: "30px",
