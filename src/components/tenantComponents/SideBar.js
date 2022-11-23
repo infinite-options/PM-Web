@@ -88,16 +88,7 @@ export default function SideBar(props) {
                 isActive ? sidebarButtonsActive : sidebarButtons
               }
             >
-              Tenants
-            </NavLink>
-            <NavLink
-              to="/owner-list"
-              className="sidebarButtons"
-              style={({ isActive }) =>
-                isActive ? sidebarButtonsActive : sidebarButtons
-              }
-            >
-              Owners
+              Payments
             </NavLink>
             <NavLink
               to="/manager-repairs"

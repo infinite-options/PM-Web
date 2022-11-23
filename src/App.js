@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProfileInfo from "./pages/ProfileInfo";
 import TenantHome from "./pages/TenantHome";
-import TenantAvailableProperties from "./pages/TenantAvailableProperties";
+import TenantAvailableProperties from "./components/tenantComponents/TenantAvailableProperties";
 import ApplyToProperty from "./pages/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";

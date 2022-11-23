@@ -4,7 +4,6 @@ import Footer from "../components/Footer";
 import AppContext from "../AppContext";
 import TenantDashboard from "./TenantDashboard1";
 import TenantProfile from "../components/tenantComponents/TenantProfile";
-import TenantAvailableProperties from "./TenantAvailableProperties";
 import SwitchRole from "../components/SwitchRole";
 import { get } from "../utils/api";
 import TenantWelcomePage from "./TenantWelcomePage";

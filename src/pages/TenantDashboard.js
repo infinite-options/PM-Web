@@ -24,7 +24,7 @@ import PaymentHistory from "../components/tenantComponents/PaymentHistory";
 import TenantRepairRequest from "../components/tenantComponents/TenantRepairRequest";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
-import SearchProperties from "../icons/SearchProperties.svg";
+import SearchProperties_Black from "../icons/SearchProperties_Black.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import AddIcon from "../icons/AddIcon.svg";
@@ -515,7 +515,7 @@ export default function ManagerDashboard() {
               </Col>
               <Col>
                 <img
-                  src={AddIcon}
+                  src={SearchProperties_Black}
                   onClick={() => {
                     navigate("/tenantAvailableProperties");
                     window.scrollTo(0, 0);

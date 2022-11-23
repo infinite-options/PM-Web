@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
-import Header from "../components/Header";
-import { get } from "../utils/api";
-import AppContext from "../AppContext";
-
-import PropertyCard from "../components/PropertyCard";
-import PropertyCard2 from "../components/tenantComponents/PropertyCard";
-import SideBar from "../components/tenantComponents/SideBar";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import PropertyCard from "../PropertyCard";
+import PropertyCard2 from "./PropertyCard";
+import SideBar from "./SideBar";
+import TenantFooter from "./TenantFooter";
+import { get } from "../../utils/api";
 export default function TenantAvailableProperties(props) {
   const { hideBackButton } = props;
   const [properties, setProperties] = useState([]);
@@ -17,8 +17,20 @@ export default function TenantAvailableProperties(props) {
   const [appliedProperties, setAppliedProperties] = useState({});
   const [view, setView] = useState(true);
 
-  // useEffect(() => {
-  // }, []);
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -89,25 +101,35 @@ export default function TenantAvailableProperties(props) {
   });
 
   return (
-    <div className="mb-5 pb-5">
-      <Header
-        title="Available Properties"
-        leftText={hideBackButton ? "" : "< Back"}
-        leftFn={() => navigate("/tenant")}
-        rightFn={changeView}
-        rightText="Change View"
-      />
-      <div className="available-props-container">
-        <div>
+    <div className="w-100 overflow-hidden">
+      <div className="flex-1">
+        <div
+          hidden={!responsive.showSidebar}
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
           <SideBar />
         </div>
-        <div>
+        <div className="w-100 mb-5">
+          <Header
+            title="Available Properties"
+            leftText={hideBackButton ? "" : "< Back"}
+            leftFn={() => navigate("/tenant")}
+            rightFn={changeView}
+            rightText="Change View"
+          />
           {view ? (
             <Container>{tableView}</Container>
           ) : (
             <Container className="p-container">{boxView}</Container>
           )}
         </div>
+      </div>{" "}
+      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+        <TenantFooter />
       </div>
     </div>
   );
