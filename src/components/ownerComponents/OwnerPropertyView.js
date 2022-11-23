@@ -18,7 +18,7 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import OwnerFooter from "./OwnerFooter";
-import PropertyForm from "../PropertyForm";
+import OwnerPropertyForm from "./OwnerPropertyForm";
 import OwnerCreateExpense from "./OwnerCreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerDocs from "../ManagerDocs";
@@ -906,7 +906,7 @@ function OwnerPropertyView(props) {
             />
             <div className="w-100 mb-5">
               {editProperty ? (
-                <PropertyForm
+                <OwnerPropertyForm
                   property={property}
                   edit={editProperty}
                   setEdit={setEditProperty}

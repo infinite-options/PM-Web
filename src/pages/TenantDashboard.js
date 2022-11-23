@@ -30,12 +30,13 @@ import Message from "../icons/Message.svg";
 import AddIcon from "../icons/AddIcon.svg";
 import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
+import No_Image from "../icons/No_Image_Available.jpeg";
 import { get, put } from "../utils/api";
 import {
   green,
   red,
   blue,
-  xSmall,
+  mediumBold,
   subHeading,
   smallImg,
 } from "../utils/styles";
@@ -60,7 +61,12 @@ export default function ManagerDashboard() {
   const [announcements, setAnnouncements] = useState([]);
   const [upcomingPaymentsData, setUpcomingPaymentsData] = useState([]);
   const [paymentHistoryData, setPaymentHistoryData] = useState([]);
-
+  const [applications, setApplications] = useState([]);
+  const [newApplication, setNewApplication] = useState([]);
+  const [leaseRecieved, setLeaseRecieved] = useState([]);
+  const [leaseTerminated, setLeaseTerminated] = useState([]);
+  const [leaseRejected, setLeaseRejected] = useState([]);
+  const [applicationRefused, setApplicationRefused] = useState([]);
   const [managerInfo, setManagerInfo] = useState([]);
 
   // search variables
@@ -71,6 +77,9 @@ export default function ManagerDashboard() {
 
   const [orderMaintenance, setOrderMaintenance] = useState("asc");
   const [orderMaintenanceBy, setOrderMaintenanceBy] = useState("calories");
+
+  const [orderApplications, setOrderApplications] = useState("asc");
+  const [orderApplicationsBy, setOrderApplicationsBy] = useState("calories");
 
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -92,7 +101,7 @@ export default function ManagerDashboard() {
       return;
     }
     const response = await get("/tenantDashboard", access_token);
-
+    const appRes = await get(`/applications?tenant_id=${user.user_uid}`);
     if (response.msg === "Token has expired") {
       console.log("here msg");
       refresh();
@@ -100,6 +109,33 @@ export default function ManagerDashboard() {
       return;
     }
     console.log(response.result);
+    console.log(appRes.result);
+    let newApp = [];
+    let leaseRecieved = [];
+    let leaseTerminated = [];
+
+    let leaseRejected = [];
+    let appRefused = [];
+    for (let i = 0; i < appRes.result.length; i++) {
+      if (appRes.result[i].application_status === "NEW") {
+        newApp.push(appRes.result[i]);
+      } else if (appRes.result[i].application_status === "FORWARDED") {
+        leaseRecieved.push(appRes.result[i]);
+      } else if (appRes.result[i].application_status === "ENDED") {
+        leaseTerminated.push(appRes.result[i]);
+      } else if (appRes.result[i].application_status === "REJECTED") {
+        leaseRejected.push(appRes.result[i]);
+      } else if (appRes.result[i].application_status === "REFUSED") {
+        appRefused.push(appRes.result[i]);
+      }
+    }
+    setApplications(appRes.result);
+    setNewApplication(newApp);
+    setLeaseRecieved(leaseRecieved);
+    setLeaseTerminated(leaseTerminated);
+    setLeaseRejected(leaseRejected);
+    setApplicationRefused(appRefused);
+
     const properties = response.result[0].properties.filter(
       (property) => property.management_status !== "REJECTED"
     );
@@ -202,6 +238,17 @@ export default function ManagerDashboard() {
     setStage("LIST");
   };
 
+  const goToReviewPropertyLease = (application) => {
+    console.log(application.application_status);
+    navigate(`/reviewPropertyLease/${application.property_uid}`, {
+      state: {
+        application_uid: application.application_uid,
+        application_status_1: application.application_status,
+        message: application.message,
+      },
+    });
+  };
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -247,23 +294,16 @@ export default function ManagerDashboard() {
       numeric: false,
       label: "Street Address",
     },
-    // {
-    //   id: "city",
-    //   numeric: false,
-    //   label: "City,State",
-    // },
+    {
+      id: "city",
+      numeric: false,
+      label: "City,State",
+    },
     {
       id: "zip",
       numeric: true,
       label: "Zip",
     },
-
-    {
-      id: "owner",
-      numeric: false,
-      label: "Owner",
-    },
-
     {
       id: "property_manager",
       numeric: false,
@@ -279,6 +319,18 @@ export default function ManagerDashboard() {
       id: "num_beds",
       numeric: true,
       label: "Size",
+    },
+
+    {
+      id: "listed_rent",
+      numeric: true,
+      label: "Rent",
+    },
+
+    {
+      id: "lease_end",
+      numeric: true,
+      label: "Lease End",
     },
   ];
   function EnhancedTableHeadProperties(props) {
@@ -472,6 +524,144 @@ export default function ManagerDashboard() {
     rowCount: PropTypes.number.isRequired,
   };
 
+  const handleRequestSortApplications = (event, property) => {
+    const isAsc =
+      orderApplicationsBy === property && orderApplications === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  function descendingComparatorApplications(a, b, orderApplicationsBy) {
+    if (b[orderApplicationsBy] < a[orderApplicationsBy]) {
+      return -1;
+    }
+    if (b[orderApplicationsBy] > a[orderApplicationsBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparatorApplications(orderApplications, orderApplicationsBy) {
+    return orderApplications === "desc"
+      ? (a, b) => descendingComparatorApplications(a, b, orderApplicationsBy)
+      : (a, b) => -descendingComparatorApplications(a, b, orderApplicationsBy);
+  }
+
+  function stableSortApplications(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const orderApplications = comparator(a[0], b[0]);
+      if (orderApplications !== 0) {
+        return orderApplications;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const applicationsHeadCell = [
+    {
+      id: "images",
+      numeric: false,
+      label: "Property Images",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Street Address",
+    },
+    {
+      id: "city",
+      numeric: false,
+      label: "City,State",
+    },
+    {
+      id: "zip",
+      numeric: true,
+      label: "Zip",
+    },
+    {
+      id: "property_manager",
+      numeric: false,
+      label: "Property Manager",
+    },
+
+    {
+      id: "property_type",
+      numeric: false,
+      label: "Type",
+    },
+    {
+      id: "num_beds",
+      numeric: true,
+      label: "Size",
+    },
+
+    {
+      id: "listed_rent",
+      numeric: true,
+      label: "Rent",
+    },
+
+    {
+      id: "application_status",
+      numeric: true,
+      label: "Application Status",
+    },
+  ];
+  function EnhancedTableHeadApplications(props) {
+    const { orderApplications, orderApplicationsBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {applicationsHeadCell.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={
+                orderApplicationsBy === headCell.id ? orderApplications : false
+              }
+            >
+              <TableSortLabel
+                align="center"
+                active={orderApplicationsBy === headCell.id}
+                direction={
+                  orderApplicationsBy === headCell.id
+                    ? orderApplications
+                    : "asc"
+                }
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderApplicationsBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {orderApplications === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadApplications.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    orderApplications: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderApplicationsBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
       {!isLoading && tenantData.length > 1 ? (
@@ -513,21 +703,7 @@ export default function ManagerDashboard() {
               <Col>
                 <h1>Properties</h1>
               </Col>
-              <Col>
-                <img
-                  src={SearchProperties_Black}
-                  onClick={() => {
-                    navigate("/tenantAvailableProperties");
-                    window.scrollTo(0, 0);
-                  }}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    float: "right",
-                    marginRight: "3rem",
-                  }}
-                />
-              </Col>
+              <Col></Col>
             </Row>
 
             <Row className="w-100 m-3">
@@ -617,20 +793,11 @@ export default function ManagerDashboard() {
                               : ""}{" "}
                             {property.city}, {property.state}
                           </TableCell>
-                          {/* <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                           
-                          >
-                            {property.city}, {property.state}
-                          </TableCell> */}
                           <TableCell padding="none" size="small" align="center">
-                            {property.zip}
+                            {property.city}, {property.state}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {property.owner[0].owner_first_name}{" "}
-                            {property.owner[0].owner_last_name}
+                            {property.zip}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {property.property_manager[0].manager_business_name}
@@ -642,6 +809,12 @@ export default function ManagerDashboard() {
 
                           <TableCell padding="none" size="small" align="center">
                             {property.num_beds + "/" + property.num_baths}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            ${property.listed_rent}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {property.lease_end}
                           </TableCell>
                         </TableRow>
                       );
@@ -835,6 +1008,193 @@ export default function ManagerDashboard() {
                 </TableBody>
               </Table>
             </Row>
+            {applications.length > 0 ? (
+              <Row className="m-3">
+                <Row>
+                  <Col>
+                    <h1>Find Your Next Place</h1>
+                  </Col>
+                  <Col>
+                    <img
+                      src={SearchProperties_Black}
+                      onClick={() => {
+                        navigate("/tenantAvailableProperties");
+                        window.scrollTo(0, 0);
+                      }}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "3rem",
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="xl"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadApplications
+                      orderApplications={orderApplications}
+                      orderApplicationsBy={orderApplicationsBy}
+                      onRequestSort={handleRequestSort}
+                      rowCount={applications.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortApplications(
+                        applications,
+                        getComparatorApplications(
+                          orderApplications,
+                          orderApplicationsBy
+                        )
+                      ).map((application, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={application.property_uid}
+                            onClick={() => goToReviewPropertyLease(application)}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(application.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(application.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="application"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={PropertyIcon}
+                                  alt="application"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {application.address}
+                              {application.unit !== ""
+                                ? " " + application.unit
+                                : ""}{" "}
+                              {application.city}, {application.state}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {application.city}, {application.state}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {application.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {application.business_name}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {application.property_type}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {application.num_beds +
+                                "/" +
+                                application.num_baths}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              ${application.listed_rent}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {application.application_status === "NEW" ? (
+                                <h6 style={{ mediumBold, color: "blue" }}>
+                                  {application.application_status}
+                                </h6>
+                              ) : application.application_status ===
+                                "REJECTED" ? (
+                                <h6 style={{ mediumBold, color: "red" }}>
+                                  {application.application_status}
+                                </h6>
+                              ) : application.application_status ===
+                                "REFUSED" ? (
+                                <h6 style={{ mediumBold, color: "red" }}>
+                                  {application.application_status}
+                                </h6>
+                              ) : application.application_status ===
+                                "PM END EARLY" ? (
+                                <h6 style={{ mediumBold, color: "yellow" }}>
+                                  {application.application_status}
+                                </h6>
+                              ) : application.application_status ===
+                                "TENANT END EARLY" ? (
+                                <h6 style={{ mediumBold, color: "yellow" }}>
+                                  {application.application_status}
+                                </h6>
+                              ) : application.application_status ===
+                                "RENTED" ? (
+                                <h6 style={{ mediumBold, color: "green" }}>
+                                  {application.application_status}
+                                </h6>
+                              ) : (
+                                ""
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </Row>
+            ) : (
+              ""
+            )}
           </div>
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <TenantFooter />

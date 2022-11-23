@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
-import ReviewPropertyLease from "./reviewPropertyLease";
+import ReviewPropertyLease from "../components/tenantComponents/reviewPropertyLease";
 import RepairRequest from "../icons/repair_request.svg";
 import RepairStatus from "../icons/repair_status.svg";
 import Documents from "../icons/documents.svg";
@@ -106,7 +106,6 @@ function TenantWelcomePage(props) {
   // }, [profile]);
 
   const fetchApplications = async () => {
-    
     const response = await get(`/applications?tenant_id=${profile.tenant_id}`);
 
     const appArray = response.result || [];
@@ -173,7 +172,7 @@ function TenantWelcomePage(props) {
   const goToReviewPropertyLease = (application) => {
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
       state: {
-        application_uid: application.application_uid, 
+        application_uid: application.application_uid,
         application_status_1: application.application_status,
       },
     });
@@ -184,7 +183,7 @@ function TenantWelcomePage(props) {
     <div className="h-100">
       {/* ============================HEADER =========================== */}
       <Header title="Tenant Dashboard" />
-      {isLoading === true || (!profile || profile.length === 0) ? null : (
+      {isLoading === true || !profile || profile.length === 0 ? null : (
         <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
           <div style={welcome}>
             <Row style={headings}>
@@ -379,12 +378,24 @@ function TenantWelcomePage(props) {
                             <h5 style={mediumBold}>APPLICATION STATUS</h5>
                             {application.application_status === "NEW" ||
                             application.application_status === "FORWARDED" ? (
-                              <h6 style={{ mediumBold, color: "blue", height: '50px'}}>
+                              <h6
+                                style={{
+                                  mediumBold,
+                                  color: "blue",
+                                  height: "50px",
+                                }}
+                              >
                                 {application.application_status}
                               </h6>
                             ) : application.application_status ===
                               "REJECTED" ? (
-                              <h6 style={{ mediumBold, color: "red", height: '50px' }}>
+                              <h6
+                                style={{
+                                  mediumBold,
+                                  color: "red",
+                                  height: "50px",
+                                }}
+                              >
                                 {application.application_status}
                               </h6>
                             ) : (

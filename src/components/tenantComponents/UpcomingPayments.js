@@ -75,6 +75,18 @@ export default function UpcomingPayments(props) {
         <TableRow>
           <TableCell>{index + 1}</TableCell>
           <TableCell>
+            {"" +
+              row.address +
+              " " +
+              row.unit +
+              "," +
+              row.city +
+              ", " +
+              row.state +
+              " " +
+              row.zip}
+          </TableCell>
+          <TableCell>
             {"" + row.purchase_notes + " " + row.description}
           </TableCell>
           <TableCell>{row.purchase_type}</TableCell>
@@ -113,6 +125,7 @@ export default function UpcomingPayments(props) {
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
+            <TableCell>Address</TableCell>
             <TableCell>Description</TableCell>
             <TableCell>Type</TableCell>
             <TableCell>Date</TableCell>

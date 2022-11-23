@@ -1,17 +1,32 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { Component } from "react";
-
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
+import SideBar from "../components/tenantComponents/SideBar";
+import TenantFooter from "../components/tenantComponents/TenantFooter";
+import Header from "../components/Header";
 import Appliances from "../components/tenantComponents/Appliances";
 import Apply from "../icons/ApplyIcon.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import Carousel from "react-elastic-carousel";
-import ReviewPropertyLease from "./reviewPropertyLease";
+import ReviewPropertyLease from "../components/tenantComponents/reviewPropertyLease";
 export default function PropertyInfo() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   const data = location.state.property;
   const type = location.state.type;
   const imgs = data.images;
@@ -82,98 +97,122 @@ export default function PropertyInfo() {
   console.log("location state: ");
   console.log(location.state);
   return (
-    <div className="prop-info-container">
-      {imgs.length > 3 ? (
-        <h3 className="prop-info-images-container">
-          {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
+    <div className="w-100 overflow-hidden">
+      <div className="flex-1">
+        <div
+          hidden={!responsive.showSidebar}
+          style={{
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
+          }}
+        >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
+          <Header title="Tenant Dashboard" />
+          <Row className="m-3">
+            {imgs.length > 3 ? (
+              <h3 className="prop-info-images-container">
+                {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
                     <img className="more-info-prop-images" src={imgs[currentImg]}/>
                     <div onClick={nextImg} className="right-arrow">{">"}</div>  */}
-          <Carousel breakPoints={breakPoints}>{showImgs}</Carousel>
-        </h3>
-      ) : (
-        <h3 className="prop-info-images-container">
-          {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
+                <Carousel breakPoints={breakPoints}>{showImgs}</Carousel>
+              </h3>
+            ) : (
+              <h3 className="prop-info-images-container">
+                {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
                     <img className="more-info-prop-images" src={imgs[currentImg]}/>
                     <div onClick={nextImg} className="right-arrow">{">"}</div>  */}
-          {showImgs}
-        </h3>
-      )}
+                {showImgs}
+              </h3>
+            )}
 
-      <h1 className="prop-info-address">{data.address}</h1>
+            <h1 className="prop-info-address">{data.address}</h1>
 
-      <h3 className="prop-info-prop-type">{data.property_type}</h3>
-      <div className="info-container">
-        <div className="left box">
-          <h3 className="prop-info-stats">Rent : ${data.listed_rent} / mo</h3>
-          <h3 className="prop-info-stats">Bedrooms: {data.num_beds}</h3>
-          <h3 className="prop-info-stats">Bathrooms: {data.num_baths}</h3>
-          <h3 className="prop-info-stats">Active Since: {data.active_date}</h3>
-          <h3 className="prop-info-stats">Area : {data.area} SqFt</h3>
-          <h3 className="prop-info-stats">City: {data.city}</h3>
-          <div className="contacts" style={{ marginTop: "10vh" }}>
-            <div>
-              {/* {console.log("im trying to print an apply button")} */}
-              <img
-                src={Apply}
-                onClick={goToApplyToProperty}
-                alt="documentIcon"
-              />
-              <div className="mask flex-center">
-                <p className="white-text" style={{ fontSize: "14px" }}>
-                  Apply
-                </p>
+            <h3 className="prop-info-prop-type">{data.property_type}</h3>
+            <div className="info-container">
+              <div className="left box">
+                <h3 className="prop-info-stats">
+                  Rent : ${data.listed_rent} / mo
+                </h3>
+                <h3 className="prop-info-stats">Bedrooms: {data.num_beds}</h3>
+                <h3 className="prop-info-stats">Bathrooms: {data.num_baths}</h3>
+                <h3 className="prop-info-stats">
+                  Active Since: {data.active_date}
+                </h3>
+                <h3 className="prop-info-stats">Area : {data.area} SqFt</h3>
+                <h3 className="prop-info-stats">City: {data.city}</h3>
+                <div className="contacts" style={{ marginTop: "10vh" }}>
+                  <div>
+                    {/* {console.log("im trying to print an apply button")} */}
+                    <img
+                      src={Apply}
+                      onClick={goToApplyToProperty}
+                      alt="documentIcon"
+                    />
+                    <div className="mask flex-center">
+                      <p className="white-text" style={{ fontSize: "14px" }}>
+                        Apply
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <img
+                      onClick={() =>
+                        (window.location.href = `tel:${location.state.property.business_number}`)
+                      }
+                      src={Phone}
+                      style={{ marginRight: "10px" }}
+                    />
+                    <div className="mask flex-center">
+                      <p
+                        className="white-text"
+                        style={{ fontSize: "14px", marginRight: "0px" }}
+                      >
+                        Call
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <img
+                      onClick={() =>
+                        (window.location.href = `mailto:${location.state.property.business_email}`)
+                      }
+                      src={Message}
+                      style={{ marginRight: "10px" }}
+                    />
+                    <div className="mask flex-center">
+                      <p
+                        className="white-text"
+                        style={{ fontSize: "14px", marginLeft: "0px" }}
+                      >
+                        Email
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* <Appliances data = {data.appliances}/> */}
+              <div className="right box">
+                <h3 className="prop-info-stats">
+                  Included Utilities <br />
+                </h3>
+                {availUtils}
+                <h3 className="prop-info-stats">
+                  Utilities covered by Tenant <br />
+                </h3>
+                {tenantUtils}
+                <h3 className="prop-info-stats">Included Appliances:</h3>
+                {apps}
               </div>
             </div>
-            <div>
-              <img
-                onClick={() =>
-                  (window.location.href = `tel:${location.state.property.business_number}`)
-                }
-                src={Phone}
-                style={{ marginRight: "10px" }}
-              />
-              <div className="mask flex-center">
-                <p
-                  className="white-text"
-                  style={{ fontSize: "14px", marginRight: "0px" }}
-                >
-                  Call
-                </p>
-              </div>
-            </div>
-            <div>
-              <img
-                onClick={() =>
-                  (window.location.href = `mailto:${location.state.property.business_email}`)
-                }
-                src={Message}
-                style={{ marginRight: "10px" }}
-              />
-              <div className="mask flex-center">
-                <p
-                  className="white-text"
-                  style={{ fontSize: "14px", marginLeft: "0px" }}
-                >
-                  Email
-                </p>
-              </div>
-            </div>
-          </div>
+          </Row>
         </div>
-
-        {/* <Appliances data = {data.appliances}/> */}
-        <div className="right box">
-          <h3 className="prop-info-stats">
-            Included Utilities <br />
-          </h3>
-          {availUtils}
-          <h3 className="prop-info-stats">
-            Utilities covered by Tenant <br />
-          </h3>
-          {tenantUtils}
-          <h3 className="prop-info-stats">Included Appliances:</h3>
-          {apps}
-        </div>
+      </div>
+      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+        <TenantFooter />
       </div>
       {type == 2 && (
         <div>

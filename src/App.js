@@ -7,7 +7,7 @@ import Signup from "./pages/Signup";
 import ProfileInfo from "./pages/ProfileInfo";
 import TenantHome from "./pages/TenantHome";
 import TenantAvailableProperties from "./components/tenantComponents/TenantAvailableProperties";
-import ApplyToProperty from "./pages/ApplyToProperty";
+import ApplyToProperty from "./components/tenantComponents/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
@@ -36,9 +36,9 @@ import DetailQuoteRequest from "./components/DetailQuoteRequest";
 import QuotesAccepted from "./components/QuotesAccepted";
 import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
 import TenantDocumentUpload from "./components/tenantComponents/TenantDocumentUpload";
-import ReviewTenantProfile from "./pages/ReviewTenantprofile";
+import ReviewTenantProfile from "./components/tenantComponents/ReviewTenantprofile";
 import TenantPropertyView from "./pages/TenantPropertyView";
-import ReviewPropertyLease from "./pages/reviewPropertyLease";
+import ReviewPropertyLease from "./components/tenantComponents/reviewPropertyLease";
 import OwnerContacts from "./components/ownerComponents/OwnerContacts";
 import ManagerProperties from "./pages/ManagerProperties";
 import ManagerPropertyView from "./components/managerComponents/ManagerPropertyView";
@@ -76,7 +76,6 @@ import OwnerRepairRequest from "./components/ownerComponents/OwnerRepairRequest"
 import PropertyManagersList from "./components/PropertyManagersList";
 import ModifyExisiting from "./pages/ModifyExisiting";
 import PropertyInfo from "./pages/PropertyInfo";
-import AppliedDashboard from "./pages/AppliedDashboard";
 import ManagerTenantListDetail from "./components/managerComponents/ManagerTenantListDetail";
 import ManagerDocuments from "./components/managerComponents/ManagerDocuments";
 import ManagerProfile from "./components/managerComponents/ManagerProfile";
@@ -159,7 +158,6 @@ function App() {
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
-            <Route path="applied_dashboard" element={<AppliedDashboard />} />
             <Route path="tenant_original" element={<TenantHome />} />
             {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             {/* <Route path="tenant_doc_upload" element={<TenantDocumentUpload />} /> */}

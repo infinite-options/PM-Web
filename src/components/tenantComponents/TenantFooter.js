@@ -9,7 +9,7 @@ import Profile_Gray from "../../icons/Profile_Gray.svg";
 import Expenses_Gray from "../../icons/Expenses_Gray.svg";
 import Documents from "../../icons/Tenants.svg";
 import Announcements from "../../icons/announcements.svg";
-import Roles_Gray from "../../icons/Roles_Gray.svg";
+import SearchProperties_Gray from "../../icons/SearchProperties_Gray.svg";
 
 function ManagerFooter(props) {
   const navigate = useNavigate();
@@ -59,6 +59,18 @@ function ManagerFooter(props) {
             Owners
           </p>
         </Col> */}
+
+        <Col
+          className="text-center"
+          onClick={() => {
+            navigate("/manager-utilities");
+          }}
+        >
+          <img src={Expenses_Gray} alt="EXPENSES" />
+          <p style={smallGray} className="mb-0">
+            Payments
+          </p>
+        </Col>
         <Col
           className="text-center"
           onClick={() => {
@@ -70,16 +82,19 @@ function ManagerFooter(props) {
             Maintenance
           </p>
         </Col>
-        .
         <Col
           className="text-center"
           onClick={() => {
             navigate("/manager-utilities");
           }}
         >
-          <img src={Expenses_Gray} alt="EXPENSES" />
+          <img
+            src={SearchProperties_Gray}
+            alt="EXPENSES"
+            style={{ width: "30px", height: "30px" }}
+          />
           <p style={smallGray} className="mb-0">
-            Utilities
+            Search
           </p>
         </Col>
         <Col
