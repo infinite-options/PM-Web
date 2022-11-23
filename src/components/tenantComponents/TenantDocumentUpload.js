@@ -1,18 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "../components/Header";
-import AppContext from "../AppContext";
-import { get, put, post } from "../utils/api";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import File from "../../icons/File.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import { get, put, post } from "../../utils/api";
 import {
   squareForm,
   smallPillButton,
   small,
   mediumBold,
-} from "../utils/styles";
-import File from "../icons/File.svg";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
+} from "../../utils/styles";
 
 function TenantDocumentUpload(props) {
   const context = useContext(AppContext);
@@ -114,16 +114,9 @@ function TenantDocumentUpload(props) {
   // ======================================<Return function>=======================================
   return (
     <div className="h-100 d-flex flex-column">
-      <Header
-        title="Documents"
-        leftText="< Back"
-        leftFn={() => navigate("/tenant")}
-        // rightText="Save"
-        // rightFn={submitInfo}
-      />
-
-      <Container className="pt-1 mb-4">
-        <div className="mb-4">
+      <Row className="m-3">
+        <h5>Upload documents</h5>
+        <div className="m-4">
           {/* <h5 style={mediumBold}>Tenant Documents</h5> */}
           {files.map((file, i) => (
             <div key={i}>
@@ -221,7 +214,7 @@ function TenantDocumentUpload(props) {
             </div>
           )}
         </div>
-      </Container>
+      </Row>
     </div>
   );
 }

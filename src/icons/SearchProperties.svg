@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="48.973" height="48.973" viewBox="0 0 48.973 48.973">
   <g id="Group_631" data-name="Group 631" transform="translate(2.5 2.5)">
     <g id="Icon_feather-search" data-name="Icon feather-search">
-      <path id="Path_110" data-name="Path 110" d="M39.5,22A17.5,17.5,0,1,1,22,4.5,17.5,17.5,0,0,1,39.5,22Z" transform="translate(-4.5 -4.5)" fill="none" stroke="#007aff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
-      <path id="Path_111" data-name="Path 111" d="M36.855,36.855l-11.88-11.88" transform="translate(6.083 6.083)" fill="none" stroke="#007aff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+      <path id="Path_110" data-name="Path 110" d="M39.5,22A17.5,17.5,0,1,1,22,4.5,17.5,17.5,0,0,1,39.5,22Z" transform="translate(-4.5 -4.5)" fill="none" stroke="#c4c4c4" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+      <path id="Path_111" data-name="Path 111" d="M36.855,36.855l-11.88-11.88" transform="translate(6.083 6.083)" fill="none" stroke="#c4c4c4" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
     </g>
   </g>
 </svg>
