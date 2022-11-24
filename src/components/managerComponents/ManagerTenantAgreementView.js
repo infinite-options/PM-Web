@@ -33,7 +33,6 @@ const useStyles = makeStyles({
 function ManagerTenantAgreementView(props) {
   const classes = useStyles();
   const {
-    back,
     property,
     renewLease,
     selectedAgreement,
@@ -52,7 +51,10 @@ function ManagerTenantAgreementView(props) {
   // const [renewLease, setRenewLease] = useState(false)
   const [terminateLease, setTerminateLease] = useState(false);
   const [lastDate, setLastDate] = useState("");
+  const [message, setMessage] = useState("");
   const [tenantEndEarly, setTenantEndEarly] = useState(false);
+
+  const [pmEndEarly, setPmEndEarly] = useState(false);
   const [agreement, setAgreement] = useState([]);
 
   const loadAgreement = async (agg) => {
@@ -101,6 +103,12 @@ function ManagerTenantAgreementView(props) {
     if (app.length > 0) {
       setTenantEndEarly(true);
     }
+    let appPM = property.applications.filter(
+      (a) => a.application_status === "PM END EARLY"
+    );
+    if (appPM.length > 0) {
+      setPmEndEarly(true);
+    }
   };
   useEffect(() => {
     loadAgreement(selectedAgreement);
@@ -116,9 +124,7 @@ function ManagerTenantAgreementView(props) {
       ""
     );
 
-  const renewLeaseAgreement = async () => {
-    back();
-  };
+  const renewLeaseAgreement = async () => {};
 
   const terminateLeaseAgreement = async () => {
     if (lastDate === "") {
@@ -130,9 +136,11 @@ function ManagerTenantAgreementView(props) {
       application_status: "PM END EARLY",
       property_uid: property.property_uid,
       early_end_date: lastDate,
+      message: message,
     };
     const response = await put("/endEarly", request_body);
-    back();
+    setPmEndEarly(true);
+    setTerminateLease(false);
   };
 
   const endEarlyRequestResponse = async (end_early) => {
@@ -153,8 +161,21 @@ function ManagerTenantAgreementView(props) {
       request_body.application_status = "REFUSED";
     }
     const response = await put("/endEarly", request_body);
-    back();
   };
+
+  const endEarlyWithdraw = async () => {
+    let request_body = {
+      application_status: "RENTED",
+      property_uid: property.property_uid,
+      early_end_date: "",
+      message: "",
+    };
+
+    const response = await put("/endEarly", request_body);
+    setTerminateLease(false);
+    setPmEndEarly(false);
+  };
+
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
@@ -409,7 +430,7 @@ function ManagerTenantAgreementView(props) {
 
           <Row
             className="pt-4 my-4"
-            hidden={agreement === null || tenantEndEarly}
+            hidden={agreement === null || tenantEndEarly || pmEndEarly}
           >
             <Col className="d-flex flex-row justify-content-evenly">
               <Button
@@ -423,7 +444,7 @@ function ManagerTenantAgreementView(props) {
           </Row>
 
           {terminateLease ? (
-            <div hidden={agreement === null || tenantEndEarly}>
+            <div hidden={agreement === null || tenantEndEarly || pmEndEarly}>
               <Row>
                 <Col className="d-flex flex-row justify-content-evenly">
                   <Form.Group className="mx-2 my-3">
@@ -435,6 +456,18 @@ function ManagerTenantAgreementView(props) {
                       type="date"
                       value={lastDate}
                       onChange={(e) => setLastDate(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>{" "}
+                <Col className="d-flex flex-row justify-content-evenly">
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Message {message === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                     />
                   </Form.Group>
                 </Col>
@@ -461,7 +494,7 @@ function ManagerTenantAgreementView(props) {
               </Row>
             </div>
           ) : (
-            <Row hidden={agreement === null || tenantEndEarly}>
+            <Row hidden={agreement === null || tenantEndEarly || pmEndEarly}>
               <Col className="d-flex flex-row justify-content-evenly">
                 <Button
                   style={redPillButton}
@@ -496,6 +529,38 @@ function ManagerTenantAgreementView(props) {
                     onClick={() => endEarlyRequestResponse(false)}
                   >
                     Reject request
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          ) : (
+            ""
+          )}
+          {pmEndEarly ? (
+            <div className="my-4 ">
+              <h5
+                style={mediumBold}
+                className="d-flex justify-content-center align-items-center flex-row"
+              >
+                You requested to end lease early on {agreement.early_end_date}
+              </h5>
+              <Row className="my-4">
+                {/* <Col className="d-flex flex-row justify-content-evenly">
+                  <Button
+                    style={bluePillButton}
+                    variant="outline-primary"
+                    onClick={() => endEarlyRequestResponse(true)}
+                  >
+                    Terminate Lease
+                  </Button>
+                </Col> */}
+                <Col className="d-flex flex-row justify-content-evenly">
+                  <Button
+                    style={redPillButton}
+                    variant="outline-primary"
+                    onClick={() => endEarlyWithdraw()}
+                  >
+                    Withdraw request
                   </Button>
                 </Col>
               </Row>

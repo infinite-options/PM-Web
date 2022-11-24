@@ -82,7 +82,7 @@ export default function SideBar(props) {
               Dashboard
             </NavLink>
             <NavLink
-              to="/tenant-list"
+              to="/tenant-payments"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons
@@ -91,7 +91,7 @@ export default function SideBar(props) {
               Payments
             </NavLink>
             <NavLink
-              to="/manager-repairs"
+              to="/tenant-repairs"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons
@@ -109,7 +109,7 @@ export default function SideBar(props) {
               Search Properties
             </NavLink>
             <NavLink
-              to="/manager-announcements"
+              to="/tenant-announcements"
               className="sidebarButtons"
               style={({ isActive }) =>
                 isActive ? sidebarButtonsActive : sidebarButtons

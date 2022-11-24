@@ -73,6 +73,8 @@ import MaintenencePage from "./pages/MaintenencePage";
 import ManagerLanding from "./pages/ManagerLanding";
 import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/ownerComponents/OwnerRepairList";
+
+import TenantRepairList from "./components/tenantComponents/TenantRepairList";
 import OwnerRepairRequest from "./components/ownerComponents/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
 import ModifyExisiting from "./pages/ModifyExisiting";
@@ -318,6 +320,7 @@ function App() {
               path="owner-repairRequest"
               element={<OwnerRepairRequest />}
             />
+            <Route path="tenant-repairs" element={<TenantRepairList />} />
             <Route
               path="tenant-repairRequest"
               element={<TenantRepairRequest />}
