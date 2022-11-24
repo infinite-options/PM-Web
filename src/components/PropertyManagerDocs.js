@@ -52,7 +52,6 @@ function PropertyManagerDocs(props) {
     property,
     selectContract,
     reload,
-    setExpandManagerDocs,
     fetchProperty,
     setShowDialog,
     endEarlyDate,
@@ -71,19 +70,6 @@ function PropertyManagerDocs(props) {
     setShowMessageForm(false);
   };
 
-  const updateBusiness = async () => {
-    const files = JSON.parse(property.images);
-    const business_uid = JSON.parse(selectedBusiness).business_uid;
-    const newProperty = {
-      property_uid: property.property_uid,
-      manager_id: business_uid,
-      management_status: "FORWARDED",
-    };
-    const response = await put("/properties", newProperty, null, files);
-    setAddPropertyManager(false);
-    reload();
-  };
-
   const rejectManagement = async () => {
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
@@ -99,7 +85,6 @@ function PropertyManagerDocs(props) {
     const files = JSON.parse(property.images);
 
     await put("/properties", newProperty, null, files);
-    setExpandManagerDocs(false);
   };
 
   const acceptCancelAgreement = async () => {
@@ -125,8 +110,13 @@ function PropertyManagerDocs(props) {
     }
 
     await put("/cancelAgreement", updatedManagementContract, null, files);
-    setExpandManagerDocs(false);
-    navigate("/manager-properties");
+
+    navigate(`/managerPropertyDetails/${property.property_uid}`, {
+      state: {
+        property: property,
+        property_uid: property.property_uid,
+      },
+    });
   };
 
   const rejectCancelAgreement = async () => {
@@ -151,11 +141,9 @@ function PropertyManagerDocs(props) {
       updatedManagementContract[key] = files[i + 1];
     }
     await put("/cancelAgreement", updatedManagementContract, null, files);
-    setExpandManagerDocs(false);
     fetchProperty();
   };
-
-  useEffect(async () => {
+  const getContract = async () => {
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );
@@ -186,6 +174,10 @@ function PropertyManagerDocs(props) {
     }
 
     setContracts(response.result);
+  };
+
+  useEffect(() => {
+    getContract();
   }, []);
 
   useEffect(async () => {
@@ -196,12 +188,6 @@ function PropertyManagerDocs(props) {
 
   return (
     <div className="d-flex flex-column flex-grow-1 w-100 justify-content-center">
-      {/* <ConfirmDialog
-        title={"Are you sure you want to cancel the agreement?"}
-        isOpen={showDialog}
-        onConfirm={cancelAgreement}
-        onCancel={onCancel}
-      /> */}
       <MessageDialog
         title={"Message"}
         isOpen={showMessageForm}

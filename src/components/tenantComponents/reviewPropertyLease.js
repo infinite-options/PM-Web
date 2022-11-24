@@ -6,7 +6,7 @@ import Header from "../Header";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import AppContext from "../../AppContext";
-import TenantPropertyView from "../../pages/TenantPropertyView";
+import PropertyApplicationView from "./PropertyApplicationView";
 import No_Image from "../../icons/No_Image_Available.jpeg";
 import { bluePillButton, greenPill, redPillButton } from "../../utils/styles";
 import { get, put } from "../../utils/api";
@@ -263,8 +263,8 @@ function ReviewPropertyLease(props) {
 
   const fromPage = "homePage";
   const goToApplyToProperty = () => {
-    // navigate(`/tenantPropertyView/${property_uid}`,{ state: {from: "homePage"}})
-    navigate(`/tenantPropertyView/${property_uid}`, {
+    // navigate(`/propertyApplicationView/${property_uid}`,{ state: {from: "homePage"}})
+    navigate(`/propertyApplicationView/${property_uid}`, {
       state: { fromPage: fromPage },
     });
   };
@@ -292,7 +292,7 @@ function ReviewPropertyLease(props) {
           />
 
           {/* ==================< Property Details >=======================================  */}
-          <TenantPropertyView forPropertyLease="true" />
+          <PropertyApplicationView forPropertyLease="true" />
           {/* ==================< Lease Details >=======================================  */}
           {/* {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ? */}
           {application_status_1 === "FORWARDED" ||

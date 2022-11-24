@@ -140,7 +140,7 @@ function ManagerProfile(props) {
   };
 
   return (
-    <div>
+    <div className="w-100 overflow-hidden">
       <div className="flex-1">
         <div
           hidden={!responsiveSidebar.showSidebar}

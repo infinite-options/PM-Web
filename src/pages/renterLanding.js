@@ -194,7 +194,7 @@ export default function RenterLanding() {
 
   const goToApplyToProperty = (pid) => {
     // navigate("/applyToProperty");
-    navigate(`/tenantPropertyView/${pid}`);
+    navigate(`/propertyApplicationView/${pid}`);
   };
 
   const mapProperty = featuredProperties?.map((prop, index) => {
@@ -259,17 +259,6 @@ export default function RenterLanding() {
                         {property.images.length > 0 ? (
                           <img
                             src={property.images[0]}
-                            // onClick={() => {
-                            //   navigate(
-                            //     `/manager-properties/${property.property_uid}`,
-                            //     {
-                            //       state: {
-                            //         property: property,
-                            //         property_uid: property.property_uid,
-                            //       },
-                            //     }
-                            //   );
-                            // }}
                             alt="Property"
                             style={{
                               borderRadius: "4px",

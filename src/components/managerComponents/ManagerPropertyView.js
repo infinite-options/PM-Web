@@ -103,9 +103,7 @@ function ManagerPropertyView(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
-  const [pastMaintenanceRequests, setPastMaintenanceRequests] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
-
   const [showAddRequest, setShowAddRequest] = useState(false);
   const [cancel, setCancel] = useState(false);
   const [endEarlyDate, setEndEarlyDate] = useState("");
@@ -191,16 +189,8 @@ function ManagerPropertyView(props) {
     },
   });
   const appliances = Object.keys(applianceState[0]);
-
   const [imagesProperty, setImagesProperty] = useState([]);
-
-  const [showControls, setShowControls] = useState(true);
-  const [currentImg, setCurrentImg] = useState(0);
-  const [expandDetails, setExpandDetails] = useState(false);
   const [editProperty, setEditProperty] = useState(false);
-  const [expandMaintenanceR, setExpandMaintenanceR] = useState(false);
-  const [expandManagerDocs, setExpandManagerDocs] = useState(false);
-  const [expandLeaseDocs, setExpandLeaseDocs] = useState(false);
   const [showManagementContract, setShowManagementContract] = useState(false);
   const [showTenantAgreement, setShowTenantAgreement] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
@@ -213,9 +203,6 @@ function ManagerPropertyView(props) {
     useState(null);
   const [showCreateExpense, setShowCreateExpense] = useState(false);
   const [showCreateRevenue, setShowCreateRevenue] = useState(false);
-  const [showCreateTax, setShowCreateTax] = useState(false);
-  const [showCreateMortgage, setShowCreateMortgage] = useState(false);
-  const [showCreateInsurance, setShowCreateInsurance] = useState(false);
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -279,9 +266,8 @@ function ManagerPropertyView(props) {
       updatedManagementContract[key] = files[i + 1];
     }
     await put("/cancelAgreement", updatedManagementContract, null, files);
-    setExpandManagerDocs(false);
     setShowDialog(false);
-    fetchProperty();
+    reloadProperty();
   };
   const onCancel = () => {
     setShowDialog(false);
@@ -297,7 +283,7 @@ function ManagerPropertyView(props) {
     setCashflowData(cashflowResponse.result);
     setImagesProperty(JSON.parse(response.result[0].images));
     let show = JSON.parse(response.result[0].images).length < 5 ? false : true;
-    setShowControls(show);
+
     console.log(response.result[0]);
     applianceState[1](JSON.parse(response.result[0].appliances));
     const property_details = response.result[0];
@@ -355,7 +341,6 @@ function ManagerPropertyView(props) {
     });
     console.log(recent_mr, past_mr);
     setRecentMaintenanceRequests(recent_mr);
-    setPastMaintenanceRequests(past_mr);
   };
 
   useState(() => {
@@ -758,6 +743,7 @@ function ManagerPropertyView(props) {
           onConfirm={cancelAgreement}
           onCancel={onCancel}
         />
+        {console.log("showdialog", showDialog)}
         <div className="flex-1">
           <div
             hidden={!responsiveSidebar.showSidebar}
@@ -4540,7 +4526,6 @@ function ManagerPropertyView(props) {
                     fetchProperty={fetchProperty}
                     addDocument={addContract}
                     selectContract={selectContract}
-                    setExpandManagerDocs={setExpandManagerDocs}
                     setShowDialog={setShowDialog}
                     endEarlyDate={endEarlyDate}
                     setEndEarlyDate={setEndEarlyDate}

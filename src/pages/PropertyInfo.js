@@ -75,7 +75,7 @@ export default function PropertyInfo() {
   });
   const goToApplyToProperty = () => {
     // navigate("/applyToProperty");
-    navigate(`/tenantPropertyView/${data.property_uid}`);
+    navigate(`/propertyApplicationView/${data.property_uid}`);
   };
   const nextImg = () => {
     if (currentImg === imgs.length - 1) {

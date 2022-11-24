@@ -62,11 +62,7 @@ export default function ManagerDashboard() {
   const [upcomingPaymentsData, setUpcomingPaymentsData] = useState([]);
   const [paymentHistoryData, setPaymentHistoryData] = useState([]);
   const [applications, setApplications] = useState([]);
-  const [newApplication, setNewApplication] = useState([]);
-  const [leaseRecieved, setLeaseRecieved] = useState([]);
-  const [leaseTerminated, setLeaseTerminated] = useState([]);
-  const [leaseRejected, setLeaseRejected] = useState([]);
-  const [applicationRefused, setApplicationRefused] = useState([]);
+  const [tenantProfile, setTenantProfile] = useState([]);
   const [managerInfo, setManagerInfo] = useState([]);
 
   // search variables
@@ -110,31 +106,8 @@ export default function ManagerDashboard() {
     }
     console.log(response.result);
     console.log(appRes.result);
-    let newApp = [];
-    let leaseRecieved = [];
-    let leaseTerminated = [];
-
-    let leaseRejected = [];
-    let appRefused = [];
-    for (let i = 0; i < appRes.result.length; i++) {
-      if (appRes.result[i].application_status === "NEW") {
-        newApp.push(appRes.result[i]);
-      } else if (appRes.result[i].application_status === "FORWARDED") {
-        leaseRecieved.push(appRes.result[i]);
-      } else if (appRes.result[i].application_status === "ENDED") {
-        leaseTerminated.push(appRes.result[i]);
-      } else if (appRes.result[i].application_status === "REJECTED") {
-        leaseRejected.push(appRes.result[i]);
-      } else if (appRes.result[i].application_status === "REFUSED") {
-        appRefused.push(appRes.result[i]);
-      }
-    }
+    setTenantProfile(response.result[0]);
     setApplications(appRes.result);
-    setNewApplication(newApp);
-    setLeaseRecieved(leaseRecieved);
-    setLeaseTerminated(leaseTerminated);
-    setLeaseRejected(leaseRejected);
-    setApplicationRefused(appRefused);
 
     const properties = response.result[0].properties.filter(
       (property) => property.management_status !== "REJECTED"
@@ -527,8 +500,8 @@ export default function ManagerDashboard() {
   const handleRequestSortApplications = (event, property) => {
     const isAsc =
       orderApplicationsBy === property && orderApplications === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+    setOrderApplications(isAsc ? "desc" : "asc");
+    setOrderApplicationsBy(property);
   };
 
   function descendingComparatorApplications(a, b, orderApplicationsBy) {
@@ -679,17 +652,20 @@ export default function ManagerDashboard() {
           <div className="w-100 mb-5">
             <Header title="Tenant Dashboard" />
             {announcements.length > 0 ? (
-              <Row>
+              <Row className="m-3">
                 <h1>Announcements</h1>
                 <Carousel slide={false}>
                   {announcements.map((announce) => {
                     return (
                       <CarouselItem>
-                        <div className="align-items-center w-50">
-                          <p style={subHeading}>
+                        <div className="align-items-center w-100 p-4">
+                          <p style={(subHeading, { textAlign: "center" })}>
                             {announce.announcement_title}
                           </p>
-                          <p>{announce.announcement_msg}</p>
+                          <p style={{ textAlign: "center" }}>
+                            {" "}
+                            {announce.announcement_msg}
+                          </p>
                         </div>
                       </CarouselItem>
                     );
@@ -758,6 +734,17 @@ export default function ManagerDashboard() {
                           role="checkbox"
                           tabIndex={-1}
                           key={property.property_uid}
+                          onClick={() => {
+                            navigate(
+                              `/tenantPropertyDetails/${property.property_uid}`,
+                              {
+                                state: {
+                                  property: property,
+                                  property_uid: property.property_uid,
+                                },
+                              }
+                            );
+                          }}
                         >
                           <TableCell padding="none" size="small" align="center">
                             {JSON.parse(property.images).length > 0 ? (
@@ -885,7 +872,7 @@ export default function ManagerDashboard() {
                           key={request.maintenance_request_uid}
                           onClick={() =>
                             navigate(
-                              `/manager-repairs/${request.maintenance_request_uid}`,
+                              `/tenant-repairs/${request.maintenance_request_uid}`,
                               {
                                 state: {
                                   repair: request,
@@ -1008,28 +995,28 @@ export default function ManagerDashboard() {
                 </TableBody>
               </Table>
             </Row>
+            <Row className="m-3">
+              <Col>
+                <h1>Find Your Next Place</h1>
+              </Col>
+              <Col>
+                <img
+                  src={SearchProperties_Black}
+                  onClick={() => {
+                    navigate("/tenantAvailableProperties");
+                    window.scrollTo(0, 0);
+                  }}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "3rem",
+                  }}
+                />
+              </Col>
+            </Row>
             {applications.length > 0 ? (
               <Row className="m-3">
-                <Row>
-                  <Col>
-                    <h1>Find Your Next Place</h1>
-                  </Col>
-                  <Col>
-                    <img
-                      src={SearchProperties_Black}
-                      onClick={() => {
-                        navigate("/tenantAvailableProperties");
-                        window.scrollTo(0, 0);
-                      }}
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        float: "right",
-                        marginRight: "3rem",
-                      }}
-                    />
-                  </Col>
-                </Row>
                 <Row style={{ overflow: "scroll" }}>
                   <Table
                     responsive="xl"
@@ -1039,7 +1026,7 @@ export default function ManagerDashboard() {
                     <EnhancedTableHeadApplications
                       orderApplications={orderApplications}
                       orderApplicationsBy={orderApplicationsBy}
-                      onRequestSort={handleRequestSort}
+                      onRequestSort={handleRequestSortApplications}
                       rowCount={applications.length}
                     />{" "}
                     <TableBody>
@@ -1217,7 +1204,9 @@ export default function ManagerDashboard() {
             <Row className="m-3">
               <h1>Welcome to Manifest My Space</h1>
             </Row>
-
+            <Row>
+              {tenantProfile.tenant_first_name} {tenantProfile.tenant_last_name}
+            </Row>
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />
             </div>

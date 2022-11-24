@@ -73,8 +73,8 @@ export default function UpcomingPayments(props) {
     if (row.purchase_status == "UNPAID") {
       return (
         <TableRow>
-          <TableCell>{index + 1}</TableCell>
-          <TableCell>
+          <TableCell align="center">{index + 1}</TableCell>
+          <TableCell align="center">
             {"" +
               row.address +
               " " +
@@ -86,12 +86,19 @@ export default function UpcomingPayments(props) {
               " " +
               row.zip}
           </TableCell>
-          <TableCell>
+          <TableCell align="center">
             {"" + row.purchase_notes + " " + row.description}
           </TableCell>
-          <TableCell>{row.purchase_type}</TableCell>
-          <TableCell>{row.next_payment.substring(0, 10)}</TableCell>
-          <TableCell>
+          <TableCell align="center">{row.purchase_type}</TableCell>
+          <TableCell
+            align="center"
+            style={{
+              color: new Date(row.next_payment) < new Date() ? "red" : "green",
+            }}
+          >
+            {row.next_payment.substring(0, 10)}
+          </TableCell>
+          <TableCell align="center">
             {props.type ? (
               <button className="yellow payB" onClick={goToPayment}>
                 Pay
@@ -108,7 +115,7 @@ export default function UpcomingPayments(props) {
               </label>
             )}
           </TableCell>
-          <TableCell>{row.amount_due}</TableCell>
+          <TableCell align="right">{row.amount_due.toFixed(2)}</TableCell>
         </TableRow>
       );
     }
@@ -124,13 +131,13 @@ export default function UpcomingPayments(props) {
       >
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Address</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Pay</TableCell>
-            <TableCell>Amount</TableCell>
+            <TableCell align="center">ID</TableCell>
+            <TableCell align="center">Address</TableCell>
+            <TableCell align="center">Description</TableCell>
+            <TableCell align="center">Type</TableCell>
+            <TableCell align="center">Date</TableCell>
+            <TableCell align="center">Pay</TableCell>
+            <TableCell align="right">Amount</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -138,7 +145,7 @@ export default function UpcomingPayments(props) {
             rows
           ) : (
             <TableRow>
-              <TableCell>No upcoming payments</TableCell>
+              <TableCell align="right">No upcoming payments</TableCell>
             </TableRow>
           )}
         </TableBody>

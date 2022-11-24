@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     },
   },
 });
-export default function UpcomingPayments(props) {
+export default function PaymentHistory(props) {
   const classes = useStyles();
   const history = props.data; //array of objects
 
@@ -28,8 +28,8 @@ export default function UpcomingPayments(props) {
     if (row.purchase_status == "PAID") {
       return (
         <TableRow>
-          <TableCell>{index + 1}</TableCell>
-          <TableCell>
+          <TableCell align="center">{index + 1}</TableCell>
+          <TableCell align="center">
             {"" +
               row.address +
               " " +
@@ -41,13 +41,15 @@ export default function UpcomingPayments(props) {
               " " +
               row.zip}
           </TableCell>
-          <TableCell>
+          <TableCell align="center">
             {"" + row.purchase_notes + " " + row.description}
           </TableCell>
-          <TableCell>{row.purchase_type}</TableCell>
-          <TableCell>{row.next_payment.substring(0, 10)}</TableCell>
-          <TableCell></TableCell>
-          <TableCell>{row.amount_paid}</TableCell>
+          <TableCell align="center">{row.purchase_type}</TableCell>
+          <TableCell align="center">
+            {row.next_payment.substring(0, 10)}
+          </TableCell>
+          <TableCell align="center"></TableCell>
+          <TableCell align="right">{row.amount_paid.toFixed(2)}</TableCell>
         </TableRow>
       );
     }
@@ -63,13 +65,13 @@ export default function UpcomingPayments(props) {
       >
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Address</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Invoice</TableCell>
-            <TableCell>Amount</TableCell>
+            <TableCell align="center">ID</TableCell>
+            <TableCell align="center">Address</TableCell>
+            <TableCell align="center">Description</TableCell>
+            <TableCell align="center">Type</TableCell>
+            <TableCell align="center">Date</TableCell>
+            <TableCell align="center">Invoice</TableCell>
+            <TableCell align="right">Amount</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

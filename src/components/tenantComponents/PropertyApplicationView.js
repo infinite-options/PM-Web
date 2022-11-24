@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import SideBar from "../components/tenantComponents/SideBar";
-import TenantFooter from "../components/tenantComponents/TenantFooter";
+import Header from "../Header";
+import SideBar from "./SideBar";
+import TenantFooter from "./TenantFooter";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-import PropertyForm from "../components/tenantComponents/TenantPropertyForm";
-import { get } from "../utils/api";
+import PropertyForm from "./TenantPropertyForm";
+import { get } from "../../utils/api";
 import { Row, Col, Button, Carousel, Image } from "react-bootstrap";
-import { bluePillButton } from "../utils/styles";
+import { bluePillButton } from "../../utils/styles";
 import { fontWeight } from "@mui/system";
 
-function TenantPropertyView(props) {
+function PropertyApplicationView(props) {
   const { property_uid } = useParams();
   const { forPropertyLease } = props;
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ function TenantPropertyView(props) {
     };
     fetchProperty();
   }, []);
-  console.log("tenantPropertyView");
+  console.log("propertyApplicationView");
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
@@ -169,4 +169,4 @@ function TenantPropertyView(props) {
   );
 }
 
-export default TenantPropertyView;
+export default PropertyApplicationView;

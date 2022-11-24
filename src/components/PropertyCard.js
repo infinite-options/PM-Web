@@ -17,7 +17,7 @@ function PropertyCard(props) {
 
   const goToApplyToProperty = () => {
     // navigate("/applyToProperty");
-    navigate(`/tenantPropertyView/${property.property_uid}`);
+    navigate(`/propertyApplicationView/${property.property_uid}`);
   };
   const stopEventPropagation = (e) => {
     e.stopPropagation();

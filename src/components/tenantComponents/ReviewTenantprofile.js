@@ -45,7 +45,7 @@ function ReviewTenantProfile(props) {
     showSidebar: width > 1023,
   };
   const goToPropertyView = () => {
-    navigate(`/tenantPropertyView/${property_uid}`);
+    navigate(`/propertyApplicationView/${property_uid}`);
   };
   const goToShowApplied = () => {
     navigate("/applyToProperty");

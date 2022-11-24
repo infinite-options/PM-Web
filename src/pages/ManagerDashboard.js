@@ -3732,7 +3732,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -3774,7 +3774,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -3796,7 +3796,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -3814,7 +3814,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -3843,7 +3843,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -3905,7 +3905,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -3926,7 +3926,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -3970,7 +3970,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -3989,7 +3989,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
@@ -4008,7 +4008,7 @@ export default function ManagerDashboard() {
                             align="center"
                             onClick={() => {
                               navigate(
-                                `/manager-properties/${property.property_uid}`,
+                                `/managerPropertyDetails/${property.property_uid}`,
                                 {
                                   state: {
                                     property: property,
