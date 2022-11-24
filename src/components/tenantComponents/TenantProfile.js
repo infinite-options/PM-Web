@@ -109,6 +109,7 @@ function TenantProfile(props) {
       name: file.name,
       description: "",
       file: file,
+      created_date: new Date().toISOString().split("T")[0],
     };
     setNewFile(newFile);
   };

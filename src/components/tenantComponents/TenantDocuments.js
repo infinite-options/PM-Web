@@ -68,11 +68,13 @@ function TenantDocuments(props) {
     const newFile = {
       name: file.name,
       description: "",
+      created_date: new Date().toLocaleDateString().split("T")[0],
       file: file,
       shared: false,
     };
     setNewFile(newFile);
   };
+  console.log(newFile);
   const updateNewFile = (field, value) => {
     const newFileCopy = { ...newFile };
     newFileCopy[field] = value;
@@ -221,6 +223,7 @@ function TenantDocuments(props) {
                       {" "}
                       <h5>Active Lease Documents</h5>{" "}
                     </TableCell>
+                    <TableCell width="180px">Address</TableCell>
                     <TableCell width="180px">Expiry Date</TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
@@ -239,6 +242,7 @@ function TenantDocuments(props) {
                               <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
+                          <TableCell>{ald.address}</TableCell>
                           <TableCell width="180px">{ald.expiry_date}</TableCell>
                           <TableCell width="180px">
                             {ald.created_date}
@@ -303,6 +307,7 @@ function TenantDocuments(props) {
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                     </TableRow>
                   )}
                   <TableRow>
@@ -310,6 +315,7 @@ function TenantDocuments(props) {
                       {" "}
                       <h5>Past Lease Documents</h5>{" "}
                     </TableCell>
+                    <TableCell width="180px">Address</TableCell>
                     <TableCell width="180px">Expiry Date</TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
@@ -329,6 +335,7 @@ function TenantDocuments(props) {
                             )}
                           </TableCell>
                           <TableCell width="180px">{pld.expiry_date}</TableCell>
+                          <TableCell width="180px">{pld.address}</TableCell>
                           <TableCell width="180px">
                             {pld.created_date}
                           </TableCell>
@@ -393,14 +400,16 @@ function TenantDocuments(props) {
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                     </TableRow>
                   )}
                   <TableRow>
                     <TableCell width="380px">
                       {" "}
                       <h5>Tenant Documents</h5>{" "}
-                    </TableCell>
-                    <TableCell width="180px">Expiry Date</TableCell>
+                    </TableCell>{" "}
+                    <TableCell width="180px"></TableCell>
+                    <TableCell width="180px"></TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
                     <TableCell width="180px">Created For</TableCell>
@@ -418,8 +427,9 @@ function TenantDocuments(props) {
                             ) : (
                               <p className="mx-3">Document {i + 1}</p>
                             )}
-                          </TableCell>
-                          <TableCell width="180px">{tud.expiry_date}</TableCell>
+                          </TableCell>{" "}
+                          <TableCell width="180px"></TableCell>
+                          <TableCell width="180px"></TableCell>
                           <TableCell width="180px">
                             {tud.created_date}
                           </TableCell>
