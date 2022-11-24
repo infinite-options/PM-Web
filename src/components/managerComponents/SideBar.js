@@ -47,16 +47,6 @@ function SideBar() {
             >
               Dashboard
             </NavLink>
-            {/* <NavLink
-                to="/manager-properties"
-                className="sidebarButtons"
-                activeClassName="sidebarButtonsActive"
-                style={({ isActive }) =>
-                  isActive ? sidebarButtonsActive : sidebarButtons
-                }
-              >
-                Properties
-              </NavLink> */}
             <NavLink
               to="/tenant-list"
               className="sidebarButtons"

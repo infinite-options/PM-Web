@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../Header";
 import File from "../../icons/File.svg";
@@ -19,6 +19,7 @@ import {
   subHeading,
   headings,
 } from "../../utils/styles";
+import ManagerFooter from "./ManagerFooter";
 
 function ManagerManagementContract(props) {
   const { userData, refresh } = React.useContext(AppContext);
@@ -34,6 +35,20 @@ function ManagerManagementContract(props) {
   const [files, setFiles] = React.useState([]);
   const [newFile, setNewFile] = React.useState(null);
   const [editingDoc, setEditingDoc] = React.useState(null);
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsive = {
+    showSidebar: width > 1023,
+  };
   const addFile = (e) => {
     const file = e.target.files[0];
     const newFile = {
@@ -175,16 +190,17 @@ function ManagerManagementContract(props) {
   console.log(property);
   return (
     <div className="flex-1">
-      <div>
-        <SideBar />
-      </div>
       <div
-        className="w-100"
+        hidden={!responsive.showSidebar}
         style={{
-          width: "calc(100vw - 13rem)",
-          position: "relative",
+          backgroundColor: "#229ebc",
+          width: "11rem",
+          minHeight: "100%",
         }}
       >
+        <SideBar />
+      </div>
+      <div className="w-100 mb-5">
         <Header
           title="Management Contract"
           leftText="< Back"
@@ -381,6 +397,9 @@ function ManagerManagementContract(props) {
             )}
           </div>
         </div>{" "}
+        <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <ManagerFooter />
+        </div>
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Header from "../Header";
 import OwnerFooter from "./OwnerFooter";
-import PropertyForm from "../PropertyForm";
+import OwnerPropertyForm from "./OwnerPropertyForm";
 import OwnerCreateExpense from "./OwnerCreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerDocs from "../ManagerDocs";
@@ -906,7 +906,7 @@ function OwnerPropertyView(props) {
             />
             <div className="w-100 mb-5">
               {editProperty ? (
-                <PropertyForm
+                <OwnerPropertyForm
                   property={property}
                   edit={editProperty}
                   setEdit={setEditProperty}
@@ -4568,7 +4568,8 @@ function OwnerPropertyView(props) {
                                     size="small"
                                     align="center"
                                   >
-                                    {request.assigned_business != null
+                                    {request.assigned_business !== null &&
+                                    request.assigned_business !== "null"
                                       ? request.assigned_business
                                       : "None"}
                                   </TableCell>
@@ -4578,7 +4579,8 @@ function OwnerPropertyView(props) {
                                     size="small"
                                     align="center"
                                   >
-                                    {request.scheduled_date != null
+                                    {request.scheduled_date !== null &&
+                                    request.scheduled_date !== "null"
                                       ? request.scheduled_date
                                       : "Not Scheduled"}
                                   </TableCell>
@@ -4731,6 +4733,97 @@ function OwnerPropertyView(props) {
                         </TableBody>
                       </Table>
                     </div>
+                  </Row>
+                  <Row className="m-3">
+                    <Col>
+                      <h3>Other Info</h3>
+                    </Col>
+                    <Col xs={2}></Col>
+                  </Row>
+                  <Row className="m-3">
+                    <Table
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                      responsive="md"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Utilities</TableCell>
+                          <TableCell>Electricity</TableCell>
+                          <TableCell>Trash</TableCell>
+                          <TableCell>Water</TableCell>
+                          <TableCell>Wifi </TableCell>
+                          <TableCell>Gas</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>Paid by</TableCell>
+                          <TableCell>
+                            {JSON.parse(property.utilities)["Electricity"]
+                              ? "Owner"
+                              : "Trash"}
+                          </TableCell>
+                          <TableCell>
+                            {JSON.parse(property.utilities)["Trash"]
+                              ? "Owner"
+                              : "Trash"}
+                          </TableCell>
+                          <TableCell>
+                            {JSON.parse(property.utilities)["Water"]
+                              ? "Owner"
+                              : "Trash"}
+                          </TableCell>
+                          <TableCell>
+                            {JSON.parse(property.utilities)["Wifi"]
+                              ? "Owner"
+                              : "Trash"}
+                          </TableCell>
+                          <TableCell>
+                            {JSON.parse(property.utilities)["Gas"]
+                              ? "Owner"
+                              : "Trash"}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Row>
+                  <Row className="m-3">
+                    <Table
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                      responsive="md"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Pets Allowed</TableCell>
+                          <TableCell>
+                            Deposit can be used for last month's rent
+                          </TableCell>
+                          <TableCell>
+                            Deposit can be used for last month's rent
+                          </TableCell>
+                          <TableCell>Available to Rent</TableCell>
+                          <TableCell>Featured</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            {property.pets_allowed == 0 ? "No" : "Yes"}
+                          </TableCell>
+                          <TableCell>
+                            {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                          </TableCell>
+                          <TableCell>
+                            {property.available_to_rent == 0 ? "No" : "Yes"}
+                          </TableCell>
+                          <TableCell>
+                            {property.featured ? "No" : "Yes"}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
                   </Row>
                   {Object.keys(property.managerInfo).length !== 0 ? (
                     <div>

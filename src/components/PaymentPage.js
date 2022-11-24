@@ -26,7 +26,7 @@ import {
   squareForm,
 } from "../utils/styles";
 import PayPal from "./PayPal";
-import ApplePay from "./ApplePay";
+// import ApplePay from "./ApplePay";
 
 function PaymentPage(props) {
   const navigate = useNavigate();
@@ -222,7 +222,11 @@ function PaymentPage(props) {
                 ambassadorCode={this.state.ambassadorCode_applied}
               />
           */}
-          <div style={{"margin": "0px 0px 100px 0px"}} className="mt-5" hidden={stripePayment}>
+          <div
+            style={{ margin: "0px 0px 100px 0px" }}
+            className="mt-5"
+            hidden={stripePayment}
+          >
             {/*<Form.Group>*/}
             {/*  <Form.Label>Amount</Form.Label>*/}
             {/*  {purchaseUIDs.length === 1 ? (*/}
@@ -262,26 +266,29 @@ function PaymentPage(props) {
               }}
             >
               <Col>
-                <Button className="mt-2 mb-2" variant="outline-primary"
-                    onClick={() => {
-                      //navigate("/tenant");
-                      toggleKeys();
-                      setStripePayment(true);
-                    }}
-                    style={bluePillButton}
+                <Button
+                  className="mt-2 mb-2"
+                  variant="outline-primary"
+                  onClick={() => {
+                    //navigate("/tenant");
+                    toggleKeys();
+                    setStripePayment(true);
+                  }}
+                  style={bluePillButton}
                 >
                   Pay with Stripe
                 </Button>
-                <PayPal pay_purchase_id={purchase_uid}
-                        amount={totalSum}
-                        payment_notes={message}
-                        payment_type={"PAYPAL"}
+                <PayPal
+                  pay_purchase_id={purchase_uid}
+                  amount={totalSum}
+                  payment_notes={message}
+                  payment_type={"PAYPAL"}
                 />
-                <ApplePay pay_purchase_id={purchase_uid}
+                {/* <ApplePay pay_purchase_id={purchase_uid}
                           amount={totalSum}
                           payment_notes={message}
                           payment_type={"APPLEPAY"}
-                />
+                /> */}
               </Col>
             </Row>
           </div>

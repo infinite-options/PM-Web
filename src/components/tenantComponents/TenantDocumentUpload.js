@@ -1,38 +1,37 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "./Header";
-import File from "../icons/File.svg";
-import ManagerFees from "./ManagerFees";
-import BusinessContact from "./BusinessContact";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
-import { put, post } from "../utils/api";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import File from "../../icons/File.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import { get, put, post } from "../../utils/api";
 import {
-  small,
-  hidden,
-  red,
   squareForm,
-  mediumBold,
   smallPillButton,
-} from "../utils/styles";
+  small,
+  mediumBold,
+} from "../../utils/styles";
 
-function TenantAgreement(props) {
-  const { back, property, agreement } = props;
+function TenantDocumentUpload(props) {
+  const context = useContext(AppContext);
+  const { userData, refresh } = context;
+  const { access_token, user } = userData;
+  const navigate = useNavigate();
 
-  const [tenantID, setTenantID] = React.useState("");
-  const [startDate, setStartDate] = React.useState("");
-  const [endDate, setEndDate] = React.useState("");
-  const [feeState, setFeeState] = React.useState([]);
-  const contactState = React.useState([]);
-  const [newFile, setNewFile] = React.useState(null);
-  const [editingDoc, setEditingDoc] = React.useState(null);
-  const [files, setFiles] = React.useState([]);
+  const [newFile, setNewFile] = useState(null);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [files, setFiles] = useState([]);
+
+  // ============================= <File addition/Updation>============================================================
   const addFile = (e) => {
     const file = e.target.files[0];
     const newFile = {
       name: file.name,
       description: "",
       file: file,
+      shared: false,
     };
     setNewFile(newFile);
   };
@@ -57,11 +56,19 @@ function TenantAgreement(props) {
     setEditingDoc(file);
     setNewFile({ ...file });
   };
-  const saveNewFile = (e) => {
+  const saveNewFile = async (e) => {
     // copied from addFile, change e.target.files to state.newFile
     const newFiles = [...files];
     newFiles.push(newFile);
     setFiles(newFiles);
+    const tenantProfile = {};
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      tenantProfile[key] = newFiles[i].file;
+      delete newFiles[i].file;
+    }
+    tenantProfile.documents = JSON.stringify(newFiles);
+    await put("/tenantProfileInfo", tenantProfile, access_token, files);
     setNewFile(null);
   };
   const deleteDocument = (i) => {
@@ -69,114 +76,48 @@ function TenantAgreement(props) {
     newFiles.splice(i, 1);
     setFiles(newFiles);
   };
-  const loadAgreement = () => {
-    setTenantID(agreement.tenant_id);
-    setStartDate(agreement.lease_start);
-    setEndDate(agreement.lease_end);
-    setFeeState(JSON.parse(agreement.rent_payments));
-    contactState[1](JSON.parse(agreement.assigned_contacts));
-    setFiles(JSON.parse(agreement.documents));
-  };
-  React.useEffect(() => {
-    if (agreement) {
-      loadAgreement();
-    }
-  }, [agreement]);
-  const save = async () => {
-    const newAgreement = {
-      rental_property_id: property.property_uid,
-      tenant_id: tenantID,
-      lease_start: startDate,
-      lease_end: endDate,
-      rent_payments: JSON.stringify(feeState),
-      assigned_contacts: JSON.stringify(contactState[0]),
+
+  // ===========================================<Fetch documents / profile info>=================
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const response = await get("/tenantProfileInfo", access_token);
+
+      if (response.msg === "Token has expired") {
+        refresh();
+        return;
+      }
+
+      if (user.role.indexOf("TENANT") === -1) {
+        console.log("no tenant profile");
+        props.onConfirm();
+      }
+      const documents = response.result[0].documents
+        ? JSON.parse(response.result[0].documents)
+        : [];
+      setFiles(documents);
     };
+    fetchProfile();
+  }, []);
+
+  const submitInfo = async () => {
+    const tenantProfile = {};
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
-      newAgreement[key] = files[i].file;
+      tenantProfile[key] = files[i].file;
       delete files[i].file;
     }
-    newAgreement.documents = JSON.stringify(files);
-    if (agreement) {
-      newAgreement.rental_uid = agreement.rental_uid;
-      console.log(newAgreement);
-      const response = await put(`/rentals`, newAgreement, null, files);
-    } else {
-      console.log(newAgreement);
-      const response = await post("/rentals", newAgreement, null, files);
-    }
-    back();
+    tenantProfile.documents = JSON.stringify(files);
+    await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    props.onConfirm();
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
-  const required =
-    errorMessage === "Please fill out all fields" ? (
-      <span style={red} className="ms-1">
-        *
-      </span>
-    ) : (
-      ""
-    );
+
+  // ======================================<Return function>=======================================
   return (
-    <div className="mb-5 pb-5">
-      <Header
-        title="Tenant Agreement"
-        leftText="< Back"
-        leftFn={back}
-        rightText="Save"
-        rightFn={save}
-      />
-      <Container>
-        <div className="mb-4">
-          <h5 style={mediumBold}>Tenant</h5>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Tenant ID {tenantID === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              value={tenantID}
-              placeholder="100-000001"
-              onChange={(e) => setTenantID(e.target.value)}
-            />
-          </Form.Group>
-        </div>
-        <div className="mb-4">
-          <h5 style={mediumBold}>Lease Dates</h5>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Start Date {startDate === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              End Date {endDate === "" ? required : ""}
-            </Form.Label>
-            <Form.Control
-              style={squareForm}
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </Form.Group>
-        </div>
-        <div className="mb-4">
-          <h5 style={mediumBold}>Rent Payments</h5>
-          <div className="mx-2">
-            <ManagerFees feeState={feeState} setFeeState={setFeeState} />
-          </div>
-        </div>
-        <div className="mb-4">
-          <h5 style={mediumBold}>Contact Details</h5>
-          <BusinessContact state={contactState} />
-        </div>
-        <div className="mb-4">
-          <h5 style={mediumBold}>Lease Documents</h5>
+    <div className="h-100 d-flex flex-column">
+      <Row className="m-3">
+        <h5>Upload documents</h5>
+        <div className="m-4">
+          {/* <h5 style={mediumBold}>Tenant Documents</h5> */}
           {files.map((file, i) => (
             <div key={i}>
               <div className="d-flex justify-content-between align-items-end">
@@ -273,9 +214,9 @@ function TenantAgreement(props) {
             </div>
           )}
         </div>
-      </Container>
+      </Row>
     </div>
   );
 }
 
-export default TenantAgreement;
+export default TenantDocumentUpload;

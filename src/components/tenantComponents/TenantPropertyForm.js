@@ -3,15 +3,13 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Switch } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import * as ReactBootStrap from "react-bootstrap";
-import ConfirmDialog2 from "./ConfirmDialog2";
-import ConfirmDialog from "../components/ConfirmDialog";
-import PropertyAppliances from "./PropertyAppliances";
-import PropertyUtilities from "./PropertyUtilities";
-import PropertyImages from "./PropertyImages";
-import Edit from "../icons/Edit.svg";
-import ArrowDown from "../icons/ArrowDown.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
-import AppContext from "../AppContext";
+import ConfirmDialog2 from "../ConfirmDialog2";
+import PropertyAppliances from "../PropertyAppliances";
+import PropertyUtilities from "../PropertyUtilities";
+import PropertyImages from "../PropertyImages";
+import Edit from "../../icons/Edit.svg";
+import ArrowDown from "../../icons/ArrowDown.svg";
+import AppContext from "../../AppContext";
 import {
   pillButton,
   squareForm,
@@ -19,10 +17,10 @@ import {
   red,
   small,
   mediumBold,
-} from "../utils/styles";
-import { post, put } from "../utils/api";
+} from "../../utils/styles";
+import { post, put } from "../../utils/api";
 
-function PropertyForm(props) {
+function TenantPropertyForm(props) {
   const navigate = useNavigate();
   const { userData } = useContext(AppContext);
   const { user } = userData;
@@ -531,31 +529,9 @@ function PropertyForm(props) {
     style: "currency",
     currency: "USD",
   });
-  const deleteProperty = async () => {
-    let pid = property.property_uid;
-    console.log(pid);
-    const response = await put(`/RemovePropertyOwner?property_uid=${pid}`);
-    setShowDialog2(false);
-    navigate("../owner");
-  };
-  const onCancel = () => {
-    setShowDialog2(false);
-  };
+
   return (
-    <div
-      className="d-flex flex-column w-100 mx-2 p-2 m-0"
-      style={{
-        background: "#ffffff 0% 0% no-repeat padding-box",
-        borderRadius: "10px",
-        opacity: 1,
-      }}
-    >
-      <ConfirmDialog
-        title={"Are you sure you want to remove this property?"}
-        isOpen={showDialog2}
-        onConfirm={deleteProperty}
-        onCancel={onCancel}
-      />
+    <div className="d-flex flex-column w-100 overflow-hidden p-2">
       <ConfirmDialog2
         title={"Can't edit here. Click on the edit icon to make any changes"}
         isOpen={showDialog}
@@ -889,48 +865,7 @@ function PropertyForm(props) {
           <p className="p-2">Yes</p>
         </Col>
       </Container>
-      <Container className="d-flex my-3 ps-4">
-        <Col className="p-2">
-          <h6>Remove the property </h6>
-        </Col>
-        <Col>
-          <img
-            src={DeleteIcon}
-            onClick={() => {
-              setShowDialog2(true);
-            }}
-          />
-        </Col>
-      </Container>
 
-      {edit ? (
-        <Container className="my-3">
-          {/* <h6>Available to Rent</h6>
-          <p> {property.available_to_rent == 1 ? "True" : "False"}</p> */}
-        </Container>
-      ) : (
-        <Container className="my-3">
-          <h6>Available to Rent</h6>
-          <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
-        </Container>
-      )}
-      {edit ? (
-        <Container
-          style={({ paddingLeft: "0px" }, mediumBold)}
-          className="my-3"
-        >
-          {/* <h6> Featured</h6>
-          <p> {property.featured}</p> */}
-        </Container>
-      ) : (
-        <Container
-          style={({ paddingLeft: "0px" }, mediumBold)}
-          className="my-3 "
-        >
-          <h6> Featured</h6>
-          <p> {property.featured}</p>
-        </Container>
-      )}
       {edit ? (
         <div className="my-3 ps-4">
           <PropertyImages state={imageState} />
@@ -980,4 +915,4 @@ function PropertyForm(props) {
   );
 }
 
-export default PropertyForm;
+export default TenantPropertyForm;

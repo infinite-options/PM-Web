@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col } from "react-bootstrap";
+import { Row, Form, Button } from "react-bootstrap";
 import {
   Table,
   TableRow,
@@ -12,9 +12,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
-import ManagerFooter from "./ManagerFooter";
+import TenantFooter from "./TenantFooter";
+import TenantDocumentUpload from "./TenantDocumentUpload";
 import OpenDoc from "../../icons/OpenDocBlack.svg";
-import { get } from "../../utils/api";
+import File from "../../icons/File.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import { get, put, post } from "../../utils/api";
+import {
+  squareForm,
+  smallPillButton,
+  small,
+  mediumBold,
+} from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -22,7 +32,7 @@ const useStyles = makeStyles({
     },
   },
 });
-function ManagerDocuments(props) {
+function TenantDocuments(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
@@ -30,9 +40,12 @@ function ManagerDocuments(props) {
   const [documents, setDocuments] = useState([]);
   const [activeLeaseDocuments, setActiveLeaseDocuments] = useState({});
   const [pastLeaseDocuments, setPastLeaseDocuments] = useState({});
-  const [activeManagerDocuments, setActiveManagerDocuments] = useState({});
-  const [pastManagerDocuments, setPastManagerDocuments] = useState({});
+  const [tenantUploadDocuments, setTenantUploadDocuments] = useState({});
 
+  const [newFile, setNewFile] = useState(null);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [addDoc, setAddDoc] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const [width, setWindowWidth] = useState(0);
@@ -49,29 +62,96 @@ function ManagerDocuments(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
+  // ============================= <File addition/Updation>============================================================
+  const addFile = (e) => {
+    const file = e.target.files[0];
+    const newFile = {
+      name: file.name,
+      description: "",
+      created_date: new Date().toLocaleDateString().split("T")[0],
+      file: file,
+      shared: false,
+    };
+    setNewFile(newFile);
+  };
+  console.log(newFile);
+  const updateNewFile = (field, value) => {
+    const newFileCopy = { ...newFile };
+    newFileCopy[field] = value;
+    setNewFile(newFileCopy);
+  };
+  const cancelEdit = () => {
+    setNewFile(null);
+    if (editingDoc !== null) {
+      const newFiles = [...files];
+      newFiles.push(editingDoc);
+      setFiles(newFiles);
+    }
+    setEditingDoc(null);
+  };
+  const editDocument = (i) => {
+    const newFiles = [...files];
+    const file = newFiles.splice(i, 1)[0];
+    setFiles(newFiles);
+    setEditingDoc(file);
+    setNewFile({ ...file });
+  };
+  const saveNewFile = async (e) => {
+    // copied from addFile, change e.target.files to state.newFile
+    const newFiles = [...files];
+    newFiles.push(newFile);
+    setFiles(newFiles);
+    const tenantProfile = {};
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      tenantProfile[key] = newFiles[i].file;
+      delete newFiles[i].file;
+    }
+    tenantProfile.documents = JSON.stringify(newFiles);
+    await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    setAddDoc(!addDoc);
+    setNewFile(null);
+  };
+  const deleteDocument = async (i) => {
+    console.log("in delete doc", i);
+    const newFiles = [...files];
+    console.log("in delete doc", newFiles);
+    newFiles.splice(i, 1);
+    console.log("in delete doc", newFiles);
+    setFiles(newFiles);
+    const tenantProfile = {};
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      tenantProfile[key] = newFiles[i].file;
+      delete newFiles[i].file;
+    }
+    tenantProfile.documents = JSON.stringify(newFiles);
+    await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    setAddDoc(!addDoc);
+  };
 
   const fetchProfile = async () => {
     if (access_token === null) {
       navigate("/");
       return;
     }
+    const responseProfile = await get("/tenantProfileInfo", access_token);
 
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+    if (responseProfile.msg === "Token has expired") {
+      refresh();
       return;
-    } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
-      management_buid = management_businesses[0].business_uid;
-    } else {
-      management_buid = management_businesses[0].business_uid;
     }
-    const response = await get(
-      `/managerDocuments?manager_id=${management_buid}`
-    );
+
+    if (user.role.indexOf("TENANT") === -1) {
+      console.log("no tenant profile");
+      props.onConfirm();
+    }
+    const docs = responseProfile.result[0].documents
+      ? JSON.parse(responseProfile.result[0].documents)
+      : [];
+    setFiles(docs);
+
+    const response = await get(`/tenantDocuments?tenant_id=${user.user_uid}`);
     setDocuments(response.result);
     console.log(response.result[0]);
 
@@ -96,20 +176,13 @@ function ManagerDocuments(props) {
       }, {});
     console.log(past_lease_docs);
     setPastLeaseDocuments(past_lease_docs);
-    var active_manager_docs = Object.keys(documents)
-      .filter((key) => key.includes("active_manager_docs"))
+    var tenant_uploaded_docs = Object.keys(documents)
+      .filter((key) => key.includes("tenant_uploaded_docs"))
       .reduce((cur, key) => {
         return Object.assign(cur, { [key]: documents[key] });
       }, {});
-    console.log(active_manager_docs);
-    setActiveManagerDocuments(active_manager_docs);
-    var past_manager_docs = Object.keys(documents)
-      .filter((key) => key.includes("past_manager_docs"))
-      .reduce((cur, key) => {
-        return Object.assign(cur, { [key]: documents[key] });
-      }, {});
-    console.log(past_manager_docs);
-    setPastManagerDocuments(past_manager_docs);
+    console.log(tenant_uploaded_docs);
+    setTenantUploadDocuments(tenant_uploaded_docs);
     setIsLoading(false);
   };
   useEffect(() => {
@@ -117,12 +190,11 @@ function ManagerDocuments(props) {
       navigate("/");
     }
     fetchProfile();
-  }, [access_token]);
+  }, [access_token, addDoc]);
   console.log(documents);
-  console.log(activeLeaseDocuments.length);
 
   return (
-    <div className="w-100 overflow-hidden">
+    <div className="w-1oo overflow-hidden">
       <div className="flex-1">
         <div
           hidden={!responsiveSidebar.showSidebar}
@@ -136,6 +208,7 @@ function ManagerDocuments(props) {
         </div>
         <div className="w-100 mb-5">
           <Header title="Documents" />
+
           <Row className="m-3" style={{ overflow: "scroll" }}>
             {!isLoading ? (
               <Table
@@ -150,43 +223,14 @@ function ManagerDocuments(props) {
                       {" "}
                       <h5>Active Lease Documents</h5>{" "}
                     </TableCell>
+                    <TableCell width="180px">Address</TableCell>
                     <TableCell width="180px">Expiry Date</TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
                     <TableCell width="180px">Created For</TableCell>
-                    <TableCell width="180px">
-                      {/* <img
-                      src={SortDown}
-                      hidden={expandActiveLeaseDocuments}
-                      onClick={() => {
-                        setExpandActiveLeaseDocuments(
-                          !expandActiveLeaseDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />
-                    <img
-                      src={SortLeft}
-                      hidden={!expandActiveLeaseDocuments}
-                      onClick={() => {
-                        setExpandActiveLeaseDocuments(
-                          !expandActiveLeaseDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    /> */}
-                    </TableCell>
+                    <TableCell width="180px"></TableCell>
                     <TableCell width="180px"></TableCell>
                   </TableRow>
-
                   {Object.values(activeLeaseDocuments)[0].length > 0 ? (
                     Object.values(activeLeaseDocuments)[0].map((ald, i) => {
                       return (
@@ -198,6 +242,7 @@ function ManagerDocuments(props) {
                               <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
+                          <TableCell>{ald.address}</TableCell>
                           <TableCell width="180px">{ald.expiry_date}</TableCell>
                           <TableCell width="180px">
                             {ald.created_date}
@@ -262,91 +307,6 @@ function ManagerDocuments(props) {
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
-                    </TableRow>
-                  )}
-                  <TableRow>
-                    <TableCell width="380px">
-                      <h5>Active Manager Documents </h5>
-                    </TableCell>
-                    <TableCell width="180px">Expiry Date</TableCell>
-                    <TableCell width="180px">Created Date</TableCell>
-                    <TableCell width="180px">Created By</TableCell>
-                    <TableCell width="180px">Created For</TableCell>
-                    <TableCell width="180px">
-                      {/* <img
-                      src={SortDown}
-                      hidden={expandActiveManagerDocuments}
-                      onClick={() => {
-                        setExpandActiveManagerDocuments(
-                          !expandActiveManagerDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />
-                    <img
-                      src={SortLeft}
-                      hidden={!expandActiveManagerDocuments}
-                      onClick={() => {
-                        setExpandActiveManagerDocuments(
-                          !expandActiveManagerDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    /> */}
-                    </TableCell>
-                    <TableCell width="180px"></TableCell>
-                  </TableRow>
-                  {Object.values(activeManagerDocuments)[0].length > 0 ? (
-                    Object.values(activeManagerDocuments)[0].map((amd, i) => {
-                      return (
-                        <TableRow>
-                          <TableCell width="380px">
-                            {amd.description != "" ? (
-                              <p className="mx-3">{amd.description}</p>
-                            ) : (
-                              <p className="mx-3">Document {i + 1}</p>
-                            )}
-                          </TableCell>
-                          <TableCell width="180px">{amd.expiry_date}</TableCell>
-                          <TableCell width="180px">
-                            {amd.created_date}
-                          </TableCell>
-                          <TableCell width="180px">{amd.created_by}</TableCell>
-                          <TableCell width="180px">{amd.created_for}</TableCell>
-                          <TableCell width="180px" xs={1}>
-                            <a href={amd.link} target="_blank">
-                              <img
-                                src={OpenDoc}
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  float: "right",
-                                }}
-                              />
-                            </a>
-                          </TableCell>
-                          <TableCell width="180px"></TableCell>
-                        </TableRow>
-                      );
-                    })
-                  ) : (
-                    <TableRow>
-                      <TableCell width="180px">
-                        <p className="mx-3">No documents</p>
-                      </TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                     </TableRow>
                   )}
@@ -355,36 +315,12 @@ function ManagerDocuments(props) {
                       {" "}
                       <h5>Past Lease Documents</h5>{" "}
                     </TableCell>
+                    <TableCell width="180px">Address</TableCell>
                     <TableCell width="180px">Expiry Date</TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
                     <TableCell width="180px">Created For</TableCell>
-                    <TableCell width="180px">
-                      {/* <img
-                      src={SortDown}
-                      hidden={expandPastLeaseDocuments}
-                      onClick={() => {
-                        setExpandPastLeaseDocuments(!expandPastLeaseDocuments);
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />
-                    <img
-                      src={SortLeft}
-                      hidden={!expandPastLeaseDocuments}
-                      onClick={() => {
-                        setExpandPastLeaseDocuments(!expandPastLeaseDocuments);
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />{" "} */}
-                    </TableCell>
+                    <TableCell width="180px"></TableCell>
                     <TableCell width="180px"></TableCell>
                   </TableRow>
                   {Object.values(pastLeaseDocuments)[0].length > 0 ? (
@@ -399,6 +335,7 @@ function ManagerDocuments(props) {
                             )}
                           </TableCell>
                           <TableCell width="180px">{pld.expiry_date}</TableCell>
+                          <TableCell width="180px">{pld.address}</TableCell>
                           <TableCell width="180px">
                             {pld.created_date}
                           </TableCell>
@@ -463,68 +400,105 @@ function ManagerDocuments(props) {
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                     </TableRow>
                   )}
                   <TableRow>
                     <TableCell width="380px">
-                      <h5>Past Manager Documents</h5>{" "}
-                    </TableCell>
-                    <TableCell width="180px">Expiry Date</TableCell>
+                      {" "}
+                      <h5>Tenant Documents</h5>{" "}
+                    </TableCell>{" "}
+                    <TableCell width="180px"></TableCell>
+                    <TableCell width="180px"></TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
                     <TableCell width="180px">Created For</TableCell>
-                    <TableCell width="180px">
-                      {/* <img
-                      src={SortDown}
-                      hidden={expandPastManagerDocuments}
-                      onClick={() => {
-                        setExpandPastManagerDocuments(
-                          !expandPastManagerDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />
-                    <img
-                      src={SortLeft}
-                      hidden={!expandPastManagerDocuments}
-                      onClick={() => {
-                        setExpandPastManagerDocuments(
-                          !expandPastManagerDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    /> */}
-                    </TableCell>
+                    <TableCell width="180px"></TableCell>
                     <TableCell width="180px"></TableCell>
                   </TableRow>
-
-                  {Object.values(pastManagerDocuments)[0].length > 0 ? (
-                    Object.values(pastManagerDocuments)[0].map((pmd, i) => {
+                  {console.log(tenantUploadDocuments)}
+                  {Object.values(tenantUploadDocuments)[0].length > 0 ? (
+                    Object.values(tenantUploadDocuments)[0].map((tud, i) => {
                       return (
                         <TableRow>
                           <TableCell width="380px">
-                            {pmd.description != "" ? (
-                              <p className="mx-3">{pmd.description}</p>
+                            {tud.description != "" ? (
+                              <p className="mx-3">{tud.description}</p>
                             ) : (
                               <p className="mx-3">Document {i + 1}</p>
                             )}
-                          </TableCell>
-                          <TableCell width="180px">{pmd.expiry_date}</TableCell>
+                          </TableCell>{" "}
+                          <TableCell width="180px"></TableCell>
+                          <TableCell width="180px"></TableCell>
                           <TableCell width="180px">
-                            {pmd.created_date}
+                            {tud.created_date}
                           </TableCell>
-                          <TableCell width="180px">{pmd.created_by}</TableCell>
-                          <TableCell width="180px">{pmd.created_for}</TableCell>
                           <TableCell width="180px">
-                            <a href={pmd.link} target="_blank">
+                            {Object.values(tud.created_by.first_name).includes(
+                              ","
+                            ) &&
+                            Object.values(tud.created_by.last_name).includes(
+                              ","
+                            ) ? (
+                              Object.values(
+                                tud.created_by.first_name.split(",")
+                              ).map((name, index) => {
+                                return (
+                                  <p>
+                                    {
+                                      Object.values(
+                                        tud.created_by.first_name.split(",")
+                                      )[index]
+                                    }{" "}
+                                    {
+                                      Object.values(
+                                        tud.created_by.last_name.split(",")
+                                      )[index]
+                                    }
+                                  </p>
+                                );
+                              })
+                            ) : (
+                              <p>
+                                {Object.values(tud.created_by.first_name)}{" "}
+                                {Object.values(tud.created_by.last_name)}
+                              </p>
+                            )}
+                          </TableCell>
+                          <TableCell width="180px">
+                            {Object.values(tud.created_for.first_name).includes(
+                              ","
+                            ) &&
+                            Object.values(tud.created_for.last_name).includes(
+                              ","
+                            ) ? (
+                              Object.values(
+                                tud.created_for.first_name.split(",")
+                              ).map((name, index) => {
+                                return (
+                                  <p>
+                                    {
+                                      Object.values(
+                                        tud.created_for.first_name.split(",")
+                                      )[index]
+                                    }{" "}
+                                    {
+                                      Object.values(
+                                        tud.created_for.last_name.split(",")
+                                      )[index]
+                                    }
+                                  </p>
+                                );
+                              })
+                            ) : (
+                              <p>
+                                {Object.values(tud.created_for.first_name)}{" "}
+                                {Object.values(tud.created_for.last_name)}
+                              </p>
+                            )}
+                          </TableCell>
+                          <TableCell width="180px">
+                            <a href={tud.link} target="_blank">
                               <img
                                 src={OpenDoc}
                                 style={{
@@ -534,6 +508,18 @@ function ManagerDocuments(props) {
                                 }}
                               />
                             </a>
+                            <img
+                              src={EditIcon}
+                              alt="Edit"
+                              className="px-1 mx-2"
+                              onClick={() => editDocument(i)}
+                            />
+                            <img
+                              src={DeleteIcon}
+                              alt="Delete"
+                              className="px-1 mx-2"
+                              onClick={() => deleteDocument(i)}
+                            />
                           </TableCell>
                           <TableCell width="180px"></TableCell>
                         </TableRow>
@@ -541,6 +527,7 @@ function ManagerDocuments(props) {
                     })
                   ) : (
                     <TableRow>
+                      {" "}
                       <TableCell width="180px">
                         <p className="mx-3">No documents</p>
                       </TableCell>
@@ -558,8 +545,77 @@ function ManagerDocuments(props) {
               <Row></Row>
             )}
           </Row>
+          <Row className="m-3">
+            {newFile !== null ? (
+              <div>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Document Name
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    value={newFile.name}
+                    placeholder="Name"
+                    onChange={(e) => updateNewFile("name", e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Description
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    value={newFile.description}
+                    placeholder="Description"
+                    onChange={(e) =>
+                      updateNewFile("description", e.target.value)
+                    }
+                  />
+                </Form.Group>
+                <div className="text-center my-3">
+                  <Button
+                    variant="outline-primary"
+                    style={smallPillButton}
+                    as="p"
+                    onClick={cancelEdit}
+                    className="mx-2"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    style={smallPillButton}
+                    as="p"
+                    onClick={saveNewFile}
+                    className="mx-2"
+                  >
+                    Save Document
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <input
+                  id="file"
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={addFile}
+                  className="d-none"
+                />
+                <label htmlFor="file">
+                  <Button
+                    variant="outline-primary"
+                    style={smallPillButton}
+                    as="p"
+                  >
+                    Add Document
+                  </Button>
+                </label>
+              </div>
+            )}
+          </Row>
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-            <ManagerFooter />
+            <TenantFooter />
           </div>
         </div>{" "}
       </div>
@@ -567,4 +623,4 @@ function ManagerDocuments(props) {
   );
 }
 
-export default ManagerDocuments;
+export default TenantDocuments;

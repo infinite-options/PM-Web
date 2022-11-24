@@ -1,9 +1,33 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Scroll from "react-scroll";
-const ScrollLink = Scroll.ScrollLink;
+import { NavLink } from "react-router-dom";
+import { get } from "../../utils/api";
+import AppContext from "../../AppContext";
+import "./sidebar.css";
+
 export default function SideBar(props) {
+  let sidebarButtonsActive = {
+    paddingRight: "20px",
+    maxHeight: "4rem",
+    minHeight: "3rem",
+    color: "#c93667",
+    textDecoration: "none",
+    textTransform: "uppercase",
+    fontFamily: "Avenir-Light",
+    cursor: "pointer",
+    fontWeight: "700",
+  };
+  let sidebarButtons = {
+    paddingRight: "20px",
+    maxHeight: "4rem",
+    minHeight: "3rem",
+    color: "#000000",
+    textDecoration: "none",
+    textTransform: "uppercase",
+    fontFamily: "Avenir-Light",
+    cursor: "pointer",
+  };
   const navigate = useNavigate();
   const goToSearchPM = () => {
     navigate("/tenantAvailableProperties");
@@ -43,44 +67,76 @@ export default function SideBar(props) {
     navigate("/tenantProfile2");
   }
   return (
-    <div style={{ width: "13rem" }}>
-      <Row>
-        <a className="sidenav-elements" onClick={goToDash}>
-          DASHBOARD
-        </a>
-        <a className="sidenav-elements" onClick={scrollProfile}>
-          PROFILE
-        </a>
-        <a className="sidenav-elements" href={scrollExpenses}>
-          EXPENSES
-        </a>
-        {/* <div className="sidenav-elements">
-              <ScrollLink 
-                to="scroll-to-maintenance" 
-                spy={true} 
-                smooth={true} 
-                duration={500} 
-                className='some-class' 
-                activeClass='some-active-class'
-              >
-                  <a>Maintenance</a>
-              </ScrollLink>
-            </div> */}
-        <a className="sidenav-elements" onClick={scrollM}>
-          MAINTENANCE
-        </a>
-        <a className="sidenav-elements" onClick={goToDocuments}>
-          DOCUMENTS
-        </a>
-        <a className="sidenav-elements" onClick={goToSearchPM}>
-          SEARCH PROPERTIES
-        </a>
-        <a className="sidenav-elements" onClick={scrollLease}>
-          LEASE INFO
-        </a>
-        <a className="sidenav-elements" onClick={actualProfile}>
-          MORE PROFILE
-        </a>
+    <div style={{ width: "11rem", height: "100%" }}>
+      <Row style={{ width: "11rem", height: "100%" }}>
+        <nav class="sidebar">
+          <div className="sidebarLinks">
+            <NavLink
+              to="/tenant"
+              className="sidebarButtons"
+              activeClassName="sidebarButtonsActive"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="/tenant-payments"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Payments
+            </NavLink>
+            <NavLink
+              to="/tenant-repairs"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Maintenance
+            </NavLink>
+            <NavLink
+              to="/tenantAvailableProperties"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Search Properties
+            </NavLink>
+            <NavLink
+              to="/tenant-announcements"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Announcements
+            </NavLink>
+            <NavLink
+              to="/tenant-documents"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Documents
+            </NavLink>
+            <NavLink
+              to="/tenantProfile"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Profile
+            </NavLink>
+          </div>
+        </nav>
       </Row>
     </div>
   );

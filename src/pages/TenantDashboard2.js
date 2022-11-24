@@ -3,7 +3,7 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as ReactBootStrap from "react-bootstrap";
-import TopBar from "../components/tenantComponents/TopBar";
+// import TopBar from "../components/tenantComponents/TopBar";
 import SideBar from "../components/tenantComponents/SideBar";
 import TenantCard from "../components/tenantComponents/TenantCard";
 import { get } from "../utils/api";

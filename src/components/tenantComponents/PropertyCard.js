@@ -14,7 +14,7 @@ export default function PropertyCard(props) {
 
   const goToApplyToProperty = () => {
     // navigate("/applyToProperty");
-    navigate(`/tenantPropertyView/${props.property_uid}`);
+    navigate(`/propertyApplicationView/${props.property_uid}`);
   };
   const goToPropertyInfo = () => {
     navigate("/propertyInfo", {

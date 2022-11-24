@@ -150,7 +150,7 @@ const welcome = {
   textAlign: "center",
   margin: "30px",
   padding: "50px",
-  backgroundColor: "teal",
+  backgroundColor: "#c4c4c4",
 };
 const upcoming = {
   background: " #007AFF 0% 0% no-repeat padding-box",

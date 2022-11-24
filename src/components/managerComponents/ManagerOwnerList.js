@@ -205,7 +205,7 @@ function ManagerOwnerList(props) {
   };
 
   return (
-    <div className="pb-5 mb-5 h-100">
+    <div className="w-100 overflow-hidden">
       <div className="flex-1">
         <div
           hidden={!responsive.showSidebar}
@@ -277,7 +277,7 @@ function ManagerOwnerList(props) {
                               <Row
                                 onClick={() => {
                                   navigate(
-                                    `/manager-properties/${property.property_uid}`,
+                                    `/managerPropertyDetails/${property.property_uid}`,
                                     {
                                       state: {
                                         property: property,

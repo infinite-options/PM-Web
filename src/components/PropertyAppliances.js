@@ -271,7 +271,7 @@ function PropertyAppliances(props) {
           </h6>
         </Col>
         <Col>
-          {newAppliance === null ? (
+          {newAppliance === null && edit ? (
             <img
               src={AddIcon}
               onClick={() => setNewAppliance("")}

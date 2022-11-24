@@ -6,18 +6,20 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProfileInfo from "./pages/ProfileInfo";
 import TenantHome from "./pages/TenantHome";
-import TenantAvailableProperties from "./pages/TenantAvailableProperties";
-import ApplyToProperty from "./pages/ApplyToProperty";
+import TenantAvailableProperties from "./components/tenantComponents/TenantAvailableProperties";
+import ApplyToProperty from "./components/tenantComponents/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
 import CreateAnnouncement from "./components/CreateAnnouncement";
-import Emergency from "./components/TenantEmergency";
 import RepairStatus from "./components/RepairStatus";
-import TenantDocuments from "./components/TenantDocuments";
+import TenantDocuments from "./components/tenantComponents/TenantDocuments";
 import RentPayment from "./components/RentPayment";
 import PaymentPage from "./components/PaymentPage";
 import OwnerRepairDetails from "./components/ownerComponents/OwnerRepairDetails";
+import TenantRepairDetails from "./components/tenantComponents/TenantRepairDetails";
+
+import TenantPropertyView from "./components/tenantComponents/TenantPropertyView";
 import OwnerPaymentPage from "./components/ownerComponents/OwnerPaymentPage";
 import PaymentHistory from "./components/PaymentHistory";
 import ScheduleRepairs from "./components/ScheduleRepairs";
@@ -35,16 +37,14 @@ import QuotesRejectedPM from "./components/QuotesRejectedPM";
 import DetailQuoteRequest from "./components/DetailQuoteRequest";
 import QuotesAccepted from "./components/QuotesAccepted";
 import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
-import TenantDocumentUpload from "./pages/TenantDocumentUpload";
-import ReviewTenantProfile from "./pages/ReviewTenantprofile";
-import TenantPropertyView from "./pages/TenantPropertyView";
-import ReviewPropertyLease from "./pages/reviewPropertyLease";
+import TenantDocumentUpload from "./components/tenantComponents/TenantDocumentUpload";
+import ReviewTenantProfile from "./components/tenantComponents/ReviewTenantprofile";
+import PropertyApplicationView from "./components/tenantComponents/PropertyApplicationView";
+import ReviewPropertyLease from "./components/tenantComponents/reviewPropertyLease";
 import OwnerContacts from "./components/ownerComponents/OwnerContacts";
-import ManagerProperties from "./pages/ManagerProperties";
+
 import ManagerPropertyView from "./components/managerComponents/ManagerPropertyView";
-import ManagerRepairsList from "./components/managerComponents/ManagerRepairsList";
 import ManagerResidentAnnouncements from "./components/managerComponents/ManagerResidentAnnoucements";
-import ManagerEmergency from "./pages/ManagerEmergency";
 import ManagerRepairDetail from "./components/managerComponents/ManagerRepairDetail";
 import SignupExisting from "./pages/SignUpExisiting";
 import ManagerRepairsOverview from "./components/managerComponents/ManagerRepairsOverview";
@@ -53,20 +53,16 @@ import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./components/managerComponents/ManagerUtilities";
 import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
-import PropertyView from "./components/PropertyView";
 import TenantDuePayments from "./components/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 import OwnerPaymentHistory from "./components/ownerComponents/OwnerPaymentHistory";
 import ManagerOwnerList from "./components/managerComponents/ManagerOwnerList";
 import ManagerTenantList from "./components/managerComponents/ManagerTenantList";
-import ManagerApplianceList from "./components/ManagerApplianceList";
 import ManagerRepairInfo from "./components/managerComponents/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/managerComponents/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/managerComponents/ManagerPaymentHistory";
-// import TenantDashboard from "./pages/TenantDashboard2"; // updated tenant dashboard
-import TenantDashboard from "./pages/TenantFirstPageView"; // new tenant first page view
-import ActualTenantDashboard from "./pages/TenantDashboard2"; // new tenant first page view
+import TenantDashboard from "./pages/TenantDashboard"; // new tenant first page view
 import OwnerDashboard from "./pages/OwnerDashboard"; //updated owner dashboard
 import ManagerDashboard from "./pages/ManagerDashboard"; //updated owner dashboard
 import Homepage from "./pages/Homepage";
@@ -77,19 +73,20 @@ import MaintenencePage from "./pages/MaintenencePage";
 import ManagerLanding from "./pages/ManagerLanding";
 import ZellePayment from "./components/ZellePaymentPage";
 import OwnerRepairList from "./components/ownerComponents/OwnerRepairList";
+
+import TenantRepairList from "./components/tenantComponents/TenantRepairList";
 import OwnerRepairRequest from "./components/ownerComponents/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
 import ModifyExisiting from "./pages/ModifyExisiting";
 import PropertyInfo from "./pages/PropertyInfo";
-import AppliedDashboard from "./pages/AppliedDashboard";
 import ManagerTenantListDetail from "./components/managerComponents/ManagerTenantListDetail";
 import ManagerDocuments from "./components/managerComponents/ManagerDocuments";
 import ManagerProfile from "./components/managerComponents/ManagerProfile";
 import OwnerDocuments from "./components/ownerComponents/OwnerDocuments";
 import OwnerProfile from "./components/ownerComponents/OwnerProfile";
-import TenantProfile from "./pages/TenantProfile";
-import TenantProfile2 from "./pages/TenantProfile2";
+import TenantProfile from "./components/tenantComponents/TenantProfile";
 import OwnerPropertyView from "./components/ownerComponents/OwnerPropertyView";
+import TenantRepairRequest from "./components/tenantComponents/TenantRepairRequest";
 
 function App() {
   const [userData, setUserData] = React.useState({
@@ -164,8 +161,6 @@ function App() {
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
-            <Route path="tenant_dash" element={<ActualTenantDashboard />} />\
-            <Route path="applied_dashboard" element={<AppliedDashboard />} />
             <Route path="tenant_original" element={<TenantHome />} />
             {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             {/* <Route path="tenant_doc_upload" element={<TenantDocumentUpload />} /> */}
@@ -186,8 +181,8 @@ function App() {
             />
             <Route path="profile-info" element={<ProfileInfo />} />
             <Route
-              path="tenantPropertyView/:property_uid"
-              element={<TenantPropertyView />}
+              path="propertyApplicationView/:property_uid"
+              element={<PropertyApplicationView />}
             />
             <Route
               path="reviewPropertyLease/:property_uid"
@@ -211,7 +206,6 @@ function App() {
               path="detailAnnouncements"
               element={<DetailAnnouncements />}
             />
-            <Route path="emergency" element={<Emergency />} />
             <Route
               path="/:property_uid/repairStatus"
               element={<RepairStatus />}
@@ -222,7 +216,7 @@ function App() {
               path="tenantPastPaidPayments"
               element={<TenantPastPaidPayments />}
             />
-            <Route path="tenantDocuments" element={<TenantDocuments />} />
+            <Route path="tenant-documents" element={<TenantDocuments />} />
             <Route
               path="/rentPayment/:purchase_uid"
               element={<RentPayment />}
@@ -248,7 +242,6 @@ function App() {
               element={<OwnerPaymentHistory />}
             />
             <Route path="tenantProfile" element={<TenantProfile />} />
-            <Route path="tenantProfile2" element={<TenantProfile2 />} />
             <Route
               path="managerPaymentHistory"
               element={<ManagerPaymentHistory />}
@@ -263,7 +256,6 @@ function App() {
               path="/:property_uid/:maintenance_request_uid/detailRepairStatus"
               element={<DetailRepairStatus />}
             />
-            <Route path="manager-properties" element={<ManagerProperties />} />
             <Route path="/owner-list" element={<ManagerOwnerList />} />
             <Route path="/tenant-list" element={<ManagerTenantList />} />
             <Route path="/propertyInfo" element={<PropertyInfo />} />
@@ -272,21 +264,16 @@ function App() {
               element={<ManagerTenantListDetail />}
             />
             <Route
-              path="/appliances/:mp_id"
-              element={<ManagerApplianceList />}
-            />
-            <Route
-              path="manager-properties/:mp_id"
+              path="managerPropertyDetails/:mp_id"
               element={<ManagerPropertyView />}
             />
-            <Route path="owner-properties/:mp_id" element={<PropertyView />} />
+            <Route
+              path="tenantPropertyDetails/:mp_id"
+              element={<TenantPropertyView />}
+            />
             <Route
               path="propertyDetails/:mp_id"
               element={<OwnerPropertyView />}
-            />
-            <Route
-              path="manager-properties/:mp_id/repairs"
-              element={<ManagerRepairsList />}
             />
             <Route
               path="manager-properties/:mp_id/repairs/:rr_id"
@@ -295,10 +282,6 @@ function App() {
             <Route
               path="manager-properties/:mp_id/resident-announcements"
               element={<ManagerResidentAnnouncements />}
-            />
-            <Route
-              path="manager-properties/:mp_id/emergency"
-              element={<ManagerEmergency />}
             />
             <Route
               path="manager-repairs"
@@ -311,6 +294,10 @@ function App() {
             <Route
               path="owner-repairs/:rr_id"
               element={<OwnerRepairDetails />}
+            />
+            <Route
+              path="tenant-repairs/:rr_id"
+              element={<TenantRepairDetails />}
             />
             <Route path="/properties" element={<NotManagedProperties />} />
             <Route path="quotes-sent" element={<MaintenanceQuotesSent />} />
@@ -332,6 +319,11 @@ function App() {
             <Route
               path="owner-repairRequest"
               element={<OwnerRepairRequest />}
+            />
+            <Route path="tenant-repairs" element={<TenantRepairList />} />
+            <Route
+              path="tenant-repairRequest"
+              element={<TenantRepairRequest />}
             />
             <Route path="pm-list" element={<PropertyManagersList />} />
           </Route>

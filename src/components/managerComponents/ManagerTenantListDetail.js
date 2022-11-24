@@ -441,9 +441,9 @@ function ManagerTenantListDetail(props) {
                   <h6>Lease Start Date</h6>
                   <h6>Lease End Date</h6>
                   <h6>Rent Due</h6>
-                  <h6>Late After</h6>
-                  <h6>Late Fee</h6>
-                  <h6>Per Day Late Fee</h6>
+                  <h6>Late Fees After (days)</h6>
+                  <h6>Late Fee (one-time)</h6>
+                  <h6>Late Fee (per day)</h6>
                 </Col>
                 <Col className="d-flex flex-column ">
                   <h6

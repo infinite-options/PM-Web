@@ -9,7 +9,7 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import RepairImages from "../RepairImages";
 import SideBar from "./SideBar";
-import OwnerFooter from "./OwnerFooter";
+import TenantFooter from "./TenantFooter";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import RepairImg from "../../icons/RepairImg.svg";
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: "1",
   },
 }));
-function OwnerRepairDetails(props) {
+function TenantRepairDetails(props) {
   const classes = useStyles();
   const responsive = {
     superLargeDesktop: {
@@ -790,7 +790,7 @@ function OwnerRepairDetails(props) {
               </div>
             )}
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
-            <OwnerFooter />
+            <TenantFooter />
           </div>
         </div>
       </div>
@@ -798,4 +798,4 @@ function OwnerRepairDetails(props) {
   );
 }
 
-export default OwnerRepairDetails;
+export default TenantRepairDetails;
