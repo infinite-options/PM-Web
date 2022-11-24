@@ -66,9 +66,6 @@ function ManagerPropertyView(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [property, setProperty] = useState({ images: "[]" });
   const [hideEdit, setHideEdit] = useState(true);
-  const [recentMaintenanceRequests, setRecentMaintenanceRequests] = useState(
-    []
-  );
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -340,7 +337,6 @@ function ManagerPropertyView(props) {
       } else recent_mr.push(request);
     });
     console.log(recent_mr, past_mr);
-    setRecentMaintenanceRequests(recent_mr);
   };
 
   useState(() => {
@@ -4330,7 +4326,8 @@ function ManagerPropertyView(props) {
                                 size="small"
                                 align="center"
                               >
-                                {request.assigned_business != null
+                                {request.assigned_business !== null &&
+                                request.assigned_business !== "null"
                                   ? request.assigned_business
                                   : "None"}
                               </TableCell>
@@ -4340,7 +4337,8 @@ function ManagerPropertyView(props) {
                                 size="small"
                                 align="center"
                               >
-                                {request.scheduled_date != null
+                                {request.scheduled_date !== null &&
+                                request.scheduled_date !== "null"
                                   ? request.scheduled_date
                                   : "Not Scheduled"}
                               </TableCell>

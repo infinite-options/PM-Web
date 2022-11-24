@@ -741,7 +741,8 @@ function TenantPropertyView(props) {
                               size="small"
                               align="center"
                             >
-                              {request.assigned_business != null
+                              {request.assigned_business != null ||
+                              request.assigned_business != "null"
                                 ? request.assigned_business
                                 : "None"}
                             </TableCell>
@@ -751,7 +752,8 @@ function TenantPropertyView(props) {
                               size="small"
                               align="center"
                             >
-                              {request.scheduled_date != null
+                              {request.scheduled_date != null ||
+                              request.scheduled_date != "null"
                                 ? request.scheduled_date
                                 : "Not Scheduled"}
                             </TableCell>
