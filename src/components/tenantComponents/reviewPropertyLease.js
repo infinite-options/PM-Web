@@ -2,6 +2,17 @@ import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { Row, Col, Button, Container, Image } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+  Grid,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
@@ -10,28 +21,27 @@ import PropertyApplicationView from "./PropertyApplicationView";
 import No_Image from "../../icons/No_Image_Available.jpeg";
 import { bluePillButton, greenPill, redPillButton } from "../../utils/styles";
 import { get, put } from "../../utils/api";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function ReviewPropertyLease(props) {
-  console.log(props);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const classes = useStyles();
   const context = useContext(AppContext);
   const { userData } = context;
   const { access_token, user } = userData;
-
-  const property_uid = props.property_uid;
-  console.log("property uid from review property lease: " + property_uid);
-
-  const navigate = useNavigate();
-  const location = useLocation();
   const [rentals, setRentals] = useState([]);
   const [rentPayments, setRentPayments] = useState([]);
   const [lease, setLease] = useState([]);
-  // const application_uid = location.state.application_uid;
-  const application_uid = props.application_uid;
-  // const application_status_1 = location.state.application_status_1;
-  const application_status_1 = props.application_status_1;
-
-  console.log(application_status_1);
-  const { setTab } = props;
+  const property_uid = location.state.property_uid;
+  const application_uid = location.state.application_uid;
+  const application_status_1 = location.state.application_status_1;
   const [properties, setProperties] = useState([]);
   const [images, setImages] = useState({});
   const [showLease, setShowLease] = useState("True");
@@ -39,11 +49,9 @@ function ReviewPropertyLease(props) {
     "No message has been set by Tenant."
   );
   const [endEarlyDate, setEndEarlyDate] = useState("");
-  // const pmMessage = location.state.message;
-  const pmMessage = props.message;
+  const pmMessage = location.state.message;
   const [disableEndLease, setDisable] = useState(false);
   const [within60, setWithin60] = useState(false);
-  // let within60 = false;
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -132,15 +140,21 @@ function ReviewPropertyLease(props) {
     };
     fetchProperties();
   }, [property_uid]);
-
+  function ordinal_suffix_of(i) {
+    var j = i % 10,
+      k = i % 100;
+    if (j == 1 && k != 11) {
+      return i + "st";
+    }
+    if (j == 2 && k != 12) {
+      return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+      return i + "rd";
+    }
+    return i + "th";
+  }
   const approveLease = async () => {
-    // const updatedRental = {
-    //     // rental_uid: filteredRentals[0].rental_uid,
-    //     rental_uid: rentals[0].rental_uid,
-    //     rental_status: 'ACTIVE'
-    // }
-    // const response1 = await put('/rentals', updatedRental , null, []);
-
     const updatedApplication = {
       application_uid: application_uid,
       application_status: "RENTED",
@@ -268,7 +282,7 @@ function ReviewPropertyLease(props) {
       state: { fromPage: fromPage },
     });
   };
-  console.log("reviewPropertyLease");
+  console.log("reviewPropertyLease", rentals, rentPayments);
   return (
     <div className="w-100 overflow-hidden">
       {/* ==================< Header >=======================================  */}
@@ -287,300 +301,125 @@ function ReviewPropertyLease(props) {
         <div className="w-100 mb-5">
           <Header
             title="Property Lease Details"
-            // leftText="< Back"
-            // leftFn={() => navigate("/tenant")}
+            leftText="< Back"
+            leftFn={() => navigate("/tenant")}
           />
 
-          {/* ==================< Property Details >=======================================  */}
           <PropertyApplicationView forPropertyLease="true" />
-          {/* ==================< Lease Details >=======================================  */}
-          {/* {(application_status_1 === "FORWARDED" || application_status_1 === "RENTED") ? */}
+
           {application_status_1 === "FORWARDED" ||
           application_status_1 === "RENTED" ? (
-            <div style={{ marginLeft: "20px" }}>
-              <p
-                style={{
-                  fontWeight: "bold",
-                  textAlign: "left",
-                  fontSize: "24px",
-                }}
-              >
-                <u>Lease Details:</u>
-              </p>
-              <Row style={{ marginLeft: "10px" }}>
+            <div className="m-3">
+              <Row className="m-3">
                 <Col>
-                  <Row style={{ paddingLeft: "15px", fontWeight: "bold" }}>
-                    Lease Start Date{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "15px" }}>
-                    {" "}
-                    {rentals && rentals.length
-                      ? rentals[0].lease_start
-                      : ""}{" "}
-                  </Row>
+                  <h3>Lease Agreement</h3>
                 </Col>
-                <Col>
-                  <Row style={{ paddingLeft: "15px", fontWeight: "bold" }}>
-                    Lease End Date{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "15px" }}>
-                    {" "}
-                    {rentals && rentals.length ? rentals[0].lease_end : ""}
-                  </Row>
-                </Col>
+                <Col xs={2}></Col>
               </Row>
+              {rentals && rentals.length ? (
+                <Row className="m-3" style={{ hidden: "overflow" }}>
+                  <h5>Lease Details</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Lease Start</TableCell>
+                        <TableCell>Lease End</TableCell>
+                        <TableCell>Rent Due</TableCell>
+                        <TableCell>Later after</TableCell>
+                        <TableCell>Late Fee</TableCell>
+                        <TableCell>Per Day Late Fee</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>{rentals[0].lease_start}</TableCell>
+
+                        <TableCell>{rentals[0].lease_end}</TableCell>
+
+                        <TableCell>
+                          {`${ordinal_suffix_of(
+                            rentals[0].due_by
+                          )} of the month`}
+                        </TableCell>
+
+                        <TableCell>{rentals[0].late_by} days</TableCell>
+                        <TableCell> ${rentals[0].late_fee}</TableCell>
+                        <TableCell> ${rentals[0].perDay_late_fee}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+              ) : (
+                ""
+              )}
 
               {rentPayments && rentPayments.length ? (
-                <>
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      textAlign: "left",
-                      fontSize: "18px",
-                      paddingLeft: "25px",
-                      marginTop: "20px",
-                    }}
+                <Row className="m-3" style={{ hidden: "overflow" }}>
+                  <h5>Lease Payments</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
                   >
-                    <u>Charges:</u>
-                  </div>
-                  <Row style={{ marginLeft: "10px" }}>
-                    <Col>
-                      <Row style={{ paddingLeft: "15px", fontWeight: "bold" }}>
-                        Fee Name{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        1. {rentPayments[0].fee_name}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Fee Type{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {rentPayments[0].fee_type}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Charges{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {rentPayments[0].charge}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Frequency{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {rentPayments[0].frequency}{" "}
-                      </Row>
-                    </Col>
-                  </Row>
-                </>
-              ) : (
-                ""
-              )}
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Fee Name</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Of</TableCell>
+                        <TableCell>Frequency</TableCell>
+                        <TableCell>Available to Pay</TableCell>
+                        <TableCell>Due Date</TableCell>
+                        <TableCell>Late After</TableCell>
+                        <TableCell>Late Fee</TableCell>
+                        <TableCell>Late Fee Pe Day</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rentPayments.map((fee, i) => (
+                        <TableRow>
+                          <TableCell>{fee.fee_name}</TableCell>
 
-              {rentPayments[1] && rentPayments.length ? (
-                <>
-                  <Row style={{ marginLeft: "10px" }}>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Name{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        2. {rentPayments[1].fee_name}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Type{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px ", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[1].fee_type}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Charges{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[1].charge}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Frequency{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[1].frequency}{" "}
-                      </Row>
-                    </Col>
-                  </Row>
-                </>
-              ) : (
-                ""
-              )}
+                          <TableCell>
+                            {fee.fee_type === "%"
+                              ? `${fee.charge}%`
+                              : `$${fee.charge}`}
+                          </TableCell>
 
-              {rentPayments[2] && rentPayments.length ? (
-                <>
-                  <Row style={{ marginLeft: "10px" }}>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Name{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        3. {rentPayments[2].fee_name}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Type{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px ", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[2].fee_type}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Charges{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[2].charge}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Frequency{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[2].frequency}{" "}
-                      </Row>
-                    </Col>
-                  </Row>
-                </>
-              ) : (
-                ""
-              )}
+                          <TableCell>
+                            {fee.fee_type === "%" ? `${fee.of}` : ""}
+                          </TableCell>
 
-              {rentPayments[3] && rentPayments.length ? (
-                <>
-                  <Row style={{ marginLeft: "10px" }}>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Name{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        4. {rentPayments[3].fee_name}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Fee Type{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px ", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[3].fee_type}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Charges{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[3].charge}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      {/* <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                Frequency{" "}
-              </Row> */}
-                      <Row style={{ paddingLeft: "20px", paddingTop: "10px" }}>
-                        {" "}
-                        {rentPayments[3].frequency}{" "}
-                      </Row>
-                    </Col>
-                  </Row>
-                </>
+                          <TableCell>{fee.frequency}</TableCell>
+                          <TableCell>{`${ordinal_suffix_of(
+                            fee.available_topay
+                          )} of the month`}</TableCell>
+                          <TableCell>
+                            {fee.due_by == ""
+                              ? `1st of the month`
+                              : `${ordinal_suffix_of(fee.due_by)} of the month`}
+                          </TableCell>
+                          <TableCell>{fee.late_by} days</TableCell>
+                          <TableCell>${fee.late_fee}</TableCell>
+                          <TableCell>${fee.perDay_late_fee}/day</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Row>
               ) : (
                 ""
               )}
             </div>
           ) : (
-            <div>No Lease Information Available at this time</div>
+            <Row className="m-3 text-align-center">
+              <h3>No Lease Information Available at this time</h3>
+            </Row>
           )}
 
-          {/* ===============Manager Contact =================================== */}
-          {application_status_1 === "FORWARDED" ||
-          application_status_1 === "RENTED" ? (
-            <div
-              style={{
-                marginLeft: "45px",
-                marginTop: "25px",
-                paddingBottom: "20px",
-              }}
-            >
-              <p
-                style={{
-                  fontWeight: "bold",
-                  textAlign: "left",
-                  fontSize: "18px",
-                }}
-              >
-                <u>Contact:</u>
-              </p>
-              <Row style={{ marginLeft: "0px" }}>
-                <Col>
-                  <Row style={{ paddingLeft: "0px", fontWeight: "bold" }}>
-                    Management Name{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "0px" }}>
-                    {" "}
-                    {properties && properties.length
-                      ? properties[0].manager_business_name
-                      : ""}{" "}
-                  </Row>
-                </Col>
-              </Row>
-              <Row style={{ marginLeft: "0px", paddingTop: "10px" }}>
-                <Col>
-                  <Row style={{ paddingLeft: "0px", fontWeight: "bold" }}>
-                    Email{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "0px" }}>
-                    {" "}
-                    {properties && properties.length
-                      ? properties[0].manager_email
-                      : ""}{" "}
-                  </Row>
-                </Col>
-                <Col>
-                  <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                    Phone Number{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "20px" }}>
-                    {" "}
-                    {properties && properties.length
-                      ? properties[0].manager_phone_number
-                      : ""}{" "}
-                  </Row>
-                </Col>
-              </Row>
-            </div>
-          ) : (
-            ""
-          )}
           {/* ==================< Lease Documents >=======================================  */}
           {(application_status_1 === "FORWARDED" ||
             application_status_1 === "RENTED") &&
@@ -621,16 +460,11 @@ function ReviewPropertyLease(props) {
                               style={{ paddingLeft: "20px" }}
                               target="_blank"
                             >
-                              {" "}
-                              {lease.name}{" "}
+                              {lease.name}
                             </div>
-                            {/* <h6 style={{paddingLeft:"20px",fontWeight:"bold"}}>
-                                          {lease.name}
-                                      </h6> */}
                             <p style={{ paddingLeft: "20px" }} className="m-0">
                               {lease.description}
                             </p>
-                            {/* <a href={lease.link} style={{paddingLeft:"20px"}}> {lease.name} </a> */}
                           </div>
                           <Button
                             style={{ marginLeft: "auto" }}
@@ -639,15 +473,6 @@ function ReviewPropertyLease(props) {
                             View
                           </Button>
                         </div>
-                        {/* <div>
-                                  <img src={EditIcon} alt='Edit' className='px-1 mx-2'
-                                      onClick={() => editDocument(i)}/>
-                                  <img src={DeleteIcon} alt='Delete' className='px-1 mx-2'
-                                      onClick={() => deleteDocument(i)}/>
-                                  <a href={file.link} target='_blank'>
-                                      <img src={File}/>
-                                  </a>
-                                  </div> */}
                       </div>
                       <hr style={{ opacity: 1 }} />
                     </div>

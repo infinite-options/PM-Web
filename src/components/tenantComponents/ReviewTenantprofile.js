@@ -2,6 +2,17 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+  Grid,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Header";
 import Checkbox from "../Checkbox";
 import SideBar from "./SideBar";
@@ -15,8 +26,16 @@ import {
   mediumBold,
 } from "../../utils/styles";
 import { get, put, post } from "../../utils/api";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function ReviewTenantProfile(props) {
+  const classes = useStyles();
   const { property_uid } = useParams();
   const { userData } = useContext(AppContext);
   const { user, access_token } = userData;
@@ -205,306 +224,155 @@ function ReviewTenantProfile(props) {
             }}
             //    rightFn ={() => setTab("PROFILE")}
           />
+          <Row className="m-3">
+            <h3>Tenant Profile</h3>
+          </Row>
           {profile ? (
-            <Row className="m-3">
-              <div>
-                <div style={{ marginLeft: "20px" }}>
-                  <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                    First Name{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "20px" }}> {user.first_name} </Row>
-                </div>
-                <div style={{ marginLeft: "20px" }}>
-                  <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                    Last Name{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "20px" }}> {user.last_name} </Row>
-                </div>
+            <Row className="m-3" style={{ overflow: "scroll" }}>
+              <Table
+                classes={{ root: classes.customTable }}
+                size="small"
+                responsive="md"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell> First Name</TableCell>
+                    <TableCell> Last Name</TableCell>
+                    <TableCell> Current Address</TableCell>
+                    <TableCell> Current Salary</TableCell>
+                    <TableCell> Current Job Title</TableCell>
+                    <TableCell> Current Company Name</TableCell>
+                    <TableCell> SSN</TableCell>
+                    <TableCell> Driver's Licence Number(State)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell> {user.first_name}</TableCell>
+                    <TableCell> {user.last_name}</TableCell>
+                    <TableCell>
+                      {profile.tenant_current_address.street}{" "}
+                      {profile.tenant_current_address.unit},{" "}
+                      {profile.tenant_current_address.city},{" "}
+                      {profile.tenant_current_address.state}{" "}
+                      {profile.tenant_current_address.zip}{" "}
+                    </TableCell>
+                    <TableCell>
+                      {profile.tenant_current_salary} /
+                      {profile.tenant_salary_frequency}
+                    </TableCell>
+                    <TableCell> {profile.tenant_current_job_title}</TableCell>
+                    <TableCell> {profile.tenant_current_job_company}</TableCell>
+                    <TableCell> {profile.tenant_ssn}</TableCell>
+                    <TableCell>
+                      {profile.tenant_drivers_license_number} (
+                      {profile.tenant_drivers_license_state})
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
 
-                <Row style={{ marginLeft: "10px" }}>
-                  <Col>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Salary{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_current_salary}{" "}
-                    </Row>
-                  </Col>
-                  <Col>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Frequency{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_salary_frequency}{" "}
-                    </Row>
-                  </Col>
-                </Row>
-                <div style={{ marginLeft: "20px" }}>
-                  <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                    Current Job Title{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "20px" }}>
-                    {" "}
-                    {profile.tenant_current_job_title}{" "}
-                  </Row>
-                </div>
-                <div style={{ marginLeft: "20px" }}>
-                  <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                    Company Name{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "20px" }}>
-                    {" "}
-                    {profile.tenant_current_job_company}{" "}
-                  </Row>
-                </div>
-                <div style={{ marginLeft: "20px" }}>
-                  <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                    Social Security{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "20px" }}>
-                    {" "}
-                    {profile.tenant_ssn}{" "}
-                  </Row>
-                </div>
-                <Row style={{ marginLeft: "10px" }}>
-                  <Col>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Driver's License Number{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_drivers_license_number}{" "}
-                    </Row>
-                  </Col>
-                  <Col>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      State(licence){" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_drivers_license_state}{" "}
-                    </Row>
-                  </Col>
-                </Row>
-              </div>
               {/* ======================  <Current Address> ======================================== */}
               <div style={{ marginTop: "40px" }}>
-                <div style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                  Current Address{" "}
-                </div>
-                <Row style={{ marginLeft: "10px" }}>
-                  <Col>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Street{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_current_address.street}{" "}
-                    </Row>
-                  </Col>
-                  <Col>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Unit{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_current_address.unit}{" "}
-                    </Row>
-                  </Col>
-                </Row>
-                <Row style={{ marginLeft: "10px" }}>
-                  <Col>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      City{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_current_address.city}{" "}
-                    </Row>
-                  </Col>
-                  <Col>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      State{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_current_address.state}{" "}
-                    </Row>
-                  </Col>
-                </Row>
-                <div style={{ marginLeft: "20px" }}>
-                  <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                    Zip Code{" "}
-                  </Row>
-                  <Row style={{ paddingLeft: "20px" }}>
-                    {" "}
-                    {profile.tenant_current_address.zip}{" "}
-                  </Row>
-                </div>
-
                 {profile.tenant_current_address.pm_name ? (
-                  <div>
-                    <div style={{ marginLeft: "20px" }}>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Name of the Property Manager{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_current_address.pm_name}{" "}
-                      </Row>
-                    </div>
-                    <div style={{ marginLeft: "20px" }}>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Property Manager's Phone Number{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_current_address.pm_number}{" "}
-                      </Row>
-                    </div>
-                    <Row style={{ marginLeft: "10px" }}>
-                      <Col>
-                        <Row
-                          style={{ paddingLeft: "20px", fontWeight: "bold" }}
-                        >
-                          Lease Start Date{" "}
-                        </Row>
-                        <Row style={{ paddingLeft: "20px" }}>
-                          {" "}
-                          {profile.tenant_current_address.lease_start}{" "}
-                        </Row>
-                      </Col>
-                      <Col>
-                        <Row
-                          style={{ paddingLeft: "20px", fontWeight: "bold" }}
-                        >
-                          Lease End Date{" "}
-                        </Row>
-                        <Row style={{ paddingLeft: "20px" }}>
-                          {" "}
-                          {profile.tenant_current_address.lease_end}{" "}
-                        </Row>
-                      </Col>
-                    </Row>
-                    <div style={{ marginLeft: "20px" }}>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Monthly Rent{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_current_address.rent}{" "}
-                      </Row>
-                    </div>
-                  </div>
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <h3>Current Address info</h3>
+
+                    <Table
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                      responsive="md"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell> Name of the Property Manager</TableCell>
+                          <TableCell>
+                            {" "}
+                            Property Manager's Phone Number
+                          </TableCell>
+                          <TableCell> Lease Start Dates</TableCell>
+                          <TableCell> Lease End Dates</TableCell>
+                          <TableCell> Monthly Rent</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            {" "}
+                            {profile.tenant_current_address.pm_name}
+                          </TableCell>
+                          <TableCell>
+                            {" "}
+                            {profile.tenant_current_address.pm_number}
+                          </TableCell>
+                          <TableCell>
+                            {profile.tenant_current_address.lease_start}
+                          </TableCell>
+                          <TableCell>
+                            {profile.tenant_current_address.lease_end}
+                          </TableCell>
+                          <TableCell>
+                            {profile.tenant_current_address.rent}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Row>
                 ) : (
                   ""
                 )}
               </div>
               {/* =============================== <Previous Address> ==================================== */}
               {profile.tenant_previous_address ? (
-                <div style={{ marginTop: "40px" }}>
-                  <div style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                    Previous Address{" "}
-                  </div>
-                  <Row style={{ marginLeft: "10px" }}>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Street{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_previous_address.street}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Unit{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_previous_address.unit}{" "}
-                      </Row>
-                    </Col>
-                  </Row>
-                  <Row style={{ marginLeft: "10px" }}>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        City{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_previous_address.city}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        State{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_previous_address.state}{" "}
-                      </Row>
-                    </Col>
-                  </Row>
-                  <div style={{ marginLeft: "20px" }}>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Zip Code{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_previous_address.zip}{" "}
-                    </Row>
-                  </div>
-                  <div style={{ marginLeft: "20px" }}>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Name of the Property Manager{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_previous_address.pm_name}{" "}
-                    </Row>
-                  </div>
-                  <div style={{ marginLeft: "20px" }}>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Property Manager's Phone Number{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_previous_address.pm_number}{" "}
-                    </Row>
-                  </div>
-                  <Row style={{ marginLeft: "10px" }}>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Lease Start Date{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_previous_address.lease_start}{" "}
-                      </Row>
-                    </Col>
-                    <Col>
-                      <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        Lease End Date{" "}
-                      </Row>
-                      <Row style={{ paddingLeft: "20px" }}>
-                        {" "}
-                        {profile.tenant_previous_address.lease_end}{" "}
-                      </Row>
-                    </Col>
-                  </Row>
-                  <div style={{ marginLeft: "20px" }}>
-                    <Row style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                      Monthly Rent{" "}
-                    </Row>
-                    <Row style={{ paddingLeft: "20px" }}>
-                      {" "}
-                      {profile.tenant_previous_address.rent}{" "}
-                    </Row>
-                  </div>
-                </div>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <h3>Previous Address info</h3>
+
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Address</TableCell>
+                        <TableCell> Name of the Property Manager</TableCell>
+                        <TableCell> Property Manager's Phone Number</TableCell>
+                        <TableCell> Lease Start Dates</TableCell>
+                        <TableCell> Lease End Dates</TableCell>
+                        <TableCell> Monthly Rent</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          {" "}
+                          {profile.tenant_previous_address.street}{" "}
+                          {profile.tenant_previous_address.unit},{" "}
+                          {profile.tenant_previous_address.city},{" "}
+                          {profile.tenant_previous_address.state}{" "}
+                          {profile.tenant_previous_address.zip}{" "}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {profile.tenant_previous_address.pm_name}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {profile.tenant_previous_address.pm_number}
+                        </TableCell>
+                        <TableCell>
+                          {profile.tenant_previous_address.lease_start}
+                        </TableCell>
+                        <TableCell>
+                          {profile.tenant_previous_address.lease_end}
+                        </TableCell>
+                        <TableCell>
+                          {profile.tenant_previous_address.rent}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
               ) : (
                 ""
               )}
@@ -521,8 +389,7 @@ function ReviewTenantProfile(props) {
               fontWeight: "bold",
             }}
           >
-            {" "}
-            Documents
+            <h3>Documents</h3>
           </Row>
           <Row className="m-3">
             <div className="mb-4">

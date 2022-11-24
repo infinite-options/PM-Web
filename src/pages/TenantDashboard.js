@@ -107,7 +107,18 @@ export default function ManagerDashboard() {
     console.log(response.result);
     console.log(appRes.result);
     setTenantProfile(response.result[0]);
-    setApplications(appRes.result);
+    let apps = [];
+    for (let i = 0; i < appRes.result.length; i++) {
+      if (
+        appRes.result[i].application_status !== "RENTED" &&
+        appRes.result[i].application_status !== "PM END EARLY" &&
+        appRes.result[i].application_status !== "TENANT END EARLY"
+      ) {
+        apps.push(appRes.result[i]);
+      }
+    }
+
+    setApplications(apps);
 
     const properties = response.result[0].properties.filter(
       (property) => property.management_status !== "REJECTED"
@@ -215,6 +226,7 @@ export default function ManagerDashboard() {
     console.log(application.application_status);
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
       state: {
+        property_uid: application.property_uid,
         application_uid: application.application_uid,
         application_status_1: application.application_status,
         message: application.message,
@@ -1042,7 +1054,18 @@ export default function ManagerDashboard() {
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={application.property_uid}
+                            key={application.application_uid}
+                            // onClick={() => {
+                            //   navigate(
+                            //     `/tenantPropertyDetails/${application.property_uid}`,
+                            //     {
+                            //       state: {
+                            //         property: application,
+                            //         property_uid: application.property_uid,
+                            //       },
+                            //     }
+                            //   );
+                            // }}
                             onClick={() => goToReviewPropertyLease(application)}
                           >
                             <TableCell
@@ -1165,6 +1188,11 @@ export default function ManagerDashboard() {
                                 </h6>
                               ) : application.application_status ===
                                 "RENTED" ? (
+                                <h6 style={{ mediumBold, color: "green" }}>
+                                  {application.application_status}
+                                </h6>
+                              ) : application.application_status ===
+                                "FORWARDED" ? (
                                 <h6 style={{ mediumBold, color: "green" }}>
                                   {application.application_status}
                                 </h6>

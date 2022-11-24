@@ -537,7 +537,7 @@ function OwnerPropertyForm(props) {
   console.log(activeDate);
   return (
     <div
-      className="d-flex flex-column w-100 mx-2 p-2 m-0"
+      className="d-flex flex-column w-100 overflow-hidden p-2"
       style={{
         background: "#ffffff 0% 0% no-repeat padding-box",
         borderRadius: "10px",

@@ -531,14 +531,7 @@ function TenantPropertyForm(props) {
   });
 
   return (
-    <div
-      className="d-flex flex-column w-100 mx-2 p-2 m-0"
-      style={{
-        background: "#ffffff 0% 0% no-repeat padding-box",
-        borderRadius: "10px",
-        opacity: 1,
-      }}
-    >
+    <div className="d-flex flex-column w-100 overflow-hidden p-2">
       <ConfirmDialog2
         title={"Can't edit here. Click on the edit icon to make any changes"}
         isOpen={showDialog}

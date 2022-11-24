@@ -303,7 +303,7 @@ function ManagerPropertyForm(props) {
   });
 
   return (
-    <div className="d-flex flex-column w-100 mx-2 p-2 m-0">
+    <div className="d-flex flex-column w-100 overflow-hidden p-2">
       <ConfirmDialog2
         title={"Can't edit here. Click on the edit icon to make any changes"}
         isOpen={showDialog}

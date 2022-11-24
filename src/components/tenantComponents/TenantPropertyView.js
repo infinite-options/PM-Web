@@ -22,14 +22,10 @@ import TenantRepairRequest from "./TenantRepairRequest";
 import AppContext from "../../AppContext";
 import ConfirmDialog from "../ConfirmDialog";
 import SideBar from "./SideBar";
-import File from "../../icons/File.svg";
 import OpenDoc from "../../icons/OpenDoc.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
-import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
-import SortDown from "../../icons/Sort-down.svg";
-import SortLeft from "../../icons/Sort-left.svg";
 import PropertyIcon from "../../icons/PropertyIcon.svg";
 import RepairImg from "../../icons/RepairImg.svg";
 import {
@@ -867,13 +863,107 @@ function TenantPropertyView(props) {
                   </TableBody>
                 </Table>
               </Row>
-
               <Row className="m-3">
                 <Col>
-                  <h3>Lease Agreement</h3>
+                  <h3>Other Info</h3>
                 </Col>
                 <Col xs={2}></Col>
               </Row>
+              <Row className="m-3">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Utilities</TableCell>
+                      <TableCell>Electricity</TableCell>
+                      <TableCell>Trash</TableCell>
+                      <TableCell>Water</TableCell>
+                      <TableCell>Wifi </TableCell>
+                      <TableCell>Gas</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Paid by</TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Electricity"]
+                          ? "Owner"
+                          : "Trash"}
+                      </TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Trash"]
+                          ? "Owner"
+                          : "Trash"}
+                      </TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Water"]
+                          ? "Owner"
+                          : "Trash"}
+                      </TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Wifi"]
+                          ? "Owner"
+                          : "Trash"}
+                      </TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Gas"]
+                          ? "Owner"
+                          : "Trash"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+              <Row className="m-3">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Pets Allowed</TableCell>
+                      <TableCell>
+                        Deposit can be used for last month's rent
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        {property.pets_allowed == 0 ? "No" : "Yes"}
+                      </TableCell>
+                      <TableCell>
+                        {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+              {selectedAgreement ? (
+                <Row className="m-3">
+                  <Col>
+                    <h3>Lease Agreement</h3>
+                  </Col>
+                  <Col xs={2}></Col>
+                </Row>
+              ) : (
+                <Row className="m-3">
+                  <h4
+                    style={{
+                      color: "red",
+                      textAlign: "center",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Property Manager Rejected Application
+                  </h4>
+                </Row>
+              )}
+
               <Row style={{ overflow: "scroll" }}>
                 {selectedAgreement ? (
                   <div>
@@ -1063,183 +1153,219 @@ function TenantPropertyView(props) {
                         </TableBody>
                       </Table>
                     </Row>
-                    {Math.floor(
-                      (new Date().getTime() -
-                        new Date(selectedAgreement.lease_end).getTime()) /
-                        (100 * 60 * 60 * 24)
-                    ) < 60}
-                    <Row
-                      className="pt-4 my-4"
-                      hidden={
-                        selectedAgreement === null ||
-                        tenantEndEarly ||
-                        pmEndEarly
-                      }
-                    >
-                      <Col className="d-flex flex-row justify-content-evenly">
-                        <Button
-                          style={bluePillButton}
-                          variant="outline-primary"
-                          onClick={() => renewLease(selectedAgreement)}
-                        >
-                          Renew Lease
-                        </Button>
-                      </Col>
-                    </Row>
-
-                    {terminateLease ? (
-                      <div
-                        hidden={
-                          selectedAgreement === null ||
-                          tenantEndEarly ||
-                          pmEndEarly
-                        }
-                      >
-                        <Row>
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            <Form.Group className="mx-2 my-3">
-                              <Form.Label as="h6" className="mb-0 ms-2">
-                                Select the Last Date{" "}
-                                {lastDate === "" ? required : ""}
-                              </Form.Label>
-                              <Form.Control
-                                style={squareForm}
-                                type="date"
-                                value={lastDate}
-                                onChange={(e) => setLastDate(e.target.value)}
-                              />
-                            </Form.Group>
-                          </Col>
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            <Form.Group className="mx-2 my-3">
-                              <Form.Label as="h6" className="mb-0 ms-2">
-                                Message {message === "" ? required : ""}
-                              </Form.Label>
-                              <Form.Control
-                                style={squareForm}
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                              />
-                            </Form.Group>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            <Button
-                              style={redPillButton}
-                              variant="outline-primary"
-                              onClick={() => terminateLeaseAgreement()}
-                            >
-                              Notify intent to terminate
-                            </Button>
-                          </Col>
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            <Button
-                              style={bluePillButton}
-                              variant="outline-primary"
-                              onClick={() => setTerminateLease(false)}
-                            >
-                              Cancel
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                    ) : (
-                      <Row
-                        hidden={
-                          selectedAgreement === null ||
-                          tenantEndEarly ||
-                          pmEndEarly
-                        }
-                      >
-                        <Col className="d-flex flex-row justify-content-evenly">
-                          <Button
-                            style={redPillButton}
-                            variant="outline-primary"
-                            onClick={() => setTerminateLease(true)}
+                    {selectedAgreement.application_status === "REFUSED" ||
+                    selectedAgreement.application_status === "REJECTED" ||
+                    selectedAgreement.application_status === "ENDED" ? (
+                      <Row>
+                        {selectedAgreement.application_status === "NEW" ? (
+                          <h4 style={{ mediumBold, color: "blue" }}>
+                            {selectedAgreement.application_status}
+                          </h4>
+                        ) : selectedAgreement.application_status ===
+                          "REJECTED" ? (
+                          <h4 style={{ mediumBold, color: "red" }}>
+                            {selectedAgreement.application_status}
+                          </h4>
+                        ) : selectedAgreement.application_status ===
+                          "REFUSED" ? (
+                          <h4
+                            style={{
+                              color: "red",
+                              textAlign: "center",
+                            }}
                           >
-                            Terminate Lease
-                          </Button>
-                        </Col>
+                            You {selectedAgreement.application_status} the lease
+                            agreement
+                          </h4>
+                        ) : selectedAgreement.application_status === "ENDED" ? (
+                          <h4 style={{ mediumBold, color: "red" }}>
+                            {selectedAgreement.application_status}
+                          </h4>
+                        ) : (
+                          ""
+                        )}
                       </Row>
-                    )}
+                    ) : (
+                      <Row className="m-3">
+                        {Math.floor(
+                          (new Date().getTime() -
+                            new Date(selectedAgreement.lease_end).getTime()) /
+                            (100 * 60 * 60 * 24)
+                        ) < 60 ? (
+                          <Row
+                            className="pt-4 my-4"
+                            hidden={
+                              selectedAgreement === null ||
+                              tenantEndEarly ||
+                              pmEndEarly
+                            }
+                          >
+                            <Col className="d-flex flex-row justify-content-evenly">
+                              <Button
+                                style={bluePillButton}
+                                variant="outline-primary"
+                                onClick={() => renewLease(selectedAgreement)}
+                              >
+                                Renew Lease
+                              </Button>
+                            </Col>
+                          </Row>
+                        ) : (
+                          ""
+                        )}
 
-                    {pmEndEarly ? (
-                      <div className="my-4">
-                        <h5 style={mediumBold}>
-                          PM Requests to end lease early on{" "}
-                          {selectedAgreement.early_end_date}
-                        </h5>
-                        <Row className="my-4">
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            <Button
-                              style={bluePillButton}
-                              variant="outline-primary"
-                              onClick={() => endEarlyRequestResponse(true)}
+                        {terminateLease ? (
+                          <div
+                            hidden={
+                              selectedAgreement === null ||
+                              tenantEndEarly ||
+                              pmEndEarly
+                            }
+                          >
+                            <Row>
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Form.Group className="mx-2 my-3">
+                                  <Form.Label as="h6" className="mb-0 ms-2">
+                                    Select the Last Date{" "}
+                                    {lastDate === "" ? required : ""}
+                                  </Form.Label>
+                                  <Form.Control
+                                    style={squareForm}
+                                    type="date"
+                                    value={lastDate}
+                                    onChange={(e) =>
+                                      setLastDate(e.target.value)
+                                    }
+                                  />
+                                </Form.Group>
+                              </Col>
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Form.Group className="mx-2 my-3">
+                                  <Form.Label as="h6" className="mb-0 ms-2">
+                                    Message {message === "" ? required : ""}
+                                  </Form.Label>
+                                  <Form.Control
+                                    style={squareForm}
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                  />
+                                </Form.Group>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Button
+                                  style={redPillButton}
+                                  variant="outline-primary"
+                                  onClick={() => terminateLeaseAgreement()}
+                                >
+                                  Notify intent to terminate
+                                </Button>
+                              </Col>
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Button
+                                  style={bluePillButton}
+                                  variant="outline-primary"
+                                  onClick={() => setTerminateLease(false)}
+                                >
+                                  Cancel
+                                </Button>
+                              </Col>
+                            </Row>
+                          </div>
+                        ) : (
+                          <Row
+                            hidden={
+                              selectedAgreement === null ||
+                              tenantEndEarly ||
+                              pmEndEarly
+                            }
+                          >
+                            <Col className="d-flex flex-row justify-content-evenly">
+                              <Button
+                                style={redPillButton}
+                                variant="outline-primary"
+                                onClick={() => setTerminateLease(true)}
+                              >
+                                Terminate Lease
+                              </Button>
+                            </Col>
+                          </Row>
+                        )}
+
+                        {pmEndEarly ? (
+                          <div className="my-4">
+                            <h5 style={mediumBold}>
+                              PM Requests to end lease early on{" "}
+                              {selectedAgreement.early_end_date}
+                            </h5>
+                            <Row className="my-4">
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Button
+                                  style={bluePillButton}
+                                  variant="outline-primary"
+                                  onClick={() => endEarlyRequestResponse(true)}
+                                >
+                                  Terminate Lease
+                                </Button>
+                              </Col>
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Button
+                                  style={redPillButton}
+                                  variant="outline-primary"
+                                  onClick={() => endEarlyRequestResponse(false)}
+                                >
+                                  Reject request
+                                </Button>
+                              </Col>
+                            </Row>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {tenantEndEarly ? (
+                          <div className="my-4 ">
+                            <h5
+                              style={mediumBold}
+                              className="d-flex justify-content-center align-items-center flex-row"
                             >
-                              Terminate Lease
-                            </Button>
-                          </Col>
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            <Button
-                              style={redPillButton}
-                              variant="outline-primary"
-                              onClick={() => endEarlyRequestResponse(false)}
-                            >
-                              Reject request
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                    {tenantEndEarly ? (
-                      <div className="my-4 ">
-                        <h5
-                          style={mediumBold}
-                          className="d-flex justify-content-center align-items-center flex-row"
-                        >
-                          You requested to end lease early on{" "}
-                          {selectedAgreement.early_end_date}
-                        </h5>
-                        <Row className="my-4">
-                          {/* <Col className="d-flex flex-row justify-content-evenly">
-                  <Button
-                    style={bluePillButton}
-                    variant="outline-primary"
-                    onClick={() => endEarlyRequestResponse(true)}
-                  >
-                    Terminate Lease
-                  </Button>
-                </Col> */}
-                          <Col className="d-flex flex-row justify-content-evenly">
-                            <Button
-                              style={redPillButton}
-                              variant="outline-primary"
-                              onClick={() => endEarlyWithdraw()}
-                            >
-                              Withdraw request
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                    ) : (
-                      ""
+                              You requested to end lease early on{" "}
+                              {selectedAgreement.early_end_date}
+                            </h5>
+                            <Row className="my-4">
+                              <Col className="d-flex flex-row justify-content-evenly">
+                                <Button
+                                  style={redPillButton}
+                                  variant="outline-primary"
+                                  onClick={() => endEarlyWithdraw()}
+                                >
+                                  Withdraw request
+                                </Button>
+                              </Col>
+                            </Row>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </Row>
                     )}
                   </div>
                 ) : (
-                  <Row className="mx-5">No Active Lease Agreements</Row>
+                  ""
                 )}
               </Row>
 
               <Row className="m-3">
                 <Col>
-                  <h1>Property Manager Info</h1>
+                  <h3>Property Manager Info</h3>
                 </Col>
               </Row>
               <Row className="m-3">
-                <Table>
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
                   <TableHead>
                     <TableRow>
                       <TableCell>Manager Business</TableCell>
