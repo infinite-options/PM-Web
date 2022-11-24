@@ -979,6 +979,7 @@ export default function ManagerDashboard() {
                 <TableHead>
                   <TableRow>
                     <TableCell>Manager Business</TableCell>
+                    <TableCell>Address Managed</TableCell>
                     <TableCell>Manager Email</TableCell>
                     <TableCell>Manager Phone</TableCell>
                     <TableCell>Actions</TableCell>
@@ -990,6 +991,10 @@ export default function ManagerDashboard() {
                       <TableRow>
                         {" "}
                         <TableCell>{manager.manager_business_name}</TableCell>
+                        <TableCell>
+                          {manager.address} {manager.unit}, {manager.city},
+                          {manager.state} {manager.zip}
+                        </TableCell>
                         <TableCell>{manager.manager_email}</TableCell>
                         <TableCell>{manager.manager_phone_number}</TableCell>
                         <TableCell>

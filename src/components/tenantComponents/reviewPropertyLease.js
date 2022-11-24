@@ -329,9 +329,9 @@ function ReviewPropertyLease(props) {
                         <TableCell>Lease Start</TableCell>
                         <TableCell>Lease End</TableCell>
                         <TableCell>Rent Due</TableCell>
-                        <TableCell>Later after</TableCell>
-                        <TableCell>Late Fee</TableCell>
-                        <TableCell>Per Day Late Fee</TableCell>
+                        <TableCell>Late Fees After (days)</TableCell>
+                        <TableCell>Late Fee (one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -373,9 +373,9 @@ function ReviewPropertyLease(props) {
                         <TableCell>Frequency</TableCell>
                         <TableCell>Available to Pay</TableCell>
                         <TableCell>Due Date</TableCell>
-                        <TableCell>Late After</TableCell>
-                        <TableCell>Late Fee</TableCell>
-                        <TableCell>Late Fee Pe Day</TableCell>
+                        <TableCell>Late After (days)</TableCell>
+                        <TableCell>Late Fee(one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
