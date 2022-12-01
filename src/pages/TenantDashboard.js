@@ -1235,13 +1235,29 @@ export default function ManagerDashboard() {
             <SideBar />
           </div>
           <div className="w-100 mb-5">
-            <Header title="Owner Dashboard" />
-            <Row className="m-3">
+            <Header title="Tenant Dashboard" />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <h1>Welcome to Manifest My Space</h1>
-            </Row>
-            <Row>
-              {tenantProfile.tenant_first_name} {tenantProfile.tenant_last_name}
-            </Row>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <br />
+              <h3>
+                {tenantProfile.tenant_first_name}{" "}
+                {tenantProfile.tenant_last_name}
+              </h3>
+            </div>
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />
             </div>

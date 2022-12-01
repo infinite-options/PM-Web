@@ -3967,11 +3967,17 @@ export default function OwnerDashboard2() {
           </div>
           <div className="w-100 mb-5">
             <Header title="Owner Dashboard" />
-            <Row className="m-3">
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <h1>Welcome to Manifest My Space</h1>
-            </Row>
+            </div>
             <Row className="m-3">
-              {console.log("here")}
               <Col>
                 <h1>Add a new Property</h1>
               </Col>

@@ -4200,10 +4200,17 @@ export default function ManagerDashboard() {
             <SideBar />
           </div>
           <div className="w-100 mb-5">
-            <Header title="Owner Dashboard" />
-            <Row className="m-3">
+            <Header title="Manager Dashboard" />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <h1>Welcome to Manifest My Space</h1>
-            </Row>
+              <br />
+            </div>
 
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <ManagerFooter />
