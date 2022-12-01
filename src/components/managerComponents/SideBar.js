@@ -84,6 +84,15 @@ function SideBar() {
               Utilities
             </NavLink>
             <NavLink
+              to="/manager-payments"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Payments
+            </NavLink>
+            <NavLink
               to="/manager-announcements"
               className="sidebarButtons"
               style={({ isActive }) =>

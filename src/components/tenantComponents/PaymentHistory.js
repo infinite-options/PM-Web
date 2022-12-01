@@ -28,7 +28,7 @@ export default function PaymentHistory(props) {
     if (row.purchase_status == "PAID") {
       return (
         <TableRow>
-          <TableCell align="center">{index + 1}</TableCell>
+          <TableCell align="center">{row.purchase_uid}</TableCell>
           <TableCell align="center">
             {"" +
               row.address +
