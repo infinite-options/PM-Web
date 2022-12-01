@@ -125,7 +125,6 @@ function ManagerPropertyForm(props) {
   const [deposit, setDeposit] = useState("");
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [depositForRent, setDepositForRent] = useState(false);
-
   const [showSpinner, setShowSpinner] = useState(false);
   const [availableToRent, setAvailableToRent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -202,13 +201,11 @@ function ManagerPropertyForm(props) {
       area: area,
       listed_rent: rent,
       deposit: deposit,
-      // appliances: JSON.stringify(applianceState[0]),
+      appliances: JSON.stringify(applianceState[0]),
       utilities: JSON.stringify(utilityState[0]),
-      // pets_allowed: petsAllowed,
-      // deposit_for_rent: depositForRent
-      pets_allowed: petsAllowed ? 1 : 0,
-      deposit_for_rent: depositForRent ? 1 : 0,
-      available_to_rent: availableToRent ? 1 : 0,
+      pets_allowed: petsAllowed,
+      deposit_for_rent: depositForRent,
+      available_to_rent: availableToRent,
     };
     const files = imageState[0];
     let i = 0;

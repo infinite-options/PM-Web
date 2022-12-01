@@ -440,7 +440,7 @@ function OwnerPropertyForm(props) {
       area: area,
       listed_rent: rent,
       deposit: deposit,
-      // appliances: JSON.stringify(applianceState[0]),
+      appliances: JSON.stringify(applianceState[0]),
       utilities: JSON.stringify(utilityState[0]),
       pets_allowed: petsAllowed,
       deposit_for_rent: depositForRent,

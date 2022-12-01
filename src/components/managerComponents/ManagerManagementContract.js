@@ -153,14 +153,6 @@ function ManagerManagementContract(props) {
       const response = await post("/contracts", newContract, null, files);
     }
 
-    // Updating Management Status in property to SENT
-    // const management_businesses = user.businesses.filter(
-    //   (business) => business.business_type === "MANAGEMENT"
-    // );
-    // let management_buid = null;
-    // if (management_businesses.length >= 1) {
-    //   management_buid = management_businesses[0].business_uid;
-    // }
     const newProperty = {
       property_uid: property.property_uid,
       manager_id: management_buid,

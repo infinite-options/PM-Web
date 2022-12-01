@@ -3936,7 +3936,7 @@ export default function OwnerDashboard2() {
         </div>
       ) : !isLoading && ownerData.length == 1 ? (
         <div className="flex-1">
-          <div
+          {/* <div
             hidden={!responsive.showSidebar}
             style={{
               backgroundColor: "#229ebc",
@@ -3945,13 +3945,13 @@ export default function OwnerDashboard2() {
             }}
           >
             <SideBar />
-          </div>
+          </div> */}
           <div className="w-100 mb-5">
             <OwnerPropertyView property_uid={ownerData[0].property_uid} />
           </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          {/* <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <OwnerFooter />
-          </div>
+          </div> */}
         </div>
       ) : !isLoading && ownerData.length == 0 ? (
         <div className="flex-1">

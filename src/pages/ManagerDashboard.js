@@ -71,9 +71,6 @@ export default function ManagerDashboard() {
   const [monthlyManagement, setMonthlyManagement] = useState(false);
   const [monthlyMaintenance, setMonthlyMaintenance] = useState(false);
   const [monthlyRepairs, setMonthlyRepairs] = useState(false);
-  const [monthlyMortgage, setMonthlyMortgage] = useState(false);
-  const [monthlyTaxes, setMonthlyTaxes] = useState(false);
-  const [monthlyInsurance, setMonthlyInsurance] = useState(false);
   const [monthlyUtilityExpense, setMonthlyUtilityExpense] = useState(false);
 
   const [yearlyRevenue, setYearlyRevenue] = useState(false);
@@ -85,9 +82,6 @@ export default function ManagerDashboard() {
   const [yearlyManagement, setYearlyManagement] = useState(false);
   const [yearlyMaintenance, setYearlyMaintenance] = useState(false);
   const [yearlyRepairs, setYearlyRepairs] = useState(false);
-  const [yearlyMortgage, setYearlyMortgage] = useState(false);
-  const [yearlyTaxes, setYearlyTaxes] = useState(false);
-  const [yearlyInsurance, setYearlyInsurance] = useState(false);
   const [yearlyUtilityExpense, setYearlyUtilityExpense] = useState(false);
 
   const [width, setWindowWidth] = useState(0);
@@ -109,9 +103,16 @@ export default function ManagerDashboard() {
       navigate("/");
       return;
     }
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
     const response = await get("/managerDashboard", access_token);
     const cashflowResponse = await get(
-      `/ownerCashflow?owner_id=${user.user_uid}`
+      `/managerCashflow?manager_id=${management_buid}`
     );
 
     setCashflowData(cashflowResponse.result);
@@ -554,10 +555,7 @@ export default function ManagerDashboard() {
     cashflowData.maintenance_expense +
     cashflowData.management_expense +
     cashflowData.repairs_expense +
-    cashflowData.utility_expense +
-    cashflowData.mortgage_expense +
-    cashflowData.taxes_expense +
-    cashflowData.insurance_expense
+    cashflowData.utility_expense
   ).toFixed(2);
   const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
 
@@ -573,10 +571,7 @@ export default function ManagerDashboard() {
     cashflowData.amortized_maintenance_expense +
     cashflowData.amortized_management_expense +
     cashflowData.amortized_repairs_expense +
-    cashflowData.amortized_utility_expense +
-    cashflowData.amortized_mortgage_expense +
-    cashflowData.amortized_taxes_expense +
-    cashflowData.amortized_insurance_expense
+    cashflowData.amortized_utility_expense
   ).toFixed(2);
   const cashFlowAmortized = (
     revenueTotalAmortized - expenseTotalAmortized
@@ -587,10 +582,7 @@ export default function ManagerDashboard() {
     cashflowData.maintenance_year_expense +
     cashflowData.management_year_expense +
     cashflowData.repairs_year_expense +
-    cashflowData.utility_year_expense +
-    cashflowData.mortgage_year_expense +
-    cashflowData.taxes_year_expense +
-    cashflowData.insurance_year_expense
+    cashflowData.utility_year_expense
   ).toFixed(2);
 
   let yearRevenueTotal = 0;
@@ -606,10 +598,7 @@ export default function ManagerDashboard() {
     cashflowData.amortized_maintenance_year_expense +
     cashflowData.amortized_management_year_expense +
     cashflowData.amortized_repairs_year_expense +
-    cashflowData.amortized_utility_year_expense +
-    cashflowData.amortized_mortgage_year_expense +
-    cashflowData.amortized_taxes_year_expense +
-    cashflowData.amortized_insurance_year_expense
+    cashflowData.amortized_utility_year_expense
   ).toFixed(2);
 
   let yearRevenueTotalAmortized = 0;
@@ -635,10 +624,7 @@ export default function ManagerDashboard() {
     cashflowData.maintenance_expected_expense +
     cashflowData.management_expected_expense +
     cashflowData.repairs_expected_expense +
-    cashflowData.utility_expected_expense +
-    cashflowData.mortgage_expense +
-    cashflowData.taxes_expense +
-    cashflowData.insurance_expense
+    cashflowData.utility_expected_expense
   ).toFixed(2);
 
   const cashFlowExpected = (
@@ -657,10 +643,7 @@ export default function ManagerDashboard() {
     cashflowData.amortized_maintenance_expected_expense +
     cashflowData.amortized_management_expected_expense +
     cashflowData.amortized_repairs_expected_expense +
-    cashflowData.amortized_utility_expected_expense +
-    cashflowData.amortized_mortgage_expense +
-    cashflowData.amortized_taxes_expense +
-    cashflowData.amortized_insurance_expense
+    cashflowData.amortized_utility_expected_expense
   ).toFixed(2);
 
   const cashFlowExpectedAmortized = (
@@ -679,10 +662,7 @@ export default function ManagerDashboard() {
     cashflowData.maintenance_year_expected_expense +
     cashflowData.management_year_expected_expense +
     cashflowData.repairs_year_expected_expense +
-    cashflowData.utility_year_expected_expense +
-    cashflowData.mortgage_year_expense +
-    cashflowData.taxes_year_expense +
-    cashflowData.insurance_year_expense
+    cashflowData.utility_year_expected_expense
   ).toFixed(2);
 
   const yearCashFlowExpected = (
@@ -701,10 +681,7 @@ export default function ManagerDashboard() {
     cashflowData.amortized_maintenance_year_expected_expense +
     cashflowData.amortized_management_year_expected_expense +
     cashflowData.amortized_repairs_year_expected_expense +
-    cashflowData.amortized_utility_year_expected_expense +
-    cashflowData.amortized_mortgage_year_expense +
-    cashflowData.amortized_taxes_year_expense +
-    cashflowData.amortized_insurance_year_expense
+    cashflowData.amortized_utility_year_expected_expense
   ).toFixed(2);
 
   const yearCashFlowExpectedAmortized = (
@@ -782,9 +759,6 @@ export default function ManagerDashboard() {
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
                           setMonthlyUtilityExpense(false);
-                          setMonthlyMortgage(false);
-                          setMonthlyTaxes(false);
-                          setMonthlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -806,9 +780,6 @@ export default function ManagerDashboard() {
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
                           setMonthlyUtilityExpense(false);
-                          setMonthlyMortgage(false);
-                          setMonthlyTaxes(false);
-                          setMonthlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -951,7 +922,7 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_revenue.map((revenue, index) => {
+                    cashflowData.manager_revenue.map((revenue, index) => {
                       return revenue.purchase_type === "RENT" ? (
                         <TableRow hidden={!monthlyRent}>
                           <TableCell>
@@ -1080,7 +1051,7 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_revenue.map((revenue, index) => {
+                    cashflowData.manager_revenue.map((revenue, index) => {
                       return revenue.purchase_type === "EXTRA CHARGES" ? (
                         <TableRow hidden={!monthlyExtra}>
                           <TableCell>
@@ -1211,7 +1182,7 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_revenue.map((revenue, index) => {
+                    cashflowData.manager_revenue.map((revenue, index) => {
                       return revenue.purchase_type === "UTILITY" ? (
                         <TableRow hidden={!monthlyUtility}>
                           <TableCell>
@@ -1299,9 +1270,6 @@ export default function ManagerDashboard() {
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
                           setMonthlyUtilityExpense(false);
-                          setMonthlyMortgage(false);
-                          setMonthlyTaxes(false);
-                          setMonthlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -1318,9 +1286,6 @@ export default function ManagerDashboard() {
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
                           setMonthlyUtilityExpense(false);
-                          setMonthlyMortgage(false);
-                          setMonthlyTaxes(false);
-                          setMonthlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -1407,7 +1372,7 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_expense.map((expense, index) => {
+                    cashflowData.manager_expense.map((expense, index) => {
                       return expense.purchase_type === "MANAGEMENT" ? (
                         <TableRow hidden={!monthlyManagement}>
                           <TableCell>
@@ -1542,7 +1507,7 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_expense.map((expense, index) => {
+                    cashflowData.manager_expense.map((expense, index) => {
                       return expense.purchase_type === "MAINTENANCE" ? (
                         <TableRow hidden={!monthlyMaintenance}>
                           <TableCell>
@@ -1674,7 +1639,7 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_expense.map((expense, index) => {
+                    cashflowData.manager_expense.map((expense, index) => {
                       return expense.purchase_type === "REPAIRS" ? (
                         <TableRow hidden={!monthlyRepairs}>
                           <TableCell>
@@ -1807,7 +1772,7 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_utility_expense_individual.map(
+                    cashflowData.manager_utility_expense_individual.map(
                       (expense, index) => {
                         return expense.purchase_type === "UTILITY" ? (
                           <TableRow hidden={!monthlyUtilityExpense}>
@@ -1890,310 +1855,6 @@ export default function ManagerDashboard() {
                         );
                       }
                     )}
-                  <TableRow hidden={!monthlyExpense}>
-                    <TableCell width="180px">
-                      &nbsp;&nbsp; Mortgage{" "}
-                      <img
-                        src={SortDown}
-                        hidden={monthlyMortgage}
-                        onClick={() => setMonthlyMortgage(!monthlyMortgage)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                      <img
-                        src={SortLeft}
-                        hidden={!monthlyMortgage}
-                        onClick={() => setMonthlyMortgage(!monthlyMortgage)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.mortgage_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.mortgage_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.mortgage_expense -
-                        cashflowData.mortgage_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_mortgage_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_mortgage_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.amortized_mortgage_expense -
-                        cashflowData.amortized_mortgage_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                  {isLoading === false &&
-                    cashflowData.owner_property_expense.map(
-                      (expense, index) => {
-                        return expense.mortgages !== null ? (
-                          <TableRow hidden={!monthlyMortgage}>
-                            <TableCell>
-                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                              {expense.unit}
-                              <br />
-                              &nbsp;&nbsp;&nbsp;{" "}
-                              {JSON.parse(expense.mortgages).frequency} <br />
-                              &nbsp;&nbsp;&nbsp;{" "}
-                              {
-                                JSON.parse(expense.mortgages)
-                                  .frequency_of_payment
-                              }
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.mortgage_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.mortgage_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.mortgage_expense -
-                                expense.mortgage_expense
-                              ).toFixed(2)}
-                            </TableCell>
-                            <TableCell width="180px" align="right">
-                              ${expense.amortized_mortgage_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.amortized_mortgage_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.amortized_mortgage_expense -
-                                expense.amortized_mortgage_expense
-                              ).toFixed(2)}
-                            </TableCell>
-                          </TableRow>
-                        ) : (
-                          ""
-                        );
-                      }
-                    )}
-                  <TableRow hidden={!monthlyExpense}>
-                    <TableCell width="180px">
-                      &nbsp;&nbsp; Taxes{" "}
-                      <img
-                        src={SortDown}
-                        hidden={monthlyTaxes}
-                        onClick={() => setMonthlyTaxes(!monthlyTaxes)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                      <img
-                        src={SortLeft}
-                        hidden={!monthlyTaxes}
-                        onClick={() => setMonthlyTaxes(!monthlyTaxes)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.taxes_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.taxes_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.taxes_expense - cashflowData.taxes_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_taxes_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_taxes_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.amortized_taxes_expense -
-                        cashflowData.amortized_taxes_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                  {isLoading === false &&
-                    cashflowData.owner_property_expense.map(
-                      (expense, index) => {
-                        return expense.taxes !== null ? (
-                          <TableRow hidden={!monthlyTaxes}>
-                            <TableCell>
-                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                              {expense.unit}
-                              <br />
-                              &nbsp;&nbsp;&nbsp; {expense.frequency} <br />
-                              &nbsp;&nbsp;&nbsp; {expense.frequency_of_payment}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.taxes_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.taxes_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.taxes_expense - expense.taxes_expense
-                              ).toFixed(2)}
-                            </TableCell>
-                            <TableCell width="180px" align="right">
-                              ${expense.amortized_taxes_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.amortized_taxes_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.amortized_taxes_expense -
-                                expense.amortized_taxes_expense
-                              ).toFixed(2)}
-                            </TableCell>
-                          </TableRow>
-                        ) : (
-                          ""
-                        );
-                      }
-                    )}
-                  <TableRow hidden={!monthlyExpense}>
-                    <TableCell width="180px">
-                      &nbsp;&nbsp; Insurance{" "}
-                      <img
-                        src={SortDown}
-                        hidden={monthlyInsurance}
-                        onClick={() => setMonthlyInsurance(!monthlyInsurance)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                      <img
-                        src={SortLeft}
-                        hidden={!monthlyInsurance}
-                        onClick={() => setMonthlyInsurance(!monthlyInsurance)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.insurance_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.insurance_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.insurance_expense -
-                        cashflowData.insurance_expense
-                      ).toFixed(2)}
-                    </TableCell>
-
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_insurance_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_insurance_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.amortized_insurance_expense -
-                        cashflowData.amortized_insurance_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                  {isLoading === false &&
-                    cashflowData.owner_property_expense.map(
-                      (expense, index) => {
-                        return expense.insurance !== null ? (
-                          <TableRow hidden={!monthlyInsurance}>
-                            <TableCell>
-                              &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                              {expense.unit}
-                              <br />
-                              &nbsp;&nbsp;&nbsp; {expense.frequency} <br />
-                              &nbsp;&nbsp;&nbsp; {expense.frequency_of_payment}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.insurance_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.insurance_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.insurance_expense -
-                                expense.insurance_expense
-                              ).toFixed(2)}
-                            </TableCell>
-                            <TableCell width="180px" align="right">
-                              ${expense.amortized_insurance_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.amortized_insurance_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.amortized_insurance_expense -
-                                expense.amortized_insurance_expense
-                              ).toFixed(2)}
-                            </TableCell>
-                          </TableRow>
-                        ) : (
-                          ""
-                        );
-                      }
-                    )}
 
                   <TableRow>
                     <TableCell width="180px">
@@ -2211,9 +1872,6 @@ export default function ManagerDashboard() {
                           setYearlyMaintenance(false);
                           setYearlyRepairs(false);
                           setYearlyUtilityExpense(false);
-                          setYearlyMortgage(false);
-                          setYearlyTaxes(false);
-                          setYearlyInsurance(false);
                         }}
                         hidden={yearlyCashFlow}
                         style={{
@@ -2235,9 +1893,6 @@ export default function ManagerDashboard() {
                           setYearlyMaintenance(false);
                           setYearlyRepairs(false);
                           setYearlyUtilityExpense(false);
-                          setYearlyMortgage(false);
-                          setYearlyTaxes(false);
-                          setYearlyInsurance(false);
                         }}
                         hidden={!yearlyCashFlow}
                         style={{
@@ -2382,82 +2037,89 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_revenue_yearly.map((revenue, index) => {
-                      return revenue.purchase_type === "RENT" ? (
-                        <TableRow hidden={!yearlyRent}>
-                          <TableCell>
-                            &nbsp;&nbsp;&nbsp; {revenue.address} {revenue.unit}
-                            <br />
-                            &nbsp;&nbsp;&nbsp; {revenue.description} <br />
-                            &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
-                          </TableCell>
-                          {revenue.purchase_status === "PAID" ? (
-                            <TableCell
-                              width="180px"
-                              align="right"
-                              style={green}
-                            >
-                              ${revenue.amount_paid.toFixed(2)}
+                    cashflowData.manager_revenue_yearly.map(
+                      (revenue, index) => {
+                        return revenue.purchase_type === "RENT" ? (
+                          <TableRow hidden={!yearlyRent}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                              {revenue.unit}
+                              <br />
+                              &nbsp;&nbsp;&nbsp; {revenue.description} <br />
+                              &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${revenue.amount_paid.toFixed(2)}
-                            </TableCell>
-                          )}
-
-                          {revenue.purchase_status === "UNPAID" ? (
-                            <TableCell width="180px" align="right" style={red}>
-                              ${revenue.amount_due.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${revenue.amount_due.toFixed(2)}
-                            </TableCell>
-                          )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(revenue.amount_paid - revenue.amount_due).toFixed(
-                              2
+                            {revenue.purchase_status === "PAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={green}
+                              >
+                                ${revenue.amount_paid.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${revenue.amount_paid.toFixed(2)}
+                              </TableCell>
                             )}
-                          </TableCell>
-                          {revenue.purchase_status === "PAID" &&
-                          revenue.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(revenue.amount_paid / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {revenue.purchase_status === "UNPAID" &&
-                          revenue.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(revenue.amount_due / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {revenue.purchase_frequency == "Annually" ? (
+
+                            {revenue.purchase_status === "UNPAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={red}
+                              >
+                                ${revenue.amount_due.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${revenue.amount_due.toFixed(2)}
+                              </TableCell>
+                            )}
                             <TableCell width="180px" align="right">
                               $
                               {(
-                                (revenue.amount_paid - revenue.amount_due) /
-                                12
+                                revenue.amount_paid - revenue.amount_due
                               ).toFixed(2)}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ) : (
-                        ""
-                      );
-                    })}
+                            {revenue.purchase_status === "PAID" &&
+                            revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(revenue.amount_paid / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {revenue.purchase_status === "UNPAID" &&
+                            revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(revenue.amount_due / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  (revenue.amount_paid - revenue.amount_due) /
+                                  12
+                                ).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
                   <TableRow hidden={!yearlyRevenue}>
                     <TableCell width="180px">
                       &nbsp;&nbsp; Extra Charges
@@ -2513,82 +2175,89 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_revenue_yearly.map((revenue, index) => {
-                      return revenue.purchase_type === "EXTRA CHARGES" ? (
-                        <TableRow hidden={!yearlyExtra}>
-                          <TableCell>
-                            &nbsp;&nbsp;&nbsp; {revenue.address} {revenue.unit}
-                            <br />
-                            &nbsp;&nbsp;&nbsp; {revenue.description} <br />
-                            &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
-                          </TableCell>
-                          {revenue.purchase_status === "PAID" ? (
-                            <TableCell
-                              width="180px"
-                              align="right"
-                              style={green}
-                            >
-                              ${revenue.amount_paid.toFixed(2)}
+                    cashflowData.manager_revenue_yearly.map(
+                      (revenue, index) => {
+                        return revenue.purchase_type === "EXTRA CHARGES" ? (
+                          <TableRow hidden={!yearlyExtra}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                              {revenue.unit}
+                              <br />
+                              &nbsp;&nbsp;&nbsp; {revenue.description} <br />
+                              &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${revenue.amount_paid.toFixed(2)}
-                            </TableCell>
-                          )}
-
-                          {revenue.purchase_status === "UNPAID" ? (
-                            <TableCell width="180px" align="right" style={red}>
-                              ${revenue.amount_due.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${revenue.amount_due.toFixed(2)}
-                            </TableCell>
-                          )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(revenue.amount_paid - revenue.amount_due).toFixed(
-                              2
+                            {revenue.purchase_status === "PAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={green}
+                              >
+                                ${revenue.amount_paid.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${revenue.amount_paid.toFixed(2)}
+                              </TableCell>
                             )}
-                          </TableCell>
-                          {revenue.purchase_status === "PAID" &&
-                          revenue.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(revenue.amount_paid / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {revenue.purchase_status === "UNPAID" &&
-                          revenue.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(revenue.amount_due / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {revenue.purchase_frequency == "Annually" ? (
+
+                            {revenue.purchase_status === "UNPAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={red}
+                              >
+                                ${revenue.amount_due.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${revenue.amount_due.toFixed(2)}
+                              </TableCell>
+                            )}
                             <TableCell width="180px" align="right">
                               $
                               {(
-                                (revenue.amount_paid - revenue.amount_due) /
-                                12
+                                revenue.amount_paid - revenue.amount_due
                               ).toFixed(2)}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ) : (
-                        ""
-                      );
-                    })}
+                            {revenue.purchase_status === "PAID" &&
+                            revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(revenue.amount_paid / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {revenue.purchase_status === "UNPAID" &&
+                            revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(revenue.amount_due / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  (revenue.amount_paid - revenue.amount_due) /
+                                  12
+                                ).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
                   <TableRow hidden={!yearlyRevenue}>
                     <TableCell width="180px">
                       &nbsp; &nbsp;Utility{" "}
@@ -2644,82 +2313,89 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_revenue_yearly.map((revenue, index) => {
-                      return revenue.purchase_type === "UTILITY" ? (
-                        <TableRow hidden={!yearlyUtility}>
-                          <TableCell>
-                            &nbsp;&nbsp;&nbsp; {revenue.address} {revenue.unit}
-                            <br />
-                            &nbsp;&nbsp;&nbsp; {revenue.description} <br />
-                            &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
-                          </TableCell>
-                          {revenue.purchase_status === "PAID" ? (
-                            <TableCell
-                              width="180px"
-                              align="right"
-                              style={green}
-                            >
-                              ${revenue.amount_paid.toFixed(2)}
+                    cashflowData.manager_revenue_yearly.map(
+                      (revenue, index) => {
+                        return revenue.purchase_type === "UTILITY" ? (
+                          <TableRow hidden={!yearlyUtility}>
+                            <TableCell>
+                              &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                              {revenue.unit}
+                              <br />
+                              &nbsp;&nbsp;&nbsp; {revenue.description} <br />
+                              &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${revenue.amount_paid.toFixed(2)}
-                            </TableCell>
-                          )}
-
-                          {revenue.purchase_status === "UNPAID" ? (
-                            <TableCell width="180px" align="right" style={red}>
-                              ${revenue.amount_due.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${revenue.amount_due.toFixed(2)}
-                            </TableCell>
-                          )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(revenue.amount_paid - revenue.amount_due).toFixed(
-                              2
+                            {revenue.purchase_status === "PAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={green}
+                              >
+                                ${revenue.amount_paid.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${revenue.amount_paid.toFixed(2)}
+                              </TableCell>
                             )}
-                          </TableCell>
-                          {revenue.purchase_status === "PAID" &&
-                          revenue.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(revenue.amount_paid / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {revenue.purchase_status === "UNPAID" &&
-                          revenue.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(revenue.amount_due / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {revenue.purchase_frequency == "Annually" ? (
+
+                            {revenue.purchase_status === "UNPAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={red}
+                              >
+                                ${revenue.amount_due.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${revenue.amount_due.toFixed(2)}
+                              </TableCell>
+                            )}
                             <TableCell width="180px" align="right">
                               $
                               {(
-                                (revenue.amount_paid - revenue.amount_due) /
-                                12
+                                revenue.amount_paid - revenue.amount_due
                               ).toFixed(2)}
                             </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ) : (
-                        ""
-                      );
-                    })}
+                            {revenue.purchase_status === "PAID" &&
+                            revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(revenue.amount_paid / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {revenue.purchase_status === "UNPAID" &&
+                            revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(revenue.amount_due / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {revenue.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  (revenue.amount_paid - revenue.amount_due) /
+                                  12
+                                ).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      }
+                    )}
                   <TableRow hidden={!yearlyCashFlow}>
                     <TableCell width="180px">
                       &nbsp; Expenses{" "}
@@ -2732,9 +2408,6 @@ export default function ManagerDashboard() {
                           setYearlyMaintenance(false);
                           setYearlyRepairs(false);
                           setYearlyUtilityExpense(false);
-                          setYearlyMortgage(false);
-                          setYearlyTaxes(false);
-                          setYearlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -2751,9 +2424,6 @@ export default function ManagerDashboard() {
                           setYearlyMaintenance(false);
                           setYearlyRepairs(false);
                           setYearlyUtilityExpense(false);
-                          setYearlyMortgage(false);
-                          setYearlyTaxes(false);
-                          setYearlyInsurance(false);
                         }}
                         style={{
                           width: "10px",
@@ -2845,415 +2515,10 @@ export default function ManagerDashboard() {
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_expense_yearly.map((expense, index) => {
-                      return expense.purchase_type === "MANAGEMENT" ? (
-                        <TableRow hidden={!yearlyManagement}>
-                          <TableCell>
-                            &nbsp;&nbsp;&nbsp; {expense.address} {expense.unit}
-                            <br />
-                            &nbsp;&nbsp;&nbsp; {expense.description} <br />
-                            &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" ? (
-                            <TableCell
-                              width="180px"
-                              align="right"
-                              style={green}
-                            >
-                              ${expense.amount_paid.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_paid.toFixed(2)}
-                            </TableCell>
-                          )}
-
-                          {expense.purchase_status === "UNPAID" ? (
-                            <TableCell width="180px" align="right" style={red}>
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(expense.amount_paid - expense.amount_due).toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_paid / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_status === "UNPAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_due / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                (expense.amount_paid - expense.amount_due) /
-                                12
-                              ).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ) : (
-                        ""
-                      );
-                    })}
-                  <TableRow hidden={!yearlyExpense}>
-                    <TableCell width="180px">
-                      &nbsp;&nbsp; Maintenance{" "}
-                      <img
-                        src={SortDown}
-                        hidden={yearlyMaintenance}
-                        onClick={() => setYearlyMaintenance(!yearlyMaintenance)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                      <img
-                        src={SortLeft}
-                        hidden={!yearlyMaintenance}
-                        onClick={() => setYearlyMaintenance(!yearlyMaintenance)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.maintenance_year_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {cashflowData.maintenance_year_expected_expense.toFixed(
-                        2
-                      )}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.maintenance_year_expense -
-                        cashflowData.maintenance_year_expected_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {cashflowData.amortized_maintenance_year_expense.toFixed(
-                        2
-                      )}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {cashflowData.amortized_maintenance_year_expected_expense.toFixed(
-                        2
-                      )}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.amortized_maintenance_year_expense -
-                        cashflowData.amortized_maintenance_year_expected_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                  {isLoading === false &&
-                    cashflowData.owner_expense_yearly.map((expense, index) => {
-                      return expense.purchase_type === "MAINTENANCE" ? (
-                        <TableRow hidden={!yearlyMaintenance}>
-                          <TableCell>
-                            &nbsp;&nbsp;&nbsp; {expense.address} {expense.unit}
-                            <br />
-                            &nbsp;&nbsp;&nbsp; {expense.description} <br />
-                            &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" ? (
-                            <TableCell
-                              width="180px"
-                              align="right"
-                              style={green}
-                            >
-                              ${expense.amount_paid.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_paid.toFixed(2)}
-                            </TableCell>
-                          )}
-
-                          {expense.purchase_status === "UNPAID" ? (
-                            <TableCell width="180px" align="right" style={red}>
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(expense.amount_paid - expense.amount_due).toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_paid / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_status === "UNPAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_due / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                (expense.amount_paid - expense.amount_due) /
-                                12
-                              ).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ) : (
-                        ""
-                      );
-                    })}
-                  <TableRow hidden={!yearlyExpense}>
-                    <TableCell width="180px">
-                      &nbsp; &nbsp;Repairs{" "}
-                      <img
-                        src={SortDown}
-                        hidden={yearlyRepairs}
-                        onClick={() => setYearlyRepairs(!yearlyRepairs)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                      <img
-                        src={SortLeft}
-                        hidden={!yearlyRepairs}
-                        onClick={() => setYearlyRepairs(!yearlyRepairs)}
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.repairs_year_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.repairs_year_expected_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.repairs_year_expense -
-                        cashflowData.repairs_year_expected_expense
-                      ).toFixed(2)}
-                    </TableCell>
-
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_repairs_year_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {cashflowData.amortized_repairs_year_expected_expense.toFixed(
-                        2
-                      )}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.amortized_repairs_year_expense -
-                        cashflowData.amortized_repairs_year_expected_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                  {isLoading === false &&
-                    cashflowData.owner_expense_yearly.map((expense, index) => {
-                      return expense.purchase_type === "REPAIRS" ? (
-                        <TableRow hidden={!yearlyRepairs}>
-                          <TableCell>
-                            &nbsp;&nbsp;&nbsp; {expense.address} {expense.unit}
-                            <br />
-                            &nbsp;&nbsp;&nbsp; {expense.description} <br />
-                            &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" ? (
-                            <TableCell
-                              width="180px"
-                              align="right"
-                              style={green}
-                            >
-                              ${expense.amount_paid.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_paid.toFixed(2)}
-                            </TableCell>
-                          )}
-
-                          {expense.purchase_status === "UNPAID" ? (
-                            <TableCell width="180px" align="right" style={red}>
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              ${expense.amount_due.toFixed(2)}
-                            </TableCell>
-                          )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(expense.amount_paid - expense.amount_due).toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          {expense.purchase_status === "PAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_paid / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_status === "UNPAID" &&
-                          expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              ${(expense.amount_due / 12).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                          {expense.purchase_frequency == "Annually" ? (
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                (expense.amount_paid - expense.amount_due) /
-                                12
-                              ).toFixed(2)}
-                            </TableCell>
-                          ) : (
-                            <TableCell width="180px" align="right">
-                              $0.00
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ) : (
-                        ""
-                      );
-                    })}
-                  <TableRow hidden={!yearlyExpense}>
-                    <TableCell width="180px">
-                      &nbsp; &nbsp;Utility{" "}
-                      <img
-                        src={SortDown}
-                        hidden={yearlyUtilityExpense}
-                        onClick={() =>
-                          setYearlyUtilityExpense(!yearlyUtilityExpense)
-                        }
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                      <img
-                        src={SortLeft}
-                        hidden={!yearlyUtilityExpense}
-                        onClick={() =>
-                          setYearlyUtilityExpense(!yearlyUtilityExpense)
-                        }
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          float: "right",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.utility_year_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.utility_year_expected_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.utility_year_expense -
-                        cashflowData.utility_year_expected_expense
-                      ).toFixed(2)}
-                    </TableCell>
-
-                    <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_utility_year_expense.toFixed(2)}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {cashflowData.amortized_utility_year_expected_expense.toFixed(
-                        2
-                      )}
-                    </TableCell>
-                    <TableCell width="180px" align="right">
-                      $
-                      {(
-                        cashflowData.amortized_utility_year_expense -
-                        cashflowData.amortized_utility_year_expected_expense
-                      ).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                  {isLoading === false &&
-                    cashflowData.owner_utility_year_expense_individual.map(
+                    cashflowData.manager_expense_yearly.map(
                       (expense, index) => {
-                        return expense.purchase_type === "UTILITY" ? (
-                          <TableRow hidden={!yearlyUtilityExpense}>
+                        return expense.purchase_type === "MANAGEMENT" ? (
+                          <TableRow hidden={!yearlyManagement}>
                             <TableCell>
                               &nbsp;&nbsp;&nbsp; {expense.address}{" "}
                               {expense.unit}
@@ -3335,11 +2600,11 @@ export default function ManagerDashboard() {
                     )}
                   <TableRow hidden={!yearlyExpense}>
                     <TableCell width="180px">
-                      &nbsp;&nbsp; Mortgage{" "}
+                      &nbsp;&nbsp; Maintenance{" "}
                       <img
                         src={SortDown}
-                        hidden={yearlyMortgage}
-                        onClick={() => setYearlyMortgage(!yearlyMortgage)}
+                        hidden={yearlyMaintenance}
+                        onClick={() => setYearlyMaintenance(!yearlyMaintenance)}
                         style={{
                           width: "10px",
                           height: "10px",
@@ -3348,8 +2613,8 @@ export default function ManagerDashboard() {
                       />
                       <img
                         src={SortLeft}
-                        hidden={!yearlyMortgage}
-                        onClick={() => setYearlyMortgage(!yearlyMortgage)}
+                        hidden={!yearlyMaintenance}
+                        onClick={() => setYearlyMaintenance(!yearlyMaintenance)}
                         style={{
                           width: "10px",
                           height: "10px",
@@ -3358,86 +2623,119 @@ export default function ManagerDashboard() {
                       />
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.mortgage_year_expense.toFixed(2)}
+                      ${cashflowData.maintenance_year_expense.toFixed(2)}
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.mortgage_year_expense.toFixed(2)}
+                      $
+                      {cashflowData.maintenance_year_expected_expense.toFixed(
+                        2
+                      )}
                     </TableCell>
                     <TableCell width="180px" align="right">
                       $
                       {(
-                        cashflowData.mortgage_year_expense -
-                        cashflowData.mortgage_year_expense
+                        cashflowData.maintenance_year_expense -
+                        cashflowData.maintenance_year_expected_expense
                       ).toFixed(2)}
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_mortgage_year_expense.toFixed(2)}
+                      $
+                      {cashflowData.amortized_maintenance_year_expense.toFixed(
+                        2
+                      )}
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_mortgage_year_expense.toFixed(2)}
+                      $
+                      {cashflowData.amortized_maintenance_year_expected_expense.toFixed(
+                        2
+                      )}
                     </TableCell>
                     <TableCell width="180px" align="right">
                       $
                       {(
-                        cashflowData.amortized_mortgage_year_expense -
-                        cashflowData.amortized_mortgage_year_expense
+                        cashflowData.amortized_maintenance_year_expense -
+                        cashflowData.amortized_maintenance_year_expected_expense
                       ).toFixed(2)}
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_property_expense.map(
+                    cashflowData.manager_expense_yearly.map(
                       (expense, index) => {
-                        return expense.mortgages !== null ? (
-                          <TableRow hidden={!yearlyMortgage}>
+                        return expense.purchase_type === "MAINTENANCE" ? (
+                          <TableRow hidden={!yearlyMaintenance}>
                             <TableCell>
                               &nbsp;&nbsp;&nbsp; {expense.address}{" "}
                               {expense.unit}
                               <br />
-                              &nbsp;&nbsp;&nbsp;{" "}
-                              {JSON.parse(expense.mortgages).frequency} <br />
-                              &nbsp;&nbsp;&nbsp;{" "}
-                              {
-                                JSON.parse(expense.mortgages)
-                                  .frequency_of_payment
-                              }
+                              &nbsp;&nbsp;&nbsp; {expense.description} <br />
+                              &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
                             </TableCell>
+                            {expense.purchase_status === "PAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={green}
+                              >
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
+                            )}
 
-                            <TableCell width="180px" align="right">
-                              ${expense.mortgage_year_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.mortgage_year_expense.toFixed(2)}
-                            </TableCell>
-
+                            {expense.purchase_status === "UNPAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={red}
+                              >
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            )}
                             <TableCell width="180px" align="right">
                               $
                               {(
-                                expense.mortgage_year_expense -
-                                expense.mortgage_year_expense
+                                expense.amount_paid - expense.amount_due
                               ).toFixed(2)}
                             </TableCell>
-                            <TableCell width="180px" align="right">
-                              $
-                              {expense.amortized_mortgage_year_expense.toFixed(
-                                2
-                              )}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {expense.amortized_mortgage_year_expense.toFixed(
-                                2
-                              )}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.amortized_mortgage_year_expense -
-                                expense.amortized_mortgage_year_expense
-                              ).toFixed(2)}
-                            </TableCell>
+                            {expense.purchase_status === "PAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_paid / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_status === "UNPAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_due / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  (expense.amount_paid - expense.amount_due) /
+                                  12
+                                ).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
                           </TableRow>
                         ) : (
                           ""
@@ -3446,11 +2744,11 @@ export default function ManagerDashboard() {
                     )}
                   <TableRow hidden={!yearlyExpense}>
                     <TableCell width="180px">
-                      &nbsp;&nbsp; Taxes{" "}
+                      &nbsp; &nbsp;Repairs{" "}
                       <img
                         src={SortDown}
-                        hidden={yearlyTaxes}
-                        onClick={() => setYearlyTaxes(!yearlyTaxes)}
+                        hidden={yearlyRepairs}
+                        onClick={() => setYearlyRepairs(!yearlyRepairs)}
                         style={{
                           width: "10px",
                           height: "10px",
@@ -3459,8 +2757,8 @@ export default function ManagerDashboard() {
                       />
                       <img
                         src={SortLeft}
-                        hidden={!yearlyTaxes}
-                        onClick={() => setYearlyTaxes(!yearlyTaxes)}
+                        hidden={!yearlyRepairs}
+                        onClick={() => setYearlyRepairs(!yearlyRepairs)}
                         style={{
                           width: "10px",
                           height: "10px",
@@ -3469,75 +2767,114 @@ export default function ManagerDashboard() {
                       />
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.taxes_year_expense.toFixed(2)}
+                      ${cashflowData.repairs_year_expense.toFixed(2)}
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.taxes_year_expense.toFixed(2)}
+                      ${cashflowData.repairs_year_expected_expense.toFixed(2)}
                     </TableCell>
                     <TableCell width="180px" align="right">
                       $
                       {(
-                        cashflowData.taxes_year_expense -
-                        cashflowData.taxes_year_expense
+                        cashflowData.repairs_year_expense -
+                        cashflowData.repairs_year_expected_expense
                       ).toFixed(2)}
                     </TableCell>
+
                     <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_taxes_year_expense.toFixed(2)}
+                      ${cashflowData.amortized_repairs_year_expense.toFixed(2)}
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.amortized_taxes_year_expense.toFixed(2)}
+                      $
+                      {cashflowData.amortized_repairs_year_expected_expense.toFixed(
+                        2
+                      )}
                     </TableCell>
                     <TableCell width="180px" align="right">
                       $
                       {(
-                        cashflowData.amortized_taxes_year_expense -
-                        cashflowData.amortized_taxes_year_expense
+                        cashflowData.amortized_repairs_year_expense -
+                        cashflowData.amortized_repairs_year_expected_expense
                       ).toFixed(2)}
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_property_expense.map(
+                    cashflowData.manager_expense_yearly.map(
                       (expense, index) => {
-                        return expense.taxes !== null ? (
-                          <TableRow hidden={!yearlyTaxes}>
+                        return expense.purchase_type === "REPAIRS" ? (
+                          <TableRow hidden={!yearlyRepairs}>
                             <TableCell>
                               &nbsp;&nbsp;&nbsp; {expense.address}{" "}
                               {expense.unit}
                               <br />
-                              &nbsp;&nbsp;&nbsp; {expense.frequency} <br />
-                              &nbsp;&nbsp;&nbsp; {expense.frequency_of_payment}
+                              &nbsp;&nbsp;&nbsp; {expense.description} <br />
+                              &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
                             </TableCell>
+                            {expense.purchase_status === "PAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={green}
+                              >
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
+                            )}
 
-                            <TableCell width="180px" align="right">
-                              ${expense.taxes_year_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.taxes_year_expense.toFixed(2)}
-                            </TableCell>
-
+                            {expense.purchase_status === "UNPAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={red}
+                              >
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            )}
                             <TableCell width="180px" align="right">
                               $
                               {(
-                                expense.taxes_year_expense -
-                                expense.taxes_year_expense
+                                expense.amount_paid - expense.amount_due
                               ).toFixed(2)}
                             </TableCell>
-                            <TableCell width="180px" align="right">
-                              ${expense.amortized_taxes_year_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.amortized_taxes_year_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.amortized_taxes_year_expense -
-                                expense.amortized_taxes_year_expense
-                              ).toFixed(2)}
-                            </TableCell>
+                            {expense.purchase_status === "PAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_paid / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_status === "UNPAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_due / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  (expense.amount_paid - expense.amount_due) /
+                                  12
+                                ).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
                           </TableRow>
                         ) : (
                           ""
@@ -3546,11 +2883,13 @@ export default function ManagerDashboard() {
                     )}
                   <TableRow hidden={!yearlyExpense}>
                     <TableCell width="180px">
-                      &nbsp;&nbsp; Insurance{" "}
+                      &nbsp; &nbsp;Utility{" "}
                       <img
                         src={SortDown}
-                        hidden={yearlyInsurance}
-                        onClick={() => setYearlyInsurance(!yearlyInsurance)}
+                        hidden={yearlyUtilityExpense}
+                        onClick={() =>
+                          setYearlyUtilityExpense(!yearlyUtilityExpense)
+                        }
                         style={{
                           width: "10px",
                           height: "10px",
@@ -3559,8 +2898,10 @@ export default function ManagerDashboard() {
                       />
                       <img
                         src={SortLeft}
-                        hidden={!yearlyInsurance}
-                        onClick={() => setYearlyInsurance(!yearlyInsurance)}
+                        hidden={!yearlyUtilityExpense}
+                        onClick={() =>
+                          setYearlyUtilityExpense(!yearlyUtilityExpense)
+                        }
                         style={{
                           width: "10px",
                           height: "10px",
@@ -3569,83 +2910,114 @@ export default function ManagerDashboard() {
                       />
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.insurance_year_expense.toFixed(2)}
+                      ${cashflowData.utility_year_expense.toFixed(2)}
                     </TableCell>
                     <TableCell width="180px" align="right">
-                      ${cashflowData.insurance_year_expense.toFixed(2)}
+                      ${cashflowData.utility_year_expected_expense.toFixed(2)}
                     </TableCell>
                     <TableCell width="180px" align="right">
                       $
                       {(
-                        cashflowData.insurance_year_expense -
-                        cashflowData.insurance_year_expense
+                        cashflowData.utility_year_expense -
+                        cashflowData.utility_year_expected_expense
                       ).toFixed(2)}
                     </TableCell>
+
                     <TableCell width="180px" align="right">
-                      $
-                      {cashflowData.amortized_insurance_year_expense.toFixed(2)}
+                      ${cashflowData.amortized_utility_year_expense.toFixed(2)}
                     </TableCell>
                     <TableCell width="180px" align="right">
                       $
-                      {cashflowData.amortized_insurance_year_expense.toFixed(2)}
+                      {cashflowData.amortized_utility_year_expected_expense.toFixed(
+                        2
+                      )}
                     </TableCell>
                     <TableCell width="180px" align="right">
                       $
                       {(
-                        cashflowData.amortized_insurance_year_expense -
-                        cashflowData.amortized_insurance_year_expense
+                        cashflowData.amortized_utility_year_expense -
+                        cashflowData.amortized_utility_year_expected_expense
                       ).toFixed(2)}
                     </TableCell>
                   </TableRow>
                   {isLoading === false &&
-                    cashflowData.owner_property_expense.map(
+                    cashflowData.manager_utility_year_expense_individual.map(
                       (expense, index) => {
-                        return expense.insurance !== null ? (
-                          <TableRow hidden={!yearlyInsurance}>
+                        return expense.purchase_type === "UTILITY" ? (
+                          <TableRow hidden={!yearlyUtilityExpense}>
                             <TableCell>
                               &nbsp;&nbsp;&nbsp; {expense.address}{" "}
                               {expense.unit}
                               <br />
-                              &nbsp;&nbsp;&nbsp; {expense.frequency} <br />
-                              &nbsp;&nbsp;&nbsp; {expense.frequency_of_payment}
+                              &nbsp;&nbsp;&nbsp; {expense.description} <br />
+                              &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
                             </TableCell>
+                            {expense.purchase_status === "PAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={green}
+                              >
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_paid.toFixed(2)}
+                              </TableCell>
+                            )}
 
-                            <TableCell width="180px" align="right">
-                              ${expense.insurance_year_expense.toFixed(2)}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              ${expense.insurance_year_expense.toFixed(2)}
-                            </TableCell>
-
+                            {expense.purchase_status === "UNPAID" ? (
+                              <TableCell
+                                width="180px"
+                                align="right"
+                                style={red}
+                              >
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                ${expense.amount_due.toFixed(2)}
+                              </TableCell>
+                            )}
                             <TableCell width="180px" align="right">
                               $
                               {(
-                                expense.insurance_year_expense -
-                                expense.insurance_year_expense
+                                expense.amount_paid - expense.amount_due
                               ).toFixed(2)}
                             </TableCell>
-                            <TableCell width="180px" align="right">
-                              $
-                              {expense.amortized_insurance_year_expense.toFixed(
-                                2
-                              )}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {expense.amortized_insurance_year_expense.toFixed(
-                                2
-                              )}
-                            </TableCell>
-
-                            <TableCell width="180px" align="right">
-                              $
-                              {(
-                                expense.amortized_insurance_year_expense -
-                                expense.amortized_insurance_year_expense
-                              ).toFixed(2)}
-                            </TableCell>
+                            {expense.purchase_status === "PAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_paid / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_status === "UNPAID" &&
+                            expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                ${(expense.amount_due / 12).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
+                            {expense.purchase_frequency == "Annually" ? (
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  (expense.amount_paid - expense.amount_due) /
+                                  12
+                                ).toFixed(2)}
+                              </TableCell>
+                            ) : (
+                              <TableCell width="180px" align="right">
+                                $0.00
+                              </TableCell>
+                            )}
                           </TableRow>
                         ) : (
                           ""
@@ -4170,7 +3542,7 @@ export default function ManagerDashboard() {
         </div>
       ) : !isLoading && managerData.length == 1 ? (
         <div className="flex-1">
-          <div
+          {/* <div
             hidden={!responsive.showSidebar}
             style={{
               backgroundColor: "#229ebc",
@@ -4179,13 +3551,13 @@ export default function ManagerDashboard() {
             }}
           >
             <SideBar />
-          </div>
+          </div> */}
           <div className="w-100 mb-5">
             <ManagerPropertyView property_uid={managerData[0].property_uid} />
           </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          {/* <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <ManagerFooter />
-          </div>
+          </div> */}
         </div>
       ) : !isLoading && managerData.length == 0 ? (
         <div className="flex-1">
