@@ -725,7 +725,7 @@ export default function ManagerDashboard() {
                 {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
               </Col>
             </Row>
-            <Row className="m-3" style={{ overflow: "scroll" }}>
+            {/* <Row className="m-3" style={{ overflow: "scroll" }}>
               <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}
@@ -3026,7 +3026,7 @@ export default function ManagerDashboard() {
                     )}
                 </TableBody>
               </Table>
-            </Row>
+            </Row> */}
             <Row className="m-3">
               <Col>
                 <h1>Properties</h1>
