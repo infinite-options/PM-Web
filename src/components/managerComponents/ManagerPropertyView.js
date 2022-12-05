@@ -214,6 +214,7 @@ function ManagerPropertyView(props) {
   const [monthlyExtra, setMonthlyExtra] = useState(false);
   const [monthlyUtility, setMonthlyUtility] = useState(false);
   const [monthlyManagement, setMonthlyManagement] = useState(false);
+
   const [monthlyExpense, setMonthlyExpense] = useState(false);
   const [monthlyOwnerPayment, setMonthlyOwnerPayment] = useState(false);
   const [monthlyMaintenance, setMonthlyMaintenance] = useState(false);
@@ -638,7 +639,8 @@ function ManagerPropertyView(props) {
   // revenueExpectedTotalAmortized = (
   //   cashflowData.amortized_rental_expected_revenue +
   //   cashflowData.amortized_extra_expected_revenue +
-  //   cashflowData.amortized_utility_expected_revenue
+  //   cashflowData.amortized_utility_expected_revenue +
+  // amortized_management_expected_revenue
   // ).toFixed(2);
 
   // let expenseExpectedTotalAmortized = 0;
@@ -1019,8 +1021,10 @@ function ManagerPropertyView(props) {
 
                         {isLoading === false &&
                           cashflowData.manager_revenue.map((revenue, index) => {
+                            console.log("revenue", revenue);
+
                             return revenue.purchase_type === "RENT" ? (
-                              <TableRow>
+                              <TableRow hidden={!monthlyRent}>
                                 {console.log("in rent", revenue)}
                                 <TableCell>
                                   &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
@@ -1592,7 +1596,7 @@ function ManagerPropertyView(props) {
                         <TableRow hidden={!monthlyExpense}>
                           <TableCell width="180px">
                             &nbsp;&nbsp; Owner Payment
-                            <ImageListItem
+                            <img
                               src={SortLeft}
                               hidden={monthlyOwnerPayment}
                               onClick={() =>
@@ -3426,7 +3430,7 @@ function ManagerPropertyView(props) {
                       </TableBody>
                     </Table>
                   </div>
-                </Row>
+                </Row>{" "}
                 <Row className="m-3">
                   <Col>
                     <h3>Property Summary</h3>
@@ -3447,7 +3451,6 @@ function ManagerPropertyView(props) {
                     />
                   </Col>
                 </Row>
-
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <Table
                     classes={{ root: classes.customTable }}
@@ -4013,7 +4016,6 @@ function ManagerPropertyView(props) {
                     }
                   />
                 </Row>
-
                 <Row className="m-3">
                   <Col>
                     <h3>Property Owner Agreement</h3>
