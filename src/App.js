@@ -53,7 +53,7 @@ import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./components/managerComponents/ManagerUtilities";
 import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
-import TenantDuePayments from "./components/TenantDuePayments2";
+import TenantDuePayments from "./components/tenantComponents/TenantDuePayments2";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 import OwnerPaymentHistory from "./components/ownerComponents/OwnerPaymentHistory";
 import ManagerOwnerList from "./components/managerComponents/ManagerOwnerList";
@@ -87,7 +87,8 @@ import OwnerProfile from "./components/ownerComponents/OwnerProfile";
 import TenantProfile from "./components/tenantComponents/TenantProfile";
 import OwnerPropertyView from "./components/ownerComponents/OwnerPropertyView";
 import TenantRepairRequest from "./components/tenantComponents/TenantRepairRequest";
-
+import ManagerPayments from "./components/managerComponents/ManagerPayments";
+import TenantPayments from "./components/tenantComponents/TenantPayments";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -326,6 +327,9 @@ function App() {
               element={<TenantRepairRequest />}
             />
             <Route path="pm-list" element={<PropertyManagersList />} />
+            <Route path="manager-payments" element={<ManagerPayments />} />
+
+            <Route path="tenant-payments" element={<TenantPayments />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -29,7 +29,7 @@ import AddIcon from "../icons/AddIcon.svg";
 import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
 import { get, put } from "../utils/api";
-import { green, red, blue, xSmall } from "../utils/styles";
+import { green, red, blue, xSmall, gray } from "../utils/styles";
 
 const useStyles = makeStyles({
   customTable: {
@@ -475,7 +475,7 @@ export default function OwnerDashboard2() {
   let expenseTotal = 0;
   expenseTotal = (
     cashflowData.maintenance_expense +
-    cashflowData.management_expense +
+    Math.abs(cashflowData.management_expense) +
     cashflowData.repairs_expense +
     cashflowData.utility_expense +
     cashflowData.mortgage_expense +
@@ -494,7 +494,7 @@ export default function OwnerDashboard2() {
   let expenseTotalAmortized = 0;
   expenseTotalAmortized = (
     cashflowData.amortized_maintenance_expense +
-    cashflowData.amortized_management_expense +
+    Math.abs(cashflowData.amortized_management_expense) +
     cashflowData.amortized_repairs_expense +
     cashflowData.amortized_utility_expense +
     cashflowData.amortized_mortgage_expense +
@@ -508,7 +508,7 @@ export default function OwnerDashboard2() {
   let yearExpenseTotal = 0;
   yearExpenseTotal = (
     cashflowData.maintenance_year_expense +
-    cashflowData.management_year_expense +
+    Math.abs(cashflowData.management_year_expense) +
     cashflowData.repairs_year_expense +
     cashflowData.utility_year_expense +
     cashflowData.mortgage_year_expense +
@@ -527,7 +527,7 @@ export default function OwnerDashboard2() {
   let yearExpenseTotalAmortized = 0;
   yearExpenseTotalAmortized = (
     cashflowData.amortized_maintenance_year_expense +
-    cashflowData.amortized_management_year_expense +
+    Math.abs(cashflowData.amortized_management_year_expense) +
     cashflowData.amortized_repairs_year_expense +
     cashflowData.amortized_utility_year_expense +
     cashflowData.amortized_mortgage_year_expense +
@@ -556,7 +556,7 @@ export default function OwnerDashboard2() {
 
   expenseExpectedTotal = (
     cashflowData.maintenance_expected_expense +
-    cashflowData.management_expected_expense +
+    Math.abs(cashflowData.management_expected_expense) +
     cashflowData.repairs_expected_expense +
     cashflowData.utility_expected_expense +
     cashflowData.mortgage_expense +
@@ -578,7 +578,7 @@ export default function OwnerDashboard2() {
   let expenseExpectedTotalAmortized = 0;
   expenseExpectedTotalAmortized = (
     cashflowData.amortized_maintenance_expected_expense +
-    cashflowData.amortized_management_expected_expense +
+    Math.abs(cashflowData.amortized_management_expected_expense) +
     cashflowData.amortized_repairs_expected_expense +
     cashflowData.amortized_utility_expected_expense +
     cashflowData.amortized_mortgage_expense +
@@ -600,7 +600,7 @@ export default function OwnerDashboard2() {
   let yearExpenseExpectedTotal = 0;
   yearExpenseExpectedTotal = (
     cashflowData.maintenance_year_expected_expense +
-    cashflowData.management_year_expected_expense +
+    Math.abs(cashflowData.management_year_expected_expense) +
     cashflowData.repairs_year_expected_expense +
     cashflowData.utility_year_expected_expense +
     cashflowData.mortgage_year_expense +
@@ -622,7 +622,7 @@ export default function OwnerDashboard2() {
   let yearExpenseExpectedTotalAmortized = 0;
   yearExpenseExpectedTotalAmortized = (
     cashflowData.amortized_maintenance_year_expected_expense +
-    cashflowData.amortized_management_year_expected_expense +
+    Math.abs(cashflowData.amortized_management_year_expected_expense) +
     cashflowData.amortized_repairs_year_expected_expense +
     cashflowData.amortized_utility_year_expected_expense +
     cashflowData.amortized_mortgage_year_expense +
@@ -692,7 +692,7 @@ export default function OwnerDashboard2() {
                       {new Date().toLocaleString("default", { month: "long" })}{" "}
                       &nbsp;
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyCashFlow}
                         onClick={() => {
                           setMonthlyCashFlow(!monthlyCashFlow);
@@ -716,7 +716,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyCashFlow}
                         onClick={() => {
                           setMonthlyCashFlow(!monthlyCashFlow);
@@ -766,7 +766,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; Revenue{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyRevenue}
                         onClick={() => {
                           setMonthlyRevenue(!monthlyRevenue);
@@ -781,7 +781,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyRevenue}
                         onClick={() => {
                           setMonthlyRevenue(!monthlyRevenue);
@@ -823,7 +823,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Rent{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyRent}
                         onClick={() => setMonthlyRent(!monthlyRent)}
                         style={{
@@ -833,7 +833,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyRent}
                         onClick={() => setMonthlyRent(!monthlyRent)}
                         style={{
@@ -954,7 +954,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Extra Charges
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyExtra}
                         onClick={() => setMonthlyExtra(!monthlyExtra)}
                         style={{
@@ -964,7 +964,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyExtra}
                         onClick={() => setMonthlyExtra(!monthlyExtra)}
                         style={{
@@ -1083,7 +1083,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; &nbsp;Utility
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyUtility}
                         onClick={() => setMonthlyUtility(!monthlyUtility)}
                         style={{
@@ -1093,7 +1093,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyUtility}
                         onClick={() => setMonthlyUtility(!monthlyUtility)}
                         style={{
@@ -1214,7 +1214,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; Expenses{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyExpense}
                         onClick={() => {
                           setMonthlyExpense(!monthlyExpense);
@@ -1233,7 +1233,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyExpense}
                         onClick={() => {
                           setMonthlyExpense(!monthlyExpense);
@@ -1279,7 +1279,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Management
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyManagement}
                         onClick={() => setMonthlyManagement(!monthlyManagement)}
                         style={{
@@ -1289,7 +1289,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyManagement}
                         onClick={() => setMonthlyManagement(!monthlyManagement)}
                         style={{
@@ -1345,29 +1345,221 @@ export default function OwnerDashboard2() {
                               align="right"
                               style={green}
                             >
-                              ${expense.amount_paid.toFixed(2)}
+                              ${Math.abs(expense.amount_paid).toFixed(2)}
                             </TableCell>
                           ) : (
                             <TableCell width="180px" align="right">
-                              ${expense.amount_paid.toFixed(2)}
+                              ${Math.abs(expense.amount_paid).toFixed(2)}
                             </TableCell>
                           )}
 
                           {expense.purchase_status === "UNPAID" ? (
                             <TableCell width="180px" align="right" style={red}>
-                              ${expense.amount_due.toFixed(2)}
+                              ${Math.abs(expense.amount_due).toFixed(2)}
                             </TableCell>
                           ) : (
                             <TableCell width="180px" align="right">
-                              ${expense.amount_due.toFixed(2)}
+                              ${Math.abs(expense.amount_due).toFixed(2)}
                             </TableCell>
                           )}
                           <TableCell width="180px" align="right">
                             $
-                            {(expense.amount_paid - expense.amount_due).toFixed(
-                              2
-                            )}
+                            {(
+                              Math.abs(expense.amount_paid) -
+                              Math.abs(expense.amount_due)
+                            ).toFixed(2)}
                           </TableCell>
+                          {expense.purchase_status === "PAID" &&
+                          expense.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              ${(Math.abs(expense.amount_paid) / 12).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                          {expense.purchase_status === "UNPAID" &&
+                          expense.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              ${(Math.abs(expense.amount_due) / 12).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                          {expense.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                (Math.abs(expense.amount_paid) -
+                                  Math.abs(expense.amount_due)) /
+                                12
+                              ).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    })}
+                  {console.log(cashflowData.owner_expense)}
+                  {isLoading === false &&
+                    cashflowData.owner_expense.map((expense, index) => {
+                      return expense.purchase_type === "OWNER PAYMENT" &&
+                        expense.contract_fees != undefined ? (
+                        <TableRow hidden={!monthlyManagement}>
+                          {console.log(
+                            "here in owner payment monthly",
+                            expense,
+                            expense.contract_fees === undefined
+                              ? ""
+                              : JSON.parse(expense.contract_fees)
+                          )}
+                          <TableCell>
+                            &nbsp;&nbsp;&nbsp; {expense.address} {expense.unit}
+                            <br />
+                            &nbsp;&nbsp;&nbsp;{" "}
+                            {expense.contract_fees != undefined ? (
+                              <div>
+                                {JSON.parse(expense.contract_fees).map(
+                                  (fee, i) => {
+                                    return (
+                                      <div style={gray}>
+                                        {fee.fee_type == "%"
+                                          ? fee.charge +
+                                            fee.fee_type +
+                                            " Management fee"
+                                          : ""}
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            ) : (
+                              ""
+                            )}
+                            <br />
+                            &nbsp;&nbsp;&nbsp;{" "}
+                            <div style={gray}>{expense.purchase_frequency}</div>
+                          </TableCell>
+                          {expense.purchase_status === "PAID" &&
+                          expense.contract_fees != undefined ? (
+                            <TableCell width="180px" align="right" style={red}>
+                              {JSON.parse(expense.contract_fees).map(
+                                (fee, i) => {
+                                  return (
+                                    <div style={red}>
+                                      {fee.fee_type == "%"
+                                        ? "$" +
+                                          (
+                                            expense.amount_paid /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                            expense.amount_paid
+                                          ).toFixed(2)
+                                        : ""}
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              {JSON.parse(expense.contract_fees).map(
+                                (fee, i) => {
+                                  return (
+                                    <div style={red}>
+                                      {fee.fee_type == "%"
+                                        ? "$" +
+                                          (
+                                            expense.amount_paid /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                            expense.amount_paid
+                                          ).toFixed(2)
+                                        : ""}
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </TableCell>
+                          )}
+
+                          {expense.purchase_status === "UNPAID" &&
+                          expense.contract_fees != undefined ? (
+                            <TableCell width="180px" align="right" style={red}>
+                              {JSON.parse(expense.contract_fees).map(
+                                (fee, i) => {
+                                  return (
+                                    <div style={red}>
+                                      {fee.fee_type == "%"
+                                        ? "$" +
+                                          (
+                                            expense.amount_due /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                            expense.amount_due
+                                          ).toFixed(2)
+                                        : ""}
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              {JSON.parse(expense.contract_fees).map(
+                                (fee, i) => {
+                                  return (
+                                    <div style={red}>
+                                      {fee.fee_type == "%"
+                                        ? "$" +
+                                          (
+                                            expense.amount_due /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                            expense.amount_due
+                                          ).toFixed(2)
+                                        : ""}
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </TableCell>
+                          )}
+                          {expense.contract_fees != undefined ? (
+                            <TableCell width="180px" align="right" style={red}>
+                              {JSON.parse(expense.contract_fees).map(
+                                (fee, i) => {
+                                  return (
+                                    <div style={red}>
+                                      {fee.fee_type == "%"
+                                        ? "$" +
+                                          (
+                                            expense.amount_paid /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                            expense.amount_paid -
+                                            (expense.amount_due /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                              expense.amount_due)
+                                          ).toFixed(2)
+                                        : ""}
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                expense.amount_paid - expense.amount_due
+                              ).toFixed(2)}
+                            </TableCell>
+                          )}
+
                           {expense.purchase_status === "PAID" &&
                           expense.purchase_frequency == "Annually" ? (
                             <TableCell width="180px" align="right">
@@ -1410,7 +1602,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Maintenance
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyMaintenance}
                         onClick={() =>
                           setMonthlyMaintenance(!monthlyMaintenance)
@@ -1422,7 +1614,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyMaintenance}
                         onClick={() =>
                           setMonthlyMaintenance(!monthlyMaintenance)
@@ -1545,7 +1737,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; &nbsp;Repairs{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyRepairs}
                         onClick={() => setMonthlyRepairs(!monthlyRepairs)}
                         style={{
@@ -1555,7 +1747,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyRepairs}
                         onClick={() => setMonthlyRepairs(!monthlyRepairs)}
                         style={{
@@ -1674,7 +1866,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; &nbsp;Utility{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyUtilityExpense}
                         onClick={() =>
                           setMonthlyUtilityExpense(!monthlyUtilityExpense)
@@ -1686,7 +1878,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyUtilityExpense}
                         onClick={() =>
                           setMonthlyUtilityExpense(!monthlyUtilityExpense)
@@ -1817,7 +2009,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Mortgage{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyMortgage}
                         onClick={() => setMonthlyMortgage(!monthlyMortgage)}
                         style={{
@@ -1827,7 +2019,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyMortgage}
                         onClick={() => setMonthlyMortgage(!monthlyMortgage)}
                         style={{
@@ -1922,7 +2114,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Taxes{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyTaxes}
                         onClick={() => setMonthlyTaxes(!monthlyTaxes)}
                         style={{
@@ -1932,7 +2124,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyTaxes}
                         onClick={() => setMonthlyTaxes(!monthlyTaxes)}
                         style={{
@@ -2020,7 +2212,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Insurance{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={monthlyInsurance}
                         onClick={() => setMonthlyInsurance(!monthlyInsurance)}
                         style={{
@@ -2030,7 +2222,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!monthlyInsurance}
                         onClick={() => setMonthlyInsurance(!monthlyInsurance)}
                         style={{
@@ -2122,7 +2314,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       {new Date().getFullYear()} &nbsp;
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         onClick={() => {
                           setYearlyCashFlow(!yearlyCashFlow);
                           setYearlyRevenue(false);
@@ -2146,7 +2338,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         onClick={() => {
                           setYearlyCashFlow(!yearlyCashFlow);
                           setYearlyRevenue(false);
@@ -2196,7 +2388,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; Revenue{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyRevenue}
                         onClick={() => {
                           setYearlyRevenue(!yearlyRevenue);
@@ -2211,7 +2403,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyRevenue}
                         onClick={() => {
                           setYearlyRevenue(!yearlyRevenue);
@@ -2254,7 +2446,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Rent{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyRent}
                         onClick={() => setYearlyRent(!yearlyRent)}
                         style={{
@@ -2264,7 +2456,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyRent}
                         onClick={() => setYearlyRent(!yearlyRent)}
                         style={{
@@ -2385,7 +2577,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Extra Charges
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyExtra}
                         onClick={() => setYearlyExtra(!yearlyExtra)}
                         style={{
@@ -2395,7 +2587,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyExtra}
                         onClick={() => setYearlyExtra(!yearlyExtra)}
                         style={{
@@ -2516,7 +2708,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; &nbsp;Utility{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyUtility}
                         onClick={() => setYearlyUtility(!yearlyUtility)}
                         style={{
@@ -2526,7 +2718,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyUtility}
                         onClick={() => setYearlyUtility(!yearlyUtility)}
                         style={{
@@ -2647,7 +2839,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; Expenses{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyExpense}
                         onClick={() => {
                           setYearlyExpense(!yearlyExpense);
@@ -2666,7 +2858,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyExpense}
                         onClick={() => {
                           setYearlyExpense(!yearlyExpense);
@@ -2713,7 +2905,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Management{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyManagement}
                         onClick={() => setYearlyManagement(!yearlyManagement)}
                         style={{
@@ -2723,7 +2915,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyManagement}
                         onClick={() => setYearlyManagement(!yearlyManagement)}
                         style={{
@@ -2783,7 +2975,98 @@ export default function OwnerDashboard2() {
                               align="right"
                               style={green}
                             >
-                              ${expense.amount_paid.toFixed(2)}
+                              ${Math.abs(expense.amount_paid).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              ${Math.abs(expense.amount_paid).toFixed(2)}
+                            </TableCell>
+                          )}
+
+                          {expense.purchase_status === "UNPAID" ? (
+                            <TableCell width="180px" align="right" style={red}>
+                              ${Math.abs(expense.amount_due).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              ${Math.abs(expense.amount_due).toFixed(2)}
+                            </TableCell>
+                          )}
+                          <TableCell width="180px" align="right">
+                            $
+                            {(
+                              Math.abs(expense.amount_paid) -
+                              Math.abs(expense.amount_due)
+                            ).toFixed(2)}
+                          </TableCell>
+                          {expense.purchase_status === "PAID" &&
+                          expense.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              ${(Math.abs(expense.amount_paid) / 12).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                          {expense.purchase_status === "UNPAID" &&
+                          expense.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              ${(Math.abs(expense.amount_due) / 12).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                          {expense.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                (Math.abs(expense.amount_paid) -
+                                  Math.abs(expense.amount_due)) /
+                                12
+                              ).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    })}
+                  {isLoading === false &&
+                    cashflowData.owner_expense_yearly.map((expense, index) => {
+                      return expense.purchase_type === "OWNER PAYMENT" &&
+                        expense.contract_fees != undefined ? (
+                        <TableRow hidden={!yearlyManagement}>
+                          <TableCell>
+                            &nbsp;&nbsp;&nbsp; {expense.address} {expense.unit}
+                            <br />
+                            &nbsp;&nbsp;&nbsp; {expense.description} <br />
+                            &nbsp;&nbsp;&nbsp; {expense.purchase_frequency}
+                          </TableCell>
+                          {expense.purchase_status === "PAID" ? (
+                            <TableCell width="180px" align="right" style={red}>
+                              {JSON.parse(expense.contract_fees).map(
+                                (fee, i) => {
+                                  return (
+                                    <div style={red}>
+                                      {fee.fee_type == "%"
+                                        ? "$" +
+                                          (
+                                            expense.amount_paid /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                            expense.amount_paid
+                                          ).toFixed(2)
+                                        : ""}
+                                    </div>
+                                  );
+                                }
+                              )}
                             </TableCell>
                           ) : (
                             <TableCell width="180px" align="right">
@@ -2791,21 +3074,62 @@ export default function OwnerDashboard2() {
                             </TableCell>
                           )}
 
-                          {expense.purchase_status === "UNPAID" ? (
+                          {expense.purchase_status === "UNPAID" &&
+                          expense.contract_fees != undefined ? (
                             <TableCell width="180px" align="right" style={red}>
-                              ${expense.amount_due.toFixed(2)}
+                              {JSON.parse(expense.contract_fees).map(
+                                (fee, i) => {
+                                  return (
+                                    <div style={red}>
+                                      {fee.fee_type == "%"
+                                        ? "$" +
+                                          (
+                                            expense.amount_due /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                            expense.amount_due
+                                          ).toFixed(2)
+                                        : ""}
+                                    </div>
+                                  );
+                                }
+                              )}
                             </TableCell>
                           ) : (
                             <TableCell width="180px" align="right">
                               ${expense.amount_due.toFixed(2)}
                             </TableCell>
                           )}
-                          <TableCell width="180px" align="right">
-                            $
-                            {(expense.amount_paid - expense.amount_due).toFixed(
-                              2
-                            )}
-                          </TableCell>
+                          {expense.contract_fees != undefined ? (
+                            <TableCell width="180px" align="right" style={red}>
+                              {JSON.parse(expense.contract_fees).map(
+                                (fee, i) => {
+                                  return (
+                                    <div style={red}>
+                                      {fee.fee_type == "%"
+                                        ? "$" +
+                                          (
+                                            expense.amount_paid /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                            expense.amount_paid -
+                                            (expense.amount_due /
+                                              (1 - parseInt(fee.charge) / 100) -
+                                              expense.amount_due)
+                                          ).toFixed(2)
+                                        : ""}
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                expense.amount_paid - expense.amount_due
+                              ).toFixed(2)}
+                            </TableCell>
+                          )}
+
                           {expense.purchase_status === "PAID" &&
                           expense.purchase_frequency == "Annually" ? (
                             <TableCell width="180px" align="right">
@@ -2848,7 +3172,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Maintenance{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyMaintenance}
                         onClick={() => setYearlyMaintenance(!yearlyMaintenance)}
                         style={{
@@ -2858,7 +3182,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyMaintenance}
                         onClick={() => setYearlyMaintenance(!yearlyMaintenance)}
                         style={{
@@ -2985,7 +3309,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; &nbsp;Repairs{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyRepairs}
                         onClick={() => setYearlyRepairs(!yearlyRepairs)}
                         style={{
@@ -3117,7 +3441,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp; &nbsp;Utility{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyUtilityExpense}
                         onClick={() =>
                           setYearlyUtilityExpense(!yearlyUtilityExpense)
@@ -3129,7 +3453,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyUtilityExpense}
                         onClick={() =>
                           setYearlyUtilityExpense(!yearlyUtilityExpense)
@@ -3260,7 +3584,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Mortgage{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyMortgage}
                         onClick={() => setYearlyMortgage(!yearlyMortgage)}
                         style={{
@@ -3270,7 +3594,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyMortgage}
                         onClick={() => setYearlyMortgage(!yearlyMortgage)}
                         style={{
@@ -3371,7 +3695,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Taxes{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyTaxes}
                         onClick={() => setYearlyTaxes(!yearlyTaxes)}
                         style={{
@@ -3381,7 +3705,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyTaxes}
                         onClick={() => setYearlyTaxes(!yearlyTaxes)}
                         style={{
@@ -3471,7 +3795,7 @@ export default function OwnerDashboard2() {
                     <TableCell width="180px">
                       &nbsp;&nbsp; Insurance{" "}
                       <img
-                        src={SortDown}
+                        src={SortLeft}
                         hidden={yearlyInsurance}
                         onClick={() => setYearlyInsurance(!yearlyInsurance)}
                         style={{
@@ -3481,7 +3805,7 @@ export default function OwnerDashboard2() {
                         }}
                       />
                       <img
-                        src={SortLeft}
+                        src={SortDown}
                         hidden={!yearlyInsurance}
                         onClick={() => setYearlyInsurance(!yearlyInsurance)}
                         style={{
@@ -3936,7 +4260,7 @@ export default function OwnerDashboard2() {
         </div>
       ) : !isLoading && ownerData.length == 1 ? (
         <div className="flex-1">
-          <div
+          {/* <div
             hidden={!responsive.showSidebar}
             style={{
               backgroundColor: "#229ebc",
@@ -3945,13 +4269,13 @@ export default function OwnerDashboard2() {
             }}
           >
             <SideBar />
-          </div>
+          </div> */}
           <div className="w-100 mb-5">
             <OwnerPropertyView property_uid={ownerData[0].property_uid} />
           </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          {/* <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <OwnerFooter />
-          </div>
+          </div> */}
         </div>
       ) : !isLoading && ownerData.length == 0 ? (
         <div className="flex-1">
@@ -3967,11 +4291,17 @@ export default function OwnerDashboard2() {
           </div>
           <div className="w-100 mb-5">
             <Header title="Owner Dashboard" />
-            <Row className="m-3">
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <h1>Welcome to Manifest My Space</h1>
-            </Row>
+            </div>
             <Row className="m-3">
-              {console.log("here")}
               <Col>
                 <h1>Add a new Property</h1>
               </Col>

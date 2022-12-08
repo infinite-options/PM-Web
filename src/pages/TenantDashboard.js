@@ -649,7 +649,7 @@ export default function ManagerDashboard() {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
-      {!isLoading && tenantData.length > 1 ? (
+      {!isLoading && tenantData.length > 0 ? (
         <div className="flex-1">
           <div
             hidden={!responsive.showSidebar}
@@ -1235,12 +1235,215 @@ export default function ManagerDashboard() {
             <SideBar />
           </div>
           <div className="w-100 mb-5">
-            <Header title="Owner Dashboard" />
-            <Row className="m-3">
+            <Header title="Tenant Dashboard" />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <h1>Welcome to Manifest My Space</h1>
-            </Row>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <br />
+              <h3>
+                {tenantProfile.tenant_first_name}{" "}
+                {tenantProfile.tenant_last_name}
+              </h3>
+            </div>
             <Row>
-              {tenantProfile.tenant_first_name} {tenantProfile.tenant_last_name}
+              {applications.length > 0 ? (
+                <Row className="m-3">
+                  <Row style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="xl"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <EnhancedTableHeadApplications
+                        orderApplications={orderApplications}
+                        orderApplicationsBy={orderApplicationsBy}
+                        onRequestSort={handleRequestSortApplications}
+                        rowCount={applications.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSortApplications(
+                          applications,
+                          getComparatorApplications(
+                            orderApplications,
+                            orderApplicationsBy
+                          )
+                        ).map((application, index) => {
+                          return (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={application.application_uid}
+                              // onClick={() => {
+                              //   navigate(
+                              //     `/tenantPropertyDetails/${application.property_uid}`,
+                              //     {
+                              //       state: {
+                              //         property: application,
+                              //         property_uid: application.property_uid,
+                              //       },
+                              //     }
+                              //   );
+                              // }}
+                              onClick={() =>
+                                goToReviewPropertyLease(application)
+                              }
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {JSON.parse(application.images).length > 0 ? (
+                                  <img
+                                    src={`${
+                                      JSON.parse(application.images)[0]
+                                    }?${Date.now()}`}
+                                    alt="application"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={PropertyIcon}
+                                    alt="application"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                )}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.address}
+                                {application.unit !== ""
+                                  ? " " + application.unit
+                                  : ""}{" "}
+                                {application.city}, {application.state}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.city}, {application.state}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.zip}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.business_name}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.property_type}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.num_beds +
+                                  "/" +
+                                  application.num_baths}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                ${application.listed_rent}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.application_status === "NEW" ? (
+                                  <h6 style={{ mediumBold, color: "blue" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "REJECTED" ? (
+                                  <h6 style={{ mediumBold, color: "red" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "REFUSED" ? (
+                                  <h6 style={{ mediumBold, color: "red" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "PM END EARLY" ? (
+                                  <h6 style={{ mediumBold, color: "yellow" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "TENANT END EARLY" ? (
+                                  <h6 style={{ mediumBold, color: "yellow" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "RENTED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "FORWARDED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : (
+                                  ""
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </Row>
+              ) : (
+                ""
+              )}
             </Row>
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />

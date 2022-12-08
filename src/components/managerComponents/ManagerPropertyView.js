@@ -10,6 +10,7 @@ import {
   TableSortLabel,
   Box,
   Grid,
+  ImageListItem,
 } from "@material-ui/core";
 import Carousel from "react-multi-carousel";
 import { makeStyles } from "@material-ui/core/styles";
@@ -62,7 +63,8 @@ function ManagerPropertyView(props) {
   const { access_token, user } = userData;
   // const property = location.state.property
   // const { mp_id } = useParams();
-  const property_uid = location.state.property_uid;
+  const property_uid =
+    location.state === null ? props.property_uid : location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
   const [property, setProperty] = useState({ images: "[]" });
   const [hideEdit, setHideEdit] = useState(true);
@@ -211,14 +213,12 @@ function ManagerPropertyView(props) {
   const [monthlyRent, setMonthlyRent] = useState(false);
   const [monthlyExtra, setMonthlyExtra] = useState(false);
   const [monthlyUtility, setMonthlyUtility] = useState(false);
+  const [monthlyManagement, setMonthlyManagement] = useState(false);
 
   const [monthlyExpense, setMonthlyExpense] = useState(false);
-  const [monthlyManagement, setMonthlyManagement] = useState(false);
+  const [monthlyOwnerPayment, setMonthlyOwnerPayment] = useState(false);
   const [monthlyMaintenance, setMonthlyMaintenance] = useState(false);
   const [monthlyRepairs, setMonthlyRepairs] = useState(false);
-  const [monthlyMortgage, setMonthlyMortgage] = useState(false);
-  const [monthlyTaxes, setMonthlyTaxes] = useState(false);
-  const [monthlyInsurance, setMonthlyInsurance] = useState(false);
   const [monthlyUtilityExpense, setMonthlyUtilityExpense] = useState(false);
 
   const [yearlyRevenue, setYearlyRevenue] = useState(false);
@@ -230,9 +230,6 @@ function ManagerPropertyView(props) {
   const [yearlyManagement, setYearlyManagement] = useState(false);
   const [yearlyMaintenance, setYearlyMaintenance] = useState(false);
   const [yearlyRepairs, setYearlyRepairs] = useState(false);
-  const [yearlyMortgage, setYearlyMortgage] = useState(false);
-  const [yearlyTaxes, setYearlyTaxes] = useState(false);
-  const [yearlyInsurance, setYearlyInsurance] = useState(false);
   const [yearlyUtilityExpense, setYearlyUtilityExpense] = useState(false);
 
   const days = (date_1, date_2) => {
@@ -270,11 +267,18 @@ function ManagerPropertyView(props) {
     setShowDialog(false);
   };
   const fetchProperty = async () => {
+    const management_businesses = user.businesses.filter(
+      (business) => business.business_type === "MANAGEMENT"
+    );
+    let management_buid = null;
+    if (management_businesses.length >= 1) {
+      management_buid = management_businesses[0].business_uid;
+    }
     const response = await get(
       `/propertiesManagerDetail?property_uid=${property_uid}`
     );
     const cashflowResponse = await get(
-      `/ownerCashflowProperty?property_id=${property_uid}&owner_id=${user.user_uid}`
+      `/managerCashflow?manager_id=${management_buid}`
     );
 
     setCashflowData(cashflowResponse.result);
@@ -289,13 +293,6 @@ function ManagerPropertyView(props) {
       (r) => r.rental_status === "ACTIVE"
     );
 
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length >= 1) {
-      management_buid = management_businesses[0].business_uid;
-    }
     let owner_negotiations = property_details.property_manager.filter(
       (pm) => pm.linked_business_id === management_buid
     );
@@ -550,7 +547,8 @@ function ManagerPropertyView(props) {
   revenueTotal = (
     cashflowData.rental_revenue +
     cashflowData.extra_revenue +
-    cashflowData.utility_revenue
+    cashflowData.utility_revenue +
+    cashflowData.management_revenue
   ).toFixed(2);
 
   let expenseTotal = 0;
@@ -558,79 +556,70 @@ function ManagerPropertyView(props) {
     cashflowData.maintenance_expense +
     cashflowData.management_expense +
     cashflowData.repairs_expense +
-    cashflowData.utility_expense +
-    cashflowData.mortgage_expense +
-    cashflowData.taxes_expense +
-    cashflowData.insurance_expense
+    cashflowData.utility_expense
   ).toFixed(2);
   const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
 
-  let revenueTotalAmortized = 0;
-  revenueTotalAmortized = (
-    cashflowData.amortized_rental_revenue +
-    cashflowData.amortized_extra_revenue +
-    cashflowData.amortized_utility_revenue
-  ).toFixed(2);
+  // let revenueTotalAmortized = 0;
+  // revenueTotalAmortized = (
+  //   cashflowData.amortized_rental_revenue +
+  //   cashflowData.amortized_extra_revenue +
+  //   cashflowData.amortized_utility_revenue +
+  //   cashflowData.amortized_management_revenue
+  // ).toFixed(2);
 
-  let expenseTotalAmortized = 0;
-  expenseTotalAmortized = (
-    cashflowData.amortized_maintenance_expense +
-    cashflowData.amortized_management_expense +
-    cashflowData.amortized_repairs_expense +
-    cashflowData.amortized_utility_expense +
-    cashflowData.amortized_mortgage_expense +
-    cashflowData.amortized_taxes_expense +
-    cashflowData.amortized_insurance_expense
-  ).toFixed(2);
-  const cashFlowAmortized = (
-    revenueTotalAmortized - expenseTotalAmortized
-  ).toFixed(2);
+  // let expenseTotalAmortized = 0;
+  // expenseTotalAmortized = (
+  //   cashflowData.amortized_maintenance_expense +
+  //   cashflowData.amortized_management_expense +
+  //   cashflowData.amortized_repairs_expense +
+  //   cashflowData.amortized_utility_expense
+  // ).toFixed(2);
+  // const cashFlowAmortized = (
+  //   revenueTotalAmortized - expenseTotalAmortized
+  // ).toFixed(2);
 
   let yearExpenseTotal = 0;
   yearExpenseTotal = (
     cashflowData.maintenance_year_expense +
     cashflowData.management_year_expense +
     cashflowData.repairs_year_expense +
-    cashflowData.utility_year_expense +
-    cashflowData.mortgage_year_expense +
-    cashflowData.taxes_year_expense +
-    cashflowData.insurance_year_expense
+    cashflowData.utility_year_expense
   ).toFixed(2);
 
   let yearRevenueTotal = 0;
   yearRevenueTotal = (
     cashflowData.rental_year_revenue +
     cashflowData.extra_year_revenue +
-    cashflowData.utility_year_revenue
+    cashflowData.utility_year_revenue +
+    cashflowData.management_year_revenue
   ).toFixed(2);
   const yearCashFlow = (yearRevenueTotal - yearExpenseTotal).toFixed(2);
 
-  let yearExpenseTotalAmortized = 0;
-  yearExpenseTotalAmortized = (
-    cashflowData.amortized_maintenance_year_expense +
-    cashflowData.amortized_management_year_expense +
-    cashflowData.amortized_repairs_year_expense +
-    cashflowData.amortized_utility_year_expense +
-    cashflowData.amortized_mortgage_year_expense +
-    cashflowData.amortized_taxes_year_expense +
-    cashflowData.amortized_insurance_year_expense
-  ).toFixed(2);
+  // let yearExpenseTotalAmortized = 0;
+  // yearExpenseTotalAmortized = (
+  //   cashflowData.amortized_maintenance_year_expense +
+  //   cashflowData.amortized_management_year_expense +
+  //   cashflowData.amortized_repairs_year_expense +
+  //   cashflowData.amortized_utility_year_expense
+  // ).toFixed(2);
 
-  let yearRevenueTotalAmortized = 0;
-  yearRevenueTotalAmortized = (
-    cashflowData.amortized_rental_year_revenue +
-    cashflowData.amortized_extra_year_revenue +
-    cashflowData.amortized_utility_year_revenue
-  ).toFixed(2);
-  const yearCashFlowAmortized = (
-    yearRevenueTotalAmortized - yearExpenseTotalAmortized
-  ).toFixed(2);
+  // let yearRevenueTotalAmortized = 0;
+  // yearRevenueTotalAmortized = (
+  //   cashflowData.amortized_rental_year_revenue +
+  //   cashflowData.amortized_extra_year_revenue +
+  //   cashflowData.amortized_utility_year_revenue
+  // ).toFixed(2);
+  // const yearCashFlowAmortized = (
+  //   yearRevenueTotalAmortized - yearExpenseTotalAmortized
+  // ).toFixed(2);
 
   let revenueExpectedTotal = 0;
   revenueExpectedTotal = (
     cashflowData.rental_expected_revenue +
     cashflowData.extra_expected_revenue +
-    cashflowData.utility_expected_revenue
+    cashflowData.utility_expected_revenue +
+    cashflowData.management_expected_revenue
   ).toFixed(2);
 
   let expenseExpectedTotal = 0;
@@ -639,43 +628,39 @@ function ManagerPropertyView(props) {
     cashflowData.maintenance_expected_expense +
     cashflowData.management_expected_expense +
     cashflowData.repairs_expected_expense +
-    cashflowData.utility_expected_expense +
-    cashflowData.mortgage_expense +
-    cashflowData.taxes_expense +
-    cashflowData.insurance_expense
+    cashflowData.utility_expected_expense
   ).toFixed(2);
 
   const cashFlowExpected = (
     revenueExpectedTotal - expenseExpectedTotal
   ).toFixed(2);
 
-  let revenueExpectedTotalAmortized = 0;
-  revenueExpectedTotalAmortized = (
-    cashflowData.amortized_rental_expected_revenue +
-    cashflowData.amortized_extra_expected_revenue +
-    cashflowData.amortized_utility_expected_revenue
-  ).toFixed(2);
+  // let revenueExpectedTotalAmortized = 0;
+  // revenueExpectedTotalAmortized = (
+  //   cashflowData.amortized_rental_expected_revenue +
+  //   cashflowData.amortized_extra_expected_revenue +
+  //   cashflowData.amortized_utility_expected_revenue +
+  // amortized_management_expected_revenue
+  // ).toFixed(2);
 
-  let expenseExpectedTotalAmortized = 0;
-  expenseExpectedTotalAmortized = (
-    cashflowData.amortized_maintenance_expected_expense +
-    cashflowData.amortized_management_expected_expense +
-    cashflowData.amortized_repairs_expected_expense +
-    cashflowData.amortized_utility_expected_expense +
-    cashflowData.amortized_mortgage_expense +
-    cashflowData.amortized_taxes_expense +
-    cashflowData.amortized_insurance_expense
-  ).toFixed(2);
+  // let expenseExpectedTotalAmortized = 0;
+  // expenseExpectedTotalAmortized = (
+  //   cashflowData.amortized_maintenance_expected_expense +
+  //   cashflowData.amortized_management_expected_expense +
+  //   cashflowData.amortized_repairs_expected_expense +
+  //   cashflowData.amortized_utility_expected_expense
+  // ).toFixed(2);
 
-  const cashFlowExpectedAmortized = (
-    revenueExpectedTotalAmortized - expenseExpectedTotalAmortized
-  ).toFixed(2);
+  // const cashFlowExpectedAmortized = (
+  //   revenueExpectedTotalAmortized - expenseExpectedTotalAmortized
+  // ).toFixed(2);
 
   let yearRevenueExpectedTotal = 0;
   yearRevenueExpectedTotal = (
     cashflowData.rental_year_expected_revenue +
     cashflowData.extra_year_expected_revenue +
-    cashflowData.utility_year_expected_revenue
+    cashflowData.utility_year_expected_revenue +
+    cashflowData.management_year_expected_revenue
   ).toFixed(2);
 
   let yearExpenseExpectedTotal = 0;
@@ -683,37 +668,31 @@ function ManagerPropertyView(props) {
     cashflowData.maintenance_year_expected_expense +
     cashflowData.management_year_expected_expense +
     cashflowData.repairs_year_expected_expense +
-    cashflowData.utility_year_expected_expense +
-    cashflowData.mortgage_year_expense +
-    cashflowData.taxes_year_expense +
-    cashflowData.insurance_year_expense
+    cashflowData.utility_year_expected_expense
   ).toFixed(2);
 
   const yearCashFlowExpected = (
     yearRevenueExpectedTotal - yearExpenseExpectedTotal
   ).toFixed(2);
 
-  let yearRevenueExpectedTotalAmortized = 0;
-  yearRevenueExpectedTotalAmortized = (
-    cashflowData.amortized_rental_year_expected_revenue +
-    cashflowData.amortized_extra_year_expected_revenue +
-    cashflowData.amortized_utility_year_expected_revenue
-  ).toFixed(2);
+  // let yearRevenueExpectedTotalAmortized = 0;
+  // yearRevenueExpectedTotalAmortized = (
+  //   cashflowData.amortized_rental_year_expected_revenue +
+  //   cashflowData.amortized_extra_year_expected_revenue +
+  //   cashflowData.amortized_utility_year_expected_revenue
+  // ).toFixed(2);
 
-  let yearExpenseExpectedTotalAmortized = 0;
-  yearExpenseExpectedTotalAmortized = (
-    cashflowData.amortized_maintenance_year_expected_expense +
-    cashflowData.amortized_management_year_expected_expense +
-    cashflowData.amortized_repairs_year_expected_expense +
-    cashflowData.amortized_utility_year_expected_expense +
-    cashflowData.amortized_mortgage_year_expense +
-    cashflowData.amortized_taxes_year_expense +
-    cashflowData.amortized_insurance_year_expense
-  ).toFixed(2);
+  // let yearExpenseExpectedTotalAmortized = 0;
+  // yearExpenseExpectedTotalAmortized = (
+  //   cashflowData.amortized_maintenance_year_expected_expense +
+  //   cashflowData.amortized_management_year_expected_expense +
+  //   cashflowData.amortized_repairs_year_expected_expense +
+  //   cashflowData.amortized_utility_year_expected_expense
+  // ).toFixed(2);
 
-  const yearCashFlowExpectedAmortized = (
-    yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
-  ).toFixed(2);
+  // const yearCashFlowExpectedAmortized = (
+  //   yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
+  // ).toFixed(2);
 
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
@@ -860,7 +839,7 @@ function ManagerPropertyView(props) {
                             })}{" "}
                             &nbsp;
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyCashFlow}
                               onClick={() => {
                                 setMonthlyCashFlow(!monthlyCashFlow);
@@ -870,12 +849,10 @@ function ManagerPropertyView(props) {
                                 setMonthlyExtra(false);
                                 setMonthlyUtility(false);
                                 setMonthlyManagement(false);
+                                setMonthlyOwnerPayment(false);
                                 setMonthlyMaintenance(false);
                                 setMonthlyRepairs(false);
                                 setMonthlyUtilityExpense(false);
-                                setMonthlyMortgage(false);
-                                setMonthlyTaxes(false);
-                                setMonthlyInsurance(false);
                               }}
                               style={{
                                 width: "10px",
@@ -884,7 +861,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyCashFlow}
                               onClick={() => {
                                 setMonthlyCashFlow(!monthlyCashFlow);
@@ -894,12 +871,10 @@ function ManagerPropertyView(props) {
                                 setMonthlyExtra(false);
                                 setMonthlyUtility(false);
                                 setMonthlyManagement(false);
+                                setMonthlyOwnerPayment(false);
                                 setMonthlyMaintenance(false);
                                 setMonthlyRepairs(false);
                                 setMonthlyUtilityExpense(false);
-                                setMonthlyMortgage(false);
-                                setMonthlyTaxes(false);
-                                setMonthlyInsurance(false);
                               }}
                               style={{
                                 width: "10px",
@@ -917,7 +892,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px" align="right">
                             ${(cashFlow - cashFlowExpected).toFixed(2)}
                           </TableCell>
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             ${cashFlowAmortized}
                           </TableCell>
                           <TableCell width="180px" align="right">
@@ -928,19 +903,20 @@ function ManagerPropertyView(props) {
                             {(
                               cashFlowAmortized - cashFlowExpectedAmortized
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                         <TableRow hidden={!monthlyCashFlow}>
                           <TableCell width="180px">
                             &nbsp; Revenue{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyRevenue}
                               onClick={() => {
                                 setMonthlyRevenue(!monthlyRevenue);
                                 setMonthlyRent(false);
                                 setMonthlyExtra(false);
                                 setMonthlyUtility(false);
+                                setMonthlyManagement(false);
                               }}
                               style={{
                                 width: "10px",
@@ -949,13 +925,14 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyRevenue}
                               onClick={() => {
                                 setMonthlyRevenue(!monthlyRevenue);
                                 setMonthlyRent(false);
                                 setMonthlyExtra(false);
                                 setMonthlyUtility(false);
+                                setMonthlyManagement(false);
                               }}
                               style={{
                                 width: "10px",
@@ -973,7 +950,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px" align="right">
                             ${(revenueTotal - revenueExpectedTotal).toFixed(2)}
                           </TableCell>
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             ${revenueTotalAmortized}
                           </TableCell>
                           <TableCell width="180px" align="right">
@@ -985,14 +962,13 @@ function ManagerPropertyView(props) {
                               revenueTotalAmortized -
                               revenueExpectedTotalAmortized
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
-
                         <TableRow hidden={!monthlyRevenue}>
                           <TableCell width="180px">
                             &nbsp;&nbsp; Rent{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyRent}
                               onClick={() => setMonthlyRent(!monthlyRent)}
                               style={{
@@ -1002,7 +978,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyRent}
                               onClick={() => setMonthlyRent(!monthlyRent)}
                               style={{
@@ -1025,7 +1001,7 @@ function ManagerPropertyView(props) {
                               cashflowData.rental_expected_revenue
                             ).toFixed(2)}
                           </TableCell>
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             ${cashflowData.amortized_rental_revenue.toFixed(2)}
                           </TableCell>
                           <TableCell width="180px" align="right">
@@ -1040,12 +1016,16 @@ function ManagerPropertyView(props) {
                               cashflowData.amortized_rental_revenue -
                               cashflowData.amortized_rental_expected_revenue
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
+
                         {isLoading === false &&
-                          cashflowData.owner_revenue.map((revenue, index) => {
+                          cashflowData.manager_revenue.map((revenue, index) => {
+                            console.log("revenue", revenue);
+
                             return revenue.purchase_type === "RENT" ? (
                               <TableRow hidden={!monthlyRent}>
+                                {console.log("in rent", revenue)}
                                 <TableCell>
                                   &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                   {revenue.unit}
@@ -1131,7 +1111,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp;&nbsp; Extra Charges
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyExtra}
                               onClick={() => setMonthlyExtra(!monthlyExtra)}
                               style={{
@@ -1141,7 +1121,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyExtra}
                               onClick={() => setMonthlyExtra(!monthlyExtra)}
                               style={{
@@ -1164,7 +1144,7 @@ function ManagerPropertyView(props) {
                               cashflowData.extra_expected_revenue
                             ).toFixed(2)}
                           </TableCell>
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             ${cashflowData.amortized_extra_revenue.toFixed(2)}
                           </TableCell>
                           <TableCell width="180px" align="right">
@@ -1179,10 +1159,10 @@ function ManagerPropertyView(props) {
                               cashflowData.amortized_extra_revenue -
                               cashflowData.amortized_extra_expected_revenue
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_revenue.map((revenue, index) => {
+                          cashflowData.manager_revenue.map((revenue, index) => {
                             return revenue.purchase_type === "EXTRA CHARGES" ? (
                               <TableRow hidden={!monthlyExtra}>
                                 <TableCell>
@@ -1269,7 +1249,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; &nbsp;Utility
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyUtility}
                               onClick={() => setMonthlyUtility(!monthlyUtility)}
                               style={{
@@ -1279,7 +1259,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyUtility}
                               onClick={() => setMonthlyUtility(!monthlyUtility)}
                               style={{
@@ -1302,7 +1282,7 @@ function ManagerPropertyView(props) {
                               cashflowData.utility_expected_revenue
                             ).toFixed(2)}
                           </TableCell>
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             ${cashflowData.amortized_utility_revenue.toFixed(2)}
                           </TableCell>
                           <TableCell width="180px" align="right">
@@ -1317,12 +1297,161 @@ function ManagerPropertyView(props) {
                               cashflowData.amortized_utility_revenue -
                               cashflowData.amortized_utility_expected_revenue
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_revenue.map((revenue, index) => {
+                          cashflowData.manager_revenue.map((revenue, index) => {
                             return revenue.purchase_type === "UTILITY" ? (
                               <TableRow hidden={!monthlyUtility}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                  {revenue.unit}
+                                  <br />
+                                  &nbsp;&nbsp;&nbsp; {revenue.description}{" "}
+                                  <br />
+                                  &nbsp;&nbsp;&nbsp;{" "}
+                                  {revenue.purchase_frequency}
+                                </TableCell>
+                                {revenue.purchase_status === "PAID" ? (
+                                  <TableCell
+                                    width="180px"
+                                    align="right"
+                                    style={green}
+                                  >
+                                    ${revenue.amount_paid.toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    ${revenue.amount_paid.toFixed(2)}
+                                  </TableCell>
+                                )}
+
+                                {revenue.purchase_status === "UNPAID" ? (
+                                  <TableCell
+                                    width="180px"
+                                    align="right"
+                                    style={red}
+                                  >
+                                    ${revenue.amount_due.toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    ${revenue.amount_due.toFixed(2)}
+                                  </TableCell>
+                                )}
+                                <TableCell width="180px" align="right">
+                                  $
+                                  {(
+                                    revenue.amount_paid - revenue.amount_due
+                                  ).toFixed(2)}
+                                </TableCell>
+                                {revenue.purchase_status === "PAID" &&
+                                revenue.purchase_frequency == "Annually" ? (
+                                  <TableCell width="180px" align="right">
+                                    ${(revenue.amount_paid / 12).toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    $0.00
+                                  </TableCell>
+                                )}
+                                {revenue.purchase_status === "UNPAID" &&
+                                revenue.purchase_frequency == "Annually" ? (
+                                  <TableCell width="180px" align="right">
+                                    ${(revenue.amount_due / 12).toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    $0.00
+                                  </TableCell>
+                                )}
+                                {revenue.purchase_frequency == "Annually" ? (
+                                  <TableCell width="180px" align="right">
+                                    $
+                                    {(
+                                      (revenue.amount_paid -
+                                        revenue.amount_due) /
+                                      12
+                                    ).toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    $0.00
+                                  </TableCell>
+                                )}
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
+                        <TableRow hidden={!monthlyRevenue}>
+                          <TableCell width="180px">
+                            &nbsp; &nbsp;Management
+                            <img
+                              src={SortLeft}
+                              hidden={monthlyManagement}
+                              onClick={() =>
+                                setMonthlyManagement(!monthlyManagement)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />
+                            <img
+                              src={SortDown}
+                              hidden={!monthlyManagement}
+                              onClick={() =>
+                                setMonthlyManagement(!monthlyManagement)
+                              }
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                              }}
+                            />{" "}
+                          </TableCell>
+                          <TableCell width="180px" align="right">
+                            ${cashflowData.management_revenue.toFixed(2)}
+                          </TableCell>
+                          <TableCell width="180px" align="right">
+                            $
+                            {cashflowData.management_expected_revenue.toFixed(
+                              2
+                            )}
+                          </TableCell>
+                          <TableCell width="180px" align="right">
+                            $
+                            {(
+                              cashflowData.management_revenue -
+                              cashflowData.management_expected_revenue
+                            ).toFixed(2)}
+                          </TableCell>
+                          {/* <TableCell width="180px" align="right">
+                            $
+                            {cashflowData.amortized_management_revenue.toFixed(
+                              2
+                            )}
+                          </TableCell>
+                          <TableCell width="180px" align="right">
+                            $
+                            {cashflowData.amortized_management_expected_revenue.toFixed(
+                              2
+                            )}
+                          </TableCell>
+                          <TableCell width="180px" align="right">
+                            $
+                            {(
+                              cashflowData.amortized_management_revenue -
+                              cashflowData.amortized_management_expected_revenue
+                            ).toFixed(2)}
+                          </TableCell> */}
+                        </TableRow>
+                        {isLoading === false &&
+                          cashflowData.manager_revenue.map((revenue, index) => {
+                            return revenue.purchase_type === "MANAGEMENT" ? (
+                              <TableRow hidden={!monthlyManagement}>
                                 <TableCell>
                                   &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                   {revenue.unit}
@@ -1408,17 +1537,14 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; Expenses{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyExpense}
                               onClick={() => {
                                 setMonthlyExpense(!monthlyExpense);
-                                setMonthlyManagement(false);
+                                setMonthlyOwnerPayment(false);
                                 setMonthlyMaintenance(false);
                                 setMonthlyRepairs(false);
                                 setMonthlyUtilityExpense(false);
-                                setMonthlyMortgage(false);
-                                setMonthlyTaxes(false);
-                                setMonthlyInsurance(false);
                               }}
                               style={{
                                 width: "10px",
@@ -1427,17 +1553,14 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyExpense}
                               onClick={() => {
                                 setMonthlyExpense(!monthlyExpense);
-                                setMonthlyManagement(false);
+                                setMonthlyOwnerPayment(false);
                                 setMonthlyMaintenance(false);
                                 setMonthlyRepairs(false);
                                 setMonthlyUtilityExpense(false);
-                                setMonthlyMortgage(false);
-                                setMonthlyTaxes(false);
-                                setMonthlyInsurance(false);
                               }}
                               style={{
                                 width: "10px",
@@ -1455,7 +1578,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px" align="right">
                             ${(expenseTotal - expenseExpectedTotal).toFixed(2)}
                           </TableCell>
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             ${expenseTotalAmortized}
                           </TableCell>
                           <TableCell width="180px" align="right">
@@ -1468,16 +1591,16 @@ function ManagerPropertyView(props) {
                               expenseTotalAmortized -
                               expenseExpectedTotalAmortized
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                         <TableRow hidden={!monthlyExpense}>
                           <TableCell width="180px">
-                            &nbsp;&nbsp; Management
+                            &nbsp;&nbsp; Owner Payment
                             <img
-                              src={SortDown}
-                              hidden={monthlyManagement}
+                              src={SortLeft}
+                              hidden={monthlyOwnerPayment}
                               onClick={() =>
-                                setMonthlyManagement(!monthlyManagement)
+                                setMonthlyOwnerPayment(!monthlyOwnerPayment)
                               }
                               style={{
                                 width: "10px",
@@ -1486,10 +1609,10 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
-                              hidden={!monthlyManagement}
+                              src={SortDown}
+                              hidden={!monthlyOwnerPayment}
                               onClick={() =>
-                                setMonthlyManagement(!monthlyManagement)
+                                setMonthlyOwnerPayment(!monthlyOwnerPayment)
                               }
                               style={{
                                 width: "10px",
@@ -1514,7 +1637,7 @@ function ManagerPropertyView(props) {
                               cashflowData.management_expected_expense
                             ).toFixed(2)}
                           </TableCell>
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             $
                             {cashflowData.amortized_management_expense.toFixed(
                               2
@@ -1532,12 +1655,12 @@ function ManagerPropertyView(props) {
                               cashflowData.amortized_management_expense -
                               cashflowData.amortized_management_expected_expense
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_expense.map((expense, index) => {
-                            return expense.purchase_type === "MANAGEMENT" ? (
-                              <TableRow hidden={!monthlyManagement}>
+                          cashflowData.manager_expense.map((expense, index) => {
+                            return expense.purchase_type === "OWNER PAYMENT" ? (
+                              <TableRow hidden={!monthlyOwnerPayment}>
                                 <TableCell>
                                   &nbsp;&nbsp;&nbsp; {expense.address}{" "}
                                   {expense.unit}
@@ -1623,7 +1746,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp;&nbsp; Maintenance
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyMaintenance}
                               onClick={() =>
                                 setMonthlyMaintenance(!monthlyMaintenance)
@@ -1635,7 +1758,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyMaintenance}
                               onClick={() =>
                                 setMonthlyMaintenance(!monthlyMaintenance)
@@ -1663,7 +1786,7 @@ function ManagerPropertyView(props) {
                               cashflowData.maintenance_expected_expense
                             ).toFixed(2)}
                           </TableCell>
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             $
                             {cashflowData.amortized_maintenance_expense.toFixed(
                               2
@@ -1681,10 +1804,10 @@ function ManagerPropertyView(props) {
                               cashflowData.amortized_maintenance_expense -
                               cashflowData.amortized_maintenance_expected_expense
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_expense.map((expense, index) => {
+                          cashflowData.manager_expense.map((expense, index) => {
                             return expense.purchase_type === "MAINTENANCE" ? (
                               <TableRow hidden={!monthlyMaintenance}>
                                 <TableCell>
@@ -1772,7 +1895,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; &nbsp;Repairs{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyRepairs}
                               onClick={() => setMonthlyRepairs(!monthlyRepairs)}
                               style={{
@@ -1782,7 +1905,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyRepairs}
                               onClick={() => setMonthlyRepairs(!monthlyRepairs)}
                               style={{
@@ -1806,7 +1929,7 @@ function ManagerPropertyView(props) {
                             ).toFixed(2)}
                           </TableCell>
 
-                          <TableCell width="180px" align="right">
+                          {/* <TableCell width="180px" align="right">
                             ${cashflowData.amortized_repairs_expense.toFixed(2)}
                           </TableCell>
                           <TableCell width="180px" align="right">
@@ -1821,10 +1944,10 @@ function ManagerPropertyView(props) {
                               cashflowData.amortized_repairs_expense -
                               cashflowData.amortized_repairs_expected_expense
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_expense.map((expense, index) => {
+                          cashflowData.manager_expense.map((expense, index) => {
                             return expense.purchase_type === "REPAIRS" ? (
                               <TableRow hidden={!monthlyRepairs}>
                                 <TableCell>
@@ -1909,7 +2032,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; &nbsp;Utility{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={monthlyUtilityExpense}
                               onClick={() =>
                                 setMonthlyUtilityExpense(!monthlyUtilityExpense)
@@ -1921,7 +2044,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!monthlyUtilityExpense}
                               onClick={() =>
                                 setMonthlyUtilityExpense(!monthlyUtilityExpense)
@@ -1947,6 +2070,7 @@ function ManagerPropertyView(props) {
                             ).toFixed(2)}
                           </TableCell>
 
+                          {/* 
                           <TableCell width="180px" align="right">
                             ${cashflowData.amortized_utility_expense.toFixed(2)}
                           </TableCell>
@@ -1962,9 +2086,9 @@ function ManagerPropertyView(props) {
                               cashflowData.amortized_utility_expense -
                               cashflowData.amortized_utility_expected_expense
                             ).toFixed(2)}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
-                        {isLoading === false &&
+                        {/* {isLoading === false &&
                           cashflowData.owner_utility_expense.map(
                             (expense, index) => {
                               return expense.purchase_type === "UTILITY" ? (
@@ -2052,356 +2176,13 @@ function ManagerPropertyView(props) {
                                 ""
                               );
                             }
-                          )}
-                        <TableRow hidden={!monthlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Mortgage{" "}
-                            <img
-                              src={SortDown}
-                              hidden={monthlyMortgage}
-                              onClick={() =>
-                                setMonthlyMortgage(!monthlyMortgage)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortLeft}
-                              hidden={!monthlyMortgage}
-                              onClick={() =>
-                                setMonthlyMortgage(!monthlyMortgage)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.mortgage_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.mortgage_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.mortgage_expense -
-                              cashflowData.mortgage_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_mortgage_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_mortgage_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_mortgage_expense -
-                              cashflowData.amortized_mortgage_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.owner_property_expense.map(
-                            (expense, index) => {
-                              return expense.mortgages !== null ? (
-                                <TableRow hidden={!monthlyMortgage}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {
-                                      JSON.parse(expense.mortgages).frequency
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {
-                                      JSON.parse(expense.mortgages)
-                                        .frequency_of_payment
-                                    }
-                                  </TableCell>
+                          )} */}
 
-                                  <TableCell width="180px" align="right">
-                                    ${expense.mortgage_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.mortgage_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.mortgage_expense -
-                                      expense.mortgage_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_mortgage_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_mortgage_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amortized_mortgage_expense -
-                                      expense.amortized_mortgage_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!monthlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Taxes{" "}
-                            <img
-                              src={SortDown}
-                              hidden={monthlyTaxes}
-                              onClick={() => setMonthlyTaxes(!monthlyTaxes)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortLeft}
-                              hidden={!monthlyTaxes}
-                              onClick={() => setMonthlyTaxes(!monthlyTaxes)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.taxes_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.taxes_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.taxes_expense -
-                              cashflowData.taxes_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.amortized_taxes_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.amortized_taxes_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_taxes_expense -
-                              cashflowData.amortized_taxes_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.owner_property_expense.map(
-                            (expense, index) => {
-                              return expense.taxes !== null ? (
-                                <TableRow hidden={!monthlyTaxes}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {expense.frequency}{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.frequency_of_payment}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.taxes_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.taxes_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.taxes_expense -
-                                      expense.taxes_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_taxes_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_taxes_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amortized_taxes_expense -
-                                      expense.amortized_taxes_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!monthlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Insurance{" "}
-                            <img
-                              src={SortDown}
-                              hidden={monthlyInsurance}
-                              onClick={() =>
-                                setMonthlyInsurance(!monthlyInsurance)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortLeft}
-                              hidden={!monthlyInsurance}
-                              onClick={() =>
-                                setMonthlyInsurance(!monthlyInsurance)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.insurance_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.insurance_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.insurance_expense -
-                              cashflowData.insurance_expense
-                            ).toFixed(2)}
-                          </TableCell>
-
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_insurance_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_insurance_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_insurance_expense -
-                              cashflowData.amortized_insurance_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.owner_property_expense.map(
-                            (expense, index) => {
-                              return expense.insurance !== null ? (
-                                <TableRow hidden={!monthlyInsurance}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {expense.frequency}{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.frequency_of_payment}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.insurance_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.insurance_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.insurance_expense -
-                                      expense.insurance_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_insurance_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_insurance_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amortized_insurance_expense -
-                                      expense.amortized_insurance_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-
-                        <TableRow>
+                        {/* <TableRow>
                           <TableCell width="180px">
                             {new Date().getFullYear()} &nbsp;
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               onClick={() => {
                                 setYearlyCashFlow(!yearlyCashFlow);
                                 setYearlyRevenue(false);
@@ -2413,9 +2194,6 @@ function ManagerPropertyView(props) {
                                 setYearlyMaintenance(false);
                                 setYearlyRepairs(false);
                                 setYearlyUtilityExpense(false);
-                                setYearlyMortgage(false);
-                                setYearlyTaxes(false);
-                                setYearlyInsurance(false);
                               }}
                               hidden={yearlyCashFlow}
                               style={{
@@ -2425,7 +2203,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               onClick={() => {
                                 setYearlyCashFlow(!yearlyCashFlow);
                                 setYearlyRevenue(false);
@@ -2437,9 +2215,6 @@ function ManagerPropertyView(props) {
                                 setYearlyMaintenance(false);
                                 setYearlyRepairs(false);
                                 setYearlyUtilityExpense(false);
-                                setYearlyMortgage(false);
-                                setYearlyTaxes(false);
-                                setYearlyInsurance(false);
                               }}
                               hidden={!yearlyCashFlow}
                               style={{
@@ -2476,7 +2251,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; Revenue{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyRevenue}
                               onClick={() => {
                                 setYearlyRevenue(!yearlyRevenue);
@@ -2491,7 +2266,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyRevenue}
                               onClick={() => {
                                 setYearlyRevenue(!yearlyRevenue);
@@ -2536,7 +2311,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp;&nbsp; Rent{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyRent}
                               onClick={() => setYearlyRent(!yearlyRent)}
                               style={{
@@ -2546,7 +2321,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyRent}
                               onClick={() => setYearlyRent(!yearlyRent)}
                               style={{
@@ -2593,7 +2368,7 @@ function ManagerPropertyView(props) {
                           </TableCell>
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_revenue_yearly.map(
+                          cashflowData.manager_revenue_yearly.map(
                             (revenue, index) => {
                               return revenue.purchase_type === "RENT" ? (
                                 <TableRow hidden={!yearlyRent}>
@@ -2685,7 +2460,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp;&nbsp; Extra Charges
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyExtra}
                               onClick={() => setYearlyExtra(!yearlyExtra)}
                               style={{
@@ -2695,7 +2470,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyExtra}
                               onClick={() => setYearlyExtra(!yearlyExtra)}
                               style={{
@@ -2742,7 +2517,7 @@ function ManagerPropertyView(props) {
                           </TableCell>
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_revenue_yearly.map(
+                          cashflowData.manager_revenue_yearly.map(
                             (revenue, index) => {
                               return revenue.purchase_type ===
                                 "EXTRA CHARGES" ? (
@@ -2835,7 +2610,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; &nbsp;Utility{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyUtility}
                               onClick={() => setYearlyUtility(!yearlyUtility)}
                               style={{
@@ -2845,7 +2620,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyUtility}
                               onClick={() => setYearlyUtility(!yearlyUtility)}
                               style={{
@@ -2892,7 +2667,7 @@ function ManagerPropertyView(props) {
                           </TableCell>
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_revenue_yearly.map(
+                          cashflowData.manager_revenue_yearly.map(
                             (revenue, index) => {
                               return revenue.purchase_type === "UTILITY" ? (
                                 <TableRow hidden={!yearlyUtility}>
@@ -2984,7 +2759,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; Expenses{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyExpense}
                               onClick={() => {
                                 setYearlyExpense(!yearlyExpense);
@@ -2992,9 +2767,6 @@ function ManagerPropertyView(props) {
                                 setYearlyMaintenance(false);
                                 setYearlyRepairs(false);
                                 setYearlyUtilityExpense(false);
-                                setYearlyMortgage(false);
-                                setYearlyTaxes(false);
-                                setYearlyInsurance(false);
                               }}
                               style={{
                                 width: "10px",
@@ -3003,7 +2775,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyExpense}
                               onClick={() => {
                                 setYearlyExpense(!yearlyExpense);
@@ -3011,9 +2783,6 @@ function ManagerPropertyView(props) {
                                 setYearlyMaintenance(false);
                                 setYearlyRepairs(false);
                                 setYearlyUtilityExpense(false);
-                                setYearlyMortgage(false);
-                                setYearlyTaxes(false);
-                                setYearlyInsurance(false);
                               }}
                               style={{
                                 width: "10px",
@@ -3052,7 +2821,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp;&nbsp; Management{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyManagement}
                               onClick={() =>
                                 setYearlyManagement(!yearlyManagement)
@@ -3064,7 +2833,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyManagement}
                               onClick={() =>
                                 setYearlyManagement(!yearlyManagement)
@@ -3113,7 +2882,7 @@ function ManagerPropertyView(props) {
                           </TableCell>
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_expense_yearly.map(
+                          cashflowData.manager_expense_yearly.map(
                             (expense, index) => {
                               return expense.purchase_type === "MANAGEMENT" ? (
                                 <TableRow hidden={!yearlyManagement}>
@@ -3205,7 +2974,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp;&nbsp; Maintenance{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyMaintenance}
                               onClick={() =>
                                 setYearlyMaintenance(!yearlyMaintenance)
@@ -3217,7 +2986,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyMaintenance}
                               onClick={() =>
                                 setYearlyMaintenance(!yearlyMaintenance)
@@ -3266,7 +3035,7 @@ function ManagerPropertyView(props) {
                           </TableCell>
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_expense_yearly.map(
+                          cashflowData.manager_expense_yearly.map(
                             (expense, index) => {
                               return expense.purchase_type === "MAINTENANCE" ? (
                                 <TableRow hidden={!yearlyMaintenance}>
@@ -3358,7 +3127,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; &nbsp;Repairs{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyRepairs}
                               onClick={() => setYearlyRepairs(!yearlyRepairs)}
                               style={{
@@ -3368,7 +3137,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyRepairs}
                               onClick={() => setYearlyRepairs(!yearlyRepairs)}
                               style={{
@@ -3416,7 +3185,7 @@ function ManagerPropertyView(props) {
                           </TableCell>
                         </TableRow>
                         {isLoading === false &&
-                          cashflowData.owner_expense_yearly.map(
+                          cashflowData.manager_expense_yearly.map(
                             (expense, index) => {
                               return expense.purchase_type === "REPAIRS" ? (
                                 <TableRow hidden={!yearlyRepairs}>
@@ -3508,7 +3277,7 @@ function ManagerPropertyView(props) {
                           <TableCell width="180px">
                             &nbsp; &nbsp;Utility{" "}
                             <img
-                              src={SortDown}
+                              src={SortLeft}
                               hidden={yearlyUtilityExpense}
                               onClick={() =>
                                 setYearlyUtilityExpense(!yearlyUtilityExpense)
@@ -3520,7 +3289,7 @@ function ManagerPropertyView(props) {
                               }}
                             />
                             <img
-                              src={SortLeft}
+                              src={SortDown}
                               hidden={!yearlyUtilityExpense}
                               onClick={() =>
                                 setYearlyUtilityExpense(!yearlyUtilityExpense)
@@ -3657,363 +3426,11 @@ function ManagerPropertyView(props) {
                                 ""
                               );
                             }
-                          )}
-                        <TableRow hidden={!yearlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Mortgage{" "}
-                            <img
-                              src={SortDown}
-                              hidden={yearlyMortgage}
-                              onClick={() => setYearlyMortgage(!yearlyMortgage)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortLeft}
-                              hidden={!yearlyMortgage}
-                              onClick={() => setYearlyMortgage(!yearlyMortgage)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.mortgage_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.mortgage_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.mortgage_year_expense -
-                              cashflowData.mortgage_year_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_mortgage_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_mortgage_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_mortgage_year_expense -
-                              cashflowData.amortized_mortgage_year_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.owner_property_expense.map(
-                            (expense, index) => {
-                              return expense.mortgages !== null ? (
-                                <TableRow hidden={!yearlyMortgage}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {
-                                      JSON.parse(expense.mortgages).frequency
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {
-                                      JSON.parse(expense.mortgages)
-                                        .frequency_of_payment
-                                    }
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.mortgage_year_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.mortgage_year_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.mortgage_year_expense -
-                                      expense.mortgage_year_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_mortgage_year_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_mortgage_year_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amortized_mortgage_year_expense -
-                                      expense.amortized_mortgage_year_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Taxes{" "}
-                            <img
-                              src={SortDown}
-                              hidden={yearlyTaxes}
-                              onClick={() => setYearlyTaxes(!yearlyTaxes)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortLeft}
-                              hidden={!yearlyTaxes}
-                              onClick={() => setYearlyTaxes(!yearlyTaxes)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.taxes_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.taxes_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.taxes_year_expense -
-                              cashflowData.taxes_year_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_taxes_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_taxes_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_taxes_year_expense -
-                              cashflowData.amortized_taxes_year_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.owner_property_expense.map(
-                            (expense, index) => {
-                              return expense.taxes !== null ? (
-                                <TableRow hidden={!yearlyTaxes}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {expense.frequency}{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.frequency_of_payment}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.taxes_year_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.taxes_year_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.taxes_year_expense -
-                                      expense.taxes_year_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_taxes_year_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_taxes_year_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amortized_taxes_year_expense -
-                                      expense.amortized_taxes_year_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Insurance{" "}
-                            <img
-                              src={SortDown}
-                              hidden={yearlyInsurance}
-                              onClick={() =>
-                                setYearlyInsurance(!yearlyInsurance)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortLeft}
-                              hidden={!yearlyInsurance}
-                              onClick={() =>
-                                setYearlyInsurance(!yearlyInsurance)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.insurance_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.insurance_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.insurance_year_expense -
-                              cashflowData.insurance_year_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_insurance_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_insurance_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_insurance_year_expense -
-                              cashflowData.amortized_insurance_year_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.owner_property_expense.map(
-                            (expense, index) => {
-                              return expense.insurance !== null ? (
-                                <TableRow hidden={!yearlyInsurance}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {expense.frequency}{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.frequency_of_payment}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.insurance_year_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    ${expense.insurance_year_expense.toFixed(2)}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.insurance_year_expense -
-                                      expense.insurance_year_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_insurance_year_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {expense.amortized_insurance_year_expense.toFixed(
-                                      2
-                                    )}
-                                  </TableCell>
-
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amortized_insurance_year_expense -
-                                      expense.amortized_insurance_year_expense
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
+                          )} */}
                       </TableBody>
                     </Table>
                   </div>
-                </Row>
+                </Row>{" "}
                 <Row className="m-3">
                   <Col>
                     <h3>Property Summary</h3>
@@ -4034,7 +3451,6 @@ function ManagerPropertyView(props) {
                     />
                   </Col>
                 </Row>
-
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <Table
                     classes={{ root: classes.customTable }}
@@ -4600,7 +4016,6 @@ function ManagerPropertyView(props) {
                     }
                   />
                 </Row>
-
                 <Row className="m-3">
                   <Col>
                     <h3>Property Owner Agreement</h3>
