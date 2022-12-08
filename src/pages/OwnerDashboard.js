@@ -66,6 +66,7 @@ export default function OwnerDashboard2() {
   const [monthlyRent, setMonthlyRent] = useState(false);
   const [monthlyExtra, setMonthlyExtra] = useState(false);
   const [monthlyUtility, setMonthlyUtility] = useState(false);
+  const [monthlyOwnerPayment, setMonthlyOwnerPayment] = useState(false);
 
   const [monthlyExpense, setMonthlyExpense] = useState(false);
   const [monthlyManagement, setMonthlyManagement] = useState(false);
@@ -80,6 +81,7 @@ export default function OwnerDashboard2() {
   const [yearlyRent, setYearlyRent] = useState(false);
   const [yearlyExtra, setYearlyExtra] = useState(false);
   const [yearlyUtility, setYearlyUtility] = useState(false);
+  const [yearlyOwnerPayment, setYearlyOwnerPayment] = useState(false);
 
   const [yearlyExpense, setYearlyExpense] = useState(false);
   const [yearlyManagement, setYearlyManagement] = useState(false);
@@ -469,7 +471,8 @@ export default function OwnerDashboard2() {
   revenueTotal = (
     cashflowData.rental_revenue +
     cashflowData.extra_revenue +
-    cashflowData.utility_revenue
+    cashflowData.utility_revenue +
+    cashflowData.management_revenue
   ).toFixed(2);
 
   let expenseTotal = 0;
@@ -488,7 +491,8 @@ export default function OwnerDashboard2() {
   revenueTotalAmortized = (
     cashflowData.amortized_rental_revenue +
     cashflowData.amortized_extra_revenue +
-    cashflowData.amortized_utility_revenue
+    cashflowData.amortized_utility_revenue +
+    cashflowData.amortized_management_revenue
   ).toFixed(2);
 
   let expenseTotalAmortized = 0;
@@ -520,7 +524,8 @@ export default function OwnerDashboard2() {
   yearRevenueTotal = (
     cashflowData.rental_year_revenue +
     cashflowData.extra_year_revenue +
-    cashflowData.utility_year_revenue
+    cashflowData.utility_year_revenue +
+    cashflowData.management_year_revenue
   ).toFixed(2);
   const yearCashFlow = (yearRevenueTotal - yearExpenseTotal).toFixed(2);
 
@@ -539,7 +544,8 @@ export default function OwnerDashboard2() {
   yearRevenueTotalAmortized = (
     cashflowData.amortized_rental_year_revenue +
     cashflowData.amortized_extra_year_revenue +
-    cashflowData.amortized_utility_year_revenue
+    cashflowData.amortized_utility_year_revenue +
+    cashflowData.amortized_management_year_revenue
   ).toFixed(2);
   const yearCashFlowAmortized = (
     yearRevenueTotalAmortized - yearExpenseTotalAmortized
@@ -549,7 +555,8 @@ export default function OwnerDashboard2() {
   revenueExpectedTotal = (
     cashflowData.rental_expected_revenue +
     cashflowData.extra_expected_revenue +
-    cashflowData.utility_expected_revenue
+    cashflowData.utility_expected_revenue +
+    cashflowData.management_expected_revenue
   ).toFixed(2);
 
   let expenseExpectedTotal = 0;
@@ -572,7 +579,8 @@ export default function OwnerDashboard2() {
   revenueExpectedTotalAmortized = (
     cashflowData.amortized_rental_expected_revenue +
     cashflowData.amortized_extra_expected_revenue +
-    cashflowData.amortized_utility_expected_revenue
+    cashflowData.amortized_utility_expected_revenue +
+    cashflowData.amortized_management_expected_revenue
   ).toFixed(2);
 
   let expenseExpectedTotalAmortized = 0;
@@ -594,7 +602,8 @@ export default function OwnerDashboard2() {
   yearRevenueExpectedTotal = (
     cashflowData.rental_year_expected_revenue +
     cashflowData.extra_year_expected_revenue +
-    cashflowData.utility_year_expected_revenue
+    cashflowData.utility_year_expected_revenue +
+    cashflowData.management_year_expected_revenue
   ).toFixed(2);
 
   let yearExpenseExpectedTotal = 0;
@@ -616,7 +625,8 @@ export default function OwnerDashboard2() {
   yearRevenueExpectedTotalAmortized = (
     cashflowData.amortized_rental_year_expected_revenue +
     cashflowData.amortized_extra_year_expected_revenue +
-    cashflowData.amortized_utility_year_expected_revenue
+    cashflowData.amortized_utility_year_expected_revenue +
+    cashflowData.amortized_management_year_expected_revenue
   ).toFixed(2);
 
   let yearExpenseExpectedTotalAmortized = 0;
@@ -701,6 +711,7 @@ export default function OwnerDashboard2() {
                           setMonthlyRent(false);
                           setMonthlyExtra(false);
                           setMonthlyUtility(false);
+                          setMonthlyOwnerPayment(false);
                           setMonthlyManagement(false);
                           setMonthlyMaintenance(false);
                           setMonthlyRepairs(false);
@@ -1137,6 +1148,141 @@ export default function OwnerDashboard2() {
                     cashflowData.owner_revenue.map((revenue, index) => {
                       return revenue.purchase_type === "UTILITY" ? (
                         <TableRow hidden={!monthlyUtility}>
+                          <TableCell>
+                            &nbsp;&nbsp;&nbsp; {revenue.address} {revenue.unit}
+                            <br />
+                            &nbsp;&nbsp;&nbsp; {revenue.description} <br />
+                            &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
+                          </TableCell>
+                          {revenue.purchase_status === "PAID" ? (
+                            <TableCell
+                              width="180px"
+                              align="right"
+                              style={green}
+                            >
+                              ${revenue.amount_paid.toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              ${revenue.amount_paid.toFixed(2)}
+                            </TableCell>
+                          )}
+
+                          {revenue.purchase_status === "UNPAID" ? (
+                            <TableCell width="180px" align="right" style={red}>
+                              ${revenue.amount_due.toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              ${revenue.amount_due.toFixed(2)}
+                            </TableCell>
+                          )}
+                          <TableCell width="180px" align="right">
+                            $
+                            {(revenue.amount_paid - revenue.amount_due).toFixed(
+                              2
+                            )}
+                          </TableCell>
+                          {revenue.purchase_status === "PAID" &&
+                          revenue.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              ${(revenue.amount_paid / 12).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                          {revenue.purchase_status === "UNPAID" &&
+                          revenue.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              ${(revenue.amount_due / 12).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                          {revenue.purchase_frequency == "Annually" ? (
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                (revenue.amount_paid - revenue.amount_due) /
+                                12
+                              ).toFixed(2)}
+                            </TableCell>
+                          ) : (
+                            <TableCell width="180px" align="right">
+                              $0.00
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    })}
+                  <TableRow hidden={!monthlyRevenue}>
+                    <TableCell width="180px">
+                      &nbsp;&nbsp; Owner Payment{" "}
+                      <img
+                        src={SortLeft}
+                        hidden={monthlyRent}
+                        onClick={() =>
+                          setMonthlyOwnerPayment(!monthlyOwnerPayment)
+                        }
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                      <img
+                        src={SortDown}
+                        hidden={!monthlyOwnerPayment}
+                        onClick={() =>
+                          setMonthlyOwnerPayment(!monthlyOwnerPayment)
+                        }
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          float: "right",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell width="180px" align="right">
+                      ${cashflowData.management_revenue.toFixed(2)}
+                    </TableCell>
+                    <TableCell width="180px" align="right">
+                      ${cashflowData.management_expected_revenue.toFixed(2)}
+                    </TableCell>
+                    <TableCell width="180px" align="right">
+                      $
+                      {(
+                        cashflowData.management_revenue -
+                        cashflowData.management_expected_revenue
+                      ).toFixed(2)}
+                    </TableCell>
+                    <TableCell width="180px" align="right">
+                      ${cashflowData.amortized_management_revenue.toFixed(2)}
+                    </TableCell>
+                    <TableCell width="180px" align="right">
+                      $
+                      {cashflowData.amortized_management_expected_revenue.toFixed(
+                        2
+                      )}
+                    </TableCell>
+                    <TableCell width="180px" align="right">
+                      $
+                      {(
+                        cashflowData.amortized_management_revenue -
+                        cashflowData.amortized_management_expected_revenue
+                      ).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                  {isLoading === false &&
+                    cashflowData.owner_revenue.map((revenue, index) => {
+                      return revenue.purchase_type === "OWNER PAYMENT" ? (
+                        <TableRow hidden={!monthlyOwnerPayment}>
                           <TableCell>
                             &nbsp;&nbsp;&nbsp; {revenue.address} {revenue.unit}
                             <br />
