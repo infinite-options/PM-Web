@@ -32,9 +32,6 @@ function NotManagedProperties(props) {
       return;
     }
 
-    // const response = await get(`/managerProperties`, access_token);
-    // const response =  await get(`/propertyInfo?manager_id=${user.user_uid}`);
-
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
     );

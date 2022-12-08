@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Form, Button, Row } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../AppContext";
 import ArrowDown from "../../icons/ArrowDown.svg";
@@ -26,12 +26,32 @@ function ManagerCreateExpense(props) {
   const [frequencyOfPayment, setFrequencyOfPayment] = useState("Once a month");
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [date, setDate] = useState("");
+  const [payerID, setPayerID] = useState("");
+  const [payer, setPayer] = useState("");
+  const [percentageSplitOwner, setPercentageSplitOwner] = useState("");
+  const [percentageSplitTenant, setPercentageSplitTenant] = useState("");
+  const [percentageSplitManager, setPercentageSplitManager] = useState("");
+  const [payStatus, setPayStatus] = useState("");
   const reload = () => {
     props.onSubmit();
   };
   const submitForm = async (sp) => {
     if (amount === "") {
       setErrorMessage("Please fill out all fields");
+      return;
+    }
+    if (
+      parseInt(percentageSplitManager) +
+        parseInt(percentageSplitOwner) +
+        parseInt(percentageSplitTenant) !==
+      100
+    ) {
+      console.log(
+        parseInt(
+          percentageSplitManager + percentageSplitOwner + percentageSplitTenant
+        )
+      );
+      setErrorMessage("Check your percentages");
       return;
     }
     if (access_token === null) {
@@ -53,89 +73,30 @@ function ManagerCreateExpense(props) {
       management_buid = management_businesses[0].business_uid;
     }
     let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
-    // if (category === "Mortgage") {
-    //   let mortgage = [];
-    //   const files = selectedProperty.images;
-    //   const newMortgage = {
-    //     category: category,
-    //     title: title,
-    //     description: description,
-    //     amount: amount,
-    //     frequency: frequency,
-    //     frequency_of_payment: frequencyOfPayment,
-    //     next_date: date,
-    //   };
-    //   mortgage.push(newMortgage);
-    //   console.log(newMortgage);
-    //   // let formData = new FormData();
-    //   const updateMortgage = {
-    //     property_uid: selectedProperty.property_uid,
-    //     mortgages: JSON.stringify(newMortgage),
-    //   };
-
-    //   const response = await put("/properties", updateMortgage, null, files);
-    //   reload();
-    // } else if (category === "Insurance") {
-    //   let insurance =
-    //     selectedProperty.insurance == null
-    //       ? []
-    //       : JSON.parse(selectedProperty.insurance);
-    //   // console.log(insurance);
-    //   const files = selectedProperty.images;
-    //   const newInsurance = {
-    //     category: category,
-    //     title: title,
-    //     description: description,
-    //     amount: amount,
-    //     frequency: frequency,
-    //     frequency_of_payment: frequencyOfPayment,
-    //     next_date: date,
-    //   };
-    //   insurance.push(newInsurance);
-    //   // console.log(insurance);
-    //   const updateInsurance = {
-    //     property_uid: selectedProperty.property_uid,
-    //     insurance: JSON.stringify(insurance),
-    //   };
-
-    //   const response = await put("/properties", updateInsurance, null, files);
-    //   reload();
-    // } else if (category === "Tax") {
-    //   let taxes =
-    //     selectedProperty.taxes == null
-    //       ? []
-    //       : JSON.parse(selectedProperty.taxes);
-    //   // console.log(taxes);
-    //   const files = selectedProperty.images;
-    //   const newTax = {
-    //     category: category,
-    //     title: title,
-    //     description: description,
-    //     amount: amount,
-    //     frequency: frequency,
-    //     frequency_of_payment: frequencyOfPayment,
-    //     next_date: date,
-    //   };
-    //   taxes.push(newTax);
-    //   // console.log(taxes);
-    //   const updateTaxes = {
-    //     property_uid: selectedProperty.property_uid,
-    //     taxes: JSON.stringify(taxes),
-    //   };
-    //   const response = await put("/properties", updateTaxes, null, files);
-    //   reload();
-    // } else {
+    let today_date = new Date().toISOString().split("T")[0];
     const newExpense = {
       pur_property_id: selectedProperty.property_uid,
-      payer: management_buid,
-      receiver: selectedProperty.property_uid,
+      payer: payer,
+      // receiver: receiver,
+      payerID: payerID,
+      // receiverID: receiverID,
+      ownerID: selectedProperty.owner_id,
+      managerID: selectedProperty.manager_id,
+      tenantID:
+        selectedProperty.rentalInfo.length !== 0
+          ? selectedProperty.rentalInfo[0].tenant_id
+          : "",
+      splitPercentManager: percentageSplitManager,
+      splitPercentOwner: percentageSplitOwner,
+      splitPercentTenant: percentageSplitTenant,
       purchase_type: category,
-      // title: title,
       description: description,
       amount_due: amount,
       purchase_frequency: frequency,
-      payment_frequency: frequencyOfPayment,
-      next_payment: date,
+      payment_frequency:
+        frequency == "One-time" ? "One-time" : frequencyOfPayment,
+      next_payment: frequency == "One-time" ? today_date : date,
+      purchase_status: payStatus,
     };
 
     console.log(newExpense);
@@ -166,6 +127,12 @@ function ManagerCreateExpense(props) {
     ) : (
       ""
     );
+
+  console.log(
+    new Date().toISOString().split("T")[0] +
+      " " +
+      new Date().toISOString().split("T")[1].substring(0, 8)
+  );
   return (
     <div className="d-flex flex-column w-100 p-2 overflow-hidden">
       <h5 className="m-2">Add New Expense Payment</h5>
@@ -331,59 +298,12 @@ function ManagerCreateExpense(props) {
           </Form.Select>
         </Form.Group>
       )}
-      {/* <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Frequency
-        </Form.Label>
-        <Form.Select
-          style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-          value={frequency}
-          onChange={(e) => setFrequency(e.target.value)}
-        >
-          <option>Monthly</option>
-          <option>Annually</option>
-          <option>One-time</option>
-        </Form.Select>
-      </Form.Group> */}
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Frequency of payment
         </Form.Label>
 
-        {frequency === "Monthly" &&
-        (category === "Insurance" ||
-          category === "Mortgage" ||
-          category === "Tax") ? (
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequencyOfPayment}
-            onChange={(e) => setFrequencyOfPayment(e.target.value)}
-          >
-            <option>Once a month</option>
-            <option>Twice a month</option>
-          </Form.Select>
-        ) : frequency === "Annually" &&
-          (category === "Insurance" ||
-            category === "Mortgage" ||
-            category === "Tax") ? (
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequencyOfPayment}
-            onChange={(e) => setFrequencyOfPayment(e.target.value)}
-          >
-            <option>Once a year</option>
-            <option>Twice a year</option>
-          </Form.Select>
-        ) : frequency === "Weekly" && category === "Mortgage" ? (
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequencyOfPayment}
-            onChange={(e) => setFrequencyOfPayment(e.target.value)}
-          >
-            <option>Once a week</option>
-            <option>Every other week</option>
-          </Form.Select>
-        ) : frequency === "One-time" ? (
+        {frequency === "One-time" ? (
           <Form.Select
             style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
             value={frequencyOfPayment}
@@ -397,7 +317,6 @@ function ManagerCreateExpense(props) {
             value={frequencyOfPayment}
             onChange={(e) => setFrequencyOfPayment(e.target.value)}
           >
-            <option>Every other month</option>
             <option>Once a month</option>
             <option>Twice a month</option>
           </Form.Select>
@@ -430,6 +349,196 @@ function ManagerCreateExpense(props) {
           />
         </Form.Group>
       )}
+      {category === "Management" ||
+      category === "Maintenance" ||
+      category === "Repairs" ? (
+        <div>
+          {console.log(JSON.parse(selectedProperty))}
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Payer
+            </Form.Label>
+            <Row>
+              <Col xs={4}>
+                {" "}
+                <Form.Check
+                  inline
+                  label="Owner"
+                  name="group1"
+                  type="radio"
+                  id="inline-radio-1"
+                  onChange={(e) => {
+                    setPayerID(JSON.parse(selectedProperty).owner_id);
+                    setPayer("OWNER");
+                  }}
+                />
+              </Col>
+
+              {JSON.parse(selectedProperty) !== null &&
+              JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+                <Col xs={4}>
+                  {" "}
+                  <Form.Check
+                    inline
+                    label="Tenant"
+                    name="group1"
+                    type="radio"
+                    id="inline-radio-2"
+                    onChange={(e) => {
+                      setPayerID(
+                        JSON.parse(selectedProperty).rentalInfo[0].tenant_id
+                      );
+                      setPayer("TENANT");
+                    }}
+                  />
+                </Col>
+              ) : (
+                ""
+              )}
+              {JSON.parse(selectedProperty) !== null ? (
+                <Col xs={4}>
+                  <Form.Check
+                    inline
+                    name="group1"
+                    label="Property Manager"
+                    type="radio"
+                    id="inline-radio-3"
+                    onChange={(e) => {
+                      setPayerID(JSON.parse(selectedProperty).manager_id);
+                      setPayer("PROPERTY MANAGER");
+                    }}
+                  />
+                </Col>
+              ) : (
+                ""
+              )}
+            </Row>
+          </Form.Group>
+        </div>
+      ) : (
+        ""
+      )}
+      {category === "Management" ||
+      category === "Maintenance" ||
+      category === "Repairs" ? (
+        <div>
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Receiver
+            </Form.Label>{" "}
+            <Row>
+              <Col xs={4}>
+                <Form.Group className="mx-2 my-3 d-flex flex-row">
+                  <Form.Control
+                    style={(squareForm, { width: "20%", marginRight: "1rem" })}
+                    placeholder="%"
+                    value={percentageSplitOwner}
+                    onChange={(e) => setPercentageSplitOwner(e.target.value)}
+                  />
+                  Owner
+                  {/* <Form.Check
+                    inline
+                    label="Owner"
+                    name="group2"
+                    type="radio"
+                    id="inline-radio-1"
+                    onChange={(e) => {
+                      setReceiverID(JSON.parse(selectedProperty).owner_id);
+                      setReceiver("OWNER");
+                    }}
+                  /> */}
+                </Form.Group>
+              </Col>
+
+              {JSON.parse(selectedProperty) !== null &&
+              JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+                <Col>
+                  <Form.Group className="mx-2 my-3 d-flex flex-row">
+                    <Form.Control
+                      style={
+                        (squareForm, { width: "20%", marginRight: "1rem" })
+                      }
+                      placeholder="%"
+                      value={percentageSplitTenant}
+                      onChange={(e) => setPercentageSplitTenant(e.target.value)}
+                    />
+                    Tenant
+                    {/* <Form.Check
+                      inline
+                      label="Tenant"
+                      name="group2"
+                      type="radio"
+                      id="inline-radio-2"
+                      onChange={(e) => {
+                        setReceiverID(
+                          JSON.parse(selectedProperty).rentalInfo[0].tenant_id
+                        );
+                        setReceiver("TENANT");
+                      }}
+                    /> */}
+                  </Form.Group>
+                </Col>
+              ) : (
+                ""
+              )}
+
+              {JSON.parse(selectedProperty) !== null ? (
+                <Col xs={4}>
+                  <Form.Group className="mx-2 my-3 d-flex flex-row">
+                    <Form.Control
+                      style={
+                        (squareForm, { width: "20%", marginRight: "1rem" })
+                      }
+                      placeholder="%"
+                      value={percentageSplitManager}
+                      onChange={(e) =>
+                        setPercentageSplitManager(e.target.value)
+                      }
+                    />
+                    Property Manager
+                    {/* <Form.Check
+                      inline
+                      name="group2"
+                      label="Property Manager"
+                      type="radio"
+                      id="inline-radio-3"
+                      onChange={(e) => {
+                        setReceiverID(JSON.parse(selectedProperty).manager_id);
+                        setReceiver("PROPERTY MANAGER");
+                      }}
+                    /> */}
+                  </Form.Group>
+                </Col>
+              ) : (
+                ""
+              )}
+            </Row>
+          </Form.Group>
+        </div>
+      ) : (
+        ""
+      )}
+      <Form.Group className="mx-2 my-3">
+        <Form.Label as="h6" className="mb-0 ms-2">
+          Payment Status
+        </Form.Label>{" "}
+        <Form.Check
+          inline
+          label="Paid"
+          name="group3"
+          type="radio"
+          id="inline-radio-1"
+          onChange={(e) => setPayStatus("PAID")}
+        />
+        <Form.Check
+          inline
+          label="Unpaid"
+          name="group3"
+          type="radio"
+          id="inline-radio-2"
+          onChange={(e) => setPayStatus("UNPAID")}
+        />
+      </Form.Group>
       <div className="text-center" style={errorMessage === "" ? hidden : {}}>
         <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
       </div>
