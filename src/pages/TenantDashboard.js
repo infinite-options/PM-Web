@@ -19,8 +19,8 @@ import SideBar from "../components/tenantComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
 import TenantFooter from "../components/tenantComponents/TenantFooter";
-import UpcomingPayments from "../components/tenantComponents/UpcomingPayments";
-import PaymentHistory from "../components/tenantComponents/PaymentHistory";
+import TenantUpcomingPayments from "../components/tenantComponents/TenantUpcomingPayments";
+import TenantPaymentHistory from "../components/tenantComponents/TenantPaymentHistory";
 import TenantRepairRequest from "../components/tenantComponents/TenantRepairRequest";
 import SortDown from "../icons/Sort-down.svg";
 import SortLeft from "../icons/Sort-left.svg";
@@ -829,10 +829,13 @@ export default function TenantDashboard() {
             </Row>
             <Row className="m-3">
               {tenantData.length !== 0 && (
-                <UpcomingPayments data={upcomingPaymentsData} type={true} />
+                <TenantUpcomingPayments
+                  data={upcomingPaymentsData}
+                  type={true}
+                />
               )}
               {tenantData.length !== 0 && (
-                <PaymentHistory data={paymentHistoryData} />
+                <TenantPaymentHistory data={paymentHistoryData} />
               )}
             </Row>
             <Row className="m-3">

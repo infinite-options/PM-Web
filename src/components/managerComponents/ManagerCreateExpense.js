@@ -10,6 +10,7 @@ import {
   hidden,
   red,
   formLabel,
+  subHeading,
 } from "../../utils/styles";
 import { post, put } from "../../utils/api";
 
@@ -31,7 +32,8 @@ function ManagerCreateExpense(props) {
   const [percentageSplitOwner, setPercentageSplitOwner] = useState(0);
   const [percentageSplitTenant, setPercentageSplitTenant] = useState(0);
   const [percentageSplitManager, setPercentageSplitManager] = useState(0);
-  const [payStatus, setPayStatus] = useState("");
+  const [payStatus, setPayStatus] = useState("UNPAID");
+  const [addToRent, setAddToRent] = useState(false);
   const reload = () => {
     props.onSubmit();
   };
@@ -74,6 +76,9 @@ function ManagerCreateExpense(props) {
     }
     let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
     let today_date = new Date().toISOString().split("T")[0];
+    if (addToRent) {
+      setDate("0000-00-00 00:00:00");
+    }
     const newExpense = {
       pur_property_id: selectedProperty.property_uid,
       payer: payer,
@@ -185,39 +190,11 @@ function ManagerCreateExpense(props) {
           <option>Management</option>
           <option>Maintenance</option>
           <option>Repairs</option>
-          {/* <option>Insurance</option>
-          <option>Mortgage</option>
-          <option>Tax</option> */}
+          <option>Rent</option>
+          <option>Extra Charges</option>
         </Form.Select>
       </Form.Group>
-      {category === "Insurance" ||
-      category === "Mortgage" ||
-      category === "Tax" ? (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Title {title === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </Form.Group>
-      ) : (
-        ""
-      )}
-      {/* <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Title {title === "" ? required : ""}
-        </Form.Label>
-        <Form.Control
-          style={squareForm}
-          placeholder="Painting"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </Form.Group> */}
+
       <Form.Group className="mx-2 my-3">
         <Form.Label as="h6" className="mb-0 ms-2">
           Description
@@ -334,7 +311,17 @@ function ManagerCreateExpense(props) {
         )}
       </Form.Group>
       {frequency === "One-time" ? (
-        <div></div>
+        <div>
+          {" "}
+          <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+            <Form.Check
+              type="checkbox"
+              style={subHeading}
+              label="Pay with next rent"
+              onChange={(e) => setAddToRent(!addToRent)}
+            />
+          </Form.Group>
+        </div>
       ) : (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
@@ -347,6 +334,14 @@ function ManagerCreateExpense(props) {
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
+          <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+            <Form.Check
+              type="checkbox"
+              style={subHeading}
+              label="Pay with next rent"
+              onChange={(e) => setAddToRent(!addToRent)}
+            />
+          </Form.Group>
         </Form.Group>
       )}
       {category === "Management" ||

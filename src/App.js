@@ -52,7 +52,7 @@ import MaintenanceQuoteSentDetail from "./pages/MaintenanceQuoteSentDetail";
 import MaintenanceQuotesScheduled from "./pages/MaintenanceQuotesScheduled";
 import ManagerUtilities from "./components/managerComponents/ManagerUtilities";
 import OwnerUtilities from "./components/ownerComponents/OwnerUtilities";
-import TenantDuePayments from "./components/tenantComponents/TenantDuePayments2";
+import TenantDuePayments from "./components/tenantComponents/TenantDuePayments";
 import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 import OwnerPaymentHistory from "./components/ownerComponents/OwnerPaymentHistory";
 import ManagerOwnerList from "./components/managerComponents/ManagerOwnerList";

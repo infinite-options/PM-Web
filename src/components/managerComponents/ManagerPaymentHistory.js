@@ -47,7 +47,7 @@ export default function ManagerPaymentHistory(props) {
           <TableCell align="center">{row.purchase_type}</TableCell>
           <TableCell align="center">{row.receiver}</TableCell>
           <TableCell align="center">
-            {row.next_payment.substring(0, 10)}
+            {row.payment_date.substring(0, 10)}
           </TableCell>
           <TableCell align="center"></TableCell>
           <TableCell align="right">{row.amount_paid.toFixed(2)}</TableCell>
@@ -71,8 +71,7 @@ export default function ManagerPaymentHistory(props) {
             <TableCell align="center">Description</TableCell>
             <TableCell align="center">Type</TableCell>
             <TableCell align="center">Receiver</TableCell>
-            <TableCell align="center">Date</TableCell>
-            <TableCell align="center">Invoice</TableCell>
+            <TableCell align="center">Date Paid</TableCell>
             <TableCell align="right">Amount</TableCell>
           </TableRow>
         </TableHead>

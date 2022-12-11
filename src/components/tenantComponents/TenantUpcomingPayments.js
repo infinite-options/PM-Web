@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UpcomingPayments(props) {
+export default function TenantUpcomingPayments(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const [totalSum, setTotalSum] = useState(0);
@@ -100,7 +100,15 @@ export default function UpcomingPayments(props) {
           </TableCell>
           <TableCell align="center">
             {props.type ? (
-              <button className="yellow payB" onClick={goToPayment}>
+              <button
+                style={{
+                  backgroundColor:
+                    new Date(row.next_payment) < new Date() ? "red" : "green",
+                  color: "white",
+                  border: "none",
+                }}
+                onClick={goToPayment}
+              >
                 Pay
               </button>
             ) : (
@@ -135,7 +143,7 @@ export default function UpcomingPayments(props) {
             <TableCell align="center">Address</TableCell>
             <TableCell align="center">Description</TableCell>
             <TableCell align="center">Type</TableCell>
-            <TableCell align="center">Date</TableCell>
+            <TableCell align="center">Date Due</TableCell>
             <TableCell align="center">Pay</TableCell>
             <TableCell align="right">Amount</TableCell>
           </TableRow>

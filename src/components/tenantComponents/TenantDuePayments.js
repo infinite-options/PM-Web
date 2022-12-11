@@ -5,7 +5,7 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
-import UpcomingPayments from "./UpcomingPayments";
+import TenantUpcomingPayments from "./TenantUpcomingPayments";
 import { get } from "../../utils/api";
 import "../../pages/maintenance.css";
 export default function TenantDuePayments(props) {
@@ -101,7 +101,7 @@ export default function TenantDuePayments(props) {
           <Header title="Payment Portal" />
           <Row className="m-3">
             {propertyData.length !== 0 && (
-              <UpcomingPayments
+              <TenantUpcomingPayments
                 data={upcomingPaymentsData}
                 type={false}
                 selectedProperty={propertyData.result[0].properties[0]}
