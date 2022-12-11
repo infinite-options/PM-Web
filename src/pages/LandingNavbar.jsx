@@ -30,6 +30,7 @@ function LandingNavbar() {
     } else if (role === "PM_EMPLOYEE") {
       navigate("/manager");
     } else if (role === "TENANT") {
+      console.log("here after tenant clicked");
       navigate("/tenant");
     } else if (role === "MAINTENANCE") {
       navigate("/maintenance", { state: { roles: role } });

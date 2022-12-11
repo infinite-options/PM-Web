@@ -381,7 +381,7 @@ function ManagerUtilities(props) {
     const response = await post("/bills", new_bill, null, files);
     const bill_uid = response.bill_uid;
     console.log(bill_uid);
-
+    let today_date = new Date().toISOString().split("T")[0];
     const new_purchase_pm = {
       linked_bill_id: bill_uid,
       pur_property_id: properties_uid,
@@ -393,9 +393,10 @@ function ManagerUtilities(props) {
       purchase_notes: moment().format("MMMM"),
       purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
       purchase_frequency: "One-time",
-      next_payment: newUtility.due_date,
+      next_payment:
+        newUtility.due_date == "" ? today_date : newUtility.due_date,
     };
-    console.log(new_purchase_pm);
+    console.log("new purchase pm", new_purchase_pm);
     const response_pm = await post("/purchases", new_purchase_pm, null, null);
     const purchase_uid = response_pm.purchase_uid;
     console.log(response_pm);

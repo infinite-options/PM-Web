@@ -29,43 +29,7 @@ export default function SideBar(props) {
     cursor: "pointer",
   };
   const navigate = useNavigate();
-  const goToSearchPM = () => {
-    navigate("/tenantAvailableProperties");
-  };
-  const goToDash = () => {
-    navigate("/tenant");
-  };
-  const goToRepairs = () => {
-    navigate(`/${props.uid}/repairStatus`);
-  };
-  function scrollM() {
-    const anchor = document.querySelector("#scroll-to-maintenance");
-    anchor.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-  function scrollProfile() {
-    const anchor = document.querySelector("#scroll-to-profile");
-    anchor.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-  function scrollExpenses() {
-    const anchor = document.querySelector("#scroll-to-expenses");
-    anchor.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-  function scrollLease() {
-    const anchor = document.querySelector("#scroll-to-lease");
-    anchor.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-  function goToDocuments() {
-    console.log("Go to documents");
-    // <TenantDocumentUpload
-    //               setStage={"DOCUMENTS"}
-    //               setShowFooter={true}
-    //               setTab={"DASHBOARD"}
-    //   />
-    navigate("/uploadTenantDocuments");
-  }
-  function actualProfile() {
-    navigate("/tenantProfile2");
-  }
+
   return (
     <div style={{ width: "11rem", height: "100%" }}>
       <Row style={{ width: "11rem", height: "100%" }}>

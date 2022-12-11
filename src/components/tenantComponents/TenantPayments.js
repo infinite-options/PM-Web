@@ -5,10 +5,10 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
-import UpcomingPayments from "./UpcomingPayments";
+import TenantUpcomingPayments from "./TenantUpcomingPayments";
 import { get } from "../../utils/api";
 import "../../pages/maintenance.css";
-import PaymentHistory from "./PaymentHistory";
+import TenantPaymentHistory from "./TenantPaymentHistory";
 export default function TenantDuePayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);
   const [tenantExpenses, setTenantExpenses] = React.useState([]);
@@ -102,7 +102,7 @@ export default function TenantDuePayments(props) {
           <Header title="Payment Portal" />
           <Row className="m-3">
             {propertyData.length !== 0 && (
-              <UpcomingPayments
+              <TenantUpcomingPayments
                 data={upcomingPaymentsData}
                 type={false}
                 selectedProperty={propertyData.result[0].properties[0]}
@@ -112,7 +112,7 @@ export default function TenantDuePayments(props) {
           </Row>
           <Row className="m-3">
             {propertyData.length !== 0 && (
-              <PaymentHistory
+              <TenantPaymentHistory
                 data={upcomingPaymentsData}
                 type={false}
                 selectedProperty={propertyData.result[0].properties[0]}

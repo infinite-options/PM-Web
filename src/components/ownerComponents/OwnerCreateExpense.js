@@ -7,6 +7,7 @@ import {
   hidden,
   red,
   formLabel,
+  subHeading,
 } from "../../utils/styles";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import { post, put } from "../../utils/api";
@@ -23,10 +24,11 @@ function OwnerCreateExpense(props) {
   const [date, setDate] = useState("");
   const [payerID, setPayerID] = useState("");
   const [payer, setPayer] = useState("");
-  const [percentageSplitOwner, setPercentageSplitOwner] = useState("");
-  const [percentageSplitTenant, setPercentageSplitTenant] = useState("");
-  const [percentageSplitManager, setPercentageSplitManager] = useState("");
+  const [percentageSplitOwner, setPercentageSplitOwner] = useState(0);
+  const [percentageSplitTenant, setPercentageSplitTenant] = useState(0);
+  const [percentageSplitManager, setPercentageSplitManager] = useState(0);
   const [payStatus, setPayStatus] = useState("");
+  const [addToRent, setAddToRent] = useState(false);
   const reload = () => {
     props.onSubmit();
   };
@@ -37,6 +39,9 @@ function OwnerCreateExpense(props) {
     }
     let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
     let today_date = new Date().toISOString().split("T")[0];
+    if (addToRent) {
+      setDate("0000-00-00 00:00:00");
+    }
     if (category === "Mortgage") {
       let mortgage = [];
       const files = selectedProperty.images;
@@ -200,6 +205,8 @@ function OwnerCreateExpense(props) {
           <option>Management</option>
           <option>Maintenance</option>
           <option>Repairs</option>
+          <option>Rent</option>
+          <option>Extra Charges</option>
           <option>Insurance</option>
           <option>Mortgage</option>
           <option>Tax</option>
@@ -371,7 +378,16 @@ function OwnerCreateExpense(props) {
         )}
       </Form.Group>
       {frequency === "One-time" ? (
-        <div></div>
+        <div>
+          <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+            <Form.Check
+              type="checkbox"
+              style={subHeading}
+              label="Pay with next rent"
+              onChange={(e) => setAddToRent(!addToRent)}
+            />
+          </Form.Group>
+        </div>
       ) : (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
@@ -384,11 +400,21 @@ function OwnerCreateExpense(props) {
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
+          <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+            <Form.Check
+              type="checkbox"
+              style={subHeading}
+              label="Pay with next rent"
+              onChange={(e) => setAddToRent(!addToRent)}
+            />
+          </Form.Group>
         </Form.Group>
       )}
       {category === "Management" ||
       category === "Maintenance" ||
-      category === "Repairs" ? (
+      category === "Repairs" ||
+      category === "Rent" ||
+      category === "Extra Charges" ? (
         <div>
           <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
@@ -460,7 +486,9 @@ function OwnerCreateExpense(props) {
       )}
       {category === "Management" ||
       category === "Maintenance" ||
-      category === "Repairs" ? (
+      category === "Repairs" ||
+      category === "Rent" ||
+      category === "Extra Charges" ? (
         <div>
           <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
