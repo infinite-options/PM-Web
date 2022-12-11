@@ -49,7 +49,8 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ManagerDashboard() {
+export default function TenantDashboard() {
+  console.log("in tenant dashbaord");
   const navigate = useNavigate();
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
@@ -80,7 +81,6 @@ export default function ManagerDashboard() {
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
-
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
@@ -92,10 +92,11 @@ export default function ManagerDashboard() {
     showSidebar: width > 1023,
   };
   const fetchTenantDashboard = async () => {
-    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+    if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
       return;
     }
+
     const response = await get("/tenantDashboard", access_token);
     const appRes = await get(`/applications?tenant_id=${user.user_uid}`);
     if (response.msg === "Token has expired") {
@@ -1472,7 +1473,7 @@ export default function ManagerDashboard() {
       )}
     </div>
   ) : stage === "ADDREQUEST" ? (
-    <div className="ManagerDashboard">
+    <div className="TenantDashboard">
       <div className="flex-1">
         <div
           hidden={!responsive.showSidebar}

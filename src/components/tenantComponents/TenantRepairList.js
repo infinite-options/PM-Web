@@ -306,7 +306,7 @@ function TenantRepairList(props) {
   };
 
   return stage === "LIST" ? (
-    <div>
+    <div className="w-100 overflow-hidden">
       <div className="flex-1">
         <div
           hidden={!responsiveSidebar.showSidebar}
@@ -354,7 +354,7 @@ function TenantRepairList(props) {
               </Col>
             </Row>
             {!isLoading ? (
-              repairIter.length > 1 ? (
+              repairIter.length > 0 ? (
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <Table
                     classes={{ root: classes.customTable }}

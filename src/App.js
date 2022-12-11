@@ -5,7 +5,6 @@ import Landing from "./pages/LandingNavbar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProfileInfo from "./pages/ProfileInfo";
-import TenantHome from "./pages/TenantHome";
 import TenantAvailableProperties from "./components/tenantComponents/TenantAvailableProperties";
 import ApplyToProperty from "./components/tenantComponents/ApplyToProperty";
 import "./App.css";
@@ -162,7 +161,6 @@ function App() {
             <Route path="quotesRejectedM" element={<QuotesRejectedM />} />
             <Route path="quotesRejectedPM" element={<QuotesRejectedPM />} />
             <Route path="tenant" element={<TenantDashboard />} />
-            <Route path="tenant_original" element={<TenantHome />} />
             {/* <Route path="tenantPaymnt" element={<TenantPayment />} /> */}
             {/* <Route path="tenant_doc_upload" element={<TenantDocumentUpload />} /> */}
             <Route

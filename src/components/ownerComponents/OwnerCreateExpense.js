@@ -23,9 +23,9 @@ function OwnerCreateExpense(props) {
   const [date, setDate] = useState("");
   const [payerID, setPayerID] = useState("");
   const [payer, setPayer] = useState("");
-  const [percentageSplitOwner, setPercentageSplitOwner] = useState("");
-  const [percentageSplitTenant, setPercentageSplitTenant] = useState("");
-  const [percentageSplitManager, setPercentageSplitManager] = useState("");
+  const [percentageSplitOwner, setPercentageSplitOwner] = useState(0);
+  const [percentageSplitTenant, setPercentageSplitTenant] = useState(0);
+  const [percentageSplitManager, setPercentageSplitManager] = useState(0);
   const [payStatus, setPayStatus] = useState("");
   const reload = () => {
     props.onSubmit();
