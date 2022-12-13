@@ -3578,7 +3578,17 @@ export default function ManagerDashboard() {
                           >
                             {property.num_apps}
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            padding="none"
+                            size="small"
+                            style={{
+                              color:
+                                property.rentalInfo == "Not Rented"
+                                  ? "#E4CD05"
+                                  : "black",
+                            }}
+                            align="center"
+                          >
                             {property.rentalInfo !== "Not Rented" ? (
                               property.rentalInfo.map((tf, i) => {
                                 return (
@@ -3657,6 +3667,14 @@ export default function ManagerDashboard() {
                                   },
                                 }
                               );
+                            }}
+                            style={{
+                              color:
+                                property.rent_status == "PAID"
+                                  ? "green"
+                                  : property.rent_status == "UNPAID"
+                                  ? "red"
+                                  : "#E4CD05",
                             }}
                           >
                             {property.rent_status}

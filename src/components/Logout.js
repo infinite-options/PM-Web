@@ -15,7 +15,8 @@ function Logout(props) {
         borderColor: "#fb8500",
         borderRadius: "10px",
         color: "white",
-        width: "10rem",
+        maxWidth: "10rem",
+        minWidth: "10rem",
         font: "normal normal normal 18px Avenir-Light",
       }}
       onClick={() => {

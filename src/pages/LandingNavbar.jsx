@@ -161,6 +161,7 @@ function LandingNavbar() {
                     borderRadius: "10px",
                     color: "black",
                     maxWidth: "10rem",
+                    minWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={login}
@@ -181,6 +182,7 @@ function LandingNavbar() {
                     borderRadius: "10px",
                     color: "white",
                     maxWidth: "10rem",
+                    minWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={signup}
@@ -224,6 +226,7 @@ function LandingNavbar() {
                     borderRadius: "10px",
                     color: "black",
                     maxWidth: "10rem",
+                    minWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={() => navigate("/")}
@@ -248,6 +251,7 @@ function LandingNavbar() {
                     borderRadius: "10px",
                     color: "black",
                     maxWidth: "10rem",
+                    minWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={modifyexisiting}

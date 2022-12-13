@@ -1189,12 +1189,12 @@ export default function TenantDashboard() {
                                 </h6>
                               ) : application.application_status ===
                                 "PM END EARLY" ? (
-                                <h6 style={{ mediumBold, color: "yellow" }}>
+                                <h6 style={{ mediumBold, color: "#E4CD05" }}>
                                   {application.application_status}
                                 </h6>
                               ) : application.application_status ===
                                 "TENANT END EARLY" ? (
-                                <h6 style={{ mediumBold, color: "yellow" }}>
+                                <h6 style={{ mediumBold, color: "#E4CD05" }}>
                                   {application.application_status}
                                 </h6>
                               ) : application.application_status ===
@@ -1416,12 +1416,12 @@ export default function TenantDashboard() {
                                   </h6>
                                 ) : application.application_status ===
                                   "PM END EARLY" ? (
-                                  <h6 style={{ mediumBold, color: "yellow" }}>
+                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
                                     {application.application_status}
                                   </h6>
                                 ) : application.application_status ===
                                   "TENANT END EARLY" ? (
-                                  <h6 style={{ mediumBold, color: "yellow" }}>
+                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
                                     {application.application_status}
                                   </h6>
                                 ) : application.application_status ===
