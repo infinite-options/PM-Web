@@ -32,10 +32,6 @@ import ManagerRepairRequest from "./ManagerRepairRequest";
 import ManagerPropertyForm from "./ManagerPropertyForm";
 import ManagerTenantAgreement from "./ManagerTenantAgreement";
 import SideBar from "./SideBar";
-import File from "../../icons/File.svg";
-import OpenDoc from "../../icons/OpenDoc.svg";
-import Phone from "../../icons/Phone.svg";
-import Message from "../../icons/Message.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import SortDown from "../../icons/Sort-down.svg";
@@ -3955,9 +3951,6 @@ function ManagerPropertyView(props) {
                         <TableCell>
                           Deposit can be used for last month's rent
                         </TableCell>
-                        <TableCell>
-                          Deposit can be used for last month's rent
-                        </TableCell>
                         <TableCell>Available to Rent</TableCell>
                         <TableCell>Featured</TableCell>
                       </TableRow>
@@ -3974,7 +3967,7 @@ function ManagerPropertyView(props) {
                           {property.available_to_rent == 0 ? "No" : "Yes"}
                         </TableCell>
                         <TableCell>
-                          {property.featured ? "No" : "Yes"}
+                          {property.featured === "True" ? "Yes" : "No"}
                         </TableCell>
                       </TableRow>
                     </TableBody>

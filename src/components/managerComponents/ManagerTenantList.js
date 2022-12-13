@@ -18,6 +18,7 @@ import moment from "moment";
 import SideBar from "./SideBar";
 import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
+import MessageDialog from "../MessageDialog";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -55,7 +56,10 @@ function ManagerTenantList(props) {
   const [dueDate, setDueDate] = useState("1");
   const [rentDetails, setRentDetails] = useState([]);
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
-
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const onCancel = () => {
+    setShowMessageForm(false);
+  };
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
@@ -382,6 +386,17 @@ function ManagerTenantList(props) {
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
+        <MessageDialog
+          title={"Message"}
+          isOpen={showMessageForm}
+          senderPhone={user.phone_number}
+          senderEmail={user.email}
+          senderName={user.first_name + " " + user.last_name}
+          requestCreatedBy={user.user_uid}
+          userMessaged={selectedTenant.tenant_id}
+          receiverEmail={selectedTenant.tenant_email}
+          onCancel={onCancel}
+        />
         <div
           hidden={!responsive.showSidebar}
           style={{
@@ -452,7 +467,7 @@ function ManagerTenantList(props) {
                           setSelectedTenant(tenant);
                           setUserPayments(tenant.user_payments);
                           setMaintenanceRequests(tenant.user_repairRequests);
-                          setShowDetails(!showDetails);
+                          // setShowDetails(!showDetails);
                           navigate(`./${tenant.tenant_id}`, {
                             state: {
                               // maintenanceRequests: maintenanceRequests,
@@ -498,7 +513,12 @@ function ManagerTenantList(props) {
                               <a href={`tel:${tenant.tenant_phone_number}`}>
                                 <img src={Phone} alt="Phone" style={smallImg} />
                               </a>
-                              <a href={`mailto:${tenant.tenant_email}`}>
+                              <a
+                                onClick={() => {
+                                  setShowMessageForm(true);
+                                  setSelectedTenant(tenant);
+                                }}
+                              >
                                 <img
                                   src={Message}
                                   alt="Message"
@@ -558,7 +578,11 @@ function ManagerTenantList(props) {
                       <a href={`tel:${selectedTenant.tenant_phone_number}`}>
                         <img src={Phone} alt="Phone" style={smallImg} />
                       </a>
-                      <a href={`mailto:${selectedTenant.tenant_email}`}>
+                      <a
+                        onClick={() => {
+                          setShowMessageForm(true);
+                        }}
+                      >
                         <img src={Message} alt="Message" style={smallImg} />
                       </a>
                     </div>

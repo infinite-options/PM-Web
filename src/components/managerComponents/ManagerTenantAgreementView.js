@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import {
   Table,
@@ -9,6 +9,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
+import MessageDialogTenant from "../MessageDialog";
+import MessageDialogContact from "../MessageDialog";
+import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import OpenDoc from "../../icons/OpenDoc.svg";
@@ -38,9 +41,9 @@ function ManagerTenantAgreementView(props) {
     selectedAgreement,
     acceptedTenantApplications,
   } = props;
-  console.log(selectedAgreement);
-
-  console.log(selectedAgreement == null);
+  const { userData, refresh } = useContext(AppContext);
+  const { access_token, user } = userData;
+  console.log(user);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -56,7 +59,16 @@ function ManagerTenantAgreementView(props) {
 
   const [pmEndEarly, setPmEndEarly] = useState(false);
   const [agreement, setAgreement] = useState([]);
-
+  const [selectedTenant, setSelectedTenant] = useState("");
+  const [selectedContact, setSelectedContact] = useState("");
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const onCancel = () => {
+    setShowMessageForm(false);
+  };
+  const [showMessageFormContact, setShowMessageFormContact] = useState(false);
+  const onCancelContact = () => {
+    setShowMessageFormContact(false);
+  };
   const loadAgreement = async (agg) => {
     console.log("load agreement");
 
@@ -69,11 +81,13 @@ function ManagerTenantAgreementView(props) {
     console.log("selectedagg", agg);
 
     if (agg.tenant_first_name.includes(",")) {
+      let tenant_ids = agg.tenant_id.split(",");
       let tenant_fns = agg.tenant_first_name.split(",");
       let tenant_lns = agg.tenant_last_name.split(",");
       let tenant_emails = agg.tenant_email.split(",");
       let tenant_phones = agg.tenant_phone_number.split(",");
       for (let i = 0; i < tenant_fns.length; i++) {
+        ti["tenantID"] = tenant_ids[i];
         ti["tenantFirstName"] = tenant_fns[i];
         ti["tenantLastName"] = tenant_lns[i];
         ti["tenantEmail"] = tenant_emails[i];
@@ -83,6 +97,7 @@ function ManagerTenantAgreementView(props) {
       }
     } else {
       ti = {
+        tenantID: agg.tenant_id,
         tenantFirstName: agg.tenant_first_name,
         tenantLastName: agg.tenant_last_name,
         tenantEmail: agg.tenant_email,
@@ -92,6 +107,7 @@ function ManagerTenantAgreementView(props) {
     }
 
     setTenantInfo(tenant);
+    setSelectedTenant(tenantInfo);
     setFeeState(JSON.parse(agg.rent_payments));
     // contactState[1](JSON.parse(agg.assigned_contacts));
     setContactState(JSON.parse(agg.assigned_contacts));
@@ -200,6 +216,28 @@ function ManagerTenantAgreementView(props) {
     <div className="mb-2 pb-2">
       {agreement ? (
         <div>
+          <MessageDialogTenant
+            title={"Message"}
+            isOpen={showMessageForm}
+            senderPhone={user.phone_number}
+            senderEmail={user.email}
+            senderName={user.first_name + " " + user.last_name}
+            requestCreatedBy={user.user_uid}
+            userMessaged={selectedTenant.tenantID}
+            receiverEmail={selectedTenant.tenantEmail}
+            onCancel={onCancel}
+          />
+          <MessageDialogContact
+            title={"Message"}
+            isOpen={showMessageFormContact}
+            senderPhone={user.phone_number}
+            senderEmail={user.email}
+            senderName={user.first_name + " " + user.last_name}
+            requestCreatedBy={user.user_uid}
+            userMessaged={selectedContact.first_name}
+            receiverEmail={selectedContact.email}
+            onCancel={onCancelContact}
+          />
           <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
             <Table
               responsive="md"
@@ -221,6 +259,7 @@ function ManagerTenantAgreementView(props) {
                       return (
                         <p>
                           {" "}
+                          {console.log("tf", tf)}
                           {tf.tenantFirstName} {tf.tenantLastName}
                         </p>
                       );
@@ -252,7 +291,13 @@ function ManagerTenantAgreementView(props) {
                             </a>
                           </Col>
                           <Col className="d-flex justify-content-center">
-                            <a href={`mailto:${tf.tenantEmail}`}>
+                            <a
+                              // href={`mailto:${tf.tenantEmail}`}
+                              onClick={() => {
+                                setShowMessageForm(true);
+                                setSelectedTenant(tf);
+                              }}
+                            >
                               <img
                                 src={Message}
                                 alt="Message"
@@ -383,7 +428,12 @@ function ManagerTenantAgreementView(props) {
                       <a href={`tel:${contact.phone_number}`}>
                         <img src={Phone} alt="Phone" style={smallImg} />
                       </a>
-                      <a href={`mailto:${contact.email}`}>
+                      <a
+                        onClick={() => {
+                          setShowMessageFormContact(true);
+                          setSelectedContact(contact);
+                        }}
+                      >
                         <img src={Message} alt="Message" style={smallImg} />
                       </a>
                     </TableCell>
