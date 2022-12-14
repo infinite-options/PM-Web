@@ -3584,7 +3584,7 @@ export default function ManagerDashboard() {
                             style={{
                               color:
                                 property.rentalInfo == "Not Rented"
-                                  ? "#E4CD05"
+                                  ? "green"
                                   : "black",
                             }}
                             align="center"
@@ -3671,10 +3671,10 @@ export default function ManagerDashboard() {
                             style={{
                               color:
                                 property.rent_status == "PAID"
-                                  ? "green"
+                                  ? "black"
                                   : property.rent_status == "UNPAID"
                                   ? "red"
-                                  : "#E4CD05",
+                                  : "green",
                             }}
                           >
                             {property.rent_status}
