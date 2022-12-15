@@ -14,8 +14,8 @@ function OwnerFooter(props) {
   const footerContainer = {
     backgroundColor: "#F5F5F5",
     // borderTop: "1px solid #EAEAEA",
-    padding: "10px 0",
-    height: "83px",
+    padding: "10px 10px",
+    height: "73px",
   };
 
   return (

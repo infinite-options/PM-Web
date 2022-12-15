@@ -16,8 +16,8 @@ function ManagerFooter(props) {
   const footerContainer = {
     backgroundColor: "#F5F5F5",
     // borderTop: "1px solid #EAEAEA",
-    padding: "10px 0",
-    height: "83px",
+    padding: "10px 10px",
+    height: "73px",
   };
 
   return (
@@ -27,7 +27,7 @@ function ManagerFooter(props) {
     >
       <Row>
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/manager");
           }}
@@ -38,7 +38,7 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/tenant-list");
           }}
@@ -49,7 +49,7 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/owner-list");
           }}
@@ -60,7 +60,7 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/manager-repairs");
           }}
@@ -72,7 +72,7 @@ function ManagerFooter(props) {
         </Col>
         .
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/manager-utilities");
           }}
@@ -83,7 +83,7 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/manager-payments");
           }}
@@ -94,7 +94,7 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/manager-announcements");
           }}
@@ -109,7 +109,7 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/manager-documents");
           }}
@@ -124,7 +124,7 @@ function ManagerFooter(props) {
           </p>
         </Col>
         <Col
-          className="text-center"
+          className="text-center p-0"
           onClick={() => {
             navigate("/manager-profile");
           }}

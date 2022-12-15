@@ -1,34 +1,56 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
+import {
+  TableBody,
+  TableHead,
+  TableRow,
+  Table,
+  TableCell,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import AppContext from "../../AppContext";
 import Checkbox from "../Checkbox";
-import BlueArrowUp from "../../icons/BlueArrowUp.svg";
-import BlueArrowDown from "../../icons/BlueArrowDown.svg";
 import File from "../../icons/File.svg";
+import Delete from "../../icons/Delete.svg";
 import {
   mediumBold,
   headings,
   subText,
   bluePillButton,
-  underline,
 } from "../../utils/styles";
 import { get, put } from "../../utils/api";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function ManagerTenantApplications(props) {
-  const { userData, refresh } = React.useContext(AppContext);
+  const classes = useStyles();
+  const { userData, refresh } = useContext(AppContext);
   const { access_token } = userData;
-  const { property, createNewTenantAgreement, selectTenantApplication } = props;
-  const [applications, setApplications] = React.useState([]);
-  const [newApplications, setNewApplications] = React.useState([]);
-  // const [selectedApplications, setSelectedApplications] = React.useState([])
-  const [forwardedApplications, setForwardedApplications] = React.useState([]);
-  const [rejectedApplications, setRejectedApplications] = React.useState([]);
-
+  const {
+    property,
+    createNewTenantAgreement,
+    selectTenantApplication,
+    reload,
+  } = props;
+  const [applications, setApplications] = useState([]);
+  const [newApplications, setNewApplications] = useState([]);
+  // const [selectedApplications, setSelectedApplications] = useState([])
+  const [forwardedApplications, setForwardedApplications] = useState([]);
+  const [rejectedApplications, setRejectedApplications] = useState([]);
+  const [showSSN, setShowSSN] = useState(true);
+  function MaskCharacter(str, mask, n = 1) {
+    return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
+  }
   const fetchApplications = async () => {
     if (access_token === null) {
       return;
     }
-
+    console.log("in fetch applicaions");
     const response = await get(
       `/applications?property_uid=${property.property_uid}`
     );
@@ -44,27 +66,28 @@ function ManagerTenantApplications(props) {
     console.log(applications);
     setApplications(applications);
     setNewApplications(
-      applications.filter((a) => a.application_status.toUpperCase() === "NEW")
+      applications.filter((a) => a.application_status === "NEW")
     );
     setForwardedApplications(
-      applications.filter(
-        (a) => a.application_status.toUpperCase() === "FORWARDED"
-      )
+      applications.filter((a) => a.application_status === "FORWARDED")
     );
     setRejectedApplications(
-      applications.filter(
-        (a) => a.application_status.toUpperCase() === "REJECTED"
-      )
+      applications.filter((a) => a.application_status === "REJECTED")
     );
   };
 
-  React.useEffect(fetchApplications, [property]);
+  useEffect(fetchApplications, [property]);
 
-  // const toggleApplications = (index) => {
-  //     const selected = [...applications];
-  //     selected[index].application_selected = !selected[index].application_selected;
-  //     setApplications(selected);
-  // }
+  const rejectApplication = async (application) => {
+    const request_body = {
+      application_uid: application.application_uid,
+      message: "Application has been rejected by the Property Manager",
+      application_status: "REJECTED",
+    };
+    // console.log(request_body)
+    const response = await put("/applications", request_body);
+    reload();
+  };
 
   const toggleApplications = (application) => {
     const selected = [...newApplications];
@@ -105,112 +128,120 @@ function ManagerTenantApplications(props) {
           <div className="d-flex w-100">
             {applications.length > 0 ? (
               <div className="d-flex w-100 flex-column justify-content-center align-items-center mx-3">
-                <div className="d-flex w-100 flex-column">
-                  {forwardedApplications.length > 0 && (
-                    <div className="">
-                      <h3 style={{ color: "#3DB727" }}>Forwarded</h3>
-                      {forwardedApplications.map((application, i) => (
-                        <Row key={i} className="mt-2">
-                          <Col xs={2} className="mt-2">
-                            <Row></Row>
-                          </Col>
-                          <Col>
-                            <Row
-                              style={headings}
-                              onClick={() =>
-                                selectTenantApplication(application)
-                              }
-                            >
-                              {`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id})`}
-                            </Row>
-                            <Row style={subText}>
-                              Note: {application.message}
-                            </Row>
-                          </Col>
-                        </Row>
-                      ))}
-                    </div>
-                  )}
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell></TableCell>
+                      <TableCell>Application Status</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Message</TableCell>
+                      <TableCell>Occupants</TableCell>
+                      <TableCell>Application Date</TableCell>
+                      <TableCell>Phone </TableCell>
+                      <TableCell>Email</TableCell>
+                      <TableCell>Current Job Title</TableCell>
+                      <TableCell>Salary</TableCell>
+                      <TableCell>SSN</TableCell>
+                      <TableCell>Reject</TableCell>
+                      <TableCell>Documents</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {applications.map((application, i) => (
+                      <TableRow className="mt-2" key={i}>
+                        <TableCell>
+                          <div
+                            hidden={
+                              application.application_status === "REJECTED" ||
+                              application.application_status === "FORWARDED"
+                            }
+                          >
+                            {" "}
+                            <Checkbox
+                              type="BOX"
+                              checked={application.application_selected}
+                              onClick={() => toggleApplications(application)}
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell>{application.application_status}</TableCell>
+                        <TableCell>
+                          {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                        </TableCell>
+                        <TableCell>Note: {application.message}</TableCell>
+                        <TableCell>
+                          {application.adult_occupants} adults <br />
+                          {application.children_occupants} children
+                        </TableCell>
+                        <TableCell>
+                          {application.application_date.split(" ")[0]}
+                        </TableCell>
+                        <TableCell>{application.tenant_phone_number}</TableCell>
+                        <TableCell>{application.tenant_email}</TableCell>
+                        <TableCell>
+                          {application.tenant_current_job_title !== null &&
+                          application.tenant_current_job_title !== "null"
+                            ? application.tenant_current_job_title
+                            : "No Job Details Provided"}
+                        </TableCell>
 
-                  {rejectedApplications.length > 0 && (
-                    <div className="mt-4">
-                      <h3 style={{ color: "#E3441F" }}>Rejected</h3>
-                      {rejectedApplications.map((application, i) => (
-                        <Row key={i} className="mt-2">
-                          <Col xs={2} className="mt-2">
-                            <Row></Row>
-                          </Col>
-                          <Col>
-                            <Row
-                              style={headings}
-                              onClick={() =>
-                                selectTenantApplication(application)
-                              }
-                            >
-                              {`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id})`}
-                            </Row>
-                            <Row style={subText}>
-                              Note: {application.message}
-                            </Row>
-                          </Col>
-                        </Row>
-                      ))}
-                    </div>
-                  )}
+                        <TableCell>
+                          {application.tenant_current_salary !== null &&
+                          application.tenant_current_salary !== "null"
+                            ? application.tenant_current_salary
+                            : "No Salary Provided"}
+                        </TableCell>
+                        <TableCell onClick={() => setShowSSN(!showSSN)}>
+                          {application.tenant_ssn !== null &&
+                          application.tenant_ssn !== "null" ? (
+                            <div>
+                              {showSSN ? (
+                                <div>
+                                  {MaskCharacter(application.tenant_ssn, "*")}
+                                </div>
+                              ) : (
+                                <div>{application.tenant_ssn}</div>
+                              )}
+                            </div>
+                          ) : (
+                            "No SSN Provided"
+                          )}
+                        </TableCell>
 
-                  {newApplications.length > 0 && (
-                    <div className="mt-4 ">
-                      <h3 style={{ color: "#007AFF" }}>New</h3>
-                      {newApplications.map((application, i) => (
-                        <Row className="mt-2" key={i}>
-                          <Col xs={2} className="mt-2">
-                            <Row>
-                              <Checkbox
-                                type="BOX"
-                                checked={application.application_selected}
-                                onClick={() => toggleApplications(application)}
-                                hidden={forwardedApplications.length > 0}
-                              />
-                            </Row>
-                          </Col>
-                          <Col>
-                            <Row
-                              style={headings}
-                              onClick={() =>
-                                selectTenantApplication(application)
-                              }
-                            >
-                              {`${application.tenant_first_name} ${application.tenant_last_name} (${application.tenant_id})`}
-                            </Row>
-                            <Row style={subText}>
-                              Note: {application.message}
-                            </Row>
-                            <Row>
-                              {application.documents &&
-                                application.documents.length > 0 &&
-                                JSON.parse(application.documents).map(
-                                  (document, i) => (
-                                    <div
-                                      className="d-flex justify-content-between align-items-end ps-0"
-                                      key={i}
-                                    >
-                                      <h6 style={mediumBold}>
-                                        {document.name}
-                                      </h6>
-                                      <a href={document.link} target="_blank">
-                                        <img src={File} alt="Document" />
-                                      </a>
-                                    </div>
-                                  )
-                                )}
-                            </Row>
-                          </Col>
-                        </Row>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                {console.log(forwardedApplications.length > 0)}
+                        <TableCell
+                          onClick={() => rejectApplication(application)}
+                        >
+                          <img src={Delete} />
+                        </TableCell>
+                        <TableCell>
+                          {application.documents &&
+                            application.documents.length > 0 &&
+                            JSON.parse(application.documents).map(
+                              (document, i) => (
+                                <div
+                                  className="d-flex justify-content-between align-items-end ps-0"
+                                  key={i}
+                                >
+                                  <h6>{document.name}</h6>
+                                  <a href={document.link} target="_blank">
+                                    <img
+                                      src={File}
+                                      style={{
+                                        width: "15px",
+                                        height: "15px",
+                                      }}
+                                      alt="Document"
+                                    />
+                                  </a>
+                                </div>
+                              )
+                            )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
                 <Row className="mt-4 d-flex w-100">
                   <Col className="d-flex justify-content-evenly">
                     <Button

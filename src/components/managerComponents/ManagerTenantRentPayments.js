@@ -1,5 +1,13 @@
 import React from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
 import ArrowDown from "../../icons/ArrowDown.svg";
@@ -12,9 +20,18 @@ import {
   hidden,
   small,
 } from "../../utils/styles";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 
 function ManagerTenantRentPayments(props) {
   // const [feeState, setFeeState] = props.state;
+  const classes = useStyles();
   const {
     feeState,
     setFeeState,
@@ -126,39 +143,54 @@ function ManagerTenantRentPayments(props) {
     );
   return (
     <div>
-      {feeState.map((fee, i) => (
-        <div
-          key={i}
-          className="p-1 mb-2"
-          style={{ boxShadow: " 0px 1px 6px #00000029", borderRadius: "5px" }}
-        >
-          <div className="d-flex">
-            <div className="flex-grow-1">
-              <h6 className="mb-1">{fee.fee_name}</h6>
-            </div>
-            <div>
-              <img
-                src={EditIcon}
-                alt="Edit"
-                className="px-1 mx-2"
-                onClick={() => editFee(i)}
-              />
-              <img
-                src={DeleteIcon}
-                alt="Delete"
-                className="px-1 mx-2"
-                onClick={() => deleteFee(i)}
-              />
-            </div>
-          </div>
-          <p style={gray} className="mb-1">
-            {fee.fee_type === "%"
-              ? `${fee.charge}% of ${fee.of}`
-              : `$${fee.charge}`}{" "}
-            {fee.frequency}
-          </p>
-        </div>
-      ))}
+      <Table classes={{ root: classes.customTable }} size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Fee Name</TableCell>
+            <TableCell>Amount</TableCell>
+            <TableCell>Of</TableCell>
+            <TableCell>Frequency</TableCell>
+            <TableCell>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {feeState.map((fee, i) => (
+            <TableRow
+              key={i}
+              className="p-1 mb-2"
+              style={{
+                boxShadow: " 0px 1px 6px #00000029",
+                borderRadius: "5px",
+              }}
+            >
+              <TableCell>{fee.fee_name}</TableCell>
+              <TableCell>
+                {fee.fee_type === "%" ? `${fee.charge}%` : `$${fee.charge}`}
+              </TableCell>
+              <TableCell>{fee.fee_type === "%" ? `${fee.of}` : ""}</TableCell>
+              <TableCell>{fee.frequency}</TableCell>
+              <TableCell>
+                {" "}
+                <img
+                  src={EditIcon}
+                  alt="Edit"
+                  className="px-1 mx-2"
+                  onClick={() => editFee(i)}
+                />
+                <img
+                  src={DeleteIcon}
+                  alt="Delete"
+                  className="px-1 mx-2"
+                  onClick={() => deleteFee(i)}
+                />
+              </TableCell>
+
+              <p style={gray} className="mb-1"></p>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
       {newFee !== null ? (
         <Container>
           <Row className="my-3">

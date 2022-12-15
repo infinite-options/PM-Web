@@ -28,7 +28,7 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  console.log("here");
+  console.log("here", acceptedTenantApplications[0]);
   const [tenantID, setTenantID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -47,11 +47,7 @@ function ManagerTenantAgreement(props) {
 
   const [adultOccupants, setAdultOccupants] = useState("");
   const [childrenOccupants, setChildrenOccupants] = useState("");
-  // const addFile = (e) => {
-  //     const newFiles = [...files];
-  //     newFiles.push(e.target.files[0]);
-  //     setFiles(newFiles);
-  // }
+
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -139,8 +135,8 @@ function ManagerTenantAgreement(props) {
       lease_end: endDate,
       rent_payments: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
-      adult_occupants: adultOccupants,
-      children_occupants: childrenOccupants,
+      adult_occupants: acceptedTenantApplications[0].adult_occupants,
+      children_occupants: acceptedTenantApplications[0].Filechildren_occupants,
     };
     newAgreement.linked_application_id = JSON.stringify(
       acceptedTenantApplications.map(
@@ -156,12 +152,6 @@ function ManagerTenantAgreement(props) {
       console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
     } else {
-      // for(let i = 0; i < acceptedTenants.length; i++){
-      //     newAgreement.tenant_id = acceptedTenantApplications[i].tenant_id
-      //     console.log(newAgreement);
-      //     const response = await post('/rentals', newAgreement, null, files);
-      // }
-
       newAgreement.tenant_id = acceptedTenantApplications;
       console.log(newAgreement);
       const response = await post("/rentals", newAgreement, null, files);
@@ -389,39 +379,44 @@ function ManagerTenantAgreement(props) {
               </Form.Group>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  No. of Adult Occupants
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Adult Occupants"
-                  value={adultOccupants}
-                  onChange={(e) => setAdultOccupants(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  No. of Children Occupants
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Children Occupants"
-                  value={childrenOccupants}
-                  onChange={(e) => setChildrenOccupants(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
+          {acceptedTenantApplications &&
+            acceptedTenantApplications.length > 0 &&
+            acceptedTenantApplications.map((application, i) => (
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      No. of Adult Occupants
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      placeholder="No. of Adult Occupants"
+                      value={application.adult_occupants}
+                      readOnly={true}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      No. of Children Occupants
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      placeholder="No. of Children Occupants"
+                      value={application.children_occupants}
+                      readOnly={true}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            ))}
+
           <Row className="my-3">
             <Col>
               <Form.Group>
                 <Form.Label as="h6" className="mb-0 ms-2">
-                  Rent Available to Pay
+                  Rent Available to pay(days before due)
                 </Form.Label>
                 <Form.Control
                   type="number"
@@ -435,7 +430,7 @@ function ManagerTenantAgreement(props) {
             <Col>
               <Form.Group>
                 <Form.Label as="h6" className="mb-0 ms-2">
-                  Rent Payment Date {dueDate === "" ? required : ""}
+                  Rent Payment Due Date {dueDate === "" ? required : ""}
                 </Form.Label>
                 {/*<Form.Control style={squareForm} placeholder='5 Days' />*/}
                 <Form.Select
@@ -465,7 +460,7 @@ function ManagerTenantAgreement(props) {
             <Col>
               <Form.Group>
                 <Form.Label as="h6" className="mb-0 ms-2">
-                  Late Fee Amount {lateFee === "" ? required : ""}
+                  Late Fee (one-time) {lateFee === "" ? required : ""}
                 </Form.Label>
                 <Form.Control
                   value={lateFee}
@@ -479,7 +474,8 @@ function ManagerTenantAgreement(props) {
             <Col>
               <Form.Group>
                 <Form.Label as="h6" className="mb-0 ms-2">
-                  Late After {lateAfter === "" ? required : ""}
+                  Late fees after(days)
+                  {lateAfter === "" ? required : ""}
                 </Form.Label>
                 <Form.Control
                   value={lateAfter}
@@ -490,12 +486,11 @@ function ManagerTenantAgreement(props) {
                 />
               </Form.Group>
             </Col>
-          </Row>
-          <Row className="mb-4">
+
             <Col>
               <Form.Group>
                 <Form.Label as="h6" className="mb-0 ms-2">
-                  Per Day Late Fee {lateFeePer === "" ? required : ""}
+                  Late Fee (per day) {lateFeePer === "" ? required : ""}
                 </Form.Label>
                 <Form.Control
                   value={lateFeePer}
@@ -506,7 +501,6 @@ function ManagerTenantAgreement(props) {
                 />
               </Form.Group>
             </Col>
-            <Col></Col>
           </Row>
 
           <div className="mb-4">

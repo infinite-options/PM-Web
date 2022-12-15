@@ -100,56 +100,61 @@ function BusinessContact(props) {
     );
   return (
     <div>
-      <Table classes={{ root: classes.customTable }} size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Contact Name</TableCell>
-            <TableCell>Role</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Phone Number</TableCell>
+      {console.log(contactState)}
+      {contactState.length !== 0 ? (
+        <Table classes={{ root: classes.customTable }} size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Contact Name</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Phone Number</TableCell>
 
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {contactState.map((contact, i) => (
-            <TableRow key={i}>
-              <TableCell>
-                {contact.first_name} {contact.last_name}
-              </TableCell>
-              <TableCell>{contact.company_role}</TableCell>
-              <TableCell>{contact.email}</TableCell>
-              <TableCell>{contact.phone_number}</TableCell>
-
-              {pageURL[3] !== "propertyDetails" ? (
-                <TableCell>
-                  <img
-                    src={EditIcon}
-                    alt="Edit"
-                    className="px-1 mx-2"
-                    onClick={() => editContact(i)}
-                  />
-                  <img
-                    src={DeleteIcon}
-                    alt="Delete"
-                    className="px-1 mx-2"
-                    onClick={() => deleteContact(i)}
-                  />
-                </TableCell>
-              ) : (
-                <TableCell>
-                  <a href={`tel:${contact.phone_number}`}>
-                    <img src={Phone} alt="Phone" style={smallImg} />
-                  </a>
-                  <a href={`mailto:${contact.email}`}>
-                    <img src={Message} alt="Message" style={smallImg} />
-                  </a>
-                </TableCell>
-              )}
+              <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {contactState.map((contact, i) => (
+              <TableRow key={i}>
+                <TableCell>
+                  {contact.first_name} {contact.last_name}
+                </TableCell>
+                <TableCell>{contact.company_role}</TableCell>
+                <TableCell>{contact.email}</TableCell>
+                <TableCell>{contact.phone_number}</TableCell>
+
+                {pageURL[3] !== "propertyDetails" ? (
+                  <TableCell>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="px-1 mx-2"
+                      onClick={() => editContact(i)}
+                    />
+                    <img
+                      src={DeleteIcon}
+                      alt="Delete"
+                      className="px-1 mx-2"
+                      onClick={() => deleteContact(i)}
+                    />
+                  </TableCell>
+                ) : (
+                  <TableCell>
+                    <a href={`tel:${contact.phone_number}`}>
+                      <img src={Phone} alt="Phone" style={smallImg} />
+                    </a>
+                    <a href={`mailto:${contact.email}`}>
+                      <img src={Message} alt="Message" style={smallImg} />
+                    </a>
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        ""
+      )}
 
       {newContact !== null ? (
         <div>

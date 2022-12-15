@@ -16,8 +16,8 @@ function ManagerFooter(props) {
   const footerContainer = {
     backgroundColor: "#F5F5F5",
     // borderTop: "1px solid #EAEAEA",
-    padding: "10px 0",
-    height: "83px",
+    padding: "10px 10px",
+    height: "73px",
   };
 
   return (
@@ -63,7 +63,7 @@ function ManagerFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/tenatnt-payments");
+            navigate("/");
           }}
         >
           <img src={Expenses_Gray} alt="EXPENSES" />
