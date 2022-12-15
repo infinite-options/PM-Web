@@ -4135,6 +4135,7 @@ function ManagerPropertyView(props) {
                     <Row style={{ overflow: "scroll" }}>
                       <ManagerTenantApplications
                         property={property}
+                        reload={reloadProperty}
                         createNewTenantAgreement={createNewTenantAgreement}
                         selectTenantApplication={selectTenantApplication}
                       />

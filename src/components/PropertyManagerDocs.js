@@ -7,11 +7,7 @@ import {
   TableCell,
   TableBody,
   TableHead,
-  TableSortLabel,
-  Box,
-  Grid,
 } from "@material-ui/core";
-import Carousel from "react-multi-carousel";
 import { makeStyles } from "@material-ui/core/styles";
 import MessageDialog from "./MessageDialog";
 import AppContext from "../AppContext";
