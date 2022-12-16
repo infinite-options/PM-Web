@@ -1323,7 +1323,6 @@ function ManagerUtilities(props) {
                     );
                   })} */}
                   </div>
-                  {console.log(managerID)}
                   <div>
                     <Row style={headings}>
                       <Col>
@@ -1369,7 +1368,7 @@ function ManagerUtilities(props) {
                             getComparator(order, orderBy)
                           ).map((expense, index) => {
                             return expense.purchase_type === "UTILITY" &&
-                              !expense.payer.includes(user.user_uid) &&
+                              !expense.payer.includes(managerID) &&
                               expense.receiver === managerID ? (
                               <TableRow
                                 hover
@@ -1564,7 +1563,7 @@ function ManagerUtilities(props) {
                                   size="small"
                                   align="center"
                                 >
-                                  {expense.bill_utility_type}
+                                  {expense.purchase_type}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1589,6 +1588,20 @@ function ManagerUtilities(props) {
                                   {expense.bill_algorithm != null
                                     ? expense.bill_algorithm
                                     : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.payer}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.receiver}
                                 </TableCell>
                                 <TableCell
                                   padding="none"

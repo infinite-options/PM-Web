@@ -1,10 +1,26 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../Header";
 import { headings, subHeading, subText, blue } from "../../utils/styles";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px", // <-- arbitrary value
+    },
+  },
+});
 function ManagerResidentAnnouncements(props) {
+  const classes = useStyles();
   const navigate = useNavigate();
   const requestTitleRef = React.createRef();
   const requestDescriptionRef = React.createRef();
