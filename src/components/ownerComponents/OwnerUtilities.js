@@ -1533,7 +1533,7 @@ function OwnerUtilities(props) {
                                   size="small"
                                   align="center"
                                 >
-                                  {expense.bill_utility_type}
+                                  {expense.purchase_type}
                                 </TableCell>
                                 <TableCell
                                   padding="none"
@@ -1558,6 +1558,20 @@ function OwnerUtilities(props) {
                                   {expense.bill_algorithm != null
                                     ? expense.bill_algorithm
                                     : "None"}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.payer}
+                                </TableCell>
+                                <TableCell
+                                  padding="none"
+                                  size="small"
+                                  align="center"
+                                >
+                                  {expense.receiver}
                                 </TableCell>
                                 <TableCell
                                   padding="none"

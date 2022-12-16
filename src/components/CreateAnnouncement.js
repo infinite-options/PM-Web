@@ -12,6 +12,18 @@ import {
   address,
   blue,
 } from "../utils/styles";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  TableSortLabel,
+  Box,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import { useNavigate } from "react-router-dom";
 import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "../components/Checkbox";
@@ -19,8 +31,15 @@ import Header from "../components/Header";
 import { post, get } from "../utils/api";
 import AppContext from "../AppContext";
 import SideBar from "../components/managerComponents/SideBar";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px", // <-- arbitrary value
+    },
+  },
+});
 function CreateAnnouncement(props) {
+  const classes = useStyles();
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
@@ -39,6 +58,9 @@ function CreateAnnouncement(props) {
   const [byTenants, setByTenants] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [announcementDetail, setAnnouncementDetail] = useState(false);
+
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
 
   const emptyAnnouncement = {
     pm_id: "",
@@ -306,6 +328,98 @@ function CreateAnnouncement(props) {
       ""
     );
 
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const headCells = [
+    {
+      id: "announcement_title",
+      numeric: false,
+      label: "Title",
+    },
+
+    {
+      id: "announcement_date",
+      numeric: false,
+      label: "Announcement Date",
+    },
+  ];
+  function EnhancedTableHead(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHead.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
   return (
     <div>
       <div className="flex-1">
@@ -580,6 +694,101 @@ function CreateAnnouncement(props) {
             !announcementDetail ? (
               <div className="mx-2 my-2 p-3">
                 {console.log(announcements)}
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHead
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                      // rowCount="4"
+                    />{" "}
+                    <TableBody>
+                      {stableSort(
+                        announcements,
+                        getComparator(order, orderBy)
+                      ).map((announce, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={announce.announce}
+                            onClick={() =>
+                              navigate("/detailAnnouncements", {
+                                state: {
+                                  announcement: announce,
+                                },
+                              })
+                            }
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {announce.announcement_title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            ></TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            ></TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            ></TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            ></TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            ></TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            ></TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {new Date(
+                                announce.date_announcement
+                              ).toLocaleString("default", {
+                                month: "long",
+                              })}{" "}
+                              {new Date(announce.date_announcement).getDate()},{" "}
+                              {new Date(
+                                announce.date_announcement
+                              ).getFullYear()}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            ></TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
                 <div>
                   {announcements.map((announce) => {
                     return (

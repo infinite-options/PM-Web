@@ -150,6 +150,7 @@ function ManagerDocuments(props) {
                       {" "}
                       <h5>Active Lease Documents</h5>{" "}
                     </TableCell>
+                    <TableCell width="180px">Address</TableCell>
                     <TableCell width="180px">Expiry Date</TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
@@ -198,6 +199,7 @@ function ManagerDocuments(props) {
                               <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
+                          <TableCell width="180px">{ald.address}</TableCell>
                           <TableCell width="180px">{ald.expiry_date}</TableCell>
                           <TableCell width="180px">
                             {ald.created_date}
@@ -262,12 +264,14 @@ function ManagerDocuments(props) {
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                     </TableRow>
                   )}
                   <TableRow>
                     <TableCell width="380px">
                       <h5>Active Manager Documents </h5>
                     </TableCell>
+                    <TableCell width="180px">Address</TableCell>
                     <TableCell width="180px">Expiry Date</TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
@@ -315,6 +319,8 @@ function ManagerDocuments(props) {
                               <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
+
+                          <TableCell width="180px">{amd.address}</TableCell>
                           <TableCell width="180px">{amd.expiry_date}</TableCell>
                           <TableCell width="180px">
                             {amd.created_date}
@@ -348,6 +354,7 @@ function ManagerDocuments(props) {
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                     </TableRow>
                   )}
                   <TableRow>
@@ -355,6 +362,7 @@ function ManagerDocuments(props) {
                       {" "}
                       <h5>Past Lease Documents</h5>{" "}
                     </TableCell>
+                    <TableCell width="180px">Address</TableCell>
                     <TableCell width="180px">Expiry Date</TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
@@ -398,6 +406,8 @@ function ManagerDocuments(props) {
                               <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
+
+                          <TableCell width="180px">{pld.address}</TableCell>
                           <TableCell width="180px">{pld.expiry_date}</TableCell>
                           <TableCell width="180px">
                             {pld.created_date}
@@ -463,12 +473,14 @@ function ManagerDocuments(props) {
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                     </TableRow>
                   )}
                   <TableRow>
                     <TableCell width="380px">
                       <h5>Past Manager Documents</h5>{" "}
                     </TableCell>
+                    <TableCell width="180px">Address</TableCell>
                     <TableCell width="180px">Expiry Date</TableCell>
                     <TableCell width="180px">Created Date</TableCell>
                     <TableCell width="180px">Created By</TableCell>
@@ -517,6 +529,7 @@ function ManagerDocuments(props) {
                               <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
+                          <TableCell width="180px">{pmd.address}</TableCell>
                           <TableCell width="180px">{pmd.expiry_date}</TableCell>
                           <TableCell width="180px">
                             {pmd.created_date}
@@ -544,6 +557,7 @@ function ManagerDocuments(props) {
                       <TableCell width="180px">
                         <p className="mx-3">No documents</p>
                       </TableCell>
+                      <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>

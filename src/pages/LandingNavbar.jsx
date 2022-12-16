@@ -203,6 +203,7 @@ function LandingNavbar() {
                     borderRadius: "10px",
                     color: "black",
                     maxWidth: "10rem",
+                    minWidth: "10rem",
                     font: "normal normal normal 18px Avenir-Light",
                   }}
                   onClick={signupexisting}
