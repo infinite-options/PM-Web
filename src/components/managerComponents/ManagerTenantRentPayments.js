@@ -494,7 +494,7 @@ function ManagerTenantRentPayments(props) {
             onClick={addFee}
             className="mx-2"
           >
-            Add Fee
+            Update Fee
           </Button>
         </div>
       )}

@@ -68,6 +68,7 @@ function ManagerRepairDetail(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [issueType, setIssueType] = useState("");
+  const [notes, setNotes] = useState("");
   const [priority, setPriority] = useState("");
   const [tenantInfo, setTenantInfo] = useState([]);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -137,6 +138,7 @@ function ManagerRepairDetail(props) {
     setTitle(request_response.result[0].title);
     setDescription(request_response.result[0].description);
     setIssueType(request_response.result[0].request_type);
+    setNotes(request_response.result[0].notes);
     setPriority(request_response.result[0].priority);
     setCanReschedule(request_response.result[0].can_reschedule === 1);
     let tenant = [];
@@ -580,6 +582,17 @@ function ManagerRepairDetail(props) {
                 >
                   <div style={subHeading}>Description</div>
                   <div style={subText}>{description}</div>
+                </Row>
+                <Row
+                  className="pt-1 mb-4"
+                  style={{
+                    background: "#F3F3F3 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <div style={subHeading}>Notes</div>
+                  <div style={subText}>{notes}</div>
                 </Row>
                 <Row
                   className="pt-1 mb-4"

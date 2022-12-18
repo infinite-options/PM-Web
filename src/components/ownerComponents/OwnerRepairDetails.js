@@ -27,6 +27,7 @@ import {
   blue,
   mediumBold,
   orangePill,
+  pillButton,
 } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
@@ -222,10 +223,14 @@ function OwnerRepairDetails(props) {
         <div className="w-100 mb-5">
           <Header
             title="Repairs"
-            leftText={"< Back"}
-            leftFn={() => navigate(-1)}
-            rightText="Edit"
-            rightFn={() => editRepair()}
+            // leftText={"< Back"}
+            // leftFn={() => navigate(-1)}
+            // rightText="Edit"
+            // rightFn={() => editRepair()}
+            leftText={isEditing ? null : "< Back"}
+            leftFn={() => (isEditing ? setIsEditing(false) : navigate(-1))}
+            rightText={isEditing ? null : "Edit"}
+            rightFn={() => (isEditing ? updateRepair() : setIsEditing(true))}
           />
 
           {repairsDetail === [] || isLoading === true ? (
@@ -439,13 +444,25 @@ function OwnerRepairDetails(props) {
                   ""
                 )}
                 {isEditing ? (
-                  <button
-                    style={{ ...editButton, margin: "5% 25%" }}
-                    // onClick={() => setIsEditing(false)}
-                    onClick={() => updateRepair()}
-                  >
-                    Done
-                  </button>
+                  <Row className="pt-1 mb-4">
+                    <Col className="d-flex flex-row justify-content-evenly">
+                      <Button
+                        style={bluePillButton}
+                        onClick={() => updateRepair()}
+                      >
+                        Save
+                      </Button>
+                    </Col>
+                    <Col className="d-flex flex-row justify-content-evenly">
+                      <Button
+                        style={pillButton}
+                        variant="outline-primary"
+                        onClick={() => setIsEditing(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </Col>
+                  </Row>
                 ) : null}
                 <Row hidden={true} className="pt-1">
                   <Col className="d-flex flex-row justify-content-evenly">

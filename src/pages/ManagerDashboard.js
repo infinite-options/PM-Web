@@ -4229,12 +4229,15 @@ export default function ManagerDashboard() {
                                 size="small"
                                 style={{
                                   color:
-                                    property.rentalInfo == "Not Rented"
+                                    property.available_to_rent == 0
+                                      ? "Red"
+                                      : property.rentalInfo == "Not Rented"
                                       ? "green"
                                       : "black",
                                 }}
                                 align="center"
                               >
+                                {console.log("available_to_rent", property)}
                                 {property.rentalInfo !== "Not Rented" ? (
                                   property.rentalInfo.map((tf, i) => {
                                     return (
@@ -4248,6 +4251,8 @@ export default function ManagerDashboard() {
                                       </div>
                                     );
                                   })
+                                ) : property.available_to_rent == 0 ? (
+                                  <div>Not Listed</div>
                                 ) : (
                                   <div>{property.rentalInfo}</div>
                                 )}
@@ -4318,14 +4323,20 @@ export default function ManagerDashboard() {
                                 }}
                                 style={{
                                   color:
-                                    property.rent_status == "PAID"
+                                    property.available_to_rent == 0
+                                      ? "red"
+                                      : property.rent_status == "PAID"
                                       ? "black"
                                       : property.rent_status == "UNPAID"
                                       ? "red"
                                       : "green",
                                 }}
                               >
-                                {property.rent_status}
+                                {property.available_to_rent == 0 ? (
+                                  <div>Not Listed</div>
+                                ) : (
+                                  <div>{property.rent_status}</div>
+                                )}
                               </TableCell>
                               <TableCell
                                 padding="none"
@@ -4605,7 +4616,9 @@ export default function ManagerDashboard() {
                                 size="small"
                                 style={{
                                   color:
-                                    property.rentalInfo == "Not Rented"
+                                    property.available_to_rent == 0
+                                      ? "Red"
+                                      : property.rentalInfo == "Not Rented"
                                       ? "green"
                                       : "black",
                                 }}
@@ -4624,6 +4637,8 @@ export default function ManagerDashboard() {
                                       </div>
                                     );
                                   })
+                                ) : property.available_to_rent == 0 ? (
+                                  <div>Not Listed</div>
                                 ) : (
                                   <div>{property.rentalInfo}</div>
                                 )}
@@ -4694,14 +4709,20 @@ export default function ManagerDashboard() {
                                 }}
                                 style={{
                                   color:
-                                    property.rent_status == "PAID"
+                                    property.available_to_rent == 0
+                                      ? "red"
+                                      : property.rent_status == "PAID"
                                       ? "black"
                                       : property.rent_status == "UNPAID"
                                       ? "red"
                                       : "green",
                                 }}
                               >
-                                {property.rent_status}
+                                {property.available_to_rent == 0 ? (
+                                  <div>Not Listed</div>
+                                ) : (
+                                  <div>{property.rent_status}</div>
+                                )}
                               </TableCell>
                               <TableCell
                                 padding="none"
@@ -4919,6 +4940,18 @@ export default function ManagerDashboard() {
                             }}
                           >
                             {request.request_status}
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {request.request_status === "INFO"
+                                    ? request.notes
+                                    : ""}
+                                </p>
+                              </div>
+                            </div>
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {" "}
