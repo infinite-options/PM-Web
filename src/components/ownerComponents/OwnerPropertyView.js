@@ -4528,6 +4528,12 @@ function OwnerPropertyView(props) {
                                     padding="none"
                                     size="small"
                                     align="center"
+                                    style={{
+                                      color:
+                                        request.title === "New"
+                                          ? "green"
+                                          : "black",
+                                    }}
                                   >
                                     {" "}
                                     {request.title}
@@ -4938,7 +4944,7 @@ function OwnerPropertyView(props) {
                                 <TableHead>
                                   <TableRow>
                                     <TableCell>Document Name</TableCell>
-                                    <TableCell></TableCell>
+                                    <TableCell>View Document</TableCell>
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -5413,7 +5419,7 @@ function OwnerPropertyView(props) {
                                 <TableHead>
                                   <TableRow>
                                     <TableCell>Document Name</TableCell>
-                                    <TableCell></TableCell>
+                                    <TableCell>View Document</TableCell>
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -5630,7 +5636,7 @@ function OwnerPropertyView(props) {
                             <TableHead>
                               <TableRow>
                                 <TableCell>Document Name</TableCell>
-                                <TableCell></TableCell>
+                                <TableCell>View Document</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>

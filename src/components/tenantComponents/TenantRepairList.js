@@ -432,6 +432,10 @@ function TenantRepairList(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              style={{
+                                color:
+                                  repair.title === "New" ? "green" : "black",
+                              }}
                             >
                               {repair.title}
                             </TableCell>

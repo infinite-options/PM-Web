@@ -5074,7 +5074,17 @@ export default function OwnerDashboard2() {
                             {request.unit !== "" ? " " + request.unit : ""}{" "}
                             {request.city}, {request.state} {request.zip}
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            padding="none"
+                            size="small"
+                            align="center"
+                            style={{
+                              color:
+                                request.request_status == "NEW"
+                                  ? "green"
+                                  : "black",
+                            }}
+                          >
                             {request.request_status}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">

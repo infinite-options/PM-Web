@@ -353,7 +353,7 @@ function PropertyManagerDocs(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Document Name</TableCell>
-                    <TableCell></TableCell>
+                    <TableCell>View Document</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

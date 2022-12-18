@@ -536,7 +536,14 @@ function ManagerRepairsOverview(props) {
                           />
                         )}
                       </TableCell>
-                      <TableCell padding="none" size="small" align="center">
+                      <TableCell
+                        padding="none"
+                        size="small"
+                        align="center"
+                        style={{
+                          color: row.title === "New" ? "green" : "black",
+                        }}
+                      >
                         {row.title}
                       </TableCell>
                       <TableCell padding="none" size="small" align="center">
