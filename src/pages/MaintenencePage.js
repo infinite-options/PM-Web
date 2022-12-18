@@ -172,6 +172,7 @@ export default function MaintenancePage() {
                 "Landscape",
                 "Appliances",
                 "Electrical",
+                "HVAC",
                 "Other",
               ]}
             />

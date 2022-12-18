@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
 import File from "../../icons/File.svg";
 import ManagerFees from "../ManagerFees";
@@ -18,6 +19,7 @@ import {
   smallPillButton,
   subHeading,
   headings,
+  pillButton,
 } from "../../utils/styles";
 import ManagerFooter from "./ManagerFooter";
 
@@ -26,6 +28,7 @@ function ManagerManagementContract(props) {
   const { access_token, user } = userData;
   const { back, property, contract, reload } = props;
 
+  const [showSpinner, setShowSpinner] = useState(false);
   const [contractName, setContractName] = React.useState("");
 
   const [startDate, setStartDate] = React.useState("");
@@ -166,6 +169,7 @@ function ManagerManagementContract(props) {
       }
       newProperty[key] = images[i + 1];
     }
+    setShowSpinner(true);
     await put("/properties", newProperty, null, images);
     back();
     reload();
@@ -197,8 +201,8 @@ function ManagerManagementContract(props) {
           title="Management Contract"
           leftText="< Back"
           leftFn={back}
-          rightText="Save"
-          rightFn={save}
+          // rightText="Save"
+          // rightFn={save}
         />
         <div
           className="mx-2 my-2 p-3"
@@ -387,6 +391,30 @@ function ManagerManagementContract(props) {
                 </label>
               </div>
             )}
+            {showSpinner ? (
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                <ReactBootStrap.Spinner animation="border" role="status" />
+              </div>
+            ) : (
+              ""
+            )}
+            <div
+              className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
+              style={{
+                background: "#FFFFFF 0% 0% no-repeat padding-box",
+
+                opacity: 1,
+              }}
+            >
+              <Button
+                variant="outline-primary"
+                style={pillButton}
+                className="mx-2"
+                onClick={save}
+              >
+                Save
+              </Button>
+            </div>
           </div>
         </div>{" "}
         <div hidden={responsive.showSidebar} className="w-100 mt-3">

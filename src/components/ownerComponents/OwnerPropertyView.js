@@ -5315,98 +5315,106 @@ function OwnerPropertyView(props) {
                         p.management_status === "REJECTED" ? (
                           ""
                         ) : p.management_status === "SENT" ? (
-                          <Row style={{ overflow: "scroll" }}>
-                            <div>
-                              <Table
-                                responsive="md"
-                                classes={{ root: classes.customTable }}
-                                size="small"
-                              >
-                                <TableHead>
-                                  <TableRow>
-                                    <TableCell align="center">
-                                      Business Name
-                                    </TableCell>
-                                    <TableCell>Contract Name</TableCell>
-                                    <TableCell>Start Date</TableCell>
-                                    <TableCell>End Date</TableCell>
-                                    <TableCell align="center">
-                                      Actions
-                                    </TableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  <TableRow>
-                                    <TableCell>
-                                      <h6 style={mediumBold} className="mb-1">
-                                        {p.manager_business_name}
-                                      </h6>
-                                      <p
-                                        style={{ mediumBold, color: "#41fc03" }}
-                                        className="mb-1"
-                                      >
-                                        Contract in Review
-                                      </p>
-                                    </TableCell>
-                                    {contracts.map((contract, i) =>
-                                      contract.business_uid === p.manager_id ? (
-                                        contract.contract_name != null ? (
+                          <div>
+                            <Row style={{ overflow: "scroll" }}>
+                              <div>
+                                <Table
+                                  responsive="md"
+                                  classes={{ root: classes.customTable }}
+                                  size="small"
+                                >
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell align="center">
+                                        Business Name
+                                      </TableCell>
+                                      <TableCell>Contract Name</TableCell>
+                                      <TableCell>Start Date</TableCell>
+                                      <TableCell>End Date</TableCell>
+                                      <TableCell align="center">
+                                        Actions
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    <TableRow>
+                                      <TableCell>
+                                        <h6 style={mediumBold} className="mb-1">
+                                          {p.manager_business_name}
+                                        </h6>
+                                        <p
+                                          style={{
+                                            mediumBold,
+                                            color: "#41fc03",
+                                          }}
+                                          className="mb-1"
+                                        >
+                                          Contract in Review
+                                        </p>
+                                      </TableCell>
+                                      {contracts.map((contract, i) =>
+                                        contract.business_uid ===
+                                        p.manager_id ? (
+                                          contract.contract_name != null ? (
+                                            <TableCell>
+                                              {contract.contract_name}{" "}
+                                            </TableCell>
+                                          ) : (
+                                            <TableCell>
+                                              Contract {i + 1}{" "}
+                                            </TableCell>
+                                          )
+                                        ) : (
+                                          ""
+                                        )
+                                      )}
+
+                                      {contracts.map((contract, i) =>
+                                        contract.business_uid ===
+                                        p.manager_id ? (
                                           <TableCell>
-                                            {contract.contract_name}{" "}
+                                            {contract.start_date}
                                           </TableCell>
                                         ) : (
-                                          <TableCell>
-                                            Contract {i + 1}{" "}
-                                          </TableCell>
+                                          ""
                                         )
-                                      ) : (
-                                        ""
-                                      )
-                                    )}
+                                      )}
+                                      {contracts.map((contract, i) =>
+                                        contract.business_uid ===
+                                        p.manager_id ? (
+                                          <TableCell>
+                                            {contract.end_date}
+                                          </TableCell>
+                                        ) : (
+                                          ""
+                                        )
+                                      )}
 
-                                    {contracts.map((contract, i) =>
-                                      contract.business_uid === p.manager_id ? (
-                                        <TableCell>
-                                          {contract.start_date}
-                                        </TableCell>
-                                      ) : (
-                                        ""
-                                      )
-                                    )}
-                                    {contracts.map((contract, i) =>
-                                      contract.business_uid === p.manager_id ? (
-                                        <TableCell>
-                                          {contract.end_date}
-                                        </TableCell>
-                                      ) : (
-                                        ""
-                                      )
-                                    )}
-
-                                    <TableCell>
-                                      <a
-                                        href={`tel:${property.managerInfo.manager_phone_number}`}
-                                      >
-                                        <img
-                                          src={Phone}
-                                          alt="Phone"
-                                          style={smallImg}
-                                        />
-                                      </a>
-                                      <a
-                                        href={`mailto:${property.managerInfo.manager_email}`}
-                                      >
-                                        <img
-                                          src={Message}
-                                          alt="Message"
-                                          style={smallImg}
-                                        />
-                                      </a>
-                                    </TableCell>
-                                  </TableRow>
-                                </TableBody>
-                              </Table>
-                            </div>
+                                      <TableCell>
+                                        <a
+                                          href={`tel:${property.managerInfo.manager_phone_number}`}
+                                        >
+                                          <img
+                                            src={Phone}
+                                            alt="Phone"
+                                            style={smallImg}
+                                          />
+                                        </a>
+                                        <a
+                                          href={`mailto:${property.managerInfo.manager_email}`}
+                                        >
+                                          <img
+                                            src={Message}
+                                            alt="Message"
+                                            style={smallImg}
+                                          />
+                                        </a>
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableBody>
+                                </Table>
+                              </div>
+                            </Row>
                             <Row className="mt-1">
                               <h5>Property Manager Documents</h5>
                             </Row>
@@ -5529,7 +5537,7 @@ function OwnerPropertyView(props) {
                                 </Button>
                               </Col>
                             </Row>
-                          </Row>
+                          </div>
                         ) : (
                           ""
                         )

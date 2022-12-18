@@ -374,8 +374,8 @@ function ManagerPropertyView(props) {
     setShowManagementContract(true);
   };
   const closeContract = () => {
-    // reload();
     setShowManagementContract(false);
+    // reload();
   };
 
   const addAgreement = () => {
@@ -4159,14 +4159,30 @@ function ManagerPropertyView(props) {
                     }
                   />
                 </Row>
-                <Row className="m-3">
+                {/* <Row className="m-3">
                   <Col>
                     <h3>Property Owner Agreement</h3>
                   </Col>
-                  <Col xs={2}></Col>
-                </Row>
+                  {selectedContract != null ? (
+                    <Col xs={2}>
+                      <img
+                        src={EditIconNew}
+                        alt="Edit"
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                        onClick={selectContract}
+                      />
+                    </Col>
+                  ) : (
+                    <Col xs={2}></Col>
+                  )}
+                </Row> */}
                 <Row style={{ overflow: "scroll" }}>
-                  {" "}
+                  {console.log("selectContract", selectContract)}
                   <PropertyManagerDocs
                     property={property}
                     fetchProperty={fetchProperty}

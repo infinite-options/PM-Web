@@ -15,7 +15,7 @@ import File from "../icons/File.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
 import Edit from "../icons/Edit.svg";
-import EditIcon from "../icons/EditIcon.svg";
+import EditIconNew from "../icons/EditIconNew.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import { get, put } from "../utils/api";
 import {
@@ -184,6 +184,28 @@ function PropertyManagerDocs(props) {
 
   return (
     <div className="d-flex flex-column flex-grow-1 w-100 justify-content-center">
+      <Row className="m-3">
+        <Col>
+          <h3>Property Owner Agreement</h3>
+        </Col>
+        {activeContract != null ? (
+          <Col xs={2}>
+            <img
+              src={EditIconNew}
+              alt="Edit"
+              style={{
+                width: "30px",
+                height: "30px",
+                float: "right",
+                marginRight: "5rem",
+              }}
+              onClick={() => selectContract(activeContract)}
+            />
+          </Col>
+        ) : (
+          <Col xs={2}></Col>
+        )}
+      </Row>
       <MessageDialog
         title={"Message"}
         isOpen={showMessageForm}
@@ -233,14 +255,14 @@ function PropertyManagerDocs(props) {
                           ? activeContract.contract_name
                           : "Unnamed Contract"}
                       </Col>
-                      <Col xs={2}>
+                      {/* <Col xs={2}>
                         <img
                           src={Edit}
                           alt="Edit"
                           style={{ width: "15px", height: "25px" }}
                           onClick={() => selectContract(activeContract)}
                         />
-                      </Col>
+                      </Col> */}
                     </Row>
                   </TableCell>
 
