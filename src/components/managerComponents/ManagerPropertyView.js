@@ -796,7 +796,7 @@ function ManagerPropertyView(props) {
                 </Row>
                 <Row className="m-3">
                   <Col>
-                    <h3>Cashflow Summary</h3>
+                    <h3>Property Cashflow Summary</h3>
                   </Col>
                   <Col>
                     <img

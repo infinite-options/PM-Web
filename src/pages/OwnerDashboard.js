@@ -687,7 +687,7 @@ export default function OwnerDashboard2() {
             <Header title="Owner Dashboard" />
             <Row className="m-3">
               <Col>
-                <h1>Cash Flow Summary</h1>
+                <h1>Portfolio Cashflow Summary</h1>
               </Col>
               <Col>
                 <img

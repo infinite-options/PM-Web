@@ -963,7 +963,7 @@ function OwnerPropertyView(props) {
 
                   <Row className="m-3">
                     <Col>
-                      <h3>Cashflow Summary</h3>
+                      <h3>Property Cashflow Summary</h3>
                     </Col>
                     <Col>
                       <img
@@ -4741,89 +4741,90 @@ function OwnerPropertyView(props) {
                     <Col xs={2}></Col>
                   </Row>
                   <Row className="m-3">
-                    <Table
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                      responsive="md"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Utilities</TableCell>
-                          <TableCell>Electricity</TableCell>
-                          <TableCell>Trash</TableCell>
-                          <TableCell>Water</TableCell>
-                          <TableCell>Wifi </TableCell>
-                          <TableCell>Gas</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>Paid by</TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Electricity"]
-                              ? "Owner"
-                              : "Trash"}
-                          </TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Trash"]
-                              ? "Owner"
-                              : "Trash"}
-                          </TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Water"]
-                              ? "Owner"
-                              : "Trash"}
-                          </TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Wifi"]
-                              ? "Owner"
-                              : "Trash"}
-                          </TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Gas"]
-                              ? "Owner"
-                              : "Trash"}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
+                    <div>
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                        responsive="md"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Utilities</TableCell>
+                            <TableCell>Electricity</TableCell>
+                            <TableCell>Trash</TableCell>
+                            <TableCell>Water</TableCell>
+                            <TableCell>Wifi </TableCell>
+                            <TableCell>Gas</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>Paid by</TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Electricity"]
+                                ? "Owner"
+                                : "Trash"}
+                            </TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Trash"]
+                                ? "Owner"
+                                : "Trash"}
+                            </TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Water"]
+                                ? "Owner"
+                                : "Trash"}
+                            </TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Wifi"]
+                                ? "Owner"
+                                : "Trash"}
+                            </TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Gas"]
+                                ? "Owner"
+                                : "Trash"}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
                   </Row>
                   <Row className="m-3">
-                    <Table
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                      responsive="md"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Pets Allowed</TableCell>
-                          <TableCell>
-                            Deposit can be used for last month's rent
-                          </TableCell>
-                          <TableCell>
-                            Deposit can be used for last month's rent
-                          </TableCell>
-                          <TableCell>Available to Rent</TableCell>
-                          <TableCell>Featured</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>
-                            {property.pets_allowed == 0 ? "No" : "Yes"}
-                          </TableCell>
-                          <TableCell>
-                            {property.deposit_for_rent == 0 ? "No" : "Yes"}
-                          </TableCell>
-                          <TableCell>
-                            {property.available_to_rent == 0 ? "No" : "Yes"}
-                          </TableCell>
-                          <TableCell>
-                            {property.featured ? "No" : "Yes"}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
+                    <div>
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                        responsive="md"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Pets Allowed</TableCell>
+                            <TableCell>
+                              Deposit can be used for last month's rent
+                            </TableCell>
+                            <TableCell>Available to Rent</TableCell>
+                            <TableCell>Featured</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>
+                              {property.pets_allowed == 0 ? "No" : "Yes"}
+                            </TableCell>
+                            <TableCell>
+                              {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                            </TableCell>
+                            <TableCell>
+                              {property.available_to_rent == 0 ? "No" : "Yes"}
+                            </TableCell>
+                            <TableCell>
+                              {property.featured ? "No" : "Yes"}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
                   </Row>
                   {Object.keys(property.managerInfo).length !== 0 ? (
                     <div>
@@ -5309,89 +5310,97 @@ function OwnerPropertyView(props) {
                           ""
                         ) : p.management_status === "SENT" ? (
                           <Row style={{ overflow: "scroll" }}>
-                            <Table
-                              responsive="md"
-                              classes={{ root: classes.customTable }}
-                              size="small"
-                            >
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell align="center">
-                                    Business Name
-                                  </TableCell>
-                                  <TableCell>Contract Name</TableCell>
-                                  <TableCell>Start Date</TableCell>
-                                  <TableCell>End Date</TableCell>
-                                  <TableCell align="center">Actions</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                <TableRow>
-                                  <TableCell>
-                                    <h6 style={mediumBold} className="mb-1">
-                                      {p.manager_business_name}
-                                    </h6>
-                                    <p
-                                      style={{ mediumBold, color: "#41fc03" }}
-                                      className="mb-1"
-                                    >
-                                      Contract in Review
-                                    </p>
-                                  </TableCell>
-                                  {contracts.map((contract, i) =>
-                                    contract.business_uid === p.manager_id ? (
-                                      contract.contract_name != null ? (
+                            <div>
+                              <Table
+                                responsive="md"
+                                classes={{ root: classes.customTable }}
+                                size="small"
+                              >
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell align="center">
+                                      Business Name
+                                    </TableCell>
+                                    <TableCell>Contract Name</TableCell>
+                                    <TableCell>Start Date</TableCell>
+                                    <TableCell>End Date</TableCell>
+                                    <TableCell align="center">
+                                      Actions
+                                    </TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell>
+                                      <h6 style={mediumBold} className="mb-1">
+                                        {p.manager_business_name}
+                                      </h6>
+                                      <p
+                                        style={{ mediumBold, color: "#41fc03" }}
+                                        className="mb-1"
+                                      >
+                                        Contract in Review
+                                      </p>
+                                    </TableCell>
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id ? (
+                                        contract.contract_name != null ? (
+                                          <TableCell>
+                                            {contract.contract_name}{" "}
+                                          </TableCell>
+                                        ) : (
+                                          <TableCell>
+                                            Contract {i + 1}{" "}
+                                          </TableCell>
+                                        )
+                                      ) : (
+                                        ""
+                                      )
+                                    )}
+
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id ? (
                                         <TableCell>
-                                          {contract.contract_name}{" "}
+                                          {contract.start_date}
                                         </TableCell>
                                       ) : (
-                                        <TableCell>Contract {i + 1} </TableCell>
+                                        ""
                                       )
-                                    ) : (
-                                      ""
-                                    )
-                                  )}
+                                    )}
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id ? (
+                                        <TableCell>
+                                          {contract.end_date}
+                                        </TableCell>
+                                      ) : (
+                                        ""
+                                      )
+                                    )}
 
-                                  {contracts.map((contract, i) =>
-                                    contract.business_uid === p.manager_id ? (
-                                      <TableCell>
-                                        {contract.start_date}
-                                      </TableCell>
-                                    ) : (
-                                      ""
-                                    )
-                                  )}
-                                  {contracts.map((contract, i) =>
-                                    contract.business_uid === p.manager_id ? (
-                                      <TableCell>{contract.end_date}</TableCell>
-                                    ) : (
-                                      ""
-                                    )
-                                  )}
-
-                                  <TableCell>
-                                    <a
-                                      href={`tel:${property.managerInfo.manager_phone_number}`}
-                                    >
-                                      <img
-                                        src={Phone}
-                                        alt="Phone"
-                                        style={smallImg}
-                                      />
-                                    </a>
-                                    <a
-                                      href={`mailto:${property.managerInfo.manager_email}`}
-                                    >
-                                      <img
-                                        src={Message}
-                                        alt="Message"
-                                        style={smallImg}
-                                      />
-                                    </a>
-                                  </TableCell>
-                                </TableRow>
-                              </TableBody>
-                            </Table>
+                                    <TableCell>
+                                      <a
+                                        href={`tel:${property.managerInfo.manager_phone_number}`}
+                                      >
+                                        <img
+                                          src={Phone}
+                                          alt="Phone"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                      <a
+                                        href={`mailto:${property.managerInfo.manager_email}`}
+                                      >
+                                        <img
+                                          src={Message}
+                                          alt="Message"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </div>
                             <Row className="mt-1">
                               <h5>Property Manager Documents</h5>
                             </Row>
