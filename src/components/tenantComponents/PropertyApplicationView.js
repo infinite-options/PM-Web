@@ -165,7 +165,7 @@ function PropertyApplicationView(props) {
   }, []);
   console.log("propertyApplicationView", property);
   return (
-    <div className="w-100 overflow-hidden">
+    <div className="p-0 m-0">
       <div className="flex-1">
         {forPropertyLease ? (
           ""
@@ -182,7 +182,7 @@ function PropertyApplicationView(props) {
           </div>
         )}
 
-        <div className="w-100 mb-5">
+        <div className="mb-5 overflow-hidden" style={{ width: "87%" }}>
           {forPropertyLease ? (
             ""
           ) : (
@@ -231,343 +231,331 @@ function PropertyApplicationView(props) {
           ) : (
             ""
           )}
-          <div
-            style={{
-              padding: "40px",
-              paddingTop: "15px",
-              paddingBottom: "15px",
-            }}
-          >
-            {property ? (
-              <div>
-                <Row className="m-3">
-                  <Col>
-                    <h3>Property Summary</h3>
-                  </Col>
-                  <Col></Col>
-                </Row>
 
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <Table
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                    responsive="md"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell> Property Images</TableCell>
-                        <TableCell>Street Address</TableCell>
-                        <TableCell>City,State</TableCell>
-                        <TableCell>Zip</TableCell>
-                        <TableCell>Type</TableCell>
-                        <TableCell>Size</TableCell>
-                        <TableCell>Rent</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={property.property_uid}
-                      >
-                        <TableCell padding="none" size="small" align="center">
-                          {JSON.parse(property.images).length > 0 ? (
-                            <img
-                              key={Date.now()}
-                              src={`${
-                                JSON.parse(property.images)[0]
-                              }?${Date.now()}`}
-                              alt="Property"
-                              style={{
-                                borderRadius: "4px",
-                                objectFit: "cover",
-                                width: "100px",
-                                height: "100px",
-                              }}
-                            />
-                          ) : (
-                            <img
-                              src={PropertyIcon}
-                              alt="Property"
-                              style={{
-                                borderRadius: "4px",
-                                objectFit: "cover",
-                                width: "100px",
-                                height: "100px",
-                              }}
-                            />
-                          )}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.address}
-                          {property.unit !== "" ? " " + property.unit : ""}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.city}, {property.state}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {property.zip}
-                        </TableCell>
+          {property ? (
+            <div className="m-3">
+              <Row className="m-3">
+                <Col>
+                  <h3>Property Summary</h3>
+                </Col>
+                <Col></Col>
+              </Row>
 
-                        <TableCell padding="none" size="small" align="center">
-                          {property.property_type}
-                        </TableCell>
-
-                        <TableCell padding="none" size="small" align="center">
-                          {property.num_beds + "/" + property.num_baths}
-                        </TableCell>
-
-                        <TableCell padding="none" size="small" align="center">
-                          {"$" + property.listed_rent}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </Row>
-              </div>
-            ) : (
-              ""
-            )}
-            {property ? (
-              <div>
-                <Row className="m-3">
-                  <Col>
-                    <h3>Appliances</h3>
-                  </Col>
-                  <Col></Col>
-                </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Appliance</TableCell>
-                        <TableCell>Name</TableCell>
-
-                        <TableCell>Images</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    {console.log("appliances", appliances, applianceState)}
-                    <TableBody>
-                      {appliances.map((appliance, i) => {
-                        return applianceState[0][appliance]["available"] ==
-                          true ||
-                          applianceState[0][appliance]["available"] ==
-                            "True" ? (
-                          <TableRow>
-                            <TableCell>{appliance}</TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["name"]}
-                            </TableCell>
-
-                            {applianceState[0][appliance]["images"] !==
-                              undefined &&
-                            applianceState[0][appliance]["images"].length >
-                              0 ? (
-                              <TableCell>
-                                {console.log(
-                                  applianceState[0][appliance]["images"][0]
-                                )}
-                                <Row className="d-flex justify-content-center align-items-center p-1">
-                                  <Col className="d-flex justify-content-center align-items-center p-0 m-0">
-                                    <img
-                                      key={Date.now()}
-                                      src={`${
-                                        applianceState[0][appliance][
-                                          "images"
-                                        ][0]
-                                      }?${Date.now()}`}
-                                      style={{
-                                        borderRadius: "4px",
-                                        objectFit: "contain",
-                                        width: "50px",
-                                        height: "50px",
-                                      }}
-                                      alt="Property"
-                                    />
-                                  </Col>
-                                </Row>
-                              </TableCell>
-                            ) : (
-                              <TableCell>None</TableCell>
-                            )}
-                          </TableRow>
-                        ) : (
-                          ""
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </Row>
-              </div>
-            ) : (
-              ""
-            )}
-            {property ? (
-              <div>
-                {" "}
-                <Row className="m-3">
-                  <Col>
-                    <h3>Other Info</h3>
-                  </Col>
-                </Row>
-                <Row className="m-3">
-                  <Table
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                    responsive="md"
-                  >
-                    <TableRow>
-                      <TableCell>Pets Allowed</TableCell>
-                      <TableCell>
-                        {property.pets_allowed == 0 ? "No" : "Yes"}
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell>
-                        Deposit can be used for last month's rent
-                      </TableCell>
-                      <TableCell>
-                        {property.deposit_for_rent == 0 ? "No" : "Yes"}
-                      </TableCell>
-                    </TableRow>
-                  </Table>
-                </Row>
-                <Row className="m-3">
-                  <Table
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                    responsive="md"
-                  >
-                    <TableRow>
-                      <TableCell>Utilities</TableCell>
-
-                      <TableCell>Paid by</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Electricity</TableCell>
-                      <TableCell>
-                        {JSON.parse(property.utilities)["Electricity"]
-                          ? "Owner"
-                          : "Tenant"}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Trash</TableCell>
-                      <TableCell>
-                        {JSON.parse(property.utilities)["Trash"]
-                          ? "Owner"
-                          : "Tenant"}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Water</TableCell>
-                      <TableCell>
-                        {JSON.parse(property.utilities)["Water"]
-                          ? "Owner"
-                          : "Tenant"}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Wifi </TableCell>
-                      <TableCell>
-                        {JSON.parse(property.utilities)["Wifi"]
-                          ? "Owner"
-                          : "Tenant"}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Gas</TableCell>
-                      <TableCell>
-                        {JSON.parse(property.utilities)["Gas"]
-                          ? "Owner"
-                          : "Tenant"}
-                      </TableCell>
-                    </TableRow>
-                  </Table>
-                </Row>
-              </div>
-            ) : (
-              ""
-            )}
-            {property ? (
-              <div>
-                <Row className="m-3">
-                  <Col>
-                    <h3>Property Manager Info</h3>
-                  </Col>
-                </Row>
-                <Row className="m-3">
-                  <Table
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                    responsive="md"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Manager Business</TableCell>
-                        <TableCell>Manager Email</TableCell>
-                        <TableCell>Manager Phone</TableCell>
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        {" "}
-                        <TableCell>{property.manager_business_name}</TableCell>
-                        <TableCell>{property.manager_email}</TableCell>
-                        <TableCell>{property.manager_phone_number}</TableCell>
-                        <TableCell>
-                          {" "}
-                          <a href={`tel:${property.manager_phone_number}`}>
-                            <img src={Phone} alt="Phone" style={smallImg} />
-                          </a>
-                          <a href={`mailto:${property.manager_email}`}>
-                            <img src={Message} alt="Message" style={smallImg} />
-                          </a>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </Row>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-          {/* ====================  < Button >==================================== */}
-          {forPropertyLease ? (
-            ""
-          ) : (
-            <Row className="mt-4">
-              <Col
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  marginBottom: "25px",
-                }}
-              >
-                {" "}
-                <Button
-                  onClick={() =>
-                    navigate(`/reviewTenantProfile/${property_uid}`)
-                  }
-                  variant="outline-primary"
-                  style={{ ...bluePillButton, margin: "0 24%" }}
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
                 >
-                  Start Application to rent
-                </Button>
-              </Col>
-            </Row>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> Property Images</TableCell>
+                      <TableCell>Street Address</TableCell>
+                      <TableCell>City,State</TableCell>
+                      <TableCell>Zip</TableCell>
+                      <TableCell>Type</TableCell>
+                      <TableCell>Size</TableCell>
+                      <TableCell>Rent</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={property.property_uid}
+                    >
+                      <TableCell padding="none" size="small" align="center">
+                        {JSON.parse(property.images).length > 0 ? (
+                          <img
+                            key={Date.now()}
+                            src={`${
+                              JSON.parse(property.images)[0]
+                            }?${Date.now()}`}
+                            alt="Property"
+                            style={{
+                              borderRadius: "4px",
+                              objectFit: "cover",
+                              width: "100px",
+                              height: "100px",
+                            }}
+                          />
+                        ) : (
+                          <img
+                            src={PropertyIcon}
+                            alt="Property"
+                            style={{
+                              borderRadius: "4px",
+                              objectFit: "cover",
+                              width: "100px",
+                              height: "100px",
+                            }}
+                          />
+                        )}
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {property.address}
+                        {property.unit !== "" ? " " + property.unit : ""}
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {property.city}, {property.state}
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {property.zip}
+                      </TableCell>
+
+                      <TableCell padding="none" size="small" align="center">
+                        {property.property_type}
+                      </TableCell>
+
+                      <TableCell padding="none" size="small" align="center">
+                        {property.num_beds + "/" + property.num_baths}
+                      </TableCell>
+
+                      <TableCell padding="none" size="small" align="center">
+                        {"$" + property.listed_rent}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+          ) : (
+            ""
+          )}
+          {property ? (
+            <div className="m-3">
+              <Row className="m-3">
+                <Col>
+                  <h3>Appliances</h3>
+                </Col>
+                <Col></Col>
+              </Row>
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Appliance</TableCell>
+                      <TableCell>Name</TableCell>
+
+                      <TableCell>Images</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {console.log("appliances", appliances, applianceState)}
+                  <TableBody>
+                    {appliances.map((appliance, i) => {
+                      return applianceState[0][appliance]["available"] ==
+                        true ||
+                        applianceState[0][appliance]["available"] == "True" ? (
+                        <TableRow>
+                          <TableCell>{appliance}</TableCell>
+                          <TableCell>
+                            {applianceState[0][appliance]["name"]}
+                          </TableCell>
+
+                          {applianceState[0][appliance]["images"] !==
+                            undefined &&
+                          applianceState[0][appliance]["images"].length > 0 ? (
+                            <TableCell>
+                              {console.log(
+                                applianceState[0][appliance]["images"][0]
+                              )}
+                              <Row className="d-flex justify-content-center align-items-center p-1">
+                                <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                                  <img
+                                    key={Date.now()}
+                                    src={`${
+                                      applianceState[0][appliance]["images"][0]
+                                    }?${Date.now()}`}
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "contain",
+                                      width: "50px",
+                                      height: "50px",
+                                    }}
+                                    alt="Property"
+                                  />
+                                </Col>
+                              </Row>
+                            </TableCell>
+                          ) : (
+                            <TableCell>None</TableCell>
+                          )}
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+          ) : (
+            ""
+          )}
+          {property ? (
+            <div className="m-3">
+              {" "}
+              <Row className="m-3">
+                <Col>
+                  <h3>Other Info</h3>
+                </Col>
+              </Row>
+              <Row className="m-3">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableRow>
+                    <TableCell>Pets Allowed</TableCell>
+                    <TableCell>
+                      {property.pets_allowed == 0 ? "No" : "Yes"}
+                    </TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell>
+                      Deposit can be used for last month's rent
+                    </TableCell>
+                    <TableCell>
+                      {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                    </TableCell>
+                  </TableRow>
+                </Table>
+              </Row>
+              <Row className="m-3">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableRow>
+                    <TableCell>Utilities</TableCell>
+
+                    <TableCell>Paid by</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Electricity</TableCell>
+                    <TableCell>
+                      {JSON.parse(property.utilities)["Electricity"]
+                        ? "Owner"
+                        : "Tenant"}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Trash</TableCell>
+                    <TableCell>
+                      {JSON.parse(property.utilities)["Trash"]
+                        ? "Owner"
+                        : "Tenant"}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Water</TableCell>
+                    <TableCell>
+                      {JSON.parse(property.utilities)["Water"]
+                        ? "Owner"
+                        : "Tenant"}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Wifi </TableCell>
+                    <TableCell>
+                      {JSON.parse(property.utilities)["Wifi"]
+                        ? "Owner"
+                        : "Tenant"}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Gas</TableCell>
+                    <TableCell>
+                      {JSON.parse(property.utilities)["Gas"]
+                        ? "Owner"
+                        : "Tenant"}
+                    </TableCell>
+                  </TableRow>
+                </Table>
+              </Row>
+            </div>
+          ) : (
+            ""
+          )}
+          {property ? (
+            <div className="m-3">
+              <Row className="m-3">
+                <Col>
+                  <h3>Property Manager Info</h3>
+                </Col>
+              </Row>
+              <Row className="m-3">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Manager Business</TableCell>
+                      <TableCell>Manager Email</TableCell>
+                      <TableCell>Manager Phone</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      {" "}
+                      <TableCell>{property.manager_business_name}</TableCell>
+                      <TableCell>{property.manager_email}</TableCell>
+                      <TableCell>{property.manager_phone_number}</TableCell>
+                      <TableCell>
+                        {" "}
+                        <a href={`tel:${property.manager_phone_number}`}>
+                          <img src={Phone} alt="Phone" style={smallImg} />
+                        </a>
+                        <a href={`mailto:${property.manager_email}`}>
+                          <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+          ) : (
+            ""
           )}
         </div>
+        {/* ====================  < Button >==================================== */}
+        {forPropertyLease ? (
+          ""
+        ) : (
+          <Row className="mt-4">
+            <Col
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: "25px",
+              }}
+            >
+              {" "}
+              <Button
+                onClick={() => navigate(`/reviewTenantProfile/${property_uid}`)}
+                variant="outline-primary"
+                style={{ ...bluePillButton, margin: "0 24%" }}
+              >
+                Start Application to rent
+              </Button>
+            </Col>
+          </Row>
+        )}
       </div>
+
       {forPropertyLease ? (
         ""
       ) : (

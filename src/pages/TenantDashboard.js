@@ -227,6 +227,7 @@ export default function TenantDashboard() {
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
       state: {
         property_uid: application.property_uid,
+        application: application,
         application_uid: application.application_uid,
         application_status_1: application.application_status,
         message: application.message,
