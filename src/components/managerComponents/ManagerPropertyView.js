@@ -745,6 +745,7 @@ function ManagerPropertyView(props) {
               <ManagerTenantProfileView
                 back={closeTenantApplication}
                 application={selectedTenantApplication}
+                createNewTenantAgreement={createNewTenantAgreement}
               />
             ) : showAddRequest ? (
               <ManagerRepairRequest

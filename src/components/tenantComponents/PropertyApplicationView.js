@@ -347,14 +347,7 @@ function PropertyApplicationView(props) {
                       <TableRow>
                         <TableCell>Appliance</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell>Purchased From</TableCell>
-                        <TableCell>Purchased On</TableCell>
-                        <TableCell>Purchase Order Number</TableCell>
-                        <TableCell>Installed On</TableCell>
-                        <TableCell>Serial Number</TableCell>
-                        <TableCell>Model Number</TableCell>
-                        <TableCell>Warranty Till</TableCell>
-                        <TableCell>Warranty Info</TableCell>
+
                         <TableCell>Images</TableCell>
                       </TableRow>
                     </TableHead>
@@ -369,30 +362,6 @@ function PropertyApplicationView(props) {
                             <TableCell>{appliance}</TableCell>
                             <TableCell>
                               {applianceState[0][appliance]["name"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["purchased_from"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["purchased"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["purchased_order"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["installed"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["serial_num"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["model_num"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["warranty_till"]}
-                            </TableCell>
-                            <TableCell>
-                              {applianceState[0][appliance]["warranty_info"]}
                             </TableCell>
 
                             {applianceState[0][appliance]["images"] !==
@@ -452,24 +421,21 @@ function PropertyApplicationView(props) {
                     size="small"
                     responsive="md"
                   >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Pets Allowed</TableCell>
-                        <TableCell>
-                          Deposit can be used for last month's rent
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>
-                          {property.pets_allowed == 0 ? "No" : "Yes"}
-                        </TableCell>
-                        <TableCell>
-                          {property.deposit_for_rent == 0 ? "No" : "Yes"}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
+                    <TableRow>
+                      <TableCell>Pets Allowed</TableCell>
+                      <TableCell>
+                        {property.pets_allowed == 0 ? "No" : "Yes"}
+                      </TableCell>
+                    </TableRow>
+
+                    <TableRow>
+                      <TableCell>
+                        Deposit can be used for last month's rent
+                      </TableCell>
+                      <TableCell>
+                        {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                      </TableCell>
+                    </TableRow>
                   </Table>
                 </Row>
                 <Row className="m-3">
@@ -478,46 +444,51 @@ function PropertyApplicationView(props) {
                     size="small"
                     responsive="md"
                   >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Utilities</TableCell>
-                        <TableCell>Electricity</TableCell>
-                        <TableCell>Trash</TableCell>
-                        <TableCell>Water</TableCell>
-                        <TableCell>Wifi </TableCell>
-                        <TableCell>Gas</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>Paid by</TableCell>
-                        <TableCell>
-                          {JSON.parse(property.utilities)["Electricity"]
-                            ? "Owner"
-                            : "Trash"}
-                        </TableCell>
-                        <TableCell>
-                          {JSON.parse(property.utilities)["Trash"]
-                            ? "Owner"
-                            : "Trash"}
-                        </TableCell>
-                        <TableCell>
-                          {JSON.parse(property.utilities)["Water"]
-                            ? "Owner"
-                            : "Trash"}
-                        </TableCell>
-                        <TableCell>
-                          {JSON.parse(property.utilities)["Wifi"]
-                            ? "Owner"
-                            : "Trash"}
-                        </TableCell>
-                        <TableCell>
-                          {JSON.parse(property.utilities)["Gas"]
-                            ? "Owner"
-                            : "Trash"}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
+                    <TableRow>
+                      <TableCell>Utilities</TableCell>
+
+                      <TableCell>Paid by</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Electricity</TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Electricity"]
+                          ? "Owner"
+                          : "Tenant"}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Trash</TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Trash"]
+                          ? "Owner"
+                          : "Tenant"}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Water</TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Water"]
+                          ? "Owner"
+                          : "Tenant"}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Wifi </TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Wifi"]
+                          ? "Owner"
+                          : "Tenant"}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Gas</TableCell>
+                      <TableCell>
+                        {JSON.parse(property.utilities)["Gas"]
+                          ? "Owner"
+                          : "Tenant"}
+                      </TableCell>
+                    </TableRow>
                   </Table>
                 </Row>
               </div>

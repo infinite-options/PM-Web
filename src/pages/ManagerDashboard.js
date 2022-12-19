@@ -174,6 +174,9 @@ export default function ManagerDashboard() {
       property.new_tenant_applications = property.applications.filter(
         (a) => a.application_status === "NEW"
       );
+      property.forwarded_applications = property.applications.filter(
+        (a) => a.application_status === "FORWARDED"
+      );
 
       property.end_early_applications = property.applications.filter(
         (a) => a.application_status === "TENANT END EARLY"
@@ -4265,6 +4268,19 @@ export default function ManagerDashboard() {
                                       {property.new_tenant_applications.length >
                                       0
                                         ? `${property.new_tenant_applications.length} new tenant application(s) to review`
+                                        : ""}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="d-flex">
+                                  <div className="d-flex align-items-end">
+                                    <p
+                                      style={{ ...blue, ...xSmall }}
+                                      className="mb-0"
+                                    >
+                                      {property.forwarded_applications.length >
+                                      0
+                                        ? `${property.forwarded_applications.length} application(s) in progress`
                                         : ""}
                                     </p>
                                   </div>

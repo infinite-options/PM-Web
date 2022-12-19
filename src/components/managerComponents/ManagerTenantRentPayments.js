@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import {
   Table,
@@ -45,8 +45,8 @@ function ManagerTenantRentPayments(props) {
     available,
   } = props;
   console.log(props);
-  const [newFee, setNewFee] = React.useState(null);
-  const [editingFee, setEditingFee] = React.useState(null);
+  const [newFee, setNewFee] = useState(null);
+  const [editingFee, setEditingFee] = useState(null);
   const emptyFee = {
     fee_name: "",
     fee_type: "%",
@@ -59,39 +59,39 @@ function ManagerTenantRentPayments(props) {
     late_fee: "",
     perDay_late_fee: "",
   };
+  console.log(feeState.length);
+  useEffect(() => {
+    const depositFee = {
+      fee_name: "Deposit",
+      fee_type: "$",
+      charge: property.deposit.toString(),
+      of: "Gross Rent",
+      frequency: "One-time",
+      available_topay: available,
+      due_by: startDate.split("-")[2],
+      late_by: lateAfter,
+      late_fee: lateFee,
+      perDay_late_fee: lateFeePer,
+    };
+    const rentFee = {
+      fee_name: "Rent",
+      fee_type: "$",
+      charge: property.listed_rent.toString(),
+      of: "Gross Rent",
+      frequency: "Monthly",
+      available_topay: available,
+      due_by: dueDate,
+      late_by: lateAfter,
+      late_fee: lateFee,
+      perDay_late_fee: lateFeePer,
+    };
 
-  React.useEffect(() => {
-    if (feeState.length === 0) {
-      const depositFee = {
-        fee_name: "Deposit",
-        fee_type: "$",
-        charge: property.deposit.toString(),
-        of: "Gross Rent",
-        frequency: "One-time",
-        available_topay: available,
-        due_by: startDate,
-        late_by: lateAfter,
-        late_fee: lateFee,
-        perDay_late_fee: lateFeePer,
-      };
-      const rentFee = {
-        fee_name: "Rent",
-        fee_type: "$",
-        charge: property.listed_rent.toString(),
-        of: "Gross Rent",
-        frequency: "Monthly",
-        available_topay: available,
-        due_by: dueDate,
-        late_by: lateAfter,
-        late_fee: lateFee,
-        perDay_late_fee: lateFeePer,
-      };
-
-      const newFeeState = [...feeState];
-      newFeeState.push({ ...depositFee });
-      newFeeState.push({ ...rentFee });
-      setFeeState(newFeeState);
-    }
+    const newFeeState = [];
+    newFeeState.push({ ...depositFee });
+    newFeeState.push({ ...rentFee });
+    console.log(rentFee);
+    console.log(depositFee);
+    setFeeState(newFeeState);
   }, [available, dueDate, lateAfter, lateFee, lateFeePer]);
 
   const addFee = () => {
@@ -132,7 +132,7 @@ function ManagerTenantRentPayments(props) {
     changedFee[field] = event.target.value;
     setNewFee(changedFee);
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -141,6 +141,20 @@ function ManagerTenantRentPayments(props) {
     ) : (
       ""
     );
+  function ordinal_suffix_of(i) {
+    var j = i % 10,
+      k = i % 100;
+    if (j == 1 && k != 11) {
+      return i + "st";
+    }
+    if (j == 2 && k != 12) {
+      return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+      return i + "rd";
+    }
+    return i + "th";
+  }
   return (
     <div>
       <Table classes={{ root: classes.customTable }} size="small">
@@ -150,6 +164,11 @@ function ManagerTenantRentPayments(props) {
             <TableCell>Amount</TableCell>
             <TableCell>Of</TableCell>
             <TableCell>Frequency</TableCell>
+            <TableCell>Available to Pay</TableCell>
+            <TableCell>Due Date</TableCell>
+            <TableCell>Late Fees After (days)</TableCell>
+            <TableCell>Late Fee (one-time)</TableCell>
+            <TableCell>Late Fee (per day)</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -169,6 +188,17 @@ function ManagerTenantRentPayments(props) {
               </TableCell>
               <TableCell>{fee.fee_type === "%" ? `${fee.of}` : ""}</TableCell>
               <TableCell>{fee.frequency}</TableCell>
+              <TableCell>{`${ordinal_suffix_of(
+                fee.available_topay
+              )} of the month`}</TableCell>
+              <TableCell>
+                {fee.due_by == ""
+                  ? `1st of the month`
+                  : `${ordinal_suffix_of(fee.due_by)} of the month`}
+              </TableCell>
+              <TableCell>{fee.late_by} days</TableCell>
+              <TableCell>${fee.late_fee}</TableCell>
+              <TableCell>${fee.perDay_late_fee}/day</TableCell>
               <TableCell>
                 {" "}
                 <img
@@ -294,8 +324,9 @@ function ManagerTenantRentPayments(props) {
                 </Form.Label>
                 <Form.Control
                   type="number"
+                  min="0"
                   style={squareForm}
-                  placeholder="10"
+                  placeholder="days"
                   value={newFee.available_topay}
                   onChange={(e) => changeNewFee(e, "available_topay")}
                 />
@@ -419,12 +450,13 @@ function ManagerTenantRentPayments(props) {
             <Col className="ps-0">
               <Form.Group>
                 <Form.Label as="h6" className="mb-0 ms-2">
-                  Late fees after(days)
+                  Late fees after (days)
                 </Form.Label>
                 <Form.Control
                   type="number"
+                  min="0"
                   style={squareForm}
-                  placeholder="10"
+                  placeholder="days"
                   value={newFee.late_by}
                   onChange={(e) => changeNewFee(e, "late_by")}
                 />
@@ -437,8 +469,9 @@ function ManagerTenantRentPayments(props) {
                 </Form.Label>
                 <Form.Control
                   type="number"
+                  min="0"
                   style={squareForm}
-                  placeholder="10"
+                  placeholder="amount($)"
                   value={newFee.late_fee}
                   onChange={(e) => changeNewFee(e, "late_fee")}
                 />
@@ -451,8 +484,9 @@ function ManagerTenantRentPayments(props) {
                 </Form.Label>
                 <Form.Control
                   type="number"
+                  min="0"
                   style={squareForm}
-                  placeholder="10"
+                  placeholder="amount($)"
                   value={newFee.perDay_late_fee}
                   onChange={(e) => changeNewFee(e, "perDay_late_fee")}
                 />
@@ -478,7 +512,7 @@ function ManagerTenantRentPayments(props) {
         >
           Add Fee
         </Button>
-      ) : (
+      ) : editingFee !== null ? (
         <div className="d-flex justify-content-center my-4">
           <Button
             variant="outline-primary"
@@ -495,6 +529,25 @@ function ManagerTenantRentPayments(props) {
             className="mx-2"
           >
             Update Fee
+          </Button>
+        </div>
+      ) : (
+        <div className="d-flex justify-content-center my-4">
+          <Button
+            variant="outline-primary"
+            style={pillButton}
+            onClick={cancelEdit}
+            className="mx-2"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="outline-primary"
+            style={pillButton}
+            onClick={addFee}
+            className="mx-2"
+          >
+            Add Fee
           </Button>
         </div>
       )}

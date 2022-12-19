@@ -42,10 +42,7 @@ function ManagerTenantApplications(props) {
   // const [selectedApplications, setSelectedApplications] = useState([])
   const [forwardedApplications, setForwardedApplications] = useState([]);
   const [rejectedApplications, setRejectedApplications] = useState([]);
-  const [showSSN, setShowSSN] = useState(true);
-  function MaskCharacter(str, mask, n = 1) {
-    return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
-  }
+
   const fetchApplications = async () => {
     if (access_token === null) {
       return;
@@ -131,25 +128,30 @@ function ManagerTenantApplications(props) {
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell></TableCell>
                       <TableCell>Application Status</TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Message</TableCell>
                       <TableCell>Occupants</TableCell>
+                      <TableCell>No.of Pets</TableCell>
+                      <TableCell>Type of Pets</TableCell>
                       <TableCell>Application Date</TableCell>
-                      <TableCell>Phone </TableCell>
+                      {/* <TableCell>Phone </TableCell>
                       <TableCell>Email</TableCell>
                       <TableCell>Current Job Title</TableCell>
                       <TableCell>Salary</TableCell>
-                      <TableCell>SSN</TableCell>
+                      <TableCell>SSN</TableCell> */}
                       <TableCell>Reject</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {applications.map((application, i) => (
-                      <TableRow className="mt-2" key={i}>
-                        <TableCell>
+                      <TableRow
+                        className="mt-2"
+                        key={i}
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        {/* <TableCell>
                           <div
                             hidden={
                               application.application_status === "REJECTED" ||
@@ -163,7 +165,7 @@ function ManagerTenantApplications(props) {
                               onClick={() => toggleApplications(application)}
                             />
                           </div>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell>{application.application_status}</TableCell>
                         <TableCell>
                           {`${application.tenant_first_name} ${application.tenant_last_name} `}
@@ -173,10 +175,12 @@ function ManagerTenantApplications(props) {
                           {application.adult_occupants} adults <br />
                           {application.children_occupants} children
                         </TableCell>
+                        <TableCell>{application.num_pets}</TableCell>
+                        <TableCell>{application.type_pets}</TableCell>
                         <TableCell>
                           {application.application_date.split(" ")[0]}
                         </TableCell>
-                        <TableCell>{application.tenant_phone_number}</TableCell>
+                        {/* <TableCell>{application.tenant_phone_number}</TableCell>
                         <TableCell>{application.tenant_email}</TableCell>
                         <TableCell>
                           {application.tenant_current_job_title !== null &&
@@ -206,7 +210,7 @@ function ManagerTenantApplications(props) {
                           ) : (
                             "No SSN Provided"
                           )}
-                        </TableCell>
+                        </TableCell> */}
 
                         <TableCell
                           onClick={() => rejectApplication(application)}
@@ -242,7 +246,7 @@ function ManagerTenantApplications(props) {
                   </TableBody>
                 </Table>
 
-                <Row className="mt-4 d-flex w-100">
+                {/* <Row className="mt-4 d-flex w-100">
                   <Col className="d-flex justify-content-evenly">
                     <Button
                       hidden={forwardedApplications.length > 0}
@@ -252,7 +256,7 @@ function ManagerTenantApplications(props) {
                       Accept Selected Applicants
                     </Button>
                   </Col>
-                </Row>
+                </Row> */}
               </div>
             ) : (
               <Row className="mx-5">No New Applications</Row>

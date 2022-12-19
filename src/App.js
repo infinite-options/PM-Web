@@ -77,7 +77,7 @@ import TenantRepairList from "./components/tenantComponents/TenantRepairList";
 import OwnerRepairRequest from "./components/ownerComponents/OwnerRepairRequest";
 import PropertyManagersList from "./components/PropertyManagersList";
 import ModifyExisiting from "./pages/ModifyExisiting";
-import PropertyInfo from "./pages/PropertyInfo";
+import PropertyInfo from "./components/tenantComponents/PropertyInfo";
 import ManagerTenantListDetail from "./components/managerComponents/ManagerTenantListDetail";
 import ManagerDocuments from "./components/managerComponents/ManagerDocuments";
 import ManagerProfile from "./components/managerComponents/ManagerProfile";

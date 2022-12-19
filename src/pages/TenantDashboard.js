@@ -1283,6 +1283,18 @@ export default function TenantDashboard() {
                 {tenantProfile.tenant_last_name}
               </h3>
             </div>
+            <Row className="m-3">
+              <Col>
+                <h1>Properties</h1>
+              </Col>
+              <Col></Col>
+            </Row>
+            <Row className="m-3">
+              <Col>
+                <h3>No rented properties</h3>
+              </Col>
+              <Col></Col>
+            </Row>
             <Row>
               {applications.length > 0 ? (
                 <Row className="m-3">

@@ -1,20 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import Header from "../Header";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import { visuallyHidden } from "@mui/utils";
 import File from "../../icons/File.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import OpenDoc from "../../icons/OpenDoc.svg";
 import { put } from "../../utils/api";
-import { gray, mediumBold, redPillButton } from "../../utils/styles";
-
+import {
+  mediumBold,
+  redPillButton,
+  hidden,
+  smallImg,
+  subText,
+  bluePillButton,
+} from "../../utils/styles";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function ManagerTenantProfileView(props) {
-  const { back, application } = props;
-  console.log(application);
-  let tenant_current_address = null;
-  //   const address = JSON.parse(application.tenant_current_address);
-  //   const tenant_current_address = `${address.street}, ${
-  //     address.unit ? `Unit ${address.unit}` : ""
-  //   }, ${address.city}, ${address.state}, ${address.zip}`;
-  // console.log(tenant_current_address)
+  const classes = useStyles();
+  const [contactState, setContactState] = useState([]);
+  const [feeState, setFeeState] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [showDL, setShowDL] = useState(true);
+  const [showSSN, setShowSSN] = useState(true);
+  const { back, application, createNewTenantAgreement } = props;
+  useEffect(() => {
+    if (application.rental_uid !== null) {
+      setFeeState(JSON.parse(application.rent_payments));
+      setFiles(JSON.parse(application["r.documents"]));
+      setContactState(JSON.parse(application.assigned_contacts));
+    }
+  }, []);
 
+  console.log(application);
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
+  const applicationsResponse = async () => {
+    createNewTenantAgreement(application);
+  };
   const rejectApplication = async () => {
     const request_body = {
       application_uid: application.application_uid,
@@ -25,119 +64,474 @@ function ManagerTenantProfileView(props) {
     const response = await put("/applications", request_body);
     back();
   };
-
+  function MaskCharacter(str, mask, n = 1) {
+    return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
+  }
+  function ordinal_suffix_of(i) {
+    var j = i % 10,
+      k = i % 100;
+    if (j == 1 && k != 11) {
+      return i + "st";
+    }
+    if (j == 2 && k != 12) {
+      return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+      return i + "rd";
+    }
+    return i + "th";
+  }
   return (
     <div className="mb-5 pb-5">
-      <Container>
-        <Row className="my-2">
+      <div
+        className="mx-2 my-2 p-3"
+        style={{
+          background: "#FFFFFF 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <Row className="p-1">
           <Col>
-            <h6>First Name</h6>
-            <p style={gray}>
-              {application.tenant_first_name !== null &&
-              application.tenant_first_name !== "null"
-                ? application.tenant_first_name
-                : "No First Name Provided"}
-            </p>
+            <div className="d-flex justify-content-between align-items-center">
+              <h5 className="mb-0" style={mediumBold}>
+                {application.tenant_first_name} {application.tenant_last_name}
+              </h5>
+            </div>
           </Col>
-          <Col>
-            <h6>Last Name</h6>
-            <p style={gray}>
-              {application.tenant_last_name !== null &&
-              application.tenant_last_name !== "null"
-                ? application.tenant_last_name
-                : "No Last Name Provided"}
-            </p>
-          </Col>
-        </Row>
 
-        <Row className="my-2">
           <Col>
-            <h6>Phone Number</h6>
-            <p style={gray}>
-              {application.tenant_phone_number !== null &&
-              application.tenant_phone_number !== "null"
-                ? application.tenant_phone_number
-                : "No Phone Number Provided"}
-            </p>
-          </Col>
-          <Col>
-            <h6>Email</h6>
-            <p style={gray}>
-              {application.tenant_email !== null &&
-              application.tenant_email !== "null"
-                ? application.tenant_email
-                : "No Email Provided"}
-            </p>
-          </Col>
-        </Row>
-
-        <Row className="my-2">
-          <Col>
-            <h6>SSN</h6>
-            <p style={gray}>
-              {application.tenant_ssn !== null &&
-              application.tenant_ssn !== "null"
-                ? application.tenant_ssn
-                : "No SSN Provided"}
-            </p>
-          </Col>
-          <Col>
-            <h6>Drivers Licence</h6>
-            <p style={gray}>
-              {application.tenant_drivers_license_number !== null &&
-              application.tenant_drivers_license_number !== "null"
-                ? application.tenant_drivers_license_number
-                : "No Drivers Licence Provided"}
-            </p>
-          </Col>
-        </Row>
-
-        <Row className="my-2">
-          <Col>
-            <h6>Current Address</h6>
-            <p style={gray}>
-              {tenant_current_address !== null &&
-              tenant_current_address !== "null"
-                ? tenant_current_address
-                : "No Address Provided"}
-            </p>
-          </Col>
-          <Col>
-            <h6>Salary</h6>
-            <p style={gray}>
-              {application.tenant_current_salary !== null &&
-              application.tenant_current_salary !== "null"
-                ? application.tenant_current_salary
-                : "No Salary Provided"}
-            </p>
-          </Col>
-        </Row>
-
-        <Row className="my-2">
-          <h6>Documents</h6>
-          {application.documents &&
-            application.documents.length > 0 &&
-            JSON.parse(application.documents).map((document, i) => (
+            <div className="d-flex  justify-content-end ">
               <div
-                className="d-flex justify-content-between align-items-end"
-                key={i}
+                style={application.tenant_id ? {} : hidden}
+                onClick={stopPropagation}
               >
-                <p style={gray}>{document.name}</p>
-                <a href={document.link} target="_blank">
-                  <img src={File} alt="Document" />
+                <a href={`tel:${application.tenant_phone_number}`}>
+                  <img src={Phone} alt="Phone" style={smallImg} />
+                </a>
+                <a href={`mailto:${application.tenant_email}`}>
+                  <img src={Message} alt="Message" style={smallImg} />
                 </a>
               </div>
-            ))}
-        </Row>
-
-        <Row className="mt-4">
-          <Col className="d-flex justify-content-evenly">
-            <Button style={redPillButton} onClick={rejectApplication}>
-              Reject Application
-            </Button>
+            </div>
           </Col>
         </Row>
-      </Container>
+        <Row className="d-flex justify-content-center my-2" style={mediumBold}>
+          Personal Info
+        </Row>
+
+        <Container
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            boxShadow: "0px 3px 6px #00000029",
+            border: "0.5px solid #707070",
+            borderRadius: "5px",
+            maxHeight: "500px",
+            overflow: "scroll",
+          }}
+        >
+          <div
+            className="my-3 p-2"
+            style={{
+              boxShadow: " 0px 1px 6px #00000029",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            <Row className="mx-2">
+              Current Job Details
+              <Row className="mx-2">
+                <Col style={subText}>Job Company</Col>
+                <Col style={subText}>
+                  {application.tenant_current_job_company}
+                </Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>Job Title</Col>
+                <Col style={subText}>
+                  {application.tenant_current_job_title}
+                </Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>Job Salary</Col>
+                <Col style={subText}>
+                  {application.tenant_current_salary}/{" "}
+                  {application.tenant_salary_frequency}
+                </Col>
+              </Row>
+            </Row>
+          </div>
+          <div
+            className="my-3 p-2"
+            style={{
+              boxShadow: " 0px 1px 6px #00000029",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            <Row className="mx-2">
+              Personal Details
+              <Row className="mx-2">
+                <Col style={subText}>DL Number</Col>
+                <Col style={subText} onClick={() => setShowDL(!showDL)}>
+                  {showDL ? (
+                    <div>
+                      {MaskCharacter(
+                        application.tenant_drivers_license_number,
+                        "*"
+                      )}
+                    </div>
+                  ) : (
+                    <div>{application.tenant_drivers_license_number}</div>
+                  )}
+                </Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>SSN</Col>
+                <Col style={subText} onClick={() => setShowSSN(!showSSN)}>
+                  {showSSN ? (
+                    <div>{MaskCharacter(application.tenant_ssn, "*")}</div>
+                  ) : (
+                    <div>{application.tenant_ssn}</div>
+                  )}
+                  {}
+                </Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>Email</Col>
+                <Col style={subText}>{application.tenant_email}</Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>Phone Number</Col>
+                <Col style={subText}>{application.tenant_phone_number}</Col>
+              </Row>
+            </Row>
+          </div>
+        </Container>
+        <Row className="d-flex justify-content-center my-2" style={mediumBold}>
+          Application Details
+        </Row>
+
+        <Container
+          style={{
+            background: "#FFFFFF 0% 0% no-repeat padding-box",
+            boxShadow: "0px 3px 6px #00000029",
+            border: "0.5px solid #707070",
+            borderRadius: "5px",
+            maxHeight: "500px",
+            overflow: "scroll",
+          }}
+        >
+          <div
+            className="my-3 p-2"
+            style={{
+              boxShadow: " 0px 1px 6px #00000029",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            <Row className="mx-2">
+              <Row className="mx-2">
+                <Col style={subText}>Message</Col>
+                <Col style={subText}>{application.message}</Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}> No. of Adult Occupants</Col>
+                <Col style={subText}>{application.adult_occupants}</Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>No. of Children Occupants</Col>
+                <Col style={subText}>{application.child_occupants}</Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>No. of Pets</Col>
+                <Col style={subText}>{application.num_pets}</Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>Type of Pets</Col>
+                <Col style={subText}>{application.type_pets}</Col>
+              </Row>
+              <Row className="mx-2">
+                <Col style={subText}>Documents</Col>
+                <Col style={subText}>
+                  {application.documents &&
+                    application.documents.length > 0 &&
+                    JSON.parse(application.documents).map((document, i) => (
+                      <div
+                        className="d-flex justify-content-between align-items-end ps-0"
+                        key={i}
+                      >
+                        <h6>{document.name}</h6>
+                        <a href={document.link} target="_blank">
+                          <img
+                            src={File}
+                            style={{
+                              width: "15px",
+                              height: "15px",
+                            }}
+                            alt="Document"
+                          />
+                        </a>
+                      </div>
+                    ))}
+                </Col>
+              </Row>
+            </Row>
+          </div>
+        </Container>
+        <Row className="d-flex justify-content-center my-2" style={mediumBold}>
+          <p hidden={application.rental_uid === null}>
+            Lease Agreement Details
+          </p>
+        </Row>
+        {application.rental_uid !== null ? (
+          <Container
+            style={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+              boxShadow: "0px 3px 6px #00000029",
+              border: "0.5px solid #707070",
+              borderRadius: "5px",
+              maxHeight: "500px",
+              overflow: "scroll",
+            }}
+          >
+            <div
+              className="my-3 p-2"
+              style={{
+                boxShadow: " 0px 1px 6px #00000029",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              <Row className="mx-2">
+                <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+                  <h5>Lease Details</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Lease Start</TableCell>
+                        <TableCell>Lease End</TableCell>
+                        <TableCell>Rent Due</TableCell>
+                        <TableCell>Later fees after(days)</TableCell>
+                        <TableCell>Late Fee (one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>{application.lease_start}</TableCell>
+
+                        <TableCell>{application.lease_end}</TableCell>
+
+                        <TableCell>
+                          {`${ordinal_suffix_of(
+                            application.due_by
+                          )} of the month`}
+                        </TableCell>
+
+                        <TableCell>{application.late_by} days</TableCell>
+                        <TableCell> ${application.late_fee}</TableCell>
+                        <TableCell> ${application.perDay_late_fee}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+              </Row>
+            </div>{" "}
+            <div
+              className="my-3 p-2"
+              style={{
+                boxShadow: " 0px 1px 6px #00000029",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              <Row className="mx-2">
+                <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+                  <h5>Lease Payments</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Fee Name</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Of</TableCell>
+                        <TableCell>Frequency</TableCell>
+                        <TableCell>Available to Pay</TableCell>
+                        <TableCell>Due Date</TableCell>
+                        <TableCell>Late Fees After (days)</TableCell>
+                        <TableCell>Late Fee (one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {feeState.map((fee, i) => (
+                        <TableRow>
+                          <TableCell>{fee.fee_name}</TableCell>
+
+                          <TableCell>
+                            {fee.fee_type === "%"
+                              ? `${fee.charge}%`
+                              : `$${fee.charge}`}
+                          </TableCell>
+
+                          <TableCell>
+                            {fee.fee_type === "%" ? `${fee.of}` : ""}
+                          </TableCell>
+
+                          <TableCell>{fee.frequency}</TableCell>
+                          <TableCell>{`${ordinal_suffix_of(
+                            fee.available_topay
+                          )} of the month`}</TableCell>
+                          <TableCell>
+                            {fee.due_by == ""
+                              ? `1st of the month`
+                              : `${ordinal_suffix_of(fee.due_by)} of the month`}
+                          </TableCell>
+                          <TableCell>{fee.late_by} days</TableCell>
+                          <TableCell>${fee.late_fee}</TableCell>
+                          <TableCell>${fee.perDay_late_fee}/day</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </Row>
+            </div>
+            <div
+              className="my-3 p-2"
+              style={{
+                boxShadow: " 0px 1px 6px #00000029",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+              hidden={application.rental_uid !== null}
+            >
+              <Row className="mx-2">
+                <Row className="mb-4 m-3" hidden={contactState.length === 0}>
+                  <h5 style={mediumBold}>Contact Details</h5>
+                  <Table classes={{ root: classes.customTable }} size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Contact Name</TableCell>
+                        <TableCell>Role</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Phone Number</TableCell>
+
+                        <TableCell>Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {contactState.map((contact, i) => (
+                        <TableRow key={i}>
+                          <TableCell>
+                            {contact.first_name} {contact.last_name}
+                          </TableCell>
+                          <TableCell>{contact.company_role}</TableCell>
+                          <TableCell>{contact.email}</TableCell>
+                          <TableCell>{contact.phone_number}</TableCell>
+                          <TableCell>
+                            <a href={`tel:${contact.phone_number}`}>
+                              <img src={Phone} alt="Phone" style={smallImg} />
+                            </a>
+                            <a href={`mailto:${contact.email}`}>
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </Row>
+            </div>
+            <div
+              className="my-3 p-2"
+              style={{
+                boxShadow: " 0px 1px 6px #00000029",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+              hidden={application.rental_uid !== null}
+            >
+              <Row className="mx-2">
+                <Row className="m-3" hidden={files.length === 0}>
+                  <h5 style={mediumBold}>Lease Documents</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Document Name</TableCell>
+                        <TableCell>View Document</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {files.map((file) => {
+                        return (
+                          <TableRow>
+                            <TableCell>{file.description}</TableCell>
+                            <TableCell>
+                              <a href={file.link} target="_blank">
+                                <img
+                                  src={OpenDoc}
+                                  style={{
+                                    width: "15px",
+                                    height: "15px",
+                                  }}
+                                />
+                              </a>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </Row>
+            </div>
+          </Container>
+        ) : (
+          <div></div>
+        )}
+      </div>
+
+      <Row
+        className="mt-4 "
+        style={application.application_status === "FORWARDED" ? hidden : {}}
+      >
+        <Col className="d-flex  justify-content-evenly">
+          <Button style={bluePillButton} onClick={applicationsResponse}>
+            Accept Application
+          </Button>
+        </Col>
+
+        <Col className="d-flex justify-content-evenly">
+          <Button style={redPillButton} onClick={rejectApplication}>
+            Reject Application
+          </Button>
+        </Col>
+      </Row>
+      <Row style={application.application_status !== "FORWARDED" ? hidden : {}}>
+        <Col className="d-flex justify-content-evenly">
+          <Button style={redPillButton} onClick={rejectApplication}>
+            Reject Application
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 }
