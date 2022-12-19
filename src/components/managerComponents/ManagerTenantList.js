@@ -112,16 +112,19 @@ function ManagerTenantList(props) {
 
     // console.log(response.result);
     setTenants(response.result);
-    setSelectedTenant(response.result[0]);
-    setDueDate(response.result[0].due_by);
-    setDueDate(response.result[0].due_by);
-    setLateAfter(response.result[0].late_by);
-    setLateFee(response.result[0].late_fee);
-    setUserPayments(response.result[0].user_payments);
-    setRentDetails(JSON.parse(response.result[0].rent_payments));
-    setLateFeePer(response.result[0].perDay_late_fee);
-    setMaintenanceRequests(response.result[0].user_repairRequests);
-    console.log(selectedTenant);
+    if (response.result.length > 0) {
+      setSelectedTenant(response.result[0]);
+      setDueDate(response.result[0].due_by);
+      setDueDate(response.result[0].due_by);
+      setLateAfter(response.result[0].late_by);
+      setLateFee(response.result[0].late_fee);
+      setUserPayments(response.result[0].user_payments);
+      setRentDetails(JSON.parse(response.result[0].rent_payments));
+      setLateFeePer(response.result[0].perDay_late_fee);
+      setMaintenanceRequests(response.result[0].user_repairRequests);
+      console.log(selectedTenant);
+    }
+
     // await getAlerts(properties_unique)
   };
   console.log(showDetails);
@@ -418,404 +421,112 @@ function ManagerTenantList(props) {
               {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
             </Col>
           </Row>
-          <Row className="w-100 m-3">
-            <Col> Search by</Col>
-
-            <Col>
-              <input
-                type="text"
-                placeholder="Search"
-                onChange={(event) => {
-                  setSearch(event.target.value);
-                }}
-              />
-            </Col>
-          </Row>
-          <Row className="m-3" style={{ overflow: "scroll" }}>
-            <Table
-              responsive="md"
-              classes={{ root: classes.customTable }}
-              size="small"
-            >
-              <EnhancedTableHead
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                rowCount={tenants.length}
-              />{" "}
-              <TableBody>
-                {stableSort(tenants, getComparator(order, orderBy))
-                  // for filtering
-                  .filter((val) => {
-                    const query = search.toLowerCase();
-
-                    return (
-                      val.address.toLowerCase().indexOf(query) >= 0 ||
-                      val.city.toLowerCase().indexOf(query) >= 0 ||
-                      val.zip.toLowerCase().indexOf(query) >= 0 ||
-                      val.tenant_first_name.toLowerCase().indexOf(query) >= 0
-                    );
-                  })
-                  .map((tenant, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={index}
-                        onClick={() => {
-                          setSelectedTenant(tenant);
-                          setUserPayments(tenant.user_payments);
-                          setMaintenanceRequests(tenant.user_repairRequests);
-                          // setShowDetails(!showDetails);
-                          navigate(`./${tenant.tenant_id}`, {
-                            state: {
-                              // maintenanceRequests: maintenanceRequests,
-                              // userPayments: userPayments,
-                              // rentDetails: rentDetails,
-                              // selectedTenant: selectedTenant,
-                              // dueDate: dueDate,
-                              // lateAfter: lateAfter,
-                              // lateFee: lateFee,
-                              // lateFeePer: lateFeePer,
-                              selectedTenant: tenant,
-                            },
-                          });
-                        }}
-                      >
-                        <TableCell padding="none" size="small" align="center">
-                          {tenant.tenant_first_name} {tenant.tenant_last_name}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {tenant.address}
-                          {tenant.unit !== "" ? " " + tenant.unit : ""}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {tenant.city}, {tenant.state}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {tenant.zip}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {tenant.tenant_phone_number}
-                        </TableCell>
-
-                        <TableCell padding="none" size="small" align="center">
-                          {tenant.tenant_email}
-                        </TableCell>
-
-                        <TableCell padding="none" size="small" align="center">
-                          <div className="d-flex  justify-content-end ">
-                            <div
-                              style={tenant.tenant_id ? {} : hidden}
-                              onClick={stopPropagation}
-                            >
-                              <a href={`tel:${tenant.tenant_phone_number}`}>
-                                <img src={Phone} alt="Phone" style={smallImg} />
-                              </a>
-                              <a
-                                onClick={() => {
-                                  setShowMessageForm(true);
-                                  setSelectedTenant(tenant);
-                                }}
-                              >
-                                <img
-                                  src={Message}
-                                  alt="Message"
-                                  style={smallImg}
-                                />
-                              </a>
-                            </div>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </Row>
-          {showDetails ? (
-            <div
-              className="mx-2 my-2 p-3"
-              hidden={!showDetails}
-              style={{
-                background: "#FFFFFF 0% 0% no-repeat padding-box",
-                borderRadius: "10px",
-                opacity: 1,
-              }}
-            >
-              <Row className="p-1">
-                <Col>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0" style={mediumBold}>
-                      {selectedTenant.tenant_first_name}{" "}
-                      {selectedTenant.tenant_last_name}
-                    </h5>
-                  </div>
-                </Col>
-              </Row>
-              <Row className="px-1 mb-1">
-                <Col
-                  style={{
-                    color: "#777777",
-                    font: "normal normal normal 14px Bahnschrift-Regular",
-                  }}
-                >
-                  {selectedTenant.address}
-                  {selectedTenant.unit !== ""
-                    ? " " + selectedTenant.unit
-                    : ""}, <br />
-                  {selectedTenant.city}, {selectedTenant.state}{" "}
-                  {selectedTenant.zip}
-                </Col>
+          {tenants.length > 0 ? (
+            <div>
+              <Row className="w-100 m-3">
+                <Col> Search by</Col>
 
                 <Col>
-                  <div className="d-flex  justify-content-end ">
-                    <div
-                      style={selectedTenant.tenant_id ? {} : hidden}
-                      onClick={stopPropagation}
-                    >
-                      <a href={`tel:${selectedTenant.tenant_phone_number}`}>
-                        <img src={Phone} alt="Phone" style={smallImg} />
-                      </a>
-                      <a
-                        onClick={() => {
-                          setShowMessageForm(true);
-                        }}
-                      >
-                        <img src={Message} alt="Message" style={smallImg} />
-                      </a>
-                    </div>
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    onChange={(event) => {
+                      setSearch(event.target.value);
+                    }}
+                  />
                 </Col>
               </Row>
-              <Row className="my-3">
-                <h6 style={mediumBold}>Lease Length</h6>
-                <Row>
-                  <Col className="d-flex justify-content-start flex-column">
-                    <h6>Lease Start Date</h6>
-                    <h6>Lease End Date</h6>
-                    <h6>Rent Due</h6>
-                    <h6>Late Fees After (days)</h6>
-                    <h6>Late Fee (one-time)</h6>
-                    <h6>Late Fee (per day)</h6>
-                  </Col>
-                  <Col className="d-flex flex-column ">
-                    <h6
-                      className="d-flex justify-content-end"
-                      style={{
-                        font: "normal normal normal 16px Bahnschrift-Regular",
-                      }}
-                    >
-                      {selectedTenant.lease_start}
-                    </h6>
-
-                    <h6
-                      className="d-flex justify-content-end"
-                      style={{
-                        font: "normal normal normal 16px Bahnschrift-Regular",
-                      }}
-                    >
-                      {selectedTenant.lease_end}
-                    </h6>
-                    <h6
-                      className="d-flex justify-content-end"
-                      style={{
-                        font: "normal normal normal 16px Bahnschrift-Regular",
-                      }}
-                    >
-                      {`${ordinal_suffix_of(dueDate)} of the month`}
-                    </h6>
-                    <h6
-                      className="d-flex justify-content-end"
-                      style={{
-                        font: "normal normal normal 16px Bahnschrift-Regular",
-                      }}
-                    >
-                      {lateAfter} days
-                    </h6>
-                    <h6
-                      className="d-flex justify-content-end"
-                      style={{
-                        font: "normal normal normal 16px Bahnschrift-Regular",
-                      }}
-                    >
-                      ${lateFee}
-                    </h6>
-                    <h6
-                      className="d-flex justify-content-end"
-                      style={{
-                        font: "normal normal normal 16px Bahnschrift-Regular",
-                      }}
-                    >
-                      ${lateFeePer}
-                    </h6>
-                  </Col>
-                </Row>
-              </Row>
-              <Row className="my-4">
-                <h6 style={mediumBold}>Rent Payments</h6>
-                {rentDetails.map((fee, i) => (
-                  <Row key={i}>
-                    <Col className="d-flex justify-content-start">
-                      <h6 className="mb-1">{fee.fee_name}</h6>
-                    </Col>
-                    <Col className="d-flex justify-content-end">
-                      <h6
-                        style={{
-                          font: "normal normal normal 16px Bahnschrift-Regular",
-                        }}
-                        className="mb-1"
-                      >
-                        {fee.fee_type === "%"
-                          ? `${fee.charge}% of ${fee.of}`
-                          : `$${fee.charge}`}{" "}
-                        {fee.frequency}
-                      </h6>
-                    </Col>
-                  </Row>
-                ))}
-              </Row>
-              <Row
-                className="d-flex justify-content-center my-2"
-                style={mediumBold}
-              >
-                Payment History
-              </Row>
-              {userPayments.length > 0 ? (
-                <Container
-                  style={{
-                    background: "#FFFFFF 0% 0% no-repeat padding-box",
-                    boxShadow: "0px 3px 6px #00000029",
-                    border: "0.5px solid #707070",
-                    borderRadius: "5px",
-                    maxHeight: "500px",
-                    overflow: "scroll",
-                  }}
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
                 >
-                  {userPayments.map((payment) => (
-                    <div
-                      className="my-3 p-2"
-                      style={{
-                        boxShadow: " 0px 1px 6px #00000029",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Row className="mx-2">
-                        <Col style={subText}>
-                          {moment(payment.payment_date).format("MMM D, YYYY")}
-                        </Col>
-                      </Row>
-                      <Row style={mediumBold} className="d-flex mx-2">
-                        <Col>
-                          {payment.description}{" "}
-                          {payment.purchase_notes &&
-                            `(${payment.purchase_notes})`}
-                        </Col>
-                        <Col
-                          xs={2}
-                          style={{
-                            fontWeight: "600",
-                            font: "normal normal normal 20px/28px Bahnschrift-Regular",
-                            color: "#007Aff",
-                          }}
-                          className="d-flex justify-content-end"
-                        >
-                          {formatter.format(payment.amount)}
-                        </Col>
-                        <Col xs={3} className="d-flex justify-content-center">
-                          {payment.payment_date > payment.next_payment ? (
-                            <div style={redPill}>Late</div>
-                          ) : (
-                            <div style={greenPill}>On-time</div>
-                          )}
-                          {console.log(
-                            payment.payment_date > payment.next_payment
-                          )}
-                        </Col>
-                      </Row>
-                    </div>
-                  ))}
-                </Container>
-              ) : (
-                <Container className="d-flex my-2">No payments made</Container>
-              )}
+                  <EnhancedTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    rowCount={tenants.length}
+                  />{" "}
+                  <TableBody>
+                    {stableSort(tenants, getComparator(order, orderBy))
+                      // for filtering
+                      .filter((val) => {
+                        const query = search.toLowerCase();
 
-              <Row
-                className="d-flex justify-content-center my-2"
-                style={mediumBold}
-              >
-                Repair Requests
-              </Row>
-              {maintenanceRequests.length > 0 ? (
-                <Container
-                  style={{
-                    background: "#FFFFFF 0% 0% no-repeat padding-box",
-                    boxShadow: "0px 3px 6px #00000029",
-                    border: "0.5px solid #707070",
-                    borderRadius: "5px",
-                    maxHeight: "500px",
-                    overflow: "scroll",
-                  }}
-                >
-                  <Row className="m-3" style={{ overflow: "scroll" }}>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <EnhancedTableHead2
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                        rowCount={maintenanceRequests.length}
-                      />{" "}
-                      <TableBody>
-                        {stableSort(
-                          maintenanceRequests,
-                          getComparator(order, orderBy)
-                        ).map((repair, j) => (
-                          <TableRow hover role="checkbox" tabIndex={-1} key={j}>
+                        return (
+                          val.address.toLowerCase().indexOf(query) >= 0 ||
+                          val.city.toLowerCase().indexOf(query) >= 0 ||
+                          val.zip.toLowerCase().indexOf(query) >= 0 ||
+                          val.tenant_first_name.toLowerCase().indexOf(query) >=
+                            0
+                        );
+                      })
+                      .map((tenant, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                            onClick={() => {
+                              setSelectedTenant(tenant);
+                              setUserPayments(tenant.user_payments);
+                              setMaintenanceRequests(
+                                tenant.user_repairRequests
+                              );
+                              // setShowDetails(!showDetails);
+                              navigate(`./${tenant.tenant_id}`, {
+                                state: {
+                                  // maintenanceRequests: maintenanceRequests,
+                                  // userPayments: userPayments,
+                                  // rentDetails: rentDetails,
+                                  // selectedTenant: selectedTenant,
+                                  // dueDate: dueDate,
+                                  // lateAfter: lateAfter,
+                                  // lateFee: lateFee,
+                                  // lateFeePer: lateFeePer,
+                                  selectedTenant: tenant,
+                                },
+                              });
+                            }}
+                          >
                             <TableCell
                               padding="none"
                               size="small"
                               align="center"
                             >
-                              {JSON.parse(repair.images).length > 0 ? (
-                                <img
-                                  src={JSON.parse(repair.images)[0]}
-                                  // onClick={() => selectRepair(repair)}
-                                  onClick={() => {
-                                    navigate(
-                                      `./${repair.maintenance_request_uid}`,
-                                      {
-                                        state: {
-                                          repair: repair,
-                                        },
-                                      }
-                                    );
-                                  }}
-                                  alt="repair"
-                                  style={{
-                                    borderRadius: "4px",
-                                    objectFit: "cover",
-                                    width: "100px",
-                                    height: "100px",
-                                  }}
-                                />
-                              ) : (
-                                <img
-                                  src={RepairImg}
-                                  alt="Repair"
-                                  style={{
-                                    borderRadius: "4px",
-                                    objectFit: "cover",
-                                    width: "100px",
-                                    height: "100px",
-                                  }}
-                                />
-                              )}
+                              {tenant.tenant_first_name}{" "}
+                              {tenant.tenant_last_name}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {tenant.address}
+                              {tenant.unit !== "" ? " " + tenant.unit : ""}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {tenant.city}, {tenant.state}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {tenant.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {tenant.tenant_phone_number}
                             </TableCell>
 
                             <TableCell
@@ -823,14 +534,7 @@ function ManagerTenantList(props) {
                               size="small"
                               align="center"
                             >
-                              {repair.title}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.description}
+                              {tenant.tenant_email}
                             </TableCell>
 
                             <TableCell
@@ -838,122 +542,43 @@ function ManagerTenantList(props) {
                               size="small"
                               align="center"
                             >
-                              {repair.address}
-                              {repair.unit !== ""
-                                ? " " + repair.unit
-                                : ""}, {repair.city}, {repair.state} <br />
-                              {repair.zip}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.priority}
-                            </TableCell>
-
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.request_created_date.split(" ")[0]}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.days_open} days
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.quotes_to_review > 0
-                                ? `${repair.quotes_to_review} new quote(s) to review`
-                                : "No new quotes"}
+                              <div className="d-flex  justify-content-end ">
+                                <div
+                                  style={tenant.tenant_id ? {} : hidden}
+                                  onClick={stopPropagation}
+                                >
+                                  <a href={`tel:${tenant.tenant_phone_number}`}>
+                                    <img
+                                      src={Phone}
+                                      alt="Phone"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setShowMessageForm(true);
+                                      setSelectedTenant(tenant);
+                                    }}
+                                  >
+                                    <img
+                                      src={Message}
+                                      alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                </div>
+                              </div>
                             </TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Row>
-                  {maintenanceRequests.map((request) => (
-                    <div
-                      className="my-3 p-2"
-                      style={{
-                        boxShadow: " 0px 1px 6px #00000029",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Row style={mediumBold} className="mx-2">
-                        <Col>{request.title}</Col>
-                        <Col>{request.business_name}</Col>
-                      </Row>
-                      <Row className="mx-2">
-                        {request.request_status === "COMPLETED" ? (
-                          <Col
-                            style={{
-                              font: "normal normal normal 12px Bahnschrift-Regular",
-                              color: "#007AFF",
-                            }}
-                          >
-                            Completed on:{" "}
-                            {new Date(
-                              request.scheduled_date
-                            ).toLocaleDateString("en-us", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </Col>
-                        ) : request.request_status === "SCHEDULED" ? (
-                          <Col
-                            style={{
-                              font: "normal normal normal 12px Bahnschrift-Regular",
-                              color: "#E3441F",
-                            }}
-                          >
-                            Scheduled for:{" "}
-                            {new Date(
-                              request.scheduled_date
-                            ).toLocaleDateString("en-us", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </Col>
-                        ) : (
-                          <Col
-                            style={{
-                              font: "normal normal normal 12px Bahnschrift-Regular",
-                              color: "#007AFF",
-                            }}
-                          >
-                            Requested on:{" "}
-                            {new Date(
-                              request.request_created_date.split(" ")[0]
-                            ).toLocaleDateString("en-us", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </Col>
-                        )}
-                      </Row>
-                    </div>
-                  ))}
-                </Container>
-              ) : (
-                <Container className="d-flex my-2">
-                  No repairs requested
-                </Container>
-              )}
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </Row>
             </div>
-          ) : null}
+          ) : (
+            <div className="m-3"> No tenants</div>
+          )}
         </div>
       </div>
       <div hidden={responsive.showSidebar} className="w-100 mt-3">

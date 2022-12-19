@@ -687,7 +687,7 @@ export default function OwnerDashboard2() {
             <Header title="Owner Dashboard" />
             <Row className="m-3">
               <Col>
-                <h1>Cash Flow Summary</h1>
+                <h1>Portfolio Cashflow Summary</h1>
               </Col>
               <Col>
                 <img
@@ -5074,8 +5074,30 @@ export default function OwnerDashboard2() {
                             {request.unit !== "" ? " " + request.unit : ""}{" "}
                             {request.city}, {request.state} {request.zip}
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            padding="none"
+                            size="small"
+                            align="center"
+                            style={{
+                              color:
+                                request.request_status == "NEW"
+                                  ? "green"
+                                  : "black",
+                            }}
+                          >
                             {request.request_status}
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {request.request_status === "INFO"
+                                    ? request.notes
+                                    : ""}
+                                </p>
+                              </div>
+                            </div>
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {" "}

@@ -33,8 +33,7 @@ import RepairImg from "../icons/RepairImg.svg";
 import No_Image from "../icons/No_Image_Available.jpeg";
 import { get, put } from "../utils/api";
 import {
-  green,
-  red,
+  xSmall,
   blue,
   mediumBold,
   subHeading,
@@ -930,8 +929,30 @@ export default function TenantDashboard() {
                             {request.unit !== "" ? " " + request.unit : ""}{" "}
                             {request.city}, {request.state} {request.zip}
                           </TableCell>
-                          <TableCell padding="none" size="small" align="center">
+                          <TableCell
+                            padding="none"
+                            size="small"
+                            align="center"
+                            style={{
+                              color:
+                                request.request_status == "NEW"
+                                  ? "green"
+                                  : "black",
+                            }}
+                          >
                             {request.request_status}
+                            <div className="d-flex">
+                              <div className="d-flex align-items-end">
+                                <p
+                                  style={{ ...blue, ...xSmall }}
+                                  className="mb-0"
+                                >
+                                  {request.request_status === "INFO"
+                                    ? request.notes
+                                    : ""}
+                                </p>
+                              </div>
+                            </div>
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {" "}

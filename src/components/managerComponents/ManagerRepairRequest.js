@@ -177,6 +177,7 @@ function ManagerRepairRequest(props) {
           <option>Landscape</option>
           <option>Appliances</option>
           <option>Electrical</option>
+          <option>HVAC</option>
           <option>Other</option>
         </Form.Select>
       </Form.Group>

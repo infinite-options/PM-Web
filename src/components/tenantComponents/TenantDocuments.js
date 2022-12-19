@@ -308,6 +308,7 @@ function TenantDocuments(props) {
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
+                      <TableCell width="180px"></TableCell>
                     </TableRow>
                   )}
                   <TableRow>
@@ -334,8 +335,8 @@ function TenantDocuments(props) {
                               <p className="mx-3">Document {i + 1}</p>
                             )}
                           </TableCell>
-                          <TableCell width="180px">{pld.expiry_date}</TableCell>
                           <TableCell width="180px">{pld.address}</TableCell>
+                          <TableCell width="180px">{pld.expiry_date}</TableCell>
                           <TableCell width="180px">
                             {pld.created_date}
                           </TableCell>
@@ -394,6 +395,7 @@ function TenantDocuments(props) {
                       <TableCell width="180px">
                         <p className="mx-3">No documents</p>
                       </TableCell>
+                      <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
@@ -531,6 +533,7 @@ function TenantDocuments(props) {
                       <TableCell width="180px">
                         <p className="mx-3">No documents</p>
                       </TableCell>
+                      <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>
                       <TableCell width="180px"></TableCell>

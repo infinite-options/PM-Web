@@ -489,6 +489,9 @@ function OwnerRepairList(props) {
                               padding="none"
                               size="small"
                               align="center"
+                              style={{
+                                color: row.title === "New" ? "green" : "black",
+                              }}
                             >
                               {row.title}
                             </TableCell>

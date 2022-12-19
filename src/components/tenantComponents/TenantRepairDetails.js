@@ -27,6 +27,7 @@ import {
   blue,
   mediumBold,
   orangePill,
+  pillButton,
 } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
@@ -222,10 +223,10 @@ function TenantRepairDetails(props) {
         <div className="w-100 mb-5">
           <Header
             title="Repairs"
-            leftText={"< Back"}
-            leftFn={() => navigate(-1)}
-            rightText="Edit"
-            rightFn={() => editRepair()}
+            leftText={isEditing ? null : "< Back"}
+            leftFn={() => (isEditing ? setIsEditing(false) : navigate(-1))}
+            rightText={isEditing ? null : "Edit"}
+            rightFn={() => (isEditing ? updateRepair() : setIsEditing(true))}
           />
 
           {repairsDetail === [] || isLoading === true ? (
@@ -249,8 +250,8 @@ function TenantRepairDetails(props) {
                     src={RepairImg}
                     style={{
                       objectFit: "contain",
-                      width: "350px",
-                      height: " 198px",
+                      width: "200px",
+                      height: " 200px",
                     }}
                     alt="repair"
                   />
@@ -265,7 +266,7 @@ function TenantRepairDetails(props) {
                           style={{
                             width: "200px",
                             height: "200px",
-                            objectFit: "cover",
+                            objectFit: "contain",
                           }}
                           alt="repair"
                         />
@@ -279,9 +280,9 @@ function TenantRepairDetails(props) {
                     src={JSON.parse(repairsDetail.images)}
                     //className="w-100 h-100"
                     style={{
-                      objectFit: "cover",
-                      width: "350px",
-                      height: " 198px",
+                      objectFit: "contain",
+                      width: "200px",
+                      height: " 200px",
                       border: "1px solid #C4C4C4",
                       borderRadius: "5px",
                     }}
@@ -439,13 +440,25 @@ function TenantRepairDetails(props) {
                   ""
                 )}
                 {isEditing ? (
-                  <button
-                    style={{ ...editButton, margin: "5% 25%" }}
-                    // onClick={() => setIsEditing(false)}
-                    onClick={() => updateRepair()}
-                  >
-                    Done
-                  </button>
+                  <Row className="pt-1 mb-4">
+                    <Col className="d-flex flex-row justify-content-evenly">
+                      <Button
+                        style={bluePillButton}
+                        onClick={() => updateRepair()}
+                      >
+                        Save
+                      </Button>
+                    </Col>
+                    <Col className="d-flex flex-row justify-content-evenly">
+                      <Button
+                        style={pillButton}
+                        variant="outline-primary"
+                        onClick={() => setIsEditing(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </Col>
+                  </Row>
                 ) : null}
                 <Row hidden={true} className="pt-1">
                   <Col className="d-flex flex-row justify-content-evenly">
@@ -572,7 +585,7 @@ function TenantRepairDetails(props) {
               </Col>
             </Row>
           </div>
-
+          {/* 
           {!scheduleMaintenance &&
             !requestQuote &&
             quotes &&
@@ -788,7 +801,7 @@ function TenantRepairDetails(props) {
                     </div>
                   ))}
               </div>
-            )}
+            )} */}
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
