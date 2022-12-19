@@ -40,15 +40,16 @@ function ReviewTenantProfile(props) {
   const { userData } = useContext(AppContext);
   const { user, access_token } = userData;
   const navigate = useNavigate();
-  const [documentClick, setDocumentClick] = React.useState([]);
   const [profile, setProfile] = useState(null);
   const [filesOrigignal, setFilesOriginal] = useState([]);
   const [files, setFiles] = useState([]);
   const [filesCopy, setFilesCopy] = useState([]);
-  const [shared, setShared] = useState(false);
   const [message, setMessage] = useState("");
   const [adultOccupants, setAdultOccupants] = useState("");
   const [childrenOccupants, setChildrenOccupants] = useState("");
+
+  const [numPets, setNumPets] = useState("");
+  const [typePets, setTypePets] = useState("");
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -94,6 +95,8 @@ function ReviewTenantProfile(props) {
       message: message,
       adult_occupants: adultOccupants,
       children_occupants: childrenOccupants,
+      num_pets: numPets,
+      type_pets: typePets,
       documents: application_docs,
     };
     console.log(application_docs);
@@ -442,6 +445,38 @@ function ReviewTenantProfile(props) {
                     placeholder="No. of Children Occupants"
                     value={childrenOccupants}
                     onChange={(e) => setChildrenOccupants(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Row>
+          {/* =======================================Application
+          Occupants================================================ */}
+          <Row className="m-3">
+            <Row>
+              <Col>
+                <Form.Group className="mx-2 my-3">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    No. of Pets
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="No. of pets"
+                    value={numPets}
+                    onChange={(e) => setNumPets(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mx-2 my-3">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Types of Pets
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="Type of Pets"
+                    value={typePets}
+                    onChange={(e) => setTypePets(e.target.value)}
                   />
                 </Form.Group>
               </Col>

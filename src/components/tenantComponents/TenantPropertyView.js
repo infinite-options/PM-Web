@@ -948,6 +948,82 @@ function TenantPropertyView(props) {
               {selectedAgreement ? (
                 <Row className="m-3">
                   <Col>
+                    <h3>Application Details</h3>
+                  </Col>
+                  <Col xs={2}> </Col>
+                </Row>
+              ) : (
+                ""
+              )}
+              {selectedAgreement ? (
+                <Row className="m-3">
+                  <Table classes={{ root: classes.customTable }} size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Application Status</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Message</TableCell>
+                        <TableCell>Occupants</TableCell>
+                        <TableCell>No.of Pets</TableCell>
+                        <TableCell>Type of Pets</TableCell>
+                        <TableCell>Application Date</TableCell>
+                        <TableCell>Documents</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow className="mt-2">
+                        <TableCell>
+                          {selectedAgreement.application_status}
+                        </TableCell>
+                        <TableCell>
+                          {`${selectedAgreement.tenant_first_name} ${selectedAgreement.tenant_last_name} `}
+                        </TableCell>
+                        <TableCell>Note: {selectedAgreement.message}</TableCell>
+                        <TableCell>
+                          {selectedAgreement.adult_occupants} adults <br />
+                          {selectedAgreement.children_occupants} children
+                        </TableCell>
+                        <TableCell>{selectedAgreement.num_pets}</TableCell>
+                        <TableCell>{selectedAgreement.type_pets}</TableCell>
+                        <TableCell>
+                          {selectedAgreement.application_date.split(" ")[0]}
+                        </TableCell>
+
+                        <TableCell>
+                          {selectedAgreement.documents &&
+                            selectedAgreement.documents.length > 0 &&
+                            JSON.parse(selectedAgreement.documents).map(
+                              (document, i) => (
+                                <div
+                                  className="d-flex justify-content-between align-items-end ps-0"
+                                  key={i}
+                                >
+                                  <h6>{document.name}</h6>
+                                  <a href={document.link} target="_blank">
+                                    <img
+                                      src={File}
+                                      style={{
+                                        width: "15px",
+                                        height: "15px",
+                                      }}
+                                      alt="Document"
+                                    />
+                                  </a>
+                                </div>
+                              )
+                            )}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+              ) : (
+                " "
+              )}
+              {console.log("selectedAgreement", selectedAgreement)}
+              {selectedAgreement ? (
+                <Row className="m-3">
+                  <Col>
                     <h3>Lease Agreement</h3>
                   </Col>
                   <Col xs={2}></Col>

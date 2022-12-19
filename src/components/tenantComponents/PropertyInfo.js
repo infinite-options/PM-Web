@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import SideBar from "../components/tenantComponents/SideBar";
-import TenantFooter from "../components/tenantComponents/TenantFooter";
-import Header from "../components/Header";
-import Appliances from "../components/tenantComponents/Appliances";
-import Apply from "../icons/ApplyIcon.svg";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import Carousel from "react-elastic-carousel";
-import ReviewPropertyLease from "../components/tenantComponents/reviewPropertyLease";
+import Carousel from "react-multi-carousel";
+import SideBar from "./SideBar";
+import TenantFooter from "./TenantFooter";
+import Header from "../Header";
+import Appliances from "./Appliances";
+import ReviewPropertyLease from "./reviewPropertyLease";
+import Apply from "../../icons/ApplyIcon.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import "react-multi-carousel/lib/styles.css";
+
 export default function PropertyInfo() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -24,12 +26,33 @@ export default function PropertyInfo() {
     const width = window.innerWidth;
     setWindowWidth(width);
   };
-  const responsive = {
+  const responsiveSidebar = {
     showSidebar: width > 1023,
   };
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 4,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 4,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
   const data = location.state.property;
+  console.log(data);
   const type = location.state.type;
   const imgs = data.images;
+  console.log(imgs);
   const util = Object.entries(JSON.parse(data.utilities));
   // const [currentImg, setCurrentImg] = React.useState(0);
   const [currentImg, setCurrentImg] = React.useState(0);
@@ -47,12 +70,7 @@ export default function PropertyInfo() {
       </ol>
     );
   });
-  const breakPoints = [
-    { width: 1, itemsToShow: 1 },
-    { width: 550, itemsToShow: 2 },
-    { width: 768, itemsToShow: 3 },
-    { width: 1200, itemsToShow: 3 },
-  ];
+
   const availUtils = util?.map((u) => {
     if (u[1] == true) {
       counter += 1;
@@ -77,30 +95,16 @@ export default function PropertyInfo() {
     // navigate("/applyToProperty");
     navigate(`/propertyApplicationView/${data.property_uid}`);
   };
-  const nextImg = () => {
-    if (currentImg === imgs.length - 1) {
-      setCurrentImg(0);
-    } else {
-      setCurrentImg((prev) => prev + 1);
-    }
-  };
-  const previousImg = () => {
-    if (currentImg === 0) {
-      setCurrentImg(imgs.length - 1);
-    } else {
-      setCurrentImg((prev) => prev - 1);
-    }
-  };
-  const showImgs = imgs?.map((img) => {
-    return <img className="more-info-prop-images" src={img} />;
-  });
-  console.log("location state: ");
-  console.log(location.state);
+
+  // const showImgs = imgs?.map((img) => {
+  //   return <img className="more-info-prop-images" src={img} />;
+  // });
+
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
         <div
-          hidden={!responsive.showSidebar}
+          hidden={!responsiveSidebar.showSidebar}
           style={{
             backgroundColor: "#229ebc",
             width: "11rem",
@@ -112,20 +116,32 @@ export default function PropertyInfo() {
         <div className="w-100 mb-5">
           <Header title="Tenant Dashboard" />
           <Row className="m-3">
-            {imgs.length > 3 ? (
-              <h3 className="prop-info-images-container">
-                {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
-                    <img className="more-info-prop-images" src={imgs[currentImg]}/>
-                    <div onClick={nextImg} className="right-arrow">{">"}</div>  */}
-                <Carousel breakPoints={breakPoints}>{showImgs}</Carousel>
-              </h3>
+            {imgs.length > 0 ? (
+              <Carousel
+                responsive={responsive}
+                infinite={true}
+                arrows={true}
+                className=" d-flex align-items-center justify-content-center"
+              >
+                {imgs.map((imagesGroup) => {
+                  return (
+                    <div className="d-flex align-items-center justify-content-center">
+                      {console.log(imagesGroup)}
+                      <img
+                        key={Date.now()}
+                        src={imagesGroup}
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </Carousel>
             ) : (
-              <h3 className="prop-info-images-container">
-                {/* <div onClick={previousImg} className="left-arrow">{"<"}</div>
-                    <img className="more-info-prop-images" src={imgs[currentImg]}/>
-                    <div onClick={nextImg} className="right-arrow">{">"}</div>  */}
-                {showImgs}
-              </h3>
+              ""
             )}
 
             <h1 className="prop-info-address">{data.address}</h1>
@@ -211,7 +227,7 @@ export default function PropertyInfo() {
           </Row>
         </div>
       </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
+      <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
         <TenantFooter />
       </div>
       {type == 2 && (

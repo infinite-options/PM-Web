@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useParams } from "react-router";
 import { Row, Col, Button, Container, Image } from "react-bootstrap";
 import {
   Table,
@@ -8,9 +7,6 @@ import {
   TableCell,
   TableBody,
   TableHead,
-  TableSortLabel,
-  Box,
-  Grid,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Header";
@@ -18,9 +14,11 @@ import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import AppContext from "../../AppContext";
 import PropertyApplicationView from "./PropertyApplicationView";
-import No_Image from "../../icons/No_Image_Available.jpeg";
-import { bluePillButton, greenPill, redPillButton } from "../../utils/styles";
+import Delete from "../../icons/Delete.svg";
+import File from "../../icons/File.svg";
+import EditIconNew from "../../icons/EditIconNew.svg";
 import { get, put } from "../../utils/api";
+import { bluePillButton, greenPill, redPillButton } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -42,6 +40,8 @@ function ReviewPropertyLease(props) {
   const property_uid = location.state.property_uid;
   const application_uid = location.state.application_uid;
   const application_status_1 = location.state.application_status_1;
+  const application = location.state.application;
+  console.log(application);
   const [properties, setProperties] = useState([]);
   const [images, setImages] = useState({});
   const [showLease, setShowLease] = useState("True");
@@ -136,10 +136,11 @@ function ReviewPropertyLease(props) {
         ? JSON.parse(response.result[0].images)
         : [];
       setImages(imageParsed);
-      setProperties(response.result);
+      setProperties(response.result[0]);
     };
     fetchProperties();
   }, [property_uid]);
+  console.log(properties);
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
@@ -304,12 +305,146 @@ function ReviewPropertyLease(props) {
             leftText="< Back"
             leftFn={() => navigate("/tenant")}
           />
+          <Row className="m-0 p-0">
+            <PropertyApplicationView forPropertyLease="true" />
+          </Row>
 
-          <PropertyApplicationView forPropertyLease="true" />
-
-          {application_status_1 === "FORWARDED" ||
-          application_status_1 === "RENTED" ? (
+          {application_status_1 === "FORWARDED" ? (
             <div className="m-3">
+              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+                <Col>
+                  <h3>Application Details</h3>
+                </Col>
+                <Col xs={2}> </Col>
+              </Row>
+              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Application Status</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Message</TableCell>
+                      <TableCell>Occupants</TableCell>
+                      <TableCell>No.of Pets</TableCell>
+                      <TableCell>Type of Pets</TableCell>
+                      <TableCell>Application Date</TableCell>
+                      <TableCell>Documents</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow className="mt-2">
+                      <TableCell>{application.application_status}</TableCell>
+                      <TableCell>
+                        {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                      </TableCell>
+                      <TableCell>Note: {application.message}</TableCell>
+                      <TableCell>
+                        {application.adult_occupants} adults <br />
+                        {application.children_occupants} children
+                      </TableCell>
+                      <TableCell>{application.num_pets}</TableCell>
+                      <TableCell>{application.type_pets}</TableCell>
+                      <TableCell>
+                        {application.application_date.split(" ")[0]}
+                      </TableCell>
+
+                      <TableCell>
+                        {application.documents &&
+                          application.documents.length > 0 &&
+                          JSON.parse(application.documents).map(
+                            (document, i) => (
+                              <div
+                                className="d-flex justify-content-between align-items-end ps-0"
+                                key={i}
+                              >
+                                <h6>{document.name}</h6>
+                                <a href={document.link} target="_blank">
+                                  <img
+                                    src={File}
+                                    style={{
+                                      width: "15px",
+                                      height: "15px",
+                                    }}
+                                    alt="Document"
+                                  />
+                                </a>
+                              </div>
+                            )
+                          )}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+          ) : application_status_1 === "FORWARDED" ||
+            application_status_1 === "RENTED" ? (
+            <div className="m-3">
+              <Row className="m-3">
+                <Col>
+                  <h3>Application Details</h3>
+                </Col>
+                <Col xs={2}> </Col>
+              </Row>
+              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Application Status</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Message</TableCell>
+                      <TableCell>Occupants</TableCell>
+                      <TableCell>No.of Pets</TableCell>
+                      <TableCell>Type of Pets</TableCell>
+                      <TableCell>Application Date</TableCell>
+                      <TableCell>Documents</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow className="mt-2">
+                      <TableCell>{application.application_status}</TableCell>
+                      <TableCell>
+                        {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                      </TableCell>
+                      <TableCell>Note: {application.message}</TableCell>
+                      <TableCell>
+                        {application.adult_occupants} adults <br />
+                        {application.children_occupants} children
+                      </TableCell>
+                      <TableCell>{application.num_pets}</TableCell>
+                      <TableCell>{application.type_pets}</TableCell>
+                      <TableCell>
+                        {application.application_date.split(" ")[0]}
+                      </TableCell>
+
+                      <TableCell>
+                        {application.documents &&
+                          application.documents.length > 0 &&
+                          JSON.parse(application.documents).map(
+                            (document, i) => (
+                              <div
+                                className="d-flex justify-content-between align-items-end ps-0"
+                                key={i}
+                              >
+                                <h6>{document.name}</h6>
+                                <a href={document.link} target="_blank">
+                                  <img
+                                    src={File}
+                                    style={{
+                                      width: "15px",
+                                      height: "15px",
+                                    }}
+                                    alt="Document"
+                                  />
+                                </a>
+                              </div>
+                            )
+                          )}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
               <Row className="m-3">
                 <Col>
                   <h3>Lease Agreement</h3>
@@ -413,6 +548,155 @@ function ReviewPropertyLease(props) {
               ) : (
                 ""
               )}
+            </div>
+          ) : application_status_1 === "REJECTED" ? (
+            <div className="m-3">
+              <Row className="m-3">
+                <Col>
+                  <h3>Application Details</h3>
+                </Col>
+                <Col xs={2}> </Col>
+              </Row>
+              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Application Status</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Message</TableCell>
+                      <TableCell>Occupants</TableCell>
+                      <TableCell>No.of Pets</TableCell>
+                      <TableCell>Type of Pets</TableCell>
+                      <TableCell>Application Date</TableCell>
+                      <TableCell>Documents</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow className="mt-2">
+                      <TableCell>{application.application_status}</TableCell>
+                      <TableCell>
+                        {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                      </TableCell>
+                      <TableCell>Note: {application.message}</TableCell>
+                      <TableCell>
+                        {application.adult_occupants} adults <br />
+                        {application.children_occupants} children
+                      </TableCell>
+                      <TableCell>{application.num_pets}</TableCell>
+                      <TableCell>{application.type_pets}</TableCell>
+                      <TableCell>
+                        {application.application_date.split(" ")[0]}
+                      </TableCell>
+
+                      <TableCell>
+                        {application.documents &&
+                          application.documents.length > 0 &&
+                          JSON.parse(application.documents).map(
+                            (document, i) => (
+                              <div
+                                className="d-flex justify-content-between align-items-end ps-0"
+                                key={i}
+                              >
+                                <h6>{document.name}</h6>
+                                <a href={document.link} target="_blank">
+                                  <img
+                                    src={File}
+                                    style={{
+                                      width: "15px",
+                                      height: "15px",
+                                    }}
+                                    alt="Document"
+                                  />
+                                </a>
+                              </div>
+                            )
+                          )}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+          ) : application_status_1 === "NEW" ? (
+            <div className="m-3">
+              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+                <Col>
+                  <h3>Application Details</h3>
+                </Col>
+                <Col xs={2}>
+                  {" "}
+                  <img
+                    src={EditIconNew}
+                    alt="Edit"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      float: "right",
+                      marginRight: "5rem",
+                    }}
+                    // onClick={() => selectContract(activeContract)}
+                  />
+                </Col>
+              </Row>
+              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Application Status</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Message</TableCell>
+                      <TableCell>Occupants</TableCell>
+                      <TableCell>No.of Pets</TableCell>
+                      <TableCell>Type of Pets</TableCell>
+                      <TableCell>Application Date</TableCell>
+                      <TableCell>Documents</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow className="mt-2">
+                      <TableCell>{application.application_status}</TableCell>
+                      <TableCell>
+                        {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                      </TableCell>
+                      <TableCell>Note: {application.message}</TableCell>
+                      <TableCell>
+                        {application.adult_occupants} adults <br />
+                        {application.children_occupants} children
+                      </TableCell>
+                      <TableCell>{application.num_pets}</TableCell>
+                      <TableCell>{application.type_pets}</TableCell>
+                      <TableCell>
+                        {application.application_date.split(" ")[0]}
+                      </TableCell>
+
+                      <TableCell>
+                        {application.documents &&
+                          application.documents.length > 0 &&
+                          JSON.parse(application.documents).map(
+                            (document, i) => (
+                              <div
+                                className="d-flex justify-content-between align-items-end ps-0"
+                                key={i}
+                              >
+                                <h6>{document.name}</h6>
+                                <a href={document.link} target="_blank">
+                                  <img
+                                    src={File}
+                                    style={{
+                                      width: "15px",
+                                      height: "15px",
+                                    }}
+                                    alt="Document"
+                                  />
+                                </a>
+                              </div>
+                            )
+                          )}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
             </div>
           ) : (
             <Row className="m-3 text-align-center">

@@ -898,7 +898,7 @@ function OwnerPropertyView(props) {
             </div>
           )}
 
-          <div className="w-100 mb-5">
+          <div className="w-100 mb-5 overflow-hidden">
             <Header
               title="Property Details"
               leftText={location.state == null ? "" : "< Back"}
@@ -931,7 +931,7 @@ function OwnerPropertyView(props) {
                   back={() => setShowCreateRevenue(false)}
                 />
               ) : (
-                <div className="w-100 my-5">
+                <div className="w-100 my-5 overflow-hidden">
                   <Row className=" d-flex align-items-center justify-content-center m-3">
                     {imagesProperty.length > 0 ? (
                       <Carousel
@@ -4833,18 +4833,106 @@ function OwnerPropertyView(props) {
                     </div>
                   </Row>
                   {Object.keys(property.managerInfo).length !== 0 ? (
-                    <div>
-                      <Row className="m-3" style={{ overflow: "scroll" }}>
-                        {property.management_status === "ACCEPTED" ||
-                        property.management_status === "OWNER END EARLY" ||
-                        property.management_status === "PM END EARLY" ? (
+                    <Row className="m-3" style={{ overflow: "scroll" }}>
+                      {property.management_status === "ACCEPTED" ||
+                      property.management_status === "OWNER END EARLY" ||
+                      property.management_status === "PM END EARLY" ? (
+                        <div>
+                          <Row>
+                            <Col>
+                              <h3>Property Management Agreement</h3>
+                            </Col>
+                            <Col xs={2}></Col>
+                          </Row>
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">
+                                  Business Name
+                                </TableCell>
+                                <TableCell>Contract Name</TableCell>
+                                <TableCell>Start Date</TableCell>
+                                <TableCell>End Date</TableCell>
+                                <TableCell align="center">Actions</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell>
+                                  {property.managerInfo.manager_business_name}
+                                </TableCell>
+
+                                {contracts.map((contract, i) =>
+                                  contract.business_uid ===
+                                  property.managerInfo.manager_id ? (
+                                    contract.contract_name != null ? (
+                                      <TableCell>
+                                        {contract.contract_name}{" "}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell>Contract {i + 1} </TableCell>
+                                    )
+                                  ) : (
+                                    ""
+                                  )
+                                )}
+
+                                {contracts.map((contract, i) =>
+                                  contract.business_uid ===
+                                  property.managerInfo.manager_id ? (
+                                    <TableCell>{contract.start_date}</TableCell>
+                                  ) : (
+                                    ""
+                                  )
+                                )}
+                                {contracts.map((contract, i) =>
+                                  contract.business_uid ===
+                                  property.managerInfo.manager_id ? (
+                                    <TableCell>{contract.end_date}</TableCell>
+                                  ) : (
+                                    ""
+                                  )
+                                )}
+
+                                <TableCell>
+                                  <a
+                                    href={`tel:${property.managerInfo.manager_phone_number}`}
+                                  >
+                                    <img
+                                      src={Phone}
+                                      alt="Phone"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a
+                                    href={`mailto:${property.managerInfo.manager_email}`}
+                                  >
+                                    <img
+                                      src={Message}
+                                      alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {property.management_status === "ACCEPTED" ||
+                      property.management_status === "OWNER END EARLY" ||
+                      property.management_status === "PM END EARLY" ? (
+                        <div>
+                          <Row className="mt-1">
+                            <h5>Property Manager Documents</h5>
+                          </Row>
                           <div>
-                            <Row>
-                              <Col>
-                                <h3>Property Management Agreement</h3>
-                              </Col>
-                              <Col xs={2}></Col>
-                            </Row>
                             <Table
                               responsive="md"
                               classes={{ root: classes.customTable }}
@@ -4852,307 +4940,214 @@ function OwnerPropertyView(props) {
                             >
                               <TableHead>
                                 <TableRow>
-                                  <TableCell align="center">
-                                    Business Name
-                                  </TableCell>
-                                  <TableCell>Contract Name</TableCell>
-                                  <TableCell>Start Date</TableCell>
-                                  <TableCell>End Date</TableCell>
-                                  <TableCell align="center">Actions</TableCell>
+                                  <TableCell>Document Name</TableCell>
+                                  <TableCell>View Document</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                <TableRow>
-                                  <TableCell>
-                                    {property.managerInfo.manager_business_name}
-                                  </TableCell>
-
-                                  {contracts.map((contract, i) =>
-                                    contract.business_uid ===
-                                    property.managerInfo.manager_id ? (
-                                      contract.contract_name != null ? (
-                                        <TableCell>
-                                          {contract.contract_name}{" "}
-                                        </TableCell>
-                                      ) : (
-                                        <TableCell>Contract {i + 1} </TableCell>
-                                      )
-                                    ) : (
-                                      ""
-                                    )
-                                  )}
-
-                                  {contracts.map((contract, i) =>
-                                    contract.business_uid ===
-                                    property.managerInfo.manager_id ? (
-                                      <TableCell>
-                                        {contract.start_date}
-                                      </TableCell>
-                                    ) : (
-                                      ""
-                                    )
-                                  )}
-                                  {contracts.map((contract, i) =>
-                                    contract.business_uid ===
-                                    property.managerInfo.manager_id ? (
-                                      <TableCell>{contract.end_date}</TableCell>
-                                    ) : (
-                                      ""
-                                    )
-                                  )}
-
-                                  <TableCell>
-                                    <a
-                                      href={`tel:${property.managerInfo.manager_phone_number}`}
-                                    >
-                                      <img
-                                        src={Phone}
-                                        alt="Phone"
-                                        style={smallImg}
-                                      />
-                                    </a>
-                                    <a
-                                      href={`mailto:${property.managerInfo.manager_email}`}
-                                    >
-                                      <img
-                                        src={Message}
-                                        alt="Message"
-                                        style={smallImg}
-                                      />
-                                    </a>
-                                  </TableCell>
-                                </TableRow>
+                                {contracts.map((contract, i) =>
+                                  contract.business_uid ===
+                                  property.managerInfo.manager_id
+                                    ? JSON.parse(contract.documents).length ===
+                                      0
+                                      ? ""
+                                      : JSON.parse(contract.documents).map(
+                                          (file) => {
+                                            return (
+                                              <TableRow>
+                                                <TableCell>
+                                                  {file.description}
+                                                </TableCell>
+                                                <TableCell>
+                                                  <a
+                                                    href={file.link}
+                                                    target="_blank"
+                                                  >
+                                                    <img
+                                                      src={File}
+                                                      style={{
+                                                        width: "15px",
+                                                        height: "15px",
+                                                      }}
+                                                    />
+                                                  </a>
+                                                </TableCell>
+                                              </TableRow>
+                                            );
+                                          }
+                                        )
+                                    : ""
+                                )}
                               </TableBody>
                             </Table>
                           </div>
-                        ) : (
-                          ""
-                        )}
-                        {property.management_status === "ACCEPTED" ||
-                        property.management_status === "OWNER END EARLY" ||
-                        property.management_status === "PM END EARLY" ? (
-                          <div>
-                            <Row className="mt-1">
-                              <h5>Property Manager Documents</h5>
-                            </Row>
-                            <div>
-                              <Table
-                                responsive="md"
-                                classes={{ root: classes.customTable }}
-                                size="small"
-                              >
-                                <TableHead>
-                                  <TableRow>
-                                    <TableCell>Document Name</TableCell>
-                                    <TableCell>View Document</TableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {contracts.map((contract, i) =>
-                                    contract.business_uid ===
-                                    property.managerInfo.manager_id
-                                      ? JSON.parse(contract.documents)
-                                          .length === 0
-                                        ? ""
-                                        : JSON.parse(contract.documents).map(
-                                            (file) => {
-                                              return (
-                                                <TableRow>
-                                                  <TableCell>
-                                                    {file.description}
-                                                  </TableCell>
-                                                  <TableCell>
-                                                    <a
-                                                      href={file.link}
-                                                      target="_blank"
-                                                    >
-                                                      <img
-                                                        src={File}
-                                                        style={{
-                                                          width: "15px",
-                                                          height: "15px",
-                                                        }}
-                                                      />
-                                                    </a>
-                                                  </TableCell>
-                                                </TableRow>
-                                              );
-                                            }
-                                          )
-                                      : ""
-                                  )}
-                                </TableBody>
-                              </Table>
-                            </div>
 
-                            <Row className="mt-1">
-                              <h5>Property Manager Fee Details</h5>
-                            </Row>
-                            {contracts.map((contract, i) =>
-                              contract.business_uid ===
-                              property.managerInfo.manager_id ? (
-                                <ManagerFees
-                                  feeState={JSON.parse(contract.contract_fees)}
-                                  setFeeState={setFeeState}
-                                />
-                              ) : (
-                                ""
-                              )
-                            )}
-                          </div>
-                        ) : (
-                          ""
-                        )}
-
-                        {contracts.map((contract, i) =>
-                          contract.business_uid ===
-                          property.managerInfo.manager_id ? (
-                            JSON.parse(contract.assigned_contacts).length ===
-                            0 ? (
-                              ""
+                          <Row className="mt-1">
+                            <h5>Property Manager Fee Details</h5>
+                          </Row>
+                          {contracts.map((contract, i) =>
+                            contract.business_uid ===
+                            property.managerInfo.manager_id ? (
+                              <ManagerFees
+                                feeState={JSON.parse(contract.contract_fees)}
+                                setFeeState={setFeeState}
+                              />
                             ) : (
-                              <Row className="mt-1">
-                                <h5>Property Manager Contact Details</h5>
-                              </Row>
-                            )
-                          ) : (
-                            ""
-                          )
-                        )}
-                        {contracts.map((contract, i) =>
-                          contract.business_uid ===
-                          property.managerInfo.manager_id ? (
-                            JSON.parse(contract.assigned_contacts).length ===
-                            0 ? (
                               ""
-                            ) : (
-                              <BusinessContact state={contactState} />
                             )
-                          ) : (
+                          )}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+
+                      {contracts.map((contract, i) =>
+                        contract.business_uid ===
+                        property.managerInfo.manager_id ? (
+                          JSON.parse(contract.assigned_contacts).length ===
+                          0 ? (
                             ""
+                          ) : (
+                            <Row className="mt-1">
+                              <h5>Property Manager Contact Details</h5>
+                            </Row>
                           )
-                        )}
+                        ) : (
+                          ""
+                        )
+                      )}
+                      {contracts.map((contract, i) =>
+                        contract.business_uid ===
+                        property.managerInfo.manager_id ? (
+                          JSON.parse(contract.assigned_contacts).length ===
+                          0 ? (
+                            ""
+                          ) : (
+                            <BusinessContact state={contactState} />
+                          )
+                        ) : (
+                          ""
+                        )
+                      )}
 
-                        {property.management_status === "ACCEPTED" &&
-                        !cancel ? (
-                          <Row className="mt-4">
-                            <Col className="d-flex justify-content-center mb-1">
-                              <Button
-                                variant="outline-primary"
-                                style={redPillButton}
-                                // onClick={() => {
-                                //   setShowDialog2(true);
-                                //   setPmID(property.managerInfo.manager_id);
-                                // }}
-                                onClick={() => setCancel(true)}
-                              >
-                                Cancel Agreement
-                              </Button>
-                            </Col>
-                          </Row>
-                        ) : (
-                          ""
-                        )}
-                        {property.management_status === "ACCEPTED" && cancel ? (
-                          <Row className="mt-4">
-                            <Col className="d-flex flex-column justify-content-center mb-1">
-                              <Form.Group className="mx-2 mb-3">
-                                <Form.Label as="h6">Early End Date</Form.Label>
-                                <Form.Control
-                                  style={squareForm}
-                                  type="date"
-                                  value={endEarlyDate}
-                                  onChange={(e) =>
-                                    setEndEarlyDate(e.target.value)
-                                  }
-                                />
-                              </Form.Group>
-                              <Button
-                                variant="outline-primary"
-                                style={redPillButton}
-                                onClick={() => {
-                                  setShowDialog2(true);
-                                  setPmID(property.managerInfo.manager_id);
-                                }}
-                              >
-                                Cancel Agreement
-                              </Button>
-                            </Col>
-                          </Row>
-                        ) : (
-                          ""
-                        )}
-                        {property.management_status === "OWNER END EARLY" ? (
-                          <Row className="mt-4">
-                            {contracts.map((contract, i) =>
-                              contract.business_uid ===
-                              property.managerInfo.manager_id ? (
-                                contract.contract_name != null ? (
-                                  <h6
-                                    className="d-flex justify-content-center"
-                                    style={mediumBold}
-                                  >
-                                    You have requested to end the agreement
-                                    early on {contract.early_end_date}
-                                  </h6>
-                                ) : (
-                                  ""
-                                )
+                      {property.management_status === "ACCEPTED" && !cancel ? (
+                        <Row className="mt-4">
+                          <Col className="d-flex justify-content-center mb-1">
+                            <Button
+                              variant="outline-primary"
+                              style={redPillButton}
+                              // onClick={() => {
+                              //   setShowDialog2(true);
+                              //   setPmID(property.managerInfo.manager_id);
+                              // }}
+                              onClick={() => setCancel(true)}
+                            >
+                              Cancel Agreement
+                            </Button>
+                          </Col>
+                        </Row>
+                      ) : (
+                        ""
+                      )}
+                      {property.management_status === "ACCEPTED" && cancel ? (
+                        <Row className="mt-4">
+                          <Col className="d-flex flex-column justify-content-center mb-1">
+                            <Form.Group className="mx-2 mb-3">
+                              <Form.Label as="h6">Early End Date</Form.Label>
+                              <Form.Control
+                                style={squareForm}
+                                type="date"
+                                value={endEarlyDate}
+                                onChange={(e) =>
+                                  setEndEarlyDate(e.target.value)
+                                }
+                              />
+                            </Form.Group>
+                            <Button
+                              variant="outline-primary"
+                              style={redPillButton}
+                              onClick={() => {
+                                setShowDialog2(true);
+                                setPmID(property.managerInfo.manager_id);
+                              }}
+                            >
+                              Cancel Agreement
+                            </Button>
+                          </Col>
+                        </Row>
+                      ) : (
+                        ""
+                      )}
+                      {property.management_status === "OWNER END EARLY" ? (
+                        <Row className="mt-4">
+                          {contracts.map((contract, i) =>
+                            contract.business_uid ===
+                            property.managerInfo.manager_id ? (
+                              contract.contract_name != null ? (
+                                <h6
+                                  className="d-flex justify-content-center"
+                                  style={mediumBold}
+                                >
+                                  You have requested to end the agreement early
+                                  on {contract.early_end_date}
+                                </h6>
                               ) : (
                                 ""
                               )
-                            )}
-                          </Row>
-                        ) : (
-                          ""
-                        )}
+                            ) : (
+                              ""
+                            )
+                          )}
+                        </Row>
+                      ) : (
+                        ""
+                      )}
 
-                        {property.management_status === "PM END EARLY" ? (
-                          <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
-                            {contracts.map((contract, i) =>
-                              contract.business_uid ===
-                              property.managerInfo.manager_id ? (
-                                contract.contract_name != null ? (
-                                  <h6
-                                    className="d-flex justify-content-center"
-                                    style={mediumBold}
-                                  >
-                                    Property Manager requested to end the
-                                    agreement early on{" "}
-                                    {contracts[0].early_end_date}
-                                  </h6>
-                                ) : (
-                                  ""
-                                )
+                      {property.management_status === "PM END EARLY" ? (
+                        <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
+                          {contracts.map((contract, i) =>
+                            contract.business_uid ===
+                            property.managerInfo.manager_id ? (
+                              contract.contract_name != null ? (
+                                <h6
+                                  className="d-flex justify-content-center"
+                                  style={mediumBold}
+                                >
+                                  Property Manager requested to end the
+                                  agreement early on{" "}
+                                  {contracts[0].early_end_date}
+                                </h6>
                               ) : (
                                 ""
                               )
-                            )}
+                            ) : (
+                              ""
+                            )
+                          )}
 
-                            <Col className="d-flex justify-content-center">
-                              <Button
-                                variant="outline-primary"
-                                style={bluePillButton}
-                                onClick={acceptCancelAgreement}
-                              >
-                                Accept
-                              </Button>
-                            </Col>
-                            <Col className="d-flex justify-content-center">
-                              <Button
-                                variant="outline-primary"
-                                style={redPillButton}
-                                onClick={rejectCancelAgreement}
-                              >
-                                Reject
-                              </Button>
-                            </Col>
-                          </Row>
-                        ) : (
-                          ""
-                        )}
-                      </Row>
-                    </div>
+                          <Col className="d-flex justify-content-center">
+                            <Button
+                              variant="outline-primary"
+                              style={bluePillButton}
+                              onClick={acceptCancelAgreement}
+                            >
+                              Accept
+                            </Button>
+                          </Col>
+                          <Col className="d-flex justify-content-center">
+                            <Button
+                              variant="outline-primary"
+                              style={redPillButton}
+                              onClick={rejectCancelAgreement}
+                            >
+                              Reject
+                            </Button>
+                          </Col>
+                        </Row>
+                      ) : (
+                        ""
+                      )}
+                    </Row>
                   ) : (
                     ""
                   )}
@@ -5178,246 +5173,135 @@ function OwnerPropertyView(props) {
                       /> */}
                     </Col>
                   </Row>
-                  <Row className="m-3" style={{ overflow: "scroll" }}>
-                    {property.property_manager.length == 0 ? (
-                      ""
-                    ) : property.property_manager.length > 1 ? (
-                      property.property_manager.map((p, i) =>
-                        p.management_status === "REJECTED" ? (
-                          ""
-                        ) : p.management_status === "FORWARDED" ? (
-                          <Row className="p-0 m-0">
-                            <Row className="d-flex justify-content-between mt-3 mx-2">
-                              <Col
-                                xs={8}
-                                className="d-flex justify-content-start flex-column"
-                              >
-                                <h6 style={mediumBold} className="mb-1">
-                                  {p.manager_business_name}
-                                </h6>
-                                <p
-                                  style={{ mediumBold, color: "blue" }}
-                                  className="mb-1"
-                                >
-                                  Property Manager Selected
-                                </p>
-                              </Col>
-                              <Col className="d-flex justify-content-end">
-                                <a href={`tel:${p.manager_phone_number}`}>
-                                  <img
-                                    src={Phone}
-                                    alt="Phone"
-                                    style={smallImg}
-                                  />
-                                </a>
-                                <a href={`mailto:${p.manager_email}`}>
-                                  <img
-                                    src={Message}
-                                    alt="Message"
-                                    style={smallImg}
-                                  />
-                                </a>
-                              </Col>
-                            </Row>
-                            <Row className="mt-4">
-                              <Col
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  justifyContent: "space-evenly",
-                                  marginBottom: "25px",
-                                }}
-                              >
-                                <Button
-                                  // onClick={rejectPropertyManager}
-                                  onClick={() => {
-                                    setShowDialog(true);
-                                    setPmID(p.manager_id);
-                                  }}
-                                  variant="outline-primary"
-                                  style={redPillButton}
-                                >
-                                  Reject
-                                </Button>
-                              </Col>
-                            </Row>
-                          </Row>
-                        ) : (
-                          ""
-                        )
-                      )
-                    ) : property.property_manager[0].management_status ===
-                      "FORWARDED" ? (
-                      <Row className="p-0 m-0">
-                        <Row className="d-flex justify-content-between mt-3">
-                          <Col
-                            xs={8}
-                            className="d-flex flex-column justify-content-start p-0"
-                          >
-                            <Row>
+
+                  {property.property_manager.length == 0 ? (
+                    ""
+                  ) : property.property_manager.length > 1 ? (
+                    property.property_manager.map((p, i) =>
+                      p.management_status === "REJECTED" ? (
+                        ""
+                      ) : p.management_status === "FORWARDED" ? (
+                        <Row className="p-0 m-3">
+                          <Row className="d-flex justify-content-between mt-3 mx-2">
+                            <Col
+                              xs={8}
+                              className="d-flex justify-content-start flex-column"
+                            >
                               <h6 style={mediumBold} className="mb-1">
-                                {
-                                  property.property_manager[0]
-                                    .manager_business_name
-                                }
+                                {p.manager_business_name}
                               </h6>
-                            </Row>
-                          </Col>
-                          <Col className="d-flex justify-content-end">
-                            <a
-                              href={`tel:${property.property_manager[0].manager_phone_number}`}
-                            >
-                              <img src={Phone} alt="Phone" style={smallImg} />
-                            </a>
-                            <a
-                              href={`mailto:${property.property_manager[0].manager_email}`}
-                            >
-                              <img
-                                src={Message}
-                                alt="Message"
-                                style={smallImg}
-                              />
-                            </a>
-                          </Col>
-                        </Row>
-                        <Row className="mt-4">
-                          <Col
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-evenly",
-                              marginBottom: "25px",
-                            }}
-                          >
-                            <Button
-                              // onClick={rejectPropertyManager}
-                              onClick={() => {
-                                setShowDialog(true);
-                                setPmID(
-                                  property.property_manager[0].manager_id
-                                );
+                              <p
+                                style={{ mediumBold, color: "blue" }}
+                                className="mb-1"
+                              >
+                                Property Manager Selected
+                              </p>
+                            </Col>
+                            <Col className="d-flex justify-content-end">
+                              <a href={`tel:${p.manager_phone_number}`}>
+                                <img src={Phone} alt="Phone" style={smallImg} />
+                              </a>
+                              <a href={`mailto:${p.manager_email}`}>
+                                <img
+                                  src={Message}
+                                  alt="Message"
+                                  style={smallImg}
+                                />
+                              </a>
+                            </Col>
+                          </Row>
+                          <Row className="mt-4">
+                            <Col
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                                marginBottom: "25px",
                               }}
-                              variant="outline-primary"
-                              style={redPillButton}
                             >
-                              Reject
-                            </Button>
-                          </Col>
+                              <Button
+                                // onClick={rejectPropertyManager}
+                                onClick={() => {
+                                  setShowDialog(true);
+                                  setPmID(p.manager_id);
+                                }}
+                                variant="outline-primary"
+                                style={redPillButton}
+                              >
+                                Reject
+                              </Button>
+                            </Col>
+                          </Row>
                         </Row>
+                      ) : (
+                        ""
+                      )
+                    )
+                  ) : property.property_manager[0].management_status ===
+                    "FORWARDED" ? (
+                    <Row className="p-0 m-3">
+                      <Row className="d-flex justify-content-between mt-3">
+                        <Col
+                          xs={8}
+                          className="d-flex flex-column justify-content-start p-0"
+                        >
+                          <Row>
+                            <h6 style={mediumBold} className="mb-1">
+                              {
+                                property.property_manager[0]
+                                  .manager_business_name
+                              }
+                            </h6>
+                          </Row>
+                        </Col>
+                        <Col className="d-flex justify-content-end">
+                          <a
+                            href={`tel:${property.property_manager[0].manager_phone_number}`}
+                          >
+                            <img src={Phone} alt="Phone" style={smallImg} />
+                          </a>
+                          <a
+                            href={`mailto:${property.property_manager[0].manager_email}`}
+                          >
+                            <img src={Message} alt="Message" style={smallImg} />
+                          </a>
+                        </Col>
                       </Row>
-                    ) : (
-                      ""
-                    )}
-                    {property.property_manager.length == 0 ? (
-                      ""
-                    ) : property.property_manager.length > 1 ? (
-                      property.property_manager.map((p, i) =>
-                        p.management_status === "REJECTED" ? (
-                          ""
-                        ) : p.management_status === "SENT" ? (
-                          <div>
-                            <Row style={{ overflow: "scroll" }}>
-                              <div>
-                                <Table
-                                  responsive="md"
-                                  classes={{ root: classes.customTable }}
-                                  size="small"
-                                >
-                                  <TableHead>
-                                    <TableRow>
-                                      <TableCell align="center">
-                                        Business Name
-                                      </TableCell>
-                                      <TableCell>Contract Name</TableCell>
-                                      <TableCell>Start Date</TableCell>
-                                      <TableCell>End Date</TableCell>
-                                      <TableCell align="center">
-                                        Actions
-                                      </TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    <TableRow>
-                                      <TableCell>
-                                        <h6 style={mediumBold} className="mb-1">
-                                          {p.manager_business_name}
-                                        </h6>
-                                        <p
-                                          style={{
-                                            mediumBold,
-                                            color: "#41fc03",
-                                          }}
-                                          className="mb-1"
-                                        >
-                                          Contract in Review
-                                        </p>
-                                      </TableCell>
-                                      {contracts.map((contract, i) =>
-                                        contract.business_uid ===
-                                        p.manager_id ? (
-                                          contract.contract_name != null ? (
-                                            <TableCell>
-                                              {contract.contract_name}{" "}
-                                            </TableCell>
-                                          ) : (
-                                            <TableCell>
-                                              Contract {i + 1}{" "}
-                                            </TableCell>
-                                          )
-                                        ) : (
-                                          ""
-                                        )
-                                      )}
-
-                                      {contracts.map((contract, i) =>
-                                        contract.business_uid ===
-                                        p.manager_id ? (
-                                          <TableCell>
-                                            {contract.start_date}
-                                          </TableCell>
-                                        ) : (
-                                          ""
-                                        )
-                                      )}
-                                      {contracts.map((contract, i) =>
-                                        contract.business_uid ===
-                                        p.manager_id ? (
-                                          <TableCell>
-                                            {contract.end_date}
-                                          </TableCell>
-                                        ) : (
-                                          ""
-                                        )
-                                      )}
-
-                                      <TableCell>
-                                        <a
-                                          href={`tel:${property.managerInfo.manager_phone_number}`}
-                                        >
-                                          <img
-                                            src={Phone}
-                                            alt="Phone"
-                                            style={smallImg}
-                                          />
-                                        </a>
-                                        <a
-                                          href={`mailto:${property.managerInfo.manager_email}`}
-                                        >
-                                          <img
-                                            src={Message}
-                                            alt="Message"
-                                            style={smallImg}
-                                          />
-                                        </a>
-                                      </TableCell>
-                                    </TableRow>
-                                  </TableBody>
-                                </Table>
-                              </div>
-                            </Row>
-                            <Row className="mt-1">
-                              <h5>Property Manager Documents</h5>
-                            </Row>
+                      <Row className="mt-4">
+                        <Col
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          <Button
+                            // onClick={rejectPropertyManager}
+                            onClick={() => {
+                              setShowDialog(true);
+                              setPmID(property.property_manager[0].manager_id);
+                            }}
+                            variant="outline-primary"
+                            style={redPillButton}
+                          >
+                            Reject
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                  {property.property_manager.length == 0 ? (
+                    ""
+                  ) : property.property_manager.length > 1 ? (
+                    property.property_manager.map((p, i) =>
+                      p.management_status === "REJECTED" ? (
+                        ""
+                      ) : p.management_status === "SENT" ? (
+                        <div>
+                          <Row className="m-3" style={{ overflow: "scroll" }}>
                             <div>
                               <Table
                                 responsive="md"
@@ -5426,125 +5310,224 @@ function OwnerPropertyView(props) {
                               >
                                 <TableHead>
                                   <TableRow>
-                                    <TableCell>Document Name</TableCell>
-                                    <TableCell>View Document</TableCell>
+                                    <TableCell align="center">
+                                      Business Name
+                                    </TableCell>
+                                    <TableCell>Contract Name</TableCell>
+                                    <TableCell>Start Date</TableCell>
+                                    <TableCell>End Date</TableCell>
+                                    <TableCell align="center">
+                                      Actions
+                                    </TableCell>
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                  {contracts.map((contract, i) =>
-                                    contract.business_uid === p.manager_id
-                                      ? JSON.parse(contract.documents)
-                                          .length === 0
-                                        ? ""
-                                        : JSON.parse(contract.documents).map(
-                                            (file) => {
-                                              return (
-                                                <TableRow>
-                                                  <TableCell>
-                                                    {file.description}
-                                                  </TableCell>
-                                                  <TableCell>
-                                                    <a
-                                                      href={file.link}
-                                                      target="_blank"
-                                                    >
-                                                      <img
-                                                        src={File}
-                                                        style={{
-                                                          width: "15px",
-                                                          height: "15px",
-                                                        }}
-                                                      />
-                                                    </a>
-                                                  </TableCell>
-                                                </TableRow>
-                                              );
-                                            }
-                                          )
-                                      : ""
-                                  )}
+                                  <TableRow>
+                                    <TableCell>
+                                      <h6 style={mediumBold} className="mb-1">
+                                        {p.manager_business_name}
+                                      </h6>
+                                      <p
+                                        style={{
+                                          mediumBold,
+                                          color: "#41fc03",
+                                        }}
+                                        className="mb-1"
+                                      >
+                                        Contract in Review
+                                      </p>
+                                    </TableCell>
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id ? (
+                                        contract.contract_name != null ? (
+                                          <TableCell>
+                                            {contract.contract_name}{" "}
+                                          </TableCell>
+                                        ) : (
+                                          <TableCell>
+                                            Contract {i + 1}{" "}
+                                          </TableCell>
+                                        )
+                                      ) : (
+                                        ""
+                                      )
+                                    )}
+
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id ? (
+                                        <TableCell>
+                                          {contract.start_date}
+                                        </TableCell>
+                                      ) : (
+                                        ""
+                                      )
+                                    )}
+                                    {contracts.map((contract, i) =>
+                                      contract.business_uid === p.manager_id ? (
+                                        <TableCell>
+                                          {contract.end_date}
+                                        </TableCell>
+                                      ) : (
+                                        ""
+                                      )
+                                    )}
+
+                                    <TableCell>
+                                      <a
+                                        href={`tel:${property.managerInfo.manager_phone_number}`}
+                                      >
+                                        <img
+                                          src={Phone}
+                                          alt="Phone"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                      <a
+                                        href={`mailto:${property.managerInfo.manager_email}`}
+                                      >
+                                        <img
+                                          src={Message}
+                                          alt="Message"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                    </TableCell>
+                                  </TableRow>
                                 </TableBody>
                               </Table>
                             </div>
-
-                            <Row className="mt-1">
-                              <h5>Property Manager Fee Details</h5>
-                            </Row>
-                            {contracts.map((contract, i) =>
-                              contract.business_uid === p.manager_id ? (
-                                <ManagerFees
-                                  feeState={JSON.parse(contract.contract_fees)}
-                                  setFeeState={setFeeState}
-                                />
-                              ) : (
-                                ""
-                              )
-                            )}
-                            <Row className="mt-1">
-                              <h5>Property Manager Contact Details</h5>
-                            </Row>
-                            {contracts.map((contract, i) =>
-                              contract.business_uid === p.manager_id ? (
-                                JSON.parse(contract.assigned_contacts)
-                                  .length === 0 ? (
-                                  ""
-                                ) : (
-                                  <BusinessContact state={contactState} />
-                                )
-                              ) : (
-                                ""
-                              )
-                            )}
-
-                            <Row className="mt-4">
-                              <Col
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  justifyContent: "space-evenly",
-                                  marginBottom: "25px",
-                                }}
-                              >
-                                <Button
-                                  onClick={() => {
-                                    setPmID(p.manager_id);
-                                    approvePropertyManager(p.manager_id);
-                                  }}
-                                  variant="outline-primary"
-                                  style={bluePillButton}
-                                >
-                                  Approve
-                                </Button>
-                              </Col>
-                              <Col
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  justifyContent: "space-evenly",
-                                  marginBottom: "25px",
-                                }}
-                              >
-                                <Button
-                                  // onClick={rejectPropertyManager}
-                                  onClick={() => {
-                                    setShowDialog(true);
-                                    setPmID(p.manager_id);
-                                  }}
-                                  variant="outline-primary"
-                                  style={redPillButton}
-                                >
-                                  Reject
-                                </Button>
-                              </Col>
-                            </Row>
+                          </Row>
+                          <Row className="mt-1">
+                            <h5>Property Manager Documents</h5>
+                          </Row>
+                          <div>
+                            <Table
+                              responsive="md"
+                              classes={{ root: classes.customTable }}
+                              size="small"
+                            >
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Document Name</TableCell>
+                                  <TableCell>View Document</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {contracts.map((contract, i) =>
+                                  contract.business_uid === p.manager_id
+                                    ? JSON.parse(contract.documents).length ===
+                                      0
+                                      ? ""
+                                      : JSON.parse(contract.documents).map(
+                                          (file) => {
+                                            return (
+                                              <TableRow>
+                                                <TableCell>
+                                                  {file.description}
+                                                </TableCell>
+                                                <TableCell>
+                                                  <a
+                                                    href={file.link}
+                                                    target="_blank"
+                                                  >
+                                                    <img
+                                                      src={File}
+                                                      style={{
+                                                        width: "15px",
+                                                        height: "15px",
+                                                      }}
+                                                    />
+                                                  </a>
+                                                </TableCell>
+                                              </TableRow>
+                                            );
+                                          }
+                                        )
+                                    : ""
+                                )}
+                              </TableBody>
+                            </Table>
                           </div>
-                        ) : (
-                          ""
-                        )
+
+                          <Row className="mt-1">
+                            <h5>Property Manager Fee Details</h5>
+                          </Row>
+                          {contracts.map((contract, i) =>
+                            contract.business_uid === p.manager_id ? (
+                              <ManagerFees
+                                feeState={JSON.parse(contract.contract_fees)}
+                                setFeeState={setFeeState}
+                              />
+                            ) : (
+                              ""
+                            )
+                          )}
+                          <Row className="mt-1">
+                            <h5>Property Manager Contact Details</h5>
+                          </Row>
+                          {contracts.map((contract, i) =>
+                            contract.business_uid === p.manager_id ? (
+                              JSON.parse(contract.assigned_contacts).length ===
+                              0 ? (
+                                ""
+                              ) : (
+                                <BusinessContact state={contactState} />
+                              )
+                            ) : (
+                              ""
+                            )
+                          )}
+
+                          <Row className="mt-4">
+                            <Col
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                                marginBottom: "25px",
+                              }}
+                            >
+                              <Button
+                                onClick={() => {
+                                  setPmID(p.manager_id);
+                                  approvePropertyManager(p.manager_id);
+                                }}
+                                variant="outline-primary"
+                                style={bluePillButton}
+                              >
+                                Approve
+                              </Button>
+                            </Col>
+                            <Col
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                                marginBottom: "25px",
+                              }}
+                            >
+                              <Button
+                                // onClick={rejectPropertyManager}
+                                onClick={() => {
+                                  setShowDialog(true);
+                                  setPmID(p.manager_id);
+                                }}
+                                variant="outline-primary"
+                                style={redPillButton}
+                              >
+                                Reject
+                              </Button>
+                            </Col>
+                          </Row>
+                        </div>
+                      ) : (
+                        ""
                       )
-                    ) : property.property_manager[0].management_status ===
-                      "SENT" ? (
-                      <Row>
+                    )
+                  ) : property.property_manager[0].management_status ===
+                    "SENT" ? (
+                    <Row className="p-0 m-3">
+                      <div>
                         <Table
                           responsive="md"
                           classes={{ root: classes.customTable }}
@@ -5632,147 +5615,144 @@ function OwnerPropertyView(props) {
                             </TableRow>
                           </TableBody>
                         </Table>
-                        <Row className="mt-1">
-                          <h5>Property Manager Documents</h5>
-                        </Row>
-                        <div>
-                          <Table
-                            responsive="md"
-                            classes={{ root: classes.customTable }}
-                            size="small"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>Document Name</TableCell>
-                                <TableCell>View Document</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {contracts.map((contract, i) =>
-                                contract.business_uid ===
-                                property.property_manager[0].manager_id
-                                  ? JSON.parse(contract.documents).length === 0
-                                    ? ""
-                                    : JSON.parse(contract.documents).map(
-                                        (file) => {
-                                          return (
-                                            <TableRow>
-                                              <TableCell>
-                                                {file.description}
-                                              </TableCell>
-                                              <TableCell>
-                                                <a
-                                                  href={file.link}
-                                                  target="_blank"
-                                                >
-                                                  <img
-                                                    src={File}
-                                                    style={{
-                                                      width: "15px",
-                                                      height: "15px",
-                                                    }}
-                                                  />
-                                                </a>
-                                              </TableCell>
-                                            </TableRow>
-                                          );
-                                        }
-                                      )
-                                  : ""
-                              )}
-                            </TableBody>
-                          </Table>
-                        </div>
-
-                        <Row className="mt-1">
-                          <h5>Property Manager Fee Details</h5>
-                        </Row>
-                        {contracts.map((contract, i) =>
-                          contract.business_uid ===
-                          property.property_manager[0].manager_id ? (
-                            <ManagerFees
-                              feeState={JSON.parse(contract.contract_fees)}
-                              setFeeState={setFeeState}
-                            />
-                          ) : (
-                            ""
-                          )
-                        )}
-                        <Row className="mt-1">
-                          <h5>Property Manager Contact Details</h5>
-                        </Row>
-                        {contracts.map((contract, i) =>
-                          contract.business_uid ===
-                          property.property_manager[0].manager_id ? (
-                            JSON.parse(contract.assigned_contacts).length ===
-                            0 ? (
-                              ""
-                            ) : (
-                              <BusinessContact state={contactState} />
-                            )
-                          ) : (
-                            ""
-                          )
-                        )}
-
-                        <Row className="mt-4">
-                          <Col
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-evenly",
-                              marginBottom: "25px",
-                            }}
-                          >
-                            <Button
-                              onClick={() => {
-                                setPmID(
-                                  property.property_manager[0].manager_id
-                                );
-                                approvePropertyManager(
-                                  property.property_manager[0].manager_id
-                                );
-                              }}
-                              style={bluePillButton}
-                            >
-                              Approve
-                            </Button>
-                          </Col>
-                          <Col
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-evenly",
-                              marginBottom: "25px",
-                            }}
-                          >
-                            <Button
-                              // onClick={rejectPropertyManager}
-                              onClick={() => {
-                                setShowDialog(true);
-                                setPmID(
-                                  property.property_manager[0].manager_id
-                                );
-                              }}
-                              variant="outline-primary"
-                              style={redPillButton}
-                            >
-                              Reject
-                            </Button>
-                          </Col>
-                        </Row>
+                      </div>
+                      <Row className="mt-1">
+                        <h5>Property Manager Documents</h5>
                       </Row>
-                    ) : (
-                      ""
-                    )}
-                    <ManagerDocs
-                      property={property}
-                      addDocument={addContract}
-                      selectContract={selectContract}
-                      // reload={reloadProperty}
-                      // setStage={setStage}
-                    />
-                  </Row>
+                      <div>
+                        <Table
+                          responsive="md"
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Document Name</TableCell>
+                              <TableCell>View Document</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {contracts.map((contract, i) =>
+                              contract.business_uid ===
+                              property.property_manager[0].manager_id
+                                ? JSON.parse(contract.documents).length === 0
+                                  ? ""
+                                  : JSON.parse(contract.documents).map(
+                                      (file) => {
+                                        return (
+                                          <TableRow>
+                                            <TableCell>
+                                              {file.description}
+                                            </TableCell>
+                                            <TableCell>
+                                              <a
+                                                href={file.link}
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src={File}
+                                                  style={{
+                                                    width: "15px",
+                                                    height: "15px",
+                                                  }}
+                                                />
+                                              </a>
+                                            </TableCell>
+                                          </TableRow>
+                                        );
+                                      }
+                                    )
+                                : ""
+                            )}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      <Row className="mt-1">
+                        <h5>Property Manager Fee Details</h5>
+                      </Row>
+                      {contracts.map((contract, i) =>
+                        contract.business_uid ===
+                        property.property_manager[0].manager_id ? (
+                          <ManagerFees
+                            feeState={JSON.parse(contract.contract_fees)}
+                            setFeeState={setFeeState}
+                          />
+                        ) : (
+                          ""
+                        )
+                      )}
+                      <Row className="mt-1">
+                        <h5>Property Manager Contact Details</h5>
+                      </Row>
+                      {contracts.map((contract, i) =>
+                        contract.business_uid ===
+                        property.property_manager[0].manager_id ? (
+                          JSON.parse(contract.assigned_contacts).length ===
+                          0 ? (
+                            ""
+                          ) : (
+                            <BusinessContact state={contactState} />
+                          )
+                        ) : (
+                          ""
+                        )
+                      )}
+
+                      <Row className="mt-4">
+                        <Col
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          <Button
+                            onClick={() => {
+                              setPmID(property.property_manager[0].manager_id);
+                              approvePropertyManager(
+                                property.property_manager[0].manager_id
+                              );
+                            }}
+                            style={bluePillButton}
+                          >
+                            Approve
+                          </Button>
+                        </Col>
+                        <Col
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          <Button
+                            // onClick={rejectPropertyManager}
+                            onClick={() => {
+                              setShowDialog(true);
+                              setPmID(property.property_manager[0].manager_id);
+                            }}
+                            variant="outline-primary"
+                            style={redPillButton}
+                          >
+                            Reject
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                  <ManagerDocs
+                    property={property}
+                    addDocument={addContract}
+                    selectContract={selectContract}
+                    // reload={reloadProperty}
+                    // setStage={setStage}
+                  />
+
                   <Row className="m-3">
                     <Col>
                       <h3>Tenant Info</h3>
