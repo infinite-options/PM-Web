@@ -311,13 +311,13 @@ function ReviewPropertyLease(props) {
 
           {application_status_1 === "FORWARDED" ? (
             <div className="m-3">
-              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+              <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Col>
                   <h3>Application Details</h3>
                 </Col>
                 <Col xs={2}> </Col>
               </Row>
-              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+              <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
                     <TableRow>
@@ -386,7 +386,7 @@ function ReviewPropertyLease(props) {
                 </Col>
                 <Col xs={2}> </Col>
               </Row>
-              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+              <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
                     <TableRow>
@@ -557,7 +557,7 @@ function ReviewPropertyLease(props) {
                 </Col>
                 <Col xs={2}> </Col>
               </Row>
-              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+              <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
                     <TableRow>
@@ -619,7 +619,7 @@ function ReviewPropertyLease(props) {
             </div>
           ) : application_status_1 === "NEW" ? (
             <div className="m-3">
-              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+              <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Col>
                   <h3>Application Details</h3>
                 </Col>
@@ -638,7 +638,7 @@ function ReviewPropertyLease(props) {
                   />
                 </Col>
               </Row>
-              <Row className="m-3" style={{ overflow: "scroll", width: "85%" }}>
+              <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
                     <TableRow>
@@ -736,7 +736,7 @@ function ReviewPropertyLease(props) {
                   {lease.map((lease, i) => (
                     <div key={i}>
                       <div className="d-flex justify-content-between align-items-end">
-                        <div style={{ display: "flex", width: "85%" }}>
+                        <div style={{ display: "flex" }}>
                           <div
                             style={{ display: "flex", flexDirection: "column" }}
                           >

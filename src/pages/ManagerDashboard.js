@@ -529,7 +529,7 @@ export default function ManagerDashboard() {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
+      label: "Scheduled Date",
     },
     {
       id: "total_estimate",
@@ -4975,7 +4975,7 @@ export default function ManagerDashboard() {
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {" "}
-                            {request.request_created_date}
+                            {request.request_created_date.split(" ")[0]}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
                             {request.days_open} days
@@ -4994,18 +4994,38 @@ export default function ManagerDashboard() {
                               request.assigned_business
                             ) : (
                               <div>
+                                {console.log(
+                                  "quotes_received",
+                                  request.quotes_received,
+                                  request.total_quotes
+                                )}
                                 {request.quotes_received}/{request.total_quotes}
                               </div>
                             )}
                           </TableCell>
                           <TableCell padding="none" size="small" align="center">
-                            {request.tenant_status}{" "}
+                            {request.quotes.length > 0
+                              ? request.quotes.map((quote) =>
+                                  quote.quote_status === "ACCEPTED"
+                                    ? quote.quote_status
+                                    : quote.quote_status === "SENT"
+                                    ? "QUOTE RECIEVED"
+                                    : quote.quote_status === "WITHDRAWN" ||
+                                      quote.quote_status === "REJECTED" ||
+                                      quote.quote_status === "REFUSED"
+                                    ? ""
+                                    : request.total_quotes === 1 &&
+                                      quote.quote_status === "REQUESTED"
+                                    ? "QUOTE REQUESTED"
+                                    : ""
+                                )
+                              : "NO QUOTES REQUESTED"}
                           </TableCell>
 
                           <TableCell padding="none" size="small" align="center">
                             {request.scheduled_date !== null &&
                             request.scheduled_date !== "null"
-                              ? request.scheduled_date
+                              ? request.scheduled_date.split(" ")[0]
                               : "Not Scheduled"}
                           </TableCell>
                           <TableCell>${request.total_estimate}</TableCell>

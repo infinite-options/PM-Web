@@ -123,7 +123,9 @@ function ManagerTenantApplications(props) {
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell></TableCell>
+                      <TableCell
+                        hidden={forwardedApplications.length > 0}
+                      ></TableCell>
                       <TableCell>Application Status</TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Message</TableCell>
@@ -143,14 +145,8 @@ function ManagerTenantApplications(props) {
                   <TableBody>
                     {applications.map((application, i) => (
                       <TableRow className="mt-2" key={i}>
-                        <TableCell>
-                          <div
-                            hidden={
-                              application.application_status === "REJECTED" ||
-                              application.application_status === "FORWARDED"
-                            }
-                          >
-                            {" "}
+                        <TableCell hidden={forwardedApplications.length > 0}>
+                          <div>
                             <Checkbox
                               type="BOX"
                               checked={application.application_selected}
@@ -265,12 +261,17 @@ function ManagerTenantApplications(props) {
                     <Button
                       style={bluePillButton}
                       onClick={applicationsResponse}
+                      hidden={forwardedApplications.length > 0}
                     >
                       Accept Selected Applicants
                     </Button>
                   </Col>
                   <Col className="d-flex justify-content-evenly">
-                    <Button style={redPillButton} onClick={rejectApplication}>
+                    <Button
+                      style={redPillButton}
+                      onClick={rejectApplication}
+                      hidden={forwardedApplications.length > 0}
+                    >
                       Reject Application
                     </Button>
                   </Col>

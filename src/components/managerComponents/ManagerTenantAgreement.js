@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Header";
 import BusinessContact from "../BusinessContact";
 import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
 import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
-import EditIcon from "../../icons/EditIcon.svg";
-import DeleteIcon from "../../icons/DeleteIcon.svg";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import File from "../../icons/File.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
 import { put, post } from "../../utils/api";
 import {
   small,
@@ -18,9 +26,19 @@ import {
   mediumBold,
   smallPillButton,
   bluePillButton,
+  smallImg,
 } from "../../utils/styles";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 
 function ManagerTenantAgreement(props) {
+  const classes = useStyles();
   const {
     back,
     property,
@@ -29,6 +47,9 @@ function ManagerTenantAgreement(props) {
     setAcceptedTenantApplications,
   } = props;
   console.log("here", acceptedTenantApplications);
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
   const [tenantID, setTenantID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -364,16 +385,100 @@ function ManagerTenantAgreement(props) {
             {acceptedTenantApplications &&
               acceptedTenantApplications.length > 0 &&
               acceptedTenantApplications.map((application, i) => (
-                <Form.Group key={i}>
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Tenant ID {application.tenant_id === "" ? required : ""}
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={application.tenant_id}
-                    readOnly={true}
-                  />
-                </Form.Group>
+                <div>
+                  <Row className="p-1">
+                    <Col>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <h5 className="mb-0" style={mediumBold}>
+                          {application.tenant_first_name}{" "}
+                          {application.tenant_last_name}
+                        </h5>
+                      </div>
+                    </Col>
+
+                    <Col>
+                      <div className="d-flex  justify-content-end ">
+                        <div
+                          style={application.tenant_id ? {} : hidden}
+                          onClick={stopPropagation}
+                        >
+                          <a href={`tel:${application.tenant_phone_number}`}>
+                            <img src={Phone} alt="Phone" style={smallImg} />
+                          </a>
+                          <a href={`mailto:${application.tenant_email}`}>
+                            <img src={Message} alt="Message" style={smallImg} />
+                          </a>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                  {/* <Form.Group key={i}>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Tenant ID {application.tenant_id === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={application.tenant_id}
+                      readOnly={true}
+                    />
+                  </Form.Group> */}
+                  <Row>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="mb-0 ms-2">
+                          No. of Adult Occupants
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="No. of Adult Occupants"
+                          value={application.adult_occupants}
+                          readOnly={true}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="mb-0 ms-2">
+                          No. of Children Occupants
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="No. of Children Occupants"
+                          value={application.children_occupants}
+                          readOnly={true}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="mb-0 ms-2">
+                          No. of Pets
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="No. of Pets"
+                          value={application.num_pets}
+                          readOnly={true}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="mb-0 ms-2">
+                          Type of Pets
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="Type of Pets"
+                          value={application.type_pets}
+                          readOnly={true}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </div>
               ))}
           </div>
           <Row className="mb-4">
@@ -404,70 +509,7 @@ function ManagerTenantAgreement(props) {
               </Form.Group>
             </Col>
           </Row>
-          {acceptedTenantApplications &&
-            acceptedTenantApplications.length > 0 &&
-            acceptedTenantApplications.map((application, i) => (
-              <Row>
-                <Col>
-                  <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      No. of Adult Occupants
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="No. of Adult Occupants"
-                      value={application.adult_occupants}
-                      readOnly={true}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      No. of Children Occupants
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="No. of Children Occupants"
-                      value={application.children_occupants}
-                      readOnly={true}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-            ))}
-          {acceptedTenantApplications &&
-            acceptedTenantApplications.length > 0 &&
-            acceptedTenantApplications.map((application, i) => (
-              <Row>
-                <Col>
-                  <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      No. of Pets
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="No. of Pets"
-                      value={application.num_pets}
-                      readOnly={true}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Type of Pets
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      placeholder="Type of Pets"
-                      value={application.type_pets}
-                      readOnly={true}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-            ))}
+
           <Row className="mb-4">
             <Col>
               <Form.Group>
@@ -646,68 +688,77 @@ function ManagerTenantAgreement(props) {
 
           <div className="mb-4">
             <h5 style={mediumBold}>Lease Documents</h5>
-            {files.map((file, i) => (
-              <div
-                className="p-1 mb-2"
-                style={{
-                  boxShadow: " 0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                }}
-                key={i}
+            {files.length > 0 ? (
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
               >
-                <div className="d-flex justify-content-between align-items-end">
-                  <div>
-                    <h6 style={mediumBold}>{file.name}</h6>
-                    <p style={small} className="m-0">
-                      {file.description}
-                    </p>
-                  </div>
-                  <div>
-                    <img
-                      src={EditIcon}
-                      alt="Edit"
-                      className="px-1 mx-2"
-                      onClick={() => editDocument(i)}
-                    />
-                    <img
-                      src={DeleteIcon}
-                      alt="Delete"
-                      className="px-1 mx-2"
-                      onClick={() => deleteDocument(i)}
-                    />
-                    <a href={file.link} target="_blank">
-                      <img src={File} />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Document Name</TableCell>
+                    <TableCell>View Document</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {files.map((file) => {
+                    return (
+                      <TableRow>
+                        <TableCell>{file.description}</TableCell>
+                        <TableCell>
+                          <a href={file.link} target="_blank">
+                            <img
+                              src={File}
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                              }}
+                            />
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            ) : (
+              ""
+            )}
+
             {newFile !== null ? (
               <div>
-                <Form.Group>
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Document Name
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={newFile.name}
-                    placeholder="Name"
-                    onChange={(e) => updateNewFile("name", e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Description
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={newFile.description}
-                    placeholder="Description"
-                    onChange={(e) =>
-                      updateNewFile("description", e.target.value)
-                    }
-                  />
-                </Form.Group>
+                <Row>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Document Name
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        value={newFile.name}
+                        placeholder="Name"
+                        onChange={(e) => updateNewFile("name", e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    {" "}
+                    <Form.Group>
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Description
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        value={newFile.description}
+                        placeholder="Description"
+                        onChange={(e) =>
+                          updateNewFile("description", e.target.value)
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
                 <div className="text-center my-3">
                   <Button
                     variant="outline-primary"
