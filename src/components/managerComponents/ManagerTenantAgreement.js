@@ -45,16 +45,10 @@ function ManagerTenantAgreement(props) {
   const [lateFeePer, setLateFeePer] = useState("");
   const [available, setAvailable] = useState("");
 
-  const [adultOccupants, setAdultOccupants] = useState(
-    acceptedTenantApplications.adult_occupants
-  );
-  const [childrenOccupants, setChildrenOccupants] = useState(
-    acceptedTenantApplications.children_occupants
-  );
-  const [numPets, setNumPets] = useState(acceptedTenantApplications.num_pets);
-  const [typePets, setTypePets] = useState(
-    acceptedTenantApplications.type_pets
-  );
+  const [adultOccupants, setAdultOccupants] = useState("");
+  const [childrenOccupants, setChildrenOccupants] = useState("");
+  const [numPets, setNumPets] = useState("");
+  const [typePets, setTypePets] = useState("");
 
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -128,8 +122,15 @@ function ManagerTenantAgreement(props) {
     setLateFeePer(agreement.perDay_late_fee);
     setAdultOccupants(agreement.adult_occupants);
     setChildrenOccupants(agreement.children_occupants);
+    setNumPets(agreement.num_pets);
+    setTypePets(agreement.type_pets);
   };
   useEffect(() => {
+    console.log("in useeffect");
+    setAdultOccupants(acceptedTenantApplications[0].adult_occupants);
+    setChildrenOccupants(acceptedTenantApplications[0].children_occupants);
+    setNumPets(acceptedTenantApplications[0].num_pets);
+    setTypePets(acceptedTenantApplications[0].type_pets);
     if (agreement) {
       loadAgreement();
     }
@@ -138,16 +139,20 @@ function ManagerTenantAgreement(props) {
   const save = async () => {
     const newAgreement = {
       rental_property_id: property.property_uid,
-      tenant_id: acceptedTenantApplications.tenant_id,
+      tenant_id: acceptedTenantApplications[0].tenant_id,
       lease_start: startDate,
       lease_end: endDate,
       rent_payments: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
-      adult_occupants: acceptedTenantApplications.adult_occupants,
-      children_occupants: acceptedTenantApplications.Filechildren_occupants,
+      adult_occupants: adultOccupants,
+      children_occupants: childrenOccupants,
+      num_pets: numPets,
+      type_pets: typePets,
     };
     newAgreement.linked_application_id = JSON.stringify(
-      acceptedTenantApplications.application_uid
+      acceptedTenantApplications.map(
+        (application) => application.application_uid
+      )
     );
     for (let i = 0; i < files.length; i++) {
       let key = `img_${i}`;
@@ -158,8 +163,7 @@ function ManagerTenantAgreement(props) {
       console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
     } else {
-      newAgreement.tenant_id = acceptedTenantApplications.tenan;
-      console.log(newAgreement);
+      newAgreement.tenant_id = acceptedTenantApplications;
       const response = await post("/rentals", newAgreement, null, files);
     }
     back();
@@ -227,6 +231,8 @@ function ManagerTenantAgreement(props) {
       perDay_late_fee: lateFeePer,
       adult_occupants: adultOccupants,
       children_occupants: childrenOccupants,
+      num_pets: numPets,
+      type_pets: typePets,
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
@@ -234,30 +240,31 @@ function ManagerTenantAgreement(props) {
       delete files[i].file;
     }
     newAgreement.linked_application_id = JSON.stringify(
-      acceptedTenantApplications.application_uid
+      acceptedTenantApplications.map(
+        (application) => application.application_uid
+      )
     );
-    console.log(newAgreement);
     // alert('ok')
     // return
     newAgreement.documents = JSON.stringify(files);
 
-    newAgreement.tenant_id = JSON.stringify(
-      acceptedTenantApplications.tenant_id
-    );
-    console.log(newAgreement);
+    for (const application of acceptedTenantApplications) {
+      newAgreement.tenant_id = application.tenant_id;
+      console.log(newAgreement);
 
-    const request_body = {
-      application_uid: acceptedTenantApplications.application_uid,
-      message: "Lease details forwarded for review",
-      application_status: "FORWARDED",
-    };
-    console.log(request_body);
-    const update_application = await put("/applications", request_body);
-    // console.log(response)
+      const request_body = {
+        application_uid: application.application_uid,
+        message: "Lease details forwarded for review",
+        application_status: "FORWARDED",
+      };
+      // console.log(request_body)
+      const update_application = await put("/applications", request_body);
+      // console.log(response)
+    }
 
     // const tenant_ids = acceptedTenantApplications.map(application => application.tenant_id)
     newAgreement.tenant_id = JSON.stringify(
-      acceptedTenantApplications.tenant_id
+      acceptedTenantApplications.map((application) => application.tenant_id)
     );
     newAgreement.rental_status = "PROCESSING";
     // console.log(newAgreement);
@@ -311,7 +318,9 @@ function ManagerTenantAgreement(props) {
     }
 
     newAgreement.documents = JSON.stringify(files);
-    newAgreement.tenant_id = acceptedTenantApplications.tenant_id;
+    newAgreement.tenant_id = JSON.stringify(
+      acceptedTenantApplications.map((application) => application.tenant_id)
+    );
     console.log(newAgreement);
     const create_rental = await post("/extendLease", newAgreement, null, files);
     back();
@@ -340,7 +349,7 @@ function ManagerTenantAgreement(props) {
           <div className="mb-4">
             <h5 style={mediumBold}>Tenant(s)</h5>
 
-            <Form.Group>
+            {/* <Form.Group>
               <Form.Label as="h6" className="mb-0 ms-2">
                 Tenant ID{" "}
                 {acceptedTenantApplications.tenant_id === "" ? required : ""}
@@ -350,7 +359,22 @@ function ManagerTenantAgreement(props) {
                 value={acceptedTenantApplications.tenant_id}
                 readOnly={true}
               />
-            </Form.Group>
+            </Form.Group> */}
+
+            {acceptedTenantApplications &&
+              acceptedTenantApplications.length > 0 &&
+              acceptedTenantApplications.map((application, i) => (
+                <Form.Group key={i}>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Tenant ID {application.tenant_id === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    value={application.tenant_id}
+                    readOnly={true}
+                  />
+                </Form.Group>
+              ))}
           </div>
           <Row className="mb-4">
             <Col>
@@ -380,6 +404,70 @@ function ManagerTenantAgreement(props) {
               </Form.Group>
             </Col>
           </Row>
+          {acceptedTenantApplications &&
+            acceptedTenantApplications.length > 0 &&
+            acceptedTenantApplications.map((application, i) => (
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      No. of Adult Occupants
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      placeholder="No. of Adult Occupants"
+                      value={application.adult_occupants}
+                      readOnly={true}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      No. of Children Occupants
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      placeholder="No. of Children Occupants"
+                      value={application.children_occupants}
+                      readOnly={true}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            ))}
+          {acceptedTenantApplications &&
+            acceptedTenantApplications.length > 0 &&
+            acceptedTenantApplications.map((application, i) => (
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      No. of Pets
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      placeholder="No. of Pets"
+                      value={application.num_pets}
+                      readOnly={true}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Type of Pets
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      placeholder="Type of Pets"
+                      value={application.type_pets}
+                      readOnly={true}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            ))}
           <Row className="mb-4">
             <Col>
               <Form.Group>
@@ -438,6 +526,7 @@ function ManagerTenantAgreement(props) {
           </Row>
 
           <Row className="my-3">
+            <h5 style={mediumBold}>Default Payment Parameters</h5>
             <Col>
               <Form.Group>
                 <Form.Label as="h6" className="mb-0 ms-2">

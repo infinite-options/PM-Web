@@ -53,11 +53,11 @@ function ManagerTenantRentPayments(props) {
     charge: "",
     of: "Gross Rent",
     frequency: "Weekly",
-    available_topay: "",
-    due_by: "",
-    late_by: "",
-    late_fee: "",
-    perDay_late_fee: "",
+    available_topay: available,
+    due_by: dueDate,
+    late_by: lateAfter,
+    late_fee: lateFee,
+    perDay_late_fee: lateFeePer,
   };
   console.log(feeState.length);
   useEffect(() => {
@@ -103,6 +103,7 @@ function ManagerTenantRentPayments(props) {
     newFeeState.push({ ...newFee });
     setFeeState(newFeeState);
     setNewFee(null);
+    setEditingFee(null);
     setErrorMessage("");
   };
   const cancelEdit = () => {
@@ -121,6 +122,7 @@ function ManagerTenantRentPayments(props) {
     setFeeState(newFeeState);
     setEditingFee(fee);
     setNewFee({ ...fee });
+    // setEditingFee(null);
   };
   const deleteFee = (i) => {
     const newFeeState = [...feeState];
@@ -536,7 +538,10 @@ function ManagerTenantRentPayments(props) {
           <Button
             variant="outline-primary"
             style={pillButton}
-            onClick={cancelEdit}
+            onClick={() => {
+              setNewFee(null);
+              setEditingFee(null);
+            }}
             className="mx-2"
           >
             Cancel

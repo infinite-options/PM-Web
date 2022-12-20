@@ -12,12 +12,7 @@ import AppContext from "../../AppContext";
 import Checkbox from "../Checkbox";
 import File from "../../icons/File.svg";
 import Delete from "../../icons/Delete.svg";
-import {
-  mediumBold,
-  headings,
-  subText,
-  bluePillButton,
-} from "../../utils/styles";
+import { mediumBold, redPillButton, bluePillButton } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
@@ -128,6 +123,7 @@ function ManagerTenantApplications(props) {
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
                     <TableRow>
+                      <TableCell></TableCell>
                       <TableCell>Application Status</TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Message</TableCell>
@@ -140,18 +136,14 @@ function ManagerTenantApplications(props) {
                       <TableCell>Current Job Title</TableCell>
                       <TableCell>Salary</TableCell>
                       <TableCell>SSN</TableCell> */}
-                      <TableCell>Reject</TableCell>
+                      {/* <TableCell>Reject</TableCell> */}
                       <TableCell>Documents</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {applications.map((application, i) => (
-                      <TableRow
-                        className="mt-2"
-                        key={i}
-                        onClick={() => selectTenantApplication(application)}
-                      >
-                        {/* <TableCell>
+                      <TableRow className="mt-2" key={i}>
+                        <TableCell>
                           <div
                             hidden={
                               application.application_status === "REJECTED" ||
@@ -165,19 +157,41 @@ function ManagerTenantApplications(props) {
                               onClick={() => toggleApplications(application)}
                             />
                           </div>
-                        </TableCell> */}
-                        <TableCell>{application.application_status}</TableCell>
-                        <TableCell>
+                        </TableCell>
+                        <TableCell
+                          onClick={() => selectTenantApplication(application)}
+                        >
+                          {application.application_status}
+                        </TableCell>
+                        <TableCell
+                          onClick={() => selectTenantApplication(application)}
+                        >
                           {`${application.tenant_first_name} ${application.tenant_last_name} `}
                         </TableCell>
-                        <TableCell>Note: {application.message}</TableCell>
-                        <TableCell>
+                        <TableCell
+                          onClick={() => selectTenantApplication(application)}
+                        >
+                          Note: {application.message}
+                        </TableCell>
+                        <TableCell
+                          onClick={() => selectTenantApplication(application)}
+                        >
                           {application.adult_occupants} adults <br />
                           {application.children_occupants} children
                         </TableCell>
-                        <TableCell>{application.num_pets}</TableCell>
-                        <TableCell>{application.type_pets}</TableCell>
-                        <TableCell>
+                        <TableCell
+                          onClick={() => selectTenantApplication(application)}
+                        >
+                          {application.num_pets}
+                        </TableCell>
+                        <TableCell
+                          onClick={() => selectTenantApplication(application)}
+                        >
+                          {application.type_pets}
+                        </TableCell>
+                        <TableCell
+                          onClick={() => selectTenantApplication(application)}
+                        >
                           {application.application_date.split(" ")[0]}
                         </TableCell>
                         {/* <TableCell>{application.tenant_phone_number}</TableCell>
@@ -212,11 +226,11 @@ function ManagerTenantApplications(props) {
                           )}
                         </TableCell> */}
 
-                        <TableCell
+                        {/* <TableCell
                           onClick={() => rejectApplication(application)}
                         >
                           <img src={Delete} />
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell>
                           {application.documents &&
                             application.documents.length > 0 &&
@@ -246,17 +260,21 @@ function ManagerTenantApplications(props) {
                   </TableBody>
                 </Table>
 
-                {/* <Row className="mt-4 d-flex w-100">
+                <Row className="mt-4 d-flex w-100">
                   <Col className="d-flex justify-content-evenly">
                     <Button
-                      hidden={forwardedApplications.length > 0}
                       style={bluePillButton}
                       onClick={applicationsResponse}
                     >
                       Accept Selected Applicants
                     </Button>
                   </Col>
-                </Row> */}
+                  <Col className="d-flex justify-content-evenly">
+                    <Button style={redPillButton} onClick={rejectApplication}>
+                      Reject Application
+                    </Button>
+                  </Col>
+                </Row>
               </div>
             ) : (
               <Row className="mx-5">No New Applications</Row>

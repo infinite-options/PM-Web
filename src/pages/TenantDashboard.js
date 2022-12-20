@@ -1497,7 +1497,7 @@ export default function TenantDashboard() {
                 </Row>
               </Row>
             ) : (
-              ""
+              "No applications"
             )}
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />
