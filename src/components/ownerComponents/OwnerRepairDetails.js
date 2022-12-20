@@ -270,7 +270,7 @@ function OwnerRepairDetails(props) {
                           style={{
                             width: "200px",
                             height: "200px",
-                            objectFit: "cover",
+                            objectFit: "contain",
                           }}
                           alt="repair"
                         />

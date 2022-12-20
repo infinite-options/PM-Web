@@ -165,7 +165,7 @@ function PropertyApplicationView(props) {
   }, []);
   console.log("propertyApplicationView", property);
   return (
-    <div className="p-0 m-0">
+    <div className="w-100 overflow-hidden p-0 m-0">
       <div className="flex-1">
         {forPropertyLease ? (
           ""
@@ -182,7 +182,7 @@ function PropertyApplicationView(props) {
           </div>
         )}
 
-        <div className="mb-5 overflow-hidden" style={{ width: "87%" }}>
+        <div className="w-100">
           {forPropertyLease ? (
             ""
           ) : (
@@ -529,31 +529,33 @@ function PropertyApplicationView(props) {
           ) : (
             ""
           )}
-        </div>
-        {/* ====================  < Button >==================================== */}
-        {forPropertyLease ? (
-          ""
-        ) : (
-          <Row className="mt-4">
-            <Col
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                marginBottom: "25px",
-              }}
-            >
-              {" "}
-              <Button
-                onClick={() => navigate(`/reviewTenantProfile/${property_uid}`)}
-                variant="outline-primary"
-                style={{ ...bluePillButton, margin: "0 24%" }}
+          {/* ====================  < Button >==================================== */}
+          {forPropertyLease ? (
+            ""
+          ) : (
+            <Row className="mt-4">
+              <Col
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  marginBottom: "25px",
+                }}
               >
-                Start Application to rent
-              </Button>
-            </Col>
-          </Row>
-        )}
+                {" "}
+                <Button
+                  onClick={() =>
+                    navigate(`/reviewTenantProfile/${property_uid}`)
+                  }
+                  variant="outline-primary"
+                  style={{ ...bluePillButton, margin: "0 24%" }}
+                >
+                  Start Application to rent
+                </Button>
+              </Col>
+            </Row>
+          )}
+        </div>
       </div>
 
       {forPropertyLease ? (

@@ -40,14 +40,14 @@ function PropertyCard(props) {
       }}
       onClick={goToPropertyInfo}
     >
-      <div className="img" style={{ flex: "0 0 35%", background: "lightgrey" }}>
+      <div className="img">
         {property.images && property.images.length > 0 ? (
           <img
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "200px", height: "200px" }}
             src={property.images[0]}
           />
         ) : (
-          <img style={{ width: "100%", height: "100%" }} src={No_Image} />
+          <img style={{ width: "200px", height: "200px" }} src={No_Image} />
         )}
       </div>
 
@@ -62,7 +62,7 @@ function PropertyCard(props) {
       >
         <div className="d-flex justify-content-between">
           <div style={{ fontWeight: "bold", fontSize: "18px", color: "black" }}>
-            ${property.listed_rent}/month | {property.area} .SqFt
+            ${property.listed_rent}/month | {property.area} sqFt
           </div>
 
           {applied === "NEW" ? (

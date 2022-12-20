@@ -254,33 +254,118 @@ function ManagerTenantProfileView(props) {
               <Row className="mx-2">
                 <Col style={subText}>Documents</Col>
                 <Col style={subText}>
-                  {application.documents &&
-                    application.documents.length > 0 &&
-                    JSON.parse(application.documents).map((document, i) => (
-                      <div
-                        className="d-flex justify-content-between align-items-end ps-0"
-                        key={i}
-                      >
-                        <h6>{document.name}</h6>
-                        <a href={document.link} target="_blank">
-                          <img
-                            src={File}
-                            style={{
-                              width: "15px",
-                              height: "15px",
-                            }}
-                            alt="Document"
-                          />
-                        </a>
-                      </div>
-                    ))}
+                  {application.documents.length > 0 ? (
+                    <div>
+                      {JSON.parse(application.documents).map((document, i) => (
+                        <div
+                          className="d-flex justify-content-between align-items-end ps-0"
+                          key={i}
+                        >
+                          <h6>{document.name}</h6>
+                          <a href={document.link} target="_blank">
+                            <img
+                              src={File}
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                              }}
+                              alt="Document"
+                            />
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="d-flex justify-content-between align-items-end ps-0">
+                      No documents uploaded by tenant
+                    </div>
+                  )}
                 </Col>
               </Row>
             </Row>
           </div>
+          {console.log(
+            "application.applicant_info",
+            application.applicant_info
+          )}
+          {application.applicant_info.length > 0
+            ? application.applicant_info.map((applicant) =>
+                applicant.application_uid !== application.application_uid ? (
+                  <div
+                    className="my-3 p-2"
+                    style={{
+                      boxShadow: " 0px 1px 6px #00000029",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Row className="mx-2">
+                      <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+                        <h5>Co-applicant Details</h5>
+                        <Row className="mx-2">
+                          <Table
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">Name</TableCell>
+                                <TableCell align="center">
+                                  Phone Number
+                                </TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Occupants</TableCell>
+                                <TableCell align="center">
+                                  No. of Pets
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  Type of Pets
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {applicant.tenant_first_name}{" "}
+                                  {applicant.tenant_last_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_phone_number}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_email}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.adult_occupants} adults <br />
+                                  {applicant.children_occupants} children
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.num_pets}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {applicant.type_pets}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Row>
+                      </Row>
+                    </Row>
+                  </div>
+                ) : (
+                  ""
+                )
+              )
+            : ""}
         </Container>
-        <Row className="d-flex justify-content-center my-2" style={mediumBold}>
-          <p hidden={application.rental_uid === null}>
+        <Row className="d-flex justify-content-center my-2">
+          <p
+            className="d-flex justify-content-center my-2"
+            hidden={application.rental_uid === null}
+            style={mediumBold}
+          >
             Lease Agreement Details
           </p>
         </Row>
@@ -316,9 +401,9 @@ function ManagerTenantProfileView(props) {
                         <TableCell>Lease Start</TableCell>
                         <TableCell>Lease End</TableCell>
                         <TableCell>Rent Due</TableCell>
-                        <TableCell>Later fees after(days)</TableCell>
-                        <TableCell>Late Fee (one-time)</TableCell>
-                        <TableCell>Late Fee (per day)</TableCell>
+                        <TableCell>Occupants</TableCell>
+                        <TableCell>No. of Pets</TableCell>
+                        <TableCell>Type of Pets</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -333,9 +418,12 @@ function ManagerTenantProfileView(props) {
                           )} of the month`}
                         </TableCell>
 
-                        <TableCell>{application.late_by} days</TableCell>
-                        <TableCell> ${application.late_fee}</TableCell>
-                        <TableCell> ${application.perDay_late_fee}</TableCell>
+                        <TableCell>
+                          {application["r.adult_occupants"]} adults <br />
+                          {application["r.children_occupants"]} children
+                        </TableCell>
+                        <TableCell> {application["r.num_pets"]}</TableCell>
+                        <TableCell> {application["r.type_pets"]}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>

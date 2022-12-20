@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Header";
 import BusinessContact from "../BusinessContact";
 import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
 import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
-import EditIcon from "../../icons/EditIcon.svg";
-import DeleteIcon from "../../icons/DeleteIcon.svg";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import File from "../../icons/File.svg";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
 import { put, post } from "../../utils/api";
 import {
   small,
@@ -18,9 +26,19 @@ import {
   mediumBold,
   smallPillButton,
   bluePillButton,
+  smallImg,
 } from "../../utils/styles";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 
 function ManagerTenantAgreement(props) {
+  const classes = useStyles();
   const {
     back,
     property,
@@ -29,6 +47,9 @@ function ManagerTenantAgreement(props) {
     setAcceptedTenantApplications,
   } = props;
   console.log("here", acceptedTenantApplications);
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
   const [tenantID, setTenantID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -45,16 +66,10 @@ function ManagerTenantAgreement(props) {
   const [lateFeePer, setLateFeePer] = useState("");
   const [available, setAvailable] = useState("");
 
-  const [adultOccupants, setAdultOccupants] = useState(
-    acceptedTenantApplications.adult_occupants
-  );
-  const [childrenOccupants, setChildrenOccupants] = useState(
-    acceptedTenantApplications.children_occupants
-  );
-  const [numPets, setNumPets] = useState(acceptedTenantApplications.num_pets);
-  const [typePets, setTypePets] = useState(
-    acceptedTenantApplications.type_pets
-  );
+  const [adultOccupants, setAdultOccupants] = useState("");
+  const [childrenOccupants, setChildrenOccupants] = useState("");
+  const [numPets, setNumPets] = useState("");
+  const [typePets, setTypePets] = useState("");
 
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -128,8 +143,15 @@ function ManagerTenantAgreement(props) {
     setLateFeePer(agreement.perDay_late_fee);
     setAdultOccupants(agreement.adult_occupants);
     setChildrenOccupants(agreement.children_occupants);
+    setNumPets(agreement.num_pets);
+    setTypePets(agreement.type_pets);
   };
   useEffect(() => {
+    console.log("in useeffect");
+    setAdultOccupants(acceptedTenantApplications[0].adult_occupants);
+    setChildrenOccupants(acceptedTenantApplications[0].children_occupants);
+    setNumPets(acceptedTenantApplications[0].num_pets);
+    setTypePets(acceptedTenantApplications[0].type_pets);
     if (agreement) {
       loadAgreement();
     }
@@ -138,16 +160,20 @@ function ManagerTenantAgreement(props) {
   const save = async () => {
     const newAgreement = {
       rental_property_id: property.property_uid,
-      tenant_id: acceptedTenantApplications.tenant_id,
+      tenant_id: acceptedTenantApplications[0].tenant_id,
       lease_start: startDate,
       lease_end: endDate,
       rent_payments: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
-      adult_occupants: acceptedTenantApplications.adult_occupants,
-      children_occupants: acceptedTenantApplications.Filechildren_occupants,
+      adult_occupants: adultOccupants,
+      children_occupants: childrenOccupants,
+      num_pets: numPets,
+      type_pets: typePets,
     };
     newAgreement.linked_application_id = JSON.stringify(
-      acceptedTenantApplications.application_uid
+      acceptedTenantApplications.map(
+        (application) => application.application_uid
+      )
     );
     for (let i = 0; i < files.length; i++) {
       let key = `img_${i}`;
@@ -158,8 +184,7 @@ function ManagerTenantAgreement(props) {
       console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
     } else {
-      newAgreement.tenant_id = acceptedTenantApplications.tenan;
-      console.log(newAgreement);
+      newAgreement.tenant_id = acceptedTenantApplications;
       const response = await post("/rentals", newAgreement, null, files);
     }
     back();
@@ -227,6 +252,8 @@ function ManagerTenantAgreement(props) {
       perDay_late_fee: lateFeePer,
       adult_occupants: adultOccupants,
       children_occupants: childrenOccupants,
+      num_pets: numPets,
+      type_pets: typePets,
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
@@ -234,30 +261,31 @@ function ManagerTenantAgreement(props) {
       delete files[i].file;
     }
     newAgreement.linked_application_id = JSON.stringify(
-      acceptedTenantApplications.application_uid
+      acceptedTenantApplications.map(
+        (application) => application.application_uid
+      )
     );
-    console.log(newAgreement);
     // alert('ok')
     // return
     newAgreement.documents = JSON.stringify(files);
 
-    newAgreement.tenant_id = JSON.stringify(
-      acceptedTenantApplications.tenant_id
-    );
-    console.log(newAgreement);
+    for (const application of acceptedTenantApplications) {
+      newAgreement.tenant_id = application.tenant_id;
+      console.log(newAgreement);
 
-    const request_body = {
-      application_uid: acceptedTenantApplications.application_uid,
-      message: "Lease details forwarded for review",
-      application_status: "FORWARDED",
-    };
-    console.log(request_body);
-    const update_application = await put("/applications", request_body);
-    // console.log(response)
+      const request_body = {
+        application_uid: application.application_uid,
+        message: "Lease details forwarded for review",
+        application_status: "FORWARDED",
+      };
+      // console.log(request_body)
+      const update_application = await put("/applications", request_body);
+      // console.log(response)
+    }
 
     // const tenant_ids = acceptedTenantApplications.map(application => application.tenant_id)
     newAgreement.tenant_id = JSON.stringify(
-      acceptedTenantApplications.tenant_id
+      acceptedTenantApplications.map((application) => application.tenant_id)
     );
     newAgreement.rental_status = "PROCESSING";
     // console.log(newAgreement);
@@ -311,7 +339,9 @@ function ManagerTenantAgreement(props) {
     }
 
     newAgreement.documents = JSON.stringify(files);
-    newAgreement.tenant_id = acceptedTenantApplications.tenant_id;
+    newAgreement.tenant_id = JSON.stringify(
+      acceptedTenantApplications.map((application) => application.tenant_id)
+    );
     console.log(newAgreement);
     const create_rental = await post("/extendLease", newAgreement, null, files);
     back();
@@ -340,7 +370,7 @@ function ManagerTenantAgreement(props) {
           <div className="mb-4">
             <h5 style={mediumBold}>Tenant(s)</h5>
 
-            <Form.Group>
+            {/* <Form.Group>
               <Form.Label as="h6" className="mb-0 ms-2">
                 Tenant ID{" "}
                 {acceptedTenantApplications.tenant_id === "" ? required : ""}
@@ -350,7 +380,106 @@ function ManagerTenantAgreement(props) {
                 value={acceptedTenantApplications.tenant_id}
                 readOnly={true}
               />
-            </Form.Group>
+            </Form.Group> */}
+
+            {acceptedTenantApplications &&
+              acceptedTenantApplications.length > 0 &&
+              acceptedTenantApplications.map((application, i) => (
+                <div>
+                  <Row className="p-1">
+                    <Col>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <h5 className="mb-0" style={mediumBold}>
+                          {application.tenant_first_name}{" "}
+                          {application.tenant_last_name}
+                        </h5>
+                      </div>
+                    </Col>
+
+                    <Col>
+                      <div className="d-flex  justify-content-end ">
+                        <div
+                          style={application.tenant_id ? {} : hidden}
+                          onClick={stopPropagation}
+                        >
+                          <a href={`tel:${application.tenant_phone_number}`}>
+                            <img src={Phone} alt="Phone" style={smallImg} />
+                          </a>
+                          <a href={`mailto:${application.tenant_email}`}>
+                            <img src={Message} alt="Message" style={smallImg} />
+                          </a>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                  {/* <Form.Group key={i}>
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Tenant ID {application.tenant_id === "" ? required : ""}
+                    </Form.Label>
+                    <Form.Control
+                      style={squareForm}
+                      value={application.tenant_id}
+                      readOnly={true}
+                    />
+                  </Form.Group> */}
+                  <Row>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="mb-0 ms-2">
+                          No. of Adult Occupants
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="No. of Adult Occupants"
+                          value={application.adult_occupants}
+                          readOnly={true}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="mb-0 ms-2">
+                          No. of Children Occupants
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="No. of Children Occupants"
+                          value={application.children_occupants}
+                          readOnly={true}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="mb-0 ms-2">
+                          No. of Pets
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="No. of Pets"
+                          value={application.num_pets}
+                          readOnly={true}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="mb-0 ms-2">
+                          Type of Pets
+                        </Form.Label>
+                        <Form.Control
+                          style={squareForm}
+                          placeholder="Type of Pets"
+                          value={application.type_pets}
+                          readOnly={true}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </div>
+              ))}
           </div>
           <Row className="mb-4">
             <Col>
@@ -380,6 +509,7 @@ function ManagerTenantAgreement(props) {
               </Form.Group>
             </Col>
           </Row>
+
           <Row className="mb-4">
             <Col>
               <Form.Group>
@@ -438,6 +568,7 @@ function ManagerTenantAgreement(props) {
           </Row>
 
           <Row className="my-3">
+            <h5 style={mediumBold}>Default Payment Parameters</h5>
             <Col>
               <Form.Group>
                 <Form.Label as="h6" className="mb-0 ms-2">
@@ -557,68 +688,77 @@ function ManagerTenantAgreement(props) {
 
           <div className="mb-4">
             <h5 style={mediumBold}>Lease Documents</h5>
-            {files.map((file, i) => (
-              <div
-                className="p-1 mb-2"
-                style={{
-                  boxShadow: " 0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                }}
-                key={i}
+            {files.length > 0 ? (
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
               >
-                <div className="d-flex justify-content-between align-items-end">
-                  <div>
-                    <h6 style={mediumBold}>{file.name}</h6>
-                    <p style={small} className="m-0">
-                      {file.description}
-                    </p>
-                  </div>
-                  <div>
-                    <img
-                      src={EditIcon}
-                      alt="Edit"
-                      className="px-1 mx-2"
-                      onClick={() => editDocument(i)}
-                    />
-                    <img
-                      src={DeleteIcon}
-                      alt="Delete"
-                      className="px-1 mx-2"
-                      onClick={() => deleteDocument(i)}
-                    />
-                    <a href={file.link} target="_blank">
-                      <img src={File} />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Document Name</TableCell>
+                    <TableCell>View Document</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {files.map((file) => {
+                    return (
+                      <TableRow>
+                        <TableCell>{file.description}</TableCell>
+                        <TableCell>
+                          <a href={file.link} target="_blank">
+                            <img
+                              src={File}
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                              }}
+                            />
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            ) : (
+              ""
+            )}
+
             {newFile !== null ? (
               <div>
-                <Form.Group>
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Document Name
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={newFile.name}
-                    placeholder="Name"
-                    onChange={(e) => updateNewFile("name", e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Description
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={newFile.description}
-                    placeholder="Description"
-                    onChange={(e) =>
-                      updateNewFile("description", e.target.value)
-                    }
-                  />
-                </Form.Group>
+                <Row>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Document Name
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        value={newFile.name}
+                        placeholder="Name"
+                        onChange={(e) => updateNewFile("name", e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    {" "}
+                    <Form.Group>
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Description
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        value={newFile.description}
+                        placeholder="Description"
+                        onChange={(e) =>
+                          updateNewFile("description", e.target.value)
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
                 <div className="text-center my-3">
                   <Button
                     variant="outline-primary"

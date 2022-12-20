@@ -188,7 +188,7 @@ function ManagerRepairDetail(props) {
     const response = await get(
       `/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`
     );
-    // console.log(response.result)
+    console.log(response.result);
     setQuotes(response.result);
   };
 
@@ -357,7 +357,7 @@ function ManagerRepairDetail(props) {
                           style={{
                             width: "200px",
                             height: "200px",
-                            objectFit: "cover",
+                            objectFit: "contain",
                           }}
                           alt="repair"
                         />
@@ -602,7 +602,7 @@ function ManagerRepairDetail(props) {
                     opacity: 1,
                   }}
                 >
-                  <div className="pt-1 mb-2" style={subHeading}>
+                  {/* <div className="pt-1 mb-2" style={subHeading}>
                     Pictures from tenant
                   </div>
 
@@ -625,7 +625,7 @@ function ManagerRepairDetail(props) {
                         />
                       </div>
                     ))}
-                  </div>
+                  </div> */}
 
                   {repair.request_status === "NEW" ? (
                     <div className="pt-1 mb-2">
@@ -1076,146 +1076,162 @@ function ManagerRepairDetail(props) {
                         <div>{quote.business_name}</div>
                       </Row>
                       <div className="mx-2 my-2 p-3">
+                        <Row hidden={quote.quote_status !== "ACCEPTED"}>
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">
+                                  Service Charges
+                                </TableCell>
+                                <TableCell align="center">Event Type</TableCell>
+                                <TableCell align="center">
+                                  Total Estimate
+                                </TableCell>
+                                <TableCell align="center">
+                                  Earliest Availability
+                                </TableCell>
+                                <TableCell align="center">
+                                  Scheduled Date
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {" "}
+                                  {quote.services_expenses &&
+                                    quote.services_expenses.length > 0 &&
+                                    JSON.parse(quote.services_expenses).map(
+                                      (service, j) => (
+                                        <div className="pt-1 mb-2 align-items-center">
+                                          <div
+                                            style={
+                                              (subHeading,
+                                              { textAlign: "center" })
+                                            }
+                                          >
+                                            {service.service_name}: $
+                                            {service.charge}{" "}
+                                            {service.per === "Hour"
+                                              ? `/${service.per}`
+                                              : "One-Time Fee"}
+                                          </div>
+                                        </div>
+                                      )
+                                    )}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {quote.event_type}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  $ {quote.total_estimate}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {new Date(
+                                    String(quote.earliest_availability).split(
+                                      " "
+                                    )[0]
+                                  ).toLocaleDateString()}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {repair.scheduled_date !== null &&
+                                  repair.scheduled_date !== "null"
+                                    ? repair.scheduled_date.split(" ")[0]
+                                    : "Not Scheduled"}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Row>
+                      </div>
+                      <div className="mx-2 my-2 p-3">
                         <Row
                           hidden={
                             quote.quote_status !== "SENT" &&
                             quote.quote_status !== "REJECTED"
                           }
                         >
-                          <div
-                            className="my-2 p-3"
-                            style={{
-                              background: "#F3F3F3 0% 0% no-repeat padding-box",
-                              borderRadius: "10px",
-                              opacity: 1,
-                            }}
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
                           >
-                            <Row>
-                              <div style={mediumBold}>Service Charges</div>
-                            </Row>
-                            <Row className="mx-2">
-                              {quote.services_expenses &&
-                                quote.services_expenses.length > 0 &&
-                                JSON.parse(quote.services_expenses).map(
-                                  (service, j) => (
-                                    <div
-                                      key={j}
-                                      style={{
-                                        background:
-                                          "#FFFFFF 0% 0% no-repeat padding-box",
-                                        boxShadow: "0px 3px 6px #00000029",
-                                        borderRadius: "5px",
-                                        opacity: 1,
-                                      }}
-                                    >
-                                      <Row className="pt-1 mb-2">
-                                        <div style={subHeading}>
-                                          {service.service_name}
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">
+                                  Service Charges
+                                </TableCell>
+                                <TableCell align="center">Event Type</TableCell>
+                                <TableCell align="center">
+                                  Total Estimate
+                                </TableCell>
+                                <TableCell align="center">
+                                  Earliest Availability
+                                </TableCell>
+                                <TableCell align="center">
+                                  Scheduled Date
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {" "}
+                                  {quote.services_expenses &&
+                                    quote.services_expenses.length > 0 &&
+                                    JSON.parse(quote.services_expenses).map(
+                                      (service, j) => (
+                                        <div className="pt-1 mb-2 align-items-center">
+                                          <div
+                                            style={
+                                              (subHeading,
+                                              { textAlign: "center" })
+                                            }
+                                          >
+                                            {service.service_name}: $
+                                            {service.charge}{" "}
+                                            {service.per === "Hour"
+                                              ? `/${service.per}`
+                                              : "One-Time Fee"}
+                                          </div>
                                         </div>
-                                        <div style={subText}>
-                                          ${service.charge}{" "}
-                                          {service.per === "Hour"
-                                            ? `/${service.per}`
-                                            : "One-Time Fee"}
-                                        </div>
-                                      </Row>
-                                    </div>
-                                  )
-                                )}
-                            </Row>
-                          </div>
-                          <div
-                            className="my-2 p-3"
-                            style={{
-                              background: "#F3F3F3 0% 0% no-repeat padding-box",
-                              borderRadius: "10px",
-                              opacity: 1,
-                            }}
-                          >
-                            <Row>
-                              <div style={mediumBold}>Event Type</div>
-                            </Row>
-                            <Row className="mx-2">
-                              <div
-                                style={
-                                  (subText,
-                                  {
-                                    background:
-                                      "#FFFFFF 0% 0% no-repeat padding-box",
-                                    boxShadow: "0px 3px 6px #00000029",
-                                    borderRadius: "5px",
-                                    opacity: 1,
-                                  })
-                                }
-                              >
-                                {quote.event_type}
-                              </div>
-                            </Row>
-                          </div>
-                          <div
-                            className="my-2 p-3"
-                            style={{
-                              background: "#F3F3F3 0% 0% no-repeat padding-box",
-                              borderRadius: "10px",
-                              opacity: 1,
-                            }}
-                          >
-                            <Row>
-                              <div style={mediumBold}>Total Estimate</div>
-                            </Row>
-                            <Row className="mx-2">
-                              {" "}
-                              <div
-                                style={
-                                  (subText,
-                                  {
-                                    background:
-                                      "#FFFFFF 0% 0% no-repeat padding-box",
-                                    boxShadow: "0px 3px 6px #00000029",
-                                    borderRadius: "5px",
-                                    opacity: 1,
-                                  })
-                                }
-                              >
-                                $ {quote.total_estimate}
-                              </div>
-                            </Row>
-                          </div>
-                          <div
-                            className="my-2 p-3"
-                            style={{
-                              background: "#F3F3F3 0% 0% no-repeat padding-box",
-                              borderRadius: "10px",
-                              opacity: 1,
-                            }}
-                          >
-                            <Row>
-                              <div style={mediumBold}>
-                                Earliest Availability
-                              </div>
-                            </Row>
-                            <Row className="mx-2">
-                              {" "}
-                              <div
-                                style={
-                                  (subText,
-                                  {
-                                    background:
-                                      "#FFFFFF 0% 0% no-repeat padding-box",
-                                    boxShadow: "0px 3px 6px #00000029",
-                                    borderRadius: "5px",
-                                    opacity: 1,
-                                  })
-                                }
-                              >
-                                {new Date(
-                                  String(quote.earliest_availability).split(
-                                    " "
-                                  )[0]
-                                ).toLocaleDateString()}
-                              </div>
-                            </Row>
-                          </div>
+                                      )
+                                    )}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {quote.event_type}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  $ {quote.total_estimate}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {new Date(
+                                    String(quote.earliest_availability).split(
+                                      " "
+                                    )[0]
+                                  ).toLocaleDateString()}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {repair.scheduled_date !== null &&
+                                  repair.scheduled_date !== "null"
+                                    ? repair.scheduled_date.split(" ")[0]
+                                    : "Not Scheduled"}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
                         </Row>
                       </div>
 
