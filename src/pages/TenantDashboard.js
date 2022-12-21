@@ -451,12 +451,7 @@ export default function TenantDashboard() {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
-    },
-    {
-      id: "total_estimate",
-      numeric: true,
-      label: "Cost",
+      label: "Scheduled Date",
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
@@ -987,7 +982,6 @@ export default function TenantDashboard() {
                               ? request.scheduled_date
                               : "Not Scheduled"}
                           </TableCell>
-                          <TableCell>${request.total_estimate}</TableCell>
                         </TableRow>
                       );
                     })}

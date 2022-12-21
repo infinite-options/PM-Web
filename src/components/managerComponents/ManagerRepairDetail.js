@@ -1097,6 +1097,9 @@ function ManagerRepairDetail(props) {
                                 <TableCell align="center">
                                   Scheduled Date
                                 </TableCell>
+                                <TableCell align="center">
+                                  Scheduled Time
+                                </TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -1134,17 +1137,24 @@ function ManagerRepairDetail(props) {
                                 </TableCell>
                                 <TableCell align="center">
                                   {" "}
-                                  {new Date(
+                                  {
                                     String(quote.earliest_availability).split(
                                       " "
                                     )[0]
-                                  ).toLocaleDateString()}
+                                  }
                                 </TableCell>
                                 <TableCell align="center">
                                   {" "}
                                   {repair.scheduled_date !== null &&
                                   repair.scheduled_date !== "null"
                                     ? repair.scheduled_date.split(" ")[0]
+                                    : "Not Scheduled"}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {repair.scheduled_time !== null &&
+                                  repair.scheduled_time !== "null"
+                                    ? repair.scheduled_time
                                     : "Not Scheduled"}
                                 </TableCell>
                               </TableRow>
@@ -1271,7 +1281,7 @@ function ManagerRepairDetail(props) {
                               ? "You've Accepted the Quote"
                               : quote.quote_status === "SENT"
                               ? "Waiting for quote from business"
-                              : "Quote Withdrawn by Business"}
+                              : "Another quote accepted"}
                           </Button>
                         </Col>
                       </Row>

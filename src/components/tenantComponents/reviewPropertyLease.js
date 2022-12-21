@@ -283,11 +283,8 @@ function ReviewPropertyLease(props) {
       state: { fromPage: fromPage },
     });
   };
-  console.log("reviewPropertyLease", rentals, rentPayments);
   return (
     <div className="w-100 overflow-hidden">
-      {/* ==================< Header >=======================================  */}
-      {/* <Header title="Property Lease Details" /> */}
       <div className="flex-1">
         <div
           hidden={!responsive.showSidebar}
@@ -299,15 +296,15 @@ function ReviewPropertyLease(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="mb-5" style={{ width: "87%" }}>
           <Header
             title="Property Lease Details"
             leftText="< Back"
             leftFn={() => navigate("/tenant")}
           />
-          <Row className="m-0 p-0">
+          <div className="w-100 overflow-hidden">
             <PropertyApplicationView forPropertyLease="true" />
-          </Row>
+          </div>
 
           {application_status_1 === "FORWARDED" ? (
             <div className="m-3">
@@ -708,7 +705,7 @@ function ReviewPropertyLease(props) {
           {(application_status_1 === "FORWARDED" ||
             application_status_1 === "RENTED") &&
           lease.length ? (
-            <div>
+            <div className="m-3">
               <p
                 style={{
                   fontWeight: "bold",
@@ -734,32 +731,24 @@ function ReviewPropertyLease(props) {
                   }}
                 >
                   {lease.map((lease, i) => (
-                    <div key={i}>
-                      <div className="d-flex justify-content-between align-items-end">
-                        <div style={{ display: "flex" }}>
-                          <div
-                            style={{ display: "flex", flexDirection: "column" }}
-                          >
-                            <div
-                              style={{ paddingLeft: "20px" }}
-                              target="_blank"
-                            >
-                              {lease.name}
-                            </div>
-                            <p style={{ paddingLeft: "20px" }} className="m-0">
-                              {lease.description}
-                            </p>
-                          </div>
-                          <Button
-                            style={{ marginLeft: "auto" }}
-                            onClick={() => displayLease(lease.link)}
-                          >
-                            View
-                          </Button>
+                    <Row>
+                      <Col>
+                        <div style={{ paddingLeft: "20px" }} target="_blank">
+                          {lease.name}
                         </div>
-                      </div>
-                      <hr style={{ opacity: 1 }} />
-                    </div>
+                        <p style={{ paddingLeft: "20px" }} className="m-0">
+                          {lease.description}
+                        </p>
+                      </Col>
+                      <Col>
+                        <Button
+                          style={{ marginLeft: "auto" }}
+                          onClick={() => displayLease(lease.link)}
+                        >
+                          View
+                        </Button>
+                      </Col>
+                    </Row>
                   ))}
                 </div>
               </Container>
@@ -1131,9 +1120,9 @@ function ReviewPropertyLease(props) {
             )}
           </Row>
         </div>
-      </div>
-      <div hidden={responsive.showSidebar} className="w-100 mt-3">
-        <TenantFooter />
+        <div hidden={responsive.showSidebar} className="w-100 mt-3">
+          <TenantFooter />
+        </div>
       </div>
     </div>
   );

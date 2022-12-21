@@ -4232,8 +4232,9 @@ export default function ManagerDashboard() {
                                 size="small"
                                 style={{
                                   color:
-                                    property.available_to_rent == 0
-                                      ? "Red"
+                                    property.available_to_rent == 0 &&
+                                    property.rentalInfo == "Not Rented"
+                                      ? "red"
                                       : property.rentalInfo == "Not Rented"
                                       ? "green"
                                       : "black",
@@ -4254,7 +4255,8 @@ export default function ManagerDashboard() {
                                       </div>
                                     );
                                   })
-                                ) : property.available_to_rent == 0 ? (
+                                ) : property.available_to_rent == 0 &&
+                                  property.rentalInfo !== "Not Rented" ? (
                                   <div>Not Listed</div>
                                 ) : (
                                   <div>{property.rentalInfo}</div>
@@ -4339,7 +4341,8 @@ export default function ManagerDashboard() {
                                 }}
                                 style={{
                                   color:
-                                    property.available_to_rent == 0
+                                    property.available_to_rent == 0 &&
+                                    property.rent_status == "Not Rented"
                                       ? "red"
                                       : property.rent_status == "PAID"
                                       ? "black"
@@ -4348,7 +4351,8 @@ export default function ManagerDashboard() {
                                       : "green",
                                 }}
                               >
-                                {property.available_to_rent == 0 ? (
+                                {property.available_to_rent == 0 &&
+                                property.rent_status !== "Not Rented" ? (
                                   <div>Not Listed</div>
                                 ) : (
                                   <div>{property.rent_status}</div>

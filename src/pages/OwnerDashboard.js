@@ -414,7 +414,7 @@ export default function OwnerDashboard2() {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
+      label: "Scheduled Date",
     },
     {
       id: "total_estimate",
