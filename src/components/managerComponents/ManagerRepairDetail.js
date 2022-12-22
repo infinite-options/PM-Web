@@ -192,11 +192,7 @@ function ManagerRepairDetail(props) {
       });
     }
     imageState[1](files);
-    // const quotes_request = await get(`/maintenanceQuotes`);
-    // if (quotes_request.msg === 'Token has expired') {
-    //     refresh();
-    //     return;
-    // }
+
     const response = await get(
       `/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`
     );
