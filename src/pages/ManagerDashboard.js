@@ -214,7 +214,7 @@ export default function ManagerDashboard() {
     setIsLoading(false);
 
     let requests = [];
-    response.result.forEach((res) => {
+    properties_unique.forEach((res) => {
       if (res.maintenanceRequests.length > 0) {
         res.maintenanceRequests.forEach((mr) => {
           requests.push(mr);
@@ -530,6 +530,12 @@ export default function ManagerDashboard() {
       id: "scheduled_date",
       numeric: true,
       label: "Scheduled Date",
+    },
+
+    {
+      id: "scheduled_time",
+      numeric: true,
+      label: "Scheduled Time",
     },
     {
       id: "total_estimate",
@@ -5030,6 +5036,12 @@ export default function ManagerDashboard() {
                             {request.scheduled_date !== null &&
                             request.scheduled_date !== "null"
                               ? request.scheduled_date.split(" ")[0]
+                              : "Not Scheduled"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.scheduled_time !== null &&
+                            request.scheduled_time !== "null"
+                              ? request.scheduled_time.split(" ")[0]
                               : "Not Scheduled"}
                           </TableCell>
                           <TableCell>${request.total_estimate}</TableCell>

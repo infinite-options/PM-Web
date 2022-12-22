@@ -10,7 +10,7 @@ import ApplyToProperty from "./components/tenantComponents/ApplyToProperty";
 import "./App.css";
 import RepairRequest from "./components/RepairRequestForm";
 import ResidentAnnouncements from "./components/ResidentAnnouncements";
-import CreateAnnouncement from "./components/CreateAnnouncement";
+import ManagerCreateAnnouncement from "./components/managerComponents/ManagerCreateAnnouncement";
 import RepairStatus from "./components/RepairStatus";
 import TenantDocuments from "./components/tenantComponents/TenantDocuments";
 import RentPayment from "./components/RentPayment";
@@ -28,7 +28,7 @@ import DetailRepairStatus from "./components/DetailRepairStatus";
 import MaintenanceHome from "./pages/MaintenanceHome";
 import ScheduledJobs from "./components/ScheduledJobs";
 import DetailQuote from "./components/DetailQuote";
-import DetailAnnouncements from "./components/DetailAnnouncement";
+import ManagerDetailAnnouncement from "./components/managerComponents/ManagerDetailAnnouncement";
 import RescheduleRepair from "./components/RescheduleRepair";
 import JobsCompleted from "./components/JobsCompleted";
 import QuotesRejectedM from "./components/QuotesRejectedM";
@@ -57,7 +57,6 @@ import TenantPastPaidPayments from "./components/TenantPastPaidPayments";
 import OwnerPaymentHistory from "./components/ownerComponents/OwnerPaymentHistory";
 import ManagerOwnerList from "./components/managerComponents/ManagerOwnerList";
 import ManagerTenantList from "./components/managerComponents/ManagerTenantList";
-import ManagerRepairInfo from "./components/managerComponents/ManagerRepairInfo";
 import NotManagedProperties from "./components/NotManagedProperties";
 import ManagerPaymentPage from "./components/managerComponents/ManagerPaymentPage";
 import ManagerPaymentHistory from "./components/managerComponents/ManagerPaymentHistory";
@@ -199,11 +198,11 @@ function App() {
             />
             <Route
               path="manager-announcements"
-              element={<CreateAnnouncement />}
+              element={<ManagerCreateAnnouncement />}
             />
             <Route
               path="detailAnnouncements"
-              element={<DetailAnnouncements />}
+              element={<ManagerDetailAnnouncement />}
             />
             <Route
               path="/:property_uid/repairStatus"
@@ -273,10 +272,6 @@ function App() {
             <Route
               path="propertyDetails/:mp_id"
               element={<OwnerPropertyView />}
-            />
-            <Route
-              path="manager-properties/:mp_id/repairs/:rr_id"
-              element={<ManagerRepairInfo />}
             />
             <Route
               path="manager-properties/:mp_id/resident-announcements"

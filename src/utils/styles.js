@@ -288,7 +288,7 @@ const formLabel = {
   letterSpacing: "0px",
   color: "#000000",
   position: "relative",
-  left: "35px",
+  // left: "35px",
 };
 const subHeading = {
   textAlign: "left",

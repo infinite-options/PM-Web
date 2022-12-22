@@ -453,6 +453,11 @@ export default function TenantDashboard() {
       numeric: true,
       label: "Scheduled Date",
     },
+    {
+      id: "scheduled_time",
+      numeric: true,
+      label: "Scheduled Time",
+    },
   ];
   function EnhancedTableHeadMaintenance(props) {
     const { orderMaintenance, orderMaintenanceBy, onRequestSort } = props;
@@ -980,6 +985,12 @@ export default function TenantDashboard() {
                             {request.scheduled_date !== null &&
                             request.scheduled_date !== "null"
                               ? request.scheduled_date
+                              : "Not Scheduled"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.scheduled_time !== null &&
+                            request.scheduled_time !== "null"
+                              ? request.scheduled_time.split(" ")[0]
                               : "Not Scheduled"}
                           </TableCell>
                         </TableRow>

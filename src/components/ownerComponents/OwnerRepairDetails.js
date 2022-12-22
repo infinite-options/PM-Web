@@ -1,11 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Carousel from "react-multi-carousel";
-import { makeStyles } from "@material-ui/core/styles";
-import Checkbox from "../Checkbox";
 import AppContext from "../../AppContext";
+import Checkbox from "../Checkbox";
 import Header from "../Header";
 import RepairImages from "../RepairImages";
 import SideBar from "./SideBar";
@@ -17,19 +24,19 @@ import HighPriority from "../../icons/highPriority.svg";
 import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
 import {
-  headings,
-  editButton,
-  subHeading,
+  squareForm,
+  mediumBold,
   subText,
-  redPillButton,
   formLabel,
   bluePillButton,
   blue,
-  mediumBold,
-  orangePill,
   pillButton,
+  headings,
+  subHeading,
+  redPillButton,
+  orangePill,
 } from "../../utils/styles";
-import { get, put } from "../../utils/api";
+import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
 const useStyles = makeStyles((theme) => ({
   priorityInactive: {
@@ -80,7 +87,7 @@ function OwnerRepairDetails(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [canReschedule, setCanReschedule] = useState(false);
+  const [issueType, setIssueType] = useState("Plumbing");
   const [requestQuote, setRequestQuote] = useState(false);
   const [scheduleMaintenance, setScheduleMaintenance] = useState(false);
   const [businesses, setBusinesses] = useState([]);
@@ -89,6 +96,8 @@ function OwnerRepairDetails(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
+  const [reDate, setReDate] = useState("");
+  const [reTime, setReTime] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showSpinner, setShowSpinner] = useState(false);
   const repair = location.state.repair;
@@ -114,7 +123,7 @@ function OwnerRepairDetails(props) {
       ...business,
       quote_requested: false,
     }));
-    // console.log(repair)
+    console.log("repair", repair, request_response.result[0]);
     // console.log(businesses)
     setBusinesses(businesses);
     console.log(request_response.result[0]);
@@ -122,7 +131,11 @@ function OwnerRepairDetails(props) {
     setTitle(request_response.result[0].title);
     setDescription(request_response.result[0].description);
     setPriority(request_response.result[0].priority);
-    setCanReschedule(request_response.result[0].can_reschedule === 1);
+    setIssueType(request_response.result[0].request_type);
+    if (request_response.result[0].request_status === "SCHEDULED") {
+      setReDate(request_response.result[0].scheduled_date);
+      setReTime(request_response.result[0].scheduled_time);
+    }
     const files = [];
     const images = JSON.parse(request_response.result[0].images);
     for (let i = 0; i < images.length; i++) {
@@ -149,6 +162,7 @@ function OwnerRepairDetails(props) {
       maintenance_request_uid: repair.maintenance_request_uid,
       title: title,
       priority: priority,
+      request_type: issueType,
       can_reschedule: true,
       assigned_business: repair.assigned_business,
       notes: repair.notes,
@@ -197,6 +211,28 @@ function OwnerRepairDetails(props) {
     const response = await put("/maintenanceQuotes", body);
     fetchBusinesses();
   };
+  const rescheduleRepair = async () => {
+    const body = {
+      maintenance_request_uid: repair.maintenance_request_uid,
+      scheduled_date: reDate,
+      scheduled_time: reTime,
+    };
+    const files = imageState[0];
+    let i = 0;
+    for (const file of imageState[0]) {
+      let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
+      if (file.file !== null) {
+        body[key] = file.file;
+      } else {
+        body[key] = file.image;
+      }
+    }
+    const response = await put("/maintenanceRequests", body, null, files);
+
+    fetchBusinesses();
+    setScheduleMaintenance(false);
+    setIsEditing(false);
+  };
 
   const rejectQuote = async (quote) => {
     const body = {
@@ -204,6 +240,27 @@ function OwnerRepairDetails(props) {
       quote_status: "REJECTED",
     };
     const response = await put("/maintenanceQuotes", body);
+
+    fetchBusinesses();
+  };
+  const sendQuotesRequest = async () => {
+    const business_ids = businesses
+      .filter((b) => b.quote_requested)
+      .map((b) => b.business_uid);
+    if (business_ids.length === 0) {
+      alert("No businesses Selected");
+      return;
+    }
+
+    console.log("Quotes Requested from", business_ids);
+    const quote_details = {
+      linked_request_uid: repair.maintenance_request_uid,
+      quote_business_uid: business_ids,
+    };
+    const response = await post("/maintenanceQuotes", quote_details);
+    const result = response.result;
+    setRequestQuote(false);
+
     fetchBusinesses();
   };
 
@@ -245,241 +302,351 @@ function OwnerRepairDetails(props) {
                 borderRadius: "10px",
                 opacity: 1,
               }}
-              hidden={scheduleMaintenance || requestQuote}
+              hidden={requestQuote}
             >
-              {}
-              {JSON.parse(repairsDetail.images).length === 0 ? (
-                <Row className=" m-3">
-                  <img
-                    src={RepairImg}
+              {isEditing ? (
+                <div className="d-flex flex-column w-100 p-2 overflow-hidden">
+                  {" "}
+                  <Form.Group
+                    className="p-2"
                     style={{
-                      objectFit: "contain",
-                      width: "350px",
-                      height: " 198px",
-                    }}
-                    alt="repair"
-                  />
-                </Row>
-              ) : JSON.parse(repairsDetail.images).length > 1 ? (
-                <Row className=" m-3">
-                  <Carousel responsive={responsive}>
-                    {JSON.parse(repairsDetail.images).map((images) => {
-                      return (
-                        <img
-                          src={`${images}?${Date.now()}`}
-                          style={{
-                            width: "200px",
-                            height: "200px",
-                            objectFit: "contain",
-                          }}
-                          alt="repair"
-                        />
-                      );
-                    })}
-                  </Carousel>
-                </Row>
-              ) : (
-                <Row className=" m-3">
-                  <img
-                    src={JSON.parse(repairsDetail.images)}
-                    //className="w-100 h-100"
-                    style={{
-                      objectFit: "cover",
-                      width: "350px",
-                      height: " 198px",
-                      border: "1px solid #C4C4C4",
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
                       borderRadius: "5px",
                     }}
-                    alt="repair"
-                  />
-                </Row>
-              )}
-              {isEditing ? (
-                <Row>
-                  <RepairImages state={imageState} />
-                </Row>
-              ) : null}
-              <Row
-                className="my-4 p-2"
-                style={
-                  (headings,
-                  {
-                    background: "#F3F3F3 0% 0% no-repeat padding-box",
-                    borderRadius: "10px",
-                    opacity: 1,
-                  })
-                }
-              >
-                <Col>
-                  {isEditing ? (
-                    ((<RepairImages />),
-                    (
-                      <input
-                        style={{ margin: "10px 0px" }}
-                        defaultValue={title}
-                        onChange={(e) => {
-                          setTitle(e.target.value);
-                        }}
-                      ></input>
-                    ))
-                  ) : (
-                    <div style={headings}>
-                      <div style={subHeading}>Title</div>
-                      {title}
-                    </div>
-                  )}
-                </Col>
-              </Row>
+                  >
+                    <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+                      Property
+                    </Form.Label>
 
-              <Row className="mt-2 mb-0">
-                <div style={subText}>
-                  {repair.address} {repair.unit}, {repair.city}, {repair.state}{" "}
-                  {repair.zip}
-                </div>
-              </Row>
-
-              {isEditing ? (
-                <Row className="mt-2" style={{ padding: "7px 0px" }}>
-                  <Col xs={4}>
-                    <img
-                      src={HighPriority}
-                      onClick={() => setPriority("High")}
-                      className={
-                        priority === "High"
-                          ? `${classes.priorityActive}`
-                          : `${classes.priorityInactive}`
-                      }
-                    />
-                  </Col>
-                  <Col xs={4}>
-                    <img
-                      src={MediumPriority}
-                      onClick={() => setPriority("Medium")}
-                      className={
-                        priority === "Medium"
-                          ? `${classes.priorityActive}`
-                          : `${classes.priorityInactive}`
-                      }
-                    />
-                  </Col>
-                  <Col xs={4}>
-                    <img
-                      src={LowPriority}
-                      onClick={() => setPriority("Low")}
-                      className={
-                        priority === "Low"
-                          ? `${classes.priorityActive}`
-                          : `${classes.priorityInactive}`
-                      }
-                    />
-                  </Col>
-                </Row>
-              ) : (
-                <Row className="mt-2" style={{ padding: "7px 0px" }}>
-                  <Col>
-                    {priority === "High" ? (
-                      <img src={HighPriority} />
-                    ) : priority === "Medium" ? (
-                      <img src={MediumPriority} />
-                    ) : (
-                      <img src={LowPriority} />
-                    )}
-                  </Col>
-                </Row>
-              )}
-
-              <div className="mx-1 pt-2">
-                <Row
-                  style={{
-                    background: "#F3F3F3 0% 0% no-repeat padding-box",
-                    borderRadius: "10px",
-                    opacity: 1,
-                  }}
-                  className="my-4 p-2"
-                >
-                  <div style={subHeading}>Description</div>
-                  {isEditing ? (
-                    <input
-                      defaultValue={description}
-                      style={{ width: "80vw" }}
-                      onChange={(e) => {
-                        console.log(e);
-                        setDescription(e.target.value);
+                    <Row style={formLabel} as="h5" className="ms-1 mb-0">
+                      {repair.address} {repair.unit}
+                      ,&nbsp;
+                      {repair.city}
+                      ,&nbsp;
+                      {repair.state}&nbsp; {repair.zip}
+                    </Row>
+                  </Form.Group>
+                  <Form.Group className="mx-2 my-3">
+                    <Form.Label as="h6" className="mb-0 ms-2">
+                      Issue Type
+                    </Form.Label>
+                    <Form.Select
+                      style={squareForm}
+                      value={issueType}
+                      onChange={(e) => setIssueType(e.target.value)}
+                    >
+                      <option>Plumbing</option>
+                      <option>Landscape</option>
+                      <option>Appliances</option>
+                      <option>Electrical</option>
+                      <option>HVAC</option>
+                      <option>Other</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <Form>
+                    <Form.Group
+                      className="mt-3 mb-4 p-2"
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                        borderRadius: "5px",
                       }}
-                    ></input>
+                    >
+                      <Form.Label
+                        style={formLabel}
+                        as="h5"
+                        className="ms-1 mb-0"
+                      >
+                        Title
+                      </Form.Label>
+                      <Form.Control
+                        style={{ borderRadius: 0 }}
+                        defaultValue={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="Enter Title"
+                      />
+                    </Form.Group>
+                    <Form.Group
+                      className="mt-3 mb-4 p-2"
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      <Form.Label
+                        style={formLabel}
+                        as="h5"
+                        className="mt-2 mb-1"
+                      >
+                        Tags
+                      </Form.Label>
+                      <Row
+                        className="mt-2 mb-2"
+                        style={{
+                          display: "text",
+                          flexDirection: "row",
+                          textAlign: "center",
+                        }}
+                      >
+                        <Col xs={4}>
+                          <img
+                            src={HighPriority}
+                            onClick={() => setPriority("High")}
+                            className={
+                              priority === "High"
+                                ? `${classes.priorityActive}`
+                                : `${classes.priorityInactive}`
+                            }
+                            //style={{ opacity: "0.5" }}
+                          />
+                        </Col>
+                        <Col xs={4}>
+                          <img
+                            src={MediumPriority}
+                            onClick={() => setPriority("Medium")}
+                            className={
+                              priority === "Medium"
+                                ? `${classes.priorityActive}`
+                                : `${classes.priorityInactive}`
+                            }
+                            //style={{ opacity: "0.5" }}
+                          />
+                        </Col>
+                        <Col xs={4}>
+                          <img
+                            src={LowPriority}
+                            onClick={() => setPriority("Low")}
+                            className={
+                              priority === "Low"
+                                ? `${classes.priorityActive}`
+                                : `${classes.priorityInactive}`
+                            }
+                            //style={{ opacity: "0.5" }}
+                          />
+                        </Col>
+                      </Row>
+                    </Form.Group>
+                    <Form.Group
+                      className="mt-3 mb-4 p-2"
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      <Form.Label
+                        style={formLabel}
+                        as="h5"
+                        className="ms-1 mb-0"
+                      >
+                        Description
+                      </Form.Label>
+                      <Form.Control
+                        style={{ borderRadius: 0 }}
+                        as="textarea"
+                        defaultValue={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Enter Description"
+                      />
+                    </Form.Group>
+                    <Form.Group
+                      className="mt-3 mb-4 p-2"
+                      style={{
+                        background: "#F3F3F3 0% 0% no-repeat padding-box",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      <RepairImages state={imageState} />
+                    </Form.Group>
+                  </Form>
+                  <div className="text-center mt-5">
+                    {showSpinner ? (
+                      <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                        <ReactBootStrap.Spinner
+                          animation="border"
+                          role="status"
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <Row
+                      style={{
+                        display: "text",
+                        flexDirection: "row",
+                        textAlign: "center",
+                        marginBottom: "5rem",
+                      }}
+                    >
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          onClick={() => updateRepair()}
+                          style={bluePillButton}
+                        >
+                          Save
+                        </Button>
+                      </Col>
+                      <Col xs={4}>
+                        <Button
+                          variant="outline-primary"
+                          onClick={() => setIsEditing(false)}
+                          style={pillButton}
+                        >
+                          Cancel
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  {JSON.parse(repairsDetail.images).length === 0 ? (
+                    <Row className=" m-3">
+                      <img
+                        src={RepairImg}
+                        style={{
+                          objectFit: "contain",
+                          width: "200px",
+                          height: " 200px",
+                        }}
+                        alt="repair"
+                      />
+                    </Row>
+                  ) : JSON.parse(repairsDetail.images).length > 1 ? (
+                    <Row className=" m-3">
+                      <Carousel responsive={responsive}>
+                        {JSON.parse(repairsDetail.images).map((images) => {
+                          return (
+                            <img
+                              src={`${images}?${Date.now()}`}
+                              style={{
+                                width: "200px",
+                                height: "200px",
+                                objectFit: "contain",
+                              }}
+                              alt="repair"
+                            />
+                          );
+                        })}
+                      </Carousel>
+                    </Row>
                   ) : (
-                    <Row className="mt-2">
-                      <div style={subText}>{description}</div>
+                    <Row className=" m-3">
+                      <img
+                        src={JSON.parse(repairsDetail.images)}
+                        //className="w-100 h-100"
+                        style={{
+                          objectFit: "contain",
+                          width: "200px",
+                          height: " 200px",
+                          border: "1px solid #C4C4C4",
+                          borderRadius: "5px",
+                        }}
+                        alt="repair"
+                      />
                     </Row>
                   )}
-                </Row>
+                  <Form.Group
+                    className="p-2"
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <div style={formLabel}>Property</div>
 
-                <Row
-                  className="pt-1 mb-4"
-                  style={{
-                    background: "#F3F3F3 0% 0% no-repeat padding-box",
-                    borderRadius: "10px",
-                    opacity: 1,
-                  }}
-                >
-                  <div style={subHeading} className="pt-1 mb-2">
-                    Tenant can reschedule this job as needed
-                  </div>
-                  <Col className="pt-1 mx-2">
-                    <Row>
-                      <Checkbox type="CIRCLE" checked={canReschedule} /> Yes
+                    <div style={formLabel}>
+                      {repair.address} {repair.unit}
+                      ,&nbsp;
+                      {repair.city}
+                      ,&nbsp;
+                      {repair.state}&nbsp; {repair.zip}
+                    </div>
+                  </Form.Group>
+                  <Form.Group
+                    className="mt-3 mb-4 p-2"
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <div style={formLabel}>Issue Type</div>
+                    <div className="ms-1 mb-0"> {issueType}</div>
+                  </Form.Group>
+
+                  <Form.Group
+                    className="mt-3 mb-4 p-2"
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <div>Title</div>
+                    <div className="ms-1 mb-0"> {title}</div>
+                  </Form.Group>
+                  <Form.Group
+                    className="mt-3 mb-4 p-2"
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <div style={formLabel}>Tags</div>
+                    <Row
+                      className="mt-2 ms-1 mb-0"
+                      style={{ padding: "7px 0px" }}
+                    >
+                      <Col>
+                        {priority === "High" ? (
+                          <img src={HighPriority} />
+                        ) : priority === "Medium" ? (
+                          <img src={MediumPriority} />
+                        ) : (
+                          <img src={LowPriority} />
+                        )}
+                      </Col>
                     </Row>
-                  </Col>
-                  <Col className="pt-1 mx-2">
-                    <Row>
-                      <Checkbox type="CIRCLE" checked={!canReschedule} /> No
-                    </Row>
-                  </Col>
-                </Row>
-                {showSpinner ? (
-                  <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                    <ReactBootStrap.Spinner animation="border" role="status" />
-                  </div>
-                ) : (
-                  ""
-                )}
-                {isEditing ? (
-                  <Row className="pt-1 mb-4">
+                  </Form.Group>
+                  <Form.Group
+                    className="mt-3 mb-4 p-2"
+                    style={{
+                      background: "#F3F3F3 0% 0% no-repeat padding-box",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <div style={formLabel}>Description</div>
+                    <div className="ms-1 mb-0">{description}</div>
+                  </Form.Group>
+                  <Row hidden={true} className="pt-1">
                     <Col className="d-flex flex-row justify-content-evenly">
                       <Button
                         style={bluePillButton}
-                        onClick={() => updateRepair()}
+                        onClick={() => setScheduleMaintenance(true)}
                       >
-                        Save
-                      </Button>
-                    </Col>
-                    <Col className="d-flex flex-row justify-content-evenly">
-                      <Button
-                        style={pillButton}
-                        variant="outline-primary"
-                        onClick={() => setIsEditing(false)}
-                      >
-                        Cancel
+                        Schedule Maintenance
                       </Button>
                     </Col>
                   </Row>
-                ) : null}
-                <Row hidden={true} className="pt-1">
-                  <Col className="d-flex flex-row justify-content-evenly">
-                    <Button
-                      style={bluePillButton}
-                      onClick={() => setScheduleMaintenance(true)}
-                    >
-                      Schedule Maintenance
-                    </Button>
-                  </Col>
-                </Row>
-              </div>
+                  {repair.property_manager.length === 0 ? (
+                    <Row className="pt-1 mt-3 mb-2">
+                      <Col className="d-flex flex-row justify-content-evenly">
+                        <Button
+                          style={pillButton}
+                          variant="outline-primary"
+                          onClick={() => setRequestQuote(true)}
+                        >
+                          Request Quotes from Maintenance
+                        </Button>
+                      </Col>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              )}
             </div>
           )}
-
           <div
-            className="mx-2 my-2 p-3"
+            className="mx-2 mt-2 mb-5 p-3"
             style={{
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               borderRadius: "10px",
@@ -487,7 +654,7 @@ function OwnerRepairDetails(props) {
             }}
             hidden={!requestQuote}
           >
-            <Row className="mt-4">
+            <Row style={headings}>
               <Col>{repair.title}</Col>
               <Col xs={4}>
                 {repair.priority === "High" ? (
@@ -499,7 +666,6 @@ function OwnerRepairDetails(props) {
                 )}
               </Col>
             </Row>
-
             <Row style={subHeading}>
               <div>Select businesses to request a quote:</div>
             </Row>
@@ -529,7 +695,7 @@ function OwnerRepairDetails(props) {
                       </Row>
                     </Col>
                     <Col>
-                      <Row style={subHeading}>{business.business_name}</Row>
+                      <Row style={mediumBold}>{business.business_name}</Row>
                       <Row style={subText}>
                         Services: Toilet repair, Plumbing, Kitchen repair
                       </Row>
@@ -555,34 +721,18 @@ function OwnerRepairDetails(props) {
                   </Row>
                 ))}
             </div>
-          </div>
-
-          <div hidden={!scheduleMaintenance}>
-            <Row>
-              <div style={headings}>Schedule Maintenace</div>
-            </Row>
-            <Form.Group className="mt-3 mb-2">
-              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                Date
-              </Form.Label>
-              <Form.Control style={{ borderRadius: 0 }} type="date" />
-            </Form.Group>
-            <Form.Group className="mt-3 mb-2">
-              <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-                Time
-              </Form.Label>
-              <Form.Control style={{ borderRadius: 0 }} type="time" />
-            </Form.Group>
-            <Row className="mt-4">
+            <Row className="mt-4 mb-4">
               <Col className="d-flex justify-content-evenly">
-                <Button style={bluePillButton}>Schedule Maintenance</Button>
+                <Button style={bluePillButton} onClick={sendQuotesRequest}>
+                  Send Quote Request to Maintenace
+                </Button>
               </Col>
             </Row>
             <Row className="mt-3">
               <Col className="d-flex justify-content-evenly">
                 <Button
                   style={redPillButton}
-                  onClick={() => setScheduleMaintenance(false)}
+                  onClick={() => setRequestQuote(false)}
                 >
                   Cancel
                 </Button>
@@ -590,222 +740,244 @@ function OwnerRepairDetails(props) {
             </Row>
           </div>
 
-          {!scheduleMaintenance &&
-            !requestQuote &&
-            quotes &&
-            quotes.length > 0 && (
-              <div className="pb-4">
-                <hr
-                  style={{
-                    border: "1px dashed #000000",
-                    borderStyle: "none none dashed",
-                    backgroundColor: "white",
-                  }}
-                />
-
-                {quotes &&
-                  quotes.length > 0 &&
-                  quotes.map((quote, i) => (
-                    <div key={i}>
-                      <hr
-                        style={{
-                          border: "1px dashed #000000",
-                          borderStyle: "none none dashed",
-                          backgroundColor: "white",
-                        }}
-                      />
-                      <Row className="mx-2 my-2" style={headings}>
-                        <div>{quote.business_name}</div>
-                      </Row>
+          {!isEditing && !requestQuote && quotes && quotes.length > 0 && (
+            <div className="pb-4 mb-4">
+              {quotes &&
+                quotes.length > 0 &&
+                quotes.map((quote, i) => (
+                  <div key={i}>
+                    <hr
+                      style={{
+                        border: "1px dashed #000000",
+                        borderStyle: "none none dashed",
+                        backgroundColor: "white",
+                      }}
+                    />
+                    <Row className="mx-2 my-2" style={headings}>
+                      <div>{quote.business_name}</div>
+                    </Row>
+                    {quote.quote_status === "ACCEPTED" ||
+                    quote.quote_status === "SENT" ||
+                    quote.quote_status === "REJECTED" ? (
                       <div className="mx-2 my-2 p-3">
-                        <Row
-                          hidden={
-                            quote.quote_status !== "SENT" &&
-                            quote.quote_status !== "REJECTED"
-                          }
-                        >
-                          <div
-                            className="my-2 p-3"
-                            style={{
-                              background: "#F3F3F3 0% 0% no-repeat padding-box",
-                              borderRadius: "10px",
-                              opacity: 1,
-                            }}
+                        <Row>
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
                           >
-                            <Row>
-                              <div style={mediumBold}>Service Charges</div>
-                            </Row>
-                            <Row className="mx-2">
-                              {quote.services_expenses &&
-                                quote.services_expenses.length > 0 &&
-                                JSON.parse(quote.services_expenses).map(
-                                  (service, j) => (
-                                    <div
-                                      key={j}
-                                      style={{
-                                        background:
-                                          "#FFFFFF 0% 0% no-repeat padding-box",
-                                        boxShadow: "0px 3px 6px #00000029",
-                                        borderRadius: "5px",
-                                        opacity: 1,
-                                      }}
-                                    >
-                                      <Row className="pt-1 mb-2">
-                                        <div style={subHeading}>
-                                          {service.service_name}
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">
+                                  Service Charges
+                                </TableCell>
+                                <TableCell align="center">Event Type</TableCell>
+                                <TableCell align="center">
+                                  Total Estimate
+                                </TableCell>
+                                <TableCell align="center">
+                                  Earliest Availability
+                                </TableCell>
+                                <TableCell align="center">
+                                  Scheduled Date
+                                </TableCell>
+                                <TableCell align="center">
+                                  Scheduled Time
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {" "}
+                                  {quote.services_expenses &&
+                                    quote.services_expenses.length > 0 &&
+                                    JSON.parse(quote.services_expenses).map(
+                                      (service, j) => (
+                                        <div className="pt-1 mb-2 align-items-center">
+                                          <div
+                                            style={
+                                              (subHeading,
+                                              { textAlign: "center" })
+                                            }
+                                          >
+                                            {service.service_name}: $
+                                            {service.charge}{" "}
+                                            {service.per === "Hour"
+                                              ? `/${service.per}`
+                                              : "One-Time Fee"}
+                                          </div>
                                         </div>
-                                        <div style={subText}>
-                                          ${service.charge}{" "}
-                                          {service.per === "Hour"
-                                            ? `/${service.per}`
-                                            : "One-Time Fee"}
-                                        </div>
-                                      </Row>
-                                    </div>
-                                  )
-                                )}
-                            </Row>
-                          </div>
-                          <div
-                            className="my-2 p-3"
-                            style={{
-                              background: "#F3F3F3 0% 0% no-repeat padding-box",
-                              borderRadius: "10px",
-                              opacity: 1,
-                            }}
-                          >
-                            <Row>
-                              <div style={mediumBold}>Event Type</div>
-                            </Row>
-                            <Row className="mx-2">
-                              <div
-                                style={
-                                  (subText,
+                                      )
+                                    )}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {quote.event_type}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  $ {quote.total_estimate}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
                                   {
-                                    background:
-                                      "#FFFFFF 0% 0% no-repeat padding-box",
-                                    boxShadow: "0px 3px 6px #00000029",
-                                    borderRadius: "5px",
-                                    opacity: 1,
-                                  })
-                                }
-                              >
-                                {quote.event_type}
-                              </div>
-                            </Row>
-                          </div>
-                          <div
-                            className="my-2 p-3"
-                            style={{
-                              background: "#F3F3F3 0% 0% no-repeat padding-box",
-                              borderRadius: "10px",
-                              opacity: 1,
-                            }}
-                          >
-                            <Row>
-                              <div style={mediumBold}>Total Estimate</div>
-                            </Row>
-                            <Row className="mx-2">
-                              {" "}
-                              <div
-                                style={
-                                  (subText,
-                                  {
-                                    background:
-                                      "#FFFFFF 0% 0% no-repeat padding-box",
-                                    boxShadow: "0px 3px 6px #00000029",
-                                    borderRadius: "5px",
-                                    opacity: 1,
-                                  })
-                                }
-                              >
-                                $ {quote.total_estimate}
-                              </div>
-                            </Row>
-                          </div>
-                          <div
-                            className="my-2 p-3"
-                            style={{
-                              background: "#F3F3F3 0% 0% no-repeat padding-box",
-                              borderRadius: "10px",
-                              opacity: 1,
-                            }}
-                          >
-                            <Row>
-                              <div style={mediumBold}>
-                                Earliest Availability
-                              </div>
-                            </Row>
-                            <Row className="mx-2">
-                              {" "}
-                              <div
-                                style={
-                                  (subText,
-                                  {
-                                    background:
-                                      "#FFFFFF 0% 0% no-repeat padding-box",
-                                    boxShadow: "0px 3px 6px #00000029",
-                                    borderRadius: "5px",
-                                    opacity: 1,
-                                  })
-                                }
-                              >
-                                {new Date(
-                                  String(quote.earliest_availability).split(
-                                    " "
-                                  )[0]
-                                ).toLocaleDateString()}
-                              </div>
-                            </Row>
-                          </div>
+                                    String(quote.earliest_availability).split(
+                                      " "
+                                    )[0]
+                                  }
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {repair.scheduled_date !== null &&
+                                  repair.scheduled_date !== "null"
+                                    ? repair.scheduled_date.split(" ")[0]
+                                    : "Not Scheduled"}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {repair.scheduled_time !== null &&
+                                  repair.scheduled_time !== "null"
+                                    ? repair.scheduled_time
+                                    : "Not Scheduled"}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
                         </Row>
                       </div>
+                    ) : quote.quote_status === "REQUESTED" ||
+                      quote.quote_status === "REFUSED" ||
+                      quote.quote_status === "WITHDRAW" ? (
+                      <div className="mx-2 my-2 p-3">No quote info</div>
+                    ) : (
+                      ""
+                    )}
 
-                      <Row
-                        hidden={quote.quote_status !== "SENT"}
-                        className="pt-1 mb-4"
-                      >
+                    <Row
+                      hidden={quote.quote_status !== "SENT"}
+                      className="pt-1 mb-4"
+                    >
+                      <Col className="d-flex flex-row justify-content-evenly">
+                        <Button
+                          style={bluePillButton}
+                          onClick={() => acceptQuote(quote)}
+                        >
+                          Accept Quote
+                        </Button>
+                      </Col>
+                      <Col className="d-flex flex-row justify-content-evenly">
+                        <Button
+                          style={redPillButton}
+                          onClick={() => rejectQuote(quote)}
+                        >
+                          Reject Quote
+                        </Button>
+                      </Col>
+                    </Row>
+
+                    <Row
+                      hidden={quote.quote_status === "SENT"}
+                      className="pt-1 mb-4"
+                    >
+                      <Col className="d-flex flex-row justify-content-evenly">
+                        <Button style={orangePill}>
+                          {quote.quote_status === "REQUESTED"
+                            ? "Waiting for quote from business"
+                            : quote.quote_status === "REJECTED"
+                            ? "You've Rejected the Quote"
+                            : quote.quote_status === "ACCEPTED"
+                            ? "You've Accepted the Quote"
+                            : quote.quote_status === "SENT"
+                            ? "Waiting for quote from business"
+                            : quote.quote_status === "REFUSED"
+                            ? "Business refused to send a quote"
+                            : "Another quote accepted"}
+                        </Button>
+                      </Col>
+                    </Row>
+
+                    {!scheduleMaintenance &&
+                    repair.property_manager.length === 0 &&
+                    quote.quote_status === "ACCEPTED" ? (
+                      <Row className="pt-1">
                         <Col className="d-flex flex-row justify-content-evenly">
                           <Button
                             style={bluePillButton}
-                            onClick={() => acceptQuote(quote)}
+                            onClick={() => setScheduleMaintenance(true)}
                           >
-                            Accept Quote
-                          </Button>
-                        </Col>
-                        <Col className="d-flex flex-row justify-content-evenly">
-                          <Button
-                            style={redPillButton}
-                            onClick={() => rejectQuote(quote)}
-                          >
-                            Reject Quote
+                            Reschedule Maintenance
                           </Button>
                         </Col>
                       </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
+                    {scheduleMaintenance ? (
+                      <Row className="mx-2 my-2 p-3">
+                        <Row>
+                          <div style={headings}>Schedule Maintenace</div>
+                        </Row>
+                        <Form.Group className="mt-3 mb-2">
+                          <Form.Label
+                            style={formLabel}
+                            as="h5"
+                            className="ms-1 mb-0"
+                          >
+                            Date
+                          </Form.Label>
+                          <Form.Control
+                            style={{ borderRadius: 0 }}
+                            type="date"
+                            value={reDate}
+                            onChange={(e) => setReDate(e.target.value)}
+                          />
+                        </Form.Group>
+                        <Form.Group className="mt-3 mb-2">
+                          <Form.Label
+                            style={formLabel}
+                            as="h5"
+                            className="ms-1 mb-0"
+                          >
+                            Time
+                          </Form.Label>
+                          <Form.Control
+                            style={{ borderRadius: 0 }}
+                            type="time"
+                            value={reTime}
+                            onChange={(e) => setReTime(e.target.value)}
+                          />
+                        </Form.Group>
+                        <Row className="mt-4">
+                          <Col className="d-flex justify-content-evenly">
+                            <Button
+                              style={bluePillButton}
+                              onClick={rescheduleRepair}
+                            >
+                              Schedule Maintenance
+                            </Button>
+                          </Col>
+                        </Row>
+                        <Row className="mt-3">
+                          <Col className="d-flex justify-content-evenly">
+                            <Button
+                              style={redPillButton}
+                              onClick={() => setScheduleMaintenance(false)}
+                            >
+                              Cancel
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
+                    <hr />
+                  </div>
+                ))}
+            </div>
+          )}
 
-                      <Row
-                        hidden={quote.quote_status === "SENT"}
-                        className="pt-1 mb-4"
-                      >
-                        <Col className="d-flex flex-row justify-content-evenly">
-                          <Button style={orangePill}>
-                            {quote.quote_status === "REQUESTED"
-                              ? "Waiting for quote from business"
-                              : quote.quote_status === "REJECTED"
-                              ? "You've Rejected the Quote"
-                              : quote.quote_status === "ACCEPTED"
-                              ? "You've Accepted the Quote"
-                              : quote.quote_status === "SENT"
-                              ? "Waiting for quote from business"
-                              : "Quote Withdrawn by Business"}
-                          </Button>
-                        </Col>
-                      </Row>
-                      <hr />
-                    </div>
-                  ))}
-              </div>
-            )}
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <OwnerFooter />
           </div>

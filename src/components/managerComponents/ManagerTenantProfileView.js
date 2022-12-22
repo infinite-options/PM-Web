@@ -421,7 +421,7 @@ function ManagerTenantProfileView(props) {
                       cursor: "pointer",
                     }}
                   >
-                    <h5>Co-applicant Application Details</h5>
+                    {/* <h5>Co-applicant Application Details</h5> */}
                     <Row className="mx-2">
                       <Table
                         classes={{ root: classes.customTable }}
@@ -665,7 +665,7 @@ function ManagerTenantProfileView(props) {
               hidden={application.rental_uid !== null}
             >
               <Row className="mx-2">
-                <Row className="m-3" hidden={files.length === 0}>
+                <Row className="m-3">
                   <h5 style={mediumBold}>Lease Documents</h5>
                   <Table
                     responsive="md"
