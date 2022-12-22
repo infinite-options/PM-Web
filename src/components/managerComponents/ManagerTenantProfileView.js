@@ -8,8 +8,6 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
-import { visuallyHidden } from "@mui/utils";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -91,31 +89,6 @@ function ManagerTenantProfileView(props) {
           opacity: 1,
         }}
       >
-        <Row className="p-1">
-          <Col>
-            <div className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0" style={mediumBold}>
-                {application.tenant_first_name} {application.tenant_last_name}
-              </h5>
-            </div>
-          </Col>
-
-          <Col>
-            <div className="d-flex  justify-content-end ">
-              <div
-                style={application.tenant_id ? {} : hidden}
-                onClick={stopPropagation}
-              >
-                <a href={`tel:${application.tenant_phone_number}`}>
-                  <img src={Phone} alt="Phone" style={smallImg} />
-                </a>
-                <a href={`mailto:${application.tenant_email}`}>
-                  <img src={Message} alt="Message" style={smallImg} />
-                </a>
-              </div>
-            </div>
-          </Col>
-        </Row>
         <Row className="d-flex justify-content-center my-2" style={mediumBold}>
           Personal Info
         </Row>
@@ -130,6 +103,31 @@ function ManagerTenantProfileView(props) {
             overflow: "scroll",
           }}
         >
+          <Row className="p-1">
+            <Col>
+              <div className="d-flex justify-content-between align-items-center">
+                <h5 className="mb-0" style={mediumBold}>
+                  {application.tenant_first_name} {application.tenant_last_name}
+                </h5>
+              </div>
+            </Col>
+
+            <Col>
+              <div className="d-flex  justify-content-end ">
+                <div
+                  style={application.tenant_id ? {} : hidden}
+                  onClick={stopPropagation}
+                >
+                  <a href={`tel:${application.tenant_phone_number}`}>
+                    <img src={Phone} alt="Phone" style={smallImg} />
+                  </a>
+                  <a href={`mailto:${application.tenant_email}`}>
+                    <img src={Message} alt="Message" style={smallImg} />
+                  </a>
+                </div>
+              </div>
+            </Col>
+          </Row>
           <div
             className="my-3 p-2"
             style={{
@@ -208,6 +206,150 @@ function ManagerTenantProfileView(props) {
             </Row>
           </div>
         </Container>
+
+        {application.applicant_info.length > 0
+          ? application.applicant_info.map((applicant) =>
+              applicant.application_uid !== application.application_uid ? (
+                <Row
+                  className="d-flex justify-content-center my-2"
+                  style={mediumBold}
+                >
+                  Co-applicant Personal Info
+                </Row>
+              ) : (
+                ""
+              )
+            )
+          : ""}
+        {application.applicant_info.length > 0
+          ? application.applicant_info.map((applicant) =>
+              applicant.application_uid !== application.application_uid ? (
+                <Container
+                  style={{
+                    background: "#FFFFFF 0% 0% no-repeat padding-box",
+                    boxShadow: "0px 3px 6px #00000029",
+                    border: "0.5px solid #707070",
+                    borderRadius: "5px",
+                    maxHeight: "500px",
+                    overflow: "scroll",
+                  }}
+                >
+                  <Row className="p-1">
+                    <Col>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <h5 className="mb-0" style={mediumBold}>
+                          {applicant.tenant_first_name}{" "}
+                          {applicant.tenant_last_name}
+                        </h5>
+                      </div>
+                    </Col>
+
+                    <Col>
+                      <div className="d-flex  justify-content-end ">
+                        <div
+                          style={applicant.tenant_id ? {} : hidden}
+                          onClick={stopPropagation}
+                        >
+                          <a href={`tel:${applicant.tenant_phone_number}`}>
+                            <img src={Phone} alt="Phone" style={smallImg} />
+                          </a>
+                          <a href={`mailto:${applicant.tenant_email}`}>
+                            <img src={Message} alt="Message" style={smallImg} />
+                          </a>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                  <div
+                    className="my-3 p-2"
+                    style={{
+                      boxShadow: " 0px 1px 6px #00000029",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Row className="mx-2">
+                      Current Job Details
+                      <Row className="mx-2">
+                        <Col style={subText}>Job Company</Col>
+                        <Col style={subText}>
+                          {applicant.tenant_current_job_company}
+                        </Col>
+                      </Row>
+                      <Row className="mx-2">
+                        <Col style={subText}>Job Title</Col>
+                        <Col style={subText}>
+                          {applicant.tenant_current_job_title}
+                        </Col>
+                      </Row>
+                      <Row className="mx-2">
+                        <Col style={subText}>Job Salary</Col>
+                        <Col style={subText}>
+                          {applicant.tenant_current_salary}/{" "}
+                          {applicant.tenant_salary_frequency}
+                        </Col>
+                      </Row>
+                    </Row>
+                  </div>
+                  <div
+                    className="my-3 p-2"
+                    style={{
+                      boxShadow: " 0px 1px 6px #00000029",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Row className="mx-2">
+                      Personal Details
+                      <Row className="mx-2">
+                        <Col style={subText}>DL Number</Col>
+                        <Col style={subText} onClick={() => setShowDL(!showDL)}>
+                          {showDL ? (
+                            <div>
+                              {MaskCharacter(
+                                applicant.tenant_drivers_license_number,
+                                "*"
+                              )}
+                            </div>
+                          ) : (
+                            <div>{applicant.tenant_drivers_license_number}</div>
+                          )}
+                        </Col>
+                      </Row>
+                      <Row className="mx-2">
+                        <Col style={subText}>SSN</Col>
+                        <Col
+                          style={subText}
+                          onClick={() => setShowSSN(!showSSN)}
+                        >
+                          {showSSN ? (
+                            <div>
+                              {MaskCharacter(applicant.tenant_ssn, "*")}
+                            </div>
+                          ) : (
+                            <div>{applicant.tenant_ssn}</div>
+                          )}
+                          {}
+                        </Col>
+                      </Row>
+                      <Row className="mx-2">
+                        <Col style={subText}>Email</Col>
+                        <Col style={subText}>{applicant.tenant_email}</Col>
+                      </Row>
+                      <Row className="mx-2">
+                        <Col style={subText}>Phone Number</Col>
+                        <Col style={subText}>
+                          {applicant.tenant_phone_number}
+                        </Col>
+                      </Row>
+                    </Row>
+                  </div>
+                </Container>
+              ) : (
+                ""
+              )
+            )
+          : ""}
         <Row className="d-flex justify-content-center my-2" style={mediumBold}>
           Application Details
         </Row>
@@ -231,134 +373,45 @@ function ManagerTenantProfileView(props) {
             }}
           >
             <Row className="mx-2">
-              <Row className="mx-2">
-                <Col style={subText}>Message</Col>
-                <Col style={subText}>{application.message}</Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}> No. of Adult Occupants</Col>
-                <Col style={subText}>{application.adult_occupants}</Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>No. of Children Occupants</Col>
-                <Col style={subText}>{application.child_occupants}</Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>No. of Pets</Col>
-                <Col style={subText}>{application.num_pets}</Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>Type of Pets</Col>
-                <Col style={subText}>{application.type_pets}</Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>Documents</Col>
-                <Col style={subText}>
-                  {application.documents.length > 0 ? (
-                    <div>
-                      {JSON.parse(application.documents).map((document, i) => (
-                        <div
-                          className="d-flex justify-content-between align-items-end ps-0"
-                          key={i}
-                        >
-                          <h6>{document.name}</h6>
-                          <a href={document.link} target="_blank">
-                            <img
-                              src={File}
-                              style={{
-                                width: "15px",
-                                height: "15px",
-                              }}
-                              alt="Document"
-                            />
-                          </a>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="d-flex justify-content-between align-items-end ps-0">
-                      No documents uploaded by tenant
-                    </div>
-                  )}
-                </Col>
-              </Row>
+              <Table classes={{ root: classes.customTable }} size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Name</TableCell>
+                    <TableCell align="center">Phone Number</TableCell>
+                    <TableCell align="center">Email</TableCell>
+                    <TableCell align="center">Occupants</TableCell>
+                    <TableCell align="center">No. of Pets</TableCell>
+                    <TableCell align="center"> Type of Pets</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {application.applicant_info.map((applicant) => (
+                    <TableRow>
+                      <TableCell align="center">
+                        {applicant.tenant_first_name}{" "}
+                        {applicant.tenant_last_name}
+                      </TableCell>
+                      <TableCell align="center">
+                        {applicant.tenant_phone_number}
+                      </TableCell>
+                      <TableCell align="center">
+                        {applicant.tenant_email}
+                      </TableCell>
+                      <TableCell align="center">
+                        {applicant.adult_occupants} adults <br />
+                        {applicant.children_occupants} children
+                      </TableCell>
+                      <TableCell align="center">{applicant.num_pets}</TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        {applicant.type_pets}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Row>
           </div>
-          {console.log(
-            "application.applicant_info",
-            application.applicant_info
-          )}
-          {application.applicant_info.length > 0
-            ? application.applicant_info.map((applicant) =>
-                applicant.application_uid !== application.application_uid ? (
-                  <div
-                    className="my-3 p-2"
-                    style={{
-                      boxShadow: " 0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Row className="mx-2">
-                      <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
-                        <h5>Co-applicant Details</h5>
-                        <Row className="mx-2">
-                          <Table
-                            classes={{ root: classes.customTable }}
-                            size="small"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align="center">Name</TableCell>
-                                <TableCell align="center">
-                                  Phone Number
-                                </TableCell>
-                                <TableCell align="center">Email</TableCell>
-                                <TableCell align="center">Occupants</TableCell>
-                                <TableCell align="center">
-                                  No. of Pets
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  Type of Pets
-                                </TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="center">
-                                  {applicant.tenant_first_name}{" "}
-                                  {applicant.tenant_last_name}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.tenant_phone_number}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.tenant_email}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.adult_occupants} adults <br />
-                                  {applicant.children_occupants} children
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.num_pets}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {applicant.type_pets}
-                                </TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </Row>
-                      </Row>
-                    </Row>
-                  </div>
-                ) : (
-                  ""
-                )
-              )
-            : ""}
         </Container>
         <Row className="d-flex justify-content-center my-2">
           <p
@@ -554,7 +607,7 @@ function ManagerTenantProfileView(props) {
               hidden={application.rental_uid !== null}
             >
               <Row className="mx-2">
-                <Row className="m-3" hidden={files.length === 0}>
+                <Row className="m-3">
                   <h5 style={mediumBold}>Lease Documents</h5>
                   <Table
                     responsive="md"
@@ -599,7 +652,13 @@ function ManagerTenantProfileView(props) {
 
       <Row
         className="mt-4 "
-        style={application.application_status === "FORWARDED" ? hidden : {}}
+        style={
+          application.application_status === "FORWARDED" ||
+          application.application_status === "REJECTED" ||
+          application.application_status === "REFUSED"
+            ? hidden
+            : {}
+        }
       >
         <Col className="d-flex  justify-content-evenly">
           <Button style={bluePillButton} onClick={applicationsResponse}>

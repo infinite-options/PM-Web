@@ -75,8 +75,7 @@ export default function TenantUpcomingPayments(props) {
         <TableRow>
           <TableCell align="center">{row.purchase_uid}</TableCell>
           <TableCell align="center">
-            {"" +
-              row.address +
+            {row.address +
               " " +
               row.unit +
               "," +

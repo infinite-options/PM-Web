@@ -1,18 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import {
-  pillButton,
-  squareForm,
-  small,
-  red,
-  hidden,
-  headings,
-  mediumBold,
-  subHeading,
-  address,
-  blue,
-} from "../utils/styles";
-import {
   Table,
   TableRow,
   TableCell,
@@ -26,11 +14,22 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { useNavigate } from "react-router-dom";
 import * as ReactBootStrap from "react-bootstrap";
-import Checkbox from "../components/Checkbox";
-import Header from "../components/Header";
-import { post, get } from "../utils/api";
-import AppContext from "../AppContext";
-import SideBar from "../components/managerComponents/SideBar";
+import Checkbox from "../Checkbox";
+import Header from "../Header";
+import AppContext from "../../AppContext";
+import SideBar from "./SideBar";
+import ManagerFooter from "./ManagerFooter";
+import { post, get } from "../../utils/api";
+import {
+  pillButton,
+  squareForm,
+  small,
+  red,
+  hidden,
+  headings,
+  mediumBold,
+} from "../../utils/styles";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -38,14 +37,13 @@ const useStyles = makeStyles({
     },
   },
 });
-function CreateAnnouncement(props) {
+function ManagerCreateAnnouncement(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [properties, setProperties] = useState([]);
   const [tenants, setTenants] = useState([]);
-  const [manager, setManager] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [managerID, setManagerID] = useState("");
@@ -61,6 +59,20 @@ function CreateAnnouncement(props) {
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
+  const [width, setWindowWidth] = useState(0);
+  useEffect(() => {
+    updateDimensions();
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  const responsiveSidebar = {
+    showSidebar: width > 1023,
+  };
 
   const emptyAnnouncement = {
     pm_id: "",
@@ -92,8 +104,7 @@ function CreateAnnouncement(props) {
     }
     setManagerID(management_buid);
     const response = await get("/managerDashboard", access_token);
-    console.log("second");
-    console.log(response);
+
     setIsLoading(false);
 
     if (response.msg === "Token has expired") {
@@ -105,7 +116,7 @@ function CreateAnnouncement(props) {
     const responseAnnouncement = await get(
       `/announcement?pm_id=${management_buid}`
     );
-    console.log(responseAnnouncement);
+
     let response_announcement = responseAnnouncement.result;
     response_announcement = response_announcement
       .sort((a, b) => {
@@ -187,7 +198,6 @@ function CreateAnnouncement(props) {
     console.log("in use effect");
     fetchProperties();
   }, []);
-  console.log(tenants);
 
   //post announcements to database and send out emails
   const postAnnouncement = async (newAnnouncement) => {
@@ -234,7 +244,6 @@ function CreateAnnouncement(props) {
       receiver: receiver_uid,
       receiver_properties: receiver_properties_id,
     };
-    console.log(new_announcement);
     // setShowSpinner(true);
     const response = await post("/announcement", new_announcement);
     setNewAnnouncement({ ...emptyAnnouncement });
@@ -368,6 +377,16 @@ function CreateAnnouncement(props) {
       numeric: false,
       label: "Title",
     },
+    {
+      id: "announcement_msg",
+      numeric: false,
+      label: "Announcement Message",
+    },
+    {
+      id: "announcement_mode",
+      numeric: false,
+      label: "Announcement Mode",
+    },
 
     {
       id: "announcement_date",
@@ -421,18 +440,19 @@ function CreateAnnouncement(props) {
     // rowCount: PropTypes.number.isRequired,
   };
   return (
-    <div>
+    <div className="w-100 overflow-hidden">
       <div className="flex-1">
-        <div>
-          <SideBar />
-        </div>
         <div
-          className="w-100"
+          hidden={!responsiveSidebar.showSidebar}
           style={{
-            width: "calc(100vw - 13rem)",
-            position: "relative",
+            backgroundColor: "#229ebc",
+            width: "11rem",
+            minHeight: "100%",
           }}
         >
+          <SideBar />
+        </div>
+        <div className="w-100 mb-5">
           <Header
             title="Announcements"
             leftText={editingAnnouncement || announcementDetail ? "< Back" : ""}
@@ -569,7 +589,6 @@ function CreateAnnouncement(props) {
                     </Form.Group>
                   </Col>
                 </Row>
-                {console.log(properties)}
                 {byProperty ? (
                   <Row className="mx-1 mt-3 mb-2">
                     <h6 style={mediumBold}>Properties</h6>
@@ -693,7 +712,6 @@ function CreateAnnouncement(props) {
             !editingAnnouncement &&
             !announcementDetail ? (
               <div className="mx-2 my-2 p-3">
-                {console.log(announcements)}
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <Table
                     responsive="md"
@@ -736,32 +754,17 @@ function CreateAnnouncement(props) {
                               padding="none"
                               size="small"
                               align="center"
-                            ></TableCell>
+                            >
+                              {announce.announcement_msg}
+                            </TableCell>
                             <TableCell
                               padding="none"
                               size="small"
                               align="center"
-                            ></TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            ></TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            ></TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            ></TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            ></TableCell>
+                            >
+                              {announce.announcement_mode}
+                            </TableCell>
+
                             <TableCell
                               padding="none"
                               size="small"
@@ -778,63 +781,19 @@ function CreateAnnouncement(props) {
                                 announce.date_announcement
                               ).getFullYear()}
                             </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            ></TableCell>
                           </TableRow>
                         );
                       })}
                     </TableBody>
                   </Table>
                 </Row>
-                <div>
-                  {announcements.map((announce) => {
-                    return (
-                      <div>
-                        <Row
-                          className="my-2 p-3"
-                          style={{
-                            background: "#FFFFFF 0% 0% no-repeat padding-box",
-                            boxShadow: "0px 3px 6px #00000029",
-                            borderRadius: "5px",
-                            opacity: 1,
-                            color: "black",
-                          }}
-                        >
-                          <Col style={headings}>
-                            {announce.announcement_title}
-                          </Col>
-                          <Col style={{ textAlign: "right" }}>
-                            {new Date(
-                              announce.date_announcement
-                            ).toLocaleString("default", { month: "long" })}{" "}
-                            {new Date(announce.date_announcement).getDate()},{" "}
-                            {new Date(announce.date_announcement).getFullYear()}
-                          </Col>
-                          <Row
-                            style={blue}
-                            className="mx-2"
-                            onClick={() =>
-                              navigate("/detailAnnouncements", {
-                                state: {
-                                  announcement: announce,
-                                },
-                              })
-                            }
-                          >
-                            Learn More
-                          </Row>
-                        </Row>
-                      </div>
-                    );
-                  })}
-                </div>
               </div>
             ) : (
               ""
             )}
+          </div>
+          <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
+            <ManagerFooter />
           </div>
         </div>
       </div>
@@ -842,4 +801,4 @@ function CreateAnnouncement(props) {
   );
 }
 
-export default CreateAnnouncement;
+export default ManagerCreateAnnouncement;

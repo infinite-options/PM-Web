@@ -414,7 +414,12 @@ export default function OwnerDashboard2() {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
+      label: "Scheduled Date",
+    },
+    {
+      id: "scheduled_time",
+      numeric: true,
+      label: "Scheduled Time",
     },
     {
       id: "total_estimate",
@@ -5129,6 +5134,12 @@ export default function OwnerDashboard2() {
                             {request.scheduled_date !== null &&
                             request.scheduled_date !== "null"
                               ? request.scheduled_date
+                              : "Not Scheduled"}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.scheduled_time !== null &&
+                            request.scheduled_time !== "null"
+                              ? request.scheduled_time.split(" ")[0]
                               : "Not Scheduled"}
                           </TableCell>
                           <TableCell>${request.total_estimate}</TableCell>

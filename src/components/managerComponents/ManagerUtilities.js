@@ -452,7 +452,11 @@ function ManagerUtilities(props) {
   };
 
   const addUtility = async () => {
-    if (newUtility.service_name === "" || newUtility.charge === "") {
+    if (
+      newUtility.service_name === "" ||
+      newUtility.charge === "" ||
+      newUtility.provider === ""
+    ) {
       setErrorMessage("Please fill out all fields");
       return;
     }

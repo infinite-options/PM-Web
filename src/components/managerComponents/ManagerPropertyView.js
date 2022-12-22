@@ -23,7 +23,7 @@ import ManagerCreateExpense from "./ManagerCreateExpense";
 import CreateRevenue from "../CreateRevenue";
 import ManagerTenantApplications from "./ManagerTenantApplications";
 import ManagerTenantProfileView from "./ManagerTenantProfileView";
-import PropertyManagerDocs from "../PropertyManagerDocs";
+import PropertyManagerDocs from "./PropertyManagerDocs";
 import AppContext from "../../AppContext";
 import ManagerManagementContract from "./ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
@@ -41,6 +41,7 @@ import RepairImg from "../../icons/RepairImg.svg";
 import { green, red } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
+import ManagerTenantAgreementEdit from "./ManagerTenantAgreementEdit";
 
 const useStyles = makeStyles({
   customTable: {
@@ -188,6 +189,8 @@ function ManagerPropertyView(props) {
   const [editProperty, setEditProperty] = useState(false);
   const [showManagementContract, setShowManagementContract] = useState(false);
   const [showTenantAgreement, setShowTenantAgreement] = useState(false);
+
+  const [showTenantAgreementEdit, setShowTenantAgreementEdit] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
   const [selectedAgreement, setSelectedAgreement] = useState(null);
   const [acceptedTenantApplications, setAcceptedTenantApplications] = useState(
@@ -315,7 +318,10 @@ function ManagerPropertyView(props) {
     }
     // setSelectedAgreement(property_details.rentalInfo);
     property_details.rentalInfo.forEach((rental) => {
-      if (rental.rental_status === "ACTIVE") {
+      if (
+        rental.rental_status === "ACTIVE" ||
+        rental.rental_status === "PROCESSING"
+      ) {
         setSelectedAgreement(rental);
       }
     });
@@ -359,6 +365,7 @@ function ManagerPropertyView(props) {
     showCreateRevenue,
     showManagementContract,
     showTenantAgreement,
+    showTenantAgreementEdit,
   ]);
 
   useEffect(() => {
@@ -384,12 +391,14 @@ function ManagerPropertyView(props) {
   };
   const selectAgreement = (agreement) => {
     setSelectedAgreement(agreement);
-    setShowTenantAgreement(true);
+    setShowTenantAgreementEdit(true);
   };
   const closeAgreement = () => {
     // reload();
     setAcceptedTenantApplications([]);
     setShowTenantAgreement(false);
+    setShowTenantAgreementEdit(false);
+    reloadProperty();
   };
 
   const reloadProperty = () => {
@@ -700,6 +709,14 @@ function ManagerPropertyView(props) {
       />
     ) : showTenantAgreement ? (
       <ManagerTenantAgreement
+        back={closeAgreement}
+        property={property}
+        agreement={selectedAgreement}
+        acceptedTenantApplications={acceptedTenantApplications}
+        setAcceptedTenantApplications={setAcceptedTenantApplications}
+      />
+    ) : showTenantAgreementEdit ? (
+      <ManagerTenantAgreementEdit
         back={closeAgreement}
         property={property}
         agreement={selectedAgreement}
@@ -4143,11 +4160,32 @@ function ManagerPropertyView(props) {
                     </Row>
                   </Row>
                 )}
+                {console.log(
+                  "selectedAgreement",
+                  selectedAgreement,
+                  acceptedTenantApplications
+                )}
                 <Row className="m-3">
                   <Col>
                     <h3>Tenant Info</h3>
                   </Col>
-                  <Col xs={2}></Col>
+                  <Col xs={2}>
+                    {property.rental_status === "PROCESSING" ? (
+                      <img
+                        src={EditIconNew}
+                        alt="Edit"
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                        onClick={() => selectAgreement(selectedAgreement)}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </Col>
                 </Row>
                 <Row style={{ overflow: "scroll" }}>
                   <ManagerTenantAgreementView

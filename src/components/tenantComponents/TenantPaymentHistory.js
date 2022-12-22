@@ -29,9 +29,8 @@ export default function TenantPaymentHistory(props) {
       return (
         <TableRow>
           <TableCell align="center">{row.purchase_uid}</TableCell>
-          <TableCell align="center">
-            {"" +
-              row.address +
+          <TableCell align="center" style={{ width: "368px" }}>
+            {row.address +
               " " +
               row.unit +
               "," +
@@ -41,13 +40,14 @@ export default function TenantPaymentHistory(props) {
               " " +
               row.zip}
           </TableCell>
-          <TableCell align="center">
+          <TableCell align="center" style={{ width: "261px" }}>
             {"" + row.purchase_notes + " " + row.description}
           </TableCell>
           <TableCell align="center">{row.purchase_type}</TableCell>
           <TableCell align="center">
             {row.payment_date.substring(0, 10)}
           </TableCell>
+          <TableCell align="center" style={{ width: "67px" }}></TableCell>
           <TableCell align="right">{row.amount_paid.toFixed(2)}</TableCell>
         </TableRow>
       );
@@ -69,6 +69,7 @@ export default function TenantPaymentHistory(props) {
             <TableCell align="center">Description</TableCell>
             <TableCell align="center">Type</TableCell>
             <TableCell align="center">Date Paid</TableCell>
+            <TableCell align="center" style={{ width: "67px" }}></TableCell>
             <TableCell align="right">Amount</TableCell>
           </TableRow>
         </TableHead>

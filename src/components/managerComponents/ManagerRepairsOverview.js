@@ -587,7 +587,7 @@ function ManagerRepairsOverview(props) {
       </div>
     </div>
   ) : stage === "ADDREQUEST" ? (
-    <div className="OwnerReapirRequest">
+    <div className="OwnerRepairRequest">
       <div className="flex-1">
         <div
           hidden={!responsiveSidebar.showSidebar}

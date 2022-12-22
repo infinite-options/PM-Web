@@ -203,34 +203,36 @@ function PropertyApplicationView(props) {
               </p>
             </div>
           )}
-          {property && JSON.parse(property.images).length > 0 ? (
-            <Row className=" d-flex align-items-center justify-content-center m-3">
-              <Carousel
-                responsive={responsive}
-                infinite={true}
-                arrows={true}
-                className=" d-flex align-items-center justify-content-center"
-              >
-                {JSON.parse(property.images).map((imagesGroup) => {
-                  return (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <img
-                        key={Date.now()}
-                        src={`${imagesGroup}?${Date.now()}`}
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </Carousel>
-            </Row>
-          ) : (
-            ""
-          )}
+          <div className="m-0 p-0">
+            {property && JSON.parse(property.images).length > 0 ? (
+              <Row className=" d-flex align-items-center justify-content-center m-3">
+                <Carousel
+                  responsive={responsive}
+                  infinite={true}
+                  arrows={true}
+                  className=" d-flex align-items-center justify-content-center"
+                >
+                  {JSON.parse(property.images).map((imagesGroup) => {
+                    return (
+                      <div className="d-flex align-items-center justify-content-center">
+                        <img
+                          key={Date.now()}
+                          src={`${imagesGroup}?${Date.now()}`}
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </Carousel>
+              </Row>
+            ) : (
+              ""
+            )}
+          </div>
 
           {property ? (
             <div className="m-3">

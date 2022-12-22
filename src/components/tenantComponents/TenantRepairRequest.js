@@ -59,7 +59,10 @@ function TenantRepairRequest(props) {
     let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
     console.log(typeof JSON.parse(sp));
     const newRequest = {
-      property_uid: selectedProperty.property_uid,
+      property_uid:
+        properties.length > 1
+          ? selectedProperty.property_uid
+          : properties[0].property_uid,
       title: title,
       request_type: issueType,
       description: description,
@@ -122,7 +125,7 @@ function TenantRepairRequest(props) {
         <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
           Property {required}
         </Form.Label>
-        {properties.length > 0 ? (
+        {properties.length > 1 ? (
           <Form.Select
             style={squareForm}
             value={selectedProperty}
@@ -141,11 +144,11 @@ function TenantRepairRequest(props) {
           </Form.Select>
         ) : (
           <Row style={formLabel} as="h5" className="ms-1 mb-0">
-            {properties.address} {properties.unit}
+            {properties[0].address} {properties[0].unit}
             ,&nbsp;
-            {properties.city}
+            {properties[0].city}
             ,&nbsp;
-            {properties.state}&nbsp; {properties.zip}
+            {properties[0].state}&nbsp; {properties[0].zip}
           </Row>
         )}
       </Form.Group>

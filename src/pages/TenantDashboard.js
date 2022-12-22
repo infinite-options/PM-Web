@@ -451,12 +451,12 @@ export default function TenantDashboard() {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
+      label: "Scheduled Date",
     },
     {
-      id: "total_estimate",
+      id: "scheduled_time",
       numeric: true,
-      label: "Cost",
+      label: "Scheduled Time",
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
@@ -987,7 +987,12 @@ export default function TenantDashboard() {
                               ? request.scheduled_date
                               : "Not Scheduled"}
                           </TableCell>
-                          <TableCell>${request.total_estimate}</TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {request.scheduled_time !== null &&
+                            request.scheduled_time !== "null"
+                              ? request.scheduled_time.split(" ")[0]
+                              : "Not Scheduled"}
+                          </TableCell>
                         </TableRow>
                       );
                     })}

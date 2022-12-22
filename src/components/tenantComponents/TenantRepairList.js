@@ -529,7 +529,7 @@ function TenantRepairList(props) {
       </div>
     </div>
   ) : stage === "ADDREQUEST" ? (
-    <div className="tenantReapirRequest">
+    <div className="tenantRepairRequest">
       <div className="flex-1">
         <div
           hidden={!responsiveSidebar.showSidebar}
