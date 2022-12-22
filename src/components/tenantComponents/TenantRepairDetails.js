@@ -646,9 +646,9 @@ function TenantRepairDetails(props) {
                                   Service Charges
                                 </TableCell>
                                 <TableCell align="center">Event Type</TableCell>
-                                <TableCell align="center">
+                                {/* <TableCell align="center">
                                   Total Estimate
-                                </TableCell>
+                                </TableCell> */}
                                 <TableCell align="center">
                                   Earliest Availability
                                 </TableCell>
@@ -675,11 +675,7 @@ function TenantRepairDetails(props) {
                                               { textAlign: "center" })
                                             }
                                           >
-                                            {service.service_name}: $
-                                            {service.charge}{" "}
-                                            {service.per === "Hour"
-                                              ? `/${service.per}`
-                                              : "One-Time Fee"}
+                                            {service.service_name}
                                           </div>
                                         </div>
                                       )
@@ -689,10 +685,10 @@ function TenantRepairDetails(props) {
                                   {" "}
                                   {quote.event_type}
                                 </TableCell>
-                                <TableCell align="center">
+                                {/* <TableCell align="center">
                                   {" "}
                                   $ {quote.total_estimate}
-                                </TableCell>
+                                </TableCell> */}
                                 <TableCell align="center">
                                   {" "}
                                   {
@@ -723,12 +719,12 @@ function TenantRepairDetails(props) {
                     ) : quote.quote_status === "REQUESTED" ||
                       quote.quote_status === "REFUSED" ||
                       quote.quote_status === "WITHDRAW" ? (
-                      "No quote info"
+                      ""
                     ) : (
                       ""
                     )}
 
-                    <Row
+                    {/* <Row
                       hidden={quote.quote_status !== "SENT"}
                       className="pt-1 mb-4"
                     >
@@ -748,9 +744,9 @@ function TenantRepairDetails(props) {
                           Reject Quote
                         </Button>
                       </Col>
-                    </Row>
+                    </Row> */}
 
-                    <Row
+                    {/* <Row
                       hidden={quote.quote_status === "SENT"}
                       className="pt-1 mb-4"
                     >
@@ -769,7 +765,7 @@ function TenantRepairDetails(props) {
                             : "Another quote accepted"}
                         </Button>
                       </Col>
-                    </Row>
+                    </Row> */}
                     {!scheduleMaintenance &&
                     repair.can_reschedule &&
                     quote.quote_status === "ACCEPTED" ? (
