@@ -488,13 +488,13 @@ function PropertyApplicationView(props) {
             ""
           )}
           {property ? (
-            <div className="m-3" style={{ overflow: "scroll" }}>
+            <div className="m-3">
               <Row className="m-3">
                 <Col>
                   <h3>Property Manager Info</h3>
                 </Col>
               </Row>
-              <Row className="w-100 m-3" style={{ overflow: "scroll" }}>
+              <Row className="m-3">
                 <Table
                   classes={{ root: classes.customTable }}
                   size="small"

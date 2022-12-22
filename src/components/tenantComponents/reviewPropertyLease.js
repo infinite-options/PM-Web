@@ -373,16 +373,89 @@ function ReviewPropertyLease(props) {
                   </TableBody>
                 </Table>
               </Row>
+              {application.applicant_info.length > 0
+                ? application.applicant_info.map((applicant) =>
+                    applicant.application_uid !==
+                    application.application_uid ? (
+                      <div>
+                        <Row
+                          style={{
+                            fontWeight: "bold",
+                            textAlign: "left",
+                            fontSize: "18px",
+                            marginLeft: "50px",
+                            marginTop: "20px",
+                          }}
+                        >
+                          Co-applicant Details
+                        </Row>
+                        <Row className="mx-2">
+                          <Table
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">Name</TableCell>
+                                <TableCell align="center">
+                                  Phone Number
+                                </TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Occupants</TableCell>
+                                <TableCell align="center">
+                                  No. of Pets
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  Type of Pets
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {applicant.tenant_first_name}{" "}
+                                  {applicant.tenant_last_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_phone_number}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_email}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.adult_occupants} adults <br />
+                                  {applicant.children_occupants} children
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.num_pets}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {applicant.type_pets}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Row>
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                : ""}
             </div>
           ) : application_status_1 === "FORWARDED" ||
             application_status_1 === "RENTED" ? (
             <div className="m-3">
+              {console.log("here forwarded")}
               <Row className="m-3">
                 <Col>
                   <h3>Application Details</h3>
                 </Col>
                 <Col xs={2}> </Col>
               </Row>
+              {console.log("application", application.applicant_info)}
               <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
@@ -442,6 +515,78 @@ function ReviewPropertyLease(props) {
                   </TableBody>
                 </Table>
               </Row>
+
+              {application.applicant_info.length > 0
+                ? application.applicant_info.map((applicant) =>
+                    applicant.application_uid !==
+                    application.application_uid ? (
+                      <div>
+                        <Row
+                          style={{
+                            fontWeight: "bold",
+                            textAlign: "left",
+                            fontSize: "18px",
+                            marginLeft: "50px",
+                            marginTop: "20px",
+                          }}
+                        >
+                          Co-applicant Details
+                        </Row>
+                        <Row className="mx-2">
+                          <Table
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">Name</TableCell>
+                                <TableCell align="center">
+                                  Phone Number
+                                </TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Occupants</TableCell>
+                                <TableCell align="center">
+                                  No. of Pets
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  Type of Pets
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {applicant.tenant_first_name}{" "}
+                                  {applicant.tenant_last_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_phone_number}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_email}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.adult_occupants} adults <br />
+                                  {applicant.children_occupants} children
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.num_pets}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {applicant.type_pets}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Row>
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                : ""}
               <Row className="m-3">
                 <Col>
                   <h3>Lease Agreement</h3>
@@ -613,6 +758,79 @@ function ReviewPropertyLease(props) {
                   </TableBody>
                 </Table>
               </Row>
+
+              {console.log("application", application.applicant_info)}
+              {application.applicant_info.length > 0
+                ? application.applicant_info.map((applicant) =>
+                    applicant.application_uid !==
+                    application.application_uid ? (
+                      <div>
+                        <Row
+                          style={{
+                            fontWeight: "bold",
+                            textAlign: "left",
+                            fontSize: "18px",
+                            marginLeft: "50px",
+                            marginTop: "20px",
+                          }}
+                        >
+                          Co-applicant Details
+                        </Row>
+                        <Row className="mx-2">
+                          <Table
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">Name</TableCell>
+                                <TableCell align="center">
+                                  Phone Number
+                                </TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Occupants</TableCell>
+                                <TableCell align="center">
+                                  No. of Pets
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  Type of Pets
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {applicant.tenant_first_name}{" "}
+                                  {applicant.tenant_last_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_phone_number}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_email}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.adult_occupants} adults <br />
+                                  {applicant.children_occupants} children
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.num_pets}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {applicant.type_pets}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Row>
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                : ""}
             </div>
           ) : application_status_1 === "NEW" ? (
             <div className="m-3">
@@ -694,6 +912,78 @@ function ReviewPropertyLease(props) {
                   </TableBody>
                 </Table>
               </Row>
+              {console.log("application", application.applicant_info)}
+              {application.applicant_info.length > 0
+                ? application.applicant_info.map((applicant) =>
+                    applicant.application_uid !==
+                    application.application_uid ? (
+                      <div>
+                        <Row
+                          style={{
+                            fontWeight: "bold",
+                            textAlign: "left",
+                            fontSize: "18px",
+                            marginLeft: "50px",
+                            marginTop: "20px",
+                          }}
+                        >
+                          Co-applicant Details
+                        </Row>
+                        <Row className="mx-2">
+                          <Table
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">Name</TableCell>
+                                <TableCell align="center">
+                                  Phone Number
+                                </TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Occupants</TableCell>
+                                <TableCell align="center">
+                                  No. of Pets
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  Type of Pets
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {applicant.tenant_first_name}{" "}
+                                  {applicant.tenant_last_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_phone_number}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.tenant_email}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.adult_occupants} adults <br />
+                                  {applicant.children_occupants} children
+                                </TableCell>
+                                <TableCell align="center">
+                                  {applicant.num_pets}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {" "}
+                                  {applicant.type_pets}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Row>
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                : ""}
             </div>
           ) : (
             <Row className="m-3 text-align-center">
@@ -720,38 +1010,37 @@ function ReviewPropertyLease(props) {
 
               {/* <div style={{marginTop:"40px",paddingLeft:"20px",fontWeight:"bold"}} > Documents</div> */}
 
-              <Container fluid>
-                <div
-                  className="mb-4"
-                  style={{
-                    textAlign: "left",
-                    fontSize: "18px",
-                    paddingLeft: "50px",
-                    marginTop: "20px",
-                  }}
-                >
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>View</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {lease.map((lease, i) => (
-                    <Row>
-                      <Col>
-                        <div style={{ paddingLeft: "20px" }} target="_blank">
-                          {lease.name}
-                        </div>
-                        <p style={{ paddingLeft: "20px" }} className="m-0">
-                          {lease.description}
-                        </p>
-                      </Col>
-                      <Col>
-                        <Button
-                          style={{ marginLeft: "auto" }}
-                          onClick={() => displayLease(lease.link)}
-                        >
-                          View
-                        </Button>
-                      </Col>
-                    </Row>
+                    <TableRow>
+                      <TableCell>{lease.description}</TableCell>
+                      <TableCell>
+                        <a href={lease.link} target="_blank">
+                          <img
+                            src={File}
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                            }}
+                            alt="Document"
+                          />
+                        </a>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </div>
-              </Container>
+                </TableBody>
+              </Table>
             </div>
           ) : (application_status_1 === "FORWARDED" ||
               application_status_1 === "RENTED") &&

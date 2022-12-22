@@ -17,7 +17,7 @@ import RentPayment from "./components/RentPayment";
 import PaymentPage from "./components/PaymentPage";
 import OwnerRepairDetails from "./components/ownerComponents/OwnerRepairDetails";
 import TenantRepairDetails from "./components/tenantComponents/TenantRepairDetails";
-
+import TenantAnnouncements from "./components/tenantComponents/TenantAnnouncements";
 import TenantPropertyView from "./components/tenantComponents/TenantPropertyView";
 import OwnerPaymentPage from "./components/ownerComponents/OwnerPaymentPage";
 import PaymentHistory from "./components/PaymentHistory";
@@ -321,8 +321,11 @@ function App() {
             />
             <Route path="pm-list" element={<PropertyManagersList />} />
             <Route path="manager-payments" element={<ManagerPayments />} />
-
             <Route path="tenant-payments" element={<TenantPayments />} />
+            <Route
+              path="tenant-announcements"
+              element={<TenantAnnouncements />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

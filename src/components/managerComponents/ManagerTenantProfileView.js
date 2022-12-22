@@ -385,91 +385,33 @@ function ManagerTenantProfileView(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
-                    <TableCell align="center">
-                      {application.tenant_first_name}{" "}
-                      {application.tenant_last_name}
-                    </TableCell>
-                    <TableCell align="center">
-                      {application.tenant_phone_number}
-                    </TableCell>
-                    <TableCell align="center">
-                      {application.tenant_email}
-                    </TableCell>
-                    <TableCell align="center">
-                      {application.adult_occupants} adults <br />
-                      {application.children_occupants} children
-                    </TableCell>
-                    <TableCell align="center">{application.num_pets}</TableCell>
-                    <TableCell align="center">
-                      {" "}
-                      {application.type_pets}
-                    </TableCell>
-                  </TableRow>
+                  {application.applicant_info.map((applicant) => (
+                    <TableRow>
+                      <TableCell align="center">
+                        {applicant.tenant_first_name}{" "}
+                        {applicant.tenant_last_name}
+                      </TableCell>
+                      <TableCell align="center">
+                        {applicant.tenant_phone_number}
+                      </TableCell>
+                      <TableCell align="center">
+                        {applicant.tenant_email}
+                      </TableCell>
+                      <TableCell align="center">
+                        {applicant.adult_occupants} adults <br />
+                        {applicant.children_occupants} children
+                      </TableCell>
+                      <TableCell align="center">{applicant.num_pets}</TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        {applicant.type_pets}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </Row>
           </div>
-          {application.applicant_info.length > 0
-            ? application.applicant_info.map((applicant) =>
-                applicant.application_uid !== application.application_uid ? (
-                  <div
-                    className="my-3 p-2"
-                    style={{
-                      boxShadow: " 0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {/* <h5>Co-applicant Application Details</h5> */}
-                    <Row className="mx-2">
-                      <Table
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow>
-                            <TableCell align="center">Name</TableCell>
-                            <TableCell align="center">Phone Number</TableCell>
-                            <TableCell align="center">Email</TableCell>
-                            <TableCell align="center">Occupants</TableCell>
-                            <TableCell align="center">No. of Pets</TableCell>
-                            <TableCell align="center"> Type of Pets</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          <TableRow>
-                            <TableCell align="center">
-                              {applicant.tenant_first_name}{" "}
-                              {applicant.tenant_last_name}
-                            </TableCell>
-                            <TableCell align="center">
-                              {applicant.tenant_phone_number}
-                            </TableCell>
-                            <TableCell align="center">
-                              {applicant.tenant_email}
-                            </TableCell>
-                            <TableCell align="center">
-                              {applicant.adult_occupants} adults <br />
-                              {applicant.children_occupants} children
-                            </TableCell>
-                            <TableCell align="center">
-                              {applicant.num_pets}
-                            </TableCell>
-                            <TableCell align="center">
-                              {" "}
-                              {applicant.type_pets}
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </Row>
-                  </div>
-                ) : (
-                  ""
-                )
-              )
-            : ""}{" "}
         </Container>
         <Row className="d-flex justify-content-center my-2">
           <p
@@ -710,7 +652,13 @@ function ManagerTenantProfileView(props) {
 
       <Row
         className="mt-4 "
-        style={application.application_status === "FORWARDED" ? hidden : {}}
+        style={
+          application.application_status === "FORWARDED" ||
+          application.application_status === "REJECTED" ||
+          application.application_status === "REFUSED"
+            ? hidden
+            : {}
+        }
       >
         <Col className="d-flex  justify-content-evenly">
           <Button style={bluePillButton} onClick={applicationsResponse}>
