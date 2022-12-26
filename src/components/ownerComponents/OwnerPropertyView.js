@@ -4354,7 +4354,9 @@ function OwnerPropertyView(props) {
                               align="center"
                             >
                               {property.rentalInfo.length !== 0
-                                ? property.rentalInfo[0].tenant_first_name
+                                ? property.rentalInfo[0].tenant_first_name +
+                                  " " +
+                                  property.rentalInfo[0].tenant_last_name
                                 : "None"}
                             </TableCell>
                             <TableCell
@@ -4769,27 +4771,27 @@ function OwnerPropertyView(props) {
                             <TableCell>
                               {JSON.parse(property.utilities)["Electricity"]
                                 ? "Owner"
-                                : "Trash"}
+                                : "Tenant"}
                             </TableCell>
                             <TableCell>
                               {JSON.parse(property.utilities)["Trash"]
                                 ? "Owner"
-                                : "Trash"}
+                                : "Tenant"}
                             </TableCell>
                             <TableCell>
                               {JSON.parse(property.utilities)["Water"]
                                 ? "Owner"
-                                : "Trash"}
+                                : "Tenant"}
                             </TableCell>
                             <TableCell>
                               {JSON.parse(property.utilities)["Wifi"]
                                 ? "Owner"
-                                : "Trash"}
+                                : "Tenant"}
                             </TableCell>
                             <TableCell>
                               {JSON.parse(property.utilities)["Gas"]
                                 ? "Owner"
-                                : "Trash"}
+                                : "Tenant"}
                             </TableCell>
                           </TableRow>
                         </TableBody>

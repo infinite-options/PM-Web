@@ -1297,7 +1297,7 @@ export default function TenantDashboard() {
             </Row>
             <Row className="m-3">
               <Col>
-                <h3>No rented properties</h3>
+                <h6>No rented properties</h6>
               </Col>
               <Col></Col>
             </Row>
@@ -1502,7 +1502,12 @@ export default function TenantDashboard() {
                 </Row>
               </Row>
             ) : (
-              "No applications"
+              <Row className="m-3">
+                <Col>
+                  <h6>No applications</h6>
+                </Col>
+                <Col></Col>
+              </Row>
             )}
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />

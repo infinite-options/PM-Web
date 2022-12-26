@@ -23,13 +23,13 @@ function PropertyCard(props) {
     e.stopPropagation();
     e.preventDefault();
   };
-  const goToPropertyInfo = () => {
-    navigate("/propertyInfo", {
-      state: {
-        property: props.property,
-      },
-    });
-  };
+  // const goToPropertyInfo = () => {
+  //   navigate("/propertyInfo", {
+  //     state: {
+  //       property: props.property,
+  //     },
+  //   });
+  // };
   console.log(property);
   return (
     <div
@@ -38,7 +38,7 @@ function PropertyCard(props) {
         cursor: "pointer",
         display: "flex",
       }}
-      onClick={goToPropertyInfo}
+      onClick={goToApplyToProperty}
     >
       <div className="img">
         {property.images && property.images.length > 0 ? (

@@ -85,7 +85,7 @@ function ManagerFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/manager-utilities");
+            navigate("/tenantAvailableProperties");
           }}
         >
           <img
@@ -100,7 +100,7 @@ function ManagerFooter(props) {
         <Col
           className="text-center"
           onClick={() => {
-            navigate("/manager-announcements");
+            navigate("/tenant-announcements");
           }}
         >
           <img

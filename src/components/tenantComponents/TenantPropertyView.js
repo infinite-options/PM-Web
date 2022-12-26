@@ -893,27 +893,27 @@ function TenantPropertyView(props) {
                       <TableCell>
                         {JSON.parse(property.utilities)["Electricity"]
                           ? "Owner"
-                          : "Trash"}
+                          : "Tenant"}
                       </TableCell>
                       <TableCell>
                         {JSON.parse(property.utilities)["Trash"]
                           ? "Owner"
-                          : "Trash"}
+                          : "Tenant"}
                       </TableCell>
                       <TableCell>
                         {JSON.parse(property.utilities)["Water"]
                           ? "Owner"
-                          : "Trash"}
+                          : "Tenant"}
                       </TableCell>
                       <TableCell>
                         {JSON.parse(property.utilities)["Wifi"]
                           ? "Owner"
-                          : "Trash"}
+                          : "Tenant"}
                       </TableCell>
                       <TableCell>
                         {JSON.parse(property.utilities)["Gas"]
                           ? "Owner"
-                          : "Trash"}
+                          : "Tenant"}
                       </TableCell>
                     </TableRow>
                   </TableBody>

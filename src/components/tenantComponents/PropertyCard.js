@@ -16,19 +16,19 @@ export default function PropertyCard(props) {
     // navigate("/applyToProperty");
     navigate(`/propertyApplicationView/${props.property_uid}`);
   };
-  const goToPropertyInfo = () => {
-    navigate("/propertyInfo", {
-      state: {
-        property: props.property,
-        type: 1,
-      },
-    });
-  };
+  // const goToPropertyInfo = () => {
+  //   navigate("/propertyInfo", {
+  //     state: {
+  //       property: props.property,
+  //       type: 1,
+  //     },
+  //   });
+  // };
   return (
     <div
       className="prop-card"
       style={{ background: props.color }}
-      onClick={goToPropertyInfo}
+      onClick={goToApplyToProperty}
     >
       <div className="left-side">
         {props.unit !== "" ? (
