@@ -4,22 +4,26 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-
+import * as ReactBootStrap from "react-bootstrap";
 import Header from "./Header";
 import SideBar from "./tenantComponents/SideBar";
 import TenantFooter from "./tenantComponents/TenantFooter";
-import { get } from "../utils/api";
 import StripePayment from "./StripePayment";
-
+import PayPal from "./PayPal";
+// import ApplePay from "./ApplePay";
+import WF_Logo from "../icons/WF-Logo.png";
+import BofA_Logo from "../icons/BofA-Logo.png";
+import Chase_Logo from "../icons/Chase-Logo.png";
+import Citi_Logo from "../icons/Citi-Logo.jpg";
 import ConfirmCheck from "../icons/confirmCheck.svg";
+import { get, post } from "../utils/api";
 import {
   headings,
   bluePillButton,
   subHeading,
   squareForm,
+  pillButton,
 } from "../utils/styles";
-import PayPal from "./PayPal";
-// import ApplePay from "./ApplePay";
 
 function PaymentPage(props) {
   const navigate = useNavigate();
@@ -30,16 +34,15 @@ function PaymentPage(props) {
   const purchaseUIDs = location.state.purchaseUIDs;
   const [stripePayment, setStripePayment] = useState(false);
   const [paymentConfirm, setPaymentConfirm] = useState(false);
-  const requestTitleRef = React.createRef();
-  const requestDescriptionRef = React.createRef();
-  const tagPriorityRef = React.createRef();
   const [stripePromise, setStripePromise] = useState(null);
   const [purchase, setPurchase] = useState({});
-  const useLiveStripeKey = false;
-  const [message, setMessage] = React.useState("");
-  const [amount, setAmount] = React.useState(totalSum);
+  const [message, setMessage] = useState("");
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [amount, setAmount] = useState(totalSum);
   const [allPurchases, setAllPurchases] = useState([]);
-  const [disabled, setDisabled] = useState(false);
+  const [bankPayment, setBankPayment] = useState(false);
+  const [paymentType, setPaymentType] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -54,14 +57,8 @@ function PaymentPage(props) {
   const responsive = {
     showSidebar: width > 1023,
   };
-  const submitForm = () => {
-    const requestTitle = requestTitleRef.current.value;
-    const requestDescription = requestDescriptionRef.current.value;
-    const tagPriority = tagPriorityRef.current.value;
-    props.onConfirm(requestTitle, requestDescription, tagPriority);
-  };
 
-  React.useEffect(async () => {
+  useEffect(async () => {
     let tempAllPurchases = [];
     for (let i in purchaseUIDs) {
       let response1 = await get(`/purchases?purchase_uid=${purchaseUIDs[i]}`);
@@ -84,24 +81,43 @@ function PaymentPage(props) {
     setStripePromise(stripePromise);
   };
 
-  useEffect(() => {
-    //console.log("allPurchases", allPurchases);
-  }, [allPurchases]);
-
-  useEffect(() => {
-    if (amount > totalSum || amount <= 0) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
-  }, [amount]);
-
   const cancel = () => setStripePayment(false);
   const submit = () => {
     cancel();
     setPaymentConfirm(true);
   };
+  const submitPayment = async () => {
+    setShowSpinner(true);
 
+    let newPayment = {};
+    if (allPurchases.length === 1) {
+      console.log(allPurchases[0]);
+      newPayment = {
+        pay_purchase_id: allPurchases[0].purchase_uid,
+        //Need to make change here
+        amount: parseFloat(amount),
+        payment_notes: message,
+        charge_id: confirmationCode,
+        payment_type: paymentType,
+      };
+      await post("/payments", newPayment);
+    } else {
+      for (let purchase of allPurchases) {
+        console.log(purchase);
+        newPayment = {
+          pay_purchase_id: purchase.purchase_uid,
+          //Need to make change here
+          amount: parseFloat(purchase.amount_due - purchase.amount_paid),
+          payment_notes: message,
+          charge_id: confirmationCode,
+          payment_type: paymentType,
+        };
+        await post("/payments", newPayment);
+      }
+    }
+    setShowSpinner(false);
+    submit();
+  };
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
@@ -188,14 +204,14 @@ function PaymentPage(props) {
                     {purchase.description && `(${purchase.description})`}
                   </div>
                 )}
-                {stripePayment ? (
+                {stripePayment || bankPayment ? (
                   <div style={subHeading}>Amount to be paid: ${amount}</div>
                 ) : null}
               </Row>
               <div
                 style={{ margin: "0px 0px 100px 0px" }}
                 className="mt-5"
-                hidden={stripePayment}
+                hidden={stripePayment || bankPayment}
               >
                 <h2>Max Payment: ${totalSum}</h2>
                 <Form.Group>
@@ -207,7 +223,75 @@ function PaymentPage(props) {
                     onChange={(e) => setMessage(e.target.value)}
                   />
                 </Form.Group>
-
+                <Row className="text-center mt-5">
+                  <Col>
+                    <a href="https://www.bankofamerica.com" target="_blank">
+                      <img
+                        onClick={() => {
+                          setBankPayment(true);
+                          setPaymentType("BANK OF AMERICA");
+                        }}
+                        src={BofA_Logo}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </a>
+                  </Col>
+                  <Col>
+                    <a href="https://www.chase.com" target="_blank">
+                      <img
+                        onClick={() => {
+                          setBankPayment(true);
+                          setPaymentType("CHASE");
+                        }}
+                        src={Chase_Logo}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </a>
+                  </Col>
+                  <Col>
+                    <a
+                      href="https://www.citi.com/login?deepdrop=true&checkAuth=Y"
+                      target="_blank"
+                    >
+                      <img
+                        onClick={() => {
+                          setBankPayment(true);
+                          setPaymentType("CITI");
+                        }}
+                        src={Citi_Logo}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </a>
+                  </Col>
+                  <Col>
+                    <a href="https://www.wellsfargo.com" target="_blank">
+                      <img
+                        onClick={() => {
+                          setBankPayment(true);
+                          setPaymentType("WELLS FARGO");
+                        }}
+                        src={WF_Logo}
+                        style={{
+                          width: "160px",
+                          height: "100px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </a>
+                  </Col>
+                </Row>
                 <Row
                   className="text-center mt-5"
                   style={{
@@ -250,6 +334,65 @@ function PaymentPage(props) {
                     amount={amount}
                   />
                 </Elements>
+              </div>
+              <div hidden={!bankPayment}>
+                <div
+                  style={{
+                    border: "1px solid black",
+                    borderRadius: "10px",
+                    padding: "10px",
+                    margin: "20px",
+                  }}
+                >
+                  <Form.Group>
+                    <Form.Label>Please enter confirmation code</Form.Label>
+                    <Form.Control
+                      placeholder="Confirmation Code"
+                      style={squareForm}
+                      value={confirmationCode}
+                      onChange={(e) => setConfirmationCode(e.target.value)}
+                    />
+                  </Form.Group>
+                </div>
+                <div className="text-center mt-2">
+                  {showSpinner ? (
+                    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                      <ReactBootStrap.Spinner
+                        animation="border"
+                        role="status"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <Row
+                    style={{
+                      display: "text",
+                      flexDirection: "row",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Col>
+                      <Button
+                        variant="outline-primary"
+                        onClick={props.cancel}
+                        style={pillButton}
+                      >
+                        Cancel
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button
+                        variant="outline-primary"
+                        //onClick={submitForm}
+                        style={bluePillButton}
+                        onClick={submitPayment}
+                      >
+                        Pay Now
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
               </div>
             </Container>
           )}
