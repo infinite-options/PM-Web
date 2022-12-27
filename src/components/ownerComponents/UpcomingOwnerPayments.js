@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UpcomingManagerPayments(props) {
+export default function UpcomingOwnerPayments(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const [totalSum, setTotalSum] = useState(0);
@@ -58,7 +58,7 @@ export default function UpcomingManagerPayments(props) {
         },
       });
     } else {
-      navigate(`/managerPaymentPage/${purchaseUIDs[0]}`, {
+      navigate(`/ownerPaymentPage/${purchaseUIDs[0]}`, {
         state: {
           amount: totalSum,
           selectedProperty: props.selectedProperty,

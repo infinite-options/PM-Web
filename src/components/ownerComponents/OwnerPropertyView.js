@@ -4949,36 +4949,49 @@ function OwnerPropertyView(props) {
                               <TableBody>
                                 {contracts.map((contract, i) =>
                                   contract.business_uid ===
-                                  property.managerInfo.manager_id
-                                    ? JSON.parse(contract.documents).length ===
-                                      0
-                                      ? ""
-                                      : JSON.parse(contract.documents).map(
-                                          (file) => {
-                                            return (
-                                              <TableRow>
+                                  property.managerInfo.manager_id ? (
+                                    JSON.parse(contract.documents).length ===
+                                    0 ? (
+                                      <TableRow>
+                                        <TableCell> No documents </TableCell>
+                                        <TableCell></TableCell>
+                                      </TableRow>
+                                    ) : (
+                                      JSON.parse(contract.documents).map(
+                                        (file) => {
+                                          return (
+                                            <TableRow>
+                                              {file.description !== "" ? (
                                                 <TableCell>
                                                   {file.description}
                                                 </TableCell>
+                                              ) : (
                                                 <TableCell>
-                                                  <a
-                                                    href={file.link}
-                                                    target="_blank"
-                                                  >
-                                                    <img
-                                                      src={File}
-                                                      style={{
-                                                        width: "15px",
-                                                        height: "15px",
-                                                      }}
-                                                    />
-                                                  </a>
+                                                  Document {i + 1}{" "}
                                                 </TableCell>
-                                              </TableRow>
-                                            );
-                                          }
-                                        )
-                                    : ""
+                                              )}
+                                              <TableCell>
+                                                <a
+                                                  href={file.link}
+                                                  target="_blank"
+                                                >
+                                                  <img
+                                                    src={File}
+                                                    style={{
+                                                      width: "15px",
+                                                      height: "15px",
+                                                    }}
+                                                  />
+                                                </a>
+                                              </TableCell>
+                                            </TableRow>
+                                          );
+                                        }
+                                      )
+                                    )
+                                  ) : (
+                                    ""
+                                  )
                                 )}
                               </TableBody>
                             </Table>
@@ -5416,36 +5429,49 @@ function OwnerPropertyView(props) {
                               </TableHead>
                               <TableBody>
                                 {contracts.map((contract, i) =>
-                                  contract.business_uid === p.manager_id
-                                    ? JSON.parse(contract.documents).length ===
-                                      0
-                                      ? ""
-                                      : JSON.parse(contract.documents).map(
-                                          (file) => {
-                                            return (
-                                              <TableRow>
+                                  contract.business_uid === p.manager_id ? (
+                                    JSON.parse(contract.documents).length ===
+                                    0 ? (
+                                      <TableRow>
+                                        <TableCell> No documents </TableCell>
+                                        <TableCell></TableCell>
+                                      </TableRow>
+                                    ) : (
+                                      JSON.parse(contract.documents).map(
+                                        (file) => {
+                                          return (
+                                            <TableRow>
+                                              {file.description !== "" ? (
                                                 <TableCell>
                                                   {file.description}
                                                 </TableCell>
+                                              ) : (
                                                 <TableCell>
-                                                  <a
-                                                    href={file.link}
-                                                    target="_blank"
-                                                  >
-                                                    <img
-                                                      src={File}
-                                                      style={{
-                                                        width: "15px",
-                                                        height: "15px",
-                                                      }}
-                                                    />
-                                                  </a>
+                                                  Document {i + 1}{" "}
                                                 </TableCell>
-                                              </TableRow>
-                                            );
-                                          }
-                                        )
-                                    : ""
+                                              )}
+                                              <TableCell>
+                                                <a
+                                                  href={file.link}
+                                                  target="_blank"
+                                                >
+                                                  <img
+                                                    src={File}
+                                                    style={{
+                                                      width: "15px",
+                                                      height: "15px",
+                                                    }}
+                                                  />
+                                                </a>
+                                              </TableCell>
+                                            </TableRow>
+                                          );
+                                        }
+                                      )
+                                    )
+                                  ) : (
+                                    ""
+                                  )
                                 )}
                               </TableBody>
                             </Table>
@@ -5636,35 +5662,43 @@ function OwnerPropertyView(props) {
                           <TableBody>
                             {contracts.map((contract, i) =>
                               contract.business_uid ===
-                              property.property_manager[0].manager_id
-                                ? JSON.parse(contract.documents).length === 0
-                                  ? ""
-                                  : JSON.parse(contract.documents).map(
-                                      (file) => {
-                                        return (
-                                          <TableRow>
-                                            <TableCell>
-                                              {file.description}
-                                            </TableCell>
-                                            <TableCell>
-                                              <a
-                                                href={file.link}
-                                                target="_blank"
-                                              >
-                                                <img
-                                                  src={File}
-                                                  style={{
-                                                    width: "15px",
-                                                    height: "15px",
-                                                  }}
-                                                />
-                                              </a>
-                                            </TableCell>
-                                          </TableRow>
-                                        );
-                                      }
-                                    )
-                                : ""
+                              property.property_manager[0].manager_id ? (
+                                JSON.parse(contract.documents).length === 0 ? (
+                                  <TableRow>
+                                    <TableCell> No documents </TableCell>
+                                    <TableCell></TableCell>
+                                  </TableRow>
+                                ) : (
+                                  JSON.parse(contract.documents).map((file) => {
+                                    return (
+                                      <TableRow>
+                                        {file.description !== "" ? (
+                                          <TableCell>
+                                            {file.description}
+                                          </TableCell>
+                                        ) : (
+                                          <TableCell>
+                                            Document {i + 1}{" "}
+                                          </TableCell>
+                                        )}
+                                        <TableCell>
+                                          <a href={file.link} target="_blank">
+                                            <img
+                                              src={File}
+                                              style={{
+                                                width: "15px",
+                                                height: "15px",
+                                              }}
+                                            />
+                                          </a>
+                                        </TableCell>
+                                      </TableRow>
+                                    );
+                                  })
+                                )
+                              ) : (
+                                ""
+                              )
                             )}
                           </TableBody>
                         </Table>
