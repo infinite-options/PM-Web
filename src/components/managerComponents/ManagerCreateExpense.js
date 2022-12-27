@@ -37,6 +37,14 @@ function ManagerCreateExpense(props) {
   const reload = () => {
     props.onSubmit();
   };
+
+  useEffect(() => {
+    console.log(properties[0]);
+    if (properties.length === undefined) {
+      setSelectedProperty(JSON.stringify(decycle(properties)));
+    }
+  }, []);
+
   const submitForm = async (sp) => {
     if (amount === "") {
       setErrorMessage("Please fill out all fields");

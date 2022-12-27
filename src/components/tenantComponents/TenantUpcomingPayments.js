@@ -86,7 +86,10 @@ export default function TenantUpcomingPayments(props) {
               row.zip}
           </TableCell>
           <TableCell align="center">
-            {"" + row.purchase_notes + " " + row.description}
+            {row.purchase_frequency === "One-time" ||
+            row.purchase_frequency === "Annually"
+              ? row.description
+              : row.purchase_notes + " " + row.description}
           </TableCell>
           <TableCell align="center">{row.purchase_type}</TableCell>
           <TableCell

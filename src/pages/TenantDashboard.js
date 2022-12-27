@@ -834,6 +834,8 @@ export default function TenantDashboard() {
                   type={true}
                 />
               )}
+            </Row>
+            <Row className="mx-3 mt-5">
               {tenantData.length !== 0 && (
                 <TenantPaymentHistory data={paymentHistoryData} />
               )}

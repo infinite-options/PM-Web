@@ -4358,7 +4358,7 @@ export default function ManagerDashboard() {
                                 }}
                               >
                                 {property.available_to_rent == 0 &&
-                                property.rent_status !== "Not Rented" ? (
+                                property.rent_status !== "No Rent Info" ? (
                                   <div>Not Listed</div>
                                 ) : (
                                   <div>{property.rent_status}</div>
