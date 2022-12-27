@@ -4,6 +4,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { useParams } from "react-router";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+
 import Header from "./Header";
 import SideBar from "./tenantComponents/SideBar";
 import TenantFooter from "./tenantComponents/TenantFooter";
@@ -206,6 +207,7 @@ function PaymentPage(props) {
                     onChange={(e) => setMessage(e.target.value)}
                   />
                 </Form.Group>
+
                 <Row
                   className="text-center mt-5"
                   style={{

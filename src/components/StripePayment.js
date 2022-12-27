@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import {
   useElements,
@@ -6,6 +6,7 @@ import {
   CardElement,
   Elements,
 } from "@stripe/react-stripe-js";
+import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../AppContext";
 import { bluePillButton, pillButton } from "../utils/styles";
 import { post } from "../utils/api";
@@ -13,11 +14,13 @@ import { post } from "../utils/api";
 function StripePayment(props) {
   const { purchases, message, amount } = props;
   const { userData } = React.useContext(AppContext);
+  const [showSpinner, setShowSpinner] = useState(false);
   const { user } = userData;
   const elements = useElements();
   const stripe = useStripe();
 
   const submitPayment = async () => {
+    setShowSpinner(true);
     const paymentData = {
       customer_uid: user.user_uid,
       business_code: message === "PMTEST" ? message : "PM",
@@ -77,15 +80,7 @@ function StripePayment(props) {
         await post("/payments", newPayment);
       }
     }
-
-    // const newPayment = {
-    //   pay_purchase_id: purchase.purchase_uid,
-    //   amount: parseFloat(amount),
-    //   payment_notes: message,
-    //   charge_id: paymentIntentID,
-    //   payment_type: 'STRIPE'
-    // }
-    // await post('/payments', newPayment);
+    setShowSpinner(false);
     props.submit();
   };
 
@@ -103,6 +98,13 @@ function StripePayment(props) {
       </div>
 
       <div className="text-center mt-2">
+        {showSpinner ? (
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        ) : (
+          ""
+        )}
         <Row
           style={{
             display: "text",
