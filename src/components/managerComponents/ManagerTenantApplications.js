@@ -11,7 +11,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppContext from "../../AppContext";
 import Checkbox from "../Checkbox";
 import File from "../../icons/File.svg";
-import Delete from "../../icons/Delete.svg";
 import { mediumBold, redPillButton, bluePillButton } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 const useStyles = makeStyles({
@@ -104,185 +103,142 @@ function ManagerTenantApplications(props) {
   };
 
   return (
-    <div>
-      <div
-        className="mx-2 my-2 py-3"
-        style={{
-          background: "#FFFFFF 0% 0% no-repeat padding-box",
-          borderRadius: "10px",
-          opacity: 1,
-        }}
-      >
-        <div
-          style={mediumBold}
-          className=" d-flex flex-column justify-content-center align-items-center"
-        >
-          <div className="d-flex w-100">
-            {applications.length > 0 ? (
-              <div className="d-flex w-100 flex-column justify-content-center align-items-center mx-3">
-                <Table classes={{ root: classes.customTable }} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell
-                        hidden={forwardedApplications.length > 0}
-                      ></TableCell>
-                      <TableCell>Application Status</TableCell>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Message</TableCell>
-                      <TableCell>Occupants</TableCell>
-                      <TableCell>No.of Pets</TableCell>
-                      <TableCell>Type of Pets</TableCell>
-                      <TableCell>Application Date</TableCell>
-                      {/* <TableCell>Phone </TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Current Job Title</TableCell>
-                      <TableCell>Salary</TableCell>
-                      <TableCell>SSN</TableCell> */}
-                      {/* <TableCell>Reject</TableCell> */}
-                      <TableCell>Documents</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {applications.map((application, i) => (
-                      <TableRow className="mt-2" key={i}>
-                        <TableCell hidden={forwardedApplications.length > 0}>
-                          <div>
-                            <Checkbox
-                              type="BOX"
-                              checked={application.application_selected}
-                              onClick={() => toggleApplications(application)}
-                            />
+    <div className="mb-2 pb-2">
+      {applications.length > 0 ? (
+        <div>
+          <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    align="center"
+                    hidden={forwardedApplications.length > 0}
+                  ></TableCell>
+                  <TableCell align="center">Application Status</TableCell>
+                  <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">Message</TableCell>
+                  <TableCell align="center">Occupants</TableCell>
+                  <TableCell align="center">No.of Pets</TableCell>
+                  <TableCell align="center">Type of Pets</TableCell>
+                  <TableCell align="center">Application Date</TableCell>
+                  <TableCell align="center">Documents</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {applications.map((application, i) => (
+                  <TableRow className="mt-2" key={i}>
+                    <TableCell
+                      align="center"
+                      hidden={forwardedApplications.length > 0}
+                    >
+                      <div>
+                        <Checkbox
+                          type="BOX"
+                          checked={application.application_selected}
+                          onClick={() => toggleApplications(application)}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      onClick={() => selectTenantApplication(application)}
+                    >
+                      {application.application_status}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      onClick={() => selectTenantApplication(application)}
+                    >
+                      {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      onClick={() => selectTenantApplication(application)}
+                    >
+                      Note: {application.message}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      onClick={() => selectTenantApplication(application)}
+                    >
+                      {application.adult_occupants} adults <br />
+                      {application.children_occupants} children
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      onClick={() => selectTenantApplication(application)}
+                    >
+                      {application.num_pets}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      onClick={() => selectTenantApplication(application)}
+                    >
+                      {application.type_pets}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      onClick={() => selectTenantApplication(application)}
+                    >
+                      {application.application_date.split(" ")[0]}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {application.documents &&
+                        application.documents.length > 0 &&
+                        JSON.parse(application.documents).map((document, i) => (
+                          <div
+                            className="d-flex justify-content-between align-items-end ps-0"
+                            key={i}
+                          >
+                            <h6>{document.name}</h6>
+                            <a href={document.link} target="_blank">
+                              <img
+                                src={File}
+                                style={{
+                                  width: "15px",
+                                  height: "15px",
+                                }}
+                                alt="Document"
+                              />
+                            </a>
                           </div>
-                        </TableCell>
-                        <TableCell
-                          onClick={() => selectTenantApplication(application)}
-                        >
-                          {application.application_status}
-                        </TableCell>
-                        <TableCell
-                          onClick={() => selectTenantApplication(application)}
-                        >
-                          {`${application.tenant_first_name} ${application.tenant_last_name} `}
-                        </TableCell>
-                        <TableCell
-                          onClick={() => selectTenantApplication(application)}
-                        >
-                          Note: {application.message}
-                        </TableCell>
-                        <TableCell
-                          onClick={() => selectTenantApplication(application)}
-                        >
-                          {application.adult_occupants} adults <br />
-                          {application.children_occupants} children
-                        </TableCell>
-                        <TableCell
-                          onClick={() => selectTenantApplication(application)}
-                        >
-                          {application.num_pets}
-                        </TableCell>
-                        <TableCell
-                          onClick={() => selectTenantApplication(application)}
-                        >
-                          {application.type_pets}
-                        </TableCell>
-                        <TableCell
-                          onClick={() => selectTenantApplication(application)}
-                        >
-                          {application.application_date.split(" ")[0]}
-                        </TableCell>
-                        {/* <TableCell>{application.tenant_phone_number}</TableCell>
-                        <TableCell>{application.tenant_email}</TableCell>
-                        <TableCell>
-                          {application.tenant_current_job_title !== null &&
-                          application.tenant_current_job_title !== "null"
-                            ? application.tenant_current_job_title
-                            : "No Job Details Provided"}
-                        </TableCell>
+                        ))}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Row>
 
-                        <TableCell>
-                          {application.tenant_current_salary !== null &&
-                          application.tenant_current_salary !== "null"
-                            ? application.tenant_current_salary
-                            : "No Salary Provided"}
-                        </TableCell>
-                        <TableCell onClick={() => setShowSSN(!showSSN)}>
-                          {application.tenant_ssn !== null &&
-                          application.tenant_ssn !== "null" ? (
-                            <div>
-                              {showSSN ? (
-                                <div>
-                                  {MaskCharacter(application.tenant_ssn, "*")}
-                                </div>
-                              ) : (
-                                <div>{application.tenant_ssn}</div>
-                              )}
-                            </div>
-                          ) : (
-                            "No SSN Provided"
-                          )}
-                        </TableCell> */}
-
-                        {/* <TableCell
-                          onClick={() => rejectApplication(application)}
-                        >
-                          <img src={Delete} />
-                        </TableCell> */}
-                        <TableCell>
-                          {application.documents &&
-                            application.documents.length > 0 &&
-                            JSON.parse(application.documents).map(
-                              (document, i) => (
-                                <div
-                                  className="d-flex justify-content-between align-items-end ps-0"
-                                  key={i}
-                                >
-                                  <h6>{document.name}</h6>
-                                  <a href={document.link} target="_blank">
-                                    <img
-                                      src={File}
-                                      style={{
-                                        width: "15px",
-                                        height: "15px",
-                                      }}
-                                      alt="Document"
-                                    />
-                                  </a>
-                                </div>
-                              )
-                            )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-
-                <Row className="mt-4 d-flex w-100">
-                  <Col className="d-flex justify-content-evenly">
-                    <Button
-                      style={bluePillButton}
-                      onClick={applicationsResponse}
-                      hidden={forwardedApplications.length > 0}
-                    >
-                      Accept Selected Applicants
-                    </Button>
-                  </Col>
-                  <Col className="d-flex justify-content-evenly">
-                    <Button
-                      style={redPillButton}
-                      onClick={rejectApplication}
-                      hidden={forwardedApplications.length > 0}
-                    >
-                      Reject Application
-                    </Button>
-                  </Col>
-                </Row>
-              </div>
-            ) : (
-              <Row className="mx-5">No New Applications</Row>
-            )}
-          </div>
+          <Row className="mt-4 d-flex w-100">
+            <Col className="d-flex justify-content-evenly">
+              <Button
+                style={bluePillButton}
+                onClick={applicationsResponse}
+                hidden={forwardedApplications.length > 0}
+              >
+                Accept Selected Applicants
+              </Button>
+            </Col>
+            <Col className="d-flex justify-content-evenly">
+              <Button
+                style={redPillButton}
+                onClick={rejectApplication}
+                hidden={forwardedApplications.length > 0}
+              >
+                Reject Application
+              </Button>
+            </Col>
+          </Row>
         </div>
-      </div>
+      ) : (
+        <Row className="mx-5">No New Applications</Row>
+      )}
     </div>
   );
 }

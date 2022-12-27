@@ -239,243 +239,253 @@ function ManagerTenantAgreementView(props) {
             onCancel={onCancelContact}
           />
           <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
-            <Table
-              responsive="md"
-              classes={{ root: classes.customTable }}
-              size="small"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Tenant Name</TableCell>
-                  <TableCell align="center">Email</TableCell>
-                  <TableCell align="center">Phone Number</TableCell>
-                  <TableCell align="center">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>
-                    {tenantInfo.map((tf) => {
-                      return (
-                        <p>
-                          {" "}
-                          {console.log("tf", tf)}
-                          {tf.tenantFirstName} {tf.tenantLastName}
-                        </p>
-                      );
-                    })}
-                  </TableCell>
-
-                  <TableCell>
-                    {" "}
-                    {tenantInfo.map((tf) => {
-                      return <p> {tf.tenantEmail}</p>;
-                    })}
-                  </TableCell>
-
-                  <TableCell>
-                    {" "}
-                    {tenantInfo.map((tf) => {
-                      return <p> {tf.tenantPhoneNumber}</p>;
-                    })}
-                  </TableCell>
-
-                  <TableCell>
-                    {tenantInfo.map((tf) => {
-                      return (
-                        <Row className="mb-2">
-                          <Col className="d-flex justify-content-center">
+            <div>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Tenant Name</TableCell>
+                    <TableCell align="center">Email</TableCell>
+                    <TableCell align="center">Phone Number</TableCell>
+                    <TableCell align="center">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      {tenantInfo.map((tf) => {
+                        return (
+                          <p>
                             {" "}
-                            <a href={`tel:${tf.tenantPhoneNumber}`}>
-                              <img src={Phone} alt="Phone" style={smallImg} />
-                            </a>
-                          </Col>
-                          <Col className="d-flex justify-content-center">
-                            <a
-                              // href={`mailto:${tf.tenantEmail}`}
-                              onClick={() => {
-                                setShowMessageForm(true);
-                                setSelectedTenant(tf);
-                              }}
-                            >
-                              <img
-                                src={Message}
-                                alt="Message"
-                                style={smallImg}
-                              />
-                            </a>
-                          </Col>
-                        </Row>
-                      );
-                    })}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+                            {console.log("tf", tf)}
+                            {tf.tenantFirstName} {tf.tenantLastName}
+                          </p>
+                        );
+                      })}
+                    </TableCell>
+
+                    <TableCell>
+                      {" "}
+                      {tenantInfo.map((tf) => {
+                        return <p> {tf.tenantEmail}</p>;
+                      })}
+                    </TableCell>
+
+                    <TableCell>
+                      {" "}
+                      {tenantInfo.map((tf) => {
+                        return <p> {tf.tenantPhoneNumber}</p>;
+                      })}
+                    </TableCell>
+
+                    <TableCell>
+                      {tenantInfo.map((tf) => {
+                        return (
+                          <Row className="mb-2">
+                            <Col className="d-flex justify-content-center">
+                              {" "}
+                              <a href={`tel:${tf.tenantPhoneNumber}`}>
+                                <img src={Phone} alt="Phone" style={smallImg} />
+                              </a>
+                            </Col>
+                            <Col className="d-flex justify-content-center">
+                              <a
+                                // href={`mailto:${tf.tenantEmail}`}
+                                onClick={() => {
+                                  setShowMessageForm(true);
+                                  setSelectedTenant(tf);
+                                }}
+                              >
+                                <img
+                                  src={Message}
+                                  alt="Message"
+                                  style={smallImg}
+                                />
+                              </a>
+                            </Col>
+                          </Row>
+                        );
+                      })}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
           </Row>
           <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
             <h5>Lease Details</h5>
-            <Table
-              responsive="md"
-              classes={{ root: classes.customTable }}
-              size="small"
-            >
-              {console.log(agreement)}
-              <TableHead>
-                <TableRow>
-                  <TableCell>Lease Start</TableCell>
-                  <TableCell>Lease End</TableCell>
-                  <TableCell>Rent Due</TableCell>
-                  <TableCell>Late Fees After (days)</TableCell>
-                  <TableCell>Late Fee (one-time)</TableCell>
-                  <TableCell>Late Fee (per day)</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>{agreement.lease_start}</TableCell>
+            <div>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                {console.log(agreement)}
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Lease Start</TableCell>
+                    <TableCell>Lease End</TableCell>
+                    <TableCell>Rent Due</TableCell>
+                    <TableCell>Late Fees After (days)</TableCell>
+                    <TableCell>Late Fee (one-time)</TableCell>
+                    <TableCell>Late Fee (per day)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>{agreement.lease_start}</TableCell>
 
-                  <TableCell>{agreement.lease_end}</TableCell>
+                    <TableCell>{agreement.lease_end}</TableCell>
 
-                  <TableCell>
-                    {`${ordinal_suffix_of(agreement.due_by)} of the month`}
-                  </TableCell>
+                    <TableCell>
+                      {`${ordinal_suffix_of(agreement.due_by)} of the month`}
+                    </TableCell>
 
-                  <TableCell>{agreement.late_by} days</TableCell>
-                  <TableCell> ${agreement.late_fee}</TableCell>
-                  <TableCell> ${agreement.perDay_late_fee}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+                    <TableCell>{agreement.late_by} days</TableCell>
+                    <TableCell> ${agreement.late_fee}</TableCell>
+                    <TableCell> ${agreement.perDay_late_fee}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
           </Row>
 
           <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
             <h5>Lease Payments</h5>
-            <Table
-              responsive="md"
-              classes={{ root: classes.customTable }}
-              size="small"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Fee Name</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Of</TableCell>
-                  <TableCell>Frequency</TableCell>
-                  <TableCell>Available to Pay</TableCell>
-                  <TableCell>Due Date</TableCell>
-                  <TableCell>Late Fees After (days)</TableCell>
-                  <TableCell>Late Fee (one-time)</TableCell>
-                  <TableCell>Late Fee (per day)</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {feeState.map((fee, i) => (
+            <div>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
                   <TableRow>
-                    <TableCell>{fee.fee_name}</TableCell>
-
-                    <TableCell>
-                      {fee.fee_type === "%"
-                        ? `${fee.charge}%`
-                        : `$${fee.charge}`}
-                    </TableCell>
-
-                    <TableCell>
-                      {fee.fee_type === "%" ? `${fee.of}` : ""}
-                    </TableCell>
-
-                    <TableCell>{fee.frequency}</TableCell>
-                    <TableCell>{`${ordinal_suffix_of(
-                      fee.available_topay
-                    )} of the month`}</TableCell>
-                    <TableCell>
-                      {fee.due_by == ""
-                        ? `1st of the month`
-                        : `${ordinal_suffix_of(fee.due_by)} of the month`}
-                    </TableCell>
-                    <TableCell>{fee.late_by} days</TableCell>
-                    <TableCell>${fee.late_fee}</TableCell>
-                    <TableCell>${fee.perDay_late_fee}/day</TableCell>
+                    <TableCell>Fee Name</TableCell>
+                    <TableCell>Amount</TableCell>
+                    <TableCell>Of</TableCell>
+                    <TableCell>Frequency</TableCell>
+                    <TableCell>Available to Pay</TableCell>
+                    <TableCell>Due Date</TableCell>
+                    <TableCell>Late Fees After (days)</TableCell>
+                    <TableCell>Late Fee (one-time)</TableCell>
+                    <TableCell>Late Fee (per day)</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {feeState.map((fee, i) => (
+                    <TableRow>
+                      <TableCell>{fee.fee_name}</TableCell>
+
+                      <TableCell>
+                        {fee.fee_type === "%"
+                          ? `${fee.charge}%`
+                          : `$${fee.charge}`}
+                      </TableCell>
+
+                      <TableCell>
+                        {fee.fee_type === "%" ? `${fee.of}` : ""}
+                      </TableCell>
+
+                      <TableCell>{fee.frequency}</TableCell>
+                      <TableCell>{`${ordinal_suffix_of(
+                        fee.available_topay
+                      )} of the month`}</TableCell>
+                      <TableCell>
+                        {fee.due_by == ""
+                          ? `1st of the month`
+                          : `${ordinal_suffix_of(fee.due_by)} of the month`}
+                      </TableCell>
+                      <TableCell>{fee.late_by} days</TableCell>
+                      <TableCell>${fee.late_fee}</TableCell>
+                      <TableCell>${fee.perDay_late_fee}/day</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </Row>
 
           <Row className="mb-4 m-3" hidden={contactState.length === 0}>
             <h5 style={mediumBold}>Contact Details</h5>
-            <Table classes={{ root: classes.customTable }} size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Contact Name</TableCell>
-                  <TableCell>Role</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Phone Number</TableCell>
+            <div>
+              <Table classes={{ root: classes.customTable }} size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Contact Name</TableCell>
+                    <TableCell>Role</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Phone Number</TableCell>
 
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {contactState.map((contact, i) => (
-                  <TableRow key={i}>
-                    <TableCell>
-                      {contact.first_name} {contact.last_name}
-                    </TableCell>
-                    <TableCell>{contact.company_role}</TableCell>
-                    <TableCell>{contact.email}</TableCell>
-                    <TableCell>{contact.phone_number}</TableCell>
-                    <TableCell>
-                      <a href={`tel:${contact.phone_number}`}>
-                        <img src={Phone} alt="Phone" style={smallImg} />
-                      </a>
-                      <a
-                        onClick={() => {
-                          setShowMessageFormContact(true);
-                          setSelectedContact(contact);
-                        }}
-                      >
-                        <img src={Message} alt="Message" style={smallImg} />
-                      </a>
-                    </TableCell>
+                    <TableCell>Actions</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Row>
-          <Row className="m-3" hidden={files.length === 0}>
-            <h5 style={mediumBold}>Lease Documents</h5>
-            <Table
-              responsive="md"
-              classes={{ root: classes.customTable }}
-              size="small"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Document Name</TableCell>
-                  <TableCell>View Document</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {files.map((file) => {
-                  return (
-                    <TableRow>
-                      <TableCell>{file.description}</TableCell>
+                </TableHead>
+                <TableBody>
+                  {contactState.map((contact, i) => (
+                    <TableRow key={i}>
                       <TableCell>
-                        <a href={file.link} target="_blank">
-                          <img
-                            src={OpenDoc}
-                            style={{
-                              width: "15px",
-                              height: "15px",
-                            }}
-                          />
+                        {contact.first_name} {contact.last_name}
+                      </TableCell>
+                      <TableCell>{contact.company_role}</TableCell>
+                      <TableCell>{contact.email}</TableCell>
+                      <TableCell>{contact.phone_number}</TableCell>
+                      <TableCell>
+                        <a href={`tel:${contact.phone_number}`}>
+                          <img src={Phone} alt="Phone" style={smallImg} />
+                        </a>
+                        <a
+                          onClick={() => {
+                            setShowMessageFormContact(true);
+                            setSelectedContact(contact);
+                          }}
+                        >
+                          <img src={Message} alt="Message" style={smallImg} />
                         </a>
                       </TableCell>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </Row>
+          <Row className="m-3" hidden={files.length === 0}>
+            <h5 style={mediumBold}>Lease Documents</h5>
+            <div>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Document Name</TableCell>
+                    <TableCell>View Document</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {files.map((file) => {
+                    return (
+                      <TableRow>
+                        <TableCell>{file.description}</TableCell>
+                        <TableCell>
+                          <a href={file.link} target="_blank">
+                            <img
+                              src={OpenDoc}
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                              }}
+                            />
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </Row>
 
           <Row
