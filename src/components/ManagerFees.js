@@ -226,6 +226,8 @@ function ManagerFees(props) {
                   <option>Biweekly</option>
                   <option>Monthly</option>
                   <option>Annually</option>
+                  <option>Move-Out Charge</option>
+                  <option>Move-In Charge</option>
                   <option>One-time</option>
                 </Form.Select>
               </Form.Group>

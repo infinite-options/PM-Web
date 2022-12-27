@@ -14,9 +14,7 @@ import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
-import Edit from "../../icons/Edit.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
-import DeleteIcon from "../../icons/DeleteIcon.svg";
 import { get, put } from "../../utils/api";
 import {
   mediumBold,

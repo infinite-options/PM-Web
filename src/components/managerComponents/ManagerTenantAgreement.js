@@ -8,6 +8,7 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
 import BusinessContact from "../BusinessContact";
 import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
@@ -71,6 +72,7 @@ function ManagerTenantAgreement(props) {
   const [numPets, setNumPets] = useState("");
   const [typePets, setTypePets] = useState("");
 
+  const [showSpinner, setShowSpinner] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -158,6 +160,7 @@ function ManagerTenantAgreement(props) {
   }, [agreement]);
 
   const save = async () => {
+    setShowSpinner(true);
     const newAgreement = {
       rental_property_id: property.property_uid,
       tenant_id: acceptedTenantApplications[0].tenant_id,
@@ -187,6 +190,7 @@ function ManagerTenantAgreement(props) {
       newAgreement.tenant_id = acceptedTenantApplications;
       const response = await post("/rentals", newAgreement, null, files);
     }
+    setShowSpinner(false);
     back();
   };
   const [errorMessage, setErrorMessage] = useState("");
@@ -222,6 +226,8 @@ function ManagerTenantAgreement(props) {
       return;
     }
     setErrorMessage("");
+
+    setShowSpinner(true);
     for (let i = 0; i < feeState.length; i++) {
       if (feeState[i]["fee_name"] === "Deposit") {
         feeState[i]["available_topay"] = available;
@@ -291,6 +297,7 @@ function ManagerTenantAgreement(props) {
     // console.log(newAgreement);
     const create_rental = await post("/rentals", newAgreement, null, files);
 
+    setShowSpinner(false);
     back();
   };
 
@@ -801,7 +808,13 @@ function ManagerTenantAgreement(props) {
               </div>
             )}
           </div>
-
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
           <Row className="mt-4" hidden={agreement !== null}>
             <div
               className="text-center"
