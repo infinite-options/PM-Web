@@ -4,12 +4,12 @@ import { Row } from "react-bootstrap";
 import AppContext from "../../AppContext";
 import Header from "../../components/Header";
 import SideBar from "./SideBar";
-import ManagerFooter from "./ManagerFooter";
-import UpcomingManagerPayments from "./UpcomingManagerPayments";
+import OwnerFooter from "./OwnerFooter";
+import UpcomingOwnerPayments from "./UpcomingOwnerPayments";
+import OwnerPaymentHistory from "./OwnerPaymentHistory";
 import { get } from "../../utils/api";
 import "../../pages/maintenance.css";
-import ManagerPaymentHistory from "./ManagerPaymentHistory";
-export default function ManagerPayments(props) {
+export default function OwnerPayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);
 
   const [upcomingPaymentsData, setUpcomingPaymentsData] = useState([]);
@@ -37,46 +37,22 @@ export default function ManagerPayments(props) {
     { name: "apple", isActive: false },
   ]);
   const [isLoading, setIsLoading] = useState(true);
-  const fetchManagerPayments = async () => {
+  const fetchOwnerPayments = async () => {
     if (access_token === null) {
       navigate("/");
       return;
     }
-
-    const management_businesses = user.businesses.filter(
-      (business) => business.business_type === "MANAGEMENT"
-    );
-    let management_buid = null;
-    if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
-      return;
-    } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
-      management_buid = management_businesses[0].business_uid;
-    } else {
-      management_buid = management_businesses[0].business_uid;
-    }
-    const response = await get(
-      `/managerPayments?manager_id=${management_buid}`
-    );
+    const response = await get(`/ownerPayments?owner_id=${user.user_uid}`);
     console.log("second");
-    console.log(response);
-    setIsLoading(false);
-
-    if (response.msg === "Token has expired") {
-      console.log("here msg");
-      refresh();
-
-      return;
-    }
-    setPropertyData(response);
-    let upcoming = [];
     console.log(response.result);
+
+    setPropertyData(response);
     setUpcomingPaymentsData(response.result);
+    setIsLoading(false);
   };
   useEffect(() => {
     console.log("in use effect");
-    fetchManagerPayments();
+    fetchOwnerPayments();
   }, [paymentOptions]);
   const handlePaymentOption = (index) => {
     console.log("payment choice called");
@@ -110,7 +86,7 @@ export default function ManagerPayments(props) {
           <Header title="Payment Portal" />
           <Row className="m-3">
             {propertyData.length !== 0 && (
-              <UpcomingManagerPayments
+              <UpcomingOwnerPayments
                 data={upcomingPaymentsData}
                 type={false}
                 selectedProperty={propertyData.result[0]}
@@ -118,12 +94,12 @@ export default function ManagerPayments(props) {
               />
             )}
             {propertyData.length !== 0 && (
-              <ManagerPaymentHistory data={upcomingPaymentsData} />
+              <OwnerPaymentHistory data={upcomingPaymentsData} />
             )}
           </Row>
         </div>
         <div hidden={responsive.showSidebar} className="w-100 mt-3">
-          <ManagerFooter />
+          <OwnerFooter />
         </div>
       </div>
     </div>

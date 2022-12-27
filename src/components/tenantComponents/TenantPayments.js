@@ -38,7 +38,7 @@ export default function TenantDuePayments(props) {
     { name: "apple", isActive: false },
   ]);
   const [isLoading, setIsLoading] = useState(true);
-  const fetchTenantDashboard = async () => {
+  const fetchTenantPayments = async () => {
     if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
       return;
@@ -68,7 +68,7 @@ export default function TenantDuePayments(props) {
   };
   useEffect(() => {
     console.log("in use effect");
-    fetchTenantDashboard();
+    fetchTenantPayments();
   }, [paymentOptions]);
   const handlePaymentOption = (index) => {
     console.log("payment choice called");

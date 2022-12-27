@@ -32,6 +32,26 @@ function OwnerCreateExpense(props) {
   const reload = () => {
     props.onSubmit();
   };
+  useEffect(() => {
+    console.log(properties[0]);
+    if (properties.length === undefined) {
+      setSelectedProperty(JSON.stringify(decycle(properties)));
+    }
+  }, []);
+
+  function decycle(obj, stack = []) {
+    if (!obj || typeof obj !== "object") return obj;
+
+    if (stack.includes(obj)) return null;
+
+    let s = stack.concat([obj]);
+
+    return Array.isArray(obj)
+      ? obj.map((x) => decycle(x, s))
+      : Object.fromEntries(
+          Object.entries(obj).map(([k, v]) => [k, decycle(v, s)])
+        );
+  }
   const submitForm = async (sp) => {
     if (amount === "") {
       setErrorMessage("Please fill out all fields");
@@ -410,6 +430,7 @@ function OwnerCreateExpense(props) {
           </Form.Group>
         </Form.Group>
       )}
+      {console.log(selectedProperty)}
       {category === "Management" ||
       category === "Maintenance" ||
       category === "Repairs" ||

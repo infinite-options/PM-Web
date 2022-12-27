@@ -86,6 +86,7 @@ import TenantProfile from "./components/tenantComponents/TenantProfile";
 import OwnerPropertyView from "./components/ownerComponents/OwnerPropertyView";
 import TenantRepairRequest from "./components/tenantComponents/TenantRepairRequest";
 import ManagerPayments from "./components/managerComponents/ManagerPayments";
+import OwnerPayments from "./components/ownerComponents/OwnerPayments";
 import TenantPayments from "./components/tenantComponents/TenantPayments";
 function App() {
   const [userData, setUserData] = React.useState({
@@ -321,6 +322,7 @@ function App() {
             />
             <Route path="pm-list" element={<PropertyManagersList />} />
             <Route path="manager-payments" element={<ManagerPayments />} />
+            <Route path="owner-payments" element={<OwnerPayments />} />
             <Route path="tenant-payments" element={<TenantPayments />} />
             <Route
               path="tenant-announcements"

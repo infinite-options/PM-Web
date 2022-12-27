@@ -24,6 +24,7 @@ import {
   bluePillButton,
   small,
   mediumBold,
+  red,
 } from "../../utils/styles";
 import { get, put, post } from "../../utils/api";
 const useStyles = makeStyles({
@@ -45,12 +46,12 @@ function ReviewTenantProfile(props) {
   const [files, setFiles] = useState([]);
   const [filesCopy, setFilesCopy] = useState([]);
   const [message, setMessage] = useState("");
-  const [adultOccupants, setAdultOccupants] = useState("");
-  const [childrenOccupants, setChildrenOccupants] = useState("");
-
-  const [numPets, setNumPets] = useState("");
+  const [adultOccupants, setAdultOccupants] = useState(0);
+  const [childrenOccupants, setChildrenOccupants] = useState(0);
+  const [numPets, setNumPets] = useState(0);
   const [typePets, setTypePets] = useState("");
   const [width, setWindowWidth] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     updateDimensions();
 
@@ -89,6 +90,10 @@ function ReviewTenantProfile(props) {
       if (filesCopy[i].shared === true) {
         application_docs.push(filesCopy[i]);
       }
+    }
+    if (numPets > 0 && typePets == "") {
+      setErrorMessage("Please fill out the type of pets");
+      return;
     }
     const newApplication = {
       property_uid: property_uid,
@@ -195,7 +200,14 @@ function ReviewTenantProfile(props) {
     fetchProfileInfo();
   }, []);
   console.log(files);
-
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
   // function handleDocumentClick(i){
   //   console.log("clicked");
   //   const temp = documentClick;
@@ -470,7 +482,7 @@ function ReviewTenantProfile(props) {
               <Col>
                 <Form.Group className="mx-2 my-3">
                   <Form.Label as="h6" className="mb-0 ms-2">
-                    Types of Pets
+                    Types of Pets {typePets === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
                     style={squareForm}

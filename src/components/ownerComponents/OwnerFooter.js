@@ -70,6 +70,17 @@ function OwnerFooter(props) {
           </p>
         </Col>
         <Col
+          className="text-center p-0"
+          onClick={() => {
+            navigate("/owner-payments");
+          }}
+        >
+          <img src={Expenses_Gray} alt="EXPENSES" />
+          <p style={smallGray} className="mb-0">
+            Payments
+          </p>
+        </Col>
+        <Col
           className="text-center"
           onClick={() => {
             navigate("/owner-documents");

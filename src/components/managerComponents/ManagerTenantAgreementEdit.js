@@ -8,6 +8,7 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
 import BusinessContact from "../BusinessContact";
 import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
@@ -15,8 +16,6 @@ import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import File from "../../icons/File.svg";
-import Phone from "../../icons/Phone.svg";
-import Message from "../../icons/Message.svg";
 import { put, post } from "../../utils/api";
 import {
   small,
@@ -67,6 +66,7 @@ function ManagerTenantAgreementEdit(props) {
   const [numPets, setNumPets] = useState("");
   const [typePets, setTypePets] = useState("");
 
+  const [showSpinner, setShowSpinner] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -154,6 +154,8 @@ function ManagerTenantAgreementEdit(props) {
   }, [agreement]);
   console.log(feeState);
   const save = async () => {
+    setShowSpinner(true);
+
     console.log(lateFee);
     const newAgreement = {
       rental_property_id: property.property_uid,
@@ -182,6 +184,9 @@ function ManagerTenantAgreementEdit(props) {
       console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
     }
+
+    setShowSpinner(false);
+
     back();
   };
   const [errorMessage, setErrorMessage] = useState("");
@@ -535,10 +540,12 @@ function ManagerTenantAgreementEdit(props) {
               </div>
             )}
           </div>
-          {console.log(
-            agreement,
-            agreement !== null || agreement.rental_status !== "PROCESSING",
-            agreement === null
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
           )}
           <Row
             className="mt-4"

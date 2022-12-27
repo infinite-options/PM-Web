@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
-// import { get } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -12,6 +10,7 @@ import {
   Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -20,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function TenantUpcomingPayments(props) {
+export default function UpcomingOwnerPayments(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const [totalSum, setTotalSum] = useState(0);
@@ -59,7 +58,7 @@ export default function TenantUpcomingPayments(props) {
         },
       });
     } else {
-      navigate(`/paymentPage/${purchaseUIDs[0]}`, {
+      navigate(`/ownerPaymentPage/${purchaseUIDs[0]}`, {
         state: {
           amount: totalSum,
           selectedProperty: props.selectedProperty,
@@ -75,7 +74,8 @@ export default function TenantUpcomingPayments(props) {
         <TableRow>
           <TableCell align="center">{row.purchase_uid}</TableCell>
           <TableCell align="center">
-            {row.address +
+            {"" +
+              row.address +
               " " +
               row.unit +
               "," +
@@ -92,6 +92,8 @@ export default function TenantUpcomingPayments(props) {
               : row.purchase_notes + " " + row.description}
           </TableCell>
           <TableCell align="center">{row.purchase_type}</TableCell>
+
+          <TableCell align="center">{row.receiver}</TableCell>
           <TableCell
             align="center"
             style={{
@@ -102,15 +104,7 @@ export default function TenantUpcomingPayments(props) {
           </TableCell>
           <TableCell align="center">
             {props.type ? (
-              <button
-                style={{
-                  backgroundColor:
-                    new Date(row.next_payment) < new Date() ? "red" : "green",
-                  color: "white",
-                  border: "none",
-                }}
-                onClick={goToPayment}
-              >
+              <button className="yellow payB" onClick={goToPayment}>
                 Pay
               </button>
             ) : (
@@ -145,7 +139,8 @@ export default function TenantUpcomingPayments(props) {
             <TableCell align="center">Address</TableCell>
             <TableCell align="center">Description</TableCell>
             <TableCell align="center">Type</TableCell>
-            <TableCell align="center">Date Due</TableCell>
+            <TableCell align="center">Receiver</TableCell>
+            <TableCell align="center">Date</TableCell>
             <TableCell align="center">Pay</TableCell>
             <TableCell align="right">Amount</TableCell>
           </TableRow>

@@ -49,7 +49,6 @@ const useStyles = makeStyles({
 });
 
 export default function TenantDashboard() {
-  console.log("in tenant dashbaord");
   const navigate = useNavigate();
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
@@ -90,6 +89,11 @@ export default function TenantDashboard() {
   const responsive = {
     showSidebar: width > 1023,
   };
+  const days = (date_1, date_2) => {
+    let difference = date_2.getTime() - date_1.getTime();
+    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+    return TotalDays;
+  };
   const fetchTenantDashboard = async () => {
     if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
@@ -104,12 +108,16 @@ export default function TenantDashboard() {
 
       return;
     }
-    console.log(response.result);
-    console.log(appRes.result);
+
     setTenantProfile(response.result[0]);
     let apps = [];
     for (let i = 0; i < appRes.result.length; i++) {
       if (
+        appRes.result[i].application_status === "REJECTED" &&
+        days(new Date(appRes.result[i].application_date), new Date()) > 30
+      ) {
+        console.log("skip ");
+      } else if (
         appRes.result[i].application_status !== "RENTED" &&
         appRes.result[i].application_status !== "PM END EARLY" &&
         appRes.result[i].application_status !== "TENANT END EARLY"
@@ -158,8 +166,6 @@ export default function TenantDashboard() {
         complete: completed_repairs.length,
       };
     });
-
-    console.log(properties_unique);
 
     setTenantData(properties_unique);
     setIsLoading(false);
@@ -213,7 +219,6 @@ export default function TenantDashboard() {
   };
 
   useEffect(() => {
-    console.log("in use effect");
     fetchTenantDashboard();
   }, [access_token]);
 
@@ -223,7 +228,6 @@ export default function TenantDashboard() {
   };
 
   const goToReviewPropertyLease = (application) => {
-    console.log(application.application_status);
     navigate(`/reviewPropertyLease/${application.property_uid}`, {
       state: {
         property_uid: application.property_uid,
@@ -834,6 +838,8 @@ export default function TenantDashboard() {
                   type={true}
                 />
               )}
+            </Row>
+            <Row className="mx-3 mt-5">
               {tenantData.length !== 0 && (
                 <TenantPaymentHistory data={paymentHistoryData} />
               )}
@@ -1093,17 +1099,6 @@ export default function TenantDashboard() {
                             role="checkbox"
                             tabIndex={-1}
                             key={application.application_uid}
-                            // onClick={() => {
-                            //   navigate(
-                            //     `/tenantPropertyDetails/${application.property_uid}`,
-                            //     {
-                            //       state: {
-                            //         property: application,
-                            //         property_uid: application.property_uid,
-                            //       },
-                            //     }
-                            //   );
-                            // }}
                             onClick={() => goToReviewPropertyLease(application)}
                           >
                             <TableCell
@@ -1297,7 +1292,7 @@ export default function TenantDashboard() {
             </Row>
             <Row className="m-3">
               <Col>
-                <h3>No rented properties</h3>
+                <h6>No rented properties</h6>
               </Col>
               <Col></Col>
             </Row>
@@ -1502,7 +1497,12 @@ export default function TenantDashboard() {
                 </Row>
               </Row>
             ) : (
-              "No applications"
+              <Row className="m-3">
+                <Col>
+                  <h6>No applications</h6>
+                </Col>
+                <Col></Col>
+              </Row>
             )}
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />

@@ -42,15 +42,20 @@ export default function ManagerPaymentHistory(props) {
               row.zip}
           </TableCell>
           <TableCell align="center">
-            {"" + row.purchase_notes + " " + row.description}
+            {row.purchase_frequency === "One-time" ||
+            row.purchase_frequency === "Annually"
+              ? row.description
+              : row.purchase_notes + " " + row.description}
           </TableCell>
           <TableCell align="center">{row.purchase_type}</TableCell>
           <TableCell align="center">{row.receiver}</TableCell>
           <TableCell align="center">
-            {row.payment_date.substring(0, 10)}
+            {row.payment_date !== null
+              ? row.payment_date.substring(0, 10)
+              : "Not Available"}
           </TableCell>
-          <TableCell align="center"></TableCell>
-          <TableCell></TableCell>
+
+          <TableCell align="center" style={{ width: "67px" }}></TableCell>
           <TableCell align="right">{row.amount_paid.toFixed(2)}</TableCell>
         </TableRow>
       );
