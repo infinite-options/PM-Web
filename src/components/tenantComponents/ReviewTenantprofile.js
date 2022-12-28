@@ -407,28 +407,33 @@ function ReviewTenantProfile(props) {
             <h3>Documents</h3>
           </Row>
           <Row className="m-3">
-            <div className="mb-4">
-              {filesCopy.map((file, i) => (
-                <div key={i}>
-                  <div className="d-flex justify-content-left align-items-start">
-                    <Checkbox
-                      type="CIRCLE"
-                      checked={file.shared}
-                      onClick={() => editDocument(i)}
-                    />
-                    <div>
-                      <h6 style={{ paddingLeft: "20px", fontWeight: "bold" }}>
-                        {file.name}
-                      </h6>
-                      <p style={{ paddingLeft: "20px" }} className="m-0">
-                        {file.description}
-                      </p>
+            {console.log("files", filesCopy.length)}
+            {filesCopy.length > 0 ? (
+              <div className="mb-4">
+                {filesCopy.map((file, i) => (
+                  <div key={i}>
+                    <div className="d-flex justify-content-left align-items-start">
+                      <Checkbox
+                        type="CIRCLE"
+                        checked={file.shared}
+                        onClick={() => editDocument(i)}
+                      />
+                      <div>
+                        <h6 style={{ paddingLeft: "20px", fontWeight: "bold" }}>
+                          {file.name}
+                        </h6>
+                        <p style={{ paddingLeft: "20px" }} className="m-0">
+                          {file.description}
+                        </p>
+                      </div>
                     </div>
+                    <hr style={{ opacity: 1 }} />
                   </div>
-                  <hr style={{ opacity: 1 }} />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="mx-3 mb-4 px-5">None uploaded</div>
+            )}
           </Row>
           {/* =======================================Application
           Occupants================================================ */}

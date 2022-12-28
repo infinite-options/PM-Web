@@ -6,14 +6,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import File from "../icons/File.svg";
-import { get, put } from "../utils/api";
+import File from "../../icons/File.svg";
+import { get, put } from "../../utils/api";
 import {
   pillButton,
   smallPillButton,
   mediumBold,
   squareForm,
-} from "../utils/styles";
+} from "../../utils/styles";
 
 function ManagerDocs(props) {
   const navigate = useNavigate();

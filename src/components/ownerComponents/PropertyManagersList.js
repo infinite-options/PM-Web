@@ -1,14 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
-import Header from "../components/Header";
-import AppContext from "../AppContext";
-import { get, put } from "../utils/api";
-import Phone from "../icons/Phone.svg";
-import Message from "../icons/Message.svg";
-import BlueFilledBox from "../icons/BlueFilledBox.svg";
-import UnFilledBox from "../icons/UnFilledBox.svg";
-import Mail from "../icons/Mail.svg";
+import Header from "../Header";
+import SideBar from "./SideBar";
+import OwnerFooter from "./OwnerFooter";
+import AppContext from "../../AppContext";
+import Phone from "../../icons/Phone.svg";
+import Message from "../../icons/Message.svg";
+import BlueFilledBox from "../../icons/BlueFilledBox.svg";
+import UnFilledBox from "../../icons/UnFilledBox.svg";
+import Mail from "../../icons/Mail.svg";
+import { get, put } from "../../utils/api";
 import {
   mediumBold,
   xSmall,
@@ -17,9 +19,7 @@ import {
   hidden,
   gray,
   pillButton,
-} from "../utils/styles";
-import SideBar from "./ownerComponents/SideBar";
-import OwnerFooter from "./ownerComponents/OwnerFooter";
+} from "../../utils/styles";
 
 function PropertyManagersList(props) {
   const navigate = useNavigate();

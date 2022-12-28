@@ -17,6 +17,8 @@ export default function ManagerPayments(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [width, setWindowWidth] = useState(0);
+  const [managerID, setManagerID] = useState("");
+  const [verified, setVerified] = useState(false);
   useEffect(() => {
     updateDimensions();
 
@@ -56,6 +58,7 @@ export default function ManagerPayments(props) {
     } else {
       management_buid = management_businesses[0].business_uid;
     }
+    setManagerID(management_buid);
     const response = await get(
       `/managerPayments?manager_id=${management_buid}`
     );
@@ -77,7 +80,7 @@ export default function ManagerPayments(props) {
   useEffect(() => {
     console.log("in use effect");
     fetchManagerPayments();
-  }, [paymentOptions]);
+  }, [paymentOptions, verified]);
   const handlePaymentOption = (index) => {
     console.log("payment choice called");
     let temp = paymentOptions.slice();
@@ -113,12 +116,18 @@ export default function ManagerPayments(props) {
               <UpcomingManagerPayments
                 data={upcomingPaymentsData}
                 type={false}
+                managerID={managerID}
                 selectedProperty={propertyData.result[0]}
                 paymentSelection={paymentOptions}
               />
             )}
             {propertyData.length !== 0 && (
-              <ManagerPaymentHistory data={upcomingPaymentsData} />
+              <ManagerPaymentHistory
+                data={upcomingPaymentsData}
+                managerID={managerID}
+                verified={verified}
+                setVerified={setVerified}
+              />
             )}
           </Row>
         </div>

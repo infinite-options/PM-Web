@@ -1,14 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Switch } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
 import * as ReactBootStrap from "react-bootstrap";
 import PropertyAppliances from "../PropertyAppliances";
 import PropertyUtilities from "../PropertyUtilities";
 import PropertyImages from "../PropertyImages";
 import ConfirmDialog2 from "../ConfirmDialog2";
+import ConfirmDialog from "../ConfirmDialog";
 import AppContext from "../../AppContext";
 import Edit from "../../icons/Edit.svg";
 import ArrowDown from "../../icons/ArrowDown.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
 import {
   pillButton,
   squareForm,
@@ -25,6 +28,7 @@ import { post, put } from "../../utils/api";
 function OwnerPropertyForm(props) {
   const { userData } = useContext(AppContext);
   const { user } = userData;
+  const navigate = useNavigate();
   const applianceState = useState({
     Microwave: {
       available: false,
@@ -131,11 +135,17 @@ function OwnerPropertyForm(props) {
   const [availableToRent, setAvailableToRent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
+
+  const [showDialogDelete, setShowDialogDelete] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const { property, edit, setEdit, hideEdit } = props;
 
   const onConfirm = () => {
     setShowDialog(false);
+  };
+
+  const onCancelDelete = () => {
+    setShowDialogDelete(false);
   };
 
   const loadProperty = () => {
@@ -533,7 +543,15 @@ function OwnerPropertyForm(props) {
     style: "currency",
     currency: "USD",
   });
+  const deleteProperty = async () => {
+    setShowSpinner(true);
+    const response = await put(
+      `/RemovePropertyOwner?property_uid=${property.property_uid}`
+    );
 
+    setShowSpinner(false);
+    navigate("/owner");
+  };
   console.log(activeDate);
   return (
     <div
@@ -548,6 +566,12 @@ function OwnerPropertyForm(props) {
         title={"Can't edit here. Click on the edit icon to make any changes"}
         isOpen={showDialog}
         onConfirm={onConfirm}
+      />
+      <ConfirmDialog
+        title={"Are you sure you want to remove this property?"}
+        isOpen={showDialogDelete}
+        onConfirm={deleteProperty}
+        onCancel={onCancelDelete}
       />
       {edit ? (
         <div className="d-flex flex-column w-100">
@@ -902,65 +926,46 @@ function OwnerPropertyForm(props) {
           />{" "}
           <p className="p-2">Yes</p>
         </Col>
-        {/* <Row>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={depositForRent}
-              onClick={
-                edit
-                  ? () => setDepositForRent(true)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">Yes</p>
-          </Col>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={!depositForRent}
-              onClick={
-                edit
-                  ? () => setDepositForRent(false)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">No</p>
-          </Col>
-        </Row> */}
       </Container>
 
       {edit ? (
-        <Container className="my-3">
+        <Container className="d-flex my-3 ps-4">
           {/* <h6>Available to Rent</h6>
           <p> {property.available_to_rent == 1 ? "True" : "False"}</p> */}
         </Container>
       ) : (
-        <Container className="my-3">
+        <Container className="d-flex my-3 ps-4">
           <h6>Available to Rent</h6>
           <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
         </Container>
       )}
       {edit ? (
-        <Container
-          style={({ paddingLeft: "0px" }, mediumBold)}
-          className="my-3"
-        >
+        <Container className="d-flex my-3 ps-4">
           {/* <h6> Featured</h6>
           <p> {property.featured}</p> */}
         </Container>
       ) : (
-        <Container
-          style={({ paddingLeft: "0px" }, mediumBold)}
-          className="my-3 "
-        >
+        <Container className="d-flex my-3 ps-4">
           <h6> Featured</h6>
           <p> {property.featured}</p>
         </Container>
+      )}
+      {edit ? (
+        <Container className="d-flex my-3 ps-4">
+          <Col className="p-2">
+            <h6> Delete Property</h6>
+          </Col>
+
+          <Col className="p-2">
+            <img
+              src={DeleteIcon}
+              alt="Delete"
+              onClick={() => setShowDialogDelete(true)}
+            />
+          </Col>
+        </Container>
+      ) : (
+        <Container className="d-flex my-3 ps-4"></Container>
       )}
       {edit ? (
         <div className=" my-3 ps-4">
