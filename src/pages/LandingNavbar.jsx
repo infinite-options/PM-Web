@@ -405,37 +405,6 @@ function LandingNavbar() {
                   : ""}
               </div>
             </div>
-            {/* <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                width: "100%",
-                // marginTop: "-2rem",
-              }}
-            >
-              {availableRoles != null
-                ? availableRoles.map((role, i) => (
-                    <div
-                      key={i}
-                      className={open ? "nav-links active" : "nav-links"}
-                    >
-                      <div
-                        onClick={() => {
-                          role === selectedRole ||
-                          role === currentRole.toUpperCase()
-                            ? roleSelection_original(role)
-                            : roleSelection_original(role);
-                        }}
-                        class="navButtons"
-                      >
-                        <p className="d-inline-block text-left">
-                          {longNames[role]} Original
-                        </p>
-                      </div>
-                    </div>
-                  ))
-                : ""}
-            </div> */}
           </nav>
         </Row>
       </div>

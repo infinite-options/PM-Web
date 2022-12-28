@@ -1,13 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import Header from "./Header";
-import ManagerFees from "./ManagerFees";
-import BusinessContact from "./BusinessContact";
-import ConfirmDialog from "./ConfirmDialog";
-import File from "../icons/File.svg";
-import EditIcon from "../icons/EditIcon.svg";
-import DeleteIcon from "../icons/DeleteIcon.svg";
-import { put, post } from "../utils/api";
+import Header from "../Header";
+import ManagerFees from "../ManagerFees";
+import BusinessContact from "../BusinessContact";
+import ConfirmDialog from "../ConfirmDialog";
+import AppContext from "../../AppContext";
+import File from "../../icons/File.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import { put, post } from "../../utils/api";
 import {
   small,
   hidden,
@@ -17,8 +18,7 @@ import {
   smallPillButton,
   bluePillButton,
   redPillButton,
-} from "../utils/styles";
-import AppContext from "../AppContext";
+} from "../../utils/styles";
 
 function ManagementContract(props) {
   const { userData, refresh } = useContext(AppContext);

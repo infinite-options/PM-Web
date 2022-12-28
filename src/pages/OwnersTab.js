@@ -1,14 +1,12 @@
-import "../components/ownerComponents/ownerstab.css";
-
-import LOGO1 from "./OwnerImages/eye.webp";
-import LOGO2 from "./OwnerImages/chatbubble.webp";
-import LOGO3 from "./OwnerImages/heart.webp";
-import LOGO4 from "./OwnerImages/house.webp";
-import LOGO5 from "./OwnerImages/reporting.webp";
-import LOGO6 from "./OwnerImages/requests.webp";
 import FormComponent from "../components/FormComponent";
+import LOGO1 from "../icons/eye.webp";
+import LOGO2 from "../icons/chatbubble.webp";
+import LOGO3 from "../icons/heart.webp";
+import LOGO4 from "../icons/house.webp";
+import LOGO5 from "../icons/reporting.webp";
+import LOGO6 from "../icons/requests.webp";
+import "../components/ownerComponents/ownerstab.css";
 import { Grid, Paper } from "@material-ui/core";
-import { ListItem } from "@material-ui/core";
 
 export default function OwnersTab() {
   return (

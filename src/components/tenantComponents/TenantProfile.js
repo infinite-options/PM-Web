@@ -12,7 +12,10 @@ import {
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import AddressForm from "../AddressForm";
+import SideBar from "./SideBar";
+import TenantFooter from "./TenantFooter";
 import Check from "../../icons/Check.svg";
+import EditIcon from "../../icons/EditIcon.svg";
 import { get, put, post } from "../../utils/api";
 import {
   squareForm,
@@ -20,13 +23,14 @@ import {
   small,
   underline,
   mediumBold,
+  headings,
+  gray,
+  subHeading,
 } from "../../utils/styles";
-import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
-import SideBar from "./SideBar";
-import TenantFooter from "./TenantFooter";
 
 function TenantProfile(props) {
+  console.log("in tenant profile");
   const context = useContext(AppContext);
   const { userData, refresh } = context;
   const { access_token, user } = userData;
@@ -36,6 +40,7 @@ function TenantProfile(props) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
+  const [editProfile, setEditProfile] = useState(false);
   const [phone, setPhone] = React.useState(user.phone_number);
   const [email, setEmail] = React.useState(user.email);
   const [salary, setSalary] = useState("");
@@ -271,206 +276,430 @@ function TenantProfile(props) {
         <div className="w-100 mb-5">
           <Header
             title="Profile"
-            leftText="Cancel"
-            // leftFn={() => setTab("DASHBOARD")}
-            rightText="Save"
-            rightFn={() => {
-              submitInfo();
-              // setTab("DASHBOARD");
-            }}
+            leftText={editProfile ? "Cancel" : ""}
+            leftFn={() => (editProfile ? setEditProfile(false) : "")}
+            rightText={editProfile ? "Save" : "Edit"}
+            rightFn={() => (editProfile ? submitInfo() : setEditProfile(true))}
           />
-          <Row className="m-3">
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                First Name
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Last Name
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Email ID
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Email ID"
-                value={email}
-                disabled="disabled"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Phone Number
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Phone Number"
-                value={phone}
-                // disabled="disabled"
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </Form.Group>
-            <Row className="mx-0 my-0">
-              <Col className="px-0">
-                <Form.Group className="mx-2 mb-3">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Salary
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    placeholder="$"
-                    value={salary}
-                    onChange={(e) => setSalary(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col
-                className="px-0"
-                onClick={(e) => {
-                  setExpandFrequency(!expandFrequency);
-                  handleClick(e);
-                }}
-              >
-                <Form.Group className="mx-2 mb-3">
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Frequency
-                  </Form.Label>
-                  <DropdownButton
-                    variant="light"
-                    id="dropdown-basic-button"
-                    title={frequency}
-                  >
-                    {allFrequency.map((freq, i) => (
-                      <Dropdown.Item
-                        onClick={() => setFrequency(freq)}
-                        // href="#/action-1"
-                      >
-                        {" "}
-                        {freq}{" "}
-                      </Dropdown.Item>
-                    ))}
-                  </DropdownButton>
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Current Job Title
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Title"
-                value={jobTitle}
-                onChange={(e) => setJobTitle(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Company Name
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="Company"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Social Security Number
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="123-45-6789"
-                value={ssn}
-                onChange={(e) => setSsn(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
-                Driver's License Number
-              </Form.Label>
-              <Form.Control
-                style={squareForm}
-                placeholder="1234567890"
-                value={dlNumber}
-                onChange={(e) => setDLNumber(e.target.value)}
-              />
-            </Form.Group>
-            <h5 className="mx-2 my-3">Current Address</h5>
-            <AddressForm
-              state={currentAddressState}
-              selectedState={selectedState}
-              setSelectedState={setSelectedState}
-            />
-            <Row>
-              <Col
-                xs={2}
-                className="px-0 d-flex justify-content-end align-items-center"
-              >
-                <div
-                  onClick={() => setUsePreviousAddress(!usePreviousAddress)}
-                  style={{
-                    border: "1px solid #000000",
-                    width: "24px",
-                    height: "24px",
-                    textAlign: "center",
-                  }}
-                >
-                  {usePreviousAddress &&
-                  previousAddressState &&
-                  previousAddressState.state ? (
-                    <img src={Check} style={{ width: "13px", height: "9px" }} />
-                  ) : null}
-                </div>
-              </Col>
-              <Col>
-                <p
-                  style={{ ...underline, ...small }}
-                  className="text-primary mb-1 me-3"
-                >
-                  Add another property manager reference if your last lease was
-                  for less than 2 years.
-                </p>
-              </Col>
-            </Row>
-            {usePreviousAddress ? (
-              <div>
-                <h5 className="mx-2 my-3">Previous Address</h5>
-                <AddressForm
-                  state={previousAddressState}
-                  selectedState={selectedPrevState}
-                  setSelectedState={setSelectedPrevState}
-                />
+          {editProfile ? (
+            <Row
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <div className="my-2">
+                <Row className="mb-4" style={headings}>
+                  <div>Personal Details</div>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        First Name
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="First Name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Last Name
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="Last Name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    {" "}
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Phone Number
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="Phone Number"
+                        value={phone}
+                        // disabled="disabled"
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Email ID
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="Email ID"
+                        value={email}
+                        disabled="disabled"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
               </div>
-            ) : (
-              ""
-            )}
 
-            <div className="mb-4" style={{ margin: "20px" }}>
-              <h5 style={mediumBold}>Tenant Documents</h5>
+              <div className="my-2">
+                <Row className="mb-4" style={headings}>
+                  <div>Identification Details</div>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Social Security Number
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="123-45-6789"
+                        value={ssn}
+                        onChange={(e) => setSsn(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    {" "}
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Driver's License Number
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="1234567890"
+                        value={dlNumber}
+                        onChange={(e) => setDLNumber(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </div>
+              <div className="my-2">
+                <Row className="mb-4" style={headings}>
+                  <div>Current Job Details</div>
+                </Row>
+                <Row>
+                  <Col>
+                    {" "}
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Current Job Title
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="Title"
+                        value={jobTitle}
+                        onChange={(e) => setJobTitle(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Company Name
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="Company"
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Group className="mx-2 mb-3">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Salary
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="$"
+                        value={salary}
+                        onChange={(e) => setSalary(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col
+                    className="px-0"
+                    onClick={(e) => {
+                      setExpandFrequency(!expandFrequency);
+                      handleClick(e);
+                    }}
+                  >
+                    <Form.Group className="mx-2 mb-3">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Frequency
+                      </Form.Label>
+                      <DropdownButton
+                        variant="light"
+                        id="dropdown-basic-button"
+                        title={frequency}
+                      >
+                        {allFrequency.map((freq, i) => (
+                          <Dropdown.Item
+                            onClick={() => setFrequency(freq)}
+                            // href="#/action-1"
+                          >
+                            {" "}
+                            {freq}{" "}
+                          </Dropdown.Item>
+                        ))}
+                      </DropdownButton>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </div>
+            </Row>
+          ) : (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="mb-4" style={headings}>
+                <div>Personal Details</div>
+              </Row>
+
+              <Row>
+                <Col>
+                  <h6>First Name</h6>
+                  <p style={gray}>
+                    {firstName && firstName !== "NULL"
+                      ? firstName
+                      : "No First Name Provided"}
+                  </p>
+                </Col>
+                <Col>
+                  <h6>Last Name</h6>
+                  <p style={gray}>
+                    {lastName && lastName !== "NULL"
+                      ? lastName
+                      : "No Last Name Provided"}
+                  </p>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <h6>Phone Number</h6>
+                  <p style={gray}>
+                    {phone && phone !== "NULL"
+                      ? phone
+                      : "No Phone Number Provided"}
+                  </p>
+                </Col>
+                <Col>
+                  <h6>Email</h6>
+                  <p style={gray}>
+                    {email && email !== "NULL" ? email : "No Email Provided"}
+                  </p>
+                </Col>
+              </Row>
+
+              <div className="my-2">
+                <Row className="mb-4" style={headings}>
+                  <div>Identification Details</div>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <h6>SSN</h6>
+                    <p style={gray}>
+                      {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}
+                    </p>
+                  </Col>
+                  <Col>
+                    <h6>DL</h6>
+                    <p style={gray}>
+                      {dlNumber && dlNumber !== "NULL"
+                        ? dlNumber
+                        : "No DL Provided"}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+              <div className="my-2">
+                <Row className="mb-4" style={headings}>
+                  <div>Current Job Details</div>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <h6>Job Title</h6>
+                    <p style={gray}>
+                      {jobTitle && jobTitle !== "NULL"
+                        ? jobTitle
+                        : "No SSN Provided"}
+                    </p>
+                  </Col>
+                  <Col>
+                    <h6>Company</h6>
+                    <p style={gray}>
+                      {company && company !== "NULL"
+                        ? company
+                        : "No DL Provided"}
+                    </p>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <h6>Salary</h6>
+                    <p style={gray}>
+                      {salary && salary !== "NULL" ? salary : "No SSN Provided"}
+                    </p>
+                  </Col>
+                  <Col>
+                    <h6>Frequency</h6>
+                    <p style={gray}>
+                      {frequency && frequency !== "NULL"
+                        ? frequency
+                        : "No DL Provided"}
+                    </p>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          )}
+          {editProfile ? (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="mb-4" style={headings}>
+                <div>Current Address</div>
+              </Row>
+              <AddressForm
+                editProfile={editProfile}
+                state={currentAddressState}
+                selectedState={selectedState}
+                setSelectedState={setSelectedState}
+              />
+              <Row>
+                <Col
+                  xs={2}
+                  className="px-0 d-flex justify-content-end align-items-center"
+                >
+                  <div
+                    onClick={() => setUsePreviousAddress(!usePreviousAddress)}
+                    style={{
+                      border: "1px solid #000000",
+                      width: "24px",
+                      height: "24px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {usePreviousAddress &&
+                    previousAddressState &&
+                    previousAddressState.state ? (
+                      <img
+                        src={Check}
+                        style={{ width: "13px", height: "9px" }}
+                      />
+                    ) : null}
+                  </div>
+                </Col>
+                <Col>
+                  <p
+                    style={{ ...underline, ...small }}
+                    className="text-primary mb-1 me-3"
+                  >
+                    Add another property manager reference if your last lease
+                    was for less than 2 years.
+                  </p>
+                </Col>
+              </Row>
+              {usePreviousAddress ? (
+                <div>
+                  <h5 className="mx-2 my-3">Previous Address</h5>
+                  <AddressForm
+                    editProfile={editProfile}
+                    state={previousAddressState}
+                    selectedState={selectedPrevState}
+                    setSelectedState={setSelectedPrevState}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="mb-4" style={headings}>
+                <div>Current Address</div>
+              </Row>
+              <AddressForm
+                editProfile={editProfile}
+                state={currentAddressState}
+                selectedState={selectedState}
+                setSelectedState={setSelectedState}
+              />
+
+              {usePreviousAddress ? (
+                <div>
+                  <Row className="mb-4" style={headings}>
+                    <div>Current Address</div>
+                  </Row>
+                  <AddressForm
+                    editProfile={editProfile}
+                    state={previousAddressState}
+                    selectedState={selectedPrevState}
+                    setSelectedState={setSelectedPrevState}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          )}
+          {editProfile ? (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="mb-4" style={headings}>
+                <div>Tenant Documents</div>
+              </Row>
+
               {files.map((file, i) => (
                 <div key={i}>
                   <div className="d-flex justify-content-between align-items-end">
                     <div>
-                      <h6 style={mediumBold}>{file.name}</h6>
+                      <h6 style={subHeading}>{file.name}</h6>
                       <p style={small} className="m-0">
                         {file.description}
                       </p>
@@ -564,7 +793,50 @@ function TenantProfile(props) {
                 </div>
               )}
             </div>
-          </Row>
+          ) : (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="mb-4" style={headings}>
+                <div>Tenant Documents</div>
+              </Row>
+              {files.map((file, i) => (
+                <div key={i}>
+                  <div className="d-flex justify-content-between align-items-end">
+                    <div>
+                      <h6 style={subHeading}>{file.name}</h6>
+                      <p style={gray} className="m-0">
+                        {file.description}
+                      </p>
+                    </div>
+                    <div>
+                      <img
+                        src={EditIcon}
+                        alt="Edit"
+                        className="px-1 mx-2"
+                        onClick={() => editDocument(i)}
+                      />
+                      <img
+                        src={DeleteIcon}
+                        alt="Delete"
+                        className="px-1 mx-2"
+                        onClick={() => deleteDocument(i)}
+                      />
+                      <a href={file.link} target="_blank">
+                        <img src={File} />
+                      </a>
+                    </div>
+                  </div>
+                  <hr style={{ opacity: 1 }} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
