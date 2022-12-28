@@ -690,7 +690,18 @@ export default function TenantDashboard() {
                 </Carousel>
               </Row>
             ) : (
-              ""
+              <Row className="m-3">
+                <h1>Announcements</h1>
+                <Carousel slide={false}>
+                  <CarouselItem>
+                    <div className="align-items-center w-100 p-4">
+                      <p style={(subHeading, { textAlign: "center" })}>
+                        No current announcements
+                      </p>
+                    </div>
+                  </CarouselItem>
+                </Carousel>
+              </Row>
             )}
             <Row className="m-3">
               <Col>

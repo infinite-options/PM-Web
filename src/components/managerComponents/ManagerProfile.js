@@ -4,8 +4,10 @@ import { Row, Col, Form } from "react-bootstrap";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import ManagerPaymentSelection from "./ManagerPaymentSelection";
+import ManagerLocations from "../ManagerLocations";
 import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
+import ManagerFees from "../ManagerFees";
 import { get, put } from "../../utils/api";
 import { squareForm, gray, headings } from "../../utils/styles";
 function ManagerProfile(props) {
@@ -123,8 +125,8 @@ function ManagerProfile(props) {
       phone_number: profileInfo.business_phone_number,
       email: profileInfo.business_email,
       ein_number: profileInfo.business_ein_number,
-      services_fees: feeState[0],
-      locations: locationState[0],
+      services_fees: feeState,
+      locations: locationState,
       paypal: paypal || null,
       apple_pay: applePay || null,
       zelle: zelle || null,
@@ -366,6 +368,37 @@ function ManagerProfile(props) {
             setPaymentState={setPaymentState}
             editProfile={editProfile}
           />
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            <Row className="mb-4" style={headings}>
+              <div>Fee Details</div>
+            </Row>
+            <ManagerFees
+              feeState={feeState}
+              setFeeState={setFeeState}
+              editProfile={editProfile}
+            />
+          </div>
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            <ManagerLocations
+              locationState={locationState}
+              setLocationState={setLocationState}
+              editProfile={editProfile}
+            />
+          </div>
 
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
             <ManagerFooter />
