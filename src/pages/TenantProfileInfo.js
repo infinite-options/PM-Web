@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -31,12 +31,22 @@ import {
 } from "../utils/styles";
 
 function TenantProfileInfo(props) {
-  const { userData } = React.useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   console.log("user", user);
   const navigate = useNavigate();
   const { autofillState, setAutofillState } = props;
-  const [type, setType] = React.useState("Apartment");
+
+  const [numAdults, setNumAdults] = useState(0);
+  const [numChildren, setNumChildren] = useState(0);
+  const [numPets, setNumPets] = useState(0);
+  const [numVehicles, setNumVehicles] = useState(0);
+  const [numReferences, setNumReferences] = useState(0);
+  const [adults, setAdults] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [pets, setPets] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [references, setReferences] = useState([]);
 
   const updateAutofillState = (profile) => {
     const newAutofillState = { ...autofillState };
@@ -51,28 +61,26 @@ function TenantProfileInfo(props) {
   console.log(autofillState);
   const [anchorEl, setAnchorEl] = useState(null);
   // const [expandFrequency, setExpandFrequency] = useState(false);
-  const [firstName, setFirstName] = React.useState(autofillState.first_name);
-  const [lastName, setLastName] = React.useState(autofillState.last_name);
-  const [salary, setSalary] = React.useState("");
-  const [phone, setPhone] = React.useState(autofillState.phone_number);
-  const [email, setEmail] = React.useState(autofillState.email);
+  const [firstName, setFirstName] = useState(autofillState.first_name);
+  const [lastName, setLastName] = useState(autofillState.last_name);
+  const [salary, setSalary] = useState("");
+  const [phone, setPhone] = useState(autofillState.phone_number);
+  const [email, setEmail] = useState(autofillState.email);
   const [frequency, setFrequency] = useState("Annual");
-  const [jobTitle, setJobTitle] = React.useState("");
-  const [company, setCompany] = React.useState("");
-  const [ssn, setSsn] = React.useState(autofillState.ssn);
-  const [dlNumber, setDLNumber] = React.useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [ssn, setSsn] = useState(autofillState.ssn);
+  const [dlNumber, setDLNumber] = useState("");
 
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [usePreviousAddress, setUsePreviousAddress] = React.useState(false);
-  const [useDetailsIfRenting, setUseDetailsIfRenting] = React.useState(false);
+  const [usePreviousAddress, setUsePreviousAddress] = useState(false);
   const defaultState = "--";
-  const [selectedState, setSelectedState] = React.useState(defaultState);
-  const [selectedDlState, setSelectedDlState] = React.useState(defaultState);
-  const [selectedPrevState, setSelectedPrevState] =
-    React.useState(defaultState);
+  const [selectedState, setSelectedState] = useState(defaultState);
+  const [selectedDlState, setSelectedDlState] = useState(defaultState);
+  const [selectedPrevState, setSelectedPrevState] = useState(defaultState);
 
-  const currentAddressState = React.useState({
+  const currentAddressState = useState({
     street: "",
     unit: "",
     city: "",
@@ -85,7 +93,7 @@ function TenantProfileInfo(props) {
     rent: "",
   });
 
-  const previousAddressState = React.useState({
+  const previousAddressState = useState({
     street: "",
     unit: "",
     city: "",
@@ -98,9 +106,9 @@ function TenantProfileInfo(props) {
     rent: "",
   });
 
-  const [newFile, setNewFile] = React.useState(null);
-  const [editingDoc, setEditingDoc] = React.useState(null);
-  const [files, setFiles] = React.useState([]);
+  const [newFile, setNewFile] = useState(null);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [files, setFiles] = useState([]);
   const addFile = (e) => {
     const file = e.target.files[0];
     const newFile = {
@@ -145,7 +153,363 @@ function TenantProfileInfo(props) {
     setFiles(newFiles);
   };
 
-  React.useEffect(() => {
+  const onChangeNumberOfAdults = (e) => {
+    const numberOfAdults = e.target.value;
+    setNumAdults(numberOfAdults);
+
+    if (numberOfAdults > 0) {
+      let generateArrays = [];
+      for (let i = 1; i <= Number(e.target.value); i++) {
+        let obj = { id: i, name: "", relationship: "", dob: "" };
+        generateArrays.push(obj);
+      }
+      console.log(generateArrays);
+      setAdults(generateArrays);
+    } else {
+      setAdults([]);
+    }
+  };
+
+  function addAdults() {
+    return adults.map((adult, idx) => (
+      <Row key={idx}>
+        <Col>
+          <label htmlFor="numAdults"> Adult {idx + 1} Name </label>
+          <input
+            type="text"
+            className="form-control"
+            name="name"
+            onChange={(e) => handleChangeAdults(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numAdults">Relationship to Applicant </label>
+          <input
+            type="text"
+            className="form-control"
+            name="relationship"
+            onChange={(e) => handleChangeAdults(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numAdults">Date of Birth (Mon/Date/Year)</label>
+          <input
+            type="date"
+            className="form-control"
+            name="dob"
+            onChange={(e) => handleChangeAdults(idx, e)}
+          />
+        </Col>
+      </Row>
+    ));
+  }
+  function handleChangeAdults(i, event) {
+    const { value, name } = event.target;
+    const newState = [...adults];
+    newState[i] = {
+      ...newState[i],
+      [name]: value,
+    };
+    console.log(newState);
+    setAdults(newState);
+  }
+
+  const onChangeNumberOfChildren = (e) => {
+    const numberOfChildren = e.target.value;
+
+    setNumChildren(numberOfChildren);
+    if (numberOfChildren > 0) {
+      let generateArrays = [];
+      for (let i = 1; i <= Number(e.target.value); i++) {
+        let obj = { id: i, name: "", relationship: "", dob: "" };
+        generateArrays.push(obj);
+      }
+      console.log(generateArrays);
+      setChildren(generateArrays);
+    } else {
+      setChildren([]);
+    }
+  };
+  function addChildren() {
+    return children.map((child, idx) => (
+      <Row>
+        <Col>
+          <label htmlFor="numChildren"> Children {idx + 1} Name </label>
+          <input
+            type="text"
+            className="form-control"
+            name="name"
+            onChange={(e) => handleChangeChildren(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numChildren">Relationship to Applicant </label>
+          <input
+            type="text"
+            className="form-control"
+            name="relationship"
+            onChange={(e) => handleChangeChildren(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numChildren">Date of Birth (Mon/Date/Year)</label>
+          <input
+            type="date"
+            className="form-control"
+            name="dob"
+            onChange={(e) => handleChangeChildren(idx, e)}
+          />
+        </Col>
+      </Row>
+    ));
+  }
+  function handleChangeChildren(i, event) {
+    const { value, name } = event.target;
+    const newState = [...children];
+    newState[i] = {
+      ...newState[i],
+      [name]: value,
+    };
+    console.log(newState);
+    setChildren(newState);
+  }
+  const onChangeNumberOfPets = (e) => {
+    const numberOfPets = e.target.value;
+
+    setNumPets(numberOfPets);
+
+    if (numberOfPets > 0) {
+      let generateArrays = [];
+      for (let i = 1; i <= Number(e.target.value); i++) {
+        let obj = { id: i, name: "", type: "", breed: "", weight: "" };
+        generateArrays.push(obj);
+      }
+      console.log(generateArrays);
+      setPets(generateArrays);
+    } else {
+      setPets([]);
+    }
+  };
+  function addPets() {
+    return pets.map((pet, idx) => (
+      <Row>
+        <Col>
+          <label htmlFor="numPets"> Pets {pet + 1} Name </label>
+          <input
+            type="text"
+            className="form-control"
+            name="name"
+            onChange={(e) => handleChangePets(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numPets">Type </label>
+          <input
+            type="text"
+            className="form-control"
+            name="type"
+            onChange={(e) => handleChangePets(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numPets">If Dog, What Breed?</label>
+          <input
+            type="text"
+            className="form-control"
+            name="breed"
+            onChange={(e) => handleChangePets(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numPets">Weight</label>
+          <input
+            type="text"
+            className="form-control"
+            name="weight"
+            onChange={(e) => handleChangePets(idx, e)}
+          />
+        </Col>
+      </Row>
+    ));
+  }
+  function handleChangePets(i, event) {
+    const { value, name } = event.target;
+    const newState = [...pets];
+    newState[i] = {
+      ...newState[i],
+      [name]: value,
+    };
+    console.log(newState);
+    setPets(newState);
+  }
+  const onChangeNumberOfVehicles = (e) => {
+    const numberOfVehicles = e.target.value;
+    setNumVehicles(numberOfVehicles);
+    if (numberOfVehicles > 0) {
+      let generateArrays = [];
+      for (let i = 1; i <= Number(e.target.value); i++) {
+        let obj = {
+          id: i,
+          make: "",
+          model: "",
+          year: "",
+          state: "",
+          license: "",
+        };
+        generateArrays.push(obj);
+      }
+      console.log(generateArrays);
+      setVehicles(generateArrays);
+    } else {
+      setVehicles([]);
+    }
+  };
+  function addVehicles() {
+    return vehicles.map((vehicle, idx) => (
+      <Row>
+        <Col>
+          <label htmlFor="numVehicles"> Make </label>
+          <input
+            type="text"
+            className="form-control"
+            name="make"
+            onChange={(e) => handleChangeVehicles(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numVehicles">Model </label>
+          <input
+            type="text"
+            className="form-control"
+            name="model"
+            onChange={(e) => handleChangeVehicles(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numVehicles">Year</label>
+          <input
+            type="text"
+            className="form-control"
+            name="year"
+            onChange={(e) => handleChangeVehicles(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numVehicles">State</label>
+          <input
+            type="text"
+            className="form-control"
+            name="state"
+            onChange={(e) => handleChangeVehicles(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numVehicles">License</label>
+          <input
+            type="text"
+            className="form-control"
+            name="license"
+            onChange={(e) => handleChangeVehicles(idx, e)}
+          />
+        </Col>
+      </Row>
+    ));
+  }
+  function handleChangeVehicles(i, event) {
+    const { value, name } = event.target;
+    const newState = [...vehicles];
+    newState[i] = {
+      ...newState[i],
+      [name]: value,
+    };
+    console.log(newState);
+    setVehicles(newState);
+  }
+
+  const onChangeNumberOfReferences = (e) => {
+    const numberOfReferences = e.target.value;
+    setNumReferences(numberOfReferences);
+    if (numberOfReferences > 0) {
+      let generateArrays = [];
+      for (let i = 1; i <= Number(e.target.value); i++) {
+        let obj = {
+          id: i,
+          name: "",
+          address: "",
+          phone: "",
+          email: "",
+          relationship: "",
+        };
+        generateArrays.push(obj);
+      }
+      console.log(generateArrays);
+      setReferences(generateArrays);
+    } else {
+      setReferences([]);
+    }
+  };
+  function addReferences() {
+    return references.map((reference, idx) => (
+      <Row>
+        <Col>
+          <label htmlFor="numReferences"> Name </label>
+          <input
+            type="text"
+            className="form-control"
+            name="name"
+            onChange={(e) => handleChangeReferences(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numReferences">Address </label>
+          <input
+            type="text"
+            className="form-control"
+            name="address"
+            onChange={(e) => handleChangeReferences(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numReferences">Phone Number</label>
+          <input
+            type="text"
+            className="form-control"
+            name="phone"
+            onChange={(e) => handleChangeReferences(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numReferences">Email</label>
+          <input
+            type="text"
+            className="form-control"
+            name="email"
+            onChange={(e) => handleChangeReferences(idx, e)}
+          />
+        </Col>
+        <Col>
+          <label htmlFor="numReferences">Relationship</label>
+          <input
+            type="text"
+            className="form-control"
+            name="relationship"
+            onChange={(e) => handleChangeReferences(idx, e)}
+          />
+        </Col>
+      </Row>
+    ));
+  }
+  function handleChangeReferences(i, event) {
+    const { value, name } = event.target;
+    const newState = [...references];
+    newState[i] = {
+      ...newState[i],
+      [name]: value,
+    };
+    console.log(newState);
+    setReferences(newState);
+  }
+  useEffect(() => {
     if (access_token === null) {
       navigate("/");
       return;
@@ -218,12 +582,18 @@ function TenantProfileInfo(props) {
       tenant_previous_address: usePreviousAddress
         ? JSON.stringify(previousAddressState[0])
         : null,
+      tenant_adult_occupants: JSON.stringify(adults),
+      tenant_children_occupants: JSON.stringify(children),
+      tenant_pet_occupants: JSON.stringify(pets),
+      tenant_references: JSON.stringify(references),
+      tenant_vehicle_info: JSON.stringify(vehicles),
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
       tenantProfile[key] = files[i].file;
       delete files[i].file;
     }
+    console.log(tenantProfile);
     tenantProfile.documents = JSON.stringify(files);
     await post("/tenantProfileInfo", tenantProfile, access_token, files);
     updateAutofillState(tenantProfile);
@@ -321,7 +691,7 @@ function TenantProfileInfo(props) {
     );
 
   return (
-    <div className="pb-4">
+    <div className="pb-4 w-100 overflow-hidden">
       <Header title="Tenant Profile" />
       <div>
         <Form.Group className="mx-2 my-3">
@@ -455,14 +825,17 @@ function TenantProfileInfo(props) {
             </Form.Group>
           </Col>
         </Row>
-        {/* ===============================< Current Address form -- > Address form >=================================================== */}
-        <h5 className="mx-2 my-3">Current Address</h5>
-        <AddressForm
-          state={currentAddressState}
-          errorMessage={errorMessage}
-          selectedState={selectedState}
-          setSelectedState={setSelectedState}
-        />
+        <Row className="mx-1 my-3">
+          {/* ===============================< Current Address form -- > Address form >=================================================== */}
+          <h5 className="mx-2 my-3">Current Address</h5>
+          <AddressForm
+            state={currentAddressState}
+            errorMessage={errorMessage}
+            selectedState={selectedState}
+            setSelectedState={setSelectedState}
+            editProfile={true}
+          />
+        </Row>
 
         {/* ===============================< Previous Address form -- > Address form >=================================================== */}
 
@@ -502,8 +875,98 @@ function TenantProfileInfo(props) {
         ) : (
           ""
         )}
+        <Row className="mx-2 mb-4">
+          <h5>Who plans to live in the unit?</h5>
+          <Row>
+            <Col>
+              {" "}
+              <Form.Group className="mx-2 my-3">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Adults {numAdults === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="Title"
+                  value={numAdults}
+                  onChange={onChangeNumberOfAdults}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              {" "}
+              <Form.Group className="mx-2 my-3">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Children {numChildren === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="Title"
+                  value={numChildren}
+                  onChange={onChangeNumberOfChildren}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              {" "}
+              <Form.Group className="mx-2 my-3">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Pets {numPets === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="Title"
+                  value={numPets}
+                  onChange={onChangeNumberOfPets}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>{adults.length ? <div>{addAdults()}</div> : null}</Row>
+          <Row>{children.length ? <div>{addChildren()}</div> : null}</Row>
+          <Row>{pets.length ? <div>{addPets()}</div> : null}</Row>
+        </Row>
+        <Row className="mx-2 mb-4">
+          <h5>Vehicle Information</h5>
+          <Row>
+            <Col>
+              {" "}
+              <Form.Group className="mx-2 my-3">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  Vehicles {numVehicles === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="No. of Vehicles"
+                  value={numVehicles}
+                  onChange={onChangeNumberOfVehicles}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>{vehicles.length ? <div>{addVehicles()}</div> : null}</Row>
+        </Row>
+        <Row className="mx-2 mb-4">
+          <h5>References</h5>
+          <Row>
+            <Col>
+              {" "}
+              <Form.Group className="mx-2 my-3">
+                <Form.Label as="h6" className="mb-0 ms-2">
+                  References {numReferences === "" ? required : ""}
+                </Form.Label>
+                <Form.Control
+                  style={squareForm}
+                  placeholder="No. of References"
+                  value={numReferences}
+                  onChange={onChangeNumberOfReferences}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>{references.length ? <div>{addReferences()}</div> : null}</Row>
+        </Row>
         {/* ===============================< Uploading Tenant Document >=================================================== */}
-        <div className="mb-4">
+        <Row className="mx-2 mb-4">
           <h5 style={mediumBold}>Tenant Documents</h5>
           {files.map((file, i) => (
             <div key={i}>
@@ -600,7 +1063,7 @@ function TenantProfileInfo(props) {
               </label>
             </div>
           )}
-        </div>
+        </Row>
 
         {/* ===============================< Displaying Error message >=================================================== */}
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>
