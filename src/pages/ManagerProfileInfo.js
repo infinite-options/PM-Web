@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +12,7 @@ import { get, post } from "../utils/api";
 import { squareForm, pillButton, hidden, red, small } from "../utils/styles";
 
 function ManagerProfileInfo(props) {
-  const context = React.useContext(AppContext);
+  const context = useContext(AppContext);
   const { access_token, user } = context.userData;
   const { autofillState, setAutofillState } = props;
   const updateAutofillState = (profile) => {
@@ -25,17 +25,15 @@ function ManagerProfileInfo(props) {
     setAutofillState(newAutofillState);
   };
   const navigate = useNavigate();
-  const [firstName, setFirstName] = React.useState(autofillState.first_name);
-  const [lastName, setLastName] = React.useState(autofillState.last_name);
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    autofillState.phone_number
-  );
-  const [email, setEmail] = React.useState(autofillState.email);
-  const [einNumber, setEinNumber] = React.useState(autofillState.ein_number);
-  const [ssn, setSsn] = React.useState(autofillState.ssn);
-  const [showSsn, setShowSsn] = React.useState(false);
-  const [showEin, setShowEin] = React.useState(false);
-  const paymentState = React.useState({
+  const [firstName, setFirstName] = useState(autofillState.first_name);
+  const [lastName, setLastName] = useState(autofillState.last_name);
+  const [phoneNumber, setPhoneNumber] = useState(autofillState.phone_number);
+  const [email, setEmail] = useState(autofillState.email);
+  const [einNumber, setEinNumber] = useState(autofillState.ein_number);
+  const [ssn, setSsn] = useState(autofillState.ssn);
+  const [showSsn, setShowSsn] = useState(false);
+  const [showEin, setShowEin] = useState(false);
+  const paymentState = useState({
     paypal: autofillState.paypal,
     applePay: autofillState.apple_pay,
     zelle: autofillState.zelle,
@@ -43,9 +41,9 @@ function ManagerProfileInfo(props) {
     accountNumber: autofillState.account_number,
     routingNumber: autofillState.routing_number,
   });
-  const [feeState, setFeeState] = React.useState([]);
-  const [locationState, setLocationState] = React.useState([]);
-  React.useEffect(() => {
+  const [feeState, setFeeState] = useState([]);
+  const [locationState, setLocationState] = useState([]);
+  useEffect(() => {
     if (access_token === null) {
       navigate("/");
       return;
@@ -65,7 +63,7 @@ function ManagerProfileInfo(props) {
     };
     fetchProfileInfo();
   }, []);
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const submitInfo = async () => {
     console.log(paymentState[0]);
     const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
@@ -212,11 +210,16 @@ function ManagerProfileInfo(props) {
         <PaymentSelection state={paymentState} />
         <Container className="px-2">
           <h6 className="mb-3">Fees you charge:</h6>
-          <ManagerFees feeState={feeState} setFeeState={setFeeState} />
+          <ManagerFees
+            feeState={feeState}
+            setFeeState={setFeeState}
+            editProfile={true}
+          />
         </Container>
         <ManagerLocations
           locationState={locationState}
           setLocationState={setLocationState}
+          editProfile={true}
         />
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>
           <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
