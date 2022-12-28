@@ -4244,21 +4244,29 @@ function ManagerPropertyView(props) {
                   <Col>
                     <h3>Property Summary</h3>
                   </Col>
-                  <Col>
-                    <img
-                      src={EditIconNew}
-                      onClick={() => {
-                        window.scrollTo(0, 0);
-                        setEditProperty(true);
-                      }}
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        float: "right",
-                        marginRight: "5rem",
-                      }}
-                    />
-                  </Col>
+                  {property.management_status === "ACCEPTED" ? (
+                    <Col>
+                      <img
+                        src={EditIconNew}
+                        onClick={
+                          property.management_status === "ACCEPTED"
+                            ? () => {
+                                window.scrollTo(0, 0);
+                                setEditProperty(true);
+                              }
+                            : () => {}
+                        }
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                      />
+                    </Col>
+                  ) : (
+                    <Col></Col>
+                  )}
                 </Row>
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <div>
@@ -4293,10 +4301,14 @@ function ManagerPropertyView(props) {
                             padding="none"
                             size="small"
                             align="center"
-                            onClick={() => {
-                              window.scrollTo(0, 1500);
-                              setEditProperty(true);
-                            }}
+                            onClick={
+                              property.management_status === "ACCEPTED"
+                                ? () => {
+                                    window.scrollTo(0, 1500);
+                                    setEditProperty(true);
+                                  }
+                                : () => {}
+                            }
                           >
                             {JSON.parse(property.images).length > 0 ? (
                               <img
@@ -4329,10 +4341,14 @@ function ManagerPropertyView(props) {
                             padding="none"
                             size="small"
                             align="center"
-                            onClick={() => {
-                              window.scrollTo(0, 0);
-                              setEditProperty(true);
-                            }}
+                            onClick={
+                              property.management_status === "ACCEPTED"
+                                ? () => {
+                                    window.scrollTo(0, 0);
+                                    setEditProperty(true);
+                                  }
+                                : () => {}
+                            }
                           >
                             {property.address}
                             {property.unit !== "" ? " " + property.unit : ""}
@@ -4341,10 +4357,14 @@ function ManagerPropertyView(props) {
                             padding="none"
                             size="small"
                             align="center"
-                            onClick={() => {
-                              window.scrollTo(0, 0);
-                              setEditProperty(true);
-                            }}
+                            onClick={
+                              property.management_status === "ACCEPTED"
+                                ? () => {
+                                    window.scrollTo(0, 0);
+                                    setEditProperty(true);
+                                  }
+                                : () => {}
+                            }
                           >
                             {property.city}, {property.state}
                           </TableCell>
@@ -4352,10 +4372,14 @@ function ManagerPropertyView(props) {
                             padding="none"
                             size="small"
                             align="center"
-                            onClick={() => {
-                              window.scrollTo(0, 0);
-                              setEditProperty(true);
-                            }}
+                            onClick={
+                              property.management_status === "ACCEPTED"
+                                ? () => {
+                                    window.scrollTo(0, 0);
+                                    setEditProperty(true);
+                                  }
+                                : () => {}
+                            }
                           >
                             {property.zip}
                           </TableCell>
@@ -4388,10 +4412,14 @@ function ManagerPropertyView(props) {
                             padding="none"
                             size="small"
                             align="center"
-                            onClick={() => {
-                              window.scrollTo(0, 800);
-                              setEditProperty(true);
-                            }}
+                            onClick={
+                              property.management_status === "ACCEPTED"
+                                ? () => {
+                                    window.scrollTo(0, 800);
+                                    setEditProperty(true);
+                                  }
+                                : () => {}
+                            }
                           >
                             {"$" + property.listed_rent}
                           </TableCell>
@@ -4400,10 +4428,14 @@ function ManagerPropertyView(props) {
                             padding="none"
                             size="small"
                             align="center"
-                            onClick={() => {
-                              window.scrollTo(0, 800);
-                              setEditProperty(true);
-                            }}
+                            onClick={
+                              property.management_status === "ACCEPTED"
+                                ? () => {
+                                    window.scrollTo(0, 800);
+                                    setEditProperty(true);
+                                  }
+                                : () => {}
+                            }
                           >
                             {property.property_type}
                           </TableCell>
@@ -4412,10 +4444,14 @@ function ManagerPropertyView(props) {
                             padding="none"
                             size="small"
                             align="center"
-                            onClick={() => {
-                              window.scrollTo(0, 800);
-                              setEditProperty(true);
-                            }}
+                            onClick={
+                              property.management_status === "ACCEPTED"
+                                ? () => {
+                                    window.scrollTo(0, 800);
+                                    setEditProperty(true);
+                                  }
+                                : () => {}
+                            }
                           >
                             {property.num_beds + "/" + property.num_baths}
                           </TableCell>
@@ -4582,21 +4618,25 @@ function ManagerPropertyView(props) {
                   <Col>
                     <h3>Appliances</h3>
                   </Col>
-                  <Col>
-                    <img
-                      src={EditIconNew}
-                      onClick={() => {
-                        window.scrollTo(0, 1000);
-                        setEditProperty(true);
-                      }}
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        float: "right",
-                        marginRight: "5rem",
-                      }}
-                    />
-                  </Col>
+                  {property.management_status === "ACCEPTED" ? (
+                    <Col>
+                      <img
+                        src={EditIconNew}
+                        onClick={() => {
+                          window.scrollTo(0, 1000);
+                          setEditProperty(true);
+                        }}
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                      />
+                    </Col>
+                  ) : (
+                    <Col></Col>
+                  )}
                 </Row>
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <div>
@@ -4628,10 +4668,14 @@ function ManagerPropertyView(props) {
                             applianceState[0][appliance]["available"] ==
                               "True" ? (
                             <TableRow
-                              onClick={() => {
-                                window.scrollTo(0, 1000);
-                                setEditProperty(true);
-                              }}
+                              onClick={
+                                property.management_status === "ACCEPTED"
+                                  ? () => {
+                                      window.scrollTo(0, 1000);
+                                      setEditProperty(true);
+                                    }
+                                  : () => {}
+                              }
                             >
                               <TableCell>{appliance}</TableCell>
                               <TableCell>
