@@ -12,7 +12,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
-
+import Verified from "../../icons/Verified.jpg";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -95,9 +95,9 @@ export default function TenantPaymentHistory(props) {
     },
 
     {
-      id: "",
+      id: "payment_verify",
       numeric: false,
-      label: "",
+      label: "Payment Verification",
     },
     {
       id: "amount_paid",
@@ -202,10 +202,20 @@ export default function TenantPaymentHistory(props) {
                         ? row.payment_date.substring(0, 10)
                         : "Not Available"}
                     </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ width: "83px" }}
-                    ></TableCell>
+                    <TableCell align="right" style={{ width: "83px" }}>
+                      {row.payment_verify === "Verified" ? (
+                        <img
+                          src={Verified}
+                          style={{
+                            width: "25px",
+                            height: "25px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
                     <TableCell align="right">
                       {row.amount_paid.toFixed(2)}
                     </TableCell>
