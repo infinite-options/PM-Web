@@ -278,6 +278,7 @@ function PropertyManagersList(props) {
             }}
           >
             Fees Charged:
+            {console.log(selectedPropertyManagers.business_services_fees)}
             {JSON.parse(selectedPropertyManagers.business_services_fees).map(
               (bsf) => {
                 return (
