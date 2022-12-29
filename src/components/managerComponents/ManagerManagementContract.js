@@ -26,7 +26,7 @@ import ManagerFooter from "./ManagerFooter";
 function ManagerManagementContract(props) {
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
-  const { back, property, contract, reload } = props;
+  const { back, property, contract, selectedBusiness, reload } = props;
 
   const [showSpinner, setShowSpinner] = useState(false);
   const [contractName, setContractName] = React.useState("");
@@ -107,6 +107,8 @@ function ManagerManagementContract(props) {
   React.useEffect(() => {
     if (contract) {
       loadContract();
+    } else {
+      setFeeState(JSON.parse(selectedBusiness.business_services_fees));
     }
   }, [contract]);
 
@@ -285,7 +287,12 @@ function ManagerManagementContract(props) {
           <div className="mb-4">
             <h5 style={mediumBold}>PM Fees</h5>
             <div className="mx-2">
-              <ManagerFees feeState={feeState} setFeeState={setFeeState} />
+              <ManagerFees
+                feeState={feeState}
+                setFeeState={setFeeState}
+                selectedBusiness={selectedBusiness}
+                editProfile={true}
+              />
             </div>
           </div>
           <div className="mb-4">
