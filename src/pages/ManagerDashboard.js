@@ -4247,7 +4247,6 @@ export default function ManagerDashboard() {
                                 }}
                                 align="center"
                               >
-                                {console.log("available_to_rent", property)}
                                 {property.rentalInfo !== "Not Rented" ? (
                                   property.rentalInfo.map((tf, i) => {
                                     return (
@@ -4262,7 +4261,7 @@ export default function ManagerDashboard() {
                                     );
                                   })
                                 ) : property.available_to_rent == 0 &&
-                                  property.rentalInfo !== "Not Rented" ? (
+                                  property.rentalInfo === "Not Rented" ? (
                                   <div>Not Listed</div>
                                 ) : (
                                   <div>{property.rentalInfo}</div>
@@ -4348,7 +4347,7 @@ export default function ManagerDashboard() {
                                 style={{
                                   color:
                                     property.available_to_rent == 0 &&
-                                    property.rent_status == "Not Rented"
+                                    property.rent_status == "No Rent Info"
                                       ? "red"
                                       : property.rent_status == "PAID"
                                       ? "black"
@@ -4358,7 +4357,7 @@ export default function ManagerDashboard() {
                                 }}
                               >
                                 {property.available_to_rent == 0 &&
-                                property.rent_status !== "No Rent Info" ? (
+                                property.rent_status === "No Rent Info" ? (
                                   <div>Not Listed</div>
                                 ) : (
                                   <div>{property.rent_status}</div>

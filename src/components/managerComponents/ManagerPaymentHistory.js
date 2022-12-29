@@ -64,7 +64,7 @@ export default function ManagerPaymentHistory(props) {
     return stabilizedThis.map((el) => el[0]);
   }
 
-  const paymentsHeadCell = [
+  const paymentsOutgoingHeadCell = [
     {
       id: "purchase_uid",
       numeric: false,
@@ -93,7 +93,11 @@ export default function ManagerPaymentHistory(props) {
       numeric: false,
       label: "Date Paid",
     },
-
+    {
+      id: "receiver",
+      numeric: false,
+      label: "To",
+    },
     {
       id: "",
       numeric: false,
@@ -106,7 +110,7 @@ export default function ManagerPaymentHistory(props) {
     },
   ];
 
-  function EnhancedTableHeadPayments(props) {
+  function EnhancedTableHeadOutgoingPayments(props) {
     const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
@@ -115,7 +119,7 @@ export default function ManagerPaymentHistory(props) {
     return (
       <TableHead>
         <TableRow>
-          {paymentsHeadCell.map((headCell) => (
+          {paymentsOutgoingHeadCell.map((headCell) => (
             <TableCell
               key={headCell.id}
               align="right"
@@ -144,7 +148,99 @@ export default function ManagerPaymentHistory(props) {
     );
   }
 
-  EnhancedTableHeadPayments.propTypes = {
+  EnhancedTableHeadOutgoingPayments.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+  const paymentsIncomingHeadCell = [
+    {
+      id: "purchase_uid",
+      numeric: false,
+      label: "ID",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+
+    {
+      id: "description",
+      numeric: true,
+      label: "Description",
+    },
+
+    {
+      id: "purchase_type",
+      numeric: false,
+      label: "Type",
+    },
+
+    {
+      id: "next_payment",
+      numeric: false,
+      label: "Date Due",
+    },
+    {
+      id: "payer",
+      numeric: true,
+      label: "From",
+    },
+    {
+      id: "payment_verify",
+      numeric: true,
+      label: "Verify",
+    },
+    {
+      id: "amount_due",
+      numeric: true,
+      label: "Amount",
+    },
+  ];
+
+  function EnhancedTableHeadIncomingPayments(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {paymentsIncomingHeadCell.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="right"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                align="center"
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadIncomingPayments.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
@@ -156,6 +252,14 @@ export default function ManagerPaymentHistory(props) {
     let verifyObj = {
       payment_uid: payID,
       payment_verify: "Verified",
+    };
+    const response = await put("/payments", verifyObj);
+    setVerified(true);
+  };
+  const unverifyPayment = async (payID) => {
+    let verifyObj = {
+      payment_uid: payID,
+      payment_verify: "Unverified",
     };
     const response = await put("/payments", verifyObj);
     setVerified(true);
@@ -175,7 +279,7 @@ export default function ManagerPaymentHistory(props) {
           classes={{ root: classes.customTable }}
           size="small"
         >
-          <EnhancedTableHeadPayments
+          <EnhancedTableHeadOutgoingPayments
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -216,6 +320,7 @@ export default function ManagerPaymentHistory(props) {
                         ? row.payment_date.substring(0, 10)
                         : "Not Available"}
                     </TableCell>
+                    <TableCell align="right"> {row.receiver}</TableCell>
                     <TableCell
                       align="right"
                       style={{ width: "83px" }}
@@ -242,7 +347,7 @@ export default function ManagerPaymentHistory(props) {
           classes={{ root: classes.customTable }}
           size="small"
         >
-          <EnhancedTableHeadPayments
+          <EnhancedTableHeadIncomingPayments
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -283,6 +388,7 @@ export default function ManagerPaymentHistory(props) {
                         ? row.payment_date.substring(0, 10)
                         : "Not Available"}
                     </TableCell>
+                    <TableCell align="right"> {row.payer}</TableCell>
                     <TableCell align="right" style={{ width: "83px" }}>
                       {row.payment_verify === "Verified" ? (
                         <img
@@ -292,6 +398,7 @@ export default function ManagerPaymentHistory(props) {
                             height: "25px",
                             objectFit: "contain",
                           }}
+                          onClick={() => unverifyPayment(row.payment_uid)}
                         />
                       ) : (
                         <button
