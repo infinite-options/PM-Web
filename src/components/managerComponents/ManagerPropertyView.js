@@ -63,6 +63,8 @@ function ManagerPropertyView(props) {
   const property_uid =
     location.state === null ? props.property_uid : location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
+  const [managerID, setManagerID] = useState("");
+  const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [property, setProperty] = useState({ images: "[]" });
   const [hideEdit, setHideEdit] = useState(true);
   const responsive = {
@@ -287,7 +289,7 @@ function ManagerPropertyView(props) {
     const cashflowResponse = await get(
       `/managerCashflowProperty?property_id=${property_uid}&manager_id=${management_buid}`
     );
-
+    setManagerID(management_buid);
     setCashflowData(cashflowResponse.result);
     setImagesProperty(JSON.parse(response.result[0].images));
     let show = JSON.parse(response.result[0].images).length < 5 ? false : true;
@@ -727,6 +729,7 @@ function ManagerPropertyView(props) {
         property={property}
         contract={selectedContract}
         reload={reloadProperty}
+        selectedBusiness={selectedBusiness}
       />
     ) : showTenantAgreement ? (
       <ManagerTenantAgreement
@@ -4903,9 +4906,12 @@ function ManagerPropertyView(props) {
                   {" "}
                   <PropertyManagerDocs
                     property={property}
+                    managerID={managerID}
                     fetchProperty={fetchProperty}
                     addDocument={addContract}
                     selectContract={selectContract}
+                    selectedBusiness={selectedBusiness}
+                    setSelectedBusiness={setSelectedBusiness}
                     setShowDialog={setShowDialog}
                     endEarlyDate={endEarlyDate}
                     setEndEarlyDate={setEndEarlyDate}

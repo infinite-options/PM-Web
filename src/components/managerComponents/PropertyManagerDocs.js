@@ -52,12 +52,14 @@ function PropertyManagerDocs(props) {
     setEndEarlyDate,
     cancel,
     setCancel,
+    managerID,
+    selectedBusiness,
+    setSelectedBusiness,
   } = props;
   const [contracts, setContracts] = useState([]);
   // const [showDialog, setShowDialog] = useState(false);
   const [activeContract, setActiveContract] = useState(null);
   const [businesses, setBusinesses] = useState([]);
-  const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [addPropertyManager, setAddPropertyManager] = useState(false);
   const [showMessageForm, setShowMessageForm] = useState(false);
   const onCancel = () => {
@@ -177,9 +179,13 @@ function PropertyManagerDocs(props) {
   useEffect(async () => {
     const response = await get(`/businesses?business_type=MANAGEMENT`);
     setBusinesses(response.result);
-    setSelectedBusiness(JSON.stringify(response.result[0]));
+    for (let i = 0; i < response.result.length; i++) {
+      if (response.result[i].business_uid === managerID) {
+        setSelectedBusiness(response.result[i]);
+      }
+    }
   }, []);
-
+  console.log("selectedBusiness", selectedBusiness);
   return (
     <div className="d-flex flex-column flex-grow-1 w-100 justify-content-center">
       <Row className="m-3">
