@@ -289,7 +289,8 @@ export default function ManagerPaymentHistory(props) {
             {stableSort(history, getComparator(order, orderBy)).map(
               (row, index) => {
                 return row.purchase_status === "PAID" &&
-                  row.receiver !== managerID ? (
+                  row.receiver !== managerID &&
+                  row.amount_due > 0 ? (
                   <TableRow
                     hover
                     role="checkbox"
@@ -356,8 +357,12 @@ export default function ManagerPaymentHistory(props) {
           <TableBody>
             {stableSort(history, getComparator(order, orderBy)).map(
               (row, index) => {
-                return row.purchase_status === "PAID" &&
-                  row.receiver === managerID ? (
+                return (row.purchase_status === "PAID" &&
+                  row.receiver === managerID &&
+                  row.amount_due > 0) ||
+                  (row.purchase_status === "PAID" &&
+                    row.receiver !== managerID &&
+                    row.amount_due < 0) ? (
                   <TableRow
                     hover
                     role="checkbox"
