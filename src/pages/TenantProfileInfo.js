@@ -18,6 +18,7 @@ import { get, post } from "../utils/api";
 import ArrowUp from "../icons/ArrowUp.svg";
 import ArrowDown from "../icons/ArrowDown.svg";
 import EditIcon from "../icons/EditIcon.svg";
+import AddIcon from "../icons/AddIcon.svg";
 import DeleteIcon from "../icons/DeleteIcon.svg";
 import {
   squareForm,
@@ -37,11 +38,6 @@ function TenantProfileInfo(props) {
   const navigate = useNavigate();
   const { autofillState, setAutofillState } = props;
 
-  const [numAdults, setNumAdults] = useState(0);
-  const [numChildren, setNumChildren] = useState(0);
-  const [numPets, setNumPets] = useState(0);
-  const [numVehicles, setNumVehicles] = useState(0);
-  const [numReferences, setNumReferences] = useState(0);
   const [adults, setAdults] = useState([]);
   const [children, setChildren] = useState([]);
   const [pets, setPets] = useState([]);
@@ -58,7 +54,6 @@ function TenantProfileInfo(props) {
     }
     setAutofillState(newAutofillState);
   };
-  console.log(autofillState);
   const [anchorEl, setAnchorEl] = useState(null);
   // const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = useState(autofillState.first_name);
@@ -153,22 +148,16 @@ function TenantProfileInfo(props) {
     setFiles(newFiles);
   };
 
-  const onChangeNumberOfAdults = (e) => {
-    const numberOfAdults = e.target.value;
-    setNumAdults(numberOfAdults);
-
-    if (numberOfAdults > 0) {
-      let generateArrays = [];
-      for (let i = 1; i <= Number(e.target.value); i++) {
-        let obj = { id: i, name: "", relationship: "", dob: "" };
-        generateArrays.push(obj);
-      }
-      console.log(generateArrays);
-      setAdults(generateArrays);
-    } else {
-      setAdults([]);
-    }
-  };
+  function handleAddAdults() {
+    const fields = [...adults];
+    fields.push({ name: "", relationship: "", dob: "" });
+    setAdults(fields);
+  }
+  function handleRemoveAdults(i) {
+    const fields = [...adults];
+    fields.splice(i, 1);
+    setAdults(fields);
+  }
 
   function addAdults() {
     return adults.map((adult, idx) => (
@@ -179,6 +168,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="name"
+            value={adult.name}
             onChange={(e) => handleChangeAdults(idx, e)}
           />
         </Col>
@@ -188,6 +178,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="relationship"
+            value={adult.relationship}
             onChange={(e) => handleChangeAdults(idx, e)}
           />
         </Col>
@@ -197,48 +188,57 @@ function TenantProfileInfo(props) {
             type="date"
             className="form-control"
             name="dob"
+            value={adult.dob}
             onChange={(e) => handleChangeAdults(idx, e)}
+          />
+        </Col>
+        <Col
+          xs={2}
+          style={{
+            paddingTop: "1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={DeleteIcon}
+            onClick={() => handleRemoveAdults(idx)}
+            style={{
+              width: "15px",
+              height: "15px",
+            }}
           />
         </Col>
       </Row>
     ));
   }
   function handleChangeAdults(i, event) {
-    const { value, name } = event.target;
-    const newState = [...adults];
-    newState[i] = {
-      ...newState[i],
-      [name]: value,
-    };
-    console.log(newState);
-    setAdults(newState);
+    const fields = [...adults];
+    fields[i][event.target.name] = event.target.value;
+    setAdults(fields);
   }
 
-  const onChangeNumberOfChildren = (e) => {
-    const numberOfChildren = e.target.value;
-
-    setNumChildren(numberOfChildren);
-    if (numberOfChildren > 0) {
-      let generateArrays = [];
-      for (let i = 1; i <= Number(e.target.value); i++) {
-        let obj = { id: i, name: "", relationship: "", dob: "" };
-        generateArrays.push(obj);
-      }
-      console.log(generateArrays);
-      setChildren(generateArrays);
-    } else {
-      setChildren([]);
-    }
-  };
+  function handleAddChildren() {
+    const fields = [...children];
+    fields.push({ name: "", relationship: "", dob: "" });
+    setChildren(fields);
+  }
+  function handleRemoveChildren(i) {
+    const fields = [...children];
+    fields.splice(i, 1);
+    setChildren(fields);
+  }
   function addChildren() {
     return children.map((child, idx) => (
-      <Row>
+      <Row key={idx}>
         <Col>
           <label htmlFor="numChildren"> Children {idx + 1} Name </label>
           <input
             type="text"
             className="form-control"
             name="name"
+            value={child.name}
             onChange={(e) => handleChangeChildren(idx, e)}
           />
         </Col>
@@ -248,6 +248,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="relationship"
+            value={child.relationship}
             onChange={(e) => handleChangeChildren(idx, e)}
           />
         </Col>
@@ -257,48 +258,57 @@ function TenantProfileInfo(props) {
             type="date"
             className="form-control"
             name="dob"
+            value={child.dob}
             onChange={(e) => handleChangeChildren(idx, e)}
+          />
+        </Col>
+        <Col
+          xs={2}
+          style={{
+            paddingTop: "1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={DeleteIcon}
+            onClick={() => handleRemoveChildren(idx)}
+            style={{
+              width: "15px",
+              height: "15px",
+            }}
           />
         </Col>
       </Row>
     ));
   }
   function handleChangeChildren(i, event) {
-    const { value, name } = event.target;
-    const newState = [...children];
-    newState[i] = {
-      ...newState[i],
-      [name]: value,
-    };
-    console.log(newState);
-    setChildren(newState);
+    const fields = [...children];
+    fields[i][event.target.name] = event.target.value;
+    setChildren(fields);
   }
-  const onChangeNumberOfPets = (e) => {
-    const numberOfPets = e.target.value;
 
-    setNumPets(numberOfPets);
-
-    if (numberOfPets > 0) {
-      let generateArrays = [];
-      for (let i = 1; i <= Number(e.target.value); i++) {
-        let obj = { id: i, name: "", type: "", breed: "", weight: "" };
-        generateArrays.push(obj);
-      }
-      console.log(generateArrays);
-      setPets(generateArrays);
-    } else {
-      setPets([]);
-    }
-  };
+  function handleAddPets() {
+    const fields = [...pets];
+    fields.push({ name: "", type: "", breed: "", weight: "" });
+    setPets(fields);
+  }
+  function handleRemovePets(i) {
+    const fields = [...pets];
+    fields.splice(i, 1);
+    setPets(fields);
+  }
   function addPets() {
     return pets.map((pet, idx) => (
       <Row>
         <Col>
-          <label htmlFor="numPets"> Pets {pet + 1} Name </label>
+          <label htmlFor="numPets"> Pets {idx + 1} Name </label>
           <input
             type="text"
             className="form-control"
             name="name"
+            value={pet.name}
             onChange={(e) => handleChangePets(idx, e)}
           />
         </Col>
@@ -308,6 +318,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="type"
+            value={pet.type}
             onChange={(e) => handleChangePets(idx, e)}
           />
         </Col>
@@ -317,6 +328,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="breed"
+            value={pet.breed}
             onChange={(e) => handleChangePets(idx, e)}
           />
         </Col>
@@ -326,44 +338,46 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="weight"
+            value={pet.weight}
             onChange={(e) => handleChangePets(idx, e)}
+          />
+        </Col>
+        <Col
+          xs={2}
+          style={{
+            paddingTop: "1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={DeleteIcon}
+            onClick={() => handleRemovePets(idx)}
+            style={{
+              width: "15px",
+              height: "15px",
+            }}
           />
         </Col>
       </Row>
     ));
   }
   function handleChangePets(i, event) {
-    const { value, name } = event.target;
-    const newState = [...pets];
-    newState[i] = {
-      ...newState[i],
-      [name]: value,
-    };
-    console.log(newState);
-    setPets(newState);
+    const fields = [...pets];
+    fields[i][event.target.name] = event.target.value;
+    setPets(fields);
   }
-  const onChangeNumberOfVehicles = (e) => {
-    const numberOfVehicles = e.target.value;
-    setNumVehicles(numberOfVehicles);
-    if (numberOfVehicles > 0) {
-      let generateArrays = [];
-      for (let i = 1; i <= Number(e.target.value); i++) {
-        let obj = {
-          id: i,
-          make: "",
-          model: "",
-          year: "",
-          state: "",
-          license: "",
-        };
-        generateArrays.push(obj);
-      }
-      console.log(generateArrays);
-      setVehicles(generateArrays);
-    } else {
-      setVehicles([]);
-    }
-  };
+  function handleAddVehicles() {
+    const fields = [...vehicles];
+    fields.push({ make: "", model: "", year: "", state: "", license: "" });
+    setVehicles(fields);
+  }
+  function handleRemoveVehicles(i) {
+    const fields = [...vehicles];
+    fields.splice(i, 1);
+    setVehicles(fields);
+  }
   function addVehicles() {
     return vehicles.map((vehicle, idx) => (
       <Row>
@@ -373,6 +387,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="make"
+            value={vehicle.make}
             onChange={(e) => handleChangeVehicles(idx, e)}
           />
         </Col>
@@ -382,6 +397,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="model"
+            value={vehicle.model}
             onChange={(e) => handleChangeVehicles(idx, e)}
           />
         </Col>
@@ -391,6 +407,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="year"
+            value={vehicle.year}
             onChange={(e) => handleChangeVehicles(idx, e)}
           />
         </Col>
@@ -400,6 +417,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="state"
+            value={vehicle.state}
             onChange={(e) => handleChangeVehicles(idx, e)}
           />
         </Col>
@@ -409,45 +427,53 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="license"
+            value={vehicle.license}
             onChange={(e) => handleChangeVehicles(idx, e)}
+          />
+        </Col>
+        <Col
+          xs={2}
+          style={{
+            paddingTop: "1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={DeleteIcon}
+            onClick={() => handleRemoveVehicles(idx)}
+            style={{
+              width: "15px",
+              height: "15px",
+            }}
           />
         </Col>
       </Row>
     ));
   }
   function handleChangeVehicles(i, event) {
-    const { value, name } = event.target;
-    const newState = [...vehicles];
-    newState[i] = {
-      ...newState[i],
-      [name]: value,
-    };
-    console.log(newState);
-    setVehicles(newState);
+    const fields = [...vehicles];
+    fields[i][event.target.name] = event.target.value;
+    setVehicles(fields);
   }
 
-  const onChangeNumberOfReferences = (e) => {
-    const numberOfReferences = e.target.value;
-    setNumReferences(numberOfReferences);
-    if (numberOfReferences > 0) {
-      let generateArrays = [];
-      for (let i = 1; i <= Number(e.target.value); i++) {
-        let obj = {
-          id: i,
-          name: "",
-          address: "",
-          phone: "",
-          email: "",
-          relationship: "",
-        };
-        generateArrays.push(obj);
-      }
-      console.log(generateArrays);
-      setReferences(generateArrays);
-    } else {
-      setReferences([]);
-    }
-  };
+  function handleAddReferences() {
+    const fields = [...references];
+    fields.push({
+      name: "",
+      address: "",
+      phone: "",
+      email: "",
+      relationship: "",
+    });
+    setReferences(fields);
+  }
+  function handleRemoveReferences(i) {
+    const fields = [...references];
+    fields.splice(i, 1);
+    setReferences(fields);
+  }
   function addReferences() {
     return references.map((reference, idx) => (
       <Row>
@@ -457,6 +483,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="name"
+            value={reference.name}
             onChange={(e) => handleChangeReferences(idx, e)}
           />
         </Col>
@@ -466,6 +493,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="address"
+            value={reference.address}
             onChange={(e) => handleChangeReferences(idx, e)}
           />
         </Col>
@@ -475,6 +503,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="phone"
+            value={reference.phone}
             onChange={(e) => handleChangeReferences(idx, e)}
           />
         </Col>
@@ -484,6 +513,7 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="email"
+            value={reference.email}
             onChange={(e) => handleChangeReferences(idx, e)}
           />
         </Col>
@@ -493,22 +523,37 @@ function TenantProfileInfo(props) {
             type="text"
             className="form-control"
             name="relationship"
+            value={reference.relationship}
             onChange={(e) => handleChangeReferences(idx, e)}
+          />
+        </Col>
+        <Col
+          xs={2}
+          style={{
+            paddingTop: "1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={DeleteIcon}
+            onClick={() => handleRemoveReferences(idx)}
+            style={{
+              width: "15px",
+              height: "15px",
+            }}
           />
         </Col>
       </Row>
     ));
   }
   function handleChangeReferences(i, event) {
-    const { value, name } = event.target;
-    const newState = [...references];
-    newState[i] = {
-      ...newState[i],
-      [name]: value,
-    };
-    console.log(newState);
-    setReferences(newState);
+    const fields = [...references];
+    fields[i][event.target.name] = event.target.value;
+    setReferences(fields);
   }
+
   useEffect(() => {
     if (access_token === null) {
       navigate("/");
@@ -877,70 +922,83 @@ function TenantProfileInfo(props) {
         )}
         <Row className="mx-2 mb-4">
           <h5>Who plans to live in the unit?</h5>
+
           <Row>
-            <Col>
+            <Col className="mx-2 my-3" xs={2}>
               {" "}
-              <Form.Group className="mx-2 my-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Adults {numAdults === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Title"
-                  value={numAdults}
-                  onChange={onChangeNumberOfAdults}
-                />
-              </Form.Group>
+              Adults
             </Col>
-            <Col>
-              {" "}
-              <Form.Group className="mx-2 my-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Children {numChildren === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Title"
-                  value={numChildren}
-                  onChange={onChangeNumberOfChildren}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              {" "}
-              <Form.Group className="mx-2 my-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Pets {numPets === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Title"
-                  value={numPets}
-                  onChange={onChangeNumberOfPets}
-                />
-              </Form.Group>
+            <Col className="mx-2 my-3">
+              <img
+                src={AddIcon}
+                onClick={handleAddAdults}
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  float: "left",
+                  marginRight: "5rem",
+                }}
+              />
             </Col>
           </Row>
           <Row>{adults.length ? <div>{addAdults()}</div> : null}</Row>
+          <Row>
+            <Col className="mx-2 my-3" xs={2}>
+              Children
+            </Col>
+            <Col className="mx-2 my-3">
+              <img
+                src={AddIcon}
+                onClick={handleAddChildren}
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  float: "left",
+                  marginRight: "5rem",
+                }}
+              />
+            </Col>
+          </Row>
           <Row>{children.length ? <div>{addChildren()}</div> : null}</Row>
+          <Row>
+            <Col className="mx-2 my-3" xs={2}>
+              {" "}
+              Pets
+            </Col>
+            <Col className="mx-2 my-3">
+              <img
+                src={AddIcon}
+                onClick={handleAddPets}
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  float: "left",
+                  marginRight: "5rem",
+                }}
+              />
+            </Col>
+          </Row>
+
           <Row>{pets.length ? <div>{addPets()}</div> : null}</Row>
         </Row>
         <Row className="mx-2 mb-4">
           <h5>Vehicle Information</h5>
           <Row>
-            <Col>
+            <Col className="mx-2 my-3" xs={2}>
               {" "}
-              <Form.Group className="mx-2 my-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Vehicles {numVehicles === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Vehicles"
-                  value={numVehicles}
-                  onChange={onChangeNumberOfVehicles}
-                />
-              </Form.Group>
+              Vehicles
+            </Col>
+            <Col className="mx-2 my-3">
+              <img
+                src={AddIcon}
+                onClick={handleAddVehicles}
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  float: "left",
+                  marginRight: "5rem",
+                }}
+              />
             </Col>
           </Row>
           <Row>{vehicles.length ? <div>{addVehicles()}</div> : null}</Row>
@@ -948,19 +1006,21 @@ function TenantProfileInfo(props) {
         <Row className="mx-2 mb-4">
           <h5>References</h5>
           <Row>
-            <Col>
+            <Col className="mx-2 my-3" xs={2}>
               {" "}
-              <Form.Group className="mx-2 my-3">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  References {numReferences === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of References"
-                  value={numReferences}
-                  onChange={onChangeNumberOfReferences}
-                />
-              </Form.Group>
+              References
+            </Col>
+            <Col className="mx-2 my-3">
+              <img
+                src={AddIcon}
+                onClick={handleAddReferences}
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  float: "left",
+                  marginRight: "5rem",
+                }}
+              />
             </Col>
           </Row>
           <Row>{references.length ? <div>{addReferences()}</div> : null}</Row>
