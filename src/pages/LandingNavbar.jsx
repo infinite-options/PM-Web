@@ -394,6 +394,9 @@ function LandingNavbar() {
                               : roleSelection(role);
                             closeMenu();
                           }}
+                          style={{
+                            color: role === selectedRole ? "black" : "white",
+                          }}
                           class="navButtons"
                         >
                           <p className="d-inline-block text-left">

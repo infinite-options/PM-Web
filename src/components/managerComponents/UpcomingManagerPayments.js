@@ -110,7 +110,7 @@ export default function UpcomingManagerPayments(props) {
     return stabilizedThis.map((el) => el[0]);
   }
 
-  const paymentsHeadCell = [
+  const paymentsOutgoingHeadCell = [
     {
       id: "purchase_uid",
       numeric: false,
@@ -120,6 +120,11 @@ export default function UpcomingManagerPayments(props) {
       id: "address",
       numeric: false,
       label: "Address",
+    },
+    {
+      id: "receiver",
+      numeric: false,
+      label: "To",
     },
 
     {
@@ -152,7 +157,7 @@ export default function UpcomingManagerPayments(props) {
     },
   ];
 
-  function EnhancedTableHeadPayments(props) {
+  function EnhancedTableHeadOutgoingPayments(props) {
     const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
@@ -161,7 +166,7 @@ export default function UpcomingManagerPayments(props) {
     return (
       <TableHead>
         <TableRow>
-          {paymentsHeadCell.map((headCell) => (
+          {paymentsOutgoingHeadCell.map((headCell) => (
             <TableCell
               key={headCell.id}
               align="right"
@@ -190,7 +195,94 @@ export default function UpcomingManagerPayments(props) {
     );
   }
 
-  EnhancedTableHeadPayments.propTypes = {
+  EnhancedTableHeadOutgoingPayments.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+  const paymentsIncomingHeadCell = [
+    {
+      id: "purchase_uid",
+      numeric: false,
+      label: "ID",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    {
+      id: "payer",
+      numeric: true,
+      label: "From",
+    },
+
+    {
+      id: "description",
+      numeric: true,
+      label: "Description",
+    },
+
+    {
+      id: "purchase_type",
+      numeric: false,
+      label: "Type",
+    },
+
+    {
+      id: "next_payment",
+      numeric: false,
+      label: "Date Due",
+    },
+    {
+      id: "amount_due",
+      numeric: true,
+      label: "Amount",
+    },
+  ];
+
+  function EnhancedTableHeadIncomingPayments(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {paymentsIncomingHeadCell.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="right"
+              size="small"
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                align="center"
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadIncomingPayments.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
@@ -214,7 +306,7 @@ export default function UpcomingManagerPayments(props) {
           classes={{ root: classes.customTable }}
           size="small"
         >
-          <EnhancedTableHeadPayments
+          <EnhancedTableHeadOutgoingPayments
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -225,7 +317,8 @@ export default function UpcomingManagerPayments(props) {
               ? stableSort(rents, getComparator(order, orderBy)).map(
                   (row, index) => {
                     return row.purchase_status === "UNPAID" &&
-                      row.receiver !== managerID ? (
+                      row.receiver !== managerID &&
+                      row.amount_due > 0 ? (
                       <TableRow
                         hover
                         role="checkbox"
@@ -233,7 +326,7 @@ export default function UpcomingManagerPayments(props) {
                         key={row.purchase_uid}
                       >
                         <TableCell align="right">{row.purchase_uid}</TableCell>
-                        <TableCell align="right" style={{ width: "300px" }}>
+                        <TableCell align="right">
                           {row.address +
                             " " +
                             row.unit +
@@ -244,7 +337,8 @@ export default function UpcomingManagerPayments(props) {
                             " " +
                             row.zip}
                         </TableCell>
-                        <TableCell align="right" style={{ width: "200px" }}>
+                        <TableCell align="right"> {row.receiver}</TableCell>
+                        <TableCell align="right">
                           {row.purchase_frequency === "One-time" ||
                           row.purchase_frequency === "Annually"
                             ? row.description
@@ -294,7 +388,7 @@ export default function UpcomingManagerPayments(props) {
                           )}
                         </TableCell>
                         <TableCell align="right">
-                          {row.amount_due.toFixed(2)}
+                          {Math.abs(row.amount_due).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -333,7 +427,7 @@ export default function UpcomingManagerPayments(props) {
           classes={{ root: classes.customTable }}
           size="small"
         >
-          <EnhancedTableHeadPayments
+          <EnhancedTableHeadIncomingPayments
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -343,8 +437,12 @@ export default function UpcomingManagerPayments(props) {
             {rents.length !== 0
               ? stableSort(rents, getComparator(order, orderBy)).map(
                   (row, index) => {
-                    return row.purchase_status === "UNPAID" &&
-                      row.receiver === managerID ? (
+                    return (row.purchase_status === "UNPAID" &&
+                      row.receiver === managerID &&
+                      row.amount_due > 0) ||
+                      (row.purchase_status === "UNPAID" &&
+                        row.receiver !== managerID &&
+                        row.amount_due < 0) ? (
                       <TableRow
                         hover
                         role="checkbox"
@@ -352,7 +450,7 @@ export default function UpcomingManagerPayments(props) {
                         key={row.purchase_uid}
                       >
                         <TableCell align="right">{row.purchase_uid}</TableCell>
-                        <TableCell align="right" style={{ width: "300px" }}>
+                        <TableCell align="right">
                           {row.address +
                             " " +
                             row.unit +
@@ -363,7 +461,8 @@ export default function UpcomingManagerPayments(props) {
                             " " +
                             row.zip}
                         </TableCell>
-                        <TableCell align="right" style={{ width: "200px" }}>
+                        <TableCell align="right"> {row.payer}</TableCell>
+                        <TableCell align="right">
                           {row.purchase_frequency === "One-time" ||
                           row.purchase_frequency === "Annually"
                             ? row.description
@@ -381,39 +480,9 @@ export default function UpcomingManagerPayments(props) {
                         >
                           {row.next_payment.substring(0, 10)}
                         </TableCell>
+
                         <TableCell align="right">
-                          {/* {props.type ? (
-                            <button
-                              style={{
-                                backgroundColor:
-                                  new Date(row.next_payment) < new Date()
-                                    ? "red"
-                                    : "green",
-                                color: "white",
-                                border: "none",
-                              }}
-                              onClick={goToPayment}
-                            >
-                              Pay
-                            </button>
-                          ) : (
-                            <label>
-                              <input
-                                className="check"
-                                type="checkbox"
-                                onClick={(event) =>
-                                  handleCheck(
-                                    event,
-                                    row.amount_due,
-                                    row.purchase_uid
-                                  )
-                                }
-                              />
-                            </label>
-                          )} */}
-                        </TableCell>
-                        <TableCell align="right">
-                          {row.amount_due.toFixed(2)}
+                          {Math.abs(row.amount_due).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (

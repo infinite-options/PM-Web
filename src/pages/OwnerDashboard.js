@@ -1864,7 +1864,6 @@ export default function OwnerDashboard2() {
                         ""
                       );
                     })}
-                  {console.log(cashflowData.owner_expense)}
                   {isLoading === false &&
                     cashflowData.owner_expense.map((expense, index) => {
                       return expense.purchase_type === "OWNER PAYMENT" &&
@@ -3297,7 +3296,7 @@ export default function OwnerDashboard2() {
                         ""
                       );
                     })}
-                  <TableRow hidden={!monthlyRevenue}>
+                  <TableRow hidden={!yearlyRevenue}>
                     <TableCell width="180px">
                       &nbsp;&nbsp; Owner Payment{" "}
                       <img

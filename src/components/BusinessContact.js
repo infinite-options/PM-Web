@@ -231,7 +231,7 @@ function BusinessContact(props) {
             style={smallPillButton}
             onClick={() => setNewContact({ ...emptyContact })}
           >
-            Add Another Person
+            Add Person
           </Button>
         ) : (
           <div className="d-flex justify-content-center my-4">

@@ -28,6 +28,8 @@ import {
   smallPillButton,
   bluePillButton,
   smallImg,
+  subHeading,
+  gray,
 } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
@@ -67,10 +69,11 @@ function ManagerTenantAgreement(props) {
   const [lateFeePer, setLateFeePer] = useState("");
   const [available, setAvailable] = useState("");
 
-  const [adultOccupants, setAdultOccupants] = useState("");
-  const [childrenOccupants, setChildrenOccupants] = useState("");
-  const [numPets, setNumPets] = useState("");
-  const [typePets, setTypePets] = useState("");
+  const [adults, setAdults] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [pets, setPets] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [references, setReferences] = useState([]);
 
   const [showSpinner, setShowSpinner] = useState(false);
   const [width, setWindowWidth] = useState(0);
@@ -143,17 +146,31 @@ function ManagerTenantAgreement(props) {
     setLateAfter(agreement.late_by);
     setLateFee(agreement.late_fee);
     setLateFeePer(agreement.perDay_late_fee);
-    setAdultOccupants(agreement.adult_occupants);
-    setChildrenOccupants(agreement.children_occupants);
-    setNumPets(agreement.num_pets);
-    setTypePets(agreement.type_pets);
+    setAdults(agreement.adults);
+    setChildren(agreement.children);
+    setPets(agreement.pets);
+    setVehicles(agreement.vehicles);
+    setReferences(agreement.references);
   };
   useEffect(() => {
-    console.log("in useeffect");
-    setAdultOccupants(acceptedTenantApplications[0].adult_occupants);
-    setChildrenOccupants(acceptedTenantApplications[0].children_occupants);
-    setNumPets(acceptedTenantApplications[0].num_pets);
-    setTypePets(acceptedTenantApplications[0].type_pets);
+    console.log("in useeffect", acceptedTenantApplications);
+    if (acceptedTenantApplications[0].adults) {
+      setAdults(JSON.parse(acceptedTenantApplications[0].adults));
+    }
+    if (acceptedTenantApplications[0].children) {
+      setChildren(JSON.parse(acceptedTenantApplications[0].children));
+    }
+    if (acceptedTenantApplications[0].pets) {
+      setPets(JSON.parse(acceptedTenantApplications[0].pets));
+    }
+
+    if (acceptedTenantApplications[0].vehicles) {
+      setVehicles(JSON.parse(acceptedTenantApplications[0].vehicles));
+    }
+    if (acceptedTenantApplications[0].references) {
+      setReferences(JSON.parse(acceptedTenantApplications[0].references));
+    }
+
     if (agreement) {
       loadAgreement();
     }
@@ -168,10 +185,11 @@ function ManagerTenantAgreement(props) {
       lease_end: endDate,
       rent_payments: JSON.stringify(feeState),
       assigned_contacts: JSON.stringify(contactState[0]),
-      adult_occupants: adultOccupants,
-      children_occupants: childrenOccupants,
-      num_pets: numPets,
-      type_pets: typePets,
+      adults: adults,
+      children: children,
+      pets: pets,
+      vehicles: vehicles,
+      references: references,
     };
     newAgreement.linked_application_id = JSON.stringify(
       acceptedTenantApplications.map(
@@ -256,10 +274,11 @@ function ManagerTenantAgreement(props) {
       late_by: lateAfter,
       late_fee: lateFee,
       perDay_late_fee: lateFeePer,
-      adult_occupants: adultOccupants,
-      children_occupants: childrenOccupants,
-      num_pets: numPets,
-      type_pets: typePets,
+      adults: adults,
+      children: children,
+      pets: pets,
+      vehicles: vehicles,
+      references: references,
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
@@ -353,7 +372,7 @@ function ManagerTenantAgreement(props) {
     const create_rental = await post("/extendLease", newAgreement, null, files);
     back();
   };
-  // console.log(acceptedTenantApplications.children_occupants);
+  // console.log(acceptedTenantApplications.children);
   return (
     <div className="flex-1">
       <div
@@ -432,56 +451,182 @@ function ManagerTenantAgreement(props) {
                   <Row>
                     <Col>
                       <Form.Group>
-                        <Form.Label as="h6" className="mb-0 ms-2">
-                          No. of Adult Occupants
+                        <Form.Label as="h6" className="my-2">
+                          Adult Occupants
                         </Form.Label>
-                        <Form.Control
-                          style={squareForm}
-                          placeholder="No. of Adult Occupants"
-                          value={application.adult_occupants}
-                          readOnly={true}
-                        />
+                        {application.adults &&
+                        JSON.parse(application.adults).length > 0 ? (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>
+                              <Col>Name</Col>
+                              <Col>Relationship</Col>
+                              <Col>DOB</Col>
+                            </Row>
+                            {JSON.parse(application.adults).map((adult) => {
+                              return (
+                                <div>
+                                  <Row style={gray}>
+                                    <Col>{adult.name}</Col>
+                                    <Col>{adult.relationship}</Col>
+                                    <Col>{adult.dob}</Col>
+                                  </Row>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>None</Row>
+                          </div>
+                        )}
                       </Form.Group>
                     </Col>
+                  </Row>
+                  <Row>
                     <Col>
+                      <Form.Label as="h6" className="my-2">
+                        Children Occupants
+                      </Form.Label>
                       <Form.Group>
-                        <Form.Label as="h6" className="mb-0 ms-2">
-                          No. of Children Occupants
-                        </Form.Label>
-                        <Form.Control
-                          style={squareForm}
-                          placeholder="No. of Children Occupants"
-                          value={application.children_occupants}
-                          readOnly={true}
-                        />
+                        {application.children &&
+                        JSON.parse(application.children).length > 0 ? (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>
+                              <Col>Name</Col>
+                              <Col>Relationship</Col>
+                              <Col>DOB</Col>
+                            </Row>
+                            {JSON.parse(application.children).map((child) => {
+                              return (
+                                <div>
+                                  <Row style={gray}>
+                                    <Col>{child.name}</Col>
+                                    <Col>{child.relationship}</Col>
+                                    <Col>{child.dob}</Col>
+                                  </Row>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>None</Row>
+                          </div>
+                        )}
                       </Form.Group>
                     </Col>
                   </Row>
                   <Row>
                     <Col>
                       <Form.Group>
-                        <Form.Label as="h6" className="mb-0 ms-2">
-                          No. of Pets
+                        <Form.Label as="h6" className="my-2">
+                          Pets
                         </Form.Label>
-                        <Form.Control
-                          style={squareForm}
-                          placeholder="No. of Pets"
-                          value={application.num_pets}
-                          readOnly={true}
-                        />
+                        {application.pets &&
+                        JSON.parse(application.pets).length > 0 ? (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>
+                              <Col>Name</Col>
+                              <Col>Type</Col>
+                              <Col>Breed</Col>
+                              <Col>Weight</Col>
+                            </Row>
+                            {JSON.parse(application.pets).map((pet) => {
+                              return (
+                                <div>
+                                  <Row style={gray}>
+                                    <Col>{pet.name}</Col>
+                                    <Col>{pet.type}</Col>
+                                    <Col>{pet.breed}</Col>
+                                    <Col>{pet.weight}</Col>
+                                  </Row>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>None</Row>
+                          </div>
+                        )}
                       </Form.Group>
                     </Col>
+                  </Row>
+                  <Row>
                     <Col>
                       <Form.Group>
-                        <Form.Label as="h6" className="mb-0 ms-2">
-                          Type of Pets
+                        <Form.Label as="h6" className="my-2">
+                          Vehicles
                         </Form.Label>
-                        <Form.Control
-                          style={squareForm}
-                          placeholder="Type of Pets"
-                          value={application.type_pets}
-                          readOnly={true}
-                        />
+                        {application.vehicles &&
+                        JSON.parse(application.vehicles).length > 0 ? (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>
+                              <Col>Make</Col>
+                              <Col>Model</Col>
+                              <Col>Year</Col>
+                              <Col>State</Col>
+                              <Col>License</Col>
+                            </Row>
+                            {JSON.parse(application.vehicles).map((vehicle) => {
+                              return (
+                                <div>
+                                  <Row style={gray}>
+                                    <Col>{vehicle.make}</Col>
+                                    <Col>{vehicle.model}</Col>
+                                    <Col>{vehicle.year}</Col>
+                                    <Col>{vehicle.state}</Col>
+                                    <Col>{vehicle.license}</Col>
+                                  </Row>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>None</Row>
+                          </div>
+                        )}
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label as="h6" className="my-2">
+                          References
+                        </Form.Label>
+                        {application.references &&
+                        JSON.parse(application.references).length > 0 ? (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>
+                              <Col>Name</Col>
+                              <Col>Address</Col>
+                              <Col>Phone Number</Col>
+                              <Col>Email</Col>
+                              <Col>Relationship</Col>
+                            </Row>
+                            {JSON.parse(application.references).map(
+                              (reference) => {
+                                return (
+                                  <div>
+                                    <Row style={gray}>
+                                      <Col>{reference.name}</Col>
+                                      <Col>{reference.address}</Col>
+                                      <Col>{reference.phone}</Col>
+                                      <Col>{reference.email}</Col>
+                                      <Col>{reference.relationship}</Col>
+                                    </Row>
+                                  </div>
+                                );
+                              }
+                            )}
+                          </div>
+                        ) : (
+                          <div className="mx-3 ">
+                            <Row style={subHeading}>None</Row>
+                          </div>
+                        )}
                       </Form.Group>
                     </Col>
                   </Row>
@@ -512,63 +657,6 @@ function ManagerTenantAgreement(props) {
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <Row className="mb-4">
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  No. of Adult Occupants
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Adult Occupants"
-                  value={adultOccupants}
-                  onChange={(e) => setAdultOccupants(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  No. of Children Occupants
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Children Occupants"
-                  defaultValue={childrenOccupants}
-                  onChange={(e) => setChildrenOccupants(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  No. of Pets
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Pets"
-                  value={numPets}
-                  onChange={(e) => setNumPets(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Type of Pets
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Type of Pets"
-                  value={typePets}
-                  onChange={(e) => setTypePets(e.target.value)}
                 />
               </Form.Group>
             </Col>
