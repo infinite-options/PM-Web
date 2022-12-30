@@ -246,119 +246,144 @@ function ManagerOwnerList(props) {
             </Col>
           </Row>
           {owners.length > 0 ? (
-            <Row className="m-3" style={{ overflow: "scroll" }}>
-              <Table
-                responsive="md"
-                classes={{ root: classes.customTable }}
-                size="small"
-              >
-                <EnhancedTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                  rowCount={owners.length}
-                />{" "}
-                <TableBody>
-                  {stableSort(owners, getComparator(order, orderBy))
-                    // for filtering
-                    .filter((val) => {
-                      const query = search.toLowerCase();
-                      return (
-                        val.owner_first_name.toLowerCase().indexOf(query) >= 0
-                      );
-                    })
-                    .map((owner, index) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                          onClick={() => {
-                            setShowDetails(!showDetails);
-                            setSelectedOwner(owner);
-                          }}
-                        >
-                          <TableCell padding="none" size="small" align="center">
-                            {owner.owner_first_name} {owner.owner_last_name}
-                          </TableCell>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
+                  <EnhancedTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    rowCount={owners.length}
+                  />{" "}
+                  <TableBody>
+                    {stableSort(owners, getComparator(order, orderBy))
+                      // for filtering
+                      .filter((val) => {
+                        const query = search.toLowerCase();
+                        return (
+                          val.owner_first_name.toLowerCase().indexOf(query) >= 0
+                        );
+                      })
+                      .map((owner, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                            onClick={() => {
+                              setShowDetails(!showDetails);
+                              setSelectedOwner(owner);
+                            }}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {owner.owner_first_name} {owner.owner_last_name}
+                            </TableCell>
 
-                          <TableCell padding="none" size="small" align="center">
-                            {owner.owner_phone_number}
-                          </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {owner.owner_phone_number}
+                            </TableCell>
 
-                          <TableCell padding="none" size="small" align="center">
-                            {owner.owner_email}
-                          </TableCell>
-                          <TableCell>
-                            {owner.properties.map((property, i) => {
-                              return (
-                                <Row
-                                  onClick={() => {
-                                    navigate(
-                                      `/managerPropertyDetails/${property.property_uid}`,
-                                      {
-                                        state: {
-                                          property: property,
-                                          property_uid: property.property_uid,
-                                        },
-                                      }
-                                    );
-                                  }}
-                                  className="p-1"
-                                  style={{
-                                    cursor: "pointer",
-                                    background:
-                                      i % 2 === 0
-                                        ? "#FFFFFF 0% 0% no-repeat padding-box"
-                                        : "#F3F3F3 0% 0% no-repeat padding-box",
-                                    font: "normal normal normal 16px Bahnschrift-Regular",
-                                  }}
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {owner.owner_email}
+                            </TableCell>
+                            <TableCell>
+                              {owner.properties.map((property, i) => {
+                                return (
+                                  <Row
+                                    onClick={() => {
+                                      navigate(
+                                        `/managerPropertyDetails/${property.property_uid}`,
+                                        {
+                                          state: {
+                                            property: property,
+                                            property_uid: property.property_uid,
+                                          },
+                                        }
+                                      );
+                                    }}
+                                    className="p-1"
+                                    style={{
+                                      cursor: "pointer",
+                                      background:
+                                        i % 2 === 0
+                                          ? "#FFFFFF 0% 0% no-repeat padding-box"
+                                          : "#F3F3F3 0% 0% no-repeat padding-box",
+                                      font: "normal normal normal 16px Bahnschrift-Regular",
+                                    }}
+                                  >
+                                    {property.address}
+                                    {property.unit !== ""
+                                      ? ` ${property.unit}, `
+                                      : ", "}
+                                    {property.city}, {property.state}{" "}
+                                    {property.zip}
+                                  </Row>
+                                );
+                              })}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              <div className="d-flex  justify-content-end ">
+                                <div
+                                  style={owner.owner_id ? {} : hidden}
+                                  onClick={stopPropagation}
                                 >
-                                  {property.address}
-                                  {property.unit !== ""
-                                    ? ` ${property.unit}, `
-                                    : ", "}
-                                  {property.city}, {property.state}{" "}
-                                  {property.zip}
-                                </Row>
-                              );
-                            })}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            <div className="d-flex  justify-content-end ">
-                              <div
-                                style={owner.owner_id ? {} : hidden}
-                                onClick={stopPropagation}
-                              >
-                                <a href={`tel:${owner.owner_phone_number}`}>
-                                  <img
-                                    src={Phone}
-                                    alt="Phone"
-                                    style={smallImg}
-                                  />
-                                </a>
-                                <a
-                                  onClick={() => {
-                                    setShowMessageForm(true);
-                                    setSelectedOwner(owner);
-                                  }}
-                                >
-                                  <img
-                                    src={Message}
-                                    alt="Message"
-                                    style={smallImg}
-                                  />
-                                </a>
+                                  <a href={`tel:${owner.owner_phone_number}`}>
+                                    <img
+                                      src={Phone}
+                                      alt="Phone"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a
+                                    onClick={() => {
+                                      setShowMessageForm(true);
+                                      setSelectedOwner(owner);
+                                    }}
+                                  >
+                                    <img
+                                      src={Message}
+                                      alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                </div>
                               </div>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                </TableBody>
-              </Table>
-            </Row>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
           ) : (
             <div className="m-3">No active owners</div>
           )}

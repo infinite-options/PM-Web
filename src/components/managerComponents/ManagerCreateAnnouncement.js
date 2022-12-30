@@ -711,85 +711,113 @@ function ManagerCreateAnnouncement(props) {
             newAnnouncement === null &&
             !editingAnnouncement &&
             !announcementDetail ? (
-              <div className="mx-2 my-2 p-3">
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <EnhancedTableHead
-                      order={order}
-                      orderBy={orderBy}
-                      onRequestSort={handleRequestSort}
-                      // rowCount="4"
-                    />{" "}
-                    <TableBody>
-                      {stableSort(
-                        announcements,
-                        getComparator(order, orderBy)
-                      ).map((announce, index) => {
-                        return (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={announce.announce}
-                            onClick={() =>
-                              navigate("/detailAnnouncements", {
-                                state: {
-                                  announcement: announce,
-                                },
-                              })
-                            }
-                          >
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {announce.announcement_title}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {announce.announcement_msg}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {announce.announcement_mode}
-                            </TableCell>
-
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {" "}
-                              {new Date(
-                                announce.date_announcement
-                              ).toLocaleString("default", {
-                                month: "long",
-                              })}{" "}
-                              {new Date(announce.date_announcement).getDate()},{" "}
-                              {new Date(
-                                announce.date_announcement
-                              ).getFullYear()}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
+              <div>
+                <Row className="m-3">
+                  <Col>
+                    <h1>Announcements</h1>
+                  </Col>
+                  <Col>
+                    {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+                  </Col>
                 </Row>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <EnhancedTableHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
+                      <TableBody>
+                        {stableSort(
+                          announcements,
+                          getComparator(order, orderBy)
+                        ).map((announce, index) => {
+                          return (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={announce.announce}
+                              onClick={() =>
+                                navigate("/detailAnnouncements", {
+                                  state: {
+                                    announcement: announce,
+                                  },
+                                })
+                              }
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {announce.announcement_title}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {announce.announcement_msg}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {announce.announcement_mode}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {" "}
+                                {new Date(
+                                  announce.date_announcement
+                                ).toLocaleString("default", {
+                                  month: "long",
+                                })}{" "}
+                                {new Date(announce.date_announcement).getDate()}
+                                ,{" "}
+                                {new Date(
+                                  announce.date_announcement
+                                ).getFullYear()}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </div>
               </div>
             ) : (
-              ""
+              <div>
+                <Row className="m-3">
+                  <Col>
+                    <h1>Announcements</h1>
+                  </Col>
+                  <Col>
+                    {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+                  </Col>
+                </Row>{" "}
+                <Row className="m-3">No announcements</Row>
+              </div>
             )}
           </div>
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">

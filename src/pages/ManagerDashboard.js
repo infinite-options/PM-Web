@@ -109,7 +109,7 @@ export default function ManagerDashboard() {
     showSidebar: width > 1023,
   };
   const fetchManagerDashboard = async () => {
-    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+    if (access_token === null || user.role.indexOf("MANAGER") === -1) {
       navigate("/");
       return;
     }
@@ -4566,16 +4566,16 @@ export default function ManagerDashboard() {
                 <Row className="m-3">No active properties</Row>
               )}
             </div>
-            <div
-              className="mx-3 my-3 p-2"
-              style={{
-                background: "#E9E9E9 0% 0% no-repeat padding-box",
-                borderRadius: "10px",
-                opacity: 1,
-              }}
-            >
+            <div>
               {processingManagerData.length > 0 ? (
-                <div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
                   <Row className="m-3">
                     <Col>
                       <h1>New Properties</h1>
