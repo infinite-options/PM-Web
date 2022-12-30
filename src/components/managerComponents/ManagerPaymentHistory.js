@@ -75,6 +75,11 @@ export default function ManagerPaymentHistory(props) {
       numeric: false,
       label: "Address",
     },
+    {
+      id: "receiver",
+      numeric: false,
+      label: "To",
+    },
 
     {
       id: "description",
@@ -92,11 +97,6 @@ export default function ManagerPaymentHistory(props) {
       id: "payment_date",
       numeric: false,
       label: "Date Paid",
-    },
-    {
-      id: "receiver",
-      numeric: false,
-      label: "To",
     },
     {
       id: "",
@@ -169,6 +169,11 @@ export default function ManagerPaymentHistory(props) {
     },
 
     {
+      id: "payer",
+      numeric: true,
+      label: "From",
+    },
+    {
       id: "description",
       numeric: true,
       label: "Description",
@@ -186,17 +191,12 @@ export default function ManagerPaymentHistory(props) {
       label: "Date Due",
     },
     {
-      id: "payer",
-      numeric: true,
-      label: "From",
-    },
-    {
       id: "payment_verify",
       numeric: true,
       label: "Verify",
     },
     {
-      id: "amount_due",
+      id: "amount_paid",
       numeric: true,
       label: "Amount",
     },
@@ -290,7 +290,7 @@ export default function ManagerPaymentHistory(props) {
               (row, index) => {
                 return row.purchase_status === "PAID" &&
                   row.receiver !== managerID &&
-                  row.amount_due > 0 ? (
+                  row.amount_paid > 0 ? (
                   <TableRow
                     hover
                     role="checkbox"
@@ -309,6 +309,7 @@ export default function ManagerPaymentHistory(props) {
                         " " +
                         row.zip}
                     </TableCell>
+                    <TableCell align="right"> {row.receiver}</TableCell>
                     <TableCell align="right" style={{ width: "200px" }}>
                       {row.purchase_frequency === "One-time" ||
                       row.purchase_frequency === "Annually"
@@ -321,13 +322,12 @@ export default function ManagerPaymentHistory(props) {
                         ? row.payment_date.substring(0, 10)
                         : "Not Available"}
                     </TableCell>
-                    <TableCell align="right"> {row.receiver}</TableCell>
                     <TableCell
                       align="right"
                       style={{ width: "83px" }}
                     ></TableCell>
                     <TableCell align="right">
-                      {row.amount_paid.toFixed(2)}
+                      {Math.abs(row.amount_paid).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -359,10 +359,10 @@ export default function ManagerPaymentHistory(props) {
               (row, index) => {
                 return (row.purchase_status === "PAID" &&
                   row.receiver === managerID &&
-                  row.amount_due > 0) ||
+                  row.amount_paid > 0) ||
                   (row.purchase_status === "PAID" &&
                     row.receiver !== managerID &&
-                    row.amount_due < 0) ? (
+                    row.amount_paid < 0) ? (
                   <TableRow
                     hover
                     role="checkbox"
@@ -381,6 +381,8 @@ export default function ManagerPaymentHistory(props) {
                         " " +
                         row.zip}
                     </TableCell>
+
+                    <TableCell align="right"> {row.payer}</TableCell>
                     <TableCell align="right" style={{ width: "200px" }}>
                       {row.purchase_frequency === "One-time" ||
                       row.purchase_frequency === "Annually"
@@ -393,7 +395,6 @@ export default function ManagerPaymentHistory(props) {
                         ? row.payment_date.substring(0, 10)
                         : "Not Available"}
                     </TableCell>
-                    <TableCell align="right"> {row.payer}</TableCell>
                     <TableCell align="right" style={{ width: "83px" }}>
                       {row.payment_verify === "Verified" ? (
                         <img
@@ -422,7 +423,7 @@ export default function ManagerPaymentHistory(props) {
                       )}
                     </TableCell>
                     <TableCell align="right">
-                      {row.amount_paid.toFixed(2)}
+                      {Math.abs(row.amount_paid).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ) : (

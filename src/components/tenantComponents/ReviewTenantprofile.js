@@ -8,9 +8,6 @@ import {
   TableCell,
   TableBody,
   TableHead,
-  TableSortLabel,
-  Box,
-  Grid,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Header";
@@ -18,12 +15,14 @@ import Checkbox from "../Checkbox";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import AppContext from "../../AppContext";
+import Radiobutton_filled from "../../icons/Radiobutton_filled.svg";
+import Radiobutton_unfilled from "../../icons/Radiobutton_unfilled.svg";
 import {
   squareForm,
   pillButton,
   bluePillButton,
-  small,
-  mediumBold,
+  headings,
+  subHeading,
   red,
 } from "../../utils/styles";
 import { get, put, post } from "../../utils/api";
@@ -46,10 +45,22 @@ function ReviewTenantProfile(props) {
   const [files, setFiles] = useState([]);
   const [filesCopy, setFilesCopy] = useState([]);
   const [message, setMessage] = useState("");
-  const [adultOccupants, setAdultOccupants] = useState(0);
-  const [childrenOccupants, setChildrenOccupants] = useState(0);
+  const [numAdults, setNumAdults] = useState(0);
+  const [numChildren, setNumChildren] = useState(0);
   const [numPets, setNumPets] = useState(0);
-  const [typePets, setTypePets] = useState("");
+  const [numVehicles, setNumVehicles] = useState(0);
+  const [numReferences, setNumReferences] = useState(0);
+  const [adultsApplication, setAdultsApplication] = useState([]);
+  const [childrenApplication, setChildrenApplication] = useState([]);
+  const [petsApplication, setPetsApplication] = useState([]);
+  const [vehiclesApplication, setVehiclesApplication] = useState([]);
+  const [referencesApplication, setReferencesApplication] = useState([]);
+  const [adults, setAdults] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [pets, setPets] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [references, setReferences] = useState([]);
+
   const [width, setWindowWidth] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
@@ -91,17 +102,20 @@ function ReviewTenantProfile(props) {
         application_docs.push(filesCopy[i]);
       }
     }
-    if (numPets > 0 && typePets == "") {
-      setErrorMessage("Please fill out the type of pets");
-      return;
-    }
+    // if (numPets > 0 && typePets == "") {
+    //   setErrorMessage("Please fill out the type of pets");
+    //   return;
+    // }
+    console.log(application_docs);
+    console.log(adultsApplication);
     const newApplication = {
       property_uid: property_uid,
       message: message,
-      adult_occupants: adultOccupants,
-      children_occupants: childrenOccupants,
-      num_pets: numPets,
-      type_pets: typePets,
+      adults: adultsApplication,
+      children: childrenApplication,
+      pets: petsApplication,
+      vehicles: vehiclesApplication,
+      references: referencesApplication,
       documents: application_docs,
     };
     console.log(application_docs);
@@ -186,6 +200,20 @@ function ReviewTenantProfile(props) {
         : [];
       // setFiles(documents);
       setFilesCopy(documents);
+      setNumAdults(
+        JSON.parse(response.result[0].tenant_adult_occupants).length
+      );
+      setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
+      setNumChildren(
+        JSON.parse(response.result[0].tenant_children_occupants).length
+      );
+      setChildren(JSON.parse(response.result[0].tenant_children_occupants));
+      setNumPets(JSON.parse(response.result[0].tenant_pet_occupants).length);
+      setPets(JSON.parse(response.result[0].tenant_pet_occupants));
+      setNumVehicles(JSON.parse(response.result[0].tenant_vehicle_info).length);
+      setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
+      setNumReferences(JSON.parse(response.result[0].tenant_references).length);
+      setReferences(JSON.parse(response.result[0].tenant_references));
       let fo = JSON.parse(JSON.stringify(documents));
       setFilesOriginal(fo);
       return;
@@ -199,6 +227,7 @@ function ReviewTenantProfile(props) {
   useEffect(() => {
     fetchProfileInfo();
   }, []);
+
   console.log(files);
   const required =
     errorMessage === "Please fill out all fields" ? (
@@ -208,6 +237,37 @@ function ReviewTenantProfile(props) {
     ) : (
       ""
     );
+
+  const handleAdultsClick = (adult) => {
+    setAdultsApplication((nums) =>
+      nums.includes(adult) ? nums.filter((n) => n !== adult) : [adult, ...nums]
+    );
+  };
+  const handleChildrenClick = (child) => {
+    setChildrenApplication((nums) =>
+      nums.includes(child) ? nums.filter((n) => n !== child) : [child, ...nums]
+    );
+  };
+  const handlePetsClick = (pet) => {
+    setPetsApplication((nums) =>
+      nums.includes(pet) ? nums.filter((n) => n !== pet) : [pet, ...nums]
+    );
+  };
+  const handleVehiclesClick = (vehicle) => {
+    setVehiclesApplication((nums) =>
+      nums.includes(vehicle)
+        ? nums.filter((n) => n !== vehicle)
+        : [vehicle, ...nums]
+    );
+  };
+  const handleReferencesClick = (reference) => {
+    setReferencesApplication((nums) =>
+      nums.includes(reference)
+        ? nums.filter((n) => n !== reference)
+        : [reference, ...nums]
+    );
+  };
+  console.log("adultsApplication", adultsApplication);
   // function handleDocumentClick(i){
   //   console.log("clicked");
   //   const temp = documentClick;
@@ -435,9 +495,239 @@ function ReviewTenantProfile(props) {
               <div className="mx-3 mb-4 px-5">None uploaded</div>
             )}
           </Row>
+
+          <Row
+            className="m-3"
+            style={{
+              marginTop: "40px",
+              paddingLeft: "20px",
+              fontWeight: "bold",
+            }}
+          >
+            <h3>Who plans to live in the unit?</h3>
+          </Row>
+          <Row className="m-3">
+            <div>
+              {Object.values(adults).length > 0 ? (
+                <div className="mx-3 ">
+                  <Row style={subHeading}>Adults</Row>
+                  <Row style={subHeading}>
+                    <Col xs={1}></Col>
+                    <Col>Name</Col>
+                    <Col>Relationship</Col>
+                    <Col>DOB</Col>
+                  </Row>
+                  {Object.values(adults).map((adult, i) => {
+                    return (
+                      <div>
+                        <Row>
+                          <Col xs={1}>
+                            {adultsApplication.includes(adult) ? (
+                              <img
+                                src={Radiobutton_filled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handleAdultsClick(adult)}
+                              />
+                            ) : (
+                              <img
+                                src={Radiobutton_unfilled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handleAdultsClick(adult)}
+                              />
+                            )}
+                          </Col>
+                          <Col>{adult.name}</Col>
+                          <Col>{adult.relationship}</Col>
+                          <Col>{adult.dob}</Col>
+                        </Row>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <div>
+              {Object.values(children).length > 0 ? (
+                <div className="mx-3 ">
+                  <Row style={subHeading}>Children</Row>
+                  <Row style={subHeading}>
+                    <Col xs={1}></Col>
+                    <Col>Name</Col>
+                    <Col>Relationship</Col>
+                    <Col>DOB</Col>
+                  </Row>
+                  {Object.values(children).map((child) => {
+                    return (
+                      <div>
+                        <Row>
+                          <Col xs={1}>
+                            {childrenApplication.includes(child) ? (
+                              <img
+                                src={Radiobutton_filled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handleChildrenClick(child)}
+                              />
+                            ) : (
+                              <img
+                                src={Radiobutton_unfilled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handleChildrenClick(child)}
+                              />
+                            )}
+                          </Col>
+                          <Col>{child.name}</Col>
+                          <Col>{child.relationship}</Col>
+                          <Col>{child.dob}</Col>
+                        </Row>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <div>
+              {Object.values(pets).length > 0 ? (
+                <div className="mx-3 ">
+                  <Row style={subHeading}>Pets</Row>
+                  <Row style={subHeading}>
+                    <Col xs={1}></Col>
+                    <Col>Name</Col>
+                    <Col>Type</Col>
+                    <Col>Breed</Col>
+                    <Col>Weight</Col>
+                  </Row>
+                  {Object.values(pets).map((pet) => {
+                    return (
+                      <div>
+                        <Row>
+                          {" "}
+                          <Col xs={1}>
+                            {petsApplication.includes(pet) ? (
+                              <img
+                                src={Radiobutton_filled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handlePetsClick(pet)}
+                              />
+                            ) : (
+                              <img
+                                src={Radiobutton_unfilled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handlePetsClick(pet)}
+                              />
+                            )}
+                          </Col>
+                          <Col>{pet.name}</Col>
+                          <Col>{pet.type}</Col>
+                          <Col>{pet.breed}</Col>
+                          <Col>{pet.weight}</Col>
+                        </Row>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <div>
+              {Object.values(vehicles).length > 0 ? (
+                <div className="mx-3 ">
+                  <Row style={subHeading}>Vehicles</Row>
+                  <Row style={subHeading}>
+                    <Col xs={1}></Col>
+                    <Col>Make</Col>
+                    <Col>Model</Col>
+                    <Col>Year</Col>
+                    <Col>State</Col>
+                    <Col>License</Col>
+                  </Row>
+                  {Object.values(vehicles).map((vehicle) => {
+                    return (
+                      <div>
+                        <Row>
+                          <Col xs={1}>
+                            {vehiclesApplication.includes(vehicle) ? (
+                              <img
+                                src={Radiobutton_filled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handleVehiclesClick(vehicle)}
+                              />
+                            ) : (
+                              <img
+                                src={Radiobutton_unfilled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handleVehiclesClick(vehicle)}
+                              />
+                            )}
+                          </Col>
+                          <Col>{vehicle.make}</Col>
+                          <Col>{vehicle.model}</Col>
+                          <Col>{vehicle.year}</Col>
+                          <Col>{vehicle.state}</Col>
+                          <Col>{vehicle.license}</Col>
+                        </Row>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <div>
+              {Object.values(references).length > 0 ? (
+                <div className="mx-3 ">
+                  <Row style={subHeading}>References</Row>
+                  <Row style={subHeading}>
+                    <Col xs={1}></Col>
+                    <Col>Name</Col>
+                    <Col>Address</Col>
+                    <Col>Phone Number</Col>
+                    <Col>Email</Col>
+                    <Col>Relationship</Col>
+                  </Row>
+                  {Object.values(references).map((reference) => {
+                    return (
+                      <div>
+                        <Row>
+                          <Col xs={1}>
+                            {referencesApplication.includes(reference) ? (
+                              <img
+                                src={Radiobutton_filled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handleReferencesClick(reference)}
+                              />
+                            ) : (
+                              <img
+                                src={Radiobutton_unfilled}
+                                style={{ width: "15px", height: "15px" }}
+                                onClick={() => handleReferencesClick(reference)}
+                              />
+                            )}
+                          </Col>
+                          <Col>{reference.name}</Col>
+                          <Col>{reference.address}</Col>
+                          <Col>{reference.phone}</Col>
+                          <Col>{reference.email}</Col>
+                          <Col>{reference.relationship}</Col>
+                        </Row>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </Row>
+
           {/* =======================================Application
           Occupants================================================ */}
-          <Row className="m-3">
+          {/* <Row className="m-3">
             <Row>
               <Col>
                 <Form.Group className="mx-2 my-3">
@@ -466,10 +756,10 @@ function ReviewTenantProfile(props) {
                 </Form.Group>
               </Col>
             </Row>
-          </Row>
+          </Row> */}
           {/* =======================================Application
           Occupants================================================ */}
-          <Row className="m-3">
+          {/* <Row className="m-3">
             <Row>
               <Col>
                 <Form.Group className="mx-2 my-3">
@@ -498,7 +788,7 @@ function ReviewTenantProfile(props) {
                 </Form.Group>
               </Col>
             </Row>
-          </Row>
+          </Row> */}
           {/* =======================================Application Message================================================ */}
           <Row className="m-3">
             <Form.Group className="mx-2 my-3">

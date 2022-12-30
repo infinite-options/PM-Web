@@ -96,11 +96,6 @@ function TenantProfile(props) {
   const [newFile, setNewFile] = useState(null);
   const [editingDoc, setEditingDoc] = useState(null);
   const [files, setFiles] = useState([]);
-  const [numAdults, setNumAdults] = useState(0);
-  const [numChildren, setNumChildren] = useState(0);
-  const [numPets, setNumPets] = useState(0);
-  const [numVehicles, setNumVehicles] = useState(0);
-  const [numReferences, setNumReferences] = useState(0);
   const [adults, setAdults] = useState([]);
   const [children, setChildren] = useState([]);
   const [pets, setPets] = useState([]);
@@ -197,19 +192,13 @@ function TenantProfile(props) {
       setCompany(response.result[0].tenant_current_job_company);
       setDLNumber(response.result[0].tenant_drivers_license_number);
       setCompany(response.result[0].tenant_current_job_company);
-      setNumAdults(
-        JSON.parse(response.result[0].tenant_adult_occupants).length
-      );
+
       setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
-      setNumChildren(
-        JSON.parse(response.result[0].tenant_children_occupants).length
-      );
+
       setChildren(JSON.parse(response.result[0].tenant_children_occupants));
-      setNumPets(JSON.parse(response.result[0].tenant_pet_occupants).length);
+
       setPets(JSON.parse(response.result[0].tenant_pet_occupants));
-      setNumVehicles(JSON.parse(response.result[0].tenant_vehicle_info).length);
       setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
-      setNumReferences(JSON.parse(response.result[0].tenant_references).length);
       setReferences(JSON.parse(response.result[0].tenant_references));
       const currentAddress = JSON.parse(
         response.result[0].tenant_current_address
@@ -258,9 +247,9 @@ function TenantProfile(props) {
       previous_address: usePreviousAddress
         ? JSON.stringify(previousAddressState[0])
         : null,
-      adult_occupants: JSON.stringify(adults),
-      children_occupants: JSON.stringify(children),
-      pet_occupants: JSON.stringify(pets),
+      adults: JSON.stringify(adults),
+      children: JSON.stringify(children),
+      pets: JSON.stringify(pets),
       references: JSON.stringify(references),
       vehicle_info: JSON.stringify(vehicles),
     };
@@ -1268,7 +1257,9 @@ function TenantProfile(props) {
                     })}
                   </div>
                 ) : (
-                  ""
+                  <div className="mx-3 ">
+                    <Row style={gray}>None</Row>
+                  </div>
                 )}
               </div>
               <div>
@@ -1293,7 +1284,9 @@ function TenantProfile(props) {
                     })}
                   </div>
                 ) : (
-                  ""
+                  <div className="mx-3 ">
+                    <Row style={gray}>None</Row>
+                  </div>
                 )}
               </div>
               <div>
@@ -1320,7 +1313,9 @@ function TenantProfile(props) {
                     })}
                   </div>
                 ) : (
-                  ""
+                  <div className="mx-3 ">
+                    <Row style={gray}>None</Row>
+                  </div>
                 )}
               </div>
               <div>
@@ -1349,7 +1344,9 @@ function TenantProfile(props) {
                     })}
                   </div>
                 ) : (
-                  ""
+                  <div className="mx-3 ">
+                    <Row style={gray}>None</Row>
+                  </div>
                 )}
               </div>
               <div>
@@ -1378,7 +1375,9 @@ function TenantProfile(props) {
                     })}
                   </div>
                 ) : (
-                  ""
+                  <div className="mx-3 ">
+                    <Row style={gray}>None</Row>
+                  </div>
                 )}
               </div>
             </div>

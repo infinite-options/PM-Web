@@ -20,6 +20,9 @@ import {
   smallImg,
   subText,
   bluePillButton,
+  subHeading,
+  gray,
+  headings,
 } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
@@ -49,8 +52,9 @@ function ManagerTenantProfileView(props) {
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
-  const applicationsResponse = async () => {
-    createNewTenantAgreement(application);
+  const applicationsResponse = () => {
+    console.log("applicationsResponse", application);
+    createNewTenantAgreement([application]);
   };
   const rejectApplication = async () => {
     const request_body = {
@@ -364,54 +368,172 @@ function ManagerTenantProfileView(props) {
             overflow: "scroll",
           }}
         >
-          <div
-            className="my-3 p-2"
-            style={{
-              boxShadow: " 0px 1px 6px #00000029",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            <Row className="mx-2">
-              <Table classes={{ root: classes.customTable }} size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Name</TableCell>
-                    <TableCell align="center">Phone Number</TableCell>
-                    <TableCell align="center">Email</TableCell>
-                    <TableCell align="center">Occupants</TableCell>
-                    <TableCell align="center">No. of Pets</TableCell>
-                    <TableCell align="center"> Type of Pets</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {application.applicant_info.map((applicant) => (
-                    <TableRow>
-                      <TableCell align="center">
-                        {applicant.tenant_first_name}{" "}
-                        {applicant.tenant_last_name}
-                      </TableCell>
-                      <TableCell align="center">
-                        {applicant.tenant_phone_number}
-                      </TableCell>
-                      <TableCell align="center">
-                        {applicant.tenant_email}
-                      </TableCell>
-                      <TableCell align="center">
-                        {applicant.adult_occupants} adults <br />
-                        {applicant.children_occupants} children
-                      </TableCell>
-                      <TableCell align="center">{applicant.num_pets}</TableCell>
-                      <TableCell align="center">
-                        {" "}
-                        {applicant.type_pets}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Row>
-          </div>
+          {application.applicant_info.map((applicant) => (
+            <div
+              className="my-3 p-2"
+              style={{
+                boxShadow: " 0px 1px 6px #00000029",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              <Row className="mx-2">
+                <Row className="mx-2">
+                  <Col style={subText}>Applicant Name</Col>
+                  <Col style={subText}>
+                    {applicant.tenant_first_name} {applicant.tenant_last_name}
+                  </Col>
+                </Row>
+                <Row className="mx-2">
+                  <Col style={subText}>Phone Number</Col>
+                  <Col style={subText}>{applicant.tenant_phone_number}</Col>
+                </Row>
+                <Row className="mx-2">
+                  <Col style={subText}>Email</Col>
+                  <Col style={subText}>{applicant.tenant_email}</Col>
+                </Row>
+              </Row>
+              <Row className="mx-2 my-2">
+                <Row className="mx-2" style={headings}>
+                  <div>Who plans to live in the unit?</div>
+                </Row>
+                <Row className="mx-2">
+                  {applicant.adults &&
+                  JSON.parse(applicant.adults).length > 0 ? (
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Adults</Row>
+                      <Row style={subHeading}>
+                        <Col>Name</Col>
+                        <Col>Relationship</Col>
+                        <Col>DOB</Col>
+                      </Row>
+                      {JSON.parse(applicant.adults).map((adult) => {
+                        return (
+                          <div>
+                            <Row style={gray}>
+                              <Col>{adult.name}</Col>
+                              <Col>{adult.relationship}</Col>
+                              <Col>{adult.dob}</Col>
+                            </Row>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {applicant.children &&
+                  JSON.parse(applicant.children).length > 0 ? (
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Children</Row>
+                      <Row style={subHeading}>
+                        <Col>Name</Col>
+                        <Col>Relationship</Col>
+                        <Col>DOB</Col>
+                      </Row>
+                      {JSON.parse(applicant.children).map((child) => {
+                        return (
+                          <div>
+                            <Row style={gray}>
+                              <Col>{child.name}</Col>
+                              <Col>{child.relationship}</Col>
+                              <Col>{child.dob}</Col>
+                            </Row>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {applicant.pets && JSON.parse(applicant.pets).length > 0 ? (
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Pets</Row>
+                      <Row style={subHeading}>
+                        <Col>Name</Col>
+                        <Col>Type</Col>
+                        <Col>Breed</Col>
+                        <Col>Weight</Col>
+                      </Row>
+                      {JSON.parse(applicant.pets).map((pet) => {
+                        return (
+                          <div>
+                            <Row style={gray}>
+                              <Col>{pet.name}</Col>
+                              <Col>{pet.type}</Col>
+                              <Col>{pet.breed}</Col>
+                              <Col>{pet.weight}</Col>
+                            </Row>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {applicant.vehicles &&
+                  JSON.parse(applicant.vehicles).length > 0 ? (
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Vehicles</Row>
+                      <Row style={subHeading}>
+                        <Col>Make</Col>
+                        <Col>Model</Col>
+                        <Col>Year</Col>
+                        <Col>State</Col>
+                        <Col>License</Col>
+                      </Row>
+                      {JSON.parse(applicant.vehicles).map((vehicle) => {
+                        return (
+                          <div>
+                            <Row style={gray}>
+                              <Col>{vehicle.make}</Col>
+                              <Col>{vehicle.model}</Col>
+                              <Col>{vehicle.year}</Col>
+                              <Col>{vehicle.state}</Col>
+                              <Col>{vehicle.license}</Col>
+                            </Row>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {applicant.references &&
+                  JSON.parse(applicant.references).length > 0 ? (
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>References</Row>
+                      <Row style={subHeading}>
+                        <Col>Name</Col>
+                        <Col>Address</Col>
+                        <Col>Phone Number</Col>
+                        <Col>Email</Col>
+                        <Col>Relationship</Col>
+                      </Row>
+                      {JSON.parse(applicant.references).map((reference) => {
+                        return (
+                          <div>
+                            <Row style={gray}>
+                              <Col>{reference.name}</Col>
+                              <Col>{reference.address}</Col>
+                              <Col>{reference.phone}</Col>
+                              <Col>{reference.email}</Col>
+                              <Col>{reference.relationship}</Col>
+                            </Row>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </Row>
+              </Row>
+            </div>
+          ))}
         </Container>
         <Row className="d-flex justify-content-center my-2">
           <p
@@ -454,9 +576,11 @@ function ManagerTenantProfileView(props) {
                         <TableCell>Lease Start</TableCell>
                         <TableCell>Lease End</TableCell>
                         <TableCell>Rent Due</TableCell>
-                        <TableCell>Occupants</TableCell>
-                        <TableCell>No. of Pets</TableCell>
-                        <TableCell>Type of Pets</TableCell>
+                        <TableCell>Adults</TableCell>
+                        <TableCell>Children</TableCell>
+                        <TableCell>Pets</TableCell>
+                        <TableCell>Vehicles</TableCell>
+                        <TableCell>References</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -646,7 +770,27 @@ function ManagerTenantProfileView(props) {
             </div>
           </Container>
         ) : (
-          <div></div>
+          <Container
+            style={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+              boxShadow: "0px 3px 6px #00000029",
+              border: "0.5px solid #707070",
+              borderRadius: "5px",
+              maxHeight: "500px",
+              overflow: "scroll",
+            }}
+          >
+            <div
+              className="my-3 p-2"
+              style={{
+                boxShadow: " 0px 1px 6px #00000029",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              No lease created yet
+            </div>
+          </Container>
         )}
       </div>
 

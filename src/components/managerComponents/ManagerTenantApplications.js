@@ -121,9 +121,11 @@ function ManagerTenantApplications(props) {
                   <TableCell align="center">Application Status</TableCell>
                   <TableCell align="center">Name</TableCell>
                   <TableCell align="center">Message</TableCell>
-                  <TableCell align="center">Occupants</TableCell>
-                  <TableCell align="center">No.of Pets</TableCell>
-                  <TableCell align="center">Type of Pets</TableCell>
+                  <TableCell align="center">Adults</TableCell>
+                  <TableCell align="center">Children</TableCell>
+                  <TableCell align="center">Pets</TableCell>
+                  <TableCell align="center">Vehicles</TableCell>
+                  <TableCell align="center">References</TableCell>
                   <TableCell align="center">Application Date</TableCell>
                   <TableCell align="center">Documents</TableCell>
                 </TableRow>
@@ -161,25 +163,82 @@ function ManagerTenantApplications(props) {
                     >
                       Note: {application.message}
                     </TableCell>
-                    <TableCell
-                      align="center"
-                      onClick={() => selectTenantApplication(application)}
-                    >
-                      {application.adult_occupants} adults <br />
-                      {application.children_occupants} children
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      onClick={() => selectTenantApplication(application)}
-                    >
-                      {application.num_pets}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      onClick={() => selectTenantApplication(application)}
-                    >
-                      {application.type_pets}
-                    </TableCell>
+                    {application.adults ? (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        {JSON.parse(application.adults).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        0
+                      </TableCell>
+                    )}
+                    {application.children ? (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        {JSON.parse(application.children).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        0
+                      </TableCell>
+                    )}
+
+                    {application.pets ? (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        {JSON.parse(application.pets).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        0
+                      </TableCell>
+                    )}
+                    {application.vehicles ? (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        {JSON.parse(application.vehicles).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        0
+                      </TableCell>
+                    )}
+                    {application.references ? (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        {JSON.parse(application.references).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell
+                        align="center"
+                        onClick={() => selectTenantApplication(application)}
+                      >
+                        0
+                      </TableCell>
+                    )}
                     <TableCell
                       align="center"
                       onClick={() => selectTenantApplication(application)}

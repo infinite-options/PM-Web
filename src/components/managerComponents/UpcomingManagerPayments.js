@@ -121,6 +121,11 @@ export default function UpcomingManagerPayments(props) {
       numeric: false,
       label: "Address",
     },
+    {
+      id: "receiver",
+      numeric: false,
+      label: "To",
+    },
 
     {
       id: "description",
@@ -138,11 +143,6 @@ export default function UpcomingManagerPayments(props) {
       id: "next_payment",
       numeric: false,
       label: "Date Due",
-    },
-    {
-      id: "receiver",
-      numeric: false,
-      label: "To",
     },
 
     {
@@ -214,6 +214,11 @@ export default function UpcomingManagerPayments(props) {
       numeric: false,
       label: "Address",
     },
+    {
+      id: "payer",
+      numeric: true,
+      label: "From",
+    },
 
     {
       id: "description",
@@ -231,11 +236,6 @@ export default function UpcomingManagerPayments(props) {
       id: "next_payment",
       numeric: false,
       label: "Date Due",
-    },
-    {
-      id: "payer",
-      numeric: true,
-      label: "From",
     },
     {
       id: "amount_due",
@@ -337,6 +337,7 @@ export default function UpcomingManagerPayments(props) {
                             " " +
                             row.zip}
                         </TableCell>
+                        <TableCell align="right"> {row.receiver}</TableCell>
                         <TableCell align="right">
                           {row.purchase_frequency === "One-time" ||
                           row.purchase_frequency === "Annually"
@@ -355,7 +356,6 @@ export default function UpcomingManagerPayments(props) {
                         >
                           {row.next_payment.substring(0, 10)}
                         </TableCell>
-                        <TableCell align="right"> {row.receiver}</TableCell>
                         <TableCell align="right">
                           {props.type ? (
                             <button
@@ -388,7 +388,7 @@ export default function UpcomingManagerPayments(props) {
                           )}
                         </TableCell>
                         <TableCell align="right">
-                          {row.amount_due.toFixed(2)}
+                          {Math.abs(row.amount_due).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -461,6 +461,7 @@ export default function UpcomingManagerPayments(props) {
                             " " +
                             row.zip}
                         </TableCell>
+                        <TableCell align="right"> {row.payer}</TableCell>
                         <TableCell align="right">
                           {row.purchase_frequency === "One-time" ||
                           row.purchase_frequency === "Annually"
@@ -479,10 +480,9 @@ export default function UpcomingManagerPayments(props) {
                         >
                           {row.next_payment.substring(0, 10)}
                         </TableCell>
-                        <TableCell align="right"> {row.payer}</TableCell>
 
                         <TableCell align="right">
-                          {row.amount_due.toFixed(2)}
+                          {Math.abs(row.amount_due).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
