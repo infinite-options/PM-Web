@@ -1114,7 +1114,7 @@ function ManagerUtilities(props) {
               !expenseDetailManager &&
               !maintenanceExpenseDetail &&
               !payExpense ? (
-                <div className="mx-2 my-2 p-3">
+                <div>
                   <div
                     className="mx-3 my-3 p-2"
                     style={{
@@ -1123,7 +1123,7 @@ function ManagerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row style={headings}>
+                    <Row style={headings} className="m-3">
                       {" "}
                       <Col>
                         <h3>Utility Expenses Due From Manager </h3>
@@ -1342,9 +1342,9 @@ function ManagerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row style={headings}>
+                    <Row className="m-3" style={headings}>
                       <Col>
-                        <h3>Utilities Due From Tenant </h3>
+                        <h3>Utility Expenses Due From Tenant </h3>
                       </Col>
                       <Col>
                         <img
@@ -1553,7 +1553,7 @@ function ManagerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row style={headings}>
+                    <Row className="m-3" style={headings}>
                       <Col>
                         <h3>Maintenance Payments</h3>{" "}
                       </Col>

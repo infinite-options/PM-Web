@@ -388,15 +388,8 @@ function OwnerRepairList(props) {
             // rightText="+ New"
             // rightFn={() => setStage("ADDREQUEST")}
           />
-          <div
-            className="mx-2 my-2 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-          >
-            <Row>
+          <div>
+            <Row className="m-3">
               <Col>
                 {" "}
                 <h3>Maintenance and Repairs </h3>
@@ -419,161 +412,171 @@ function OwnerRepairList(props) {
             </Row>
             {!isLoading ? (
               repairIter.length > 1 ? (
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <Table
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                    responsive="md"
-                  >
-                    <EnhancedTableHead
-                      order={order}
-                      orderBy={orderBy}
-                      onRequestSort={handleRequestSort}
-                      // rowCount="4"
-                    />{" "}
-                    <TableBody>
-                      {repairIter.map((row, index) => {
-                        return stableSort(
-                          row.repairs_list,
-                          getComparator(order, orderBy)
-                        ).map((repair, j) => (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={j}
-                            onClick={() => {
-                              navigate(
-                                `/owner-repairs/${repair.maintenance_request_uid}`,
-                                {
-                                  state: {
-                                    repair: repair,
-                                    property: repair.address,
-                                  },
-                                }
-                              );
-                            }}
-                          >
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {JSON.parse(repair.images).length > 0 ? (
-                                <img
-                                  src={JSON.parse(repair.images)[0]}
-                                  // onClick={() => selectRepair(repair)}
-
-                                  alt="repair"
-                                  style={{
-                                    borderRadius: "4px",
-                                    objectFit: "cover",
-                                    width: "100px",
-                                    height: "100px",
-                                  }}
-                                />
-                              ) : (
-                                <img
-                                  src={RepairImg}
-                                  alt="Repair"
-                                  style={{
-                                    borderRadius: "4px",
-                                    objectFit: "cover",
-                                    width: "100px",
-                                    height: "100px",
-                                  }}
-                                />
-                              )}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                              style={{
-                                color: row.title === "New" ? "green" : "black",
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <Table
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                      responsive="md"
+                    >
+                      <EnhancedTableHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        // rowCount="4"
+                      />{" "}
+                      <TableBody>
+                        {repairIter.map((row, index) => {
+                          return stableSort(
+                            row.repairs_list,
+                            getComparator(order, orderBy)
+                          ).map((repair, j) => (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={j}
+                              onClick={() => {
+                                navigate(
+                                  `/owner-repairs/${repair.maintenance_request_uid}`,
+                                  {
+                                    state: {
+                                      repair: repair,
+                                      property: repair.address,
+                                    },
+                                  }
+                                );
                               }}
                             >
-                              {row.title}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.title}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.description}
-                            </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {JSON.parse(repair.images).length > 0 ? (
+                                  <img
+                                    src={JSON.parse(repair.images)[0]}
+                                    // onClick={() => selectRepair(repair)}
 
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.address}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.priority}
-                            </TableCell>
+                                    alt="repair"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={RepairImg}
+                                    alt="Repair"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                )}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                                style={{
+                                  color:
+                                    row.title === "New" ? "green" : "black",
+                                }}
+                              >
+                                {row.title}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.title}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.description}
+                              </TableCell>
 
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.request_created_date.split(" ")[0]}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.days_open} days
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.quotes_to_review > 0
-                                ? `${repair.quotes_to_review} new quote(s) to review`
-                                : "No new quotes"}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.assigned_business != null
-                                ? repair.assigned_business
-                                : "None"}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {repair.scheduled_date != null
-                                ? repair.scheduled_date
-                                : "Not Scheduled"}
-                            </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.address}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.priority}
+                              </TableCell>
 
-                            <TableCell>${repair.total_estimate}</TableCell>
-                          </TableRow>
-                        ));
-                      })}
-                    </TableBody>
-                  </Table>
-                </Row>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.request_created_date.split(" ")[0]}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.days_open} days
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.quotes_to_review > 0
+                                  ? `${repair.quotes_to_review} new quote(s) to review`
+                                  : "No new quotes"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.assigned_business != null
+                                  ? repair.assigned_business
+                                  : "None"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.scheduled_date != null
+                                  ? repair.scheduled_date
+                                  : "Not Scheduled"}
+                              </TableCell>
+
+                              <TableCell>${repair.total_estimate}</TableCell>
+                            </TableRow>
+                          ));
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </div>
               ) : (
                 <div className="w-100 d-flex flex-column justify-content-center align-items-center">
                   No maintenance and repair requests

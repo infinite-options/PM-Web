@@ -84,7 +84,7 @@ export default function OwnerPayments(props) {
         </div>
         <div className="w-100 mb-5">
           <Header title="Payment Portal" />
-          <Row className="m-3">
+          <Row>
             {propertyData.length !== 0 && (
               <UpcomingOwnerPayments
                 data={upcomingPaymentsData}
