@@ -220,7 +220,14 @@ function ManagerManagementContract(props) {
           >
             <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
           </div>
-          <div className="row">
+          <div
+            className="mx-3 my-3 p-2 row"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
             <div className="col">
               <h5 style={headings}>
                 {property.address}
@@ -241,7 +248,14 @@ function ManagerManagementContract(props) {
               </h5>
             </div>
           </div>
-          <div className="mb-4">
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
             <h5 style={headings}>Contract Details</h5>
             <Form.Group className="mx-2 my-3">
               <Form.Label style={mediumBold} className="mb-0 ms-2">
@@ -255,36 +269,54 @@ function ManagerManagementContract(props) {
               />
             </Form.Group>
           </div>
-          <Row className="mb-4">
-            <h5 style={mediumBold}>PM Agreement Dates</h5>
-            <Col>
-              <Form.Group className="mx-2 my-3">
-                <Form.Label style={mediumBold} className="mb-0 ms-2">
-                  Start Date {startDate === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mx-2 my-3">
-                <Form.Label style={mediumBold} className="mb-0 ms-2">
-                  End Date {endDate === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <div className="mb-4">
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            {" "}
+            <Row>
+              <h5 style={mediumBold}>PM Agreement Dates</h5>
+              <Col>
+                <Form.Group className="mx-2 my-3">
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    Start Date {startDate === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mx-2 my-3">
+                  <Form.Label style={mediumBold} className="mb-0 ms-2">
+                    End Date {endDate === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
             <h5 style={mediumBold}>PM Fees</h5>
             <div className="mx-2">
               <ManagerFees
@@ -295,11 +327,25 @@ function ManagerManagementContract(props) {
               />
             </div>
           </div>
-          <div className="mb-4">
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
             <h5 style={mediumBold}>Contact Details</h5>
             <BusinessContact state={contactState} />
           </div>
-          <div className="mb-4">
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
             <h5 style={mediumBold}>Property Manager Documents</h5>
             {files.map((file, i) => (
               <div key={i}>
@@ -398,30 +444,30 @@ function ManagerManagementContract(props) {
                 </label>
               </div>
             )}
-            {showSpinner ? (
-              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                <ReactBootStrap.Spinner animation="border" role="status" />
-              </div>
-            ) : (
-              ""
-            )}
-            <div
-              className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
-              style={{
-                background: "#FFFFFF 0% 0% no-repeat padding-box",
-
-                opacity: 1,
-              }}
-            >
-              <Button
-                variant="outline-primary"
-                style={pillButton}
-                className="mx-2"
-                onClick={save}
-              >
-                Save
-              </Button>
+          </div>
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
             </div>
+          ) : (
+            ""
+          )}
+          <div
+            className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
+            style={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+
+              opacity: 1,
+            }}
+          >
+            <Button
+              variant="outline-primary"
+              style={pillButton}
+              className="mx-2"
+              onClick={save}
+            >
+              Save
+            </Button>
           </div>
         </div>{" "}
         <div hidden={responsive.showSidebar} className="w-100 mt-3">

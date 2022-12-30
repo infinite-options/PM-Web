@@ -61,11 +61,11 @@ function ManagerTenantAgreementEdit(props) {
   const [lateFeePer, setLateFeePer] = useState("");
   const [available, setAvailable] = useState("");
 
-  const [adultOccupants, setAdultOccupants] = useState("");
-  const [childrenOccupants, setChildrenOccupants] = useState("");
-  const [numPets, setNumPets] = useState("");
-  const [typePets, setTypePets] = useState("");
-
+  const [adults, setAdults] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [pets, setPets] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [references, setReferences] = useState([]);
   const [showSpinner, setShowSpinner] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -137,22 +137,38 @@ function ManagerTenantAgreementEdit(props) {
     setLateAfter(agreement.late_by);
     setLateFee(agreement.late_fee);
     setLateFeePer(agreement.perDay_late_fee);
-    setAdultOccupants(agreement.adult_occupants);
-    setChildrenOccupants(agreement.children_occupants);
-    setNumPets(agreement.num_pets);
-    setTypePets(agreement.type_pets);
+
+    setAdults(JSON.parse(agreement.adults));
+    setChildren(JSON.parse(agreement.children));
+    setPets(JSON.parse(agreement.pets));
+    setVehicles(JSON.parse(agreement.vehicles));
+    setReferences(JSON.parse(agreement.references));
   };
   useEffect(() => {
     console.log("in useeffect");
-    setAdultOccupants(agreement.adult_occupants);
-    setChildrenOccupants(agreement.children_occupants);
-    setNumPets(agreement.num_pets);
-    setTypePets(agreement.type_pets);
+
+    if (agreement.adults) {
+      setAdults(JSON.parse(agreement.adults));
+    }
+    if (agreement.children) {
+      setChildren(JSON.parse(agreement.children));
+    }
+    if (agreement.pets) {
+      setPets(JSON.parse(agreement.pets));
+    }
+
+    if (agreement.vehicles) {
+      setVehicles(JSON.parse(agreement.vehicles));
+    }
+    if (agreement.references) {
+      setReferences(JSON.parse(agreement.references));
+    }
     if (agreement) {
       loadAgreement();
     }
   }, [agreement]);
   console.log(feeState);
+
   const save = async () => {
     setShowSpinner(true);
 
@@ -168,11 +184,13 @@ function ManagerTenantAgreementEdit(props) {
       late_fee: lateFee,
       perDay_late_fee: lateFeePer,
       assigned_contacts: JSON.stringify(contactState[0]),
-      adult_occupants: adultOccupants,
-      children_occupants: childrenOccupants,
-      num_pets: numPets,
-      type_pets: typePets,
+      adults: adults,
+      children: children,
+      pets: pets,
+      vehicles: vehicles,
+      references: references,
     };
+
     console.log(newAgreement);
     for (let i = 0; i < files.length; i++) {
       let key = `img_${i}`;
@@ -220,189 +238,156 @@ function ManagerTenantAgreementEdit(props) {
           rightText=""
         />
         <div className=" w-100 mx-2 my-2 p-3">
-          <Row className="mb-4">
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Lease Start Date {startDate === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Lease End Date {endDate === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            <Row className="mb-4">
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Lease Start Date {startDate === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Lease End Date {endDate === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            <Row className="my-3">
+              <h5 style={mediumBold}>Default Payment Parameters</h5>
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Rent Available to pay(days before due)
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    min="0"
+                    style={squareForm}
+                    placeholder="days"
+                    value={available}
+                    onChange={(e) => setAvailable(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Rent Payment Due Date {dueDate === "" ? required : ""}
+                  </Form.Label>
+                  {/*<Form.Control style={squareForm} placeholder='5 Days' />*/}
+                  <Form.Select
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                  >
+                    <option value="1">1st of the month</option>
+                    <option value="2">2nd of the month</option>
+                    <option value="3">3rd of the month</option>
+                    <option value="4">4th of the month</option>
+                    <option value="5">5th of the month</option>
+                    <option value="10">10th of the month</option>
+                    <option value="15">15th of the month</option>
+                    <option value="20">20th of the month</option>
+                    <option value="25">25th of the month</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
 
-          <Row className="mb-4">
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  No. of Adult Occupants
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Adult Occupants"
-                  value={adultOccupants}
-                  onChange={(e) => setAdultOccupants(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  No. of Children Occupants
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Children Occupants"
-                  defaultValue={childrenOccupants}
-                  onChange={(e) => setChildrenOccupants(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  No. of Pets
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="No. of Pets"
-                  value={numPets}
-                  onChange={(e) => setNumPets(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Type of Pets
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Type of Pets"
-                  value={typePets}
-                  onChange={(e) => setTypePets(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
+            <Row className="mb-2">
+              <h5 style={mediumBold}>Late Payment Details</h5>
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Late Fee (one-time) {lateFee === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    value={lateFee}
+                    type="number"
+                    min="0"
+                    style={squareForm}
+                    placeholder="amount($)"
+                    onChange={(e) => setLateFee(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Late fees after (days)
+                    {lateAfter === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    value={lateAfter}
+                    style={squareForm}
+                    placeholder="days"
+                    type="number"
+                    min="0"
+                    onChange={(e) => setLateAfter(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
 
-          <Row className="my-3">
-            <h5 style={mediumBold}>Default Payment Parameters</h5>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Rent Available to pay(days before due)
-                </Form.Label>
-                <Form.Control
-                  type="number"
-                  min="0"
-                  style={squareForm}
-                  placeholder="days"
-                  value={available}
-                  onChange={(e) => setAvailable(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Rent Payment Due Date {dueDate === "" ? required : ""}
-                </Form.Label>
-                {/*<Form.Control style={squareForm} placeholder='5 Days' />*/}
-                <Form.Select
-                  style={{
-                    ...squareForm,
-                    backgroundImage: `url(${ArrowDown})`,
-                  }}
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                >
-                  <option value="1">1st of the month</option>
-                  <option value="2">2nd of the month</option>
-                  <option value="3">3rd of the month</option>
-                  <option value="4">4th of the month</option>
-                  <option value="5">5th of the month</option>
-                  <option value="10">10th of the month</option>
-                  <option value="15">15th of the month</option>
-                  <option value="20">20th of the month</option>
-                  <option value="25">25th of the month</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <Row className="mb-2">
-            <h5 style={mediumBold}>Late Payment Details</h5>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Late Fee (one-time) {lateFee === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  value={lateFee}
-                  type="number"
-                  min="0"
-                  style={squareForm}
-                  placeholder="amount($)"
-                  onChange={(e) => setLateFee(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Late fees after (days)
-                  {lateAfter === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  value={lateAfter}
-                  style={squareForm}
-                  placeholder="days"
-                  type="number"
-                  min="0"
-                  onChange={(e) => setLateAfter(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-
-            <Col>
-              <Form.Group>
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Late Fee (per day) {lateFeePer === "" ? required : ""}
-                </Form.Label>
-                <Form.Control
-                  value={lateFeePer}
-                  type="number"
-                  min="0"
-                  style={squareForm}
-                  placeholder="amount($)"
-                  onChange={(e) => setLateFeePer(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <div className="mb-4">
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Late Fee (per day) {lateFeePer === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    value={lateFeePer}
+                    type="number"
+                    min="0"
+                    style={squareForm}
+                    placeholder="amount($)"
+                    onChange={(e) => setLateFeePer(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            {" "}
             <h5 style={mediumBold}>Rent Payments</h5>
             <div className="mx-2">
               <ManagerTenantRentPayments
@@ -420,12 +405,27 @@ function ManagerTenantAgreementEdit(props) {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            {" "}
             <h5 style={mediumBold}>Contact Details</h5>
             <BusinessContact state={contactState} />
           </div>
 
-          <div className="mb-4">
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
             <h5 style={mediumBold}>Lease Documents</h5>
             {files.length > 0 ? (
               <Table
