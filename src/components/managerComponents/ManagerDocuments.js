@@ -136,438 +136,448 @@ function ManagerDocuments(props) {
         </div>
         <div className="w-100 mb-5">
           <Header title="Documents" />
-          <Row className="m-3" style={{ overflow: "scroll" }}>
+          <Row>
             {!isLoading ? (
-              <Table
-                responsive="md"
-                classes={{ root: classes.customTable }}
-                size="small"
-              >
-                <TableHead></TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell width="380px">
-                      {" "}
-                      <h5>Active Lease Documents</h5>{" "}
-                    </TableCell>
-                    <TableCell width="180px">Address</TableCell>
-                    <TableCell width="180px">Expiry Date</TableCell>
-                    <TableCell width="180px">Created Date</TableCell>
-                    <TableCell width="180px">Created By</TableCell>
-                    <TableCell width="180px">Created For</TableCell>
-                    <TableCell width="180px">
-                      {/* <img
-                      src={SortDown}
-                      hidden={expandActiveLeaseDocuments}
-                      onClick={() => {
-                        setExpandActiveLeaseDocuments(
-                          !expandActiveLeaseDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />
-                    <img
-                      src={SortLeft}
-                      hidden={!expandActiveLeaseDocuments}
-                      onClick={() => {
-                        setExpandActiveLeaseDocuments(
-                          !expandActiveLeaseDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    /> */}
-                    </TableCell>
-                    <TableCell width="180px"></TableCell>
-                  </TableRow>
-
-                  {Object.values(activeLeaseDocuments)[0].length > 0 ? (
-                    Object.values(activeLeaseDocuments)[0].map((ald, i) => {
-                      return (
+              <div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    {" "}
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead></TableHead>
+                      <TableBody>
                         <TableRow>
                           <TableCell width="380px">
-                            {ald.description != "" ? (
-                              <p className="mx-3">{ald.description}</p>
-                            ) : (
-                              <p className="mx-3">Document {i + 1}</p>
-                            )}
+                            {" "}
+                            <h5>Active Lease Documents</h5>{" "}
                           </TableCell>
-                          <TableCell width="180px">{ald.address}</TableCell>
-                          <TableCell width="180px">{ald.expiry_date}</TableCell>
-                          <TableCell width="180px">
-                            {ald.created_date}
-                          </TableCell>
-                          <TableCell width="180px">{ald.created_by}</TableCell>
-                          <TableCell width="180px">
-                            {Object.values(ald.created_for.first_name).includes(
-                              ","
-                            ) &&
-                            Object.values(ald.created_for.last_name).includes(
-                              ","
-                            ) ? (
-                              Object.values(
-                                ald.created_for.first_name.split(",")
-                              ).map((name, index) => {
-                                return (
-                                  <p>
-                                    {
+                          <TableCell width="180px">Address</TableCell>
+                          <TableCell width="180px">Expiry Date</TableCell>
+                          <TableCell width="180px">Created Date</TableCell>
+                          <TableCell width="180px">Created By</TableCell>
+                          <TableCell width="180px">Created For</TableCell>
+                          <TableCell width="180px"></TableCell>
+                          <TableCell width="180px"></TableCell>
+                        </TableRow>
+
+                        {Object.values(activeLeaseDocuments)[0].length > 0 ? (
+                          Object.values(activeLeaseDocuments)[0].map(
+                            (ald, i) => {
+                              return (
+                                <TableRow>
+                                  <TableCell width="380px">
+                                    {ald.description != "" ? (
+                                      <p className="mx-3">{ald.description}</p>
+                                    ) : (
+                                      <p className="mx-3">Document {i + 1}</p>
+                                    )}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {ald.address}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {ald.expiry_date}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {ald.created_date}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {ald.created_by}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {Object.values(
+                                      ald.created_for.first_name
+                                    ).includes(",") &&
+                                    Object.values(
+                                      ald.created_for.last_name
+                                    ).includes(",") ? (
                                       Object.values(
                                         ald.created_for.first_name.split(",")
-                                      )[index]
-                                    }{" "}
-                                    {
-                                      Object.values(
-                                        ald.created_for.last_name.split(",")
-                                      )[index]
-                                    }
-                                  </p>
-                                );
-                              })
-                            ) : (
-                              <p>
-                                {Object.values(ald.created_for.first_name)}{" "}
-                                {Object.values(ald.created_for.last_name)}
-                              </p>
-                            )}
-                          </TableCell>
-                          <TableCell width="180px">
-                            <a href={ald.link} target="_blank">
-                              <img
-                                src={OpenDoc}
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  float: "right",
-                                }}
-                              />
-                            </a>
-                          </TableCell>
-                          <TableCell width="180px"></TableCell>
-                        </TableRow>
-                      );
-                    })
-                  ) : (
-                    <TableRow>
-                      <TableCell width="180px">
-                        <p className="mx-3">No documents</p>
-                      </TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                    </TableRow>
-                  )}
-                  <TableRow>
-                    <TableCell width="380px">
-                      <h5>Active Manager Documents </h5>
-                    </TableCell>
-                    <TableCell width="180px">Address</TableCell>
-                    <TableCell width="180px">Expiry Date</TableCell>
-                    <TableCell width="180px">Created Date</TableCell>
-                    <TableCell width="180px">Created By</TableCell>
-                    <TableCell width="180px">Created For</TableCell>
-                    <TableCell width="180px">
-                      {/* <img
-                      src={SortDown}
-                      hidden={expandActiveManagerDocuments}
-                      onClick={() => {
-                        setExpandActiveManagerDocuments(
-                          !expandActiveManagerDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />
-                    <img
-                      src={SortLeft}
-                      hidden={!expandActiveManagerDocuments}
-                      onClick={() => {
-                        setExpandActiveManagerDocuments(
-                          !expandActiveManagerDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    /> */}
-                    </TableCell>
-                    <TableCell width="180px"></TableCell>
-                  </TableRow>
-                  {Object.values(activeManagerDocuments)[0].length > 0 ? (
-                    Object.values(activeManagerDocuments)[0].map((amd, i) => {
-                      return (
+                                      ).map((name, index) => {
+                                        return (
+                                          <p>
+                                            {
+                                              Object.values(
+                                                ald.created_for.first_name.split(
+                                                  ","
+                                                )
+                                              )[index]
+                                            }{" "}
+                                            {
+                                              Object.values(
+                                                ald.created_for.last_name.split(
+                                                  ","
+                                                )
+                                              )[index]
+                                            }
+                                          </p>
+                                        );
+                                      })
+                                    ) : (
+                                      <p>
+                                        {Object.values(
+                                          ald.created_for.first_name
+                                        )}{" "}
+                                        {Object.values(
+                                          ald.created_for.last_name
+                                        )}
+                                      </p>
+                                    )}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    <a href={ald.link} target="_blank">
+                                      <img
+                                        src={OpenDoc}
+                                        style={{
+                                          width: "30px",
+                                          height: "30px",
+                                          float: "right",
+                                        }}
+                                      />
+                                    </a>
+                                  </TableCell>
+                                  <TableCell width="180px"></TableCell>
+                                </TableRow>
+                              );
+                            }
+                          )
+                        ) : (
+                          <TableRow>
+                            <TableCell width="180px">
+                              <p className="mx-3">No documents</p>
+                            </TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead></TableHead>
+                      <TableBody>
                         <TableRow>
                           <TableCell width="380px">
-                            {amd.description != "" ? (
-                              <p className="mx-3">{amd.description}</p>
-                            ) : (
-                              <p className="mx-3">Document {i + 1}</p>
-                            )}
+                            <h5>Active Manager Documents </h5>
                           </TableCell>
-
-                          <TableCell width="180px">{amd.address}</TableCell>
-                          <TableCell width="180px">{amd.expiry_date}</TableCell>
-                          <TableCell width="180px">
-                            {amd.created_date}
-                          </TableCell>
-                          <TableCell width="180px">{amd.created_by}</TableCell>
-                          <TableCell width="180px">{amd.created_for}</TableCell>
-                          <TableCell width="180px" xs={1}>
-                            <a href={amd.link} target="_blank">
-                              <img
-                                src={OpenDoc}
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  float: "right",
-                                }}
-                              />
-                            </a>
-                          </TableCell>
+                          <TableCell width="180px">Address</TableCell>
+                          <TableCell width="180px">Expiry Date</TableCell>
+                          <TableCell width="180px">Created Date</TableCell>
+                          <TableCell width="180px">Created By</TableCell>
+                          <TableCell width="180px">Created For</TableCell>
+                          <TableCell width="180px"></TableCell>
                           <TableCell width="180px"></TableCell>
                         </TableRow>
-                      );
-                    })
-                  ) : (
-                    <TableRow>
-                      <TableCell width="180px">
-                        <p className="mx-3">No documents</p>
-                      </TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                    </TableRow>
-                  )}
-                  <TableRow>
-                    <TableCell width="380px">
-                      {" "}
-                      <h5>Past Lease Documents</h5>{" "}
-                    </TableCell>
-                    <TableCell width="180px">Address</TableCell>
-                    <TableCell width="180px">Expiry Date</TableCell>
-                    <TableCell width="180px">Created Date</TableCell>
-                    <TableCell width="180px">Created By</TableCell>
-                    <TableCell width="180px">Created For</TableCell>
-                    <TableCell width="180px">
-                      {/* <img
-                      src={SortDown}
-                      hidden={expandPastLeaseDocuments}
-                      onClick={() => {
-                        setExpandPastLeaseDocuments(!expandPastLeaseDocuments);
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />
-                    <img
-                      src={SortLeft}
-                      hidden={!expandPastLeaseDocuments}
-                      onClick={() => {
-                        setExpandPastLeaseDocuments(!expandPastLeaseDocuments);
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />{" "} */}
-                    </TableCell>
-                    <TableCell width="180px"></TableCell>
-                  </TableRow>
-                  {Object.values(pastLeaseDocuments)[0].length > 0 ? (
-                    Object.values(pastLeaseDocuments)[0].map((pld, i) => {
-                      return (
+                        {Object.values(activeManagerDocuments)[0].length > 0 ? (
+                          Object.values(activeManagerDocuments)[0].map(
+                            (amd, i) => {
+                              return (
+                                <TableRow>
+                                  <TableCell width="380px">
+                                    {amd.description != "" ? (
+                                      <p className="mx-3">{amd.description}</p>
+                                    ) : (
+                                      <p className="mx-3">Document {i + 1}</p>
+                                    )}
+                                  </TableCell>
+
+                                  <TableCell width="180px">
+                                    {amd.address}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {amd.expiry_date}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {amd.created_date}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {amd.created_by}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {amd.created_for}
+                                  </TableCell>
+                                  <TableCell width="180px" xs={1}>
+                                    <a href={amd.link} target="_blank">
+                                      <img
+                                        src={OpenDoc}
+                                        style={{
+                                          width: "30px",
+                                          height: "30px",
+                                          float: "right",
+                                        }}
+                                      />
+                                    </a>
+                                  </TableCell>
+                                  <TableCell width="180px"></TableCell>
+                                </TableRow>
+                              );
+                            }
+                          )
+                        ) : (
+                          <TableRow>
+                            <TableCell width="180px">
+                              <p className="mx-3">No documents</p>
+                            </TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead></TableHead>
+                      <TableBody>
                         <TableRow>
                           <TableCell width="380px">
-                            {pld.description != "" ? (
-                              <p className="mx-3">{pld.description}</p>
-                            ) : (
-                              <p className="mx-3">Document {i + 1}</p>
-                            )}
+                            {" "}
+                            <h5>Past Lease Documents</h5>{" "}
                           </TableCell>
-
-                          <TableCell width="180px">{pld.address}</TableCell>
-                          <TableCell width="180px">{pld.expiry_date}</TableCell>
-                          <TableCell width="180px">
-                            {pld.created_date}
-                          </TableCell>
-                          <TableCell width="180px">{pld.created_by}</TableCell>
-                          <TableCell width="180px">
-                            {Object.values(pld.created_for.first_name).includes(
-                              ","
-                            ) &&
-                            Object.values(pld.created_for.last_name).includes(
-                              ","
-                            ) ? (
-                              Object.values(
-                                pld.created_for.first_name.split(",")
-                              ).map((name, index) => {
-                                return (
-                                  <p>
-                                    {
-                                      Object.values(
-                                        pld.created_for.first_name.split(",")
-                                      )[index]
-                                    }{" "}
-                                    {
-                                      Object.values(
-                                        pld.created_for.last_name.split(",")
-                                      )[index]
-                                    }
-                                  </p>
-                                );
-                              })
-                            ) : (
-                              <p>
-                                {Object.values(pld.created_for.first_name)}{" "}
-                                {Object.values(pld.created_for.last_name)}
-                              </p>
-                            )}
-                          </TableCell>
-                          <TableCell width="180px">
-                            <a href={pld.link} target="_blank">
-                              <img
-                                src={OpenDoc}
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  float: "right",
-                                }}
-                              />
-                            </a>
-                          </TableCell>
+                          <TableCell width="180px">Address</TableCell>
+                          <TableCell width="180px">Expiry Date</TableCell>
+                          <TableCell width="180px">Created Date</TableCell>
+                          <TableCell width="180px">Created By</TableCell>
+                          <TableCell width="180px">Created For</TableCell>
+                          <TableCell width="180px"></TableCell>
                           <TableCell width="180px"></TableCell>
                         </TableRow>
-                      );
-                    })
-                  ) : (
-                    <TableRow>
-                      {" "}
-                      <TableCell width="180px">
-                        <p className="mx-3">No documents</p>
-                      </TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                    </TableRow>
-                  )}
-                  <TableRow>
-                    <TableCell width="380px">
-                      <h5>Past Manager Documents</h5>{" "}
-                    </TableCell>
-                    <TableCell width="180px">Address</TableCell>
-                    <TableCell width="180px">Expiry Date</TableCell>
-                    <TableCell width="180px">Created Date</TableCell>
-                    <TableCell width="180px">Created By</TableCell>
-                    <TableCell width="180px">Created For</TableCell>
-                    <TableCell width="180px">
-                      {/* <img
-                      src={SortDown}
-                      hidden={expandPastManagerDocuments}
-                      onClick={() => {
-                        setExpandPastManagerDocuments(
-                          !expandPastManagerDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    />
-                    <img
-                      src={SortLeft}
-                      hidden={!expandPastManagerDocuments}
-                      onClick={() => {
-                        setExpandPastManagerDocuments(
-                          !expandPastManagerDocuments
-                        );
-                      }}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        float: "right",
-                      }}
-                    /> */}
-                    </TableCell>
-                    <TableCell width="180px"></TableCell>
-                  </TableRow>
+                        {Object.values(pastLeaseDocuments)[0].length > 0 ? (
+                          Object.values(pastLeaseDocuments)[0].map((pld, i) => {
+                            return (
+                              <TableRow>
+                                <TableCell width="380px">
+                                  {pld.description != "" ? (
+                                    <p className="mx-3">{pld.description}</p>
+                                  ) : (
+                                    <p className="mx-3">Document {i + 1}</p>
+                                  )}
+                                </TableCell>
 
-                  {Object.values(pastManagerDocuments)[0].length > 0 ? (
-                    Object.values(pastManagerDocuments)[0].map((pmd, i) => {
-                      return (
+                                <TableCell width="180px">
+                                  {pld.address}
+                                </TableCell>
+                                <TableCell width="180px">
+                                  {pld.expiry_date}
+                                </TableCell>
+                                <TableCell width="180px">
+                                  {pld.created_date}
+                                </TableCell>
+                                <TableCell width="180px">
+                                  {pld.created_by}
+                                </TableCell>
+                                <TableCell width="180px">
+                                  {Object.values(
+                                    pld.created_for.first_name
+                                  ).includes(",") &&
+                                  Object.values(
+                                    pld.created_for.last_name
+                                  ).includes(",") ? (
+                                    Object.values(
+                                      pld.created_for.first_name.split(",")
+                                    ).map((name, index) => {
+                                      return (
+                                        <p>
+                                          {
+                                            Object.values(
+                                              pld.created_for.first_name.split(
+                                                ","
+                                              )
+                                            )[index]
+                                          }{" "}
+                                          {
+                                            Object.values(
+                                              pld.created_for.last_name.split(
+                                                ","
+                                              )
+                                            )[index]
+                                          }
+                                        </p>
+                                      );
+                                    })
+                                  ) : (
+                                    <p>
+                                      {Object.values(
+                                        pld.created_for.first_name
+                                      )}{" "}
+                                      {Object.values(pld.created_for.last_name)}
+                                    </p>
+                                  )}
+                                </TableCell>
+                                <TableCell width="180px">
+                                  <a href={pld.link} target="_blank">
+                                    <img
+                                      src={OpenDoc}
+                                      style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        float: "right",
+                                      }}
+                                    />
+                                  </a>
+                                </TableCell>
+                                <TableCell width="180px"></TableCell>
+                              </TableRow>
+                            );
+                          })
+                        ) : (
+                          <TableRow>
+                            {" "}
+                            <TableCell width="180px">
+                              <p className="mx-3">No documents</p>
+                            </TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead></TableHead>
+                      <TableBody>
                         <TableRow>
                           <TableCell width="380px">
-                            {pmd.description != "" ? (
-                              <p className="mx-3">{pmd.description}</p>
-                            ) : (
-                              <p className="mx-3">Document {i + 1}</p>
-                            )}
+                            <h5>Past Manager Documents</h5>{" "}
                           </TableCell>
-                          <TableCell width="180px">{pmd.address}</TableCell>
-                          <TableCell width="180px">{pmd.expiry_date}</TableCell>
-                          <TableCell width="180px">
-                            {pmd.created_date}
-                          </TableCell>
-                          <TableCell width="180px">{pmd.created_by}</TableCell>
-                          <TableCell width="180px">{pmd.created_for}</TableCell>
-                          <TableCell width="180px">
-                            <a href={pmd.link} target="_blank">
-                              <img
-                                src={OpenDoc}
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  float: "right",
-                                }}
-                              />
-                            </a>
-                          </TableCell>
+                          <TableCell width="180px">Address</TableCell>
+                          <TableCell width="180px">Expiry Date</TableCell>
+                          <TableCell width="180px">Created Date</TableCell>
+                          <TableCell width="180px">Created By</TableCell>
+                          <TableCell width="180px">Created For</TableCell>
+                          <TableCell width="180px"></TableCell>
                           <TableCell width="180px"></TableCell>
                         </TableRow>
-                      );
-                    })
-                  ) : (
-                    <TableRow>
-                      <TableCell width="180px">
-                        <p className="mx-3">No documents</p>
-                      </TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                      <TableCell width="180px"></TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+
+                        {Object.values(pastManagerDocuments)[0].length > 0 ? (
+                          Object.values(pastManagerDocuments)[0].map(
+                            (pmd, i) => {
+                              return (
+                                <TableRow>
+                                  <TableCell width="380px">
+                                    {pmd.description != "" ? (
+                                      <p className="mx-3">{pmd.description}</p>
+                                    ) : (
+                                      <p className="mx-3">Document {i + 1}</p>
+                                    )}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {pmd.address}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {pmd.expiry_date}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {pmd.created_date}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {pmd.created_by}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    {pmd.created_for}
+                                  </TableCell>
+                                  <TableCell width="180px">
+                                    <a href={pmd.link} target="_blank">
+                                      <img
+                                        src={OpenDoc}
+                                        style={{
+                                          width: "30px",
+                                          height: "30px",
+                                          float: "right",
+                                        }}
+                                      />
+                                    </a>
+                                  </TableCell>
+                                  <TableCell width="180px"></TableCell>
+                                </TableRow>
+                              );
+                            }
+                          )
+                        ) : (
+                          <TableRow>
+                            <TableCell width="180px">
+                              <p className="mx-3">No documents</p>
+                            </TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                            <TableCell width="180px"></TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </div>
+              </div>
             ) : (
               <Row></Row>
             )}

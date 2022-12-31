@@ -394,133 +394,143 @@ function OwnerContacts() {
                   </div>
                 </Row>
               ) : propertyManagers.length > 0 && !addContacts ? (
-                <Row className="m-3">
-                  <Row className="w-100 m-3">
-                    <Col xs={2}> Search by</Col>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3">
+                    <Row className="w-100 m-3">
+                      <Col xs={2}> Search by</Col>
 
-                    <Col>
-                      <input
-                        type="text"
-                        placeholder="Search"
-                        onChange={(event) => {
-                          setSearch(event.target.value);
-                        }}
-                        style={{
-                          width: "400px",
-                          border: "1px solid black",
-                          padding: "5px",
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                  <Row className="m-3" style={{ overflow: "scroll" }}>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <EnhancedTableHeadContacts
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                        rowCount={propertyManagers.length}
-                      />{" "}
-                      <TableBody>
-                        {stableSort(
-                          propertyManagers,
-                          getComparator(order, orderBy)
-                        )
-                          // for filtering
-                          .filter((val) => {
-                            const query = search.toLowerCase();
+                      <Col>
+                        <input
+                          type="text"
+                          placeholder="Search"
+                          onChange={(event) => {
+                            setSearch(event.target.value);
+                          }}
+                          style={{
+                            width: "400px",
+                            border: "1px solid black",
+                            padding: "5px",
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="m-3" style={{ overflow: "scroll" }}>
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <EnhancedTableHeadContacts
+                          order={order}
+                          orderBy={orderBy}
+                          onRequestSort={handleRequestSort}
+                          rowCount={propertyManagers.length}
+                        />{" "}
+                        <TableBody>
+                          {stableSort(
+                            propertyManagers,
+                            getComparator(order, orderBy)
+                          )
+                            // for filtering
+                            .filter((val) => {
+                              const query = search.toLowerCase();
 
-                            return (
-                              val.contact_name.toLowerCase().indexOf(query) >=
-                                0 ||
-                              val.contact_type.toLowerCase().indexOf(query) >= 0
-                            );
-                          })
-                          .map((property, index) => {
-                            return (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={property.contact_name}
-                              >
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="left"
+                              return (
+                                val.contact_name.toLowerCase().indexOf(query) >=
+                                  0 ||
+                                val.contact_type.toLowerCase().indexOf(query) >=
+                                  0
+                              );
+                            })
+                            .map((property, index) => {
+                              return (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={property.contact_name}
                                 >
-                                  {property.contact_name}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {property.contact_type}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {property.contact_email}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {property.contact_phone_number}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  <div
-                                    style={property.contact_uid ? {} : hidden}
-                                    onClick={stopPropagation}
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="left"
                                   >
-                                    <a
-                                      href={`tel:${property.contact_phone_number}`}
+                                    {property.contact_name}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {property.contact_type}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {property.contact_email}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {property.contact_phone_number}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    <div
+                                      style={property.contact_uid ? {} : hidden}
+                                      onClick={stopPropagation}
                                     >
-                                      <img
-                                        src={Phone}
-                                        alt="Phone"
-                                        style={smallImg}
-                                      />
-                                    </a>
-                                    <a
-                                      href={`mailto:${property.contact_email}`}
-                                    >
-                                      <img
-                                        src={Message}
-                                        alt="Message"
-                                        style={smallImg}
-                                      />
-                                    </a>
-                                    <a
-                                      href={`mailto:${property.contact_email}`}
-                                    >
-                                      <img
-                                        src={Mail}
-                                        alt="Mail"
-                                        style={smallImg}
-                                      />
-                                    </a>
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                      </TableBody>
-                    </Table>
+                                      <a
+                                        href={`tel:${property.contact_phone_number}`}
+                                      >
+                                        <img
+                                          src={Phone}
+                                          alt="Phone"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                      <a
+                                        href={`mailto:${property.contact_email}`}
+                                      >
+                                        <img
+                                          src={Message}
+                                          alt="Message"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                      <a
+                                        href={`mailto:${property.contact_email}`}
+                                      >
+                                        <img
+                                          src={Mail}
+                                          alt="Mail"
+                                          style={smallImg}
+                                        />
+                                      </a>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </Row>
                   </Row>
-                </Row>
+                </div>
               ) : (
                 <Row></Row>
               )}

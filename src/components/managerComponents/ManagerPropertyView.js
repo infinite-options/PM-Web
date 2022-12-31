@@ -836,3429 +836,23 @@ function ManagerPropertyView(props) {
                     ""
                   )}
                 </Row>
-                <Row className="m-3">
-                  <Col>
-                    <h3>Property Cashflow Summary</h3>
-                  </Col>
-                  <Col>
-                    <img
-                      src={AddIcon}
-                      onClick={() => setShowCreateExpense(true)}
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        float: "right",
-                        marginRight: "5rem",
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <div>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <TableHead>
-                        <TableCell></TableCell>
-                        <TableCell align="right">To Date</TableCell>
-                        <TableCell align="right">Expected</TableCell>
-                        <TableCell align="right">Delta</TableCell>
-                        <TableCell align="right">To Date Amortized</TableCell>
-                        <TableCell align="right">Expected Amortized</TableCell>
-                        <TableCell align="right">Delta Amortized</TableCell>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell width="180px">
-                            {new Date().toLocaleString("default", {
-                              month: "long",
-                            })}{" "}
-                            &nbsp;
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyCashFlow}
-                              onClick={() => {
-                                setMonthlyCashFlow(!monthlyCashFlow);
-                                setMonthlyRevenue(false);
-                                setMonthlyExpense(false);
-                                setMonthlyRent(false);
-                                setMonthlyExtra(false);
-                                setMonthlyUtility(false);
-                                setMonthlyManagement(false);
-                                setMonthlyOwnerPayment(false);
-                                setMonthlyMaintenance(false);
-                                setMonthlyRepairs(false);
-                                setMonthlyUtilityExpense(false);
-                                setMonthlyMaintenanceRevenue(false);
-                                setMonthlyRepairsRevenue(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyCashFlow}
-                              onClick={() => {
-                                setMonthlyCashFlow(!monthlyCashFlow);
-                                setMonthlyRevenue(false);
-                                setMonthlyExpense(false);
-                                setMonthlyRent(false);
-                                setMonthlyExtra(false);
-                                setMonthlyUtility(false);
-                                setMonthlyManagement(false);
-                                setMonthlyOwnerPayment(false);
-                                setMonthlyMaintenance(false);
-                                setMonthlyRepairs(false);
-                                setMonthlyUtilityExpense(false);
-                                setMonthlyMaintenanceRevenue(false);
-                                setMonthlyRepairsRevenue(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashFlow}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashFlowExpected}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${(cashFlow - cashFlowExpected).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashFlowAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashFlowExpectedAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashFlowAmortized - cashFlowExpectedAmortized
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow hidden={!monthlyCashFlow}>
-                          <TableCell width="180px">
-                            &nbsp; Revenue{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyRevenue}
-                              onClick={() => {
-                                setMonthlyRevenue(!monthlyRevenue);
-                                setMonthlyRent(false);
-                                setMonthlyExtra(false);
-                                setMonthlyUtility(false);
-                                setMonthlyManagement(false);
-                                setMonthlyMaintenanceRevenue(false);
-                                setMonthlyRepairsRevenue(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyRevenue}
-                              onClick={() => {
-                                setMonthlyRevenue(!monthlyRevenue);
-                                setMonthlyRent(false);
-                                setMonthlyExtra(false);
-                                setMonthlyUtility(false);
-                                setMonthlyManagement(false);
-                                setMonthlyMaintenanceRevenue(false);
-                                setMonthlyRepairsRevenue(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${revenueTotal}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${revenueExpectedTotal}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${(revenueTotal - revenueExpectedTotal).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${revenueTotalAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${revenueExpectedTotalAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              revenueTotalAmortized -
-                              revenueExpectedTotalAmortized
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow hidden={!monthlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Rent{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyRent}
-                              onClick={() => setMonthlyRent(!monthlyRent)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyRent}
-                              onClick={() => setMonthlyRent(!monthlyRent)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.rental_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.rental_expected_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.rental_revenue -
-                              cashflowData.rental_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.amortized_rental_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_rental_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_rental_revenue -
-                              cashflowData.amortized_rental_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-
-                        {isLoading === false &&
-                          cashflowData.manager_revenue.map((revenue, index) => {
-                            console.log("revenue", revenue);
-
-                            return revenue.purchase_type === "RENT" ? (
-                              <TableRow hidden={!monthlyRent}>
-                                {console.log("in rent", revenue)}
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                  {revenue.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {revenue.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {revenue.purchase_frequency}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {revenue.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    revenue.amount_paid - revenue.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (revenue.amount_paid -
-                                        revenue.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Extra Charges
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyExtra}
-                              onClick={() => setMonthlyExtra(!monthlyExtra)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyExtra}
-                              onClick={() => setMonthlyExtra(!monthlyExtra)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.extra_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.extra_expected_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.extra_revenue -
-                              cashflowData.extra_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.amortized_extra_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_extra_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_extra_revenue -
-                              cashflowData.amortized_extra_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue.map((revenue, index) => {
-                            return revenue.purchase_type === "EXTRA CHARGES" ? (
-                              <TableRow hidden={!monthlyExtra}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                  {revenue.unit} <br />
-                                  &nbsp;&nbsp;&nbsp; {revenue.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {revenue.purchase_frequency}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {revenue.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    revenue.amount_paid - revenue.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (revenue.amount_paid -
-                                        revenue.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Utility
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyUtility}
-                              onClick={() => setMonthlyUtility(!monthlyUtility)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyUtility}
-                              onClick={() => setMonthlyUtility(!monthlyUtility)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.utility_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.utility_expected_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.utility_revenue -
-                              cashflowData.utility_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.amortized_utility_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_utility_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_utility_revenue -
-                              cashflowData.amortized_utility_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue.map((revenue, index) => {
-                            return revenue.purchase_type === "UTILITY" ? (
-                              <TableRow hidden={!monthlyUtility}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                  {revenue.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {revenue.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {revenue.purchase_frequency}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {revenue.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    revenue.amount_paid - revenue.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (revenue.amount_paid -
-                                        revenue.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Management
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyManagement}
-                              onClick={() =>
-                                setMonthlyManagement(!monthlyManagement)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyManagement}
-                              onClick={() =>
-                                setMonthlyManagement(!monthlyManagement)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.management_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.management_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.management_revenue -
-                              cashflowData.management_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_management_revenue -
-                              cashflowData.amortized_management_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue.map((revenue, index) => {
-                            return revenue.purchase_type === "MANAGEMENT" ? (
-                              <TableRow hidden={!monthlyManagement}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                  {revenue.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {revenue.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {revenue.purchase_frequency}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {revenue.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    revenue.amount_paid - revenue.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (revenue.amount_paid -
-                                        revenue.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Maintenance
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyMaintenanceRevenue}
-                              onClick={() =>
-                                setMonthlyMaintenanceRevenue(
-                                  !monthlyMaintenanceRevenue
-                                )
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyMaintenanceRevenue}
-                              onClick={() =>
-                                setMonthlyMaintenanceRevenue(
-                                  !monthlyMaintenanceRevenue
-                                )
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.maintenance_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.maintenance_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.maintenance_revenue -
-                              cashflowData.maintenance_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_maintenance_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_maintenance_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_maintenance_revenue -
-                              cashflowData.amortized_maintenance_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue.map((revenue, index) => {
-                            return revenue.purchase_type === "MAINTENANCE" ? (
-                              <TableRow hidden={!monthlyMaintenanceRevenue}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                  {revenue.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {revenue.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {revenue.purchase_frequency}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {revenue.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    revenue.amount_paid - revenue.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (revenue.amount_paid -
-                                        revenue.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Repairs
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyRepairsRevenue}
-                              onClick={() =>
-                                setMonthlyRepairsRevenue(!monthlyRepairsRevenue)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyRepairsRevenue}
-                              onClick={() =>
-                                setMonthlyRepairsRevenue(!monthlyRepairsRevenue)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.repairs_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.repairs_expected_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.repairs_revenue -
-                              cashflowData.repairs_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.amortized_repairs_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_repairs_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_repairs_revenue -
-                              cashflowData.amortized_repairs_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue.map((revenue, index) => {
-                            return revenue.purchase_type === "REPAIRS" ? (
-                              <TableRow hidden={!monthlyRepairsRevenue}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                  {revenue.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {revenue.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {revenue.purchase_frequency}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {revenue.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${revenue.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    revenue.amount_paid - revenue.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(revenue.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {revenue.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (revenue.amount_paid -
-                                        revenue.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyCashFlow}>
-                          <TableCell width="180px">
-                            &nbsp; Expenses{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyExpense}
-                              onClick={() => {
-                                setMonthlyExpense(!monthlyExpense);
-                                setMonthlyOwnerPayment(false);
-                                setMonthlyMaintenance(false);
-                                setMonthlyRepairs(false);
-                                setMonthlyUtilityExpense(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyExpense}
-                              onClick={() => {
-                                setMonthlyExpense(!monthlyExpense);
-                                setMonthlyOwnerPayment(false);
-                                setMonthlyMaintenance(false);
-                                setMonthlyRepairs(false);
-                                setMonthlyUtilityExpense(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${expenseTotal}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${expenseExpectedTotal}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${(expenseTotal - expenseExpectedTotal).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${expenseTotalAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${expenseExpectedTotalAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            {" "}
-                            $
-                            {(
-                              expenseTotalAmortized -
-                              expenseExpectedTotalAmortized
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow hidden={!monthlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Owner Payment
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyOwnerPayment}
-                              onClick={() =>
-                                setMonthlyOwnerPayment(!monthlyOwnerPayment)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyOwnerPayment}
-                              onClick={() =>
-                                setMonthlyOwnerPayment(!monthlyOwnerPayment)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.management_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.management_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.management_expense -
-                              cashflowData.management_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_management_expense -
-                              cashflowData.amortized_management_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_expense.map((expense, index) => {
-                            return expense.purchase_type === "OWNER PAYMENT" ? (
-                              <TableRow hidden={!monthlyOwnerPayment}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                  {expense.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {expense.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {expense.purchase_frequency}
-                                </TableCell>
-                                {expense.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${expense.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${expense.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {expense.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${expense.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${expense.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    expense.amount_paid - expense.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {expense.purchase_status === "PAID" &&
-                                expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(expense.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {expense.purchase_status === "UNPAID" &&
-                                expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(expense.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (expense.amount_paid -
-                                        expense.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Maintenance
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyMaintenance}
-                              onClick={() =>
-                                setMonthlyMaintenance(!monthlyMaintenance)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyMaintenance}
-                              onClick={() =>
-                                setMonthlyMaintenance(!monthlyMaintenance)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.maintenance_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.maintenance_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.maintenance_expense -
-                              cashflowData.maintenance_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_maintenance_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_maintenance_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_maintenance_expense -
-                              cashflowData.amortized_maintenance_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_expense.map((expense, index) => {
-                            return expense.purchase_type === "MAINTENANCE" ? (
-                              <TableRow hidden={!monthlyMaintenance}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                  {expense.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {expense.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {expense.purchase_frequency}
-                                </TableCell>
-                                {expense.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${expense.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${expense.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {expense.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${expense.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${expense.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    expense.amount_paid - expense.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {expense.purchase_status === "PAID" &&
-                                expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(expense.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {expense.purchase_status === "UNPAID" &&
-                                expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(expense.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (expense.amount_paid -
-                                        expense.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Repairs{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyRepairs}
-                              onClick={() => setMonthlyRepairs(!monthlyRepairs)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyRepairs}
-                              onClick={() => setMonthlyRepairs(!monthlyRepairs)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.repairs_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.repairs_expected_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.repairs_expense -
-                              cashflowData.repairs_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.amortized_repairs_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_repairs_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_repairs_expense -
-                              cashflowData.amortized_repairs_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_expense.map((expense, index) => {
-                            return expense.purchase_type === "REPAIRS" ? (
-                              <TableRow hidden={!monthlyRepairs}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                  {expense.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {expense.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {expense.purchase_frequency}
-                                </TableCell>
-                                {expense.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${expense.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${expense.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {expense.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${expense.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${expense.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  ${expense.amount_paid - expense.amount_due}
-                                </TableCell>
-                                {expense.purchase_status === "PAID" &&
-                                expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(expense.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {expense.purchase_status === "UNPAID" &&
-                                expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(expense.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (expense.amount_paid -
-                                        expense.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        <TableRow hidden={!monthlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Utility{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={monthlyUtilityExpense}
-                              onClick={() =>
-                                setMonthlyUtilityExpense(!monthlyUtilityExpense)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!monthlyUtilityExpense}
-                              onClick={() =>
-                                setMonthlyUtilityExpense(!monthlyUtilityExpense)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.utility_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.utility_expected_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.utility_expense -
-                              cashflowData.utility_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.amortized_utility_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_utility_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_utility_expense -
-                              cashflowData.amortized_utility_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_expense.map((expense, index) => {
-                            return expense.purchase_type === "UTILITY" ? (
-                              <TableRow hidden={!monthlyUtilityExpense}>
-                                <TableCell>
-                                  &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                  {expense.unit}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp; {expense.description}{" "}
-                                  <br />
-                                  &nbsp;&nbsp;&nbsp;{" "}
-                                  {expense.purchase_frequency}
-                                </TableCell>
-                                {expense.purchase_status === "PAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={green}
-                                  >
-                                    ${expense.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${expense.amount_paid.toFixed(2)}
-                                  </TableCell>
-                                )}
-
-                                {expense.purchase_status === "UNPAID" ? (
-                                  <TableCell
-                                    width="180px"
-                                    align="right"
-                                    style={red}
-                                  >
-                                    ${expense.amount_due.toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    ${expense.amount_due.toFixed(2)}
-                                  </TableCell>
-                                )}
-                                <TableCell width="180px" align="right">
-                                  $
-                                  {(
-                                    expense.amount_paid - expense.amount_due
-                                  ).toFixed(2)}
-                                </TableCell>
-                                {expense.purchase_status === "PAID" &&
-                                expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(expense.amount_paid / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {expense.purchase_status === "UNPAID" &&
-                                expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    ${(expense.amount_due / 12).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                                {expense.purchase_frequency == "Annually" ? (
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      (expense.amount_paid -
-                                        expense.amount_due) /
-                                      12
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                ) : (
-                                  <TableCell width="180px" align="right">
-                                    $0.00
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-
-                        <TableRow>
-                          <TableCell width="180px">
-                            {new Date().getFullYear()} &nbsp;
-                            <img
-                              src={SortLeft}
-                              onClick={() => {
-                                setYearlyCashFlow(!yearlyCashFlow);
-                                setYearlyRevenue(false);
-                                setYearlyExpense(false);
-                                setYearlyRent(false);
-                                setYearlyExtra(false);
-                                setYearlyUtility(false);
-                                setYearlyManagement(false);
-                                setYearlyMaintenanceRevenue(false);
-                                setYearlyRepairsRevenue(false);
-                                setYearlyMaintenance(false);
-                                setYearlyRepairs(false);
-                                setYearlyUtilityExpense(false);
-                              }}
-                              hidden={yearlyCashFlow}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              onClick={() => {
-                                setYearlyCashFlow(!yearlyCashFlow);
-                                setYearlyRevenue(false);
-                                setYearlyExpense(false);
-                                setYearlyRent(false);
-                                setYearlyExtra(false);
-                                setYearlyUtility(false);
-                                setYearlyManagement(false);
-                                setYearlyMaintenanceRevenue(false);
-                                setYearlyRepairsRevenue(false);
-                                setYearlyMaintenance(false);
-                                setYearlyRepairs(false);
-                                setYearlyUtilityExpense(false);
-                              }}
-                              hidden={!yearlyCashFlow}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearCashFlow}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearCashFlowExpected}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${(yearCashFlow - yearCashFlowExpected).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearCashFlowAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearCashFlowExpectedAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              yearCashFlowAmortized -
-                              yearCashFlowExpectedAmortized
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow hidden={!yearlyCashFlow}>
-                          <TableCell width="180px">
-                            &nbsp; Revenue{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyRevenue}
-                              onClick={() => {
-                                setYearlyRevenue(!yearlyRevenue);
-                                setYearlyRent(false);
-                                setYearlyExtra(false);
-                                setYearlyUtility(false);
-                                setYearlyManagement(false);
-                                setYearlyMaintenanceRevenue(false);
-                                setYearlyRepairsRevenue(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyRevenue}
-                              onClick={() => {
-                                setYearlyRevenue(!yearlyRevenue);
-                                setYearlyRent(false);
-                                setYearlyExtra(false);
-                                setYearlyUtility(false);
-                                setYearlyManagement(false);
-                                setYearlyMaintenanceRevenue(false);
-                                setYearlyRepairsRevenue(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearRevenueTotal}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearRevenueExpectedTotal}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              yearRevenueTotal - yearRevenueExpectedTotal
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearRevenueTotalAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearRevenueExpectedTotalAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              yearRevenueTotalAmortized -
-                              yearRevenueExpectedTotalAmortized
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow hidden={!yearlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Rent{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyRent}
-                              onClick={() => setYearlyRent(!yearlyRent)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyRent}
-                              onClick={() => setYearlyRent(!yearlyRent)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.rental_year_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.rental_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.rental_year_revenue -
-                              cashflowData.rental_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_rental_year_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_rental_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_rental_year_revenue -
-                              cashflowData.amortized_rental_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue_yearly.map(
-                            (revenue, index) => {
-                              return revenue.purchase_type === "RENT" ? (
-                                <TableRow hidden={!yearlyRent}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                    {revenue.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      revenue.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {revenue.purchase_frequency}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {revenue.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      revenue.amount_paid - revenue.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (revenue.amount_paid -
-                                          revenue.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Extra Charges
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyExtra}
-                              onClick={() => setYearlyExtra(!yearlyExtra)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyExtra}
-                              onClick={() => setYearlyExtra(!yearlyExtra)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.extra_year_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.extra_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.extra_year_revenue -
-                              cashflowData.extra_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_extra_year_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_extra_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_extra_year_revenue -
-                              cashflowData.amortized_extra_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue_yearly.map(
-                            (revenue, index) => {
-                              return revenue.purchase_type ===
-                                "EXTRA CHARGES" ? (
-                                <TableRow hidden={!yearlyExtra}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                    {revenue.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      revenue.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {revenue.purchase_frequency}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {revenue.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      revenue.amount_paid - revenue.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (revenue.amount_paid -
-                                          revenue.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-
-                        <TableRow hidden={!yearlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Management{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyManagement}
-                              onClick={() =>
-                                setYearlyManagement(!yearlyManagement)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyManagement}
-                              onClick={() =>
-                                setYearlyManagement(!yearlyManagement)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.management_year_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.management_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.management_year_revenue -
-                              cashflowData.management_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_year_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_management_year_revenue -
-                              cashflowData.amortized_management_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue_yearly.map(
-                            (revenue, index) => {
-                              return revenue.purchase_type === "MANAGEMENT" ? (
-                                <TableRow hidden={!yearlyManagement}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                    {revenue.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      revenue.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {revenue.purchase_frequency}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {revenue.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      revenue.amount_paid - revenue.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (revenue.amount_paid -
-                                          revenue.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Utility{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyUtility}
-                              onClick={() => setYearlyUtility(!yearlyUtility)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyUtility}
-                              onClick={() => setYearlyUtility(!yearlyUtility)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.utility_year_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.utility_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.utility_year_revenue -
-                              cashflowData.utility_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_utility_year_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_utility_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_utility_year_revenue -
-                              cashflowData.amortized_utility_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue_yearly.map(
-                            (revenue, index) => {
-                              return revenue.purchase_type === "UTILITY" ? (
-                                <TableRow hidden={!yearlyUtility}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                    {revenue.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      revenue.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {revenue.purchase_frequency}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {revenue.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      revenue.amount_paid - revenue.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (revenue.amount_paid -
-                                          revenue.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Maintenance{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyMaintenanceRevenue}
-                              onClick={() =>
-                                setYearlyMaintenanceRevenue(
-                                  !yearlyMaintenanceRevenue
-                                )
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyMaintenanceRevenue}
-                              onClick={() =>
-                                setYearlyMaintenanceRevenue(
-                                  !yearlyMaintenanceRevenue
-                                )
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.management_year_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.management_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.management_year_revenue -
-                              cashflowData.management_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_year_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_management_year_revenue -
-                              cashflowData.amortized_management_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue_yearly.map(
-                            (revenue, index) => {
-                              return revenue.purchase_type === "MAINTENANCE" ? (
-                                <TableRow hidden={!yearlyMaintenanceRevenue}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                    {revenue.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      revenue.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {revenue.purchase_frequency}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {revenue.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      revenue.amount_paid - revenue.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (revenue.amount_paid -
-                                          revenue.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyRevenue}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Repairs{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyRepairsRevenue}
-                              onClick={() =>
-                                setYearlyRepairsRevenue(!yearlyRepairsRevenue)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyRepairsRevenue}
-                              onClick={() =>
-                                setYearlyRepairsRevenue(!yearlyRepairsRevenue)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />{" "}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.repairs_year_revenue.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.repairs_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.repairs_year_revenue -
-                              cashflowData.repairs_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_repairs_year_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_repairs_year_expected_revenue.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_repairs_year_revenue -
-                              cashflowData.amortized_repairs_year_expected_revenue
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_revenue_yearly.map(
-                            (revenue, index) => {
-                              return revenue.purchase_type === "REPAIRS" ? (
-                                <TableRow hidden={!yearlyRepairsRevenue}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
-                                    {revenue.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      revenue.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {revenue.purchase_frequency}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {revenue.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${revenue.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      revenue.amount_paid - revenue.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(revenue.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {revenue.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (revenue.amount_paid -
-                                          revenue.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyCashFlow}>
-                          <TableCell width="180px">
-                            &nbsp; Expenses{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyExpense}
-                              onClick={() => {
-                                setYearlyExpense(!yearlyExpense);
-                                setYearlyOwnerPayment(false);
-                                setYearlyMaintenance(false);
-                                setYearlyRepairs(false);
-                                setYearlyUtilityExpense(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyExpense}
-                              onClick={() => {
-                                setYearlyExpense(!yearlyExpense);
-                                setYearlyOwnerPayment(false);
-                                setYearlyMaintenance(false);
-                                setYearlyRepairs(false);
-                                setYearlyUtilityExpense(false);
-                              }}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearExpenseTotal}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearExpenseExpectedTotal}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              yearExpenseTotal - yearExpenseExpectedTotal
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearExpenseTotalAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${yearExpenseExpectedTotalAmortized}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              yearExpenseTotalAmortized -
-                              yearExpenseExpectedTotalAmortized
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow hidden={!yearlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Management{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyOwnerPayment}
-                              onClick={() =>
-                                setYearlyOwnerPayment(!yearlyOwnerPayment)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyOwnerPayment}
-                              onClick={() =>
-                                setYearlyOwnerPayment(!yearlyOwnerPayment)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.management_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.management_year_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.management_year_expense -
-                              cashflowData.management_year_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_management_year_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_management_year_expense -
-                              cashflowData.amortized_management_year_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_expense_yearly.map(
-                            (expense, index) => {
-                              return expense.purchase_type ===
-                                "OWNER PAYMENT" ? (
-                                <TableRow hidden={!yearlyOwnerPayment}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      expense.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.purchase_frequency}
-                                  </TableCell>
-                                  {expense.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${expense.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${expense.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {expense.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${expense.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${expense.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amount_paid - expense.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {expense.purchase_status === "PAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(expense.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {expense.purchase_status === "UNPAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(expense.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (expense.amount_paid -
-                                          expense.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp;&nbsp; Maintenance{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyMaintenance}
-                              onClick={() =>
-                                setYearlyMaintenance(!yearlyMaintenance)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyMaintenance}
-                              onClick={() =>
-                                setYearlyMaintenance(!yearlyMaintenance)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.maintenance_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.maintenance_year_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.maintenance_year_expense -
-                              cashflowData.maintenance_year_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_maintenance_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_maintenance_year_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_maintenance_year_expense -
-                              cashflowData.amortized_maintenance_year_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_expense_yearly.map(
-                            (expense, index) => {
-                              return expense.purchase_type === "MAINTENANCE" ? (
-                                <TableRow hidden={!yearlyMaintenance}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      expense.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.purchase_frequency}
-                                  </TableCell>
-                                  {expense.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${expense.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${expense.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {expense.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${expense.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${expense.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amount_paid - expense.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {expense.purchase_status === "PAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(expense.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {expense.purchase_status === "UNPAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(expense.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (expense.amount_paid -
-                                          expense.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Repairs{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyRepairs}
-                              onClick={() => setYearlyRepairs(!yearlyRepairs)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyRepairs}
-                              onClick={() => setYearlyRepairs(!yearlyRepairs)}
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.repairs_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.repairs_year_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.repairs_year_expense -
-                              cashflowData.repairs_year_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_repairs_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_repairs_year_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_repairs_year_expense -
-                              cashflowData.amortized_repairs_year_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_expense_yearly.map(
-                            (expense, index) => {
-                              return expense.purchase_type === "REPAIRS" ? (
-                                <TableRow hidden={!yearlyRepairs}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      expense.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.purchase_frequency}
-                                  </TableCell>
-                                  {expense.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${expense.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${expense.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {expense.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${expense.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${expense.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amount_paid - expense.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {expense.purchase_status === "PAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(expense.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {expense.purchase_status === "UNPAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(expense.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (expense.amount_paid -
-                                          expense.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                        <TableRow hidden={!yearlyExpense}>
-                          <TableCell width="180px">
-                            &nbsp; &nbsp;Utility{" "}
-                            <img
-                              src={SortLeft}
-                              hidden={yearlyUtilityExpense}
-                              onClick={() =>
-                                setYearlyUtilityExpense(!yearlyUtilityExpense)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              hidden={!yearlyUtilityExpense}
-                              onClick={() =>
-                                setYearlyUtilityExpense(!yearlyUtilityExpense)
-                              }
-                              style={{
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            ${cashflowData.utility_year_expense.toFixed(2)}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.utility_year_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.utility_year_expense -
-                              cashflowData.utility_year_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_utility_year_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {cashflowData.amortized_utility_year_expected_expense.toFixed(
-                              2
-                            )}
-                          </TableCell>
-                          <TableCell width="180px" align="right">
-                            $
-                            {(
-                              cashflowData.amortized_utility_year_expense -
-                              cashflowData.amortized_utility_year_expected_expense
-                            ).toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                        {isLoading === false &&
-                          cashflowData.manager_expense_yearly.map(
-                            (expense, index) => {
-                              return expense.purchase_type === "UTILITY" ? (
-                                <TableRow hidden={!yearlyUtilityExpense}>
-                                  <TableCell>
-                                    &nbsp;&nbsp;&nbsp; {expense.address}{" "}
-                                    {expense.unit}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp; {
-                                      expense.description
-                                    }{" "}
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.purchase_frequency}
-                                  </TableCell>
-                                  {expense.purchase_status === "PAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={green}
-                                    >
-                                      ${expense.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${expense.amount_paid.toFixed(2)}
-                                    </TableCell>
-                                  )}
-
-                                  {expense.purchase_status === "UNPAID" ? (
-                                    <TableCell
-                                      width="180px"
-                                      align="right"
-                                      style={red}
-                                    >
-                                      ${expense.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      ${expense.amount_due.toFixed(2)}
-                                    </TableCell>
-                                  )}
-                                  <TableCell width="180px" align="right">
-                                    $
-                                    {(
-                                      expense.amount_paid - expense.amount_due
-                                    ).toFixed(2)}
-                                  </TableCell>
-                                  {expense.purchase_status === "PAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(expense.amount_paid / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {expense.purchase_status === "UNPAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      ${(expense.amount_due / 12).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                  {expense.purchase_frequency == "Annually" ? (
-                                    <TableCell width="180px" align="right">
-                                      $
-                                      {(
-                                        (expense.amount_paid -
-                                          expense.amount_due) /
-                                        12
-                                      ).toFixed(2)}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell width="180px" align="right">
-                                      $0.00
-                                    </TableCell>
-                                  )}
-                                </TableRow>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </Row>{" "}
-                <Row className="m-3">
-                  <Col>
-                    <h3>Property Summary</h3>
-                  </Col>
-                  {property.management_status === "ACCEPTED" ? (
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  {" "}
+                  <Row className="m-3">
+                    <Col>
+                      <h3>Property Cashflow Summary</h3>
+                    </Col>
                     <Col>
                       <img
-                        src={EditIconNew}
-                        onClick={
-                          property.management_status === "ACCEPTED"
-                            ? () => {
-                                window.scrollTo(0, 0);
-                                setEditProperty(true);
-                              }
-                            : () => {}
-                        }
+                        src={AddIcon}
+                        onClick={() => setShowCreateExpense(true)}
                         style={{
                           width: "30px",
                           height: "30px",
@@ -4267,659 +861,4283 @@ function ManagerPropertyView(props) {
                         }}
                       />
                     </Col>
-                  ) : (
-                    <Col></Col>
-                  )}
-                </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <div>
-                    <Table
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                      responsive="md"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell> Property Images</TableCell>
-                          <TableCell>Street Address</TableCell>
-                          <TableCell>City,State</TableCell>
-                          <TableCell>Zip</TableCell>
-                          <TableCell>Owner</TableCell>
-                          <TableCell>Tenant</TableCell>{" "}
-                          <TableCell>Rent Status</TableCell>
-                          <TableCell>Lease End</TableCell>
-                          <TableCell>Rent</TableCell>{" "}
-                          <TableCell>Type</TableCell>{" "}
-                          <TableCell>Size</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={property.property_uid}
-                        >
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={
-                              property.management_status === "ACCEPTED"
-                                ? () => {
-                                    window.scrollTo(0, 1500);
-                                    setEditProperty(true);
-                                  }
-                                : () => {}
-                            }
-                          >
-                            {JSON.parse(property.images).length > 0 ? (
+                  </Row>
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <div>
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <TableHead>
+                          <TableCell></TableCell>
+                          <TableCell align="right">To Date</TableCell>
+                          <TableCell align="right">Expected</TableCell>
+                          <TableCell align="right">Delta</TableCell>
+                          <TableCell align="right">To Date Amortized</TableCell>
+                          <TableCell align="right">
+                            Expected Amortized
+                          </TableCell>
+                          <TableCell align="right">Delta Amortized</TableCell>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell width="180px">
+                              {new Date().toLocaleString("default", {
+                                month: "long",
+                              })}{" "}
+                              &nbsp;
                               <img
-                                key={Date.now()}
-                                src={`${
-                                  JSON.parse(property.images)[0]
-                                }?${Date.now()}`}
-                                alt="Property"
+                                src={SortLeft}
+                                hidden={monthlyCashFlow}
+                                onClick={() => {
+                                  setMonthlyCashFlow(!monthlyCashFlow);
+                                  setMonthlyRevenue(false);
+                                  setMonthlyExpense(false);
+                                  setMonthlyRent(false);
+                                  setMonthlyExtra(false);
+                                  setMonthlyUtility(false);
+                                  setMonthlyManagement(false);
+                                  setMonthlyOwnerPayment(false);
+                                  setMonthlyMaintenance(false);
+                                  setMonthlyRepairs(false);
+                                  setMonthlyUtilityExpense(false);
+                                  setMonthlyMaintenanceRevenue(false);
+                                  setMonthlyRepairsRevenue(false);
+                                }}
                                 style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                  width: "100px",
-                                  height: "100px",
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
                                 }}
                               />
-                            ) : (
                               <img
-                                src={PropertyIcon}
-                                alt="Property"
+                                src={SortDown}
+                                hidden={!monthlyCashFlow}
+                                onClick={() => {
+                                  setMonthlyCashFlow(!monthlyCashFlow);
+                                  setMonthlyRevenue(false);
+                                  setMonthlyExpense(false);
+                                  setMonthlyRent(false);
+                                  setMonthlyExtra(false);
+                                  setMonthlyUtility(false);
+                                  setMonthlyManagement(false);
+                                  setMonthlyOwnerPayment(false);
+                                  setMonthlyMaintenance(false);
+                                  setMonthlyRepairs(false);
+                                  setMonthlyUtilityExpense(false);
+                                  setMonthlyMaintenanceRevenue(false);
+                                  setMonthlyRepairsRevenue(false);
+                                }}
                                 style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                  width: "100px",
-                                  height: "100px",
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
                                 }}
                               />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashFlow}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashFlowExpected}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${(cashFlow - cashFlowExpected).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashFlowAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashFlowExpectedAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashFlowAmortized - cashFlowExpectedAmortized
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow hidden={!monthlyCashFlow}>
+                            <TableCell width="180px">
+                              &nbsp; Revenue{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyRevenue}
+                                onClick={() => {
+                                  setMonthlyRevenue(!monthlyRevenue);
+                                  setMonthlyRent(false);
+                                  setMonthlyExtra(false);
+                                  setMonthlyUtility(false);
+                                  setMonthlyManagement(false);
+                                  setMonthlyMaintenanceRevenue(false);
+                                  setMonthlyRepairsRevenue(false);
+                                }}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyRevenue}
+                                onClick={() => {
+                                  setMonthlyRevenue(!monthlyRevenue);
+                                  setMonthlyRent(false);
+                                  setMonthlyExtra(false);
+                                  setMonthlyUtility(false);
+                                  setMonthlyManagement(false);
+                                  setMonthlyMaintenanceRevenue(false);
+                                  setMonthlyRepairsRevenue(false);
+                                }}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${revenueTotal}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${revenueExpectedTotal}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(revenueTotal - revenueExpectedTotal).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${revenueTotalAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${revenueExpectedTotalAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                revenueTotalAmortized -
+                                revenueExpectedTotalAmortized
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow hidden={!monthlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Rent{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyRent}
+                                onClick={() => setMonthlyRent(!monthlyRent)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyRent}
+                                onClick={() => setMonthlyRent(!monthlyRent)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.rental_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.rental_expected_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.rental_revenue -
+                                cashflowData.rental_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_rental_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_rental_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_rental_revenue -
+                                cashflowData.amortized_rental_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+
+                          {isLoading === false &&
+                            cashflowData.manager_revenue.map(
+                              (revenue, index) => {
+                                console.log("revenue", revenue);
+
+                                return revenue.purchase_type === "RENT" ? (
+                                  <TableRow hidden={!monthlyRent}>
+                                    {console.log("in rent", revenue)}
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
                             )}
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={
-                              property.management_status === "ACCEPTED"
-                                ? () => {
-                                    window.scrollTo(0, 0);
-                                    setEditProperty(true);
-                                  }
-                                : () => {}
-                            }
-                          >
-                            {property.address}
-                            {property.unit !== "" ? " " + property.unit : ""}
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={
-                              property.management_status === "ACCEPTED"
-                                ? () => {
-                                    window.scrollTo(0, 0);
-                                    setEditProperty(true);
-                                  }
-                                : () => {}
-                            }
-                          >
-                            {property.city}, {property.state}
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={
-                              property.management_status === "ACCEPTED"
-                                ? () => {
-                                    window.scrollTo(0, 0);
-                                    setEditProperty(true);
-                                  }
-                                : () => {}
-                            }
-                          >
-                            {property.zip}
-                          </TableCell>
-                          {console.log(property)}
-                          <TableCell padding="none" size="small" align="center">
-                            {property.owner.length !== 0
-                              ? property.owner[0].owner_first_name +
-                                " " +
-                                property.owner[0].owner_last_name
-                              : "None"}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.rentalInfo.length !== 0
-                              ? property.rentalInfo[0].tenant_first_name +
-                                " " +
-                                property.rentalInfo[0].tenant_last_name
-                              : "None"}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.rent_paid !== ""
-                              ? property.rent_paid
-                              : "None"}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.rentalInfo.length !== 0
-                              ? property.rentalInfo[0].lease_end
-                              : "None"}
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={
-                              property.management_status === "ACCEPTED"
-                                ? () => {
-                                    window.scrollTo(0, 800);
-                                    setEditProperty(true);
-                                  }
-                                : () => {}
-                            }
-                          >
-                            {"$" + property.listed_rent}
-                          </TableCell>
+                          <TableRow hidden={!monthlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Extra Charges
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyExtra}
+                                onClick={() => setMonthlyExtra(!monthlyExtra)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyExtra}
+                                onClick={() => setMonthlyExtra(!monthlyExtra)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.extra_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.extra_expected_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.extra_revenue -
+                                cashflowData.extra_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.amortized_extra_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_extra_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_extra_revenue -
+                                cashflowData.amortized_extra_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type ===
+                                  "EXTRA CHARGES" ? (
+                                  <TableRow hidden={!monthlyExtra}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit} <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
 
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={
-                              property.management_status === "ACCEPTED"
-                                ? () => {
-                                    window.scrollTo(0, 800);
-                                    setEditProperty(true);
-                                  }
-                                : () => {}
-                            }
-                          >
-                            {property.property_type}
-                          </TableCell>
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Utility
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyUtility}
+                                onClick={() =>
+                                  setMonthlyUtility(!monthlyUtility)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyUtility}
+                                onClick={() =>
+                                  setMonthlyUtility(!monthlyUtility)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.utility_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.utility_expected_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.utility_revenue -
+                                cashflowData.utility_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_utility_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_utility_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_utility_revenue -
+                                cashflowData.amortized_utility_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type === "UTILITY" ? (
+                                  <TableRow hidden={!monthlyUtility}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
 
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            onClick={
-                              property.management_status === "ACCEPTED"
-                                ? () => {
-                                    window.scrollTo(0, 800);
-                                    setEditProperty(true);
-                                  }
-                                : () => {}
-                            }
-                          >
-                            {property.num_beds + "/" + property.num_baths}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </Row>
-                <Row className="m-3">
-                  <Col>
-                    <h3>Maintenance and Repair Requests</h3>
-                  </Col>
-                  <Col xs={2}>
-                    {" "}
-                    <img
-                      src={AddIcon}
-                      onClick={() => setShowAddRequest(true)}
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        float: "right",
-                        marginRight: "5rem",
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  {property.maintenanceRequests.length > 0 ? (
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Management
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyManagement}
+                                onClick={() =>
+                                  setMonthlyManagement(!monthlyManagement)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyManagement}
+                                onClick={() =>
+                                  setMonthlyManagement(!monthlyManagement)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.management_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.management_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.management_revenue -
+                                cashflowData.management_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_management_revenue -
+                                cashflowData.amortized_management_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type ===
+                                  "MANAGEMENT" ? (
+                                  <TableRow hidden={!monthlyManagement}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Maintenance
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyMaintenanceRevenue}
+                                onClick={() =>
+                                  setMonthlyMaintenanceRevenue(
+                                    !monthlyMaintenanceRevenue
+                                  )
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyMaintenanceRevenue}
+                                onClick={() =>
+                                  setMonthlyMaintenanceRevenue(
+                                    !monthlyMaintenanceRevenue
+                                  )
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.maintenance_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.maintenance_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.maintenance_revenue -
+                                cashflowData.maintenance_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_maintenance_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_maintenance_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_maintenance_revenue -
+                                cashflowData.amortized_maintenance_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type ===
+                                  "MAINTENANCE" ? (
+                                  <TableRow hidden={!monthlyMaintenanceRevenue}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Repairs
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyRepairsRevenue}
+                                onClick={() =>
+                                  setMonthlyRepairsRevenue(
+                                    !monthlyRepairsRevenue
+                                  )
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyRepairsRevenue}
+                                onClick={() =>
+                                  setMonthlyRepairsRevenue(
+                                    !monthlyRepairsRevenue
+                                  )
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.repairs_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.repairs_expected_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.repairs_revenue -
+                                cashflowData.repairs_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_repairs_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_repairs_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_repairs_revenue -
+                                cashflowData.amortized_repairs_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type === "REPAIRS" ? (
+                                  <TableRow hidden={!monthlyRepairsRevenue}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyCashFlow}>
+                            <TableCell width="180px">
+                              &nbsp; Expenses{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyExpense}
+                                onClick={() => {
+                                  setMonthlyExpense(!monthlyExpense);
+                                  setMonthlyOwnerPayment(false);
+                                  setMonthlyMaintenance(false);
+                                  setMonthlyRepairs(false);
+                                  setMonthlyUtilityExpense(false);
+                                }}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyExpense}
+                                onClick={() => {
+                                  setMonthlyExpense(!monthlyExpense);
+                                  setMonthlyOwnerPayment(false);
+                                  setMonthlyMaintenance(false);
+                                  setMonthlyRepairs(false);
+                                  setMonthlyUtilityExpense(false);
+                                }}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${expenseTotal}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${expenseExpectedTotal}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(expenseTotal - expenseExpectedTotal).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${expenseTotalAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${expenseExpectedTotalAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              {" "}
+                              $
+                              {(
+                                expenseTotalAmortized -
+                                expenseExpectedTotalAmortized
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow hidden={!monthlyExpense}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Owner Payment
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyOwnerPayment}
+                                onClick={() =>
+                                  setMonthlyOwnerPayment(!monthlyOwnerPayment)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyOwnerPayment}
+                                onClick={() =>
+                                  setMonthlyOwnerPayment(!monthlyOwnerPayment)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.management_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.management_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.management_expense -
+                                cashflowData.management_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_management_expense -
+                                cashflowData.amortized_management_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_expense.map(
+                              (expense, index) => {
+                                return expense.purchase_type ===
+                                  "OWNER PAYMENT" ? (
+                                  <TableRow hidden={!monthlyOwnerPayment}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                      {expense.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        expense.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {expense.purchase_frequency}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        expense.amount_paid - expense.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_status === "UNPAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (expense.amount_paid -
+                                            expense.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyExpense}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Maintenance
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyMaintenance}
+                                onClick={() =>
+                                  setMonthlyMaintenance(!monthlyMaintenance)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyMaintenance}
+                                onClick={() =>
+                                  setMonthlyMaintenance(!monthlyMaintenance)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.maintenance_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.maintenance_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.maintenance_expense -
+                                cashflowData.maintenance_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_maintenance_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_maintenance_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_maintenance_expense -
+                                cashflowData.amortized_maintenance_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_expense.map(
+                              (expense, index) => {
+                                return expense.purchase_type ===
+                                  "MAINTENANCE" ? (
+                                  <TableRow hidden={!monthlyMaintenance}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                      {expense.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        expense.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {expense.purchase_frequency}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        expense.amount_paid - expense.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_status === "UNPAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (expense.amount_paid -
+                                            expense.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyExpense}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Repairs{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyRepairs}
+                                onClick={() =>
+                                  setMonthlyRepairs(!monthlyRepairs)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyRepairs}
+                                onClick={() =>
+                                  setMonthlyRepairs(!monthlyRepairs)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.repairs_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.repairs_expected_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.repairs_expense -
+                                cashflowData.repairs_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_repairs_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_repairs_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_repairs_expense -
+                                cashflowData.amortized_repairs_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_expense.map(
+                              (expense, index) => {
+                                return expense.purchase_type === "REPAIRS" ? (
+                                  <TableRow hidden={!monthlyRepairs}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                      {expense.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        expense.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {expense.purchase_frequency}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {expense.amount_paid - expense.amount_due}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_status === "UNPAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (expense.amount_paid -
+                                            expense.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyExpense}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Utility{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyUtilityExpense}
+                                onClick={() =>
+                                  setMonthlyUtilityExpense(
+                                    !monthlyUtilityExpense
+                                  )
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyUtilityExpense}
+                                onClick={() =>
+                                  setMonthlyUtilityExpense(
+                                    !monthlyUtilityExpense
+                                  )
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.utility_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.utility_expected_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.utility_expense -
+                                cashflowData.utility_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_utility_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_utility_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_utility_expense -
+                                cashflowData.amortized_utility_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_expense.map(
+                              (expense, index) => {
+                                return expense.purchase_type === "UTILITY" ? (
+                                  <TableRow hidden={!monthlyUtilityExpense}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                      {expense.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        expense.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {expense.purchase_frequency}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        expense.amount_paid - expense.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_status === "UNPAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (expense.amount_paid -
+                                            expense.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+
+                          <TableRow>
+                            <TableCell width="180px">
+                              {new Date().getFullYear()} &nbsp;
+                              <img
+                                src={SortLeft}
+                                onClick={() => {
+                                  setYearlyCashFlow(!yearlyCashFlow);
+                                  setYearlyRevenue(false);
+                                  setYearlyExpense(false);
+                                  setYearlyRent(false);
+                                  setYearlyExtra(false);
+                                  setYearlyUtility(false);
+                                  setYearlyManagement(false);
+                                  setYearlyMaintenanceRevenue(false);
+                                  setYearlyRepairsRevenue(false);
+                                  setYearlyMaintenance(false);
+                                  setYearlyRepairs(false);
+                                  setYearlyUtilityExpense(false);
+                                }}
+                                hidden={yearlyCashFlow}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                onClick={() => {
+                                  setYearlyCashFlow(!yearlyCashFlow);
+                                  setYearlyRevenue(false);
+                                  setYearlyExpense(false);
+                                  setYearlyRent(false);
+                                  setYearlyExtra(false);
+                                  setYearlyUtility(false);
+                                  setYearlyManagement(false);
+                                  setYearlyMaintenanceRevenue(false);
+                                  setYearlyRepairsRevenue(false);
+                                  setYearlyMaintenance(false);
+                                  setYearlyRepairs(false);
+                                  setYearlyUtilityExpense(false);
+                                }}
+                                hidden={!yearlyCashFlow}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearCashFlow}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearCashFlowExpected}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(yearCashFlow - yearCashFlowExpected).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearCashFlowAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearCashFlowExpectedAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                yearCashFlowAmortized -
+                                yearCashFlowExpectedAmortized
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow hidden={!yearlyCashFlow}>
+                            <TableCell width="180px">
+                              &nbsp; Revenue{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyRevenue}
+                                onClick={() => {
+                                  setYearlyRevenue(!yearlyRevenue);
+                                  setYearlyRent(false);
+                                  setYearlyExtra(false);
+                                  setYearlyUtility(false);
+                                  setYearlyManagement(false);
+                                  setYearlyMaintenanceRevenue(false);
+                                  setYearlyRepairsRevenue(false);
+                                }}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyRevenue}
+                                onClick={() => {
+                                  setYearlyRevenue(!yearlyRevenue);
+                                  setYearlyRent(false);
+                                  setYearlyExtra(false);
+                                  setYearlyUtility(false);
+                                  setYearlyManagement(false);
+                                  setYearlyMaintenanceRevenue(false);
+                                  setYearlyRepairsRevenue(false);
+                                }}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearRevenueTotal}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearRevenueExpectedTotal}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                yearRevenueTotal - yearRevenueExpectedTotal
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearRevenueTotalAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearRevenueExpectedTotalAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                yearRevenueTotalAmortized -
+                                yearRevenueExpectedTotalAmortized
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow hidden={!yearlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Rent{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyRent}
+                                onClick={() => setYearlyRent(!yearlyRent)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyRent}
+                                onClick={() => setYearlyRent(!yearlyRent)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.rental_year_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.rental_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.rental_year_revenue -
+                                cashflowData.rental_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_rental_year_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_rental_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_rental_year_revenue -
+                                cashflowData.amortized_rental_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue_yearly.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type === "RENT" ? (
+                                  <TableRow hidden={!yearlyRent}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!yearlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Extra Charges
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyExtra}
+                                onClick={() => setYearlyExtra(!yearlyExtra)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyExtra}
+                                onClick={() => setYearlyExtra(!yearlyExtra)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.extra_year_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.extra_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.extra_year_revenue -
+                                cashflowData.extra_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_extra_year_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_extra_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_extra_year_revenue -
+                                cashflowData.amortized_extra_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue_yearly.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type ===
+                                  "EXTRA CHARGES" ? (
+                                  <TableRow hidden={!yearlyExtra}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+
+                          <TableRow hidden={!yearlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Management{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyManagement}
+                                onClick={() =>
+                                  setYearlyManagement(!yearlyManagement)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyManagement}
+                                onClick={() =>
+                                  setYearlyManagement(!yearlyManagement)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.management_year_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.management_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.management_year_revenue -
+                                cashflowData.management_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_year_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_management_year_revenue -
+                                cashflowData.amortized_management_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue_yearly.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type ===
+                                  "MANAGEMENT" ? (
+                                  <TableRow hidden={!yearlyManagement}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!yearlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Utility{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyUtility}
+                                onClick={() => setYearlyUtility(!yearlyUtility)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyUtility}
+                                onClick={() => setYearlyUtility(!yearlyUtility)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.utility_year_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.utility_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.utility_year_revenue -
+                                cashflowData.utility_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_utility_year_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_utility_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_utility_year_revenue -
+                                cashflowData.amortized_utility_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue_yearly.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type === "UTILITY" ? (
+                                  <TableRow hidden={!yearlyUtility}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!yearlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Maintenance{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyMaintenanceRevenue}
+                                onClick={() =>
+                                  setYearlyMaintenanceRevenue(
+                                    !yearlyMaintenanceRevenue
+                                  )
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyMaintenanceRevenue}
+                                onClick={() =>
+                                  setYearlyMaintenanceRevenue(
+                                    !yearlyMaintenanceRevenue
+                                  )
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.management_year_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.management_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.management_year_revenue -
+                                cashflowData.management_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_year_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_management_year_revenue -
+                                cashflowData.amortized_management_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue_yearly.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type ===
+                                  "MAINTENANCE" ? (
+                                  <TableRow hidden={!yearlyMaintenanceRevenue}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!yearlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Repairs{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyRepairsRevenue}
+                                onClick={() =>
+                                  setYearlyRepairsRevenue(!yearlyRepairsRevenue)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyRepairsRevenue}
+                                onClick={() =>
+                                  setYearlyRepairsRevenue(!yearlyRepairsRevenue)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />{" "}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.repairs_year_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.repairs_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.repairs_year_revenue -
+                                cashflowData.repairs_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_repairs_year_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_repairs_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_repairs_year_revenue -
+                                cashflowData.amortized_repairs_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue_yearly.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type === "REPAIRS" ? (
+                                  <TableRow hidden={!yearlyRepairsRevenue}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!yearlyCashFlow}>
+                            <TableCell width="180px">
+                              &nbsp; Expenses{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyExpense}
+                                onClick={() => {
+                                  setYearlyExpense(!yearlyExpense);
+                                  setYearlyOwnerPayment(false);
+                                  setYearlyMaintenance(false);
+                                  setYearlyRepairs(false);
+                                  setYearlyUtilityExpense(false);
+                                }}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyExpense}
+                                onClick={() => {
+                                  setYearlyExpense(!yearlyExpense);
+                                  setYearlyOwnerPayment(false);
+                                  setYearlyMaintenance(false);
+                                  setYearlyRepairs(false);
+                                  setYearlyUtilityExpense(false);
+                                }}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearExpenseTotal}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearExpenseExpectedTotal}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                yearExpenseTotal - yearExpenseExpectedTotal
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearExpenseTotalAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${yearExpenseExpectedTotalAmortized}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                yearExpenseTotalAmortized -
+                                yearExpenseExpectedTotalAmortized
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow hidden={!yearlyExpense}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Management{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyOwnerPayment}
+                                onClick={() =>
+                                  setYearlyOwnerPayment(!yearlyOwnerPayment)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyOwnerPayment}
+                                onClick={() =>
+                                  setYearlyOwnerPayment(!yearlyOwnerPayment)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.management_year_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.management_year_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.management_year_expense -
+                                cashflowData.management_year_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_year_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_management_year_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_management_year_expense -
+                                cashflowData.amortized_management_year_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_expense_yearly.map(
+                              (expense, index) => {
+                                return expense.purchase_type ===
+                                  "OWNER PAYMENT" ? (
+                                  <TableRow hidden={!yearlyOwnerPayment}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                      {expense.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        expense.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {expense.purchase_frequency}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        expense.amount_paid - expense.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_status === "UNPAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (expense.amount_paid -
+                                            expense.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!yearlyExpense}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Maintenance{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyMaintenance}
+                                onClick={() =>
+                                  setYearlyMaintenance(!yearlyMaintenance)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyMaintenance}
+                                onClick={() =>
+                                  setYearlyMaintenance(!yearlyMaintenance)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.maintenance_year_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.maintenance_year_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.maintenance_year_expense -
+                                cashflowData.maintenance_year_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_maintenance_year_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_maintenance_year_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_maintenance_year_expense -
+                                cashflowData.amortized_maintenance_year_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_expense_yearly.map(
+                              (expense, index) => {
+                                return expense.purchase_type ===
+                                  "MAINTENANCE" ? (
+                                  <TableRow hidden={!yearlyMaintenance}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                      {expense.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        expense.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {expense.purchase_frequency}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        expense.amount_paid - expense.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_status === "UNPAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (expense.amount_paid -
+                                            expense.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!yearlyExpense}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Repairs{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyRepairs}
+                                onClick={() => setYearlyRepairs(!yearlyRepairs)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyRepairs}
+                                onClick={() => setYearlyRepairs(!yearlyRepairs)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.repairs_year_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.repairs_year_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.repairs_year_expense -
+                                cashflowData.repairs_year_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_repairs_year_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_repairs_year_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_repairs_year_expense -
+                                cashflowData.amortized_repairs_year_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_expense_yearly.map(
+                              (expense, index) => {
+                                return expense.purchase_type === "REPAIRS" ? (
+                                  <TableRow hidden={!yearlyRepairs}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                      {expense.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        expense.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {expense.purchase_frequency}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        expense.amount_paid - expense.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_status === "UNPAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (expense.amount_paid -
+                                            expense.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!yearlyExpense}>
+                            <TableCell width="180px">
+                              &nbsp; &nbsp;Utility{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyUtilityExpense}
+                                onClick={() =>
+                                  setYearlyUtilityExpense(!yearlyUtilityExpense)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyUtilityExpense}
+                                onClick={() =>
+                                  setYearlyUtilityExpense(!yearlyUtilityExpense)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.utility_year_expense.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.utility_year_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.utility_year_expense -
+                                cashflowData.utility_year_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_utility_year_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_utility_year_expected_expense.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_utility_year_expense -
+                                cashflowData.amortized_utility_year_expected_expense
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_expense_yearly.map(
+                              (expense, index) => {
+                                return expense.purchase_type === "UTILITY" ? (
+                                  <TableRow hidden={!yearlyUtilityExpense}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {expense.address}{" "}
+                                      {expense.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        expense.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {expense.purchase_frequency}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {expense.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${expense.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        expense.amount_paid - expense.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {expense.purchase_status === "PAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_status === "UNPAID" &&
+                                    expense.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(expense.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {expense.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (expense.amount_paid -
+                                            expense.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </Row>{" "}
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3">
+                    <Col>
+                      <h3>Property Summary</h3>
+                    </Col>
+                    {property.management_status === "ACCEPTED" ? (
+                      <Col>
+                        <img
+                          src={EditIconNew}
+                          onClick={
+                            property.management_status === "ACCEPTED"
+                              ? () => {
+                                  window.scrollTo(0, 0);
+                                  setEditProperty(true);
+                                }
+                              : () => {}
+                          }
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            float: "right",
+                            marginRight: "5rem",
+                          }}
+                        />
+                      </Col>
+                    ) : (
+                      <Col></Col>
+                    )}
+                  </Row>
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     <div>
                       <Table
                         classes={{ root: classes.customTable }}
                         size="small"
                         responsive="md"
                       >
-                        <EnhancedTableHeadMaintenance
-                          order={order}
-                          orderBy={orderBy}
-                          onRequestSort={handleRequestSort}
-                          rowCount={property.maintenanceRequests.length}
-                        />{" "}
+                        <TableHead>
+                          <TableRow>
+                            <TableCell> Property Images</TableCell>
+                            <TableCell>Street Address</TableCell>
+                            <TableCell>City,State</TableCell>
+                            <TableCell>Zip</TableCell>
+                            <TableCell>Owner</TableCell>
+                            <TableCell>Tenant</TableCell>{" "}
+                            <TableCell>Rent Status</TableCell>
+                            <TableCell>Lease End</TableCell>
+                            <TableCell>Rent</TableCell>{" "}
+                            <TableCell>Type</TableCell>{" "}
+                            <TableCell>Size</TableCell>
+                          </TableRow>
+                        </TableHead>
                         <TableBody>
-                          {stableSort(
-                            property.maintenanceRequests,
-                            getComparator(order, orderBy)
-                          ).map((request, index) => {
-                            return (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={request.maintenance_request_uid}
-                                onClick={() => {
-                                  navigate(
-                                    `../manager-repairs/${request.maintenance_request_uid}`,
-                                    {
-                                      state: {
-                                        repair: request,
-                                      },
-                                    }
-                                  );
-                                }}
-                              >
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {JSON.parse(request.images).length > 0 ? (
-                                    <img
-                                      src={JSON.parse(request.images)[0]}
-                                      alt="Repair"
-                                      style={{
-                                        borderRadius: "4px",
-                                        objectFit: "cover",
-                                        width: "100px",
-                                        height: "100px",
-                                      }}
-                                    />
-                                  ) : (
-                                    <img
-                                      src={RepairImg}
-                                      alt="Repair"
-                                      style={{
-                                        borderRadius: "4px",
-                                        objectFit: "cover",
-                                        width: "100px",
-                                        height: "100px",
-                                      }}
-                                    />
-                                  )}
-                                </TableCell>
-
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {" "}
-                                  {request.title}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {" "}
-                                  {request.request_created_date}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {request.days_open} days
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {request.request_type != null
-                                    ? request.request_type
-                                    : "None"}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {request.priority}
-                                </TableCell>
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {request.assigned_business !== null &&
-                                  request.assigned_business !== "null"
-                                    ? request.assigned_business
-                                    : "None"}
-                                </TableCell>
-
-                                <TableCell
-                                  padding="none"
-                                  size="small"
-                                  align="center"
-                                >
-                                  {request.scheduled_date !== null &&
-                                  request.scheduled_date !== "null"
-                                    ? request.scheduled_date
-                                    : "Not Scheduled"}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <div>No maintenance or repair requests</div>
-                  )}
-                </Row>
-                <Row className="m-3">
-                  <Col>
-                    <h3>Appliances</h3>
-                  </Col>
-                  {property.management_status === "ACCEPTED" ? (
-                    <Col>
-                      <img
-                        src={EditIconNew}
-                        onClick={() => {
-                          window.scrollTo(0, 1000);
-                          setEditProperty(true);
-                        }}
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          float: "right",
-                          marginRight: "5rem",
-                        }}
-                      />
-                    </Col>
-                  ) : (
-                    <Col></Col>
-                  )}
-                </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <div>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Appliance</TableCell>
-                          <TableCell>Name</TableCell>
-                          <TableCell>Purchased From</TableCell>
-                          <TableCell>Purchased On</TableCell>
-                          <TableCell>Purchase Order Number</TableCell>
-                          <TableCell>Installed On</TableCell>
-                          <TableCell>Serial Number</TableCell>
-                          <TableCell>Model Number</TableCell>
-                          <TableCell>Warranty Till</TableCell>
-                          <TableCell>Warranty Info</TableCell>
-                          <TableCell>Images</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      {console.log("appliances", appliances, applianceState)}
-                      <TableBody>
-                        {appliances.map((appliance, i) => {
-                          return applianceState[0][appliance]["available"] ==
-                            true ||
-                            applianceState[0][appliance]["available"] ==
-                              "True" ? (
-                            <TableRow
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={property.property_uid}
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
                               onClick={
                                 property.management_status === "ACCEPTED"
                                   ? () => {
-                                      window.scrollTo(0, 1000);
+                                      window.scrollTo(0, 1500);
                                       setEditProperty(true);
                                     }
                                   : () => {}
                               }
                             >
-                              <TableCell>{appliance}</TableCell>
-                              <TableCell>
-                                {applianceState[0][appliance]["name"]}
-                              </TableCell>
-                              <TableCell>
-                                {applianceState[0][appliance]["purchased_from"]}
-                              </TableCell>
-                              <TableCell>
-                                {applianceState[0][appliance]["purchased"]}
-                              </TableCell>
-                              <TableCell>
-                                {
-                                  applianceState[0][appliance][
-                                    "purchased_order"
-                                  ]
-                                }
-                              </TableCell>
-                              <TableCell>
-                                {applianceState[0][appliance]["installed"]}
-                              </TableCell>
-                              <TableCell>
-                                {applianceState[0][appliance]["serial_num"]}
-                              </TableCell>
-                              <TableCell>
-                                {applianceState[0][appliance]["model_num"]}
-                              </TableCell>
-                              <TableCell>
-                                {applianceState[0][appliance]["warranty_till"]}
-                              </TableCell>
-                              <TableCell>
-                                {applianceState[0][appliance]["warranty_info"]}
-                              </TableCell>
-
-                              {applianceState[0][appliance]["images"] !==
-                                undefined &&
-                              applianceState[0][appliance]["images"].length >
-                                0 ? (
-                                <TableCell>
-                                  {console.log(
-                                    applianceState[0][appliance]["images"][0]
-                                  )}
-                                  <Row className="d-flex justify-content-center align-items-center p-1">
-                                    <Col className="d-flex justify-content-center align-items-center p-0 m-0">
-                                      <img
-                                        key={Date.now()}
-                                        src={`${
-                                          applianceState[0][appliance][
-                                            "images"
-                                          ][0]
-                                        }?${Date.now()}`}
-                                        style={{
-                                          borderRadius: "4px",
-                                          objectFit: "contain",
-                                          width: "50px",
-                                          height: "50px",
-                                        }}
-                                        alt="Property"
-                                      />
-                                    </Col>
-                                  </Row>
-                                </TableCell>
+                              {JSON.parse(property.images).length > 0 ? (
+                                <img
+                                  key={Date.now()}
+                                  src={`${
+                                    JSON.parse(property.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="Property"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
                               ) : (
-                                <TableCell>None</TableCell>
+                                <img
+                                  src={PropertyIcon}
+                                  alt="Property"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
                               )}
-                            </TableRow>
-                          ) : (
-                            ""
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </Row>
-                <Row className="m-3">
-                  <Col>
-                    <h3>Other Info</h3>
-                  </Col>
-                  <Col xs={2}></Col>
-                </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <div>
-                    {" "}
-                    <Table
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                      responsive="md"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Utilities</TableCell>
-                          <TableCell>Electricity</TableCell>
-                          <TableCell>Trash</TableCell>
-                          <TableCell>Water</TableCell>
-                          <TableCell>Wifi </TableCell>
-                          <TableCell>Gas</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>Paid by</TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Electricity"]
-                              ? "Owner"
-                              : "Tenant"}
-                          </TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Trash"]
-                              ? "Owner"
-                              : "Tenant"}
-                          </TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Water"]
-                              ? "Owner"
-                              : "Tenant"}
-                          </TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Wifi"]
-                              ? "Owner"
-                              : "Tenant"}
-                          </TableCell>
-                          <TableCell>
-                            {JSON.parse(property.utilities)["Gas"]
-                              ? "Owner"
-                              : "Tenant"}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <div>
-                    {" "}
-                    <Table
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                      responsive="md"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Pets Allowed</TableCell>
-                          <TableCell>
-                            Deposit can be used for last month's rent
-                          </TableCell>
-                          <TableCell>Available to Rent</TableCell>
-                          <TableCell>Featured</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>
-                            {property.pets_allowed == 0 ? "No" : "Yes"}
-                          </TableCell>
-                          <TableCell>
-                            {property.deposit_for_rent == 0 ? "No" : "Yes"}
-                          </TableCell>
-                          <TableCell>
-                            {property.available_to_rent == 0 ? "No" : "Yes"}
-                          </TableCell>
-                          <TableCell>
-                            {property.featured === "True" ? "Yes" : "No"}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </Row>
-                {property.rental_status === "ACTIVE" ? (
-                  ""
-                ) : (
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              onClick={
+                                property.management_status === "ACCEPTED"
+                                  ? () => {
+                                      window.scrollTo(0, 0);
+                                      setEditProperty(true);
+                                    }
+                                  : () => {}
+                              }
+                            >
+                              {property.address}
+                              {property.unit !== "" ? " " + property.unit : ""}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              onClick={
+                                property.management_status === "ACCEPTED"
+                                  ? () => {
+                                      window.scrollTo(0, 0);
+                                      setEditProperty(true);
+                                    }
+                                  : () => {}
+                              }
+                            >
+                              {property.city}, {property.state}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              onClick={
+                                property.management_status === "ACCEPTED"
+                                  ? () => {
+                                      window.scrollTo(0, 0);
+                                      setEditProperty(true);
+                                    }
+                                  : () => {}
+                              }
+                            >
+                              {property.zip}
+                            </TableCell>
+                            {console.log(property)}
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {property.owner.length !== 0
+                                ? property.owner[0].owner_first_name +
+                                  " " +
+                                  property.owner[0].owner_last_name
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {property.rentalInfo.length !== 0
+                                ? property.rentalInfo[0].tenant_first_name +
+                                  " " +
+                                  property.rentalInfo[0].tenant_last_name
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {property.rent_paid !== ""
+                                ? property.rent_paid
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {property.rentalInfo.length !== 0
+                                ? property.rentalInfo[0].lease_end
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              onClick={
+                                property.management_status === "ACCEPTED"
+                                  ? () => {
+                                      window.scrollTo(0, 800);
+                                      setEditProperty(true);
+                                    }
+                                  : () => {}
+                              }
+                            >
+                              {"$" + property.listed_rent}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              onClick={
+                                property.management_status === "ACCEPTED"
+                                  ? () => {
+                                      window.scrollTo(0, 800);
+                                      setEditProperty(true);
+                                    }
+                                  : () => {}
+                              }
+                            >
+                              {property.property_type}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              onClick={
+                                property.management_status === "ACCEPTED"
+                                  ? () => {
+                                      window.scrollTo(0, 800);
+                                      setEditProperty(true);
+                                    }
+                                  : () => {}
+                              }
+                            >
+                              {property.num_beds + "/" + property.num_baths}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </Row>
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
                   <Row className="m-3">
                     <Col>
-                      <h3>Tenant Applications</h3>
+                      <h3>Maintenance and Repair Requests</h3>
                     </Col>
-                    <Col xs={2}></Col>
-                  </Row>
-                )}
-                {property.rental_status === "ACTIVE" ? (
-                  ""
-                ) : (
-                  <Row style={{ overflow: "scroll" }}>
-                    <ManagerTenantApplications
-                      property={property}
-                      reload={reloadProperty}
-                      createNewTenantAgreement={createNewTenantAgreement}
-                      selectTenantApplication={selectTenantApplication}
-                    />
-                  </Row>
-                )}
-                <Row className="m-3">
-                  <Col>
-                    <h3>Tenant Info</h3>
-                  </Col>
-                  <Col xs={2}>
-                    {property.rental_status === "PROCESSING" ? (
+                    <Col xs={2}>
+                      {" "}
                       <img
-                        src={EditIconNew}
-                        alt="Edit"
+                        src={AddIcon}
+                        onClick={() => setShowAddRequest(true)}
                         style={{
                           width: "30px",
                           height: "30px",
                           float: "right",
                           marginRight: "5rem",
                         }}
-                        onClick={() => selectAgreement(selectedAgreement)}
                       />
+                    </Col>
+                  </Row>
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    {property.maintenanceRequests.length > 0 ? (
+                      <div>
+                        <Table
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                          responsive="md"
+                        >
+                          <EnhancedTableHeadMaintenance
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                            rowCount={property.maintenanceRequests.length}
+                          />{" "}
+                          <TableBody>
+                            {stableSort(
+                              property.maintenanceRequests,
+                              getComparator(order, orderBy)
+                            ).map((request, index) => {
+                              return (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={request.maintenance_request_uid}
+                                  onClick={() => {
+                                    navigate(
+                                      `../manager-repairs/${request.maintenance_request_uid}`,
+                                      {
+                                        state: {
+                                          repair: request,
+                                        },
+                                      }
+                                    );
+                                  }}
+                                >
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {JSON.parse(request.images).length > 0 ? (
+                                      <img
+                                        src={JSON.parse(request.images)[0]}
+                                        alt="Repair"
+                                        style={{
+                                          borderRadius: "4px",
+                                          objectFit: "cover",
+                                          width: "100px",
+                                          height: "100px",
+                                        }}
+                                      />
+                                    ) : (
+                                      <img
+                                        src={RepairImg}
+                                        alt="Repair"
+                                        style={{
+                                          borderRadius: "4px",
+                                          objectFit: "cover",
+                                          width: "100px",
+                                          height: "100px",
+                                        }}
+                                      />
+                                    )}
+                                  </TableCell>
+
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {" "}
+                                    {request.title}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {" "}
+                                    {request.request_created_date}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {request.days_open} days
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {request.request_type != null
+                                      ? request.request_type
+                                      : "None"}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {request.priority}
+                                  </TableCell>
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {request.assigned_business !== null &&
+                                    request.assigned_business !== "null"
+                                      ? request.assigned_business
+                                      : "None"}
+                                  </TableCell>
+
+                                  <TableCell
+                                    padding="none"
+                                    size="small"
+                                    align="center"
+                                  >
+                                    {request.scheduled_date !== null &&
+                                    request.scheduled_date !== "null"
+                                      ? request.scheduled_date
+                                      : "Not Scheduled"}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </div>
                     ) : (
-                      ""
+                      <div>No maintenance or repair requests</div>
                     )}
-                  </Col>
-                </Row>
-                <Row style={{ overflow: "scroll" }}>
-                  <ManagerTenantAgreementView
-                    property={property}
-                    selectedAgreement={selectedAgreement}
-                    renewLease={renewLease}
-                    acceptedTenantApplications={acceptedTenantApplications}
-                    setAcceptedTenantApplications={
-                      setAcceptedTenantApplications
-                    }
-                  />
-                </Row>
-                <Row style={{ overflow: "scroll" }}>
-                  {" "}
-                  <PropertyManagerDocs
-                    property={property}
-                    managerID={managerID}
-                    fetchProperty={fetchProperty}
-                    addDocument={addContract}
-                    selectContract={selectContract}
-                    selectedBusiness={selectedBusiness}
-                    setSelectedBusiness={setSelectedBusiness}
-                    setShowDialog={setShowDialog}
-                    endEarlyDate={endEarlyDate}
-                    setEndEarlyDate={setEndEarlyDate}
-                    cancel={cancel}
-                    setCancel={setCancel}
-                    reload={""}
-                  />
-                </Row>
+                  </Row>
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3">
+                    <Col>
+                      <h3>Appliances</h3>
+                    </Col>
+                    {property.management_status === "ACCEPTED" ? (
+                      <Col>
+                        <img
+                          src={EditIconNew}
+                          onClick={() => {
+                            window.scrollTo(0, 1000);
+                            setEditProperty(true);
+                          }}
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            float: "right",
+                            marginRight: "5rem",
+                          }}
+                        />
+                      </Col>
+                    ) : (
+                      <Col></Col>
+                    )}
+                  </Row>
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <div>
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Appliance</TableCell>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Purchased From</TableCell>
+                            <TableCell>Purchased On</TableCell>
+                            <TableCell>Purchase Order Number</TableCell>
+                            <TableCell>Installed On</TableCell>
+                            <TableCell>Serial Number</TableCell>
+                            <TableCell>Model Number</TableCell>
+                            <TableCell>Warranty Till</TableCell>
+                            <TableCell>Warranty Info</TableCell>
+                            <TableCell>Images</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        {console.log("appliances", appliances, applianceState)}
+                        <TableBody>
+                          {appliances.map((appliance, i) => {
+                            return applianceState[0][appliance]["available"] ==
+                              true ||
+                              applianceState[0][appliance]["available"] ==
+                                "True" ? (
+                              <TableRow
+                                onClick={
+                                  property.management_status === "ACCEPTED"
+                                    ? () => {
+                                        window.scrollTo(0, 1000);
+                                        setEditProperty(true);
+                                      }
+                                    : () => {}
+                                }
+                              >
+                                <TableCell>{appliance}</TableCell>
+                                <TableCell>
+                                  {applianceState[0][appliance]["name"]}
+                                </TableCell>
+                                <TableCell>
+                                  {
+                                    applianceState[0][appliance][
+                                      "purchased_from"
+                                    ]
+                                  }
+                                </TableCell>
+                                <TableCell>
+                                  {applianceState[0][appliance]["purchased"]}
+                                </TableCell>
+                                <TableCell>
+                                  {
+                                    applianceState[0][appliance][
+                                      "purchased_order"
+                                    ]
+                                  }
+                                </TableCell>
+                                <TableCell>
+                                  {applianceState[0][appliance]["installed"]}
+                                </TableCell>
+                                <TableCell>
+                                  {applianceState[0][appliance]["serial_num"]}
+                                </TableCell>
+                                <TableCell>
+                                  {applianceState[0][appliance]["model_num"]}
+                                </TableCell>
+                                <TableCell>
+                                  {
+                                    applianceState[0][appliance][
+                                      "warranty_till"
+                                    ]
+                                  }
+                                </TableCell>
+                                <TableCell>
+                                  {
+                                    applianceState[0][appliance][
+                                      "warranty_info"
+                                    ]
+                                  }
+                                </TableCell>
+
+                                {applianceState[0][appliance]["images"] !==
+                                  undefined &&
+                                applianceState[0][appliance]["images"].length >
+                                  0 ? (
+                                  <TableCell>
+                                    {console.log(
+                                      applianceState[0][appliance]["images"][0]
+                                    )}
+                                    <Row className="d-flex justify-content-center align-items-center p-1">
+                                      <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                                        <img
+                                          key={Date.now()}
+                                          src={`${
+                                            applianceState[0][appliance][
+                                              "images"
+                                            ][0]
+                                          }?${Date.now()}`}
+                                          style={{
+                                            borderRadius: "4px",
+                                            objectFit: "contain",
+                                            width: "50px",
+                                            height: "50px",
+                                          }}
+                                          alt="Property"
+                                        />
+                                      </Col>
+                                    </Row>
+                                  </TableCell>
+                                ) : (
+                                  <TableCell>None</TableCell>
+                                )}
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </Row>
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3">
+                    <Col>
+                      <h3>Other Info</h3>
+                    </Col>
+                    <Col xs={2}></Col>
+                  </Row>
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <div>
+                      {" "}
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                        responsive="md"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Utilities</TableCell>
+                            <TableCell>Electricity</TableCell>
+                            <TableCell>Trash</TableCell>
+                            <TableCell>Water</TableCell>
+                            <TableCell>Wifi </TableCell>
+                            <TableCell>Gas</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>Paid by</TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Electricity"]
+                                ? "Owner"
+                                : "Tenant"}
+                            </TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Trash"]
+                                ? "Owner"
+                                : "Tenant"}
+                            </TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Water"]
+                                ? "Owner"
+                                : "Tenant"}
+                            </TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Wifi"]
+                                ? "Owner"
+                                : "Tenant"}
+                            </TableCell>
+                            <TableCell>
+                              {JSON.parse(property.utilities)["Gas"]
+                                ? "Owner"
+                                : "Tenant"}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </Row>
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <div>
+                      {" "}
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                        responsive="md"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Pets Allowed</TableCell>
+                            <TableCell>
+                              Deposit can be used for last month's rent
+                            </TableCell>
+                            <TableCell>Available to Rent</TableCell>
+                            <TableCell>Featured</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>
+                              {property.pets_allowed == 0 ? "No" : "Yes"}
+                            </TableCell>
+                            <TableCell>
+                              {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                            </TableCell>
+                            <TableCell>
+                              {property.available_to_rent == 0 ? "No" : "Yes"}
+                            </TableCell>
+                            <TableCell>
+                              {property.featured === "True" ? "Yes" : "No"}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </Row>
+                </div>
+                {property.rental_status === "ACTIVE" ? (
+                  ""
+                ) : (
+                  <div
+                    className="mx-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px 10px 0px 0px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row className="m-3">
+                      <Col>
+                        <h3>Tenant Applications</h3>
+                      </Col>
+                      <Col xs={2}></Col>
+                    </Row>
+                  </div>
+                )}
+                {property.rental_status === "ACTIVE" ? (
+                  ""
+                ) : (
+                  <div
+                    className="mx-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "0px 0px 10px 10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row style={{ overflow: "scroll" }}>
+                      <ManagerTenantApplications
+                        property={property}
+                        reload={reloadProperty}
+                        createNewTenantAgreement={createNewTenantAgreement}
+                        selectTenantApplication={selectTenantApplication}
+                      />
+                    </Row>
+                  </div>
+                )}
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3">
+                    <Col>
+                      <h3>Tenant Info</h3>
+                    </Col>
+                    <Col xs={2}>
+                      {property.rental_status === "PROCESSING" ? (
+                        <img
+                          src={EditIconNew}
+                          alt="Edit"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            float: "right",
+                            marginRight: "5rem",
+                          }}
+                          onClick={() => selectAgreement(selectedAgreement)}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </Col>
+                  </Row>
+                  <Row style={{ overflow: "scroll" }}>
+                    <ManagerTenantAgreementView
+                      property={property}
+                      selectedAgreement={selectedAgreement}
+                      renewLease={renewLease}
+                      acceptedTenantApplications={acceptedTenantApplications}
+                      setAcceptedTenantApplications={
+                        setAcceptedTenantApplications
+                      }
+                    />
+                  </Row>
+                </div>
+                <div
+                  className="mx-3 my-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row style={{ overflow: "scroll" }}>
+                    {" "}
+                    <PropertyManagerDocs
+                      property={property}
+                      managerID={managerID}
+                      fetchProperty={fetchProperty}
+                      addDocument={addContract}
+                      selectContract={selectContract}
+                      selectedBusiness={selectedBusiness}
+                      setSelectedBusiness={setSelectedBusiness}
+                      setShowDialog={setShowDialog}
+                      endEarlyDate={endEarlyDate}
+                      setEndEarlyDate={setEndEarlyDate}
+                      cancel={cancel}
+                      setCancel={setCancel}
+                      reload={""}
+                    />
+                  </Row>
+                </div>
               </div>
             )}
           </div>

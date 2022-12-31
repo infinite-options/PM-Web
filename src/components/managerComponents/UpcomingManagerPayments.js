@@ -296,204 +296,232 @@ export default function UpcomingManagerPayments(props) {
         Upcoming Payments
       </Row>
 
-      <Row className="m-3" style={subHeading}>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
         {" "}
-        Outgoing Payments
-      </Row>
-      <Row className="m-3" style={{ overflow: "scroll" }}>
-        <Table
-          responsive="md"
-          classes={{ root: classes.customTable }}
-          size="small"
-        >
-          <EnhancedTableHeadOutgoingPayments
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            rowCount={rents.length}
-          />{" "}
-          <TableBody>
-            {rents.length !== 0
-              ? stableSort(rents, getComparator(order, orderBy)).map(
-                  (row, index) => {
-                    return row.purchase_status === "UNPAID" &&
-                      row.receiver !== managerID &&
-                      row.amount_due > 0 ? (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.purchase_uid}
-                      >
-                        <TableCell align="right">{row.purchase_uid}</TableCell>
-                        <TableCell align="right">
-                          {row.address +
-                            " " +
-                            row.unit +
-                            "," +
-                            row.city +
-                            ", " +
-                            row.state +
-                            " " +
-                            row.zip}
-                        </TableCell>
-                        <TableCell align="right"> {row.receiver}</TableCell>
-                        <TableCell align="right">
-                          {row.purchase_frequency === "One-time" ||
-                          row.purchase_frequency === "Annually"
-                            ? row.description
-                            : row.purchase_notes + " " + row.description}
-                        </TableCell>
-                        <TableCell align="right">{row.purchase_type}</TableCell>
-                        <TableCell
-                          align="right"
-                          style={{
-                            color:
-                              new Date(row.next_payment) < new Date()
-                                ? "red"
-                                : "green",
-                          }}
-                        >
-                          {row.next_payment.substring(0, 10)}
-                        </TableCell>
-                        <TableCell align="right">
-                          {props.type ? (
-                            <button
-                              style={{
-                                backgroundColor:
-                                  new Date(row.next_payment) < new Date()
-                                    ? "red"
-                                    : "green",
-                                color: "white",
-                                border: "none",
-                              }}
-                              onClick={goToPayment}
-                            >
-                              Pay
-                            </button>
-                          ) : (
-                            <label>
-                              <input
-                                className="check"
-                                type="checkbox"
-                                onClick={(event) =>
-                                  handleCheck(
-                                    event,
-                                    row.amount_due,
-                                    row.purchase_uid
-                                  )
-                                }
-                              />
-                            </label>
-                          )}
-                        </TableCell>
-                        <TableCell align="right">
-                          {Math.abs(row.amount_due).toFixed(2)}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      ""
-                    );
-                  }
-                )
-              : "No upcoming payments"}
-          </TableBody>
-        </Table>
-      </Row>
-      {props.type == false && (
-        <div className="amount-pay">
-          <h4 className="amount">Amount: ${totalSum}</h4>
-          {totalSum === 0 ? (
-            <button className="pay-button2">Pay Now</button>
-          ) : (
-            <button
-              className="pay-button2"
-              onClick={() => {
-                navigateToPaymentPage();
-              }}
-            >
-              Pay Now
-            </button>
-          )}
-        </div>
-      )}
-      <Row className="m-3" style={subHeading}>
-        {" "}
-        Incoming Payments
-      </Row>
-      <Row className="m-3" style={{ overflow: "scroll" }}>
-        <Table
-          responsive="md"
-          classes={{ root: classes.customTable }}
-          size="small"
-        >
-          <EnhancedTableHeadIncomingPayments
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            rowCount={rents.length}
-          />{" "}
-          <TableBody>
-            {rents.length !== 0
-              ? stableSort(rents, getComparator(order, orderBy)).map(
-                  (row, index) => {
-                    return (row.purchase_status === "UNPAID" &&
-                      row.receiver === managerID &&
-                      row.amount_due > 0) ||
-                      (row.purchase_status === "UNPAID" &&
+        <Row className="m-3" style={subHeading}>
+          {" "}
+          Outgoing Payments
+        </Row>
+        <Row className="m-3" style={{ overflow: "scroll" }}>
+          <Table
+            responsive="md"
+            classes={{ root: classes.customTable }}
+            size="small"
+          >
+            <EnhancedTableHeadOutgoingPayments
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              rowCount={rents.length}
+            />{" "}
+            <TableBody>
+              {rents.length !== 0
+                ? stableSort(rents, getComparator(order, orderBy)).map(
+                    (row, index) => {
+                      return row.purchase_status === "UNPAID" &&
                         row.receiver !== managerID &&
-                        row.amount_due < 0) ? (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.purchase_uid}
-                      >
-                        <TableCell align="right">{row.purchase_uid}</TableCell>
-                        <TableCell align="right">
-                          {row.address +
-                            " " +
-                            row.unit +
-                            "," +
-                            row.city +
-                            ", " +
-                            row.state +
-                            " " +
-                            row.zip}
-                        </TableCell>
-                        <TableCell align="right"> {row.payer}</TableCell>
-                        <TableCell align="right">
-                          {row.purchase_frequency === "One-time" ||
-                          row.purchase_frequency === "Annually"
-                            ? row.description
-                            : row.purchase_notes + " " + row.description}
-                        </TableCell>
-                        <TableCell align="right">{row.purchase_type}</TableCell>
-                        <TableCell
-                          align="right"
-                          style={{
-                            color:
-                              new Date(row.next_payment) < new Date()
-                                ? "red"
-                                : "green",
-                          }}
+                        row.amount_due > 0 ? (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={row.purchase_uid}
                         >
-                          {row.next_payment.substring(0, 10)}
-                        </TableCell>
+                          <TableCell align="right">
+                            {row.purchase_uid}
+                          </TableCell>
+                          <TableCell align="right">
+                            {row.address +
+                              " " +
+                              row.unit +
+                              "," +
+                              row.city +
+                              ", " +
+                              row.state +
+                              " " +
+                              row.zip}
+                          </TableCell>
+                          <TableCell align="right"> {row.receiver}</TableCell>
+                          <TableCell align="right">
+                            {row.purchase_frequency === "One-time" ||
+                            row.purchase_frequency === "Annually"
+                              ? row.description
+                              : row.purchase_notes + " " + row.description}
+                          </TableCell>
+                          <TableCell align="right">
+                            {row.purchase_type}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            style={{
+                              color:
+                                new Date(row.next_payment) < new Date()
+                                  ? "red"
+                                  : "green",
+                            }}
+                          >
+                            {row.next_payment.substring(0, 10)}
+                          </TableCell>
+                          <TableCell align="right">
+                            {props.type ? (
+                              <button
+                                style={{
+                                  backgroundColor:
+                                    new Date(row.next_payment) < new Date()
+                                      ? "red"
+                                      : "green",
+                                  color: "white",
+                                  border: "none",
+                                }}
+                                onClick={goToPayment}
+                              >
+                                Pay
+                              </button>
+                            ) : (
+                              <label>
+                                <input
+                                  className="check"
+                                  type="checkbox"
+                                  onClick={(event) =>
+                                    handleCheck(
+                                      event,
+                                      row.amount_due,
+                                      row.purchase_uid
+                                    )
+                                  }
+                                />
+                              </label>
+                            )}
+                          </TableCell>
+                          <TableCell align="right">
+                            {Math.abs(row.amount_due).toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    }
+                  )
+                : "No upcoming payments"}
+            </TableBody>
+          </Table>
+        </Row>
+        {props.type == false && (
+          <div className="amount-pay">
+            <h4 className="amount">Amount: ${totalSum}</h4>
+            {totalSum === 0 ? (
+              <button className="pay-button2">Pay Now</button>
+            ) : (
+              <button
+                className="pay-button2"
+                onClick={() => {
+                  navigateToPaymentPage();
+                }}
+              >
+                Pay Now
+              </button>
+            )}
+          </div>
+        )}
+      </div>
 
-                        <TableCell align="right">
-                          {Math.abs(row.amount_due).toFixed(2)}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      ""
-                    );
-                  }
-                )
-              : "No upcoming payments"}
-          </TableBody>
-        </Table>
-      </Row>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <Row className="m-3" style={subHeading}>
+          {" "}
+          Incoming Payments
+        </Row>
+        <Row className="m-3" style={{ overflow: "scroll" }}>
+          <Table
+            responsive="md"
+            classes={{ root: classes.customTable }}
+            size="small"
+          >
+            <EnhancedTableHeadIncomingPayments
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              rowCount={rents.length}
+            />{" "}
+            <TableBody>
+              {rents.length !== 0
+                ? stableSort(rents, getComparator(order, orderBy)).map(
+                    (row, index) => {
+                      return (row.purchase_status === "UNPAID" &&
+                        row.receiver === managerID &&
+                        row.amount_due > 0) ||
+                        (row.purchase_status === "UNPAID" &&
+                          row.receiver !== managerID &&
+                          row.amount_due < 0) ? (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={row.purchase_uid}
+                        >
+                          <TableCell align="right">
+                            {row.purchase_uid}
+                          </TableCell>
+                          <TableCell align="right">
+                            {row.address +
+                              " " +
+                              row.unit +
+                              "," +
+                              row.city +
+                              ", " +
+                              row.state +
+                              " " +
+                              row.zip}
+                          </TableCell>
+                          <TableCell align="right"> {row.payer}</TableCell>
+                          <TableCell align="right">
+                            {row.purchase_frequency === "One-time" ||
+                            row.purchase_frequency === "Annually"
+                              ? row.description
+                              : row.purchase_notes + " " + row.description}
+                          </TableCell>
+                          <TableCell align="right">
+                            {row.purchase_type}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            style={{
+                              color:
+                                new Date(row.next_payment) < new Date()
+                                  ? "red"
+                                  : "green",
+                            }}
+                          >
+                            {row.next_payment.substring(0, 10)}
+                          </TableCell>
+
+                          <TableCell align="right">
+                            {Math.abs(row.amount_due).toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    }
+                  )
+                : "No upcoming payments"}
+            </TableBody>
+          </Table>
+        </Row>
+      </div>
     </div>
   );
 }

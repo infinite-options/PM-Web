@@ -269,171 +269,189 @@ export default function ManagerPaymentHistory(props) {
       <Row className="m-3" style={headings}>
         Payment History (Last 30 Days)
       </Row>
-      <Row className="m-3" style={subHeading}>
-        {" "}
-        Outgoing Payments
-      </Row>
-      <Row className="m-3" style={{ overflow: "scroll" }}>
-        <Table
-          responsive="md"
-          classes={{ root: classes.customTable }}
-          size="small"
-        >
-          <EnhancedTableHeadOutgoingPayments
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            rowCount={history.length}
-          />{" "}
-          <TableBody>
-            {stableSort(history, getComparator(order, orderBy)).map(
-              (row, index) => {
-                return row.purchase_status === "PAID" &&
-                  row.receiver !== managerID &&
-                  row.amount_paid > 0 ? (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.purchase_uid}
-                  >
-                    <TableCell align="right">{row.purchase_uid}</TableCell>
-                    <TableCell align="right" style={{ width: "300px" }}>
-                      {row.address +
-                        " " +
-                        row.unit +
-                        "," +
-                        row.city +
-                        ", " +
-                        row.state +
-                        " " +
-                        row.zip}
-                    </TableCell>
-                    <TableCell align="right"> {row.receiver}</TableCell>
-                    <TableCell align="right" style={{ width: "200px" }}>
-                      {row.purchase_frequency === "One-time" ||
-                      row.purchase_frequency === "Annually"
-                        ? row.description
-                        : row.purchase_notes + " " + row.description}
-                    </TableCell>
-                    <TableCell align="right">{row.purchase_type}</TableCell>
-                    <TableCell align="right">
-                      {row.payment_date !== null
-                        ? row.payment_date.substring(0, 10)
-                        : "Not Available"}
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ width: "83px" }}
-                    ></TableCell>
-                    <TableCell align="right">
-                      {Math.abs(row.amount_paid).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  ""
-                );
-              }
-            )}
-          </TableBody>
-        </Table>
-      </Row>
-      <Row className="m-3" style={subHeading}>
-        {" "}
-        Incoming Payments
-      </Row>
-      <Row className="m-3" style={{ overflow: "scroll" }}>
-        <Table
-          responsive="md"
-          classes={{ root: classes.customTable }}
-          size="small"
-        >
-          <EnhancedTableHeadIncomingPayments
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            rowCount={history.length}
-          />{" "}
-          <TableBody>
-            {stableSort(history, getComparator(order, orderBy)).map(
-              (row, index) => {
-                return (row.purchase_status === "PAID" &&
-                  row.receiver === managerID &&
-                  row.amount_paid > 0) ||
-                  (row.purchase_status === "PAID" &&
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <Row className="m-3" style={subHeading}>
+          {" "}
+          Outgoing Payments
+        </Row>
+        <Row className="m-3" style={{ overflow: "scroll" }}>
+          <Table
+            responsive="md"
+            classes={{ root: classes.customTable }}
+            size="small"
+          >
+            <EnhancedTableHeadOutgoingPayments
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              rowCount={history.length}
+            />{" "}
+            <TableBody>
+              {stableSort(history, getComparator(order, orderBy)).map(
+                (row, index) => {
+                  return row.purchase_status === "PAID" &&
                     row.receiver !== managerID &&
-                    row.amount_paid < 0) ? (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.purchase_uid}
-                  >
-                    <TableCell align="right">{row.purchase_uid}</TableCell>
-                    <TableCell align="right" style={{ width: "300px" }}>
-                      {row.address +
-                        " " +
-                        row.unit +
-                        "," +
-                        row.city +
-                        ", " +
-                        row.state +
-                        " " +
-                        row.zip}
-                    </TableCell>
+                    row.amount_paid > 0 ? (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.purchase_uid}
+                    >
+                      <TableCell align="right">{row.purchase_uid}</TableCell>
+                      <TableCell align="right" style={{ width: "300px" }}>
+                        {row.address +
+                          " " +
+                          row.unit +
+                          "," +
+                          row.city +
+                          ", " +
+                          row.state +
+                          " " +
+                          row.zip}
+                      </TableCell>
+                      <TableCell align="right"> {row.receiver}</TableCell>
+                      <TableCell align="right" style={{ width: "200px" }}>
+                        {row.purchase_frequency === "One-time" ||
+                        row.purchase_frequency === "Annually"
+                          ? row.description
+                          : row.purchase_notes + " " + row.description}
+                      </TableCell>
+                      <TableCell align="right">{row.purchase_type}</TableCell>
+                      <TableCell align="right">
+                        {row.payment_date !== null
+                          ? row.payment_date.substring(0, 10)
+                          : "Not Available"}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        style={{ width: "83px" }}
+                      ></TableCell>
+                      <TableCell align="right">
+                        {Math.abs(row.amount_paid).toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    ""
+                  );
+                }
+              )}
+            </TableBody>
+          </Table>
+        </Row>
+      </div>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <Row className="m-3" style={subHeading}>
+          {" "}
+          Incoming Payments
+        </Row>
+        <Row className="m-3" style={{ overflow: "scroll" }}>
+          <Table
+            responsive="md"
+            classes={{ root: classes.customTable }}
+            size="small"
+          >
+            <EnhancedTableHeadIncomingPayments
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              rowCount={history.length}
+            />{" "}
+            <TableBody>
+              {stableSort(history, getComparator(order, orderBy)).map(
+                (row, index) => {
+                  return (row.purchase_status === "PAID" &&
+                    row.receiver === managerID &&
+                    row.amount_paid > 0) ||
+                    (row.purchase_status === "PAID" &&
+                      row.receiver !== managerID &&
+                      row.amount_paid < 0) ? (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.purchase_uid}
+                    >
+                      <TableCell align="right">{row.purchase_uid}</TableCell>
+                      <TableCell align="right" style={{ width: "300px" }}>
+                        {row.address +
+                          " " +
+                          row.unit +
+                          "," +
+                          row.city +
+                          ", " +
+                          row.state +
+                          " " +
+                          row.zip}
+                      </TableCell>
 
-                    <TableCell align="right"> {row.payer}</TableCell>
-                    <TableCell align="right" style={{ width: "200px" }}>
-                      {row.purchase_frequency === "One-time" ||
-                      row.purchase_frequency === "Annually"
-                        ? row.description
-                        : row.purchase_notes + " " + row.description}
-                    </TableCell>
-                    <TableCell align="right">{row.purchase_type}</TableCell>
-                    <TableCell align="right">
-                      {row.payment_date !== null
-                        ? row.payment_date.substring(0, 10)
-                        : "Not Available"}
-                    </TableCell>
-                    <TableCell align="right" style={{ width: "83px" }}>
-                      {row.payment_verify === "Verified" ? (
-                        <img
-                          src={Verified}
-                          style={{
-                            width: "25px",
-                            height: "25px",
-                            objectFit: "contain",
-                          }}
-                          onClick={() => unverifyPayment(row.payment_uid)}
-                        />
-                      ) : (
-                        <button
-                          style={{
-                            backgroundColor:
-                              new Date(row.payment_date) < new Date()
-                                ? "red"
-                                : "green",
-                            color: "white",
-                            border: "none",
-                          }}
-                          onClick={() => verifyPayment(row.payment_uid)}
-                        >
-                          Verify
-                        </button>
-                      )}
-                    </TableCell>
-                    <TableCell align="right">
-                      {Math.abs(row.amount_paid).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  ""
-                );
-              }
-            )}
-          </TableBody>
-        </Table>
-      </Row>
+                      <TableCell align="right"> {row.payer}</TableCell>
+                      <TableCell align="right" style={{ width: "200px" }}>
+                        {row.purchase_frequency === "One-time" ||
+                        row.purchase_frequency === "Annually"
+                          ? row.description
+                          : row.purchase_notes + " " + row.description}
+                      </TableCell>
+                      <TableCell align="right">{row.purchase_type}</TableCell>
+                      <TableCell align="right">
+                        {row.payment_date !== null
+                          ? row.payment_date.substring(0, 10)
+                          : "Not Available"}
+                      </TableCell>
+                      <TableCell align="right" style={{ width: "83px" }}>
+                        {row.payment_verify === "Verified" ? (
+                          <img
+                            src={Verified}
+                            style={{
+                              width: "25px",
+                              height: "25px",
+                              objectFit: "contain",
+                            }}
+                            onClick={() => unverifyPayment(row.payment_uid)}
+                          />
+                        ) : (
+                          <button
+                            style={{
+                              backgroundColor:
+                                new Date(row.payment_date) < new Date()
+                                  ? "red"
+                                  : "green",
+                              color: "white",
+                              border: "none",
+                            }}
+                            onClick={() => verifyPayment(row.payment_uid)}
+                          >
+                            Verify
+                          </button>
+                        )}
+                      </TableCell>
+                      <TableCell align="right">
+                        {Math.abs(row.amount_paid).toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    ""
+                  );
+                }
+              )}
+            </TableBody>
+          </Table>
+        </Row>
+      </div>
     </div>
   );
 }

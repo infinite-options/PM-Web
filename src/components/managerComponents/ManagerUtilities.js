@@ -1114,9 +1114,16 @@ function ManagerUtilities(props) {
               !expenseDetailManager &&
               !maintenanceExpenseDetail &&
               !payExpense ? (
-                <div className="mx-2 my-2 p-3">
-                  <div>
-                    <Row style={headings}>
+                <div>
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row style={headings} className="m-3">
                       {" "}
                       <Col>
                         <h3>Utility Expenses Due From Manager </h3>
@@ -1327,10 +1334,17 @@ function ManagerUtilities(props) {
                     );
                   })} */}
                   </div>
-                  <div>
-                    <Row style={headings}>
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row className="m-3" style={headings}>
                       <Col>
-                        <h3>Utilities Due From Tenant </h3>
+                        <h3>Utility Expenses Due From Tenant </h3>
                       </Col>
                       <Col>
                         <img
@@ -1531,8 +1545,19 @@ function ManagerUtilities(props) {
                     );
                   })} */}
                   </div>
-                  <div>
-                    <Row style={headings}> Maintenance Payments</Row>
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row className="m-3" style={headings}>
+                      <Col>
+                        <h3>Maintenance Payments</h3>{" "}
+                      </Col>
+                    </Row>
                     <Row className="m-3" style={{ overflow: "scroll" }}>
                       <Table
                         responsive="md"

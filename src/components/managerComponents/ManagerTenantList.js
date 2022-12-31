@@ -422,7 +422,14 @@ function ManagerTenantList(props) {
             </Col>
           </Row>
           {tenants.length > 0 ? (
-            <div>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="w-100 m-3">
                 <Col> Search by</Col>
 

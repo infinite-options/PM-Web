@@ -149,297 +149,336 @@ function ManagerCreateExpense(props) {
   return (
     <div className="d-flex flex-column w-100 p-2 overflow-hidden">
       <h5 className="m-2">Add New Expense Payment</h5>
-      <Form.Group
-        className="p-2"
+      <div
+        className="mx-3 my-3 p-2"
         style={{
-          background: "#F3F3F3 0% 0% no-repeat padding-box",
-          borderRadius: "5px",
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
         }}
       >
-        <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
-          Property {required}
-        </Form.Label>
-        {properties.length > 0 ? (
-          <Form.Select
-            style={squareForm}
-            value={selectedProperty}
-            onChange={(e) => setSelectedProperty(e.target.value)}
-          >
-            <option key="blankChoice" hidden value>
-              Search Your Properties
-            </option>
-            {properties.map((property, i) => (
-              <option key={i} value={JSON.stringify(decycle(property))}>
-                {property.address}
-                {property.unit !== "" ? " " + property.unit : ""},&nbsp;
-                {property.city},&nbsp;{property.state} {property.zip}
-              </option>
-            ))}
-          </Form.Select>
-        ) : (
-          <Row style={formLabel} as="h5" className="ms-1 mb-0">
-            {properties.address} {properties.unit}
-            ,&nbsp;
-            {properties.city}
-            ,&nbsp;
-            {properties.state}&nbsp; {properties.zip}
-          </Row>
-        )}
-      </Form.Group>
-      <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Category
-        </Form.Label>
-        <Form.Select
-          style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+        <Form.Group
+          className="p-2"
+          style={{
+            background: "#F3F3F3 0% 0% no-repeat padding-box",
+            borderRadius: "5px",
+          }}
         >
-          <option>Management</option>
-          <option>Maintenance</option>
-          <option>Repairs</option>
-          <option>Rent</option>
-          <option>Extra Charges</option>
-        </Form.Select>
-      </Form.Group>
+          <Form.Label style={formLabel} as="h5" className="ms-1 mb-0">
+            Property {required}
+          </Form.Label>
+          {properties.length > 0 ? (
+            <Form.Select
+              style={squareForm}
+              value={selectedProperty}
+              onChange={(e) => setSelectedProperty(e.target.value)}
+            >
+              <option key="blankChoice" hidden value>
+                Search Your Properties
+              </option>
+              {properties.map((property, i) => (
+                <option key={i} value={JSON.stringify(decycle(property))}>
+                  {property.address}
+                  {property.unit !== "" ? " " + property.unit : ""},&nbsp;
+                  {property.city},&nbsp;{property.state} {property.zip}
+                </option>
+              ))}
+            </Form.Select>
+          ) : (
+            <Row style={formLabel} as="h5" className="ms-1 mb-0">
+              {properties.address} {properties.unit}
+              ,&nbsp;
+              {properties.city}
+              ,&nbsp;
+              {properties.state}&nbsp; {properties.zip}
+            </Row>
+          )}
+        </Form.Group>
+      </div>
 
-      <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Description
-        </Form.Label>
-        <Form.Control
-          style={squareForm}
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </Form.Group>
-      <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Amount {amount === "" ? required : ""}
-        </Form.Label>
-        <Form.Control
-          style={squareForm}
-          placeholder="200"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-      </Form.Group>
-      {category === "Insurance" ? (
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        {" "}
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Frequency
+            Category
           </Form.Label>
           <Form.Select
             style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
           >
-            <option>Monthly</option>
-            <option>Annually</option>
+            <option>Management</option>
+            <option>Maintenance</option>
+            <option>Repairs</option>
+            <option>Rent</option>
+            <option>Extra Charges</option>
           </Form.Select>
         </Form.Group>
-      ) : category === "Mortgage" ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Frequency
+            Description
           </Form.Label>
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-          >
-            <option>Weekly</option>
-            <option>Monthly</option>
-          </Form.Select>
+          <Form.Control
+            style={squareForm}
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
         </Form.Group>
-      ) : category === "Tax" ? (
         <Form.Group className="mx-2 my-3">
           <Form.Label as="h6" className="mb-0 ms-2">
-            Frequency
-          </Form.Label>
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-          >
-            <option>Monthly</option>
-            <option>Annually</option>
-          </Form.Select>
-        </Form.Group>
-      ) : (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Frequency
-          </Form.Label>
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-          >
-            <option>Monthly</option>
-            <option>Annually</option>
-            <option>One-time</option>
-          </Form.Select>
-        </Form.Group>
-      )}
-      <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Frequency of payment
-        </Form.Label>
-
-        {frequency === "One-time" ? (
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequencyOfPayment}
-            onChange={(e) => setFrequencyOfPayment(e.target.value)}
-          >
-            <option>One-time</option>
-          </Form.Select>
-        ) : frequency === "Monthly" ? (
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequencyOfPayment}
-            onChange={(e) => setFrequencyOfPayment(e.target.value)}
-          >
-            <option>Once a month</option>
-            <option>Twice a month</option>
-          </Form.Select>
-        ) : frequency === "Annually" ? (
-          <Form.Select
-            style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
-            value={frequencyOfPayment}
-            onChange={(e) => setFrequencyOfPayment(e.target.value)}
-          >
-            <option>Once a year</option>
-            <option>Twice a year</option>
-          </Form.Select>
-        ) : (
-          <div></div>
-        )}
-      </Form.Group>
-      {frequency === "One-time" ? (
-        <div>
-          {" "}
-          <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
-            <Form.Check
-              type="checkbox"
-              style={subHeading}
-              label="Pay with next rent"
-              onChange={(e) => setAddToRent(!addToRent)}
-            />
-          </Form.Group>
-        </div>
-      ) : (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Payment Date {date === "" ? required : ""}
+            Amount {amount === "" ? required : ""}
           </Form.Label>
           <Form.Control
             style={squareForm}
             placeholder="200"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
           />
-          <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
-            <Form.Check
-              type="checkbox"
-              style={subHeading}
-              label="Pay with next rent"
-              onChange={(e) => setAddToRent(!addToRent)}
-            />
-          </Form.Group>
         </Form.Group>
-      )}
-      {category === "Management" ||
-      category === "Maintenance" ||
-      category === "Repairs" ? (
-        <div>
-          {console.log(JSON.parse(selectedProperty))}
+      </div>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        {category === "Insurance" ? (
           <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Payer
+              Frequency
             </Form.Label>
-            <Row>
-              <Col xs={4}>
-                {" "}
-                <Form.Check
-                  inline
-                  label="Owner"
-                  name="group1"
-                  type="radio"
-                  id="inline-radio-1"
-                  onChange={(e) => {
-                    setPayerID(JSON.parse(selectedProperty).owner_id);
-                    setPayer("OWNER");
-                  }}
-                />
-              </Col>
+            <Form.Select
+              style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+            >
+              <option>Monthly</option>
+              <option>Annually</option>
+            </Form.Select>
+          </Form.Group>
+        ) : category === "Mortgage" ? (
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Frequency
+            </Form.Label>
+            <Form.Select
+              style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+            >
+              <option>Weekly</option>
+              <option>Monthly</option>
+            </Form.Select>
+          </Form.Group>
+        ) : category === "Tax" ? (
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Frequency
+            </Form.Label>
+            <Form.Select
+              style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+            >
+              <option>Monthly</option>
+              <option>Annually</option>
+            </Form.Select>
+          </Form.Group>
+        ) : (
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Frequency
+            </Form.Label>
+            <Form.Select
+              style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+            >
+              <option>Monthly</option>
+              <option>Annually</option>
+              <option>One-time</option>
+            </Form.Select>
+          </Form.Group>
+        )}
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Frequency of payment
+          </Form.Label>
 
-              {JSON.parse(selectedProperty) !== null &&
-              JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+          {frequency === "One-time" ? (
+            <Form.Select
+              style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+              value={frequencyOfPayment}
+              onChange={(e) => setFrequencyOfPayment(e.target.value)}
+            >
+              <option>One-time</option>
+            </Form.Select>
+          ) : frequency === "Monthly" ? (
+            <Form.Select
+              style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+              value={frequencyOfPayment}
+              onChange={(e) => setFrequencyOfPayment(e.target.value)}
+            >
+              <option>Once a month</option>
+              <option>Twice a month</option>
+            </Form.Select>
+          ) : frequency === "Annually" ? (
+            <Form.Select
+              style={{ ...squareForm, backgroundImage: `url(${ArrowDown})` }}
+              value={frequencyOfPayment}
+              onChange={(e) => setFrequencyOfPayment(e.target.value)}
+            >
+              <option>Once a year</option>
+              <option>Twice a year</option>
+            </Form.Select>
+          ) : (
+            <div></div>
+          )}
+        </Form.Group>
+        {frequency === "One-time" ? (
+          <div>
+            {" "}
+            <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+              <Form.Check
+                type="checkbox"
+                style={subHeading}
+                label="Pay with next rent"
+                onChange={(e) => setAddToRent(!addToRent)}
+              />
+            </Form.Group>
+          </div>
+        ) : (
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2">
+              Payment Date {date === "" ? required : ""}
+            </Form.Label>
+            <Form.Control
+              style={squareForm}
+              placeholder="200"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+            <Form.Group className="mx-2 mb-3" controlId="formBasicCheckbox">
+              <Form.Check
+                type="checkbox"
+                style={subHeading}
+                label="Pay with next rent"
+                onChange={(e) => setAddToRent(!addToRent)}
+              />
+            </Form.Group>
+          </Form.Group>
+        )}
+      </div>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        {" "}
+        {category === "Management" ||
+        category === "Maintenance" ||
+        category === "Repairs" ? (
+          <div>
+            {console.log(JSON.parse(selectedProperty))}
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Payer
+              </Form.Label>
+              <Row>
                 <Col xs={4}>
                   {" "}
                   <Form.Check
                     inline
-                    label="Tenant"
+                    label="Owner"
                     name="group1"
                     type="radio"
-                    id="inline-radio-2"
+                    id="inline-radio-1"
                     onChange={(e) => {
-                      setPayerID(
-                        JSON.parse(selectedProperty).rentalInfo[0].tenant_id
-                      );
-                      setPayer("TENANT");
+                      setPayerID(JSON.parse(selectedProperty).owner_id);
+                      setPayer("OWNER");
                     }}
                   />
                 </Col>
-              ) : (
-                ""
-              )}
-              {JSON.parse(selectedProperty) !== null ? (
+
+                {JSON.parse(selectedProperty) !== null &&
+                JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+                  <Col xs={4}>
+                    {" "}
+                    <Form.Check
+                      inline
+                      label="Tenant"
+                      name="group1"
+                      type="radio"
+                      id="inline-radio-2"
+                      onChange={(e) => {
+                        setPayerID(
+                          JSON.parse(selectedProperty).rentalInfo[0].tenant_id
+                        );
+                        setPayer("TENANT");
+                      }}
+                    />
+                  </Col>
+                ) : (
+                  ""
+                )}
+                {JSON.parse(selectedProperty) !== null ? (
+                  <Col xs={4}>
+                    <Form.Check
+                      inline
+                      name="group1"
+                      label="Property Manager"
+                      type="radio"
+                      id="inline-radio-3"
+                      onChange={(e) => {
+                        setPayerID(JSON.parse(selectedProperty).manager_id);
+                        setPayer("PROPERTY MANAGER");
+                      }}
+                    />
+                  </Col>
+                ) : (
+                  ""
+                )}
+              </Row>
+            </Form.Group>
+          </div>
+        ) : (
+          ""
+        )}
+        {category === "Management" ||
+        category === "Maintenance" ||
+        category === "Repairs" ? (
+          <div>
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Receiver
+              </Form.Label>{" "}
+              <Row>
                 <Col xs={4}>
-                  <Form.Check
-                    inline
-                    name="group1"
-                    label="Property Manager"
-                    type="radio"
-                    id="inline-radio-3"
-                    onChange={(e) => {
-                      setPayerID(JSON.parse(selectedProperty).manager_id);
-                      setPayer("PROPERTY MANAGER");
-                    }}
-                  />
-                </Col>
-              ) : (
-                ""
-              )}
-            </Row>
-          </Form.Group>
-        </div>
-      ) : (
-        ""
-      )}
-      {category === "Management" ||
-      category === "Maintenance" ||
-      category === "Repairs" ? (
-        <div>
-          <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Receiver
-            </Form.Label>{" "}
-            <Row>
-              <Col xs={4}>
-                <Form.Group className="mx-2 my-3 d-flex flex-row">
-                  <Form.Control
-                    style={(squareForm, { width: "20%", marginRight: "1rem" })}
-                    placeholder="%"
-                    value={percentageSplitOwner}
-                    onChange={(e) => setPercentageSplitOwner(e.target.value)}
-                  />
-                  Owner
-                  {/* <Form.Check
+                  <Form.Group className="mx-2 my-3 d-flex flex-row">
+                    <Form.Control
+                      style={
+                        (squareForm, { width: "20%", marginRight: "1rem" })
+                      }
+                      placeholder="%"
+                      value={percentageSplitOwner}
+                      onChange={(e) => setPercentageSplitOwner(e.target.value)}
+                    />
+                    Owner
+                    {/* <Form.Check
                     inline
                     label="Owner"
                     name="group2"
@@ -450,23 +489,25 @@ function ManagerCreateExpense(props) {
                       setReceiver("OWNER");
                     }}
                   /> */}
-                </Form.Group>
-              </Col>
+                  </Form.Group>
+                </Col>
 
-              {JSON.parse(selectedProperty) !== null &&
-              JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
-                <Col>
-                  <Form.Group className="mx-2 my-3 d-flex flex-row">
-                    <Form.Control
-                      style={
-                        (squareForm, { width: "20%", marginRight: "1rem" })
-                      }
-                      placeholder="%"
-                      value={percentageSplitTenant}
-                      onChange={(e) => setPercentageSplitTenant(e.target.value)}
-                    />
-                    Tenant
-                    {/* <Form.Check
+                {JSON.parse(selectedProperty) !== null &&
+                JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+                  <Col>
+                    <Form.Group className="mx-2 my-3 d-flex flex-row">
+                      <Form.Control
+                        style={
+                          (squareForm, { width: "20%", marginRight: "1rem" })
+                        }
+                        placeholder="%"
+                        value={percentageSplitTenant}
+                        onChange={(e) =>
+                          setPercentageSplitTenant(e.target.value)
+                        }
+                      />
+                      Tenant
+                      {/* <Form.Check
                       inline
                       label="Tenant"
                       name="group2"
@@ -479,27 +520,27 @@ function ManagerCreateExpense(props) {
                         setReceiver("TENANT");
                       }}
                     /> */}
-                  </Form.Group>
-                </Col>
-              ) : (
-                ""
-              )}
+                    </Form.Group>
+                  </Col>
+                ) : (
+                  ""
+                )}
 
-              {JSON.parse(selectedProperty) !== null ? (
-                <Col xs={4}>
-                  <Form.Group className="mx-2 my-3 d-flex flex-row">
-                    <Form.Control
-                      style={
-                        (squareForm, { width: "20%", marginRight: "1rem" })
-                      }
-                      placeholder="%"
-                      value={percentageSplitManager}
-                      onChange={(e) =>
-                        setPercentageSplitManager(e.target.value)
-                      }
-                    />
-                    Property Manager
-                    {/* <Form.Check
+                {JSON.parse(selectedProperty) !== null ? (
+                  <Col xs={4}>
+                    <Form.Group className="mx-2 my-3 d-flex flex-row">
+                      <Form.Control
+                        style={
+                          (squareForm, { width: "20%", marginRight: "1rem" })
+                        }
+                        placeholder="%"
+                        value={percentageSplitManager}
+                        onChange={(e) =>
+                          setPercentageSplitManager(e.target.value)
+                        }
+                      />
+                      Property Manager
+                      {/* <Form.Check
                       inline
                       name="group2"
                       label="Property Manager"
@@ -510,38 +551,49 @@ function ManagerCreateExpense(props) {
                         setReceiver("PROPERTY MANAGER");
                       }}
                     /> */}
-                  </Form.Group>
-                </Col>
-              ) : (
-                ""
-              )}
-            </Row>
-          </Form.Group>
-        </div>
-      ) : (
-        ""
-      )}
-      <Form.Group className="mx-2 my-3">
-        <Form.Label as="h6" className="mb-0 ms-2">
-          Payment Status
-        </Form.Label>{" "}
-        <Form.Check
-          inline
-          label="Paid"
-          name="group3"
-          type="radio"
-          id="inline-radio-1"
-          onChange={(e) => setPayStatus("PAID")}
-        />
-        <Form.Check
-          inline
-          label="Unpaid"
-          name="group3"
-          type="radio"
-          id="inline-radio-2"
-          onChange={(e) => setPayStatus("UNPAID")}
-        />
-      </Form.Group>
+                    </Form.Group>
+                  </Col>
+                ) : (
+                  ""
+                )}
+              </Row>
+            </Form.Group>
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <Form.Group className="mx-2 my-3">
+          <Form.Label as="h6" className="mb-0 ms-2">
+            Payment Status
+          </Form.Label>{" "}
+          <Form.Check
+            inline
+            label="Paid"
+            name="group3"
+            type="radio"
+            id="inline-radio-1"
+            onChange={(e) => setPayStatus("PAID")}
+          />
+          <Form.Check
+            inline
+            label="Unpaid"
+            name="group3"
+            type="radio"
+            id="inline-radio-2"
+            onChange={(e) => setPayStatus("UNPAID")}
+          />
+        </Form.Group>
+      </div>
+
       <div className="text-center" style={errorMessage === "" ? hidden : {}}>
         <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
       </div>

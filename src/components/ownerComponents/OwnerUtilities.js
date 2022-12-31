@@ -1077,7 +1077,14 @@ function OwnerUtilities(props) {
               !maintenanceExpenseDetail &&
               !payExpense ? (
                 <div className="mx-2 my-2 p-3">
-                  <div>
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
                     <Row style={headings}>
                       <Col>
                         {" "}
@@ -1298,7 +1305,14 @@ function OwnerUtilities(props) {
                     );
                   })} */}
                   </div>
-                  <div>
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
                     <Row style={headings}>
                       <Col>
                         <h3>Utilities Due From Tenant </h3>
@@ -1501,8 +1515,20 @@ function OwnerUtilities(props) {
                     );
                   })} */}
                   </div>
-                  <div>
-                    <Row style={headings}> Maintenance Payments</Row>
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row style={headings}>
+                      {" "}
+                      <Col>
+                        <h3> Maintenance Payments </h3>
+                      </Col>{" "}
+                    </Row>
                     <Row className="m-3" style={{ overflow: "scroll" }}>
                       <Table
                         responsive="md"
