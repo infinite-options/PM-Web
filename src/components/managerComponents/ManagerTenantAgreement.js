@@ -274,11 +274,11 @@ function ManagerTenantAgreement(props) {
       late_by: lateAfter,
       late_fee: lateFee,
       perDay_late_fee: lateFeePer,
-      adults: adults,
-      children: children,
-      pets: pets,
-      vehicles: vehicles,
-      references: references,
+      adults: JSON.stringify(adults),
+      children: JSON.stringify(children),
+      pets: JSON.stringify(pets),
+      vehicles: JSON.stringify(vehicles),
+      references: JSON.stringify(references),
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
