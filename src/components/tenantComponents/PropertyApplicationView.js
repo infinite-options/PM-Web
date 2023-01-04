@@ -235,7 +235,14 @@ function PropertyApplicationView(props) {
           </div>
 
           {property ? (
-            <div className="m-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="m-3">
                 <Col>
                   <h3>Property Summary</h3>
@@ -326,7 +333,14 @@ function PropertyApplicationView(props) {
             ""
           )}
           {property ? (
-            <div className="m-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="m-3">
                 <Col>
                   <h3>Appliances</h3>
@@ -400,7 +414,14 @@ function PropertyApplicationView(props) {
             ""
           )}
           {property ? (
-            <div className="m-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               {" "}
               <Row className="m-3">
                 <Col>
@@ -488,7 +509,14 @@ function PropertyApplicationView(props) {
             ""
           )}
           {property ? (
-            <div className="m-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="m-3">
                 <Col>
                   <h3>Property Manager Info</h3>
@@ -531,8 +559,11 @@ function PropertyApplicationView(props) {
           ) : (
             ""
           )}
+          {console.log(forPropertyLease)}
           {/* ====================  < Button >==================================== */}
           {!property && forPropertyLease ? (
+            ""
+          ) : property && forPropertyLease ? (
             ""
           ) : (
             <Row className="mt-4 mb04">

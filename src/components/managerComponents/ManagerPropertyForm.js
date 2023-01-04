@@ -306,343 +306,333 @@ function ManagerPropertyForm(props) {
         isOpen={showDialog}
         onConfirm={onConfirm}
       />
-      {edit ? (
-        <div className="d-flex flex-column w-100">
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        {edit ? (
+          <div className="d-flex flex-column w-100">
+            <Form.Group className="mx-2 my-3">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Address {required}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="283 Barley St"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </Form.Group>
+            <div className="d-flex my-3">
+              <Col>
+                <Form.Group className="mx-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Unit
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="#122"
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mx-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    City {required}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="San Jose"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </div>
+            <div className="d-flex my-3">
+              <Col>
+                <Form.Group className="mx-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    State {required}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="CA"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mx-2">
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Zip Code {required}
+                  </Form.Label>
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="90808"
+                    value={zip}
+                    onChange={(e) => setZip(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </div>
+          </div>
+        ) : (
+          <Row className="mx-2">
+            <Row className="d-flex justify-content-between">
+              <Col>
+                <h6 style={mediumBold}>Property Address</h6>
+              </Col>
+              <Col className="d-flex justify-content-end">
+                {hideEdit ? (
+                  ""
+                ) : (
+                  <img
+                    src={Edit}
+                    style={{ width: "15px", height: "25px" }}
+                    alt="Edit"
+                    onClick={() => setEdit(true)}
+                  />
+                )}
+              </Col>
+            </Row>
+            <p style={mediumBold}>
+              {address}
+              {unit === "" ? "," : ` ${unit},`} {city}, {state}, {zip}
+            </p>
+          </Row>
+        )}
+
+        {edit ? (
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+              Description {description === "" ? required : ""}
+            </Form.Label>
+            <Form.Control
+              style={squareForm}
+              placeholder="Describe the property"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </Form.Group>
+        ) : (
+          <Row className="mx-2">
+            <h6>Description</h6>
+            <p>{description}</p>
+          </Row>
+        )}
+        {edit ? (
           <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Address {required}
+              Type {required}
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="283 Barley St"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Apartment"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
             />
           </Form.Group>
+        ) : (
+          <Row className="mx-2">
+            <h6>Type</h6>
+            <p>{type}</p>
+          </Row>
+        )}
+        {edit ? (
           <div className="d-flex my-3">
-            <Col>
-              <Form.Group className="mx-2">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Unit
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="#122"
-                  value={unit}
-                  onChange={(e) => setUnit(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mx-2">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  City {required}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="San Jose"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Bedroom {required}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="2"
+                value={numBeds}
+                onChange={(e) => setNumBeds(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Bath {required}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="1.5"
+                value={numBaths}
+                onChange={(e) => setNumBaths(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mx-2">
+              <Form.Label as="h6" className="mb-0 ms-2">
+                Sq. Ft. {required}
+              </Form.Label>
+              <Form.Control
+                style={squareForm}
+                placeholder="1100"
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+              />
+            </Form.Group>
           </div>
-          <div className="d-flex my-3">
+        ) : (
+          <Row className="mx-2">
             <Col>
-              <Form.Group className="mx-2">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  State {required}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="CA"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                />
-              </Form.Group>
+              <h6>Bedroom</h6>
+              <p>{numBeds}</p>
             </Col>
             <Col>
-              <Form.Group className="mx-2">
-                <Form.Label as="h6" className="mb-0 ms-2">
-                  Zip Code {required}
-                </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="90808"
-                  value={zip}
-                  onChange={(e) => setZip(e.target.value)}
-                />
-              </Form.Group>
+              <h6>Bath</h6>
+              <p>{numBaths}</p>
             </Col>
-          </div>
-        </div>
-      ) : (
-        <Row className="mx-2">
-          <Row className="d-flex justify-content-between">
             <Col>
-              <h6 style={mediumBold}>Property Address</h6>
-            </Col>
-            <Col className="d-flex justify-content-end">
-              {hideEdit ? (
-                ""
-              ) : (
-                <img
-                  src={Edit}
-                  style={{ width: "15px", height: "25px" }}
-                  alt="Edit"
-                  onClick={() => setEdit(true)}
-                />
-              )}
+              <h6>Sq. Ft.</h6>
+              <p>{area}</p>
             </Col>
           </Row>
-          <p style={mediumBold}>
-            {address}
-            {unit === "" ? "," : ` ${unit},`} {city}, {state}, {zip}
-          </p>
-        </Row>
-      )}
-      {edit ? (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-            Description {description === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="Describe the property"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Form.Group>
-      ) : (
-        <Row className="mx-2">
-          <h6>Description</h6>
-          <p>{description}</p>
-        </Row>
-      )}
-      {edit ? (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Type {required}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="Apartment"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-          />
-        </Form.Group>
-      ) : (
-        <Row className="mx-2">
-          <h6>Type</h6>
-          <p>{type}</p>
-        </Row>
-      )}
-      {edit ? (
-        <div className="d-flex my-3">
-          <Form.Group className="mx-2">
-            <Form.Label as="h6" className="mb-0 ms-2">
-              Bedroom {required}
+        )}
+      </div>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        {edit ? (
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+              Active Date {activeDate === "" ? required : ""}
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="2"
-              value={numBeds}
-              onChange={(e) => setNumBeds(e.target.value)}
+              type="date"
+              // placeholder="2000"
+              value={activeDate}
+              onChange={(e) => setActiveDate(e.target.value)}
             />
           </Form.Group>
-          <Form.Group className="mx-2">
+        ) : (
+          <Row className="mx-2">
+            <h6>Active Date</h6>
+            <p>{activeDate}</p>
+          </Row>
+        )}
+        {edit ? (
+          <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Bath {required}
+              Monthly Rent {required}
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="1.5"
-              value={numBaths}
-              onChange={(e) => setNumBaths(e.target.value)}
+              placeholder="2000"
+              value={rent}
+              onChange={(e) => setRent(e.target.value)}
             />
           </Form.Group>
-          <Form.Group className="mx-2">
+        ) : (
+          <Row className="mx-2">
+            <h6>Monthly Rent</h6>
+            <p>{formatter.format(rent)}</p>
+          </Row>
+        )}
+        {edit ? (
+          <Form.Group className="mx-2 my-3">
             <Form.Label as="h6" className="mb-0 ms-2">
-              Sq. Ft. {required}
+              Deposit {required}
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="1100"
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
+              placeholder="2000"
+              value={deposit}
+              onChange={(e) => setDeposit(e.target.value)}
             />
           </Form.Group>
-        </div>
-      ) : (
-        <Row className="mx-2">
+        ) : (
+          <Row className="mx-2">
+            <h6>Deposit</h6>
+            <p>{formatter.format(deposit)}</p>
+          </Row>
+        )}
+      </div>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <PropertyAppliances
+          state={applianceState}
+          property={property}
+          edit={edit}
+        />
+      </div>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <PropertyUtilities state={utilityState} edit={edit} />
+      </div>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <Container className="d-flex my-3 ">
           <Col>
-            <h6>Bedroom</h6>
-            <p>{numBeds}</p>
+            <h6>Pets Allowed</h6>
           </Col>
-          <Col>
-            <h6>Bath</h6>
-            <p>{numBaths}</p>
-          </Col>
-          <Col>
-            <h6>Sq. Ft.</h6>
-            <p>{area}</p>
-          </Col>
-        </Row>
-      )}
-      {edit ? (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
-            Active Date {activeDate === "" ? required : ""}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            type="date"
-            // placeholder="2000"
-            value={activeDate}
-            onChange={(e) => setActiveDate(e.target.value)}
-          />
-        </Form.Group>
-      ) : (
-        <Row className="mx-2">
-          <h6>Active Date</h6>
-          <p>{activeDate}</p>
-        </Row>
-      )}
-      {edit ? (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Monthly Rent {required}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="2000"
-            value={rent}
-            onChange={(e) => setRent(e.target.value)}
-          />
-        </Form.Group>
-      ) : (
-        <Row className="mx-2">
-          <h6>Monthly Rent</h6>
-          <p>{formatter.format(rent)}</p>
-        </Row>
-      )}
-      {edit ? (
-        <Form.Group className="mx-2 my-3">
-          <Form.Label as="h6" className="mb-0 ms-2">
-            Deposit {required}
-          </Form.Label>
-          <Form.Control
-            style={squareForm}
-            placeholder="2000"
-            value={deposit}
-            onChange={(e) => setDeposit(e.target.value)}
-          />
-        </Form.Group>
-      ) : (
-        <Row className="mx-2">
-          <h6>Deposit</h6>
-          <p>{formatter.format(deposit)}</p>
-        </Row>
-      )}
-      <PropertyAppliances
-        state={applianceState}
-        property={property}
-        edit={edit}
-      />
-      <PropertyUtilities state={utilityState} edit={edit} />
-      <Container className="d-flex my-3 ps-4">
-        <Col className="p-2">
-          <h6>Pets Allowed</h6>
-        </Col>
-        <Col className="d-flex">
-          <p className="p-2">No</p>
-          <Switch
-            checked={petsAllowed}
-            onChange={
-              edit
-                ? (e) => {
-                    petsAllowed == 1
-                      ? setPetsAllowed(false)
-                      : setPetsAllowed(true);
-                  }
-                : () => {
-                    setShowDialog(true);
-                  }
-            }
-            inputProps={{ "aria-label": "controlled" }}
-          />
-          <p className="p-2">Yes</p>
-        </Col>
-        {/* <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={petsAllowed}
-              onClick={
-                edit
-                  ? () => setPetsAllowed(true)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">Yes</p>
-          </Col>
-          <Col className="d-flex ps-4">
-            <Checkbox
-              type="CIRCLE"
-              checked={!petsAllowed}
-              onClick={
-                edit
-                  ? () => setPetsAllowed(false)
-                  : () => {
-                      setShowDialog(true);
-                    }
-              }
-            />
-            <p className="ms-1 mb-1">No</p>
-          </Col> */}
-      </Container>
-      <Container className="d-flex my-3 ps-4">
-        <Col className="p-2">
-          <h6>Deposit can be used for last month's rent</h6>
-        </Col>
-        <Col className="d-flex">
-          <p className="p-2">No</p>
-          <Switch
-            checked={depositForRent}
-            onChange={
-              edit
-                ? (e) => {
-                    depositForRent == 1
-                      ? setDepositForRent(false)
-                      : setDepositForRent(true);
-                  }
-                : () => {
-                    setShowDialog(true);
-                  }
-            }
-            inputProps={{ "aria-label": "controlled" }}
-          />{" "}
-          <p className="p-2">Yes</p>
-        </Col>
-      </Container>
-
-      {edit ? (
-        <Container className="d-flex my-3 ps-4">
-          <Col className="p-2">
-            <h6>Available to Rent</h6>
-          </Col>
-
           <Col className="d-flex">
-            <p className="p-2">No</p>
+            <p>No</p>
             <Switch
-              checked={availableToRent}
+              checked={petsAllowed}
               onChange={
                 edit
                   ? (e) => {
-                      availableToRent == 1
-                        ? setAvailableToRent(false)
-                        : setAvailableToRent(true);
+                      petsAllowed == 1
+                        ? setPetsAllowed(false)
+                        : setPetsAllowed(true);
+                    }
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
+              inputProps={{ "aria-label": "controlled" }}
+            />
+            <p>Yes</p>
+          </Col>
+        </Container>
+        <Container className="d-flex my-3 ">
+          <Col>
+            <h6>Deposit can be used for last month's rent</h6>
+          </Col>
+          <Col className="d-flex">
+            <p>No</p>
+            <Switch
+              checked={depositForRent}
+              onChange={
+                edit
+                  ? (e) => {
+                      depositForRent == 1
+                        ? setDepositForRent(false)
+                        : setDepositForRent(true);
                     }
                   : () => {
                       setShowDialog(true);
@@ -650,64 +640,102 @@ function ManagerPropertyForm(props) {
               }
               inputProps={{ "aria-label": "controlled" }}
             />{" "}
-            <p className="p-2">Yes</p>
+            <p>Yes</p>
           </Col>
         </Container>
-      ) : (
-        <Container className="my-3">
-          <h6>Available to Rent</h6>
-          <Row>
-            <Col className="d-flex ps-4">
-              <Checkbox
-                type="CIRCLE"
+
+        {edit ? (
+          <Container className="d-flex my-3 ">
+            <Col>
+              <h6>Available to Rent</h6>
+            </Col>
+
+            <Col className="d-flex">
+              <p>No</p>
+              <Switch
                 checked={availableToRent}
-                onClick={
+                onChange={
                   edit
-                    ? () => setAvailableToRent(true)
+                    ? (e) => {
+                        availableToRent == 1
+                          ? setAvailableToRent(false)
+                          : setAvailableToRent(true);
+                      }
                     : () => {
                         setShowDialog(true);
                       }
                 }
-              />
-              <p className="ms-1 mb-1">Yes</p>
+                inputProps={{ "aria-label": "controlled" }}
+              />{" "}
+              <p>Yes</p>
             </Col>
-            <Col className="d-flex ps-4">
-              <Checkbox
-                type="CIRCLE"
-                checked={!availableToRent}
-                onClick={
-                  edit
-                    ? () => setAvailableToRent(false)
-                    : () => {
-                        setShowDialog(true);
-                      }
-                }
-              />
-              <p className="ms-1 mb-1">No</p>
-            </Col>
-          </Row>
-        </Container>
-      )}
-      {edit ? (
-        <Container
-          style={({ paddingLeft: "0px" }, mediumBold)}
-          className="my-3"
-        >
-          <h6> Featured</h6>
-          <p> {property.featured}</p>
-        </Container>
-      ) : (
-        <Container
-          style={({ paddingLeft: "0px" }, mediumBold)}
-          className="my-3"
-        >
-          <h6> Featured</h6>
-          <p> {property.featured}</p>
-        </Container>
-      )}
+          </Container>
+        ) : (
+          <Container className="my-3">
+            <h6>Available to Rent</h6>
+            <Row>
+              <Col className="d-flex ps-4">
+                <Checkbox
+                  type="CIRCLE"
+                  checked={availableToRent}
+                  onClick={
+                    edit
+                      ? () => setAvailableToRent(true)
+                      : () => {
+                          setShowDialog(true);
+                        }
+                  }
+                />
+                <p className="ms-1 mb-1">Yes</p>
+              </Col>
+              <Col className="d-flex ps-4">
+                <Checkbox
+                  type="CIRCLE"
+                  checked={!availableToRent}
+                  onClick={
+                    edit
+                      ? () => setAvailableToRent(false)
+                      : () => {
+                          setShowDialog(true);
+                        }
+                  }
+                />
+                <p className="ms-1 mb-1">No</p>
+              </Col>
+            </Row>
+          </Container>
+        )}
+        {edit ? (
+          <Container
+            style={({ paddingLeft: "0px" }, mediumBold)}
+            className="my-3"
+          >
+            <h6> Featured</h6>
+            <p> {property.featured}</p>
+          </Container>
+        ) : (
+          <Container
+            style={({ paddingLeft: "0px" }, mediumBold)}
+            className="my-3"
+          >
+            <h6> Featured</h6>
+            <p> {property.featured}</p>
+          </Container>
+        )}
+      </div>
+
       {edit ? (
         <div>
-          <PropertyImages state={imageState} />
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
+            <PropertyImages state={imageState} />
+          </div>
           <div
             className="text-center"
             style={errorMessage === "" ? hidden : {}}

@@ -305,149 +305,286 @@ function ReviewPropertyLease(props) {
           <div className="w-100 overflow-hidden">
             <PropertyApplicationView forPropertyLease="true" />
           </div>
+          {console.log(application_status_1)}
 
           {application_status_1 === "FORWARDED" ? (
-            <div className="m-3">
-              <Row className="m-3" style={{ overflow: "scroll" }}>
-                <Col>
-                  <h3>Application Details</h3>
-                </Col>
-                <Col xs={2}> </Col>
-              </Row>
-              <Row className="m-3" style={{ overflow: "scroll" }}>
-                <Table classes={{ root: classes.customTable }} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Application Status</TableCell>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Message</TableCell>
-                      <TableCell>Occupants</TableCell>
-                      <TableCell>No.of Pets</TableCell>
-                      <TableCell>Type of Pets</TableCell>
-                      <TableCell>Application Date</TableCell>
-                      <TableCell>Documents</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow className="mt-2">
-                      <TableCell>{application.application_status}</TableCell>
-                      <TableCell>
-                        {`${application.tenant_first_name} ${application.tenant_last_name} `}
-                      </TableCell>
-                      <TableCell>Note: {application.message}</TableCell>
-                      <TableCell>
-                        {application.adult_occupants} adults <br />
-                        {application.children_occupants} children
-                      </TableCell>
-                      <TableCell>{application.num_pets}</TableCell>
-                      <TableCell>{application.type_pets}</TableCell>
-                      <TableCell>
-                        {application.application_date.split(" ")[0]}
-                      </TableCell>
+            <div>
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                {console.log("here forwarded")}
+                <Row className="m-3">
+                  <Col>
+                    <h3>Application Details</h3>
+                  </Col>
+                  <Col xs={2}> </Col>
+                </Row>
+                {console.log("application", application.applicant_info)}
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table classes={{ root: classes.customTable }} size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Application Status</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Message</TableCell>
+                        <TableCell>Occupants</TableCell>
+                        <TableCell>No.of Pets</TableCell>
+                        <TableCell>Type of Pets</TableCell>
+                        <TableCell>Application Date</TableCell>
+                        <TableCell>Documents</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow className="mt-2">
+                        <TableCell>{application.application_status}</TableCell>
+                        <TableCell>
+                          {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                        </TableCell>
+                        <TableCell>Note: {application.message}</TableCell>
+                        <TableCell>
+                          {application.adult_occupants} adults <br />
+                          {application.children_occupants} children
+                        </TableCell>
+                        <TableCell>{application.num_pets}</TableCell>
+                        <TableCell>{application.type_pets}</TableCell>
+                        <TableCell>
+                          {application.application_date.split(" ")[0]}
+                        </TableCell>
 
-                      <TableCell>
-                        {application.documents &&
-                          application.documents.length > 0 &&
-                          JSON.parse(application.documents).map(
-                            (document, i) => (
-                              <div
-                                className="d-flex justify-content-between align-items-end ps-0"
-                                key={i}
-                              >
-                                <h6>{document.name}</h6>
-                                <a href={document.link} target="_blank">
-                                  <img
-                                    src={File}
-                                    style={{
-                                      width: "15px",
-                                      height: "15px",
-                                    }}
-                                    alt="Document"
-                                  />
-                                </a>
-                              </div>
-                            )
-                          )}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </Row>
-              {application.applicant_info.length > 0
-                ? application.applicant_info.map((applicant) =>
-                    applicant.application_uid !==
-                    application.application_uid ? (
-                      <div>
-                        <Row
-                          style={{
-                            fontWeight: "bold",
-                            textAlign: "left",
-                            fontSize: "18px",
-                            marginLeft: "50px",
-                            marginTop: "20px",
-                          }}
-                        >
-                          Co-applicant Details
-                        </Row>
-                        <Row className="mx-2">
-                          <Table
-                            classes={{ root: classes.customTable }}
-                            size="small"
+                        <TableCell>
+                          {application.documents &&
+                            application.documents.length > 0 &&
+                            JSON.parse(application.documents).map(
+                              (document, i) => (
+                                <div
+                                  className="d-flex justify-content-between align-items-end ps-0"
+                                  key={i}
+                                >
+                                  <h6>{document.name}</h6>
+                                  <a href={document.link} target="_blank">
+                                    <img
+                                      src={File}
+                                      style={{
+                                        width: "15px",
+                                        height: "15px",
+                                      }}
+                                      alt="Document"
+                                    />
+                                  </a>
+                                </div>
+                              )
+                            )}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+
+                {application.applicant_info.length > 0
+                  ? application.applicant_info.map((applicant) =>
+                      applicant.application_uid !==
+                      application.application_uid ? (
+                        <div>
+                          <Row
+                            style={{
+                              fontWeight: "bold",
+                              textAlign: "left",
+                              fontSize: "18px",
+                              marginLeft: "50px",
+                              marginTop: "20px",
+                            }}
                           >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align="center">Name</TableCell>
-                                <TableCell align="center">
-                                  Phone Number
-                                </TableCell>
-                                <TableCell align="center">Email</TableCell>
-                                <TableCell align="center">Occupants</TableCell>
-                                <TableCell align="center">
-                                  No. of Pets
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  Type of Pets
-                                </TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="center">
-                                  {applicant.tenant_first_name}{" "}
-                                  {applicant.tenant_last_name}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.tenant_phone_number}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.tenant_email}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.adult_occupants} adults <br />
-                                  {applicant.children_occupants} children
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.num_pets}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {applicant.type_pets}
-                                </TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </Row>
-                      </div>
-                    ) : (
-                      ""
+                            Co-applicant Details
+                          </Row>
+                          <Row className="mx-2">
+                            <Table
+                              classes={{ root: classes.customTable }}
+                              size="small"
+                            >
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell align="center">Name</TableCell>
+                                  <TableCell align="center">
+                                    Phone Number
+                                  </TableCell>
+                                  <TableCell align="center">Email</TableCell>
+                                  <TableCell align="center">
+                                    Occupants
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    No. of Pets
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {" "}
+                                    Type of Pets
+                                  </TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                <TableRow>
+                                  <TableCell align="center">
+                                    {applicant.tenant_first_name}{" "}
+                                    {applicant.tenant_last_name}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {applicant.tenant_phone_number}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {applicant.tenant_email}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {applicant.adult_occupants} adults <br />
+                                    {applicant.children_occupants} children
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {applicant.num_pets}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {" "}
+                                    {applicant.type_pets}
+                                  </TableCell>
+                                </TableRow>
+                              </TableBody>
+                            </Table>
+                          </Row>
+                        </div>
+                      ) : (
+                        ""
+                      )
                     )
-                  )
-                : ""}
+                  : ""}
+              </div>
+
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Lease Agreement</h3>
+                  </Col>
+                  <Col xs={2}></Col>
+                </Row>
+                {rentals && rentals.length ? (
+                  <Row className="m-3" style={{ hidden: "overflow" }}>
+                    <h5>Lease Details</h5>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Lease Start</TableCell>
+                          <TableCell>Lease End</TableCell>
+                          <TableCell>Rent Due</TableCell>
+                          <TableCell>Late Fees After (days)</TableCell>
+                          <TableCell>Late Fee (one-time)</TableCell>
+                          <TableCell>Late Fee (per day)</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>{rentals[0].lease_start}</TableCell>
+
+                          <TableCell>{rentals[0].lease_end}</TableCell>
+
+                          <TableCell>
+                            {`${ordinal_suffix_of(
+                              rentals[0].due_by
+                            )} of the month`}
+                          </TableCell>
+
+                          <TableCell>{rentals[0].late_by} days</TableCell>
+                          <TableCell> ${rentals[0].late_fee}</TableCell>
+                          <TableCell> ${rentals[0].perDay_late_fee}</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Row>
+                ) : (
+                  ""
+                )}
+
+                {rentPayments && rentPayments.length ? (
+                  <Row className="m-3" style={{ hidden: "overflow" }}>
+                    <h5>Lease Payments</h5>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Fee Name</TableCell>
+                          <TableCell>Amount</TableCell>
+                          <TableCell>Of</TableCell>
+                          <TableCell>Frequency</TableCell>
+                          <TableCell>Available to Pay</TableCell>
+                          <TableCell>Due Date</TableCell>
+                          <TableCell>Late After (days)</TableCell>
+                          <TableCell>Late Fee(one-time)</TableCell>
+                          <TableCell>Late Fee (per day)</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {rentPayments.map((fee, i) => (
+                          <TableRow>
+                            <TableCell>{fee.fee_name}</TableCell>
+
+                            <TableCell>
+                              {fee.fee_type === "%"
+                                ? `${fee.charge}%`
+                                : `$${fee.charge}`}
+                            </TableCell>
+
+                            <TableCell>
+                              {fee.fee_type === "%" ? `${fee.of}` : ""}
+                            </TableCell>
+
+                            <TableCell>{fee.frequency}</TableCell>
+                            <TableCell>{`${ordinal_suffix_of(
+                              fee.available_topay
+                            )} of the month`}</TableCell>
+                            <TableCell>
+                              {fee.due_by == ""
+                                ? `1st of the month`
+                                : `${ordinal_suffix_of(
+                                    fee.due_by
+                                  )} of the month`}
+                            </TableCell>
+                            <TableCell>{fee.late_by} days</TableCell>
+                            <TableCell>${fee.late_fee}</TableCell>
+                            <TableCell>${fee.perDay_late_fee}/day</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
           ) : application_status_1 === "FORWARDED" ||
             application_status_1 === "RENTED" ? (
-            <div className="m-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               {console.log("here forwarded")}
               <Row className="m-3">
                 <Col>
@@ -587,52 +724,62 @@ function ReviewPropertyLease(props) {
                     )
                   )
                 : ""}
-              <Row className="m-3">
-                <Col>
-                  <h3>Lease Agreement</h3>
-                </Col>
-                <Col xs={2}></Col>
-              </Row>
-              {rentals && rentals.length ? (
-                <Row className="m-3" style={{ hidden: "overflow" }}>
-                  <h5>Lease Details</h5>
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Lease Start</TableCell>
-                        <TableCell>Lease End</TableCell>
-                        <TableCell>Rent Due</TableCell>
-                        <TableCell>Late Fees After (days)</TableCell>
-                        <TableCell>Late Fee (one-time)</TableCell>
-                        <TableCell>Late Fee (per day)</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>{rentals[0].lease_start}</TableCell>
 
-                        <TableCell>{rentals[0].lease_end}</TableCell>
-
-                        <TableCell>
-                          {`${ordinal_suffix_of(
-                            rentals[0].due_by
-                          )} of the month`}
-                        </TableCell>
-
-                        <TableCell>{rentals[0].late_by} days</TableCell>
-                        <TableCell> ${rentals[0].late_fee}</TableCell>
-                        <TableCell> ${rentals[0].perDay_late_fee}</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">
+                  <Col>
+                    <h3>Lease Agreement</h3>
+                  </Col>
+                  <Col xs={2}></Col>
                 </Row>
-              ) : (
-                ""
-              )}
+                {rentals && rentals.length ? (
+                  <Row className="m-3" style={{ hidden: "overflow" }}>
+                    <h5>Lease Details</h5>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Lease Start</TableCell>
+                          <TableCell>Lease End</TableCell>
+                          <TableCell>Rent Due</TableCell>
+                          <TableCell>Late Fees After (days)</TableCell>
+                          <TableCell>Late Fee (one-time)</TableCell>
+                          <TableCell>Late Fee (per day)</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>{rentals[0].lease_start}</TableCell>
+
+                          <TableCell>{rentals[0].lease_end}</TableCell>
+
+                          <TableCell>
+                            {`${ordinal_suffix_of(
+                              rentals[0].due_by
+                            )} of the month`}
+                          </TableCell>
+
+                          <TableCell>{rentals[0].late_by} days</TableCell>
+                          <TableCell> ${rentals[0].late_fee}</TableCell>
+                          <TableCell> ${rentals[0].perDay_late_fee}</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Row>
+                ) : (
+                  ""
+                )}
+              </div>
 
               {rentPayments && rentPayments.length ? (
                 <Row className="m-3" style={{ hidden: "overflow" }}>
@@ -692,7 +839,14 @@ function ReviewPropertyLease(props) {
               )}
             </div>
           ) : application_status_1 === "REJECTED" ? (
-            <div className="m-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="m-3">
                 <Col>
                   <h3>Application Details</h3>
@@ -833,7 +987,14 @@ function ReviewPropertyLease(props) {
                 : ""}
             </div>
           ) : application_status_1 === "NEW" ? (
-            <div className="m-3">
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Col>
                   <h3>Application Details</h3>
@@ -986,27 +1147,38 @@ function ReviewPropertyLease(props) {
                 : ""}
             </div>
           ) : (
-            <Row className="m-3 text-align-center">
-              <h3>No Lease Information Available at this time</h3>
-            </Row>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3 text-align-center">
+                <h3>No Lease Information Available at this time</h3>
+              </Row>
+            </div>
           )}
 
           {/* ==================< Lease Documents >=======================================  */}
           {(application_status_1 === "FORWARDED" ||
             application_status_1 === "RENTED") &&
           lease.length ? (
-            <div className="m-3">
-              <p
-                style={{
-                  fontWeight: "bold",
-                  textAlign: "left",
-                  fontSize: "18px",
-                  marginLeft: "50px",
-                  marginTop: "20px",
-                }}
-              >
-                Lease Documents
-              </p>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Col>
+                  <h3> Lease Documents </h3>
+                </Col>
+                <Col xs={2}> </Col>
+              </Row>
 
               {/* <div style={{marginTop:"40px",paddingLeft:"20px",fontWeight:"bold"}} > Documents</div> */}
 
@@ -1045,24 +1217,26 @@ function ReviewPropertyLease(props) {
           ) : (application_status_1 === "FORWARDED" ||
               application_status_1 === "RENTED") &&
             !lease.length ? (
-            <>
-              <p
-                style={{
-                  fontWeight: "bold",
-                  textAlign: "left",
-                  fontSize: "18px",
-                  marginLeft: "45px",
-                  marginTop: "20px",
-                }}
-              >
-                <u>Lease Documents:</u>
-              </p>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Col>
+                  <h3> Lease Documents </h3>
+                </Col>
+                <Col xs={2}> </Col>
+              </Row>
               <h6 style={{ paddingLeft: "45px", paddingBottom: "30px" }}>
                 {" "}
                 Property Manager is yet to upload the lease document. Please
                 contact them{" "}
               </h6>
-            </>
+            </div>
           ) : application_status_1 === "REFUSED" ||
             application_status_1 === "NEW" ? (
             ""

@@ -156,78 +156,87 @@ export default function TenantPaymentHistory(props) {
   return (
     <div className="payment-history">
       Payment History (Last 30 Days)
-      <Row className="m-3" style={{ overflow: "scroll" }}>
-        <Table
-          responsive="md"
-          classes={{ root: classes.customTable }}
-          size="small"
-        >
-          <EnhancedTableHeadPayments
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            rowCount={history.length}
-          />{" "}
-          <TableBody>
-            {stableSort(history, getComparator(order, orderBy)).map(
-              (row, index) => {
-                return row.purchase_status === "PAID" ? (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.purchase_uid}
-                  >
-                    <TableCell align="right">{row.purchase_uid}</TableCell>
-                    <TableCell align="right" style={{ width: "300px" }}>
-                      {row.address +
-                        " " +
-                        row.unit +
-                        "," +
-                        row.city +
-                        ", " +
-                        row.state +
-                        " " +
-                        row.zip}
-                    </TableCell>
-                    <TableCell align="right" style={{ width: "200px" }}>
-                      {row.purchase_frequency === "One-time" ||
-                      row.purchase_frequency === "Annually"
-                        ? row.description
-                        : row.purchase_notes + " " + row.description}
-                    </TableCell>
-                    <TableCell align="right">{row.purchase_type}</TableCell>
-                    <TableCell align="right">
-                      {row.payment_date !== null
-                        ? row.payment_date.substring(0, 10)
-                        : "Not Available"}
-                    </TableCell>
-                    <TableCell align="right" style={{ width: "83px" }}>
-                      {row.payment_verify === "Verified" ? (
-                        <img
-                          src={Verified}
-                          style={{
-                            width: "25px",
-                            height: "25px",
-                            objectFit: "contain",
-                          }}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </TableCell>
-                    <TableCell align="right">
-                      {row.amount_paid.toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  ""
-                );
-              }
-            )}
-          </TableBody>
-        </Table>
-      </Row>
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <Row className="m-3" style={{ overflow: "scroll" }}>
+          <Table
+            responsive="md"
+            classes={{ root: classes.customTable }}
+            size="small"
+          >
+            <EnhancedTableHeadPayments
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              rowCount={history.length}
+            />{" "}
+            <TableBody>
+              {stableSort(history, getComparator(order, orderBy)).map(
+                (row, index) => {
+                  return row.purchase_status === "PAID" ? (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.purchase_uid}
+                    >
+                      <TableCell align="right">{row.purchase_uid}</TableCell>
+                      <TableCell align="right" style={{ width: "300px" }}>
+                        {row.address +
+                          " " +
+                          row.unit +
+                          "," +
+                          row.city +
+                          ", " +
+                          row.state +
+                          " " +
+                          row.zip}
+                      </TableCell>
+                      <TableCell align="right" style={{ width: "200px" }}>
+                        {row.purchase_frequency === "One-time" ||
+                        row.purchase_frequency === "Annually"
+                          ? row.description
+                          : row.purchase_notes + " " + row.description}
+                      </TableCell>
+                      <TableCell align="right">{row.purchase_type}</TableCell>
+                      <TableCell align="right">
+                        {row.payment_date !== null
+                          ? row.payment_date.substring(0, 10)
+                          : "Not Available"}
+                      </TableCell>
+                      <TableCell align="right" style={{ width: "83px" }}>
+                        {row.payment_verify === "Verified" ? (
+                          <img
+                            src={Verified}
+                            style={{
+                              width: "25px",
+                              height: "25px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.amount_paid.toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    ""
+                  );
+                }
+              )}
+            </TableBody>
+          </Table>
+        </Row>
+      </div>
     </div>
   );
 }

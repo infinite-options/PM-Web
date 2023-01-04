@@ -668,461 +668,142 @@ export default function TenantDashboard() {
           </div>
           <div className="w-100 mb-5">
             <Header title="Tenant Dashboard" />
-            {announcements.length > 0 ? (
-              <Row className="m-3">
-                <h1>Announcements</h1>
-                <Carousel slide={false}>
-                  {announcements.map((announce) => {
-                    return (
-                      <CarouselItem>
-                        <div className="align-items-center w-100 p-4">
-                          <p style={(subHeading, { textAlign: "center" })}>
-                            {announce.announcement_title}
-                          </p>
-                          <p style={{ textAlign: "center" }}>
-                            {" "}
-                            {announce.announcement_msg}
-                          </p>
-                        </div>
-                      </CarouselItem>
-                    );
-                  })}
-                </Carousel>
-              </Row>
-            ) : (
-              <Row className="m-3">
-                <h1>Announcements</h1>
-                <Carousel slide={false}>
-                  <CarouselItem>
-                    <div className="align-items-center w-100 p-4">
-                      <p style={(subHeading, { textAlign: "center" })}>
-                        No current announcements
-                      </p>
-                    </div>
-                  </CarouselItem>
-                </Carousel>
-              </Row>
-            )}
-            <Row className="m-3">
-              <Col>
-                <h1>Properties</h1>
-              </Col>
-              <Col></Col>
-            </Row>
-
-            <Row className="w-100 m-3">
-              <Col xs={2}> Search by</Col>
-
-              <Col>
-                <input
-                  type="text"
-                  placeholder="Search"
-                  onChange={(event) => {
-                    setSearch(event.target.value);
-                  }}
-                  style={{
-                    width: "400px",
-                    border: "1px solid black",
-                    padding: "5px",
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className="m-3" style={{ overflow: "scroll" }}>
-              <Table
-                responsive="xl"
-                classes={{ root: classes.customTable }}
-                size="small"
-              >
-                <EnhancedTableHeadProperties
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                  rowCount={tenantData.length}
-                />{" "}
-                <TableBody>
-                  {stableSort(tenantData, getComparator(order, orderBy))
-                    // for filtering
-                    .filter((val) => {
-                      const query = search.toLowerCase();
-
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              {announcements.length > 0 ? (
+                <Row className="m-3">
+                  <h1>Announcements</h1>
+                  <Carousel slide={false}>
+                    {announcements.map((announce) => {
                       return (
-                        val.address.toLowerCase().indexOf(query) >= 0 ||
-                        val.city.toLowerCase().indexOf(query) >= 0 ||
-                        val.zip.toLowerCase().indexOf(query) >= 0 ||
-                        String(val.oldestOpenMR).toLowerCase().indexOf(query) >=
-                          0 ||
-                        String(val.late_date).toLowerCase().indexOf(query) >= 0
-                      );
-                    })
-                    .map((property, index) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={property.property_uid}
-                          onClick={() => {
-                            navigate(
-                              `/tenantPropertyDetails/${property.property_uid}`,
-                              {
-                                state: {
-                                  property: property,
-                                  property_uid: property.property_uid,
-                                },
-                              }
-                            );
-                          }}
-                        >
-                          <TableCell padding="none" size="small" align="center">
-                            {JSON.parse(property.images).length > 0 ? (
-                              <img
-                                src={`${
-                                  JSON.parse(property.images)[0]
-                                }?${Date.now()}`}
-                                alt="Property"
-                                style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                  width: "100px",
-                                  height: "100px",
-                                }}
-                              />
-                            ) : (
-                              <img
-                                src={PropertyIcon}
-                                alt="Property"
-                                style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                  width: "100px",
-                                  height: "100px",
-                                }}
-                              />
-                            )}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.address}
-                            {property.unit !== ""
-                              ? " " + property.unit
-                              : ""}{" "}
-                            {property.city}, {property.state}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.city}, {property.state}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.zip}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.property_manager[0].manager_business_name}
-                          </TableCell>
-
-                          <TableCell padding="none" size="small" align="center">
-                            {property.property_type}
-                          </TableCell>
-
-                          <TableCell padding="none" size="small" align="center">
-                            {property.num_beds + "/" + property.num_baths}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            ${property.listed_rent}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {property.lease_end}
-                          </TableCell>
-                        </TableRow>
+                        <CarouselItem>
+                          <div className="align-items-center w-100 p-4">
+                            <p style={(subHeading, { textAlign: "center" })}>
+                              {announce.announcement_title}
+                            </p>
+                            <p style={{ textAlign: "center" }}>
+                              {" "}
+                              {announce.announcement_msg}
+                            </p>
+                          </div>
+                        </CarouselItem>
                       );
                     })}
-                </TableBody>
-              </Table>
-            </Row>
-            <Row className="m-3">
-              <Col>
-                <h1>Payment Summary</h1>
-              </Col>
-            </Row>
-            <Row className="m-3">
-              {tenantData.length !== 0 && (
-                <TenantUpcomingPayments
-                  data={upcomingPaymentsData}
-                  type={true}
-                />
+                  </Carousel>
+                </Row>
+              ) : (
+                <Row className="m-3">
+                  <h1>Announcements</h1>
+                  <Carousel slide={false}>
+                    <CarouselItem>
+                      <div className="align-items-center w-100 p-4">
+                        <p style={(subHeading, { textAlign: "center" })}>
+                          No current announcements
+                        </p>
+                      </div>
+                    </CarouselItem>
+                  </Carousel>
+                </Row>
               )}
-            </Row>
-            <Row className="mx-3 mt-5">
-              {tenantData.length !== 0 && (
-                <TenantPaymentHistory data={paymentHistoryData} />
-              )}
-            </Row>
-            <Row className="m-3">
-              <Col>
-                <h1>Maintenance and Repairs</h1>
-              </Col>
-              <Col>
-                <img
-                  src={AddIcon}
-                  onClick={() => {
-                    setStage("ADDREQUEST");
-                    window.scrollTo(0, 0);
-                  }}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    float: "right",
-                    marginRight: "3rem",
-                  }}
-                />
-                {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
-              </Col>
-            </Row>
-            {maintenanceRequests.length > 0 ? (
+            </div>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3">
+                <Col>
+                  <h1>Properties</h1>
+                </Col>
+                <Col></Col>
+              </Row>
+
+              <Row className="w-100 m-3">
+                <Col xs={2}> Search by</Col>
+
+                <Col>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    onChange={(event) => {
+                      setSearch(event.target.value);
+                    }}
+                    style={{
+                      width: "400px",
+                      border: "1px solid black",
+                      padding: "5px",
+                    }}
+                  />
+                </Col>
+              </Row>
               <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table
-                  responsive="md"
+                  responsive="xl"
                   classes={{ root: classes.customTable }}
                   size="small"
                 >
-                  <EnhancedTableHeadMaintenance
-                    orderMaintenance={orderMaintenance}
-                    orderMaintenanceBy={orderMaintenanceBy}
-                    onRequestSort={handleRequestSortMaintenance}
-                    rowCount={maintenanceRequests.length}
+                  <EnhancedTableHeadProperties
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    rowCount={tenantData.length}
                   />{" "}
                   <TableBody>
-                    {stableSortMaintenance(
-                      maintenanceRequests,
-                      getComparatorMaintenance(
-                        orderMaintenance,
-                        orderMaintenanceBy
-                      )
-                    ).map((request, index) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={request.maintenance_request_uid}
-                          onClick={() =>
-                            navigate(
-                              `/tenant-repairs/${request.maintenance_request_uid}`,
-                              {
-                                state: {
-                                  repair: request,
-                                  property: request.address,
-                                },
-                              }
-                            )
-                          }
-                        >
-                          <TableCell padding="none" size="small" align="center">
-                            {JSON.parse(request.images).length > 0 ? (
-                              <img
-                                src={`${
-                                  JSON.parse(request.images)[0]
-                                }?${Date.now()}`}
-                                alt="RepairImg"
-                                style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                  width: "100px",
-                                  height: "100px",
-                                }}
-                              />
-                            ) : (
-                              <img
-                                src={RepairImg}
-                                alt="Repair"
-                                style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                  width: "100px",
-                                  height: "100px",
-                                }}
-                              />
-                            )}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {request.address}{" "}
-                            {request.unit !== "" ? " " + request.unit : ""}{" "}
-                            {request.city}, {request.state} {request.zip}
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            size="small"
-                            align="center"
-                            style={{
-                              color:
-                                request.request_status == "NEW"
-                                  ? "green"
-                                  : "black",
-                            }}
-                          >
-                            {request.request_status}
-                            <div className="d-flex">
-                              <div className="d-flex align-items-end">
-                                <p
-                                  style={{ ...blue, ...xSmall }}
-                                  className="mb-0"
-                                >
-                                  {request.request_status === "INFO"
-                                    ? request.notes
-                                    : ""}
-                                </p>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {" "}
-                            {request.title}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {" "}
-                            {request.request_created_date}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {request.days_open} days
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {request.request_type != null
-                              ? request.request_type
-                              : "None"}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {request.priority}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {request.assigned_business !== null &&
-                            request.assigned_business !== "null"
-                              ? request.assigned_business
-                              : "None"}
-                          </TableCell>
+                    {stableSort(tenantData, getComparator(order, orderBy))
+                      // for filtering
+                      .filter((val) => {
+                        const query = search.toLowerCase();
 
-                          <TableCell padding="none" size="small" align="center">
-                            {request.scheduled_date !== null &&
-                            request.scheduled_date !== "null"
-                              ? request.scheduled_date
-                              : "Not Scheduled"}
-                          </TableCell>
-                          <TableCell padding="none" size="small" align="center">
-                            {request.scheduled_time !== null &&
-                            request.scheduled_time !== "null"
-                              ? request.scheduled_time.split(" ")[0]
-                              : "Not Scheduled"}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </Row>
-            ) : (
-              <Row className="m-3">No maintenance requests and repairs</Row>
-            )}
-            <Row className="m-3">
-              <Col>
-                <h1>Property Manager Info</h1>
-              </Col>
-            </Row>
-            <Row className="m-3">
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Manager Business</TableCell>
-                    <TableCell>Address Managed</TableCell>
-                    <TableCell>Manager Email</TableCell>
-                    <TableCell>Manager Phone</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {managerInfo.map((manager) => {
-                    return (
-                      <TableRow>
-                        {" "}
-                        <TableCell>{manager.manager_business_name}</TableCell>
-                        <TableCell>
-                          {manager.address} {manager.unit}, {manager.city},
-                          {manager.state} {manager.zip}
-                        </TableCell>
-                        <TableCell>{manager.manager_email}</TableCell>
-                        <TableCell>{manager.manager_phone_number}</TableCell>
-                        <TableCell>
-                          {" "}
-                          <a href={`tel:${manager.manager_phone_number}`}>
-                            <img src={Phone} alt="Phone" style={smallImg} />
-                          </a>
-                          <a href={`mailto:${manager.manager_email}`}>
-                            <img src={Message} alt="Message" style={smallImg} />
-                          </a>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </Row>
-            <Row className="m-3">
-              <Col>
-                <h1>Find Your Next Place</h1>
-              </Col>
-              <Col>
-                <img
-                  src={SearchProperties_Black}
-                  onClick={() => {
-                    navigate("/tenantAvailableProperties");
-                    window.scrollTo(0, 0);
-                  }}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    float: "right",
-                    marginRight: "3rem",
-                  }}
-                />
-              </Col>
-            </Row>
-            {applications.length > 0 ? (
-              <Row className="m-3">
-                <Row style={{ overflow: "scroll" }}>
-                  <Table
-                    responsive="xl"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <EnhancedTableHeadApplications
-                      orderApplications={orderApplications}
-                      orderApplicationsBy={orderApplicationsBy}
-                      onRequestSort={handleRequestSortApplications}
-                      rowCount={applications.length}
-                    />{" "}
-                    <TableBody>
-                      {stableSortApplications(
-                        applications,
-                        getComparatorApplications(
-                          orderApplications,
-                          orderApplicationsBy
-                        )
-                      ).map((application, index) => {
+                        return (
+                          val.address.toLowerCase().indexOf(query) >= 0 ||
+                          val.city.toLowerCase().indexOf(query) >= 0 ||
+                          val.zip.toLowerCase().indexOf(query) >= 0 ||
+                          String(val.oldestOpenMR)
+                            .toLowerCase()
+                            .indexOf(query) >= 0 ||
+                          String(val.late_date).toLowerCase().indexOf(query) >=
+                            0
+                        );
+                      })
+                      .map((property, index) => {
                         return (
                           <TableRow
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={application.application_uid}
-                            onClick={() => goToReviewPropertyLease(application)}
+                            key={property.property_uid}
+                            onClick={() => {
+                              navigate(
+                                `/tenantPropertyDetails/${property.property_uid}`,
+                                {
+                                  state: {
+                                    property: property,
+                                    property_uid: property.property_uid,
+                                  },
+                                }
+                              );
+                            }}
                           >
                             <TableCell
                               padding="none"
                               size="small"
                               align="center"
                             >
-                              {JSON.parse(application.images).length > 0 ? (
+                              {JSON.parse(property.images).length > 0 ? (
                                 <img
                                   src={`${
-                                    JSON.parse(application.images)[0]
+                                    JSON.parse(property.images)[0]
                                   }?${Date.now()}`}
-                                  alt="application"
+                                  alt="Property"
                                   style={{
                                     borderRadius: "4px",
                                     objectFit: "cover",
@@ -1133,7 +814,7 @@ export default function TenantDashboard() {
                               ) : (
                                 <img
                                   src={PropertyIcon}
-                                  alt="application"
+                                  alt="Property"
                                   style={{
                                     borderRadius: "4px",
                                     objectFit: "cover",
@@ -1148,40 +829,35 @@ export default function TenantDashboard() {
                               size="small"
                               align="center"
                             >
-                              {application.address}
-                              {application.unit !== ""
-                                ? " " + application.unit
+                              {property.address}
+                              {property.unit !== ""
+                                ? " " + property.unit
                                 : ""}{" "}
-                              {application.city}, {application.state}
+                              {property.city}, {property.state}
                             </TableCell>
                             <TableCell
                               padding="none"
                               size="small"
                               align="center"
                             >
-                              {application.city}, {application.state}
+                              {property.city}, {property.state}
                             </TableCell>
                             <TableCell
                               padding="none"
                               size="small"
                               align="center"
                             >
-                              {application.zip}
+                              {property.zip}
                             </TableCell>
                             <TableCell
                               padding="none"
                               size="small"
                               align="center"
                             >
-                              {application.business_name}
-                            </TableCell>
-
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {application.property_type}
+                              {
+                                property.property_manager[0]
+                                  .manager_business_name
+                              }
                             </TableCell>
 
                             <TableCell
@@ -1189,16 +865,7 @@ export default function TenantDashboard() {
                               size="small"
                               align="center"
                             >
-                              {application.num_beds +
-                                "/" +
-                                application.num_baths}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              ${application.listed_rent}
+                              {property.property_type}
                             </TableCell>
 
                             <TableCell
@@ -1206,43 +873,258 @@ export default function TenantDashboard() {
                               size="small"
                               align="center"
                             >
-                              {application.application_status === "NEW" ? (
-                                <h6 style={{ mediumBold, color: "blue" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "REJECTED" ? (
-                                <h6 style={{ mediumBold, color: "red" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "REFUSED" ? (
-                                <h6 style={{ mediumBold, color: "red" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "PM END EARLY" ? (
-                                <h6 style={{ mediumBold, color: "#E4CD05" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "TENANT END EARLY" ? (
-                                <h6 style={{ mediumBold, color: "#E4CD05" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "RENTED" ? (
-                                <h6 style={{ mediumBold, color: "green" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "FORWARDED" ? (
-                                <h6 style={{ mediumBold, color: "green" }}>
-                                  {application.application_status}
-                                </h6>
+                              {property.num_beds + "/" + property.num_baths}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              ${property.listed_rent}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {property.lease_end}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3">
+                <Col>
+                  <h1>Payment Summary</h1>
+                </Col>
+              </Row>
+              <Row className="m-3">
+                {tenantData.length !== 0 && (
+                  <TenantUpcomingPayments
+                    data={upcomingPaymentsData}
+                    type={true}
+                  />
+                )}
+              </Row>
+              <Row className="mx-3 mt-5">
+                {tenantData.length !== 0 && (
+                  <TenantPaymentHistory data={paymentHistoryData} />
+                )}
+              </Row>
+            </div>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3">
+                <Col>
+                  <h1>Maintenance and Repairs</h1>
+                </Col>
+                <Col>
+                  <img
+                    src={AddIcon}
+                    onClick={() => {
+                      setStage("ADDREQUEST");
+                      window.scrollTo(0, 0);
+                    }}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      float: "right",
+                      marginRight: "3rem",
+                    }}
+                  />
+                  {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+                </Col>
+              </Row>
+              {maintenanceRequests.length > 0 ? (
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <EnhancedTableHeadMaintenance
+                      orderMaintenance={orderMaintenance}
+                      orderMaintenanceBy={orderMaintenanceBy}
+                      onRequestSort={handleRequestSortMaintenance}
+                      rowCount={maintenanceRequests.length}
+                    />{" "}
+                    <TableBody>
+                      {stableSortMaintenance(
+                        maintenanceRequests,
+                        getComparatorMaintenance(
+                          orderMaintenance,
+                          orderMaintenanceBy
+                        )
+                      ).map((request, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={request.maintenance_request_uid}
+                            onClick={() =>
+                              navigate(
+                                `/tenant-repairs/${request.maintenance_request_uid}`,
+                                {
+                                  state: {
+                                    repair: request,
+                                    property: request.address,
+                                  },
+                                }
+                              )
+                            }
+                          >
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {JSON.parse(request.images).length > 0 ? (
+                                <img
+                                  src={`${
+                                    JSON.parse(request.images)[0]
+                                  }?${Date.now()}`}
+                                  alt="RepairImg"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
                               ) : (
-                                ""
+                                <img
+                                  src={RepairImg}
+                                  alt="Repair"
+                                  style={{
+                                    borderRadius: "4px",
+                                    objectFit: "cover",
+                                    width: "100px",
+                                    height: "100px",
+                                  }}
+                                />
                               )}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.address}{" "}
+                              {request.unit !== "" ? " " + request.unit : ""}{" "}
+                              {request.city}, {request.state} {request.zip}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                              style={{
+                                color:
+                                  request.request_status == "NEW"
+                                    ? "green"
+                                    : "black",
+                              }}
+                            >
+                              {request.request_status}
+                              <div className="d-flex">
+                                <div className="d-flex align-items-end">
+                                  <p
+                                    style={{ ...blue, ...xSmall }}
+                                    className="mb-0"
+                                  >
+                                    {request.request_status === "INFO"
+                                      ? request.notes
+                                      : ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.title}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {" "}
+                              {request.request_created_date}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.days_open} days
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.request_type != null
+                                ? request.request_type
+                                : "None"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.priority}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.assigned_business !== null &&
+                              request.assigned_business !== "null"
+                                ? request.assigned_business
+                                : "None"}
+                            </TableCell>
+
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_date !== null &&
+                              request.scheduled_date !== "null"
+                                ? request.scheduled_date
+                                : "Not Scheduled"}
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              size="small"
+                              align="center"
+                            >
+                              {request.scheduled_time !== null &&
+                              request.scheduled_time !== "null"
+                                ? request.scheduled_time.split(" ")[0]
+                                : "Not Scheduled"}
                             </TableCell>
                           </TableRow>
                         );
@@ -1250,10 +1132,269 @@ export default function TenantDashboard() {
                     </TableBody>
                   </Table>
                 </Row>
+              ) : (
+                <Row className="m-3">No maintenance requests and repairs</Row>
+              )}
+            </div>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3">
+                <Col>
+                  <h1>Property Manager Info</h1>
+                </Col>
               </Row>
-            ) : (
-              ""
-            )}
+              <Row className="m-3">
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Manager Business</TableCell>
+                      <TableCell>Address Managed</TableCell>
+                      <TableCell>Manager Email</TableCell>
+                      <TableCell>Manager Phone</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {managerInfo.map((manager) => {
+                      return (
+                        <TableRow>
+                          {" "}
+                          <TableCell>{manager.manager_business_name}</TableCell>
+                          <TableCell>
+                            {manager.address} {manager.unit}, {manager.city},
+                            {manager.state} {manager.zip}
+                          </TableCell>
+                          <TableCell>{manager.manager_email}</TableCell>
+                          <TableCell>{manager.manager_phone_number}</TableCell>
+                          <TableCell>
+                            {" "}
+                            <a href={`tel:${manager.manager_phone_number}`}>
+                              <img src={Phone} alt="Phone" style={smallImg} />
+                            </a>
+                            <a href={`mailto:${manager.manager_email}`}>
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3">
+                <Col>
+                  <h1>Find Your Next Place</h1>
+                </Col>
+                <Col>
+                  <img
+                    src={SearchProperties_Black}
+                    onClick={() => {
+                      navigate("/tenantAvailableProperties");
+                      window.scrollTo(0, 0);
+                    }}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      float: "right",
+                      marginRight: "3rem",
+                    }}
+                  />
+                </Col>
+              </Row>
+              {applications.length > 0 ? (
+                <Row className="m-3">
+                  <Row style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="xl"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <EnhancedTableHeadApplications
+                        orderApplications={orderApplications}
+                        orderApplicationsBy={orderApplicationsBy}
+                        onRequestSort={handleRequestSortApplications}
+                        rowCount={applications.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSortApplications(
+                          applications,
+                          getComparatorApplications(
+                            orderApplications,
+                            orderApplicationsBy
+                          )
+                        ).map((application, index) => {
+                          return (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={application.application_uid}
+                              onClick={() =>
+                                goToReviewPropertyLease(application)
+                              }
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {JSON.parse(application.images).length > 0 ? (
+                                  <img
+                                    src={`${
+                                      JSON.parse(application.images)[0]
+                                    }?${Date.now()}`}
+                                    alt="application"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={PropertyIcon}
+                                    alt="application"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                )}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.address}
+                                {application.unit !== ""
+                                  ? " " + application.unit
+                                  : ""}{" "}
+                                {application.city}, {application.state}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.city}, {application.state}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.zip}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.business_name}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.property_type}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.num_beds +
+                                  "/" +
+                                  application.num_baths}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                ${application.listed_rent}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.application_status === "NEW" ? (
+                                  <h6 style={{ mediumBold, color: "blue" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "REJECTED" ? (
+                                  <h6 style={{ mediumBold, color: "red" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "REFUSED" ? (
+                                  <h6 style={{ mediumBold, color: "red" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "PM END EARLY" ? (
+                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "TENANT END EARLY" ? (
+                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "RENTED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "FORWARDED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : (
+                                  ""
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </Row>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
           <div hidden={responsive.showSidebar} className="w-100 mt-3">
             <TenantFooter />
@@ -1295,226 +1436,246 @@ export default function TenantDashboard() {
                 {tenantProfile.tenant_last_name}
               </h3>
             </div>
-            <Row className="m-3">
-              <Col>
-                <h1>Properties</h1>
-              </Col>
-              <Col></Col>
-            </Row>
-            <Row className="m-3">
-              <Col>
-                <h6>No rented properties</h6>
-              </Col>
-              <Col></Col>
-            </Row>
-            <Row className="m-3">
-              <Col>
-                <h1>Find Your Next Place</h1>
-              </Col>
-              <Col>
-                <img
-                  src={SearchProperties_Black}
-                  onClick={() => {
-                    navigate("/tenantAvailableProperties");
-                    window.scrollTo(0, 0);
-                  }}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    float: "right",
-                    marginRight: "3rem",
-                  }}
-                />
-              </Col>
-            </Row>
-            {applications.length > 0 ? (
-              <Row className="m-3">
-                <Row style={{ overflow: "scroll" }}>
-                  <Table
-                    responsive="xl"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <EnhancedTableHeadApplications
-                      orderApplications={orderApplications}
-                      orderApplicationsBy={orderApplicationsBy}
-                      onRequestSort={handleRequestSortApplications}
-                      rowCount={applications.length}
-                    />{" "}
-                    <TableBody>
-                      {stableSortApplications(
-                        applications,
-                        getComparatorApplications(
-                          orderApplications,
-                          orderApplicationsBy
-                        )
-                      ).map((application, index) => {
-                        return (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={application.application_uid}
-                            // onClick={() => {
-                            //   navigate(
-                            //     `/tenantPropertyDetails/${application.property_uid}`,
-                            //     {
-                            //       state: {
-                            //         property: application,
-                            //         property_uid: application.property_uid,
-                            //       },
-                            //     }
-                            //   );
-                            // }}
-                            onClick={() => goToReviewPropertyLease(application)}
-                          >
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {JSON.parse(application.images).length > 0 ? (
-                                <img
-                                  src={`${
-                                    JSON.parse(application.images)[0]
-                                  }?${Date.now()}`}
-                                  alt="application"
-                                  style={{
-                                    borderRadius: "4px",
-                                    objectFit: "cover",
-                                    width: "100px",
-                                    height: "100px",
-                                  }}
-                                />
-                              ) : (
-                                <img
-                                  src={PropertyIcon}
-                                  alt="application"
-                                  style={{
-                                    borderRadius: "4px",
-                                    objectFit: "cover",
-                                    width: "100px",
-                                    height: "100px",
-                                  }}
-                                />
-                              )}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {application.address}
-                              {application.unit !== ""
-                                ? " " + application.unit
-                                : ""}{" "}
-                              {application.city}, {application.state}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {application.city}, {application.state}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {application.zip}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {application.business_name}
-                            </TableCell>
-
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {application.property_type}
-                            </TableCell>
-
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {application.num_beds +
-                                "/" +
-                                application.num_baths}
-                            </TableCell>
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              ${application.listed_rent}
-                            </TableCell>
-
-                            <TableCell
-                              padding="none"
-                              size="small"
-                              align="center"
-                            >
-                              {application.application_status === "NEW" ? (
-                                <h6 style={{ mediumBold, color: "blue" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "REJECTED" ? (
-                                <h6 style={{ mediumBold, color: "red" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "REFUSED" ? (
-                                <h6 style={{ mediumBold, color: "red" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "PM END EARLY" ? (
-                                <h6 style={{ mediumBold, color: "#E4CD05" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "TENANT END EARLY" ? (
-                                <h6 style={{ mediumBold, color: "#E4CD05" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "RENTED" ? (
-                                <h6 style={{ mediumBold, color: "green" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : application.application_status ===
-                                "FORWARDED" ? (
-                                <h6 style={{ mediumBold, color: "green" }}>
-                                  {application.application_status}
-                                </h6>
-                              ) : (
-                                ""
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </Row>
-              </Row>
-            ) : (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
               <Row className="m-3">
                 <Col>
-                  <h6>No applications</h6>
+                  <h1>Properties</h1>
                 </Col>
                 <Col></Col>
               </Row>
-            )}
+              <Row className="m-3">
+                <Col>
+                  <h6>No rented properties</h6>
+                </Col>
+                <Col></Col>
+              </Row>
+            </div>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3">
+                <Col>
+                  <h1>Find Your Next Place</h1>
+                </Col>
+                <Col>
+                  <img
+                    src={SearchProperties_Black}
+                    onClick={() => {
+                      navigate("/tenantAvailableProperties");
+                      window.scrollTo(0, 0);
+                    }}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      float: "right",
+                      marginRight: "3rem",
+                    }}
+                  />
+                </Col>
+              </Row>
+              {applications.length > 0 ? (
+                <Row className="m-3">
+                  <Row style={{ overflow: "scroll" }}>
+                    <Table
+                      responsive="xl"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <EnhancedTableHeadApplications
+                        orderApplications={orderApplications}
+                        orderApplicationsBy={orderApplicationsBy}
+                        onRequestSort={handleRequestSortApplications}
+                        rowCount={applications.length}
+                      />{" "}
+                      <TableBody>
+                        {stableSortApplications(
+                          applications,
+                          getComparatorApplications(
+                            orderApplications,
+                            orderApplicationsBy
+                          )
+                        ).map((application, index) => {
+                          return (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={application.application_uid}
+                              // onClick={() => {
+                              //   navigate(
+                              //     `/tenantPropertyDetails/${application.property_uid}`,
+                              //     {
+                              //       state: {
+                              //         property: application,
+                              //         property_uid: application.property_uid,
+                              //       },
+                              //     }
+                              //   );
+                              // }}
+                              onClick={() =>
+                                goToReviewPropertyLease(application)
+                              }
+                            >
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {JSON.parse(application.images).length > 0 ? (
+                                  <img
+                                    src={`${
+                                      JSON.parse(application.images)[0]
+                                    }?${Date.now()}`}
+                                    alt="application"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={PropertyIcon}
+                                    alt="application"
+                                    style={{
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                )}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.address}
+                                {application.unit !== ""
+                                  ? " " + application.unit
+                                  : ""}{" "}
+                                {application.city}, {application.state}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.city}, {application.state}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.zip}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.business_name}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.property_type}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.num_beds +
+                                  "/" +
+                                  application.num_baths}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                ${application.listed_rent}
+                              </TableCell>
+
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {application.application_status === "NEW" ? (
+                                  <h6 style={{ mediumBold, color: "blue" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "REJECTED" ? (
+                                  <h6 style={{ mediumBold, color: "red" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "REFUSED" ? (
+                                  <h6 style={{ mediumBold, color: "red" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "PM END EARLY" ? (
+                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "TENANT END EARLY" ? (
+                                  <h6 style={{ mediumBold, color: "#E4CD05" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "RENTED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "FORWARDED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : (
+                                  ""
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                </Row>
+              ) : (
+                <Row className="m-3">
+                  <Col>
+                    <h6>No applications</h6>
+                  </Col>
+                  <Col></Col>
+                </Row>
+              )}
+            </div>
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
               <TenantFooter />
             </div>

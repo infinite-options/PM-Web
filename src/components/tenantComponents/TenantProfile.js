@@ -1236,7 +1236,7 @@ function TenantProfile(props) {
                 <div>Who plans to live in the unit?</div>
               </Row>
               <div>
-                {Object.values(adults).length > 0 ? (
+                {adults && Object.values(adults).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Adults</Row>
                     <Row style={subHeading}>
@@ -1258,12 +1258,13 @@ function TenantProfile(props) {
                   </div>
                 ) : (
                   <div className="mx-3 ">
+                    <Row style={subHeading}>Adults</Row>
                     <Row style={gray}>None</Row>
                   </div>
                 )}
               </div>
               <div>
-                {Object.values(children).length > 0 ? (
+                {children && Object.values(children).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Children</Row>
                     <Row style={subHeading}>
@@ -1285,12 +1286,13 @@ function TenantProfile(props) {
                   </div>
                 ) : (
                   <div className="mx-3 ">
+                    <Row style={subHeading}>Children</Row>
                     <Row style={gray}>None</Row>
                   </div>
                 )}
               </div>
               <div>
-                {Object.values(pets).length > 0 ? (
+                {pets && Object.values(pets).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Pets</Row>
                     <Row style={subHeading}>
@@ -1314,12 +1316,13 @@ function TenantProfile(props) {
                   </div>
                 ) : (
                   <div className="mx-3 ">
+                    <Row style={subHeading}>Pets</Row>
                     <Row style={gray}>None</Row>
                   </div>
                 )}
               </div>
               <div>
-                {Object.values(vehicles).length > 0 ? (
+                {vehicles && Object.values(vehicles).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Vehicles</Row>
                     <Row style={subHeading}>
@@ -1345,12 +1348,13 @@ function TenantProfile(props) {
                   </div>
                 ) : (
                   <div className="mx-3 ">
+                    <Row style={subHeading}>Vehicles</Row>
                     <Row style={gray}>None</Row>
                   </div>
                 )}
               </div>
               <div>
-                {Object.values(references).length > 0 ? (
+                {references && Object.values(references).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>References</Row>
                     <Row style={subHeading}>
@@ -1376,6 +1380,7 @@ function TenantProfile(props) {
                   </div>
                 ) : (
                   <div className="mx-3 ">
+                    <Row style={subHeading}>References</Row>
                     <Row style={gray}>None</Row>
                   </div>
                 )}

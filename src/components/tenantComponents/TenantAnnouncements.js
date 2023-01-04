@@ -209,8 +209,23 @@ function TenantAnnouncements(props) {
               setAnnouncementDetail(false);
             }}
           />
+          <Row>
+            <Col>
+              {" "}
+              <h3>Announcements </h3>
+            </Col>
 
-          <div>
+            <Col></Col>
+          </Row>
+
+          <div
+            className="mx-3 my-3 p-2"
+            style={{
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px",
+              opacity: 1,
+            }}
+          >
             {announcements.length > 0 && !announcementDetail ? (
               <div className="mx-2 my-2 p-3">
                 <Row className="m-3" style={{ overflow: "scroll" }}>
