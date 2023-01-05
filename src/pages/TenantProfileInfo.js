@@ -505,6 +505,7 @@ function TenantProfileInfo(props) {
             name="phone"
             value={reference.phone}
             type="tel"
+            placeholder="xxx-xxx-xxxx"
             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
             onChange={(e) => handleChangeReferences(idx, e)}
           />

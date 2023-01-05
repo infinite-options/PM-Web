@@ -178,7 +178,7 @@ function EmployeeProfile(props) {
           </Form.Label>
           <Form.Control
             style={squareForm}
-            placeholder="(xxx)xxx-xxxx"
+            placeholder="xxx-xxx-xxxx"
             value={phoneNumber}
             type="tel"
             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
