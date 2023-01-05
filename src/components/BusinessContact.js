@@ -198,7 +198,9 @@ function BusinessContact(props) {
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="(xxx)xxx-xxxx"
+              placeholder="xxx-xxx-xxxx"
+              type="tel"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
               value={newContact.phone_number}
               onChange={(e) => changeNewContact(e, "phone_number")}
             />

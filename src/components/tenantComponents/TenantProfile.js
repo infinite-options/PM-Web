@@ -756,6 +756,8 @@ function TenantProfile(props) {
                         style={squareForm}
                         placeholder="Phone Number"
                         value={phone}
+                        type="tel"
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                         // disabled="disabled"
                         onChange={(e) => setPhone(e.target.value)}
                       />

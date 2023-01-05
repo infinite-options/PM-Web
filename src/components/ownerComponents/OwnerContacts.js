@@ -363,6 +363,8 @@ function OwnerContacts() {
                     <Form.Control
                       style={squareForm}
                       value={contactPhoneNumber}
+                      type="tel"
+                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                       onChange={(e) => setContactPhoneNumber(e.target.value)}
                     />
                   </Form.Group>

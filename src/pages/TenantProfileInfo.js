@@ -500,10 +500,12 @@ function TenantProfileInfo(props) {
         <Col>
           <label htmlFor="numReferences">Phone Number</label>
           <input
-            type="text"
+            // type="text"
             className="form-control"
             name="phone"
             value={reference.phone}
+            type="tel"
+            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
             onChange={(e) => handleChangeReferences(idx, e)}
           />
         </Col>
