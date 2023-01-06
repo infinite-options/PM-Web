@@ -1,20 +1,19 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
-
 import AppContext from "../AppContext";
 import Header from "../components/Header";
-import SelectRole from "../components/SelectRole";
-import { post, put } from "../utils/api";
-import { pillButton, boldSmall, red, small, hidden } from "../utils/styles";
 import SocialLogin from "./SocialLogin";
 import Homepage from "./Homepage";
-import Landing from "./LandingNavbar";
+import PasswordModal from "./PasswordModal";
+import { post, put } from "../utils/api";
+import { pillButton, boldSmall, red, small, hidden } from "../utils/styles";
 
 function Login(props) {
   const context = useContext(AppContext);
   const { userData, updateUserData } = useContext(AppContext);
   const navigate = useNavigate();
+  const [passModal, setpassModal] = useState(false);
   const [loginStage, setLoginStage] = useState("LOGIN");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -82,7 +81,20 @@ function Login(props) {
     // save to app state / context
     // setLoginStage("ROLE");
   };
+  const onReset = async () => {
+    const response = await post("/set_temp_password", { email: email });
 
+    if (response.message === "A temporary password has been sent") {
+      console.log(response);
+      setpassModal(true);
+    } else if (response.code === 280) {
+      console.log(response);
+      alert("No account found with that email.");
+    }
+  };
+  const onCancel = () => {
+    setpassModal(false);
+  };
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -93,6 +105,7 @@ function Login(props) {
     );
   return (
     <div className="h-100 pb-5">
+      {<PasswordModal isOpen={passModal} onCancel={onCancel} />}
       {loginStage === "LOGIN" && props.signupStage !== "NAME" ? (
         <div className="d-flex flex-column h-100">
           {/* <Header
@@ -142,6 +155,11 @@ function Login(props) {
               </Form.Group>
             </Form>
             <div className="text-center pt-1 pb-2">
+              <div className="text-center mb-4">
+                <p style={boldSmall} onClick={onReset}>
+                  Forgot Password?
+                </p>
+              </div>
               <Button
                 variant="outline-primary"
                 style={pillButton}
@@ -225,7 +243,11 @@ function Login(props) {
                 />
               </Form.Group>
             </Form>
+
             <div className="text-center pt-1 pb-3">
+              <div className="text-center mb-4">
+                <p style={boldSmall}>Forgot Password?</p>
+              </div>
               <Button
                 variant="outline-primary"
                 style={pillButton}
