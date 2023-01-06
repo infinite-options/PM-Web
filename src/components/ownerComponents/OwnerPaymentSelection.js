@@ -138,6 +138,7 @@ function OwnerPaymentSelection(props) {
                 style={squareForm}
                 placeholder="Routing Number"
                 value={routingNumber}
+                maxLength="9"
                 onChange={(e) => onChange(e, "routingNumber")}
               />
             </Col>
