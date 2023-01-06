@@ -9,8 +9,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
-import MessageDialogTenant from "../MessageDialog";
-import MessageDialogContact from "../MessageDialog";
+import MailDialogTenant from "../MailDialog";
+import MailDialogContact from "../MailDialog";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -216,7 +216,7 @@ function ManagerTenantAgreementView(props) {
     <div className="mb-2 pb-2">
       {agreement ? (
         <div>
-          <MessageDialogTenant
+          <MailDialogTenant
             title={"Message"}
             isOpen={showMessageForm}
             senderPhone={user.phone_number}
@@ -227,7 +227,7 @@ function ManagerTenantAgreementView(props) {
             receiverEmail={selectedTenant.tenantEmail}
             onCancel={onCancel}
           />
-          <MessageDialogContact
+          <MailDialogContact
             title={"Message"}
             isOpen={showMessageFormContact}
             senderPhone={user.phone_number}

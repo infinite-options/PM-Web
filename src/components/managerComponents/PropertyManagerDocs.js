@@ -9,7 +9,7 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import MessageDialog from "../MessageDialog";
+import MailDialog from "../MailDialog";
 import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
@@ -210,7 +210,7 @@ function PropertyManagerDocs(props) {
           <Col xs={2}></Col>
         )}
       </Row>
-      <MessageDialog
+      <MailDialog
         title={"Message"}
         isOpen={showMessageForm}
         senderPhone={user.phone_number}

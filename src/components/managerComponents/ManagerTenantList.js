@@ -18,7 +18,7 @@ import moment from "moment";
 import SideBar from "./SideBar";
 import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
-import MessageDialog from "../MessageDialog";
+import MailDialog from "../MailDialog";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -389,7 +389,7 @@ function ManagerTenantList(props) {
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
-        <MessageDialog
+        <MailDialog
           title={"Message"}
           isOpen={showMessageForm}
           senderPhone={user.phone_number}
