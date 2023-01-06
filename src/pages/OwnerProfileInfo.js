@@ -108,31 +108,37 @@ function OwnerProfileInfo(props) {
   const [showSsn, setShowSsn] = React.useState(false);
   const [showEin, setShowEin] = React.useState(false);
   function formatPhoneNumber(value) {
-    // if input value is falsy eg if the user deletes the input, then just return
     if (!value) return value;
 
-    // clean the input for any non-digit values.
     const phoneNumber = value.replace(/[^\d]/g, "");
 
-    // phoneNumberLength is used to know when to apply our formatting for the phone number
     const phoneNumberLength = phoneNumber.length;
 
-    // we need to return the value with no formatting if its less then four digits
-    // this is to avoid weird behavior that occurs if you  format the area code to early
     if (phoneNumberLength < 4) return phoneNumber;
 
-    // if phoneNumberLength is greater than 4 and less the 7 we start to return
-    // the formatted number
     if (phoneNumberLength < 7) {
       return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
     }
 
-    // finally, if the phoneNumberLength is greater then seven, we add the last
-    // bit of formatting and return it.
     return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
       3,
       6
     )}-${phoneNumber.slice(6, 10)}`;
+  }
+  function formatSSN(value) {
+    if (!value) return value;
+
+    const ssn = value.replace(/[^\d]/g, "");
+
+    const ssnLength = ssn.length;
+
+    if (ssnLength < 4) return ssn;
+
+    if (ssnLength < 6) {
+      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
+    }
+
+    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
   }
   const required =
     errorMessage === "Please fill out all fields" ? (
@@ -210,9 +216,10 @@ function OwnerProfileInfo(props) {
             <Col>
               <Form.Control
                 style={showSsn ? squareForm : hidden}
-                placeholder="123-45-6789"
+                placeholder="xxx-xx-xxxx"
                 value={ssn}
-                onChange={(e) => setSsn(e.target.value)}
+                pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
+                onChange={(e) => setSsn(formatSSN(e.target.value))}
               />
             </Col>
           </Row>
@@ -224,8 +231,9 @@ function OwnerProfileInfo(props) {
             <Col>
               <Form.Control
                 style={showEin ? squareForm : hidden}
-                placeholder="12-1234567"
+                placeholder="xx-xxxxxxx"
                 value={einNumber}
+                pattern="[0-9]{2}-[0-9]{7}"
                 onChange={(e) => setEinNumber(e.target.value)}
               />
             </Col>
