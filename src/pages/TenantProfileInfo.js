@@ -474,6 +474,7 @@ function TenantProfileInfo(props) {
     fields.splice(i, 1);
     setReferences(fields);
   }
+
   function addReferences() {
     return references.map((reference, idx) => (
       <Row>
@@ -505,9 +506,9 @@ function TenantProfileInfo(props) {
             name="phone"
             value={reference.phone}
             type="tel"
-            placeholder="xxx-xxx-xxxx"
+            placeholder="(xxx)xxx-xxxx"
             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            onChange={(e) => handleChangeReferences(idx, e)}
+            onChange={(e) => handlePhoneNumber(idx, e)}
           />
         </Col>
         <Col>
@@ -550,6 +551,38 @@ function TenantProfileInfo(props) {
         </Col>
       </Row>
     ));
+  }
+  const handlePhoneNumber = (i, event) => {
+    const fields = [...references];
+    fields[i][event.target.name] = formatPhoneNumber(event.target.value);
+    setReferences(fields);
+  };
+  function formatPhoneNumber(value) {
+    // if input value is falsy eg if the user deletes the input, then just return
+    if (!value) return value;
+
+    // clean the input for any non-digit values.
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    // phoneNumberLength is used to know when to apply our formatting for the phone number
+    const phoneNumberLength = phoneNumber.length;
+
+    // we need to return the value with no formatting if its less then four digits
+    // this is to avoid weird behavior that occurs if you  format the area code to early
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    // if phoneNumberLength is greater than 4 and less the 7 we start to return
+    // the formatted number
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    // finally, if the phoneNumberLength is greater then seven, we add the last
+    // bit of formatting and return it.
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
   }
   function handleChangeReferences(i, event) {
     const fields = [...references];
@@ -944,7 +977,7 @@ function TenantProfileInfo(props) {
               />
             </Col>
           </Row>
-          <Row>{adults.length ? <div>{addAdults()}</div> : null}</Row>
+          <Row>{adults && adults.length ? <div>{addAdults()}</div> : null}</Row>
           <Row>
             <Col className="mx-2 my-3" xs={2}>
               Children
@@ -962,7 +995,9 @@ function TenantProfileInfo(props) {
               />
             </Col>
           </Row>
-          <Row>{children.length ? <div>{addChildren()}</div> : null}</Row>
+          <Row>
+            {children && children.length ? <div>{addChildren()}</div> : null}
+          </Row>
           <Row>
             <Col className="mx-2 my-3" xs={2}>
               {" "}
@@ -982,7 +1017,7 @@ function TenantProfileInfo(props) {
             </Col>
           </Row>
 
-          <Row>{pets.length ? <div>{addPets()}</div> : null}</Row>
+          <Row>{pets && pets.length ? <div>{addPets()}</div> : null}</Row>
         </Row>
         <Row className="mx-2 mb-4">
           <h5>Vehicle Information</h5>
@@ -1004,7 +1039,9 @@ function TenantProfileInfo(props) {
               />
             </Col>
           </Row>
-          <Row>{vehicles.length ? <div>{addVehicles()}</div> : null}</Row>
+          <Row>
+            {vehicles && vehicles.length ? <div>{addVehicles()}</div> : null}
+          </Row>
         </Row>
         <Row className="mx-2 mb-4">
           <h5>References</h5>
@@ -1026,7 +1063,11 @@ function TenantProfileInfo(props) {
               />
             </Col>
           </Row>
-          <Row>{references.length ? <div>{addReferences()}</div> : null}</Row>
+          <Row>
+            {references && references.length ? (
+              <div>{addReferences()}</div>
+            ) : null}
+          </Row>
         </Row>
         {/* ===============================< Uploading Tenant Document >=================================================== */}
         <Row className="mx-2 mb-4">

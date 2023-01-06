@@ -30,7 +30,7 @@ export default function App() {
     if (rules.phone) {
       let phoneno = new RegExp(/^\(?(\d{3})\)?[-. ]?(\d{3})[-. ]?(\d{4})$/);
       if (!phoneno.test(value))
-        errors.push("*Please Enter valid phone number XXX-XXX-XXXX");
+        errors.push("*Please Enter valid phone number (xxx)xxx-xxxx");
     }
     if (rules.email) {
       let pattern = new RegExp(

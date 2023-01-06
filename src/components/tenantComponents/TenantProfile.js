@@ -237,7 +237,7 @@ function TenantProfile(props) {
       current_salary: salary,
       phone_number: phone,
       email: email,
-      salary_freq: frequency,
+      salary_frequency: frequency,
       current_job_title: jobTitle,
       current_job_company: company,
       ssn: ssn,
@@ -249,7 +249,7 @@ function TenantProfile(props) {
         : null,
       adults: JSON.stringify(adults),
       children: JSON.stringify(children),
-      pets: JSON.stringify(pets),
+      pet_occupants: JSON.stringify(pets),
       references: JSON.stringify(references),
       vehicle_info: JSON.stringify(vehicles),
     };
@@ -634,7 +634,7 @@ function TenantProfile(props) {
             className="form-control"
             name="phone"
             value={reference.phone}
-            onChange={(e) => handleChangeReferences(idx, e)}
+            onChange={(e) => handlePhoneNumber(idx, e)}
           />
         </Col>
         <Col>
@@ -682,6 +682,38 @@ function TenantProfile(props) {
     const fields = [...references];
     fields[i][event.target.name] = event.target.value;
     setReferences(fields);
+  }
+  const handlePhoneNumber = (i, event) => {
+    const fields = [...references];
+    fields[i][event.target.name] = formatPhoneNumber(event.target.value);
+    setReferences(fields);
+  };
+  function formatPhoneNumber(value) {
+    // if input value is falsy eg if the user deletes the input, then just return
+    if (!value) return value;
+
+    // clean the input for any non-digit values.
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    // phoneNumberLength is used to know when to apply our formatting for the phone number
+    const phoneNumberLength = phoneNumber.length;
+
+    // we need to return the value with no formatting if its less then four digits
+    // this is to avoid weird behavior that occurs if you  format the area code to early
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    // if phoneNumberLength is greater than 4 and less the 7 we start to return
+    // the formatted number
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    // finally, if the phoneNumberLength is greater then seven, we add the last
+    // bit of formatting and return it.
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
   }
   return (
     <div className="w-100 overflow-hidden">
@@ -820,7 +852,6 @@ function TenantProfile(props) {
                 </Row>
                 <Row>
                   <Col>
-                    {" "}
                     <Form.Group className="my-2">
                       <Form.Label as="h6" className="mb-0 ms-2">
                         Current Job Title
@@ -849,7 +880,7 @@ function TenantProfile(props) {
                 </Row>
                 <Row>
                   <Col>
-                    <Form.Group className="mx-2 mb-3">
+                    <Form.Group className="my-2">
                       <Form.Label as="h6" className="mb-0 ms-2">
                         Salary
                       </Form.Label>
@@ -862,13 +893,12 @@ function TenantProfile(props) {
                     </Form.Group>
                   </Col>
                   <Col
-                    className="px-0"
                     onClick={(e) => {
                       setExpandFrequency(!expandFrequency);
                       handleClick(e);
                     }}
                   >
-                    <Form.Group className="mx-2 mb-3">
+                    <Form.Group className="my-2">
                       <Form.Label as="h6" className="mb-0 ms-2">
                         Frequency
                       </Form.Label>
@@ -1137,7 +1167,11 @@ function TenantProfile(props) {
                     />
                   </Col>
                 </Row>
-                <Row>{adults.length ? <div>{addAdults()}</div> : null}</Row>
+                <Row>
+                  {adults && Object.values(adults).length > 0 ? (
+                    <div>{addAdults()}</div>
+                  ) : null}
+                </Row>
                 <Row>
                   <Col className="mx-2 my-3" xs={2}>
                     Children
@@ -1155,7 +1189,11 @@ function TenantProfile(props) {
                     />
                   </Col>
                 </Row>
-                <Row>{children.length ? <div>{addChildren()}</div> : null}</Row>
+                <Row>
+                  {children && Object.values(children).length > 0 ? (
+                    <div>{addChildren()}</div>
+                  ) : null}
+                </Row>
                 <Row>
                   <Col className="mx-2 my-3" xs={2}>
                     {" "}
@@ -1175,7 +1213,11 @@ function TenantProfile(props) {
                   </Col>
                 </Row>
 
-                <Row>{pets.length ? <div>{addPets()}</div> : null}</Row>
+                <Row>
+                  {pets && Object.values(pets).length > 0 ? (
+                    <div>{addPets()}</div>
+                  ) : null}
+                </Row>
               </Row>
               <Row className="mx-2 mb-4">
                 <h5>Vehicle Information</h5>
@@ -1197,7 +1239,11 @@ function TenantProfile(props) {
                     />
                   </Col>
                 </Row>
-                <Row>{vehicles.length ? <div>{addVehicles()}</div> : null}</Row>
+                <Row>
+                  {vehicles && Object.values(vehicles).length > 0 ? (
+                    <div>{addVehicles()}</div>
+                  ) : null}
+                </Row>
               </Row>
               <Row className="mx-2 mb-4">
                 <h5>References</h5>
@@ -1220,7 +1266,9 @@ function TenantProfile(props) {
                   </Col>
                 </Row>
                 <Row>
-                  {references.length ? <div>{addReferences()}</div> : null}
+                  {references && Object.values(references).length > 0 ? (
+                    <div>{addReferences()}</div>
+                  ) : null}
                 </Row>
               </Row>
             </div>

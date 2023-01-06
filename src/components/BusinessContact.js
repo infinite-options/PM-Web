@@ -98,6 +98,38 @@ function BusinessContact(props) {
     ) : (
       ""
     );
+  function formatPhoneNumber(value) {
+    // if input value is falsy eg if the user deletes the input, then just return
+    if (!value) return value;
+
+    // clean the input for any non-digit values.
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    // phoneNumberLength is used to know when to apply our formatting for the phone number
+    const phoneNumberLength = phoneNumber.length;
+
+    // we need to return the value with no formatting if its less then four digits
+    // this is to avoid weird behavior that occurs if you  format the area code to early
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    // if phoneNumberLength is greater than 4 and less the 7 we start to return
+    // the formatted number
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    // finally, if the phoneNumberLength is greater then seven, we add the last
+    // bit of formatting and return it.
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
+  }
+  const handlePhoneNumber = (event, field) => {
+    const changedContact = { ...newContact };
+    changedContact[field] = formatPhoneNumber(event.target.value);
+    setNewContact(changedContact);
+  };
   return (
     <div>
       {console.log(contactState)}
@@ -198,11 +230,12 @@ function BusinessContact(props) {
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="xxx-xxx-xxxx"
+              placeholder="(xxx)xxx-xxxx"
               type="tel"
               pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
               value={newContact.phone_number}
-              onChange={(e) => changeNewContact(e, "phone_number")}
+              //  onChange={(e) => changeNewContact(e, "phone_number")}
+              onChange={(e) => handlePhoneNumber(e, "phone_number")}
             />
           </Form.Group>
           <Form.Group className="mx-2 my-3">
