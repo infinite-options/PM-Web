@@ -239,7 +239,7 @@ function ManagerOwnerList(props) {
           <Header title="Owners" />
           <Row className="m-3">
             <Col>
-              <h1>Owners</h1>
+              <h3>Owners</h3>
             </Col>
             <Col>
               {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}

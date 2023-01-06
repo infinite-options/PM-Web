@@ -714,10 +714,10 @@ function ManagerCreateAnnouncement(props) {
               <div>
                 <Row className="m-3">
                   <Col>
-                    <h1>Announcements</h1>
+                    <h3>Announcements</h3>
                   </Col>
                   <Col>
-                    {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+                    {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
                   </Col>
                 </Row>
                 <div
@@ -810,10 +810,10 @@ function ManagerCreateAnnouncement(props) {
               <div>
                 <Row className="m-3">
                   <Col>
-                    <h1>Announcements</h1>
+                    <h3>Announcements</h3>
                   </Col>
                   <Col>
-                    {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+                    {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
                   </Col>
                 </Row>{" "}
                 <Row className="m-3">No announcements</Row>

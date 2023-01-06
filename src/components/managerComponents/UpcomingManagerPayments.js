@@ -292,8 +292,10 @@ export default function UpcomingManagerPayments(props) {
   };
   return (
     <div className="upcoming-payments">
-      <Row className="m-3" style={headings}>
-        Upcoming Payments
+      <Row className="m-3">
+        <Col>
+          <h3> Upcoming Payments</h3>
+        </Col>
       </Row>
 
       <div

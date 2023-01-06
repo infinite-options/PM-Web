@@ -198,7 +198,11 @@ export default function TenantUpcomingPayments(props) {
 
   return (
     <div className="upcoming-payments">
-      Upcoming Payments
+      <Row className="mx-3">
+        <Col>
+          <h3>Upcoming Payments</h3>
+        </Col>
+      </Row>
       <div
         className="mx-3 my-3 p-2"
         style={{

@@ -415,10 +415,10 @@ function ManagerTenantList(props) {
           <Header title="Tenants" />
           <Row className="m-3">
             <Col>
-              <h1>Tenants</h1>
+              <h3>Tenants</h3>
             </Col>
             <Col>
-              {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+              {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
             </Col>
           </Row>
           {tenants.length > 0 ? (

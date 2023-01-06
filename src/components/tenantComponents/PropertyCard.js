@@ -45,7 +45,11 @@ export default function PropertyCard(props) {
         <h3 className="p4">
           {props.property_type} located in the city of {props.city}
         </h3>
-        <h3 className="p4">{props.description}</h3>
+        <h3 className="p4">
+          {props.description === "null" || props.description === null
+            ? ""
+            : props.description}
+        </h3>
         {/* {props.unit !== "" && <h4 className="p5">Unit Number: </h4>} */}
         <button className="read-more" style={{ background: props.color }}>
           Read More
@@ -58,7 +62,7 @@ export default function PropertyCard(props) {
           src={props.part !== 2 ? props.imgSrc[0] : props.imgSrc[0]}
         ></img>
         {props.part == 2 && (
-          <div className="contacts">
+          <div className="contacts m-2">
             <div>
               {/* {console.log("im trying to print an apply button")} */}
               <img

@@ -1123,8 +1123,7 @@ function ManagerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row style={headings} className="m-3">
-                      {" "}
+                    <Row className="m-3">
                       <Col>
                         <h3>Utility Expenses Due From Manager </h3>
                       </Col>
@@ -1342,7 +1341,7 @@ function ManagerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row className="m-3" style={headings}>
+                    <Row className="m-3">
                       <Col>
                         <h3>Utility Expenses Due From Tenant </h3>
                       </Col>
@@ -1553,7 +1552,7 @@ function ManagerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row className="m-3" style={headings}>
+                    <Row className="m-3">
                       <Col>
                         <h3>Maintenance Payments</h3>{" "}
                       </Col>

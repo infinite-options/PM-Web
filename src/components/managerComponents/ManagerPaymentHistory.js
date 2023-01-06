@@ -266,8 +266,10 @@ export default function ManagerPaymentHistory(props) {
   };
   return (
     <div className="payment-history">
-      <Row className="m-3" style={headings}>
-        Payment History (Last 30 Days)
+      <Row className="m-3">
+        <Col>
+          <h3>Payment History (Last 30 Days)</h3>
+        </Col>
       </Row>
       <div
         className="mx-3 my-3 p-2"
