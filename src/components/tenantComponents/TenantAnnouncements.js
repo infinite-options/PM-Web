@@ -209,7 +209,7 @@ function TenantAnnouncements(props) {
               setAnnouncementDetail(false);
             }}
           />
-          <Row>
+          <Row className="m-3">
             <Col>
               {" "}
               <h3>Announcements </h3>

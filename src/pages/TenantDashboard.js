@@ -1591,7 +1591,6 @@ export default function TenantDashboard() {
                               >
                                 {application.business_name}
                               </TableCell>
-
                               <TableCell
                                 padding="none"
                                 size="small"
@@ -1599,7 +1598,6 @@ export default function TenantDashboard() {
                               >
                                 {application.property_type}
                               </TableCell>
-
                               <TableCell
                                 padding="none"
                                 size="small"
@@ -1616,7 +1614,6 @@ export default function TenantDashboard() {
                               >
                                 ${application.listed_rent}
                               </TableCell>
-
                               <TableCell
                                 padding="none"
                                 size="small"
@@ -1656,8 +1653,13 @@ export default function TenantDashboard() {
                                   <h6 style={{ mediumBold, color: "green" }}>
                                     {application.application_status}
                                   </h6>
+                                ) : application.application_status ===
+                                  "ACCEPTED" ? (
+                                  <h6 style={{ mediumBold, color: "yellow" }}>
+                                    {application.application_status}
+                                  </h6>
                                 ) : (
-                                  ""
+                                  <h6>{application.application_status}</h6>
                                 )}
                               </TableCell>
                             </TableRow>

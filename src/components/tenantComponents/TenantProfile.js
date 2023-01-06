@@ -28,12 +28,15 @@ import {
   headings,
   gray,
   subHeading,
+  pillButton,
+  red,
+  hidden,
 } from "../../utils/styles";
 
 function TenantProfile(props) {
   console.log("in tenant profile");
   const context = useContext(AppContext);
-  const { userData, refresh } = context;
+  const { userData, refresh, logout } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -42,8 +45,13 @@ function TenantProfile(props) {
   const [lastName, setLastName] = useState("");
 
   const [editProfile, setEditProfile] = useState(false);
+
+  const [resetPassword, setResetPassword] = useState(false);
   const [phone, setPhone] = useState(user.phone_number);
   const [email, setEmail] = useState(user.email);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [salary, setSalary] = useState("");
   const [frequency, setFrequency] = useState("Annual");
   const [jobTitle, setJobTitle] = useState("");
@@ -237,7 +245,7 @@ function TenantProfile(props) {
       current_salary: salary,
       phone_number: phone,
       email: email,
-      salary_freq: frequency,
+      salary_frequency: frequency,
       current_job_title: jobTitle,
       current_job_company: company,
       ssn: ssn,
@@ -249,7 +257,7 @@ function TenantProfile(props) {
         : null,
       adults: JSON.stringify(adults),
       children: JSON.stringify(children),
-      pets: JSON.stringify(pets),
+      pet_occupants: JSON.stringify(pets),
       references: JSON.stringify(references),
       vehicle_info: JSON.stringify(vehicles),
     };
@@ -278,6 +286,42 @@ function TenantProfile(props) {
     "Annual",
     "Hourly Rate",
   ];
+  const updatePassword = async (u) => {
+    if (password === "" || confirmPassword === "") {
+      setErrorMessage("Please fill out all fields");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords must match");
+      return;
+    }
+
+    console.log(u);
+    const user = {
+      email: email,
+      password: password,
+      user_uid: u.user_uid,
+    };
+    console.log(user);
+    const response = await post("/update_email_password", user);
+    if (response.code !== 200) {
+      setErrorMessage(response.message);
+      return;
+      // add validation
+    }
+    logout();
+    navigate("/");
+    window.scrollTo(0, 0);
+  };
+  const required =
+    errorMessage === "Please fill out all fields" ? (
+      <span style={red} className="ms-1">
+        *
+      </span>
+    ) : (
+      ""
+    );
   function handleAddAdults() {
     const fields = [...adults];
     fields.push({ name: "", relationship: "", dob: "" });
@@ -634,7 +678,7 @@ function TenantProfile(props) {
             className="form-control"
             name="phone"
             value={reference.phone}
-            onChange={(e) => handleChangeReferences(idx, e)}
+            onChange={(e) => handlePhoneNumber(idx, e)}
           />
         </Col>
         <Col>
@@ -682,6 +726,44 @@ function TenantProfile(props) {
     const fields = [...references];
     fields[i][event.target.name] = event.target.value;
     setReferences(fields);
+  }
+  const handlePhoneNumber = (i, event) => {
+    const fields = [...references];
+    fields[i][event.target.name] = formatPhoneNumber(event.target.value);
+    setReferences(fields);
+  };
+  function formatPhoneNumber(value) {
+    if (!value) return value;
+
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
+  }
+  function formatSSN(value) {
+    if (!value) return value;
+
+    const ssn = value.replace(/[^\d]/g, "");
+
+    const ssnLength = ssn.length;
+
+    if (ssnLength < 4) return ssn;
+
+    if (ssnLength < 6) {
+      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
+    }
+
+    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
   }
   return (
     <div className="w-100 overflow-hidden">
@@ -756,6 +838,8 @@ function TenantProfile(props) {
                         style={squareForm}
                         placeholder="Phone Number"
                         value={phone}
+                        type="tel"
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                         // disabled="disabled"
                         onChange={(e) => setPhone(e.target.value)}
                       />
@@ -790,9 +874,10 @@ function TenantProfile(props) {
                       </Form.Label>
                       <Form.Control
                         style={squareForm}
-                        placeholder="123-45-6789"
+                        placeholder="xxx-xx-xxxx"
                         value={ssn}
-                        onChange={(e) => setSsn(e.target.value)}
+                        pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
+                        onChange={(e) => setSsn(formatSSN(e.target.value))}
                       />
                     </Form.Group>
                   </Col>
@@ -818,7 +903,6 @@ function TenantProfile(props) {
                 </Row>
                 <Row>
                   <Col>
-                    {" "}
                     <Form.Group className="my-2">
                       <Form.Label as="h6" className="mb-0 ms-2">
                         Current Job Title
@@ -847,7 +931,7 @@ function TenantProfile(props) {
                 </Row>
                 <Row>
                   <Col>
-                    <Form.Group className="mx-2 mb-3">
+                    <Form.Group className="my-2">
                       <Form.Label as="h6" className="mb-0 ms-2">
                         Salary
                       </Form.Label>
@@ -860,13 +944,12 @@ function TenantProfile(props) {
                     </Form.Group>
                   </Col>
                   <Col
-                    className="px-0"
                     onClick={(e) => {
                       setExpandFrequency(!expandFrequency);
                       handleClick(e);
                     }}
                   >
-                    <Form.Group className="mx-2 mb-3">
+                    <Form.Group className="my-2">
                       <Form.Label as="h6" className="mb-0 ms-2">
                         Frequency
                       </Form.Label>
@@ -1135,7 +1218,11 @@ function TenantProfile(props) {
                     />
                   </Col>
                 </Row>
-                <Row>{adults.length ? <div>{addAdults()}</div> : null}</Row>
+                <Row>
+                  {adults && Object.values(adults).length > 0 ? (
+                    <div>{addAdults()}</div>
+                  ) : null}
+                </Row>
                 <Row>
                   <Col className="mx-2 my-3" xs={2}>
                     Children
@@ -1153,7 +1240,11 @@ function TenantProfile(props) {
                     />
                   </Col>
                 </Row>
-                <Row>{children.length ? <div>{addChildren()}</div> : null}</Row>
+                <Row>
+                  {children && Object.values(children).length > 0 ? (
+                    <div>{addChildren()}</div>
+                  ) : null}
+                </Row>
                 <Row>
                   <Col className="mx-2 my-3" xs={2}>
                     {" "}
@@ -1173,7 +1264,11 @@ function TenantProfile(props) {
                   </Col>
                 </Row>
 
-                <Row>{pets.length ? <div>{addPets()}</div> : null}</Row>
+                <Row>
+                  {pets && Object.values(pets).length > 0 ? (
+                    <div>{addPets()}</div>
+                  ) : null}
+                </Row>
               </Row>
               <Row className="mx-2 mb-4">
                 <h5>Vehicle Information</h5>
@@ -1195,7 +1290,11 @@ function TenantProfile(props) {
                     />
                   </Col>
                 </Row>
-                <Row>{vehicles.length ? <div>{addVehicles()}</div> : null}</Row>
+                <Row>
+                  {vehicles && Object.values(vehicles).length > 0 ? (
+                    <div>{addVehicles()}</div>
+                  ) : null}
+                </Row>
               </Row>
               <Row className="mx-2 mb-4">
                 <h5>References</h5>
@@ -1218,7 +1317,9 @@ function TenantProfile(props) {
                   </Col>
                 </Row>
                 <Row>
-                  {references.length ? <div>{addReferences()}</div> : null}
+                  {references && Object.values(references).length > 0 ? (
+                    <div>{addReferences()}</div>
+                  ) : null}
                 </Row>
               </Row>
             </div>
@@ -1550,6 +1651,99 @@ function TenantProfile(props) {
           )}
         </div>
       </div>
+      {editProfile ? (
+        ""
+      ) : (
+        <div
+          className="mx-3 my-3 p-2"
+          style={{
+            background: "#E9E9E9 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Row>
+            <Col></Col>
+            <Col xs={4} className="d-flex justify-content-center">
+              {" "}
+              <Button
+                style={resetPassword === true ? hidden : pillButton}
+                onClick={() => setResetPassword(true)}
+              >
+                Reset Password
+              </Button>
+            </Col>
+            <Col></Col>
+          </Row>
+
+          {resetPassword ? (
+            <div>
+              <Row className="m-3">
+                <Col className="mx-2 my-3">
+                  <h6>Email</h6>
+                  <p style={gray}>
+                    {email && email !== "NULL" ? email : "No Email Provided"}
+                  </p>
+                </Col>
+                <Col>
+                  <Form.Group className="mx-2 my-3">
+                    <h6>Enter Password {password === "" ? required : ""}</h6>
+                    <Form.Control
+                      style={{ borderRadius: 0 }}
+                      placeholder="Password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mx-2 my-3">
+                    <h6>
+                      Confirm Password {confirmPassword === "" ? required : ""}
+                    </h6>
+                    <Form.Control
+                      style={{ borderRadius: 0 }}
+                      placeholder="Confirm Password"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <div
+                className="text-center"
+                style={errorMessage === "" ? hidden : {}}
+              >
+                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+              </div>
+
+              <Row>
+                <Col className="d-flex justify-content-center">
+                  <Button
+                    style={pillButton}
+                    onClick={() => updatePassword(user)}
+                  >
+                    Update Password
+                  </Button>
+                </Col>{" "}
+                <Col className="d-flex justify-content-center">
+                  <Button
+                    style={pillButton}
+                    onClick={() => setResetPassword(false)}
+                  >
+                    Cancel
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      )}
 
       <div hidden={responsive.showSidebar} className="w-100 mt-3">
         <TenantFooter />

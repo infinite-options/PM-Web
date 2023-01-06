@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Form, Button } from "react-bootstrap";
+import { Row, Col, Form, Button } from "react-bootstrap";
 import {
   Table,
   TableRow,
@@ -209,9 +209,17 @@ function TenantDocuments(props) {
         <div className="w-100 mb-5">
           <Header title="Documents" />
 
-          <Row className="m-3" style={{ overflow: "scroll" }}>
+          <Row style={{ overflow: "scroll" }}>
             {!isLoading ? (
               <div>
+                <Row className="m-3">
+                  <Col>
+                    {" "}
+                    <h3>Documents </h3>
+                  </Col>
+
+                  <Col></Col>
+                </Row>
                 <div
                   className="mx-3 my-3 p-2"
                   style={{

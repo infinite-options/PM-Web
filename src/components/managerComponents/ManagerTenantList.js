@@ -18,7 +18,7 @@ import moment from "moment";
 import SideBar from "./SideBar";
 import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
-import MessageDialog from "../MessageDialog";
+import MailDialog from "../MailDialog";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -56,9 +56,9 @@ function ManagerTenantList(props) {
   const [dueDate, setDueDate] = useState("1");
   const [rentDetails, setRentDetails] = useState([]);
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
-  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
-    setShowMessageForm(false);
+    setShowMailForm(false);
   };
   // search variables
   const [search, setSearch] = useState("");
@@ -389,9 +389,9 @@ function ManagerTenantList(props) {
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
-        <MessageDialog
+        <MailDialog
           title={"Message"}
-          isOpen={showMessageForm}
+          isOpen={showMailForm}
           senderPhone={user.phone_number}
           senderEmail={user.email}
           senderName={user.first_name + " " + user.last_name}
@@ -415,10 +415,10 @@ function ManagerTenantList(props) {
           <Header title="Tenants" />
           <Row className="m-3">
             <Col>
-              <h1>Tenants</h1>
+              <h3>Tenants</h3>
             </Col>
             <Col>
-              {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+              {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
             </Col>
           </Row>
           {tenants.length > 0 ? (
@@ -563,7 +563,7 @@ function ManagerTenantList(props) {
                                   </a>
                                   <a
                                     onClick={() => {
-                                      setShowMessageForm(true);
+                                      setShowMailForm(true);
                                       setSelectedTenant(tenant);
                                     }}
                                   >

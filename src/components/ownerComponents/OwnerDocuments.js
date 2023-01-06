@@ -125,7 +125,11 @@ function OwnerDocuments(props) {
 
           {!isLoading ? (
             <div>
-              {" "}
+              <Row className="m-3">
+                <Col>
+                  <h3>Documents</h3>
+                </Col>
+              </Row>
               <div
                 className="mx-3 my-3 p-2"
                 style={{

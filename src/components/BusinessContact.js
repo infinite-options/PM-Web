@@ -98,6 +98,29 @@ function BusinessContact(props) {
     ) : (
       ""
     );
+  function formatPhoneNumber(value) {
+    if (!value) return value;
+
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
+  }
+  const handlePhoneNumber = (event, field) => {
+    const changedContact = { ...newContact };
+    changedContact[field] = formatPhoneNumber(event.target.value);
+    setNewContact(changedContact);
+  };
   return (
     <div>
       {console.log(contactState)}
@@ -199,8 +222,11 @@ function BusinessContact(props) {
             <Form.Control
               style={squareForm}
               placeholder="(xxx)xxx-xxxx"
+              type="tel"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
               value={newContact.phone_number}
-              onChange={(e) => changeNewContact(e, "phone_number")}
+              //  onChange={(e) => changeNewContact(e, "phone_number")}
+              onChange={(e) => handlePhoneNumber(e, "phone_number")}
             />
           </Form.Group>
           <Form.Group className="mx-2 my-3">

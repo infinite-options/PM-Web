@@ -122,9 +122,9 @@ export default function TenantAvailableProperties(props) {
             rightText="Change View"
           />
           {view ? (
-            <Container>{tableView}</Container>
+            <div>{tableView}</div>
           ) : (
-            <Container className="p-container">{boxView}</Container>
+            <div className="p-container">{boxView}</div>
           )}
         </div>
       </div>{" "}

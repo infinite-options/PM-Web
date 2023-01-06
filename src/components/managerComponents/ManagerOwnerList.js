@@ -17,7 +17,7 @@ import SideBar from "./SideBar";
 import Header from "../Header";
 import ManagerFooter from "./ManagerFooter";
 import AppContext from "../../AppContext";
-import MessageDialog from "../MessageDialog";
+import MailDialog from "../MailDialog";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import { get, put } from "../../utils/api";
@@ -45,9 +45,9 @@ function ManagerOwnerList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [width, setWindowWidth] = useState(0);
-  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
-    setShowMessageForm(false);
+    setShowMailForm(false);
   };
   useEffect(() => {
     updateDimensions();
@@ -214,9 +214,9 @@ function ManagerOwnerList(props) {
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
-        <MessageDialog
+        <MailDialog
           title={"Message"}
-          isOpen={showMessageForm}
+          isOpen={showMailForm}
           senderPhone={user.phone_number}
           senderEmail={user.email}
           senderName={user.first_name + " " + user.last_name}
@@ -239,7 +239,7 @@ function ManagerOwnerList(props) {
           <Header title="Owners" />
           <Row className="m-3">
             <Col>
-              <h1>Owners</h1>
+              <h3>Owners</h3>
             </Col>
             <Col>
               {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
@@ -364,7 +364,7 @@ function ManagerOwnerList(props) {
                                   </a>
                                   <a
                                     onClick={() => {
-                                      setShowMessageForm(true);
+                                      setShowMailForm(true);
                                       setSelectedOwner(owner);
                                     }}
                                   >

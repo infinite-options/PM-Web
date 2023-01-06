@@ -1085,7 +1085,7 @@ function OwnerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row style={headings}>
+                    <Row className="m-3">
                       <Col>
                         {" "}
                         <h3>Utilities Due From Owner </h3>
@@ -1313,7 +1313,7 @@ function OwnerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row style={headings}>
+                    <Row className="m-3">
                       <Col>
                         <h3>Utilities Due From Tenant </h3>
                       </Col>
@@ -1523,7 +1523,7 @@ function OwnerUtilities(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row style={headings}>
+                    <Row className="m-3">
                       {" "}
                       <Col>
                         <h3> Maintenance Payments </h3>
@@ -1695,7 +1695,7 @@ function OwnerUtilities(props) {
                 !expenseDetailOwner &&
                 !maintenanceExpenseDetail &&
                 !payExpense ? (
-                <Row style={headings} className="m-3">
+                <Row className="m-3">
                   <Col>
                     {" "}
                     <h3>No utilities </h3>

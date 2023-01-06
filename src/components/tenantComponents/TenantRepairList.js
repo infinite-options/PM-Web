@@ -323,15 +323,8 @@ function TenantRepairList(props) {
         </div>
         <div className="w-100 mb-5">
           <Header title="Repairs" />
-          <div
-            className="mx-2 my-2 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-          >
-            <Row>
+          <div>
+            <Row className="m-3">
               <Col>
                 {" "}
                 <h3>Maintenance and Repairs </h3>

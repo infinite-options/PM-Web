@@ -121,8 +121,9 @@ function BusinessProfile(props) {
           </Form.Label>
           <Form.Control
             style={squareForm}
-            placeholder="12-1234567"
+            placeholder="xx-xxxxxxx"
             value={einNumber}
+            pattern="[0-9]{2}-[0-9]{7}"
             onChange={(e) => setEinNumber(e.target.value)}
           />
         </Form.Group>

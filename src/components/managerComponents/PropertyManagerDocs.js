@@ -9,7 +9,7 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import MessageDialog from "../MessageDialog";
+import MailDialog from "../MailDialog";
 import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
@@ -61,9 +61,9 @@ function PropertyManagerDocs(props) {
   const [activeContract, setActiveContract] = useState(null);
   const [businesses, setBusinesses] = useState([]);
   const [addPropertyManager, setAddPropertyManager] = useState(false);
-  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
-    setShowMessageForm(false);
+    setShowMailForm(false);
   };
 
   const rejectManagement = async () => {
@@ -210,9 +210,9 @@ function PropertyManagerDocs(props) {
           <Col xs={2}></Col>
         )}
       </Row>
-      <MessageDialog
+      <MailDialog
         title={"Message"}
-        isOpen={showMessageForm}
+        isOpen={showMailForm}
         senderPhone={user.phone_number}
         senderEmail={user.email}
         senderName={user.first_name + " " + user.last_name}
@@ -282,7 +282,7 @@ function PropertyManagerDocs(props) {
                         </a>
                       </Col>
                       <Col className="d-flex justify-content-center">
-                        <a onClick={() => setShowMessageForm(true)}>
+                        <a onClick={() => setShowMailForm(true)}>
                           {/*  href={`mailto:${property.owner[0].owner_email}`}> */}
                           <img src={Message} alt="Message" style={smallImg} />
                         </a>

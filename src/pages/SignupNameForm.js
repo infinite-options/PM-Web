@@ -21,6 +21,24 @@ function SignupNameForm(props) {
   const goToLogin = () => {
     navigate("/login");
   };
+  function formatPhoneNumber(value) {
+    if (!value) return value;
+
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
+  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -64,7 +82,11 @@ function SignupNameForm(props) {
               style={{ borderRadius: 0 }}
               placeholder="(xxx)xxx-xxxx"
               value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              type="tel"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              onChange={(e) =>
+                setPhoneNumber(formatPhoneNumber(e.target.value))
+              }
             />
           </Form.Group>
         </Form>

@@ -33,10 +33,14 @@ function PropertyCard(props) {
   console.log(property);
   return (
     <div
+      className="mx-3 my-3 p-2"
       style={{
-        border: "1px solid lightblue",
         cursor: "pointer",
         display: "flex",
+
+        background: "#E9E9E9 0% 0% no-repeat padding-box",
+        borderRadius: "10px",
+        opacity: 1,
       }}
       onClick={goToApplyToProperty}
     >

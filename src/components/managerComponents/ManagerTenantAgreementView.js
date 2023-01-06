@@ -9,8 +9,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
-import MessageDialogTenant from "../MessageDialog";
-import MessageDialogContact from "../MessageDialog";
+import MailDialogTenant from "../MailDialog";
+import MailDialogContact from "../MailDialog";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
@@ -61,9 +61,9 @@ function ManagerTenantAgreementView(props) {
   const [agreement, setAgreement] = useState([]);
   const [selectedTenant, setSelectedTenant] = useState("");
   const [selectedContact, setSelectedContact] = useState("");
-  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
-    setShowMessageForm(false);
+    setShowMailForm(false);
   };
   const [showMessageFormContact, setShowMessageFormContact] = useState(false);
   const onCancelContact = () => {
@@ -216,9 +216,9 @@ function ManagerTenantAgreementView(props) {
     <div className="mb-2 pb-2">
       {agreement ? (
         <div>
-          <MessageDialogTenant
+          <MailDialogTenant
             title={"Message"}
-            isOpen={showMessageForm}
+            isOpen={showMailForm}
             senderPhone={user.phone_number}
             senderEmail={user.email}
             senderName={user.first_name + " " + user.last_name}
@@ -227,7 +227,7 @@ function ManagerTenantAgreementView(props) {
             receiverEmail={selectedTenant.tenantEmail}
             onCancel={onCancel}
           />
-          <MessageDialogContact
+          <MailDialogContact
             title={"Message"}
             isOpen={showMessageFormContact}
             senderPhone={user.phone_number}
@@ -295,7 +295,7 @@ function ManagerTenantAgreementView(props) {
                               <a
                                 // href={`mailto:${tf.tenantEmail}`}
                                 onClick={() => {
-                                  setShowMessageForm(true);
+                                  setShowMailForm(true);
                                   setSelectedTenant(tf);
                                 }}
                               >

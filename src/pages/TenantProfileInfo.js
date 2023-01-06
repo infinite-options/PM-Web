@@ -474,6 +474,7 @@ function TenantProfileInfo(props) {
     fields.splice(i, 1);
     setReferences(fields);
   }
+
   function addReferences() {
     return references.map((reference, idx) => (
       <Row>
@@ -500,11 +501,14 @@ function TenantProfileInfo(props) {
         <Col>
           <label htmlFor="numReferences">Phone Number</label>
           <input
-            type="text"
+            // type="text"
             className="form-control"
             name="phone"
             value={reference.phone}
-            onChange={(e) => handleChangeReferences(idx, e)}
+            type="tel"
+            placeholder="(xxx)xxx-xxxx"
+            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+            onChange={(e) => handlePhoneNumber(idx, e)}
           />
         </Col>
         <Col>
@@ -547,6 +551,29 @@ function TenantProfileInfo(props) {
         </Col>
       </Row>
     ));
+  }
+  const handlePhoneNumber = (i, event) => {
+    const fields = [...references];
+    fields[i][event.target.name] = formatPhoneNumber(event.target.value);
+    setReferences(fields);
+  };
+  function formatPhoneNumber(value) {
+    if (!value) return value;
+
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
   }
   function handleChangeReferences(i, event) {
     const fields = [...references];
@@ -726,6 +753,22 @@ function TenantProfileInfo(props) {
     { name: "WISCONSIN", abbreviation: "WI" },
     { name: "WYOMING", abbreviation: "WY" },
   ];
+
+  function formatSSN(value) {
+    if (!value) return value;
+
+    const ssn = value.replace(/[^\d]/g, "");
+
+    const ssnLength = ssn.length;
+
+    if (ssnLength < 4) return ssn;
+
+    if (ssnLength < 6) {
+      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
+    }
+
+    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
+  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -833,9 +876,10 @@ function TenantProfileInfo(props) {
           </Form.Label>
           <Form.Control
             style={squareForm}
-            placeholder="123-45-6789"
+            placeholder="xxx-xx-xxxx"
             value={ssn}
-            onChange={(e) => setSsn(e.target.value)}
+            pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
+            onChange={(e) => setSsn(formatSSN(e.target.value))}
           />
         </Form.Group>
         <Row className="my-3">
@@ -941,7 +985,7 @@ function TenantProfileInfo(props) {
               />
             </Col>
           </Row>
-          <Row>{adults.length ? <div>{addAdults()}</div> : null}</Row>
+          <Row>{adults && adults.length ? <div>{addAdults()}</div> : null}</Row>
           <Row>
             <Col className="mx-2 my-3" xs={2}>
               Children
@@ -959,7 +1003,9 @@ function TenantProfileInfo(props) {
               />
             </Col>
           </Row>
-          <Row>{children.length ? <div>{addChildren()}</div> : null}</Row>
+          <Row>
+            {children && children.length ? <div>{addChildren()}</div> : null}
+          </Row>
           <Row>
             <Col className="mx-2 my-3" xs={2}>
               {" "}
@@ -979,7 +1025,7 @@ function TenantProfileInfo(props) {
             </Col>
           </Row>
 
-          <Row>{pets.length ? <div>{addPets()}</div> : null}</Row>
+          <Row>{pets && pets.length ? <div>{addPets()}</div> : null}</Row>
         </Row>
         <Row className="mx-2 mb-4">
           <h5>Vehicle Information</h5>
@@ -1001,7 +1047,9 @@ function TenantProfileInfo(props) {
               />
             </Col>
           </Row>
-          <Row>{vehicles.length ? <div>{addVehicles()}</div> : null}</Row>
+          <Row>
+            {vehicles && vehicles.length ? <div>{addVehicles()}</div> : null}
+          </Row>
         </Row>
         <Row className="mx-2 mb-4">
           <h5>References</h5>
@@ -1023,7 +1071,11 @@ function TenantProfileInfo(props) {
               />
             </Col>
           </Row>
-          <Row>{references.length ? <div>{addReferences()}</div> : null}</Row>
+          <Row>
+            {references && references.length ? (
+              <div>{addReferences()}</div>
+            ) : null}
+          </Row>
         </Row>
         {/* ===============================< Uploading Tenant Document >=================================================== */}
         <Row className="mx-2 mb-4">

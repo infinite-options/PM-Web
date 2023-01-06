@@ -1,24 +1,36 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@material-ui/core";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import OwnerPaymentSelection from "../ownerComponents/OwnerPaymentSelection";
 import SideBar from "./SideBar";
 import OwnerFooter from "./OwnerFooter";
-import { squareForm, red, gray, headings } from "../../utils/styles";
-import { get, put } from "../../utils/api";
+import { get, put, post } from "../../utils/api";
+import {
+  squareForm,
+  gray,
+  headings,
+  pillButton,
+  red,
+  hidden,
+  small,
+} from "../../utils/styles";
 function OwnerProfile(props) {
   const context = useContext(AppContext);
-  const { userData, refresh } = context;
+  const { userData, refresh, logout } = context;
   const { access_token, user } = userData;
   const navigate = useNavigate();
-  const { errorMessage, setShowFooter, setFooterTab, setStage } = props;
   const [profileInfo, setProfileInfo] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
+  const [resetPassword, setResetPassword] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [einNumber, setEinNumber] = useState("");
   const [ssn, setSsn] = useState("");
@@ -117,6 +129,34 @@ function OwnerProfile(props) {
     // props.onConfirm();
   };
 
+  const updatePassword = async (u) => {
+    if (password === "" || confirmPassword === "") {
+      setErrorMessage("Please fill out all fields");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords must match");
+      return;
+    }
+
+    console.log(u);
+    const user = {
+      email: email,
+      password: password,
+      user_uid: u.user_uid,
+    };
+    console.log(user);
+    const response = await post("/update_email_password", user);
+    if (response.code !== 200) {
+      setErrorMessage(response.message);
+      return;
+      // add validation
+    }
+    logout();
+    navigate("/");
+    window.scrollTo(0, 0);
+  };
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -125,7 +165,39 @@ function OwnerProfile(props) {
     ) : (
       ""
     );
+  function formatPhoneNumber(value) {
+    if (!value) return value;
 
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
+  }
+  function formatSSN(value) {
+    if (!value) return value;
+
+    const ssn = value.replace(/[^\d]/g, "");
+
+    const ssnLength = ssn.length;
+
+    if (ssnLength < 4) return ssn;
+
+    if (ssnLength < 6) {
+      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
+    }
+
+    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
+  }
   return (
     <div>
       <div className="flex-1">
@@ -196,9 +268,11 @@ function OwnerProfile(props) {
                       </Form.Label>
                       <Form.Control
                         style={squareForm}
-                        placeholder="(789)909-9099"
+                        placeholder="(xxx)xxx-xxxx"
                         value={lastName}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        onChange={(e) =>
+                          setPhoneNumber(formatPhoneNumber(e.target.value))
+                        }
                       />
                     </Form.Group>
                   </Col>
@@ -229,9 +303,10 @@ function OwnerProfile(props) {
                       </Form.Label>
                       <Form.Control
                         style={squareForm}
-                        placeholder="131-89-1829"
+                        placeholder="xxx-xx-xxxx"
                         value={ssn}
-                        onChange={(e) => setSsn(e.target.value)}
+                        pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
+                        onChange={(e) => setSsn(formatSSN(e.target.value))}
                       />
                     </Form.Group>
                   </Col>
@@ -242,8 +317,9 @@ function OwnerProfile(props) {
                       </Form.Label>
                       <Form.Control
                         style={squareForm}
-                        placeholder="1231"
+                        placeholder="xx-xxxxxxx"
                         value={einNumber}
+                        pattern="[0-9]{2}-[0-9]{7}"
                         onChange={(e) => setEinNumber(e.target.value)}
                       />
                     </Form.Group>
@@ -329,6 +405,106 @@ function OwnerProfile(props) {
             setPaymentState={setPaymentState}
             editProfile={editProfile}
           />
+          {editProfile ? (
+            ""
+          ) : (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Row>
+                <Col></Col>
+                <Col xs={4} className="d-flex justify-content-center">
+                  {" "}
+                  <Button
+                    style={resetPassword === true ? hidden : pillButton}
+                    onClick={() => setResetPassword(true)}
+                  >
+                    Reset Password
+                  </Button>
+                </Col>
+                <Col></Col>
+              </Row>
+
+              {resetPassword ? (
+                <div>
+                  <Row className="m-3">
+                    <Col className="mx-2 my-3">
+                      <h6>Email</h6>
+                      <p style={gray}>
+                        {email && email !== "NULL"
+                          ? email
+                          : "No Email Provided"}
+                      </p>
+                    </Col>
+                    <Col>
+                      <Form.Group className="mx-2 my-3">
+                        <h6>
+                          Enter Password {password === "" ? required : ""}
+                        </h6>
+                        <Form.Control
+                          style={{ borderRadius: 0 }}
+                          placeholder="Password"
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mx-2 my-3">
+                        <h6>
+                          Confirm Password{" "}
+                          {confirmPassword === "" ? required : ""}
+                        </h6>
+                        <Form.Control
+                          style={{ borderRadius: 0 }}
+                          placeholder="Confirm Password"
+                          type="password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <div
+                    className="text-center"
+                    style={errorMessage === "" ? hidden : {}}
+                  >
+                    <p style={{ ...red, ...small }}>
+                      {errorMessage || "error"}
+                    </p>
+                  </div>
+
+                  <Row>
+                    <Col className="d-flex justify-content-center">
+                      <Button
+                        style={pillButton}
+                        onClick={() => updatePassword(user)}
+                      >
+                        Update Password
+                      </Button>
+                    </Col>{" "}
+                    <Col className="d-flex justify-content-center">
+                      <Button
+                        style={pillButton}
+                        onClick={() => setResetPassword(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          )}
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
             <OwnerFooter />
           </div>
