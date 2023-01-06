@@ -61,9 +61,9 @@ function ManagerTenantAgreementView(props) {
   const [agreement, setAgreement] = useState([]);
   const [selectedTenant, setSelectedTenant] = useState("");
   const [selectedContact, setSelectedContact] = useState("");
-  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
-    setShowMessageForm(false);
+    setShowMailForm(false);
   };
   const [showMessageFormContact, setShowMessageFormContact] = useState(false);
   const onCancelContact = () => {
@@ -218,7 +218,7 @@ function ManagerTenantAgreementView(props) {
         <div>
           <MailDialogTenant
             title={"Message"}
-            isOpen={showMessageForm}
+            isOpen={showMailForm}
             senderPhone={user.phone_number}
             senderEmail={user.email}
             senderName={user.first_name + " " + user.last_name}
@@ -295,7 +295,7 @@ function ManagerTenantAgreementView(props) {
                               <a
                                 // href={`mailto:${tf.tenantEmail}`}
                                 onClick={() => {
-                                  setShowMessageForm(true);
+                                  setShowMailForm(true);
                                   setSelectedTenant(tf);
                                 }}
                               >

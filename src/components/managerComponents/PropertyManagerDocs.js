@@ -61,9 +61,9 @@ function PropertyManagerDocs(props) {
   const [activeContract, setActiveContract] = useState(null);
   const [businesses, setBusinesses] = useState([]);
   const [addPropertyManager, setAddPropertyManager] = useState(false);
-  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
-    setShowMessageForm(false);
+    setShowMailForm(false);
   };
 
   const rejectManagement = async () => {
@@ -212,7 +212,7 @@ function PropertyManagerDocs(props) {
       </Row>
       <MailDialog
         title={"Message"}
-        isOpen={showMessageForm}
+        isOpen={showMailForm}
         senderPhone={user.phone_number}
         senderEmail={user.email}
         senderName={user.first_name + " " + user.last_name}
@@ -282,7 +282,7 @@ function PropertyManagerDocs(props) {
                         </a>
                       </Col>
                       <Col className="d-flex justify-content-center">
-                        <a onClick={() => setShowMessageForm(true)}>
+                        <a onClick={() => setShowMailForm(true)}>
                           {/*  href={`mailto:${property.owner[0].owner_email}`}> */}
                           <img src={Message} alt="Message" style={smallImg} />
                         </a>

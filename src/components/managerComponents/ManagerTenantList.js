@@ -56,9 +56,9 @@ function ManagerTenantList(props) {
   const [dueDate, setDueDate] = useState("1");
   const [rentDetails, setRentDetails] = useState([]);
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
-  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
-    setShowMessageForm(false);
+    setShowMailForm(false);
   };
   // search variables
   const [search, setSearch] = useState("");
@@ -391,7 +391,7 @@ function ManagerTenantList(props) {
       <div className="flex-1">
         <MailDialog
           title={"Message"}
-          isOpen={showMessageForm}
+          isOpen={showMailForm}
           senderPhone={user.phone_number}
           senderEmail={user.email}
           senderName={user.first_name + " " + user.last_name}
@@ -563,7 +563,7 @@ function ManagerTenantList(props) {
                                   </a>
                                   <a
                                     onClick={() => {
-                                      setShowMessageForm(true);
+                                      setShowMailForm(true);
                                       setSelectedTenant(tenant);
                                     }}
                                   >

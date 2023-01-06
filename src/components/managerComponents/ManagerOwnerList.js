@@ -45,9 +45,9 @@ function ManagerOwnerList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [width, setWindowWidth] = useState(0);
-  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [showMailForm, setShowMailForm] = useState(false);
   const onCancel = () => {
-    setShowMessageForm(false);
+    setShowMailForm(false);
   };
   useEffect(() => {
     updateDimensions();
@@ -216,7 +216,7 @@ function ManagerOwnerList(props) {
       <div className="flex-1">
         <MailDialog
           title={"Message"}
-          isOpen={showMessageForm}
+          isOpen={showMailForm}
           senderPhone={user.phone_number}
           senderEmail={user.email}
           senderName={user.first_name + " " + user.last_name}
@@ -364,7 +364,7 @@ function ManagerOwnerList(props) {
                                   </a>
                                   <a
                                     onClick={() => {
-                                      setShowMessageForm(true);
+                                      setShowMailForm(true);
                                       setSelectedOwner(owner);
                                     }}
                                   >
