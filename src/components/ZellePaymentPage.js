@@ -70,7 +70,7 @@ export default function ZellePaymentPage(props) {
   };
   return (
     <div>
-      <h1>Paying with Zelle</h1>
+      <h3>Paying with Zelle</h3>
       <div>You are paying: ${totalSum}</div>
       {/* <form>
                   

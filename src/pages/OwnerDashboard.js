@@ -700,7 +700,7 @@ export default function OwnerDashboard2() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Portfolio Cashflow Summary</h1>
+                  <h3>Portfolio Cashflow Summary</h3>
                 </Col>
                 <Col>
                   <img
@@ -713,7 +713,7 @@ export default function OwnerDashboard2() {
                       marginRight: "3rem",
                     }}
                   />
-                  {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+                  {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
                 </Col>
               </Row>
               <Row className="m-3" style={{ overflow: "scroll" }}>
@@ -5001,7 +5001,7 @@ export default function OwnerDashboard2() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Properties</h1>
+                  <h3>Properties</h3>
                 </Col>
                 <Col>
                   <img
@@ -5278,7 +5278,7 @@ export default function OwnerDashboard2() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Maintenance and Repairs</h1>
+                  <h3>Maintenance and Repairs</h3>
                 </Col>
                 <Col>
                   <img
@@ -5291,7 +5291,7 @@ export default function OwnerDashboard2() {
                       marginRight: "3rem",
                     }}
                   />
-                  {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+                  {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
                 </Col>
               </Row>
               {maintenanceRequests.length > 0 ? (
@@ -5532,11 +5532,11 @@ export default function OwnerDashboard2() {
                   alignItems: "center",
                 }}
               >
-                <h1>Welcome to Manifest My Space</h1>
+                <h3>Welcome to Manifest My Space</h3>
               </div>
               <Row className="m-3">
                 <Col>
-                  <h1>Add a new Property</h1>
+                  <h3>Add a new Property</h3>
                 </Col>
                 <Col xs={2}>
                   <img

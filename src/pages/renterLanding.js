@@ -223,7 +223,7 @@ export default function RenterLanding() {
     <div className="main-renter-page">
       {/* <LandingNavbar/> */}
       <img className="main-img" src={RenterMap} />
-      <h1>Search For Your New Home </h1>
+      <h3>Search For Your New Home </h3>
       <div className="options">
         {/* <div className="o">All cities</div>
         <div className="o">All neighborhoods</div>
@@ -232,8 +232,8 @@ export default function RenterLanding() {
           Search
         </div>
       </div>
-      <h1>Schedule A Tour Today</h1>
-      <h1>Featured Properties</h1>
+      <h3>Schedule A Tour Today</h3>
+      <h3>Featured Properties</h3>
       {/* <PropertyCard propImg={PropImg}/> */}
       {data.length !== 0 && <div className="p-container">{mapProperty}</div>}
       {showTable ? (

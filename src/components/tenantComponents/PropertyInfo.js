@@ -144,7 +144,7 @@ export default function PropertyInfo() {
               ""
             )}
 
-            <h1 className="prop-info-address">{data.address}</h1>
+            <h3 className="prop-info-address">{data.address}</h3>
 
             <h3 className="prop-info-prop-type">{data.property_type}</h3>
             <div className="info-container">

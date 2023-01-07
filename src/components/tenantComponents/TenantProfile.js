@@ -214,7 +214,7 @@ function TenantProfile(props) {
       const documents = response.result[0].documents
         ? JSON.parse(response.result[0].documents)
         : [];
-      setFiles(documents);
+      setFiles(JSON.parse(response.result[0].documents));
       currentAddressState[1](currentAddress);
       setSelectedState(currentAddress.state);
       if (response.result[0].tenant_previous_address != null) {
