@@ -385,7 +385,7 @@ function ManagerTenantAgreement(props) {
       >
         <SideBar />
       </div>
-      <div className="w-100 mb-5 overflow-hidden">
+      <div className="w-100 mb-5 overflow-scroll overflow-hidden">
         <Header
           title="Tenant Agreement"
           leftText="< Back"

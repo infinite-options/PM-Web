@@ -933,13 +933,13 @@ function OwnerPropertyView(props) {
             </div>
           )}
 
-          <div className="w-100 mb-5 overflow-hidden">
+          <div className="w-100 mb-5 overflow-scroll overflow-hidden">
             <Header
               title="Property Details"
               leftText={location.state == null ? "" : "< Back"}
               leftFn={headerBack}
             />
-            <div className="w-100 mb-5">
+            <div className="w-100 mb-5 overflow-scroll">
               {editProperty ? (
                 <OwnerPropertyForm
                   property={property}
@@ -5663,11 +5663,22 @@ function OwnerPropertyView(props) {
                           size="small"
                           responsive="md"
                         >
-                          <EnhancedTableHeadProperties
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                          />{" "}
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Property Images</TableCell>
+                              <TableCell>Street Address</TableCell>
+                              <TableCell>City,State</TableCell>
+                              <TableCell>Zip</TableCell>
+                              <TableCell>Tenant</TableCell>
+                              <TableCell>Rent Status</TableCell>
+                              <TableCell>Rent</TableCell>{" "}
+                              <TableCell>$/SqFt</TableCell>{" "}
+                              <TableCell>Type</TableCell>{" "}
+                              <TableCell>Size</TableCell>
+                              <TableCell>Property Manager</TableCell>
+                              <TableCell>Lease End</TableCell>
+                            </TableRow>
+                          </TableHead>
                           <TableBody>
                             <TableRow
                               hover
@@ -5834,6 +5845,25 @@ function OwnerPropertyView(props) {
                               </TableCell>
                             </TableRow>
                           </TableBody>
+                        </Table>
+                        <Table
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                          responsive="md"
+                        >
+                          {" "}
+                          <TableRow>
+                            <TableCell style={{ width: "136px" }}>
+                              Description
+                            </TableCell>
+                            <TableCell>
+                              {property.description == "null" ||
+                              property.description == "" ||
+                              property.description == null
+                                ? "Not Available"
+                                : property.description}
+                            </TableCell>
+                          </TableRow>
                         </Table>
                       </div>
                     </Row>

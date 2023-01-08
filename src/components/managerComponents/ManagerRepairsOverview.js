@@ -324,7 +324,7 @@ function ManagerRepairsOverview(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           {/* <div
             className="mx-2 my-2 p-3"
             style={{
@@ -609,7 +609,7 @@ function ManagerRepairsOverview(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header title="Add Repair Request" />
           <ManagerRepairRequest
             properties={properties}

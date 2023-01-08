@@ -807,7 +807,7 @@ export default function ManagerDashboard() {
           >
             <SideBar />
           </div>
-          <div className="w-100 mb-5">
+          <div className="w-100 mb-5 overflow-scroll">
             <Header title="Manager Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -4425,9 +4425,39 @@ export default function ManagerDashboard() {
                                     })
                                   ) : property.available_to_rent == 0 &&
                                     property.rentalInfo === "Not Rented" ? (
-                                    <div>Not Listed</div>
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/managerPropertyDetails/${property.property_uid}`,
+                                          {
+                                            state: {
+                                              property: property,
+                                              property_uid:
+                                                property.property_uid,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      Not Listed
+                                    </div>
                                   ) : (
-                                    <div>{property.rentalInfo}</div>
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/managerPropertyDetails/${property.property_uid}`,
+                                          {
+                                            state: {
+                                              property: property,
+                                              property_uid:
+                                                property.property_uid,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      {property.rentalInfo}
+                                    </div>
                                   )}
                                   <div className="d-flex">
                                     <div className="d-flex align-items-end">
@@ -4521,9 +4551,39 @@ export default function ManagerDashboard() {
                                 >
                                   {property.available_to_rent == 0 &&
                                   property.rent_status === "No Rent Info" ? (
-                                    <div>Not Listed</div>
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/managerPropertyDetails/${property.property_uid}`,
+                                          {
+                                            state: {
+                                              property: property,
+                                              property_uid:
+                                                property.property_uid,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      Not Listed
+                                    </div>
                                   ) : (
-                                    <div>{property.rent_status}</div>
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/managerPropertyDetails/${property.property_uid}`,
+                                          {
+                                            state: {
+                                              property: property,
+                                              property_uid:
+                                                property.property_uid,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      {property.rent_status}
+                                    </div>
                                   )}
                                 </TableCell>
                                 <TableCell
@@ -4882,9 +4942,39 @@ export default function ManagerDashboard() {
                                       );
                                     })
                                   ) : property.available_to_rent == 0 ? (
-                                    <div>Not Listed</div>
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/managerPropertyDetails/${property.property_uid}`,
+                                          {
+                                            state: {
+                                              property: property,
+                                              property_uid:
+                                                property.property_uid,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      Not Listed
+                                    </div>
                                   ) : (
-                                    <div>{property.rentalInfo}</div>
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/managerPropertyDetails/${property.property_uid}`,
+                                          {
+                                            state: {
+                                              property: property,
+                                              property_uid:
+                                                property.property_uid,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      {property.rentalInfo}
+                                    </div>
                                   )}
                                   <div className="d-flex">
                                     <div className="d-flex align-items-end">
@@ -4963,9 +5053,39 @@ export default function ManagerDashboard() {
                                   }}
                                 >
                                   {property.available_to_rent == 0 ? (
-                                    <div>Not Listed</div>
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/managerPropertyDetails/${property.property_uid}`,
+                                          {
+                                            state: {
+                                              property: property,
+                                              property_uid:
+                                                property.property_uid,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      Not Listed
+                                    </div>
                                   ) : (
-                                    <div>{property.rent_status}</div>
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/managerPropertyDetails/${property.property_uid}`,
+                                          {
+                                            state: {
+                                              property: property,
+                                              property_uid:
+                                                property.property_uid,
+                                            },
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      {property.rent_status}
+                                    </div>
                                   )}
                                 </TableCell>
                                 <TableCell
@@ -5344,7 +5464,7 @@ export default function ManagerDashboard() {
           >
             <SideBar />
           </div>
-          <div className="w-100 mb-5">
+          <div className="w-100 mb-5 overflow-scroll">
             <Header title="Manager Dashboard" />
             <div
               style={{
@@ -5374,7 +5494,7 @@ export default function ManagerDashboard() {
           >
             <SideBar />
           </div>
-          <div className="w-100 mb-5">
+          <div className="w-100 mb-5 overflow-scroll">
             <Header title="Manager Dashboard" />
             <div
               style={{
@@ -5426,7 +5546,7 @@ export default function ManagerDashboard() {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Expense"
             leftText="< Back"
@@ -5456,7 +5576,7 @@ export default function ManagerDashboard() {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Repair Request"
             leftText="< Back"

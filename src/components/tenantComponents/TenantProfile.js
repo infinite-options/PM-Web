@@ -778,7 +778,7 @@ function TenantProfile(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header
             title="Profile"
             leftText={editProfile ? "Cancel" : ""}
@@ -1649,101 +1649,108 @@ function TenantProfile(props) {
               )}
             </div>
           )}
-        </div>
-      </div>
-      {editProfile ? (
-        ""
-      ) : (
-        <div
-          className="mx-3 my-3 p-2"
-          style={{
-            background: "#E9E9E9 0% 0% no-repeat padding-box",
-            borderRadius: "10px",
-            opacity: 1,
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Row>
-            <Col></Col>
-            <Col xs={4} className="d-flex justify-content-center">
-              {" "}
-              <Button
-                style={resetPassword === true ? hidden : pillButton}
-                onClick={() => setResetPassword(true)}
-              >
-                Reset Password
-              </Button>
-            </Col>
-            <Col></Col>
-          </Row>
-
-          {resetPassword ? (
-            <div>
-              <Row className="m-3">
-                <Col className="mx-2 my-3">
-                  <h6>Email</h6>
-                  <p style={gray}>
-                    {email && email !== "NULL" ? email : "No Email Provided"}
-                  </p>
-                </Col>
-                <Col>
-                  <Form.Group className="mx-2 my-3">
-                    <h6>Enter Password {password === "" ? required : ""}</h6>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      placeholder="Password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mx-2 my-3">
-                    <h6>
-                      Confirm Password {confirmPassword === "" ? required : ""}
-                    </h6>
-                    <Form.Control
-                      style={{ borderRadius: 0 }}
-                      placeholder="Confirm Password"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <div
-                className="text-center"
-                style={errorMessage === "" ? hidden : {}}
-              >
-                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
-              </div>
-
-              <Row>
-                <Col className="d-flex justify-content-center">
-                  <Button
-                    style={pillButton}
-                    onClick={() => updatePassword(user)}
-                  >
-                    Update Password
-                  </Button>
-                </Col>{" "}
-                <Col className="d-flex justify-content-center">
-                  <Button
-                    style={pillButton}
-                    onClick={() => setResetPassword(false)}
-                  >
-                    Cancel
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          ) : (
+          {editProfile ? (
             ""
+          ) : (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Row>
+                <Col></Col>
+                <Col xs={4} className="d-flex justify-content-center">
+                  {" "}
+                  <Button
+                    style={resetPassword === true ? hidden : pillButton}
+                    onClick={() => setResetPassword(true)}
+                  >
+                    Reset Password
+                  </Button>
+                </Col>
+                <Col></Col>
+              </Row>
+
+              {resetPassword ? (
+                <div>
+                  <Row className="m-3">
+                    <Col className="mx-2 my-3">
+                      <h6>Email</h6>
+                      <p style={gray}>
+                        {email && email !== "NULL"
+                          ? email
+                          : "No Email Provided"}
+                      </p>
+                    </Col>
+                    <Col>
+                      <Form.Group className="mx-2 my-3">
+                        <h6>
+                          Enter Password {password === "" ? required : ""}
+                        </h6>
+                        <Form.Control
+                          style={{ borderRadius: 0 }}
+                          placeholder="Password"
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mx-2 my-3">
+                        <h6>
+                          Confirm Password{" "}
+                          {confirmPassword === "" ? required : ""}
+                        </h6>
+                        <Form.Control
+                          style={{ borderRadius: 0 }}
+                          placeholder="Confirm Password"
+                          type="password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <div
+                    className="text-center"
+                    style={errorMessage === "" ? hidden : {}}
+                  >
+                    <p style={{ ...red, ...small }}>
+                      {errorMessage || "error"}
+                    </p>
+                  </div>
+
+                  <Row>
+                    <Col className="d-flex justify-content-center">
+                      <Button
+                        style={pillButton}
+                        onClick={() => updatePassword(user)}
+                      >
+                        Update Password
+                      </Button>
+                    </Col>{" "}
+                    <Col className="d-flex justify-content-center">
+                      <Button
+                        style={pillButton}
+                        onClick={() => setResetPassword(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
           )}
         </div>
-      )}
+      </div>
 
       <div hidden={responsive.showSidebar} className="w-100 mt-3">
         <TenantFooter />
