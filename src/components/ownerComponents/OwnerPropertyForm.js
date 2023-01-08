@@ -452,8 +452,11 @@ function OwnerPropertyForm(props) {
       deposit: deposit,
       appliances: JSON.stringify(applianceState[0]),
       utilities: JSON.stringify(utilityState[0]),
-      pets_allowed: petsAllowed,
-      deposit_for_rent: depositForRent,
+      pets_allowed: petsAllowed == true || petsAllowed == 1 ? "true" : "false",
+      deposit_for_rent:
+        depositForRent == true || depositForRent == 1 ? "true" : "false",
+      available_to_rent:
+        availableToRent == true || availableToRent == 1 ? "true" : "false",
     };
     const files = imageState[0];
     let i = 0;
@@ -496,8 +499,13 @@ function OwnerPropertyForm(props) {
         deposit: deposit,
         appliances: JSON.stringify(applianceState[0]),
         utilities: JSON.stringify(utilityState[0]),
-        pets_allowed: petsAllowed,
-        deposit_for_rent: depositForRent,
+
+        pets_allowed:
+          petsAllowed == true || petsAllowed == 1 ? "true" : "false",
+        deposit_for_rent:
+          depositForRent == true || depositForRent == 1 ? "true" : "false",
+        available_to_rent:
+          availableToRent == true || availableToRent == 1 ? "true" : "false",
       };
       const files = imageState[0];
       console.log(files, imageState);

@@ -198,7 +198,7 @@ function ManagerManagementContract(props) {
       >
         <SideBar />
       </div>
-      <div className="w-100 mb-5">
+      <div className="w-100 mb-5 overflow-scroll">
         <Header
           title="Management Contract"
           leftText="< Back"

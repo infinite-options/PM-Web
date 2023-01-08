@@ -203,9 +203,11 @@ function ManagerPropertyForm(props) {
       deposit: deposit,
       appliances: JSON.stringify(applianceState[0]),
       utilities: JSON.stringify(utilityState[0]),
-      pets_allowed: petsAllowed,
-      deposit_for_rent: depositForRent,
-      available_to_rent: availableToRent,
+      pets_allowed: petsAllowed == true || petsAllowed == 1 ? "true" : "false",
+      deposit_for_rent:
+        depositForRent == true || depositForRent == 1 ? "true" : "false",
+      available_to_rent:
+        availableToRent == true || availableToRent == 1 ? "true" : "false",
     };
     const files = imageState[0];
     let i = 0;
@@ -217,7 +219,7 @@ function ManagerPropertyForm(props) {
         newProperty[key] = file.image;
       }
     }
-
+    console.log(newProperty);
     setShowSpinner(true);
     if (property) {
       newProperty.owner_id = property.owner_id;
@@ -248,9 +250,12 @@ function ManagerPropertyForm(props) {
         deposit: deposit,
         appliances: JSON.stringify(applianceState[0]),
         utilities: JSON.stringify(utilityState[0]),
-        pets_allowed: petsAllowed,
-        deposit_for_rent: depositForRent,
-        available_to_rent: availableToRent,
+        pets_allowed:
+          petsAllowed == true || petsAllowed == 1 ? "true" : "false",
+        deposit_for_rent:
+          depositForRent == true || depositForRent == 1 ? "true" : "false",
+        available_to_rent:
+          availableToRent == true || availableToRent == 1 ? "true" : "false",
       };
       const files = imageState[0];
       let i = 0;
@@ -644,67 +649,32 @@ function ManagerPropertyForm(props) {
           </Col>
         </Container>
 
-        {edit ? (
-          <Container className="d-flex my-3 ">
-            <Col>
-              <h6>Available to Rent</h6>
-            </Col>
-
-            <Col className="d-flex">
-              <p>No</p>
-              <Switch
-                checked={availableToRent}
-                onChange={
-                  edit
-                    ? (e) => {
-                        availableToRent == 1
-                          ? setAvailableToRent(false)
-                          : setAvailableToRent(true);
-                      }
-                    : () => {
-                        setShowDialog(true);
-                      }
-                }
-                inputProps={{ "aria-label": "controlled" }}
-              />{" "}
-              <p>Yes</p>
-            </Col>
-          </Container>
-        ) : (
-          <Container className="my-3">
+        <Container className="d-flex my-3 ">
+          <Col>
             <h6>Available to Rent</h6>
-            <Row>
-              <Col className="d-flex ps-4">
-                <Checkbox
-                  type="CIRCLE"
-                  checked={availableToRent}
-                  onClick={
-                    edit
-                      ? () => setAvailableToRent(true)
-                      : () => {
-                          setShowDialog(true);
-                        }
-                  }
-                />
-                <p className="ms-1 mb-1">Yes</p>
-              </Col>
-              <Col className="d-flex ps-4">
-                <Checkbox
-                  type="CIRCLE"
-                  checked={!availableToRent}
-                  onClick={
-                    edit
-                      ? () => setAvailableToRent(false)
-                      : () => {
-                          setShowDialog(true);
-                        }
-                  }
-                />
-                <p className="ms-1 mb-1">No</p>
-              </Col>
-            </Row>
-          </Container>
-        )}
+          </Col>
+
+          <Col className="d-flex">
+            <p>No</p>
+            <Switch
+              checked={availableToRent}
+              onChange={
+                edit
+                  ? (e) => {
+                      availableToRent == 1
+                        ? setAvailableToRent(false)
+                        : setAvailableToRent(true);
+                    }
+                  : () => {
+                      setShowDialog(true);
+                    }
+              }
+              inputProps={{ "aria-label": "controlled" }}
+            />{" "}
+            <p>Yes</p>
+          </Col>
+        </Container>
+
         {edit ? (
           <Container
             style={({ paddingLeft: "0px" }, mediumBold)}

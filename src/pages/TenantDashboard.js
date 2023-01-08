@@ -666,7 +666,7 @@ export default function TenantDashboard() {
           >
             <SideBar />
           </div>
-          <div className="w-100 mb-5">
+          <div className="w-100 mb-5 overflow-scroll">
             <Header title="Tenant Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -678,7 +678,7 @@ export default function TenantDashboard() {
             >
               {announcements.length > 0 ? (
                 <Row className="m-3">
-                  <h1>Announcements</h1>
+                  <h3>Announcements</h3>
                   <Carousel slide={false}>
                     {announcements.map((announce) => {
                       return (
@@ -699,7 +699,7 @@ export default function TenantDashboard() {
                 </Row>
               ) : (
                 <Row className="m-3">
-                  <h1>Announcements</h1>
+                  <h3>Announcements</h3>
                   <Carousel slide={false}>
                     <CarouselItem>
                       <div className="align-items-center w-100 p-4">
@@ -722,7 +722,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Properties</h1>
+                  <h3>Properties</h3>
                 </Col>
                 <Col></Col>
               </Row>
@@ -906,7 +906,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Payment Summary</h1>
+                  <h3>Payment Summary</h3>
                 </Col>
               </Row>
               <Row className="m-3">
@@ -933,7 +933,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Maintenance and Repairs</h1>
+                  <h3>Maintenance and Repairs</h3>
                 </Col>
                 <Col>
                   <img
@@ -949,7 +949,7 @@ export default function TenantDashboard() {
                       marginRight: "3rem",
                     }}
                   />
-                  {/* <h1 style={{ float: "right", marginRight: "3rem" }}>+</h1> */}
+                  {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
                 </Col>
               </Row>
               {maintenanceRequests.length > 0 ? (
@@ -1146,7 +1146,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Property Manager Info</h1>
+                  <h3>Property Manager Info</h3>
                 </Col>
               </Row>
               <Row className="m-3">
@@ -1202,7 +1202,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Find Your Next Place</h1>
+                  <h3>Find Your Next Place</h3>
                 </Col>
                 <Col>
                   <img
@@ -1412,7 +1412,7 @@ export default function TenantDashboard() {
           >
             <SideBar />
           </div>
-          <div className="w-100 mb-5">
+          <div className="w-100 mb-5 overflow-scroll">
             <Header title="Tenant Dashboard" />
             <div
               style={{
@@ -1421,7 +1421,7 @@ export default function TenantDashboard() {
                 alignItems: "center",
               }}
             >
-              <h1>Welcome to Manifest My Space</h1>
+              <h3>Welcome to Manifest My Space</h3>
             </div>
             <div
               style={{
@@ -1446,7 +1446,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Properties</h1>
+                  <h3>Properties</h3>
                 </Col>
                 <Col></Col>
               </Row>
@@ -1467,7 +1467,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h1>Find Your Next Place</h1>
+                  <h3>Find Your Next Place</h3>
                 </Col>
                 <Col>
                   <img
@@ -1717,7 +1717,7 @@ export default function TenantDashboard() {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header
             title="Add Repair Request"
             leftText="< Back"

@@ -767,7 +767,7 @@ function ManagerPropertyView(props) {
           >
             <SideBar />
           </div>
-          <div className="w-100 mb-5 overflow-hidden">
+          <div className="w-100 mb-5 overflow-scroll overflow-hidden">
             <Header
               title="Property Details"
               leftText={location.state == null ? "" : "< Back"}
@@ -4405,6 +4405,7 @@ function ManagerPropertyView(props) {
                         responsive="md"
                       >
                         <TableHead>
+                          {" "}
                           <TableRow>
                             <TableCell> Property Images</TableCell>
                             <TableCell>Street Address</TableCell>
@@ -4420,6 +4421,7 @@ function ManagerPropertyView(props) {
                           </TableRow>
                         </TableHead>
                         <TableBody>
+                          {" "}
                           <TableRow
                             hover
                             role="checkbox"
@@ -4602,6 +4604,25 @@ function ManagerPropertyView(props) {
                             </TableCell>
                           </TableRow>
                         </TableBody>
+                      </Table>
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                        responsive="md"
+                      >
+                        {" "}
+                        <TableRow>
+                          <TableCell style={{ width: "149px" }}>
+                            Description
+                          </TableCell>
+                          <TableCell>
+                            {property.description == "null" ||
+                            property.description == "" ||
+                            property.description == null
+                              ? "Not Available"
+                              : property.description}
+                          </TableCell>
+                        </TableRow>
                       </Table>
                     </div>
                   </Row>

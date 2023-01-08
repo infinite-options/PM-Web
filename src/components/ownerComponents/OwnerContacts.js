@@ -252,7 +252,7 @@ function OwnerContacts() {
     );
 
   return (
-    <div>
+    <div className="w-100 overflow-hidden">
       <div className="flex-1">
         <div
           hidden={!responsiveSidebar.showSidebar}
@@ -264,7 +264,7 @@ function OwnerContacts() {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header title="Contacts" />
           {!isLoading ? (
             <div>

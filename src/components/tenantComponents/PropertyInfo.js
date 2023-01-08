@@ -113,7 +113,7 @@ export default function PropertyInfo() {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header title="Tenant Dashboard" />
           <Row className="m-3">
             {imgs.length > 0 ? (
@@ -144,7 +144,7 @@ export default function PropertyInfo() {
               ""
             )}
 
-            <h1 className="prop-info-address">{data.address}</h1>
+            <h3 className="prop-info-address">{data.address}</h3>
 
             <h3 className="prop-info-prop-type">{data.property_type}</h3>
             <div className="info-container">

@@ -370,7 +370,7 @@ function OwnerRepairList(props) {
   };
 
   return stage === "LIST" ? (
-    <div>
+    <div className="w-100 overflow-hidden">
       <div className="flex-1">
         <div
           hidden={!responsiveSidebar.showSidebar}
@@ -382,7 +382,7 @@ function OwnerRepairList(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header
             title="Repairs"
             // rightText="+ New"
@@ -607,7 +607,7 @@ function OwnerRepairList(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5">
+        <div className="w-100 mb-5 overflow-scroll">
           <Header title="Add Repair Request" />
           <OwnerRepairRequest
             properties={properties}

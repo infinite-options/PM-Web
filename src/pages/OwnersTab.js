@@ -12,7 +12,7 @@ export default function OwnersTab() {
   return (
     <div style={{ backgroundColor: "#fafafa" }}>
       <div style={{ textAlign: "center" }}>
-        <h1 className="propertydescription">Property Ownership Simplified</h1>
+        <h3 className="propertydescription">Property Ownership Simplified</h3>
       </div>
 
       <div className="topcontainer">
