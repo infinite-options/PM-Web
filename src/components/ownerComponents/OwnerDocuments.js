@@ -13,7 +13,7 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import OwnerFooter from "./OwnerFooter";
-import OpenDoc from "../../icons/OpenDocBlack.svg";
+import File from "../../icons/File.svg";
 import { get } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
@@ -218,7 +218,7 @@ function OwnerDocuments(props) {
                               <TableCell width="180px">
                                 <a href={ald.link} target="_blank">
                                   <img
-                                    src={OpenDoc}
+                                    src={File}
                                     style={{
                                       width: "30px",
                                       height: "30px",
@@ -307,7 +307,7 @@ function OwnerDocuments(props) {
                                 <TableCell width="180px" xs={1}>
                                   <a href={amd.link} target="_blank">
                                     <img
-                                      src={OpenDoc}
+                                      src={File}
                                       style={{
                                         width: "30px",
                                         height: "30px",
@@ -427,7 +427,7 @@ function OwnerDocuments(props) {
                               <TableCell width="180px">
                                 <a href={pld.link} target="_blank">
                                   <img
-                                    src={OpenDoc}
+                                    src={File}
                                     style={{
                                       width: "30px",
                                       height: "30px",
@@ -515,7 +515,7 @@ function OwnerDocuments(props) {
                               <TableCell width="180px">
                                 <a href={pmd.link} target="_blank">
                                   <img
-                                    src={OpenDoc}
+                                    src={File}
                                     style={{
                                       width: "30px",
                                       height: "30px",

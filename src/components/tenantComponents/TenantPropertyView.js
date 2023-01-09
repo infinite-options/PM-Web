@@ -22,7 +22,7 @@ import TenantRepairRequest from "./TenantRepairRequest";
 import AppContext from "../../AppContext";
 import ConfirmDialog from "../ConfirmDialog";
 import SideBar from "./SideBar";
-import OpenDoc from "../../icons/OpenDoc.svg";
+import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import AddIcon from "../../icons/AddIcon.svg";
@@ -1320,7 +1320,7 @@ function TenantPropertyView(props) {
                                   <TableCell>
                                     <a href={file.link} target="_blank">
                                       <img
-                                        src={OpenDoc}
+                                        src={File}
                                         style={{
                                           width: "15px",
                                           height: "15px",

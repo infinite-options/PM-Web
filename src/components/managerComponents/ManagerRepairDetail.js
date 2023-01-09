@@ -23,7 +23,7 @@ import HighPriority from "../../icons/highPriority.svg";
 import MediumPriority from "../../icons/mediumPriority.svg";
 import LowPriority from "../../icons/lowPriority.svg";
 import RepairImg from "../../icons/RepairImg.svg";
-import OpenDoc from "../../icons/OpenDoc.svg";
+import File from "../../icons/File.svg";
 import {
   headings,
   pillButton,
@@ -852,7 +852,7 @@ function ManagerRepairDetail(props) {
                                       </Col>
                                       <Col className=" d-flex justify-content-end">
                                         <a href={rp.link} target="_blank">
-                                          <img src={OpenDoc} />
+                                          <img src={File} />
                                         </a>
                                       </Col>
                                     </Row>

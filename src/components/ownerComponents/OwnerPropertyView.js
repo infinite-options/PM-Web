@@ -30,7 +30,6 @@ import ManagerFees from "../ManagerFees";
 import SideBar from "./SideBar";
 import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
-import OpenDoc from "../../icons/OpenDoc.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
@@ -7379,7 +7378,7 @@ function OwnerPropertyView(props) {
                                             </Col>
                                             <Col className=" d-flex justify-content-end">
                                               <a href={rp.link} target="_blank">
-                                                <img src={OpenDoc} />
+                                                <img src={File} />
                                               </a>
                                             </Col>
                                           </Row>

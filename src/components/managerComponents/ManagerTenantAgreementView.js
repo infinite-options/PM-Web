@@ -14,7 +14,7 @@ import MailDialogContact from "../MailDialog";
 import AppContext from "../../AppContext";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
-import OpenDoc from "../../icons/OpenDoc.svg";
+import File from "../../icons/File.svg";
 import { put, post, get } from "../../utils/api";
 import {
   small,
@@ -472,7 +472,7 @@ function ManagerTenantAgreementView(props) {
                         <TableCell>
                           <a href={file.link} target="_blank">
                             <img
-                              src={OpenDoc}
+                              src={File}
                               style={{
                                 width: "15px",
                                 height: "15px",
