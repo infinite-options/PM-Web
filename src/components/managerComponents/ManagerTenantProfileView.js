@@ -11,7 +11,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
-import OpenDoc from "../../icons/OpenDoc.svg";
 import { put } from "../../utils/api";
 import {
   mediumBold,
@@ -752,7 +751,7 @@ function ManagerTenantProfileView(props) {
                             <TableCell>
                               <a href={file.link} target="_blank">
                                 <img
-                                  src={OpenDoc}
+                                  src={File}
                                   style={{
                                     width: "15px",
                                     height: "15px",

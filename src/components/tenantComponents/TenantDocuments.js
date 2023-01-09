@@ -14,7 +14,6 @@ import Header from "../Header";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
 import TenantDocumentUpload from "./TenantDocumentUpload";
-import OpenDoc from "../../icons/OpenDocBlack.svg";
 import File from "../../icons/File.svg";
 import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
@@ -318,7 +317,7 @@ function TenantDocuments(props) {
                                   <TableCell width="180px">
                                     <a href={ald.link} target="_blank">
                                       <img
-                                        src={OpenDoc}
+                                        src={File}
                                         style={{
                                           width: "30px",
                                           height: "30px",
@@ -443,7 +442,7 @@ function TenantDocuments(props) {
                                 <TableCell width="180px">
                                   <a href={pld.link} target="_blank">
                                     <img
-                                      src={OpenDoc}
+                                      src={File}
                                       style={{
                                         width: "30px",
                                         height: "30px",
@@ -607,7 +606,7 @@ function TenantDocuments(props) {
                                   <TableCell width="180px">
                                     <a href={tud.link} target="_blank">
                                       <img
-                                        src={OpenDoc}
+                                        src={File}
                                         style={{
                                           width: "30px",
                                           height: "30px",

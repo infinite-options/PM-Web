@@ -127,6 +127,8 @@ function ManagerPropertyForm(props) {
   const [depositForRent, setDepositForRent] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [availableToRent, setAvailableToRent] = useState(false);
+
+  const [featured, setFeatured] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
 
@@ -149,6 +151,8 @@ function ManagerPropertyForm(props) {
     setPetsAllowed(property.pets_allowed);
     setDepositForRent(property.deposit_for_rent);
     setAvailableToRent(property.available_to_rent);
+
+    setFeatured(property.featured);
     applianceState[1](JSON.parse(property.appliances));
     utilityState[1](JSON.parse(property.utilities));
     loadImages();
@@ -208,6 +212,7 @@ function ManagerPropertyForm(props) {
         depositForRent == true || depositForRent == 1 ? "true" : "false",
       available_to_rent:
         availableToRent == true || availableToRent == 1 ? "true" : "false",
+      featured: featured,
     };
     const files = imageState[0];
     let i = 0;
@@ -256,6 +261,7 @@ function ManagerPropertyForm(props) {
           depositForRent == true || depositForRent == 1 ? "true" : "false",
         available_to_rent:
           availableToRent == true || availableToRent == 1 ? "true" : "false",
+        featured: featured,
       };
       const files = imageState[0];
       let i = 0;
@@ -675,23 +681,22 @@ function ManagerPropertyForm(props) {
           </Col>
         </Container>
 
-        {edit ? (
-          <Container
-            style={({ paddingLeft: "0px" }, mediumBold)}
-            className="my-3"
-          >
-            <h6> Featured</h6>
-            <p> {property.featured}</p>
-          </Container>
-        ) : (
-          <Container
-            style={({ paddingLeft: "0px" }, mediumBold)}
-            className="my-3"
-          >
-            <h6> Featured</h6>
-            <p> {property.featured}</p>
-          </Container>
-        )}
+        <Container className="d-flex my-3 ">
+          <Col>
+            <h6>Featured</h6>
+          </Col>
+
+          <Col className="d-flex">
+            <p>No</p>
+            <Switch
+              checked={featured == true || featured == "True"}
+              onChange={(event) => setFeatured(event.target.checked)}
+              inputProps={{ "aria-label": "controlled" }}
+            />{" "}
+            <p>Yes</p>
+          </Col>
+        </Container>
+        {console.log(featured)}
       </div>
 
       {edit ? (

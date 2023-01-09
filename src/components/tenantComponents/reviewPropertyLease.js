@@ -332,9 +332,11 @@ function ReviewPropertyLease(props) {
                         <TableCell>Application Status</TableCell>
                         <TableCell>Name</TableCell>
                         <TableCell>Message</TableCell>
-                        <TableCell>Occupants</TableCell>
-                        <TableCell>No.of Pets</TableCell>
-                        <TableCell>Type of Pets</TableCell>
+                        <TableCell>Adults</TableCell>
+                        <TableCell>Children</TableCell>
+                        <TableCell>Pets</TableCell>
+                        <TableCell>Vehicles</TableCell>
+                        <TableCell>References</TableCell>
                         <TableCell>Application Date</TableCell>
                         <TableCell>Documents</TableCell>
                       </TableRow>
@@ -346,12 +348,42 @@ function ReviewPropertyLease(props) {
                           {`${application.tenant_first_name} ${application.tenant_last_name} `}
                         </TableCell>
                         <TableCell>Note: {application.message}</TableCell>
-                        <TableCell>
-                          {application.adult_occupants} adults <br />
-                          {application.children_occupants} children
-                        </TableCell>
-                        <TableCell>{application.num_pets}</TableCell>
-                        <TableCell>{application.type_pets}</TableCell>
+                        {application.adults ? (
+                          <TableCell>
+                            {JSON.parse(application.adults).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
+                        {application.children ? (
+                          <TableCell>
+                            {JSON.parse(application.children).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
+
+                        {application.pets ? (
+                          <TableCell>
+                            {JSON.parse(application.pets).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
+                        {application.vehicles ? (
+                          <TableCell>
+                            {JSON.parse(application.vehicles).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
+                        {application.references ? (
+                          <TableCell>
+                            {JSON.parse(application.references).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
                         <TableCell>
                           {application.application_date.split(" ")[0]}
                         </TableCell>
@@ -413,15 +445,13 @@ function ReviewPropertyLease(props) {
                                     Phone Number
                                   </TableCell>
                                   <TableCell align="center">Email</TableCell>
+
+                                  <TableCell align="center">Adults</TableCell>
+                                  <TableCell align="center">Children</TableCell>
+                                  <TableCell align="center">Pets</TableCell>
+                                  <TableCell align="center">Vehicles</TableCell>
                                   <TableCell align="center">
-                                    Occupants
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    No. of Pets
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {" "}
-                                    Type of Pets
+                                    References
                                   </TableCell>
                                 </TableRow>
                               </TableHead>
@@ -437,17 +467,42 @@ function ReviewPropertyLease(props) {
                                   <TableCell align="center">
                                     {applicant.tenant_email}
                                   </TableCell>
-                                  <TableCell align="center">
-                                    {applicant.adult_occupants} adults <br />
-                                    {applicant.children_occupants} children
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {applicant.num_pets}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {" "}
-                                    {applicant.type_pets}
-                                  </TableCell>
+                                  {applicant.adults ? (
+                                    <TableCell align="center">
+                                      {JSON.parse(applicant.adults).length}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell align="center">0</TableCell>
+                                  )}
+                                  {applicant.children ? (
+                                    <TableCell align="center">
+                                      {JSON.parse(applicant.children).length}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell align="center">0</TableCell>
+                                  )}
+
+                                  {applicant.pets ? (
+                                    <TableCell align="center">
+                                      {JSON.parse(applicant.pets).length}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell align="center">0</TableCell>
+                                  )}
+                                  {applicant.vehicles ? (
+                                    <TableCell align="center">
+                                      {JSON.parse(applicant.vehicles).length}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell align="center">0</TableCell>
+                                  )}
+                                  {applicant.references ? (
+                                    <TableCell align="center">
+                                      {JSON.parse(applicant.references).length}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell align="center">0</TableCell>
+                                  )}
                                 </TableRow>
                               </TableBody>
                             </Table>
@@ -600,9 +655,11 @@ function ReviewPropertyLease(props) {
                       <TableCell>Application Status</TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Message</TableCell>
-                      <TableCell>Occupants</TableCell>
-                      <TableCell>No.of Pets</TableCell>
-                      <TableCell>Type of Pets</TableCell>
+                      <TableCell>Adults</TableCell>
+                      <TableCell>Children</TableCell>
+                      <TableCell>Pets</TableCell>
+                      <TableCell>Vehicles</TableCell>
+                      <TableCell>References</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -614,12 +671,42 @@ function ReviewPropertyLease(props) {
                         {`${application.tenant_first_name} ${application.tenant_last_name} `}
                       </TableCell>
                       <TableCell>Note: {application.message}</TableCell>
-                      <TableCell>
-                        {application.adult_occupants} adults <br />
-                        {application.children_occupants} children
-                      </TableCell>
-                      <TableCell>{application.num_pets}</TableCell>
-                      <TableCell>{application.type_pets}</TableCell>
+                      {application.adults ? (
+                        <TableCell>
+                          {JSON.parse(application.adults).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.children ? (
+                        <TableCell>
+                          {JSON.parse(application.children).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+
+                      {application.pets ? (
+                        <TableCell>
+                          {JSON.parse(application.pets).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.vehicles ? (
+                        <TableCell>
+                          {JSON.parse(application.vehicles).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.references ? (
+                        <TableCell>
+                          {JSON.parse(application.references).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
                       <TableCell>
                         {application.application_date.split(" ")[0]}
                       </TableCell>
@@ -681,14 +768,11 @@ function ReviewPropertyLease(props) {
                                   Phone Number
                                 </TableCell>
                                 <TableCell align="center">Email</TableCell>
-                                <TableCell align="center">Occupants</TableCell>
-                                <TableCell align="center">
-                                  No. of Pets
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  Type of Pets
-                                </TableCell>
+                                <TableCell align="center">Adults</TableCell>
+                                <TableCell align="center">Children</TableCell>
+                                <TableCell align="center">Pets</TableCell>
+                                <TableCell align="center">Vehicles</TableCell>
+                                <TableCell align="center">References</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -703,17 +787,42 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">
                                   {applicant.tenant_email}
                                 </TableCell>
-                                <TableCell align="center">
-                                  {applicant.adult_occupants} adults <br />
-                                  {applicant.children_occupants} children
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.num_pets}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {applicant.type_pets}
-                                </TableCell>
+                                {applicant.adults ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.adults).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.children ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.children).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+
+                                {applicant.pets ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.pets).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.vehicles ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.vehicles).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.references ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.references).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
                               </TableRow>
                             </TableBody>
                           </Table>
@@ -860,9 +969,11 @@ function ReviewPropertyLease(props) {
                       <TableCell>Application Status</TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Message</TableCell>
-                      <TableCell>Occupants</TableCell>
-                      <TableCell>No.of Pets</TableCell>
-                      <TableCell>Type of Pets</TableCell>
+                      <TableCell>Adults</TableCell>
+                      <TableCell>Children</TableCell>
+                      <TableCell>Pets</TableCell>
+                      <TableCell>Vehicles</TableCell>
+                      <TableCell>References</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -874,12 +985,42 @@ function ReviewPropertyLease(props) {
                         {`${application.tenant_first_name} ${application.tenant_last_name} `}
                       </TableCell>
                       <TableCell>Note: {application.message}</TableCell>
-                      <TableCell>
-                        {application.adult_occupants} adults <br />
-                        {application.children_occupants} children
-                      </TableCell>
-                      <TableCell>{application.num_pets}</TableCell>
-                      <TableCell>{application.type_pets}</TableCell>
+                      {application.adults ? (
+                        <TableCell>
+                          {JSON.parse(application.adults).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.children ? (
+                        <TableCell>
+                          {JSON.parse(application.children).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+
+                      {application.pets ? (
+                        <TableCell>
+                          {JSON.parse(application.pets).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.vehicles ? (
+                        <TableCell>
+                          {JSON.parse(application.vehicles).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.references ? (
+                        <TableCell>
+                          {JSON.parse(application.references).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
                       <TableCell>
                         {application.application_date.split(" ")[0]}
                       </TableCell>
@@ -942,14 +1083,11 @@ function ReviewPropertyLease(props) {
                                   Phone Number
                                 </TableCell>
                                 <TableCell align="center">Email</TableCell>
-                                <TableCell align="center">Occupants</TableCell>
-                                <TableCell align="center">
-                                  No. of Pets
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  Type of Pets
-                                </TableCell>
+                                <TableCell align="center">Adults</TableCell>
+                                <TableCell align="center">Children</TableCell>
+                                <TableCell align="center">Pets</TableCell>
+                                <TableCell align="center">Vehicles</TableCell>
+                                <TableCell align="center">References</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -964,17 +1102,42 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">
                                   {applicant.tenant_email}
                                 </TableCell>
-                                <TableCell align="center">
-                                  {applicant.adult_occupants} adults <br />
-                                  {applicant.children_occupants} children
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.num_pets}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {applicant.type_pets}
-                                </TableCell>
+                                {applicant.adults ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.adults).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.children ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.children).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+
+                                {applicant.pets ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.pets).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.vehicles ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.vehicles).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.references ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.references).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
                               </TableRow>
                             </TableBody>
                           </Table>
@@ -1021,9 +1184,11 @@ function ReviewPropertyLease(props) {
                       <TableCell>Application Status</TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Message</TableCell>
-                      <TableCell>Occupants</TableCell>
-                      <TableCell>No.of Pets</TableCell>
-                      <TableCell>Type of Pets</TableCell>
+                      <TableCell>Adults</TableCell>
+                      <TableCell>Children</TableCell>
+                      <TableCell>Pets</TableCell>
+                      <TableCell>Vehicles</TableCell>
+                      <TableCell>References</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -1035,12 +1200,42 @@ function ReviewPropertyLease(props) {
                         {`${application.tenant_first_name} ${application.tenant_last_name} `}
                       </TableCell>
                       <TableCell>Note: {application.message}</TableCell>
-                      <TableCell>
-                        {application.adult_occupants} adults <br />
-                        {application.children_occupants} children
-                      </TableCell>
-                      <TableCell>{application.num_pets}</TableCell>
-                      <TableCell>{application.type_pets}</TableCell>
+                      {application.adults ? (
+                        <TableCell>
+                          {JSON.parse(application.adults).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.children ? (
+                        <TableCell>
+                          {JSON.parse(application.children).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+
+                      {application.pets ? (
+                        <TableCell>
+                          {JSON.parse(application.pets).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.vehicles ? (
+                        <TableCell>
+                          {JSON.parse(application.vehicles).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.references ? (
+                        <TableCell>
+                          {JSON.parse(application.references).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
                       <TableCell>
                         {application.application_date.split(" ")[0]}
                       </TableCell>
@@ -1102,14 +1297,11 @@ function ReviewPropertyLease(props) {
                                   Phone Number
                                 </TableCell>
                                 <TableCell align="center">Email</TableCell>
-                                <TableCell align="center">Occupants</TableCell>
-                                <TableCell align="center">
-                                  No. of Pets
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  Type of Pets
-                                </TableCell>
+                                <TableCell align="center">Adults</TableCell>
+                                <TableCell align="center">Children</TableCell>
+                                <TableCell align="center">Pets</TableCell>
+                                <TableCell align="center">Vehicles</TableCell>
+                                <TableCell align="center">References</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -1124,17 +1316,42 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">
                                   {applicant.tenant_email}
                                 </TableCell>
-                                <TableCell align="center">
-                                  {applicant.adult_occupants} adults <br />
-                                  {applicant.children_occupants} children
-                                </TableCell>
-                                <TableCell align="center">
-                                  {applicant.num_pets}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {" "}
-                                  {applicant.type_pets}
-                                </TableCell>
+                                {applicant.adults ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.adults).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.children ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.children).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+
+                                {applicant.pets ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.pets).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.vehicles ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.vehicles).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
+                                {applicant.references ? (
+                                  <TableCell align="center">
+                                    {JSON.parse(applicant.references).length}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell align="center">0</TableCell>
+                                )}
                               </TableRow>
                             </TableBody>
                           </Table>

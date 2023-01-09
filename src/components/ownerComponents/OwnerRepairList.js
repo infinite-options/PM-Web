@@ -315,7 +315,12 @@ function OwnerRepairList(props) {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
+      label: "Scheduled Date",
+    },
+    {
+      id: "scheduled_time",
+      numeric: true,
+      label: "Scheduled Time",
     },
     {
       id: "total_estimate",
@@ -564,8 +569,19 @@ function OwnerRepairList(props) {
                                 size="small"
                                 align="center"
                               >
-                                {repair.scheduled_date != null
+                                {repair.scheduled_date !== null &&
+                                repair.scheduled_date !== "null"
                                   ? repair.scheduled_date
+                                  : "Not Scheduled"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.scheduled_time !== null &&
+                                repair.scheduled_time !== "null"
+                                  ? repair.scheduled_time.split(" ")[0]
                                   : "Not Scheduled"}
                               </TableCell>
 

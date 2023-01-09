@@ -22,7 +22,7 @@ import TenantRepairRequest from "./TenantRepairRequest";
 import AppContext from "../../AppContext";
 import ConfirmDialog from "../ConfirmDialog";
 import SideBar from "./SideBar";
-import OpenDoc from "../../icons/OpenDoc.svg";
+import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import AddIcon from "../../icons/AddIcon.svg";
@@ -410,7 +410,12 @@ function TenantPropertyView(props) {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
+      label: "Scheduled Date",
+    },
+    {
+      id: "scheduled_time",
+      numeric: true,
+      label: "Scheduled Time",
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
@@ -768,9 +773,19 @@ function TenantPropertyView(props) {
                                 size="small"
                                 align="center"
                               >
-                                {request.scheduled_date != null ||
-                                request.scheduled_date != "null"
+                                {request.scheduled_date !== null &&
+                                request.scheduled_date !== "null"
                                   ? request.scheduled_date
+                                  : "Not Scheduled"}
+                              </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {request.scheduled_time !== null &&
+                                request.scheduled_time !== "null"
+                                  ? request.scheduled_time.split(" ")[0]
                                   : "Not Scheduled"}
                               </TableCell>
                             </TableRow>
@@ -1305,7 +1320,7 @@ function TenantPropertyView(props) {
                                   <TableCell>
                                     <a href={file.link} target="_blank">
                                       <img
-                                        src={OpenDoc}
+                                        src={File}
                                         style={{
                                           width: "15px",
                                           height: "15px",

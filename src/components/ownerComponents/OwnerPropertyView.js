@@ -30,7 +30,6 @@ import ManagerFees from "../ManagerFees";
 import SideBar from "./SideBar";
 import AppContext from "../../AppContext";
 import File from "../../icons/File.svg";
-import OpenDoc from "../../icons/OpenDoc.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
@@ -649,7 +648,12 @@ function OwnerPropertyView(props) {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
+      label: "Scheduled Date",
+    },
+    {
+      id: "scheduled_time",
+      numeric: true,
+      label: "Scheduled Time",
     },
   ];
   function EnhancedTableHeadMaintenance(props) {
@@ -6030,6 +6034,16 @@ function OwnerPropertyView(props) {
                                         ? request.scheduled_date
                                         : "Not Scheduled"}
                                     </TableCell>
+                                    <TableCell
+                                      padding="none"
+                                      size="small"
+                                      align="center"
+                                    >
+                                      {request.scheduled_time !== null &&
+                                      request.scheduled_time !== "null"
+                                        ? request.scheduled_time.split(" ")[0]
+                                        : "Not Scheduled"}
+                                    </TableCell>
                                   </TableRow>
                                 );
                               })}
@@ -7364,7 +7378,7 @@ function OwnerPropertyView(props) {
                                             </Col>
                                             <Col className=" d-flex justify-content-end">
                                               <a href={rp.link} target="_blank">
-                                                <img src={OpenDoc} />
+                                                <img src={File} />
                                               </a>
                                             </Col>
                                           </Row>

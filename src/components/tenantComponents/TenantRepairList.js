@@ -254,12 +254,12 @@ function TenantRepairList(props) {
     {
       id: "scheduled_date",
       numeric: true,
-      label: "Closed Date",
+      label: "Scheduled Date",
     },
     {
-      id: "total_estimate",
+      id: "scheduled_time",
       numeric: true,
-      label: "Cost",
+      label: "Scheduled Time",
     },
   ];
   function EnhancedTableHead(props) {
@@ -491,7 +491,8 @@ function TenantRepairList(props) {
                                 size="small"
                                 align="center"
                               >
-                                {repair.assigned_business != null
+                                {repair.assigned_business !== null &&
+                                repair.assigned_business !== "null"
                                   ? repair.assigned_business
                                   : "None"}
                               </TableCell>
@@ -500,12 +501,21 @@ function TenantRepairList(props) {
                                 size="small"
                                 align="center"
                               >
-                                {repair.scheduled_date != null
+                                {repair.scheduled_date !== null &&
+                                repair.scheduled_date !== "null"
                                   ? repair.scheduled_date
                                   : "Not Scheduled"}
                               </TableCell>
-
-                              <TableCell>${repair.total_estimate}</TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                {repair.scheduled_time !== null &&
+                                repair.scheduled_time !== "null"
+                                  ? repair.scheduled_time.split(" ")[0]
+                                  : "Not Scheduled"}
+                              </TableCell>
                             </TableRow>
                           ));
                         })}
