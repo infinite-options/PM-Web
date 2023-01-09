@@ -255,8 +255,8 @@ function TenantProfile(props) {
       previous_address: usePreviousAddress
         ? JSON.stringify(previousAddressState[0])
         : null,
-      adults: JSON.stringify(adults),
-      children: JSON.stringify(children),
+      adult_occupants: JSON.stringify(adults),
+      children_occupants: JSON.stringify(children),
       pet_occupants: JSON.stringify(pets),
       references: JSON.stringify(references),
       vehicle_info: JSON.stringify(vehicles),
