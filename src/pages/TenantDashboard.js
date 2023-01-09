@@ -64,9 +64,9 @@ export default function TenantDashboard() {
   const [tenantProfile, setTenantProfile] = useState([]);
   const [managerInfo, setManagerInfo] = useState([]);
 
-  // search variables
-  const [search, setSearch] = useState("");
-  // sorting variables
+  // // search variables
+  // const [search, setSearch] = useState("");
+  // // sorting variables
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
 
@@ -727,7 +727,7 @@ export default function TenantDashboard() {
                 <Col></Col>
               </Row>
 
-              <Row className="w-100 m-3">
+              {/* <Row className="w-100 m-3">
                 <Col xs={2}> Search by</Col>
 
                 <Col>
@@ -744,7 +744,7 @@ export default function TenantDashboard() {
                     }}
                   />
                 </Col>
-              </Row>
+              </Row> */}
               <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table
                   responsive="xl"
@@ -760,20 +760,20 @@ export default function TenantDashboard() {
                   <TableBody>
                     {stableSort(tenantData, getComparator(order, orderBy))
                       // for filtering
-                      .filter((val) => {
-                        const query = search.toLowerCase();
+                      // .filter((val) => {
+                      //   const query = search.toLowerCase();
 
-                        return (
-                          val.address.toLowerCase().indexOf(query) >= 0 ||
-                          val.city.toLowerCase().indexOf(query) >= 0 ||
-                          val.zip.toLowerCase().indexOf(query) >= 0 ||
-                          String(val.oldestOpenMR)
-                            .toLowerCase()
-                            .indexOf(query) >= 0 ||
-                          String(val.late_date).toLowerCase().indexOf(query) >=
-                            0
-                        );
-                      })
+                      //   return (
+                      //     val.address.toLowerCase().indexOf(query) >= 0 ||
+                      //     val.city.toLowerCase().indexOf(query) >= 0 ||
+                      //     val.zip.toLowerCase().indexOf(query) >= 0 ||
+                      //     String(val.oldestOpenMR)
+                      //       .toLowerCase()
+                      //       .indexOf(query) >= 0 ||
+                      //     String(val.late_date).toLowerCase().indexOf(query) >=
+                      //       0
+                      //   );
+                      // })
                       .map((property, index) => {
                         return (
                           <TableRow
