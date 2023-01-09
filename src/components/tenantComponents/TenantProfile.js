@@ -47,8 +47,8 @@ function TenantProfile(props) {
   const [editProfile, setEditProfile] = useState(false);
 
   const [resetPassword, setResetPassword] = useState(false);
-  const [phone, setPhone] = useState(user.phone_number);
-  const [email, setEmail] = useState(user.email);
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
