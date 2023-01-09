@@ -138,11 +138,11 @@ function ManagerTenantAgreementEdit(props) {
     setLateFee(agreement.late_fee);
     setLateFeePer(agreement.perDay_late_fee);
 
-    setAdults(JSON.parse(agreement.adults));
-    setChildren(JSON.parse(agreement.children));
-    setPets(JSON.parse(agreement.pets));
-    setVehicles(JSON.parse(agreement.vehicles));
-    setReferences(JSON.parse(agreement.references));
+    // setAdults(JSON.parse(agreement.adults));
+    // setChildren(JSON.parse(agreement.children));
+    // setPets(JSON.parse(agreement.pets));
+    // setVehicles(JSON.parse(agreement.vehicles));
+    // setReferences(JSON.parse(agreement.references));
   };
   useEffect(() => {
     console.log("in useeffect");

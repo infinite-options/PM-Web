@@ -807,7 +807,7 @@ export default function ManagerDashboard() {
           >
             <SideBar />
           </div>
-          <div className="w-100 mb-5 overflow-scroll">
+          <div className="mb-5 overflow-scroll">
             <Header title="Manager Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -4219,6 +4219,8 @@ export default function ManagerDashboard() {
 
                             return (
                               val.address.toLowerCase().indexOf(query) >= 0 ||
+                              String(val.unit).toLowerCase().indexOf(query) >=
+                                0 ||
                               val.city.toLowerCase().indexOf(query) >= 0 ||
                               val.zip.toLowerCase().indexOf(query) >= 0 ||
                               String(val.oldestOpenMR)

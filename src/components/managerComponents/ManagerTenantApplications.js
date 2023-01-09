@@ -10,6 +10,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import AppContext from "../../AppContext";
 import Checkbox from "../Checkbox";
+import ConfirmDialog from "../ConfirmDialog";
 import File from "../../icons/File.svg";
 import { mediumBold, redPillButton, bluePillButton } from "../../utils/styles";
 import { get, put } from "../../utils/api";
@@ -32,6 +33,7 @@ function ManagerTenantApplications(props) {
     reload,
   } = props;
   const [applications, setApplications] = useState([]);
+  const [showDialog, setShowDialog] = useState(false);
   const [newApplications, setNewApplications] = useState([]);
   // const [selectedApplications, setSelectedApplications] = useState([])
   const [forwardedApplications, setForwardedApplications] = useState([]);
@@ -70,15 +72,20 @@ function ManagerTenantApplications(props) {
   useEffect(fetchApplications, [property]);
 
   const rejectApplication = async (application) => {
+    console.log(newApplications);
     console.log(application);
     const request_body = {
-      application_uid: application.application_uid,
+      application_uid: newApplications[0].application_uid,
       message: "Application has been rejected by the Property Manager",
       application_status: "REJECTED",
     };
     // console.log(request_body)
     const response = await put("/applications", request_body);
     reload();
+    setShowDialog(false);
+  };
+  const onCancel = () => {
+    setShowDialog(false);
   };
 
   const toggleApplications = (application) => {
@@ -105,6 +112,12 @@ function ManagerTenantApplications(props) {
 
   return (
     <div className="mb-2 pb-2">
+      <ConfirmDialog
+        title={"Are you sure you want to reject this application?"}
+        isOpen={showDialog}
+        onConfirm={rejectApplication}
+        onCancel={onCancel}
+      />
       {applications.length > 0 ? (
         <div>
           <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
@@ -288,7 +301,7 @@ function ManagerTenantApplications(props) {
             <Col className="d-flex justify-content-evenly">
               <Button
                 style={redPillButton}
-                onClick={rejectApplication}
+                onClick={() => setShowDialog(true)}
                 hidden={forwardedApplications.length > 0}
               >
                 Reject Application
