@@ -909,7 +909,7 @@ export default function TenantDashboard() {
                   <h3>Payment Summary</h3>
                 </Col>
               </Row>
-              <Row className="m-3">
+              <Row className="my-1 ms-3">
                 {tenantData.length !== 0 && (
                   <TenantUpcomingPayments
                     data={upcomingPaymentsData}
@@ -917,7 +917,7 @@ export default function TenantDashboard() {
                   />
                 )}
               </Row>
-              <Row className="mx-3 mt-5">
+              <Row className="my-1 ms-3">
                 {tenantData.length !== 0 && (
                   <TenantPaymentHistory data={paymentHistoryData} />
                 )}
