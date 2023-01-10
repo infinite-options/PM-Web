@@ -61,6 +61,7 @@ function ManagerTenantAgreementEdit(props) {
   const [lateAfter, setLateAfter] = useState("");
   const [lateFee, setLateFee] = useState("");
   const [lateFeePer, setLateFeePer] = useState("");
+  const [rentalStatus, setRentalStatus] = useState("");
   const [available, setAvailable] = useState("");
 
   const [adults, setAdults] = useState([]);
@@ -139,7 +140,7 @@ function ManagerTenantAgreementEdit(props) {
     setLateAfter(agreement.late_by);
     setLateFee(agreement.late_fee);
     setLateFeePer(agreement.perDay_late_fee);
-
+    setRentalStatus(agreement.rental_status);
     // setAdults(JSON.parse(agreement.adults));
     // setChildren(JSON.parse(agreement.children));
     // setPets(JSON.parse(agreement.pets));
@@ -179,6 +180,7 @@ function ManagerTenantAgreementEdit(props) {
       rental_property_id: property.property_uid,
       lease_start: startDate,
       lease_end: endDate,
+      rental_status: rentalStatus,
       rent_payments: JSON.stringify(feeState),
       available_topay: available,
       due_by: dueDate,
@@ -186,11 +188,11 @@ function ManagerTenantAgreementEdit(props) {
       late_fee: lateFee,
       perDay_late_fee: lateFeePer,
       assigned_contacts: JSON.stringify(contactState[0]),
-      adults: adults,
-      children: children,
-      pets: pets,
-      vehicles: vehicles,
-      references: references,
+      adults: JSON.stringify(adults),
+      children: JSON.stringify(children),
+      pets: JSON.stringify(pets),
+      vehicles: JSON.stringify(vehicles),
+      referred: JSON.stringify(references),
     };
 
     console.log(newAgreement);
@@ -203,6 +205,7 @@ function ManagerTenantAgreementEdit(props) {
       newAgreement[key] = files[i].file;
       delete files[i].file;
     }
+    newAgreement.documents = JSON.stringify(files);
     if (agreement !== null) {
       console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;

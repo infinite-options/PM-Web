@@ -189,7 +189,7 @@ function ManagerTenantAgreement(props) {
       children: children,
       pets: pets,
       vehicles: vehicles,
-      references: references,
+      referred: references,
     };
     newAgreement.linked_application_id = JSON.stringify(
       acceptedTenantApplications.map(
@@ -279,7 +279,7 @@ function ManagerTenantAgreement(props) {
       children: JSON.stringify(children),
       pets: JSON.stringify(pets),
       vehicles: JSON.stringify(vehicles),
-      references: JSON.stringify(references),
+      referred: JSON.stringify(references),
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
