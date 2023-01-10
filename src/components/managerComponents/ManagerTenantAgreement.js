@@ -197,8 +197,9 @@ function ManagerTenantAgreement(props) {
       )
     );
     for (let i = 0; i < files.length; i++) {
-      let key = `img_${i}`;
-      newAgreement[key] = files[i];
+      let key = `doc_${i}`;
+      newAgreement[key] = files[i].file;
+      delete files[i].file;
     }
     if (agreement) {
       newAgreement.rental_uid = agreement.rental_uid;
