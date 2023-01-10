@@ -194,9 +194,14 @@ function ManagerTenantAgreementEdit(props) {
     };
 
     console.log(newAgreement);
+    // for (let i = 0; i < files.length; i++) {
+    //   let key = `img_${i}`;
+    //   newAgreement[key] = files[i];
+    // }
     for (let i = 0; i < files.length; i++) {
-      let key = `img_${i}`;
-      newAgreement[key] = files[i];
+      let key = `doc_${i}`;
+      newAgreement[key] = files[i].file;
+      delete files[i].file;
     }
     if (agreement !== null) {
       console.log("in if");
