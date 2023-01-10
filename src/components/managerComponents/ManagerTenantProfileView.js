@@ -594,12 +594,42 @@ function ManagerTenantProfileView(props) {
                           )} of the month`}
                         </TableCell>
 
-                        <TableCell>
-                          {application["r.adult_occupants"]} adults <br />
-                          {application["r.children_occupants"]} children
-                        </TableCell>
-                        <TableCell> {application["r.num_pets"]}</TableCell>
-                        <TableCell> {application["r.type_pets"]}</TableCell>
+                        {application.adults ? (
+                          <TableCell>
+                            {JSON.parse(application.adults).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
+                        {application.children ? (
+                          <TableCell>
+                            {JSON.parse(application.children).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
+
+                        {application.pets ? (
+                          <TableCell>
+                            {JSON.parse(application.pets).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
+                        {application.vehicles ? (
+                          <TableCell>
+                            {JSON.parse(application.vehicles).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
+                        {application.references ? (
+                          <TableCell>
+                            {JSON.parse(application.references).length}
+                          </TableCell>
+                        ) : (
+                          <TableCell>0</TableCell>
+                        )}
                       </TableRow>
                     </TableBody>
                   </Table>

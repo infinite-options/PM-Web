@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import * as ReactBootStrap from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Header";
 import File from "../../icons/File.svg";
 import ManagerFees from "../ManagerFees";
 import BusinessContact from "../BusinessContact";
 import AppContext from "../../AppContext";
+import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
 import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
@@ -21,9 +30,17 @@ import {
   headings,
   pillButton,
 } from "../../utils/styles";
-import ManagerFooter from "./ManagerFooter";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 
 function ManagerManagementContract(props) {
+  const classes = useStyles();
   const { userData, refresh } = React.useContext(AppContext);
   const { access_token, user } = userData;
   const { back, property, contract, selectedBusiness, reload } = props;
@@ -347,36 +364,58 @@ function ManagerManagementContract(props) {
             }}
           >
             <h5 style={mediumBold}>Property Manager Documents</h5>
-            {files.map((file, i) => (
-              <div key={i}>
-                <div className="d-flex justify-content-between align-items-end">
-                  <div>
-                    <h6 style={mediumBold}>{file.name}</h6>
-                    <p style={small} className="m-0">
-                      {file.description}
-                    </p>
-                  </div>
-                  <div>
-                    <img
-                      src={EditIcon}
-                      alt="Edit"
-                      className="px-1 mx-2"
-                      onClick={() => editDocument(i)}
-                    />
-                    <img
-                      src={DeleteIcon}
-                      alt="Delete"
-                      className="px-1 mx-2"
-                      onClick={() => deleteDocument(i)}
-                    />
-                    <a href={file.link} target="_blank">
-                      <img src={File} />
-                    </a>
-                  </div>
-                </div>
-                <hr style={{ opacity: 1 }} />
-              </div>
-            ))}
+            {files.length > 0 ? (
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Document Name</TableCell>
+                    <TableCell>Actions</TableCell>
+                    <TableCell>View Document</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {files.map((file, i) => {
+                    return (
+                      <TableRow>
+                        <TableCell>{file.description}</TableCell>
+                        <TableCell>
+                          {" "}
+                          <img
+                            src={EditIcon}
+                            alt="Edit"
+                            className="px-1 mx-2"
+                            onClick={() => editDocument(i)}
+                          />
+                          <img
+                            src={DeleteIcon}
+                            alt="Delete"
+                            className="px-1 mx-2"
+                            onClick={() => deleteDocument(i)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <a href={file.link} target="_blank">
+                            <img
+                              src={File}
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                              }}
+                            />
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            ) : (
+              ""
+            )}
             {newFile !== null ? (
               <div>
                 <Form.Group>

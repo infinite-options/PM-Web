@@ -16,6 +16,8 @@ import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import File from "../../icons/File.svg";
+import EditIcon from "../../icons/EditIcon.svg";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
 import { put, post } from "../../utils/api";
 import {
   small,
@@ -436,14 +438,30 @@ function ManagerTenantAgreementEdit(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Document Name</TableCell>
+                    <TableCell>Actions</TableCell>
                     <TableCell>View Document</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {files.map((file) => {
+                  {files.map((file, i) => {
                     return (
                       <TableRow>
                         <TableCell>{file.description}</TableCell>
+                        <TableCell>
+                          {" "}
+                          <img
+                            src={EditIcon}
+                            alt="Edit"
+                            className="px-1 mx-2"
+                            onClick={() => editDocument(i)}
+                          />
+                          <img
+                            src={DeleteIcon}
+                            alt="Delete"
+                            className="px-1 mx-2"
+                            onClick={() => deleteDocument(i)}
+                          />
+                        </TableCell>
                         <TableCell>
                           <a href={file.link} target="_blank">
                             <img
