@@ -120,9 +120,9 @@ export default function TenantDuePayments(props) {
               />
             )}
           </Row>
-        </div>
-        <div hidden={responsive.showSidebar} className="w-100 mt-3">
-          <TenantFooter />
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <TenantFooter />
+          </div>
         </div>
       </div>
     </div>

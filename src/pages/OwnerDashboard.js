@@ -5479,9 +5479,9 @@ export default function OwnerDashboard2() {
                 <Row className="m-3">No maintenance requests and repairs</Row>
               )}
             </div>
-          </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <OwnerFooter />
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <OwnerFooter />
+            </div>
           </div>
         </div>
       ) : !isLoading && ownerData.length == 1 ? (

@@ -16,6 +16,7 @@ import {
   red,
   hidden,
   small,
+  bluePillButton,
 } from "../../utils/styles";
 function OwnerProfile(props) {
   const context = useContext(AppContext);
@@ -406,7 +407,37 @@ function OwnerProfile(props) {
             editProfile={editProfile}
           />
           {editProfile ? (
-            ""
+            <div className="mt-2 mx-2">
+              <Row>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  <Button
+                    style={pillButton}
+                    onClick={() => setEditProfile(false)}
+                    variant="outline-primary"
+                  >
+                    Cancel
+                  </Button>
+                </Col>
+                <Col
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  {" "}
+                  <Button style={bluePillButton} onClick={() => submitInfo()}>
+                    Save
+                  </Button>
+                </Col>
+              </Row>
+            </div>
           ) : (
             <div
               className="mx-3 my-3 p-2"
