@@ -1395,9 +1395,9 @@ export default function TenantDashboard() {
                 ""
               )}
             </div>
-          </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <TenantFooter />
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <TenantFooter />
+            </div>
           </div>
         </div>
       ) : !isLoading && tenantData.length == 0 ? (

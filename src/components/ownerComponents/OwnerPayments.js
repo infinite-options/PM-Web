@@ -97,9 +97,9 @@ export default function OwnerPayments(props) {
               <OwnerPaymentHistory data={upcomingPaymentsData} />
             )}
           </Row>
-        </div>
-        <div hidden={responsive.showSidebar} className="w-100 mt-3">
-          <OwnerFooter />
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <OwnerFooter />
+          </div>
         </div>
       </div>
     </div>

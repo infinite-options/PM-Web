@@ -130,9 +130,9 @@ export default function ManagerPayments(props) {
               />
             )}
           </Row>
-        </div>
-        <div hidden={responsive.showSidebar} className="w-100 mt-3">
-          <ManagerFooter />
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <ManagerFooter />
+          </div>
         </div>
       </div>
     </div>

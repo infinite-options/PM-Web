@@ -807,7 +807,7 @@ export default function ManagerDashboard() {
           >
             <SideBar />
           </div>
-          <div className="mb-5 overflow-scroll">
+          <div className="w-100 mb-5 overflow-scroll">
             <Header title="Manager Dashboard" />
             <div
               className="mx-3 my-3 p-2"
@@ -5449,9 +5449,9 @@ export default function ManagerDashboard() {
                 <Row className="m-3">No maintenance requests and repairs</Row>
               )}
             </div>
-          </div>
-          <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <ManagerFooter />
+            <div hidden={responsive.showSidebar} className="w-100 mt-3">
+              <ManagerFooter />
+            </div>
           </div>
         </div>
       ) : !isLoading && processingManagerData.length == 0 ? (
