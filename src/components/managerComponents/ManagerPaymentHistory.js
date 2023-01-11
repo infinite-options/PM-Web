@@ -254,7 +254,7 @@ export default function ManagerPaymentHistory(props) {
       payment_verify: "Verified",
     };
     const response = await put("/payments", verifyObj);
-    setVerified(true);
+    setVerified(!verified);
   };
   const unverifyPayment = async (payID) => {
     let verifyObj = {
@@ -262,7 +262,7 @@ export default function ManagerPaymentHistory(props) {
       payment_verify: "Unverified",
     };
     const response = await put("/payments", verifyObj);
-    setVerified(false);
+    setVerified(!verified);
   };
   return (
     <div className="payment-history">
@@ -422,6 +422,7 @@ export default function ManagerPaymentHistory(props) {
                               width: "25px",
                               height: "25px",
                               objectFit: "contain",
+                              cursor: "pointer",
                             }}
                             onClick={() => unverifyPayment(row.payment_uid)}
                           />
