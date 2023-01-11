@@ -1163,30 +1163,38 @@ function ReviewPropertyLease(props) {
                 <Col>
                   <h3>Application Details</h3>
                 </Col>
-                <Col xs={2}>
-                  {" "}
-                  <img
-                    src={EditIconNew}
-                    alt="Edit"
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      float: "right",
-                      marginRight: "5rem",
-                    }}
-                    onClick={() =>
-                      navigate(`/reviewTenantProfileEdit/${application_uid}`, {
-                        state: {
-                          property_uid: application.property_uid,
-                          application: application,
-                          application_uid: application.application_uid,
-                          application_status_1: application.application_status,
-                          message: application.message,
-                        },
-                      })
-                    }
-                  />
-                </Col>
+                {application_status_1 === "NEW" ? (
+                  <Col xs={2}>
+                    {" "}
+                    <img
+                      src={EditIconNew}
+                      alt="Edit"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                      onClick={() =>
+                        navigate(
+                          `/reviewTenantProfileEdit/${application_uid}`,
+                          {
+                            state: {
+                              property_uid: application.property_uid,
+                              application: application,
+                              application_uid: application.application_uid,
+                              application_status_1:
+                                application.application_status,
+                              message: application.message,
+                            },
+                          }
+                        )
+                      }
+                    />
+                  </Col>
+                ) : (
+                  <Col xs={2}></Col>
+                )}
               </Row>
               <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table classes={{ root: classes.customTable }} size="small">
