@@ -39,7 +39,7 @@ import ReviewTenantProfile from "./components/tenantComponents/ReviewTenantprofi
 import PropertyApplicationView from "./components/tenantComponents/PropertyApplicationView";
 import ReviewPropertyLease from "./components/tenantComponents/reviewPropertyLease";
 import OwnerContacts from "./components/ownerComponents/OwnerContacts";
-
+import ReviewTenantProfileEdit from "./components/tenantComponents/ReviewTenantProfileEdit";
 import ManagerPropertyView from "./components/managerComponents/ManagerPropertyView";
 import ManagerRepairDetail from "./components/managerComponents/ManagerRepairDetail";
 import SignupExisting from "./pages/SignUpExisiting";
@@ -174,6 +174,11 @@ function App() {
               path="reviewTenantProfile/:property_uid"
               element={<ReviewTenantProfile />}
             />
+            <Route
+              path="reviewTenantProfileEdit/:property_uid"
+              element={<ReviewTenantProfileEdit />}
+            />
+
             <Route path="profile-info" element={<ProfileInfo />} />
             <Route
               path="propertyApplicationView/:property_uid"
@@ -189,7 +194,6 @@ function App() {
               path="/:property_uid/repairRequest"
               element={<RepairRequest />}
             />
-
             <Route
               path="manager-announcements"
               element={<ManagerCreateAnnouncement />}
@@ -204,7 +208,6 @@ function App() {
             />
             <Route path="tenantDuePayments" element={<TenantDuePayments />} />
             <Route path="zelle" element={<ZellePayment />} />
-
             <Route path="tenant-documents" element={<TenantDocuments />} />
             <Route
               path="/rentPayment/:purchase_uid"
@@ -237,7 +240,6 @@ function App() {
             />
             <Route path="scheduleRepairs" element={<ScheduleRepairs />} />
             <Route path="rescheduleRepair" element={<RescheduleRepair />} />
-
             <Route
               path="/:property_uid/:maintenance_request_uid/detailRepairStatus"
               element={<DetailRepairStatus />}

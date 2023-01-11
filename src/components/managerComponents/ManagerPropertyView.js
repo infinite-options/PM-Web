@@ -294,7 +294,7 @@ function ManagerPropertyView(props) {
     setImagesProperty(JSON.parse(response.result[0].images));
     let show = JSON.parse(response.result[0].images).length < 5 ? false : true;
 
-    console.log(response.result[0]);
+    // console.log(response.result[0]);
     applianceState[1](JSON.parse(response.result[0].appliances));
     const property_details = response.result[0];
 
@@ -315,7 +315,7 @@ function ManagerPropertyView(props) {
       property_details.management_status =
         owner_negotiations[0].management_status;
     }
-    console.log(property_details);
+    // console.log(property_details);
     setProperty(property_details);
     if (
       property_details.management_status === "ACCEPTED" ||
@@ -336,7 +336,7 @@ function ManagerPropertyView(props) {
     });
     let recent_mr = [];
     let past_mr = [];
-    console.log(property_details.maintenanceRequests);
+    // console.log(property_details.maintenanceRequests);
     property_details.maintenanceRequests.forEach((request) => {
       if (
         days(new Date(request.request_created_date.split(" ")[0]), new Date()) >
@@ -345,7 +345,7 @@ function ManagerPropertyView(props) {
         past_mr.push(request);
       } else recent_mr.push(request);
     });
-    console.log(recent_mr, past_mr);
+    // console.log(recent_mr, past_mr);
   };
 
   const headerBack = () => {
@@ -726,7 +726,7 @@ function ManagerPropertyView(props) {
     yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
   ).toFixed(2);
 
-  console.log(cashflowData);
+  // console.log(cashflowData);
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
       <ManagerManagementContract
@@ -760,7 +760,7 @@ function ManagerPropertyView(props) {
           onConfirm={cancelAgreement}
           onCancel={onCancel}
         />
-        {console.log("showdialog", showDialog)}
+        {/* {console.log("showdialog", showDialog)} */}
         <div className="flex-1">
           <div
             hidden={!responsiveSidebar.showSidebar}
@@ -1086,11 +1086,11 @@ function ManagerPropertyView(props) {
                           {isLoading === false &&
                             cashflowData.manager_revenue.map(
                               (revenue, index) => {
-                                console.log("revenue", revenue);
+                                // console.log("revenue", revenue);
 
                                 return revenue.purchase_type === "RENT" ? (
                                   <TableRow hidden={!monthlyRent}>
-                                    {console.log("in rent", revenue)}
+                                    {/* {console.log("in rent", revenue)} */}
                                     <TableCell>
                                       &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                       {revenue.unit}
@@ -4519,7 +4519,7 @@ function ManagerPropertyView(props) {
                             >
                               {property.zip}
                             </TableCell>
-                            {console.log(property)}
+                            {/* {console.log(property)} */}
                             <TableCell
                               padding="none"
                               size="small"
@@ -4859,7 +4859,7 @@ function ManagerPropertyView(props) {
                             <TableCell>Images</TableCell>
                           </TableRow>
                         </TableHead>
-                        {console.log("appliances", appliances, applianceState)}
+                        {/* {console.log("appliances", appliances, applianceState)} */}
                         <TableBody>
                           {appliances.map((appliance, i) => {
                             return applianceState[0][appliance]["available"] ==
@@ -4926,9 +4926,6 @@ function ManagerPropertyView(props) {
                                 applianceState[0][appliance]["images"].length >
                                   0 ? (
                                   <TableCell>
-                                    {console.log(
-                                      applianceState[0][appliance]["images"][0]
-                                    )}
                                     <Row className="d-flex justify-content-center align-items-center p-1">
                                       <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                         <img

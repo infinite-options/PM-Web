@@ -73,7 +73,7 @@ function ManagerTenantAgreement(props) {
   const [children, setChildren] = useState([]);
   const [pets, setPets] = useState([]);
   const [vehicles, setVehicles] = useState([]);
-  const [references, setReferences] = useState([]);
+  const [referred, setReferences] = useState([]);
 
   const [showSpinner, setShowSpinner] = useState(false);
   const [width, setWindowWidth] = useState(0);
@@ -150,7 +150,7 @@ function ManagerTenantAgreement(props) {
     setChildren(JSON.parse(agreement.children));
     setPets(JSON.parse(agreement.pets));
     setVehicles(JSON.parse(agreement.vehicles));
-    setReferences(JSON.parse(agreement.references));
+    setReferences(JSON.parse(agreement.referred));
   };
   useEffect(() => {
     console.log("in useeffect", acceptedTenantApplications);
@@ -167,8 +167,8 @@ function ManagerTenantAgreement(props) {
     if (acceptedTenantApplications[0].vehicles) {
       setVehicles(JSON.parse(acceptedTenantApplications[0].vehicles));
     }
-    if (acceptedTenantApplications[0].references) {
-      setReferences(JSON.parse(acceptedTenantApplications[0].references));
+    if (acceptedTenantApplications[0].referred) {
+      setReferences(JSON.parse(acceptedTenantApplications[0].referred));
     }
 
     if (agreement) {
@@ -189,7 +189,7 @@ function ManagerTenantAgreement(props) {
       children: children,
       pets: pets,
       vehicles: vehicles,
-      referred: references,
+      referred: referred,
     };
     newAgreement.linked_application_id = JSON.stringify(
       acceptedTenantApplications.map(
@@ -279,7 +279,7 @@ function ManagerTenantAgreement(props) {
       children: JSON.stringify(children),
       pets: JSON.stringify(pets),
       vehicles: JSON.stringify(vehicles),
-      referred: JSON.stringify(references),
+      referred: JSON.stringify(referred),
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
@@ -580,10 +580,10 @@ function ManagerTenantAgreement(props) {
                     <Col>
                       <Form.Group>
                         <Form.Label as="h6" className="my-2">
-                          References
+                          referred
                         </Form.Label>
-                        {application.references &&
-                        JSON.parse(application.references).length > 0 ? (
+                        {application.referred &&
+                        JSON.parse(application.referred).length > 0 ? (
                           <div className="mx-3 ">
                             <Row style={subHeading}>
                               <Col>Name</Col>
@@ -592,7 +592,7 @@ function ManagerTenantAgreement(props) {
                               <Col>Email</Col>
                               <Col>Relationship</Col>
                             </Row>
-                            {JSON.parse(application.references).map(
+                            {JSON.parse(application.referred).map(
                               (reference) => {
                                 return (
                                   <div>

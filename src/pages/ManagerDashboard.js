@@ -128,7 +128,7 @@ export default function ManagerDashboard() {
     setCashflowData(cashflowResponse.result);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
@@ -183,7 +183,7 @@ export default function ManagerDashboard() {
       );
     });
 
-    console.log(properties_unique);
+    // console.log(properties_unique);
     let activeProperties = [];
     properties_unique.forEach((property) => {
       if (
@@ -221,7 +221,7 @@ export default function ManagerDashboard() {
     //   };
     // });
 
-    console.log(activeProperties);
+    // console.log(activeProperties);
     setManagerData(activeProperties);
     let inProcessProperties = [];
     properties_unique.forEach((property) => {
@@ -234,7 +234,7 @@ export default function ManagerDashboard() {
         inProcessProperties.push(property);
       }
     });
-    console.log(inProcessProperties);
+    // console.log(inProcessProperties);
     setProcessingManagerData(inProcessProperties);
 
     setIsLoading(false);
@@ -251,7 +251,7 @@ export default function ManagerDashboard() {
   };
 
   useEffect(() => {
-    console.log("in use effect");
+    // console.log("in use effect");
     fetchManagerDashboard();
   }, [access_token]);
 
@@ -260,17 +260,17 @@ export default function ManagerDashboard() {
       navigate("/");
       return;
     }
-    console.log(tenant_id);
+    // console.log(tenant_id);
     const response = await get("/tenantDetails?tenant_id=" + tenant_id);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
     }
     setSelectedTenant(response.result);
-    console.log(response.result);
+    // console.log(response.result);
     navigate(`/tenant-list/${tenant_id}`, {
       state: {
         selectedTenant: response.result[0],
@@ -789,8 +789,8 @@ export default function ManagerDashboard() {
     yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
   ).toFixed(2);
 
-  console.log(managerData);
-  console.log(cashflowData);
+  // console.log(managerData);
+  // console.log(cashflowData);
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
@@ -1049,11 +1049,11 @@ export default function ManagerDashboard() {
 
                       {isLoading === false &&
                         cashflowData.manager_revenue.map((revenue, index) => {
-                          console.log("revenue", revenue);
+                          // console.log("revenue", revenue);
 
                           return revenue.purchase_type === "RENT" ? (
                             <TableRow hidden={!monthlyRent}>
-                              {console.log("in rent", revenue)}
+                              {/* {console.log("in rent", revenue)} */}
                               <TableCell>
                                 &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                 {revenue.unit}
@@ -5385,11 +5385,6 @@ export default function ManagerDashboard() {
                                 request.assigned_business
                               ) : (
                                 <div>
-                                  {console.log(
-                                    "quotes_received",
-                                    request.quotes_received,
-                                    request.total_quotes
-                                  )}
                                   {request.quotes_received}/
                                   {request.total_quotes}
                                 </div>

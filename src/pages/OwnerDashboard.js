@@ -125,7 +125,7 @@ export default function OwnerDashboard2() {
     setCashflowData(cashflowResponse.result);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
@@ -157,7 +157,7 @@ export default function OwnerDashboard2() {
         ownerendearly: ownerendearly.length,
       };
     });
-    console.log(pu);
+    // console.log(pu);
     setOwnerData(pu);
 
     let requests = [];
@@ -173,7 +173,7 @@ export default function OwnerDashboard2() {
   };
 
   useEffect(() => {
-    console.log("in use effect");
+    // console.log("in use effect");
     fetchOwnerDashboard();
   }, [access_token]);
 
@@ -671,8 +671,8 @@ export default function OwnerDashboard2() {
     yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
   ).toFixed(2);
 
-  console.log(ownerData);
-  console.log(cashflowData);
+  // console.log(ownerData);
+  // console.log(cashflowData);
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
@@ -1923,13 +1923,6 @@ export default function OwnerDashboard2() {
                         return expense.purchase_type === "OWNER PAYMENT" &&
                           expense.contract_fees != undefined ? (
                           <TableRow hidden={!monthlyManagement}>
-                            {console.log(
-                              "here in owner payment monthly",
-                              expense,
-                              expense.contract_fees === undefined
-                                ? ""
-                                : JSON.parse(expense.contract_fees)
-                            )}
                             <TableCell>
                               &nbsp;&nbsp;&nbsp; {expense.address}{" "}
                               {expense.unit}

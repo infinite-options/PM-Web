@@ -68,7 +68,7 @@ function ManagerTenantAgreementEdit(props) {
   const [children, setChildren] = useState([]);
   const [pets, setPets] = useState([]);
   const [vehicles, setVehicles] = useState([]);
-  const [references, setReferences] = useState([]);
+  const [referred, setReferences] = useState([]);
   const [showSpinner, setShowSpinner] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
@@ -145,7 +145,7 @@ function ManagerTenantAgreementEdit(props) {
     // setChildren(JSON.parse(agreement.children));
     // setPets(JSON.parse(agreement.pets));
     // setVehicles(JSON.parse(agreement.vehicles));
-    // setReferences(JSON.parse(agreement.references));
+    // setReferences(JSON.parse(agreement.referred));
   };
   useEffect(() => {
     console.log("in useeffect");
@@ -163,8 +163,8 @@ function ManagerTenantAgreementEdit(props) {
     if (agreement.vehicles) {
       setVehicles(JSON.parse(agreement.vehicles));
     }
-    if (agreement.references) {
-      setReferences(JSON.parse(agreement.references));
+    if (agreement.referred) {
+      setReferences(JSON.parse(agreement.referred));
     }
     if (agreement) {
       loadAgreement();
@@ -192,7 +192,7 @@ function ManagerTenantAgreementEdit(props) {
       children: JSON.stringify(children),
       pets: JSON.stringify(pets),
       vehicles: JSON.stringify(vehicles),
-      referred: JSON.stringify(references),
+      referred: JSON.stringify(referred),
     };
 
     console.log(newAgreement);
