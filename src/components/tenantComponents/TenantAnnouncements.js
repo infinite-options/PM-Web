@@ -82,7 +82,6 @@ function TenantAnnouncements(props) {
     setAnnouncements(responseAnnouncement.result);
   };
   useEffect(() => {
-    console.log("in use effect");
     fetchProperties();
   }, []);
 

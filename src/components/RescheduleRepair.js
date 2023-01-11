@@ -37,10 +37,10 @@ function RescheduleRepair(props) {
   const [buttonSelect, setButtonSelect] = useState(false);
   useEffect(() => {
     if (dateHasBeenChanged) {
-      console.log("here1");
+      // console.log("here1");
 
       setTimeAASlots([]);
-      console.log("here2");
+      // console.log("here2");
       axios
         .get(
           "https://mfrbehiqnb.execute-api.us-west-1.amazonaws.com/dev/api/v2/availableAppointments/" +
@@ -49,9 +49,9 @@ function RescheduleRepair(props) {
             "0:59:59"
         )
         .then((res) => {
-          console.log("This is the information we got" + res);
+          // console.log("This is the information we got" + res);
           // setTimeAASlots(res.data.result);
-          // console.log("Timeslots Array " + timeSlots);
+          console.log("Timeslots Array " + timeSlots);
 
           res.data.result.map((r) => {
             timeAASlots.push(r["begin_time"]);
@@ -97,16 +97,8 @@ function RescheduleRepair(props) {
       12: "Dec",
       "": "",
     };
-    console.log("dateformat2", date);
-    console.log(
-      "dateformat2",
-      months[doubleDigitMonth(date)] +
-        " " +
-        doubleDigitDay(date) +
-        ", " +
-        date.getFullYear() +
-        " "
-    );
+    // console.log("dateformat2", date);
+
     return (
       months[doubleDigitMonth(date)] +
       " " +
@@ -119,15 +111,8 @@ function RescheduleRepair(props) {
 
   // This one is for doing the sendToDatabase Post Call
   const dateFormat3 = (date) => {
-    console.log("dateformat3", date);
-    console.log(
-      "dateformat3",
-      date.getFullYear() +
-        "-" +
-        doubleDigitMonth(date) +
-        "-" +
-        doubleDigitDay(date)
-    );
+    // console.log("dateformat3", date);
+
     return (
       date.getFullYear() +
       "-" +
@@ -143,10 +128,10 @@ function RescheduleRepair(props) {
     setDateHasBeenChanged(true);
   };
   const dateChange = (date) => {
-    console.log(timeAASlots);
+    // console.log(timeAASlots);
 
     setDate(date);
-    console.log("here3");
+    // console.log("here3");
     dateStringChange(date);
     // setTimeSelected(true);
     if (timeSelected === true) {
@@ -170,7 +155,7 @@ function RescheduleRepair(props) {
     }
   }
   function renderAvailableApptsVertical() {
-    console.log("TimeSlotsAA", timeAASlots);
+    // console.log("TimeSlotsAA", timeAASlots);
 
     return (
       <div style={{ height: "10rem" }}>
@@ -193,7 +178,7 @@ function RescheduleRepair(props) {
                 onClick={() => selectApptTime(element)}
               >
                 {formatTime(apiDateString, element)}
-                {console.log(element)}
+                {/* {console.log(element)} */}
               </button>
             );
           })}
@@ -203,7 +188,7 @@ function RescheduleRepair(props) {
   }
 
   function selectApptTime(element) {
-    console.log("selected time", element);
+    // console.log("selected time", element);
     setSelectedTime(element);
     setTimeSelected(true);
     setButtonSelect(true);

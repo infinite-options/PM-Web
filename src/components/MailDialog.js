@@ -35,7 +35,7 @@ function ConfirmDialog(props) {
       message_status: "PENDING",
       receiver_email: receiverEmail,
     };
-    console.log(newMessage);
+    // console.log(newMessage);
     const response = await post("/message", newMessage);
     onCancel();
   };

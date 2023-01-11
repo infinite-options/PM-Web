@@ -91,7 +91,7 @@ function PaymentPage(props) {
 
     let newPayment = {};
     if (allPurchases.length === 1) {
-      console.log(allPurchases[0]);
+      // console.log(allPurchases[0]);
       newPayment = {
         pay_purchase_id: allPurchases[0].purchase_uid,
         //Need to make change here
@@ -103,7 +103,7 @@ function PaymentPage(props) {
       await post("/payments", newPayment);
     } else {
       for (let purchase of allPurchases) {
-        console.log(purchase);
+        // console.log(purchase);
         newPayment = {
           pay_purchase_id: purchase.purchase_uid,
           //Need to make change here

@@ -68,7 +68,7 @@ function DetailQuote(props) {
       `/maintenanceQuotes?maintenance_quote_uid=${quote_id}`
     );
     if (response.result.length === 0) {
-      console.log("quote not found");
+      // console.log("quote not found");
       navigate("/ScheduledJobs");
       return;
     }

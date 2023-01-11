@@ -18,7 +18,7 @@ function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  console.log("stage", loginStage, props.signupStage);
+  // console.log("stage", loginStage, props.signupStage);
   useEffect(() => {
     if (userData.access_token !== null) {
       setLoginStage("ROLE");
@@ -39,7 +39,7 @@ function Login(props) {
       return;
       // add validation
     }
-    console.log("login", response.result);
+    // console.log("login", response.result);
     updateUserData(response.result);
     // save to app state / context
     setLoginStage("ROLE");
@@ -60,7 +60,7 @@ function Login(props) {
       return;
       // add validation
     } else {
-      console.log(response);
+      // console.log(response);
       // const userSignUp = {
       //   first_name: response.result.user.first_name,
       //   last_name: response.result.user.last_name,
@@ -85,10 +85,10 @@ function Login(props) {
     const response = await post("/set_temp_password", { email: email });
 
     if (response.message === "A temporary password has been sent") {
-      console.log(response);
+      // console.log(response);
       setpassModal(true);
     } else if (response.code === 280) {
-      console.log(response);
+      // console.log(response);
       alert("No account found with that email.");
     }
   };

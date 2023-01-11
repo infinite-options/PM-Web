@@ -168,10 +168,10 @@ function ManagerManagementContract(props) {
 
     if (contract) {
       newContract.contract_uid = contract.contract_uid;
-      console.log(newContract);
+      // console.log(newContract);
       const response = await put(`/contracts`, newContract, null, files);
     } else {
-      console.log(newContract);
+      // console.log(newContract);
       const response = await post("/contracts", newContract, null, files);
     }
 
@@ -202,7 +202,7 @@ function ManagerManagementContract(props) {
     ) : (
       ""
     );
-  console.log(property);
+  // console.log(property);
   return (
     <div className="flex-1">
       <div

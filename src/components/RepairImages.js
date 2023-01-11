@@ -31,7 +31,7 @@ function RepairImages(props) {
     let isLarge = file.file.size > 5000000;
     let file_size = (file.file.size / 1000000).toFixed(1);
     if (isLarge) {
-      console.log("set error message");
+      // console.log("set error message");
       setErrorMessage(`Your file size is too large (${file_size} MB)`);
       return;
     } else {

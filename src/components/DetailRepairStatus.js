@@ -118,16 +118,8 @@ function DetailRepairStatus(props) {
       12: "Dec",
       "": "",
     };
-    console.log("dateformat2", date);
-    console.log(
-      "dateformat2",
-      months[doubleDigitMonth(date)] +
-        " " +
-        doubleDigitDay(date) +
-        ", " +
-        date.getFullYear() +
-        " "
-    );
+    // console.log("dateformat2", date);
+
     return (
       months[doubleDigitMonth(date)] +
       " " +
@@ -140,15 +132,8 @@ function DetailRepairStatus(props) {
 
   // This one is for doing the sendToDatabase Post Call
   const dateFormat3 = (date) => {
-    console.log("dateformat3", date);
-    console.log(
-      "dateformat3",
-      date.getFullYear() +
-        "-" +
-        doubleDigitMonth(date) +
-        "-" +
-        doubleDigitDay(date)
-    );
+    // console.log("dateformat3", date);
+
     return (
       date.getFullYear() +
       "-" +
@@ -166,13 +151,13 @@ function DetailRepairStatus(props) {
 
   function dateChange(e) {
     setDate(e);
-    console.log("here", e);
+    // console.log("here", e);
     dateStringChange(e);
   }
 
   function selectTime(e) {
     setScheduledTime(e);
-    console.log("here", e);
+    // console.log("here", e);
   }
 
   const putRepairAppt = async () => {
@@ -234,14 +219,14 @@ function DetailRepairStatus(props) {
           "20:00"
       )
       .then((res) => {
-        console.log("This is the information we got" + res);
+        // console.log("This is the information we got" + res);
 
         res.data.result.map((r) => {
           timeAASlotsTenant.push(r["begin_time"]);
         });
         setTimeAASlotsTenant(timeAASlotsTenant);
       });
-    console.log("Here are teh available time slots ", timeAASlotsTenant);
+    // console.log("Here are teh available time slots ", timeAASlotsTenant);
   }, [apiDateString]);
 
   useEffect(() => {
@@ -252,9 +237,9 @@ function DetailRepairStatus(props) {
   useEffect(() => {
     const fetchProfile = async () => {
       const response = await get("/tenantProperties", access_token);
-      console.log("Tenant Profile", response);
+      // console.log("Tenant Profile", response);
       if (response.msg === "Token has expired") {
-        console.log("here msg");
+        // console.log("here msg");
         refresh();
 
         return;
@@ -270,17 +255,17 @@ function DetailRepairStatus(props) {
       `/maintenanceRequests?maintenance_request_uid=${maintenance_request_uid}`
     );
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
       return;
     }
     setRepairsDetail(response.result);
-    console.log(response.result);
+    // console.log(response.result);
     setPMNotes(response.result[0].notes);
-    console.log(response.result[0].notes);
-    console.log(response.result[0]);
+    // console.log(response.result[0].notes);
+    // console.log(response.result[0]);
     setRepairsImages(JSON.parse(response.result[0].images));
-    console.log(response.result);
+    // console.log(response.result);
     setPriority(response.result[0].priority);
     setDescription(response.result[0].description);
     setTitle(response.result[0].title);
@@ -309,7 +294,7 @@ function DetailRepairStatus(props) {
   }, []);
 
   function editRepair() {
-    console.log("Editing repair");
+    // console.log("Editing repair");
     setIsEditing(true);
   }
   const reload = () => {
@@ -317,7 +302,7 @@ function DetailRepairStatus(props) {
     fetchRepairsDetail();
   };
   const updateRepair = async () => {
-    console.log("Putting changes to database");
+    // console.log("Putting changes to database");
     // let files = JSON.parse(repairsDetail[0].images);
     // let files = imageState[0];
     let newRepair = {
@@ -347,10 +332,10 @@ function DetailRepairStatus(props) {
       }
     }
 
-    console.log(newRepair);
+    // console.log(newRepair);
     setShowSpinner(true);
     const res = await put("/maintenanceRequests", newRepair, null, files);
-    console.log(res);
+    // console.log(res);
     setShowSpinner(false);
     reload();
     // setIsEditing(false);
@@ -495,7 +480,7 @@ function DetailRepairStatus(props) {
                     defaultValue={description}
                     style={{ width: "80vw" }}
                     onChange={(e) => {
-                      console.log(e);
+                      // console.log(e);
                       setDescription(e.target.value);
                     }}
                   ></input>

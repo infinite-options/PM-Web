@@ -33,14 +33,14 @@ function BusinessProfile(props) {
       return;
     }
     if (user.role.indexOf("MAINTENANCE") === -1) {
-      console.log("no business in user role");
+      // console.log("no business in user role");
       //props.onConfirm();
       return;
     }
     const fetchProfileInfo = async () => {
       const response = await get("/businessProfileInfo", access_token);
       if (response.result.length !== 0) {
-        console.log("business profile already set up");
+        // console.log("business profile already set up");
         // eventually update page with current info, allow user to update and save new info
         //props.onConfirm();
         return;
@@ -85,7 +85,7 @@ function BusinessProfile(props) {
       services: JSON.stringify(serviceState[0]),
       contact: JSON.stringify(contactState[0]),
     };
-    console.log(businessProfile);
+    // console.log(businessProfile);
     await post("/businessProfileInfo", businessProfile, access_token);
     props.onConfirm();
   };

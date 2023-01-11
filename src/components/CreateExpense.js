@@ -33,7 +33,7 @@ function CreateExpense(props) {
         next_date: date,
       };
       mortgage.push(newMortgage);
-      console.log(newMortgage);
+      // console.log(newMortgage);
       // let formData = new FormData();
       const updateMortgage = {
         property_uid: property.property_uid,
@@ -103,7 +103,7 @@ function CreateExpense(props) {
         next_payment: date,
       };
 
-      console.log(newExpense);
+      // console.log(newExpense);
       const response = await post("/createExpenses", newExpense);
       reload();
       props.back();

@@ -88,7 +88,7 @@ function TenantDocumentUpload(props) {
       }
 
       if (user.role.indexOf("TENANT") === -1) {
-        console.log("no tenant profile");
+        // console.log("no tenant profile");
         props.onConfirm();
       }
       const documents = response.result[0].documents

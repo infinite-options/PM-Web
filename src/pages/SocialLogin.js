@@ -49,9 +49,9 @@ function SocialLogin(props) {
       setLoginStage("ROLE");
     }
   }, []);
-  console.log(props);
+  // console.log(props);
   let signupStage = props.signupStage;
-  console.log(signupStage);
+  // console.log(signupStage);
 
   const socialGoogle = async (e) => {
     if (signupStage === "NAME") {
@@ -60,13 +60,13 @@ function SocialLogin(props) {
         password: GOOGLE_LOGIN,
       };
       const response = await post("/login", user);
-      console.log(response);
+      // console.log(response);
       if (response.code !== 200) {
         setSocialSignUpModalShow(!socialSignUpModalShow);
         return;
         // add validation
       } else {
-        console.log(response);
+        // console.log(response);
         props.onConfirm(response.result.user.role, e);
       }
     } else {
@@ -80,7 +80,7 @@ function SocialLogin(props) {
         return;
         // add validation
       }
-      console.log("login", response.result);
+      // console.log("login", response.result);
       updateUserData(response.result);
       // save to app state / context
       setLoginStage("ROLE");
@@ -88,18 +88,13 @@ function SocialLogin(props) {
     }
   };
   const responseGoogle = (response) => {
-    console.log(response);
+    // console.log(response);
     if (response.profileObj) {
       let email = response.profileObj.email;
       let user_id = "";
       setSocialId(response.googleId);
       axios.get(BASE_URL + `/UserToken/${email}`).then((response) => {
-        console.log(
-          "in events",
-          response["data"]["result"][0]["user_uid"],
-          response["data"]["result"][0]["google_auth_token"]
-        );
-        console.log("in events", response);
+        // console.log("in events", response);
         setAccessToken(response["data"]["result"][0]["google_auth_token"]);
         let url =
           "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=";
@@ -107,12 +102,12 @@ function SocialLogin(props) {
         setUserID(response["data"]["result"][0]["user_uid"]);
         user_id = response["data"]["result"][0]["user_uid"];
         var old_at = response["data"]["result"][0]["google_auth_token"];
-        console.log("in events", old_at);
+        // console.log("in events", old_at);
         var refreshToken =
           response["data"]["result"][0]["google_refresh_token"];
 
         let checkExp_url = url + old_at;
-        console.log("in events", checkExp_url);
+        // console.log("in events", checkExp_url);
         fetch(
           `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
           {
@@ -120,9 +115,9 @@ function SocialLogin(props) {
           }
         )
           .then((response) => {
-            console.log("in events", response);
+            // console.log("in events", response);
             if (response["status"] === 400) {
-              console.log("in events if");
+              // console.log("in events if");
               let authorization_url =
                 "https://accounts.google.com/o/oauth2/token";
 
@@ -153,16 +148,16 @@ function SocialLogin(props) {
                   return response.json();
                 })
                 .then((responseData) => {
-                  console.log(responseData);
+                  // console.log(responseData);
                   return responseData;
                 })
                 .then((data) => {
-                  console.log(data);
+                  // console.log(data);
                   let at = data["access_token"];
                   var id_token = data["id_token"];
                   setAccessToken(at);
                   setIdToken(id_token);
-                  console.log("in events", at);
+                  // console.log("in events", at);
                   let url = BASE_URL + `/UpdateAccessToken/${user_id}`;
                   axios
                     .post(url, {
@@ -179,13 +174,13 @@ function SocialLogin(props) {
                 });
             } else {
               setAccessToken(old_at);
-              console.log(old_at);
+              // console.log(old_at);
             }
           })
           .catch((err) => {
             console.log(err);
           });
-        console.log("in events", refreshToken, accessToken);
+        // console.log("in events", refreshToken, accessToken);
       });
 
       //  _socialLoginAttempt(email, accessToken, socialId, "GOOGLE");
@@ -283,7 +278,7 @@ function SocialLogin(props) {
   //       console.log(err);
   //     });
   // };
-  console.log(newEmail);
+  // console.log(newEmail);
 
   const hideSignUp = () => {
     //setSignUpModalShow(false);

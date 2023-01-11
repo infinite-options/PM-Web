@@ -19,7 +19,7 @@ function SignupRoleSelection(props) {
     "Property Maintenance (Employee)": "MAINT_EMPLOYEE",
   };
   const availableRoles = Object.keys(roleCodes);
-  console.log(availableRoles, roleCodes);
+  // console.log(availableRoles, roleCodes);
   const addRole = (role) => {
     const roleCode = roleCodes[role];
     const index = userRoles.indexOf(roleCode);
@@ -65,16 +65,16 @@ function SignupRoleSelection(props) {
       setErrorMessage("Please select a role to proceed");
       return;
     }
-    console.log(userRoles, userRoles.join(","));
+    // console.log(userRoles, userRoles.join(","));
     const submitSignUpForm = async () => {
       const userSignUp = {
         email: props.email,
         role: userRoles.join(","),
       };
-      console.log(userSignUp);
+      // console.log(userSignUp);
       const res = await put("/users", userSignUp);
-      console.log(res);
-      console.log("login", res.result);
+      // console.log(res);
+      // console.log("login", res.result);
       context.updateUserData(res.result);
       // props.onConfirm();
       setErrorMessage("");
@@ -86,7 +86,7 @@ function SignupRoleSelection(props) {
   const [errorMessage, setErrorMessage] = React.useState("");
   let signupStage = props.signupStage;
   let signupRoles = props.signupRoles;
-  console.log(signupStage, signupRoles);
+  // console.log(signupStage, signupRoles);
 
   return (
     <div>
@@ -153,12 +153,6 @@ function SignupRoleSelection(props) {
             {availableRoles.map((role, i) => {
               return signupRoles.includes(roleCodes[role]) ? null : (
                 <div key={i} className="d-flex">
-                  {console.log(
-                    role,
-                    signupRoles,
-                    roleCodes[role],
-                    signupRoles.includes(roleCodes[role])
-                  )}
                   <Checkbox
                     type="CIRCLE"
                     checked={userRoles.indexOf(roleCodes[role]) !== -1}

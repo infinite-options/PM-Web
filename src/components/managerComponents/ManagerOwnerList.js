@@ -73,10 +73,10 @@ function ManagerOwnerList(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -94,7 +94,7 @@ function ManagerOwnerList(props) {
     if (response.result.length > 0) {
       setSelectedOwner(response.result[0]);
     }
-    console.log(selectedOwner);
+    // console.log(selectedOwner);
     // await getAlerts(properties_unique)
   };
 

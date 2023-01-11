@@ -43,7 +43,7 @@ function ManagerTenantAgreementView(props) {
   } = props;
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  console.log(user);
+  // console.log(user);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -70,15 +70,15 @@ function ManagerTenantAgreementView(props) {
     setShowMessageFormContact(false);
   };
   const loadAgreement = async (agg) => {
-    console.log("load agreement");
+    // console.log("load agreement");
 
-    console.log("in useeffect");
+    // console.log("in useeffect");
     setAgreement(agg);
     setIsLoading(false);
     // loadAgreement(agg);
     let tenant = [];
     let ti = {};
-    console.log("selectedagg", agg);
+    // console.log("selectedagg", agg);
 
     if (agg.tenant_first_name.includes(",")) {
       let tenant_ids = agg.tenant_id.split(",");
@@ -260,7 +260,7 @@ function ManagerTenantAgreementView(props) {
                         return (
                           <p>
                             {" "}
-                            {console.log("tf", tf)}
+                            {/* {console.log("tf", tf)} */}
                             {tf.tenantFirstName} {tf.tenantLastName}
                           </p>
                         );
@@ -323,7 +323,7 @@ function ManagerTenantAgreementView(props) {
                 classes={{ root: classes.customTable }}
                 size="small"
               >
-                {console.log(agreement)}
+                {/* {console.log(agreement)} */}
                 <TableHead>
                   <TableRow>
                     <TableCell>Lease Start</TableCell>

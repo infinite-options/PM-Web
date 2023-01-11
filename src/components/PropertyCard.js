@@ -30,7 +30,7 @@ function PropertyCard(props) {
   //     },
   //   });
   // };
-  console.log(property);
+  // console.log(property);
   return (
     <div
       className="mx-3 my-3 p-2"

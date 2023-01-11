@@ -35,7 +35,7 @@ export default function TenantAvailableProperties(props) {
   useEffect(() => {
     const fetchProperties = async () => {
       const response = await get(`/availableProperties`);
-      console.log(response);
+      // console.log(response);
       const res = response.result;
       if (res) {
         res.forEach((property) => {
@@ -48,14 +48,14 @@ export default function TenantAvailableProperties(props) {
     };
     const fetchApplications = async () => {
       const response = await get(`/applications?tenant_id=${user.user_uid}`);
-      console.log("applications :", response);
+      // console.log("applications :", response);
 
       const appliedPropertes = {};
       for (const a of response.result) {
         // appliedProperties[a.property_uid] = true;
         appliedProperties[a.property_uid] = a.application_status;
       }
-      console.log("appliedProperties :", appliedProperties);
+      // console.log("appliedProperties :", appliedProperties);
       await setAppliedProperties(appliedProperties);
     };
     fetchApplications().then(fetchProperties);
@@ -63,7 +63,7 @@ export default function TenantAvailableProperties(props) {
 
   const changeView = () => {
     setView((prev) => !prev);
-    console.log(view);
+    // console.log(view);
   };
   const tableView = properties.map((value, i) => {
     // const applied = appliedProperties.hasOwnProperty(value.property_uid);
@@ -80,7 +80,7 @@ export default function TenantAvailableProperties(props) {
   const colors = ["#628191", "#FB8500", "rgb(255,183,3)", "rgb(33,158,188)"];
 
   const boxView = properties.map((prop, index) => {
-    console.log(prop);
+    // console.log(prop);
     return (
       <PropertyCard2
         color={colors[index % 4]}

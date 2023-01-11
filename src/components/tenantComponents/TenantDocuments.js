@@ -73,7 +73,7 @@ function TenantDocuments(props) {
     };
     setNewFile(newFile);
   };
-  console.log(newFile);
+  // console.log(newFile);
   const updateNewFile = (field, value) => {
     const newFileCopy = { ...newFile };
     newFileCopy[field] = value;
@@ -112,11 +112,11 @@ function TenantDocuments(props) {
     setNewFile(null);
   };
   const deleteDocument = async (i) => {
-    console.log("in delete doc", i);
+    // console.log("in delete doc", i);
     const newFiles = [...files];
-    console.log("in delete doc", newFiles);
+    // console.log("in delete doc", newFiles);
     newFiles.splice(i, 1);
-    console.log("in delete doc", newFiles);
+    // console.log("in delete doc", newFiles);
     setFiles(newFiles);
     const tenantProfile = {};
     for (let i = 0; i < newFiles.length; i++) {
@@ -142,7 +142,7 @@ function TenantDocuments(props) {
     }
 
     if (user.role.indexOf("TENANT") === -1) {
-      console.log("no tenant profile");
+      // console.log("no tenant profile");
       props.onConfirm();
     }
     const docs = responseProfile.result[0].documents
@@ -152,10 +152,10 @@ function TenantDocuments(props) {
 
     const response = await get(`/tenantDocuments?tenant_id=${user.user_uid}`);
     setDocuments(response.result);
-    console.log(response.result[0]);
+    // console.log(response.result[0]);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
       return;
     }
@@ -166,21 +166,21 @@ function TenantDocuments(props) {
         return Object.assign(cur, { [key]: documents[key] });
       }, {});
 
-    console.log(active_lease_docs);
+    // console.log(active_lease_docs);
     setActiveLeaseDocuments(active_lease_docs);
     var past_lease_docs = Object.keys(documents)
       .filter((key) => key.includes("past_lease_docs"))
       .reduce((cur, key) => {
         return Object.assign(cur, { [key]: documents[key] });
       }, {});
-    console.log(past_lease_docs);
+    // console.log(past_lease_docs);
     setPastLeaseDocuments(past_lease_docs);
     var tenant_uploaded_docs = Object.keys(documents)
       .filter((key) => key.includes("tenant_uploaded_docs"))
       .reduce((cur, key) => {
         return Object.assign(cur, { [key]: documents[key] });
       }, {});
-    console.log(tenant_uploaded_docs);
+    // console.log(tenant_uploaded_docs);
     setTenantUploadDocuments(tenant_uploaded_docs);
     setIsLoading(false);
   };
@@ -190,7 +190,7 @@ function TenantDocuments(props) {
     }
     fetchProfile();
   }, [access_token, addDoc]);
-  console.log(documents);
+  // console.log(documents);
 
   return (
     <div className="w-1oo overflow-hidden">
@@ -505,7 +505,7 @@ function TenantDocuments(props) {
                           <TableCell width="180px"></TableCell>
                           <TableCell width="180px"></TableCell>
                         </TableRow>
-                        {console.log(tenantUploadDocuments)}
+                        {/* {console.log(tenantUploadDocuments)} */}
                         {Object.values(tenantUploadDocuments)[0].length > 0 ? (
                           Object.values(tenantUploadDocuments)[0].map(
                             (tud, i) => {

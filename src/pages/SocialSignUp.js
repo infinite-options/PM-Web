@@ -36,12 +36,12 @@ function SocialSignUp(props) {
   const GOOGLE_LOGIN = process.env.REACT_APP_GOOGLE_LOGIN;
 
   const responseGoogle = (response) => {
-    console.log("response", response);
+    // console.log("response", response);
 
     let auth_code = response.code;
     let authorization_url = "https://accounts.google.com/o/oauth2/token";
 
-    console.log("auth_code", auth_code);
+    // console.log("auth_code", auth_code);
     var details = {
       code: auth_code,
       client_id: CLIENT_ID,
@@ -70,18 +70,18 @@ function SocialSignUp(props) {
         return response.json();
       })
       .then((responseData) => {
-        console.log(responseData);
+        // console.log(responseData);
         return responseData;
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         let at = data["access_token"];
         let rt = data["refresh_token"];
         let ax = data["expires_in"].toString();
         setAccessToken(at);
         setrefreshToken(rt);
         setaccessExpiresIn(ax);
-        console.log("res", at, rt);
+        // console.log("res", at, rt);
 
         axios
           .get(
@@ -89,7 +89,7 @@ function SocialSignUp(props) {
               at
           )
           .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
 
             let data = response.data;
             //setUserInfo(data);
@@ -116,7 +116,7 @@ function SocialSignUp(props) {
                 social_id: si,
                 access_expires_in: ax,
               };
-              console.log(user);
+              // console.log(user);
               const response = await post("/userSocialSignup", user);
               context.updateUserData(response.result);
               // save to app state / context
@@ -125,7 +125,7 @@ function SocialSignUp(props) {
             socialGoogle();
           })
           .catch((error) => {
-            console.log("its in landing page");
+            // console.log("its in landing page");
             console.log(error);
           });
 

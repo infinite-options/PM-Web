@@ -49,7 +49,7 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  console.log("here", acceptedTenantApplications);
+  // console.log("here", acceptedTenantApplications);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -153,7 +153,7 @@ function ManagerTenantAgreement(props) {
     setReferences(JSON.parse(agreement.referred));
   };
   useEffect(() => {
-    console.log("in useeffect", acceptedTenantApplications);
+    // console.log("in useeffect", acceptedTenantApplications);
     if (acceptedTenantApplications[0].adults) {
       setAdults(JSON.parse(acceptedTenantApplications[0].adults));
     }
@@ -203,7 +203,7 @@ function ManagerTenantAgreement(props) {
     }
     if (agreement) {
       newAgreement.rental_uid = agreement.rental_uid;
-      console.log(newAgreement);
+      // console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
     } else {
       newAgreement.tenant_id = acceptedTenantApplications;
@@ -221,7 +221,7 @@ function ManagerTenantAgreement(props) {
     ) : (
       ""
     );
-  console.log("feeState in tenantagreemnt", feeState);
+  // console.log("feeState in tenantagreemnt", feeState);
   const forwardLeaseAgreement = async () => {
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
@@ -297,7 +297,7 @@ function ManagerTenantAgreement(props) {
 
     for (const application of acceptedTenantApplications) {
       newAgreement.tenant_id = application.tenant_id;
-      console.log(newAgreement);
+      // console.log(newAgreement);
 
       const request_body = {
         application_uid: application.application_uid,
@@ -369,7 +369,7 @@ function ManagerTenantAgreement(props) {
     newAgreement.tenant_id = JSON.stringify(
       acceptedTenantApplications.map((application) => application.tenant_id)
     );
-    console.log(newAgreement);
+    // console.log(newAgreement);
     const create_rental = await post("/extendLease", newAgreement, null, files);
     back();
   };

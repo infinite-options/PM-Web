@@ -47,7 +47,7 @@ function ProfileInfo() {
     }
     window.scrollTo(0, 0);
   }, [profileStage]);
-  console.log("profileStage", profileStage, role);
+  // console.log("profileStage", profileStage, role);
   return (
     <div className="h-100 pb-5">
       {profileStage.includes("MANAGER") && role.includes("MANAGER") ? (

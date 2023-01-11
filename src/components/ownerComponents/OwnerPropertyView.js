@@ -65,7 +65,7 @@ function OwnerPropertyView(props) {
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  console.log(location.state);
+  // console.log(location.state);
   const property_uid =
     location.state === null ? props.property_uid : location.state.property_uid;
   const [isLoading, setIsLoading] = useState(true);
@@ -214,7 +214,7 @@ function OwnerPropertyView(props) {
     setImagesProperty(JSON.parse(response.result[0].images));
     let show = JSON.parse(response.result[0].images).length < 5 ? false : true;
     setShowControls(show);
-    console.log(response.result[0]);
+    // console.log(response.result[0]);
     applianceState[1](JSON.parse(response.result[0].appliances));
     const res = await get(
       `/contracts?property_uid=${response.result[0].property_uid}`
@@ -223,7 +223,7 @@ function OwnerPropertyView(props) {
     setContracts(res.result);
     setRentalInfo(response.result[0].rentalInfo);
     setIsLoading(false);
-    console.log(res.result[0]);
+    // console.log(res.result[0]);
     if (res.result[0] !== undefined) {
       contactState[1](JSON.parse(res.result[0].assigned_contacts));
     }
@@ -312,7 +312,7 @@ function OwnerPropertyView(props) {
   const [yearlyTaxes, setYearlyTaxes] = useState(false);
   const [yearlyInsurance, setYearlyInsurance] = useState(false);
   const [yearlyUtilityExpense, setYearlyUtilityExpense] = useState(false);
-  console.log("contract", contracts);
+  // console.log("contract", contracts);
 
   const headerBack = () => {
     editProperty
@@ -895,7 +895,7 @@ function OwnerPropertyView(props) {
     yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
   ).toFixed(2);
 
-  console.log(cashflowData);
+  // console.log(cashflowData);
 
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
@@ -2313,13 +2313,6 @@ function OwnerPropertyView(props) {
                                 "OWNER PAYMENT" &&
                                 expense.contract_fees != undefined ? (
                                 <TableRow hidden={!monthlyManagement}>
-                                  {console.log(
-                                    "here in owner payment monthly",
-                                    expense,
-                                    expense.contract_fees === undefined
-                                      ? ""
-                                      : JSON.parse(expense.contract_fees)
-                                  )}
                                   <TableCell>
                                     &nbsp;&nbsp;&nbsp; {expense.address}{" "}
                                     {expense.unit}
@@ -6105,11 +6098,7 @@ function OwnerPropertyView(props) {
                               <TableCell>Images</TableCell>
                             </TableRow>
                           </TableHead>
-                          {console.log(
-                            "appliances",
-                            appliances,
-                            applianceState
-                          )}
+
                           <TableBody>
                             {appliances.map((appliance, i) => {
                               return applianceState[0][appliance][
@@ -6173,11 +6162,6 @@ function OwnerPropertyView(props) {
                                   applianceState[0][appliance]["images"]
                                     .length > 0 ? (
                                     <TableCell>
-                                      {console.log(
-                                        applianceState[0][appliance][
-                                          "images"
-                                        ][0]
-                                      )}
                                       <Row className="d-flex justify-content-center align-items-center p-1">
                                         <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                           <img

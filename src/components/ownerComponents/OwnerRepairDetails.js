@@ -123,10 +123,10 @@ function OwnerRepairDetails(props) {
       ...business,
       quote_requested: false,
     }));
-    console.log("repair", repair, request_response.result[0]);
+    // console.log("repair", repair, request_response.result[0]);
     // console.log(businesses)
     setBusinesses(businesses);
-    console.log(request_response.result[0]);
+    // console.log(request_response.result[0]);
     setRepairsDetail(request_response.result[0]);
     setTitle(request_response.result[0].title);
     setDescription(request_response.result[0].description);
@@ -184,7 +184,7 @@ function OwnerRepairDetails(props) {
       }
     }
     setShowSpinner(true);
-    console.log(newRepair);
+    // console.log(newRepair);
     const res = await put("/maintenanceRequests", newRepair, null, files);
     setShowSpinner(false);
     fetchBusinesses();
@@ -252,7 +252,7 @@ function OwnerRepairDetails(props) {
       return;
     }
 
-    console.log("Quotes Requested from", business_ids);
+    // console.log("Quotes Requested from", business_ids);
     const quote_details = {
       linked_request_uid: repair.maintenance_request_uid,
       quote_business_uid: business_ids,

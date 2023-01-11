@@ -10,7 +10,6 @@ export default function TenantCard(props) {
   const [applications, setApplications] = useState([]);
 
   const goToActualDashboard = () => {
-    console.log("going to dashboard");
     navigate("/tenant_dash", {
       state: {
         lookingAt: props.lookingAt,

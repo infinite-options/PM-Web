@@ -3,7 +3,7 @@ import React from "react";
 export default function Appliances(props) {
   const apps = JSON.parse(props.data);
   const arr = Object.entries(apps);
-  console.log(arr);
+  // console.log(arr);
   const rows = arr.map((row, index) => {
     return (
       <tr>

@@ -90,11 +90,11 @@ function OwnerContacts() {
       return;
     }
 
-    console.log(response.result);
+    // console.log(response.result);
     setPropertyManagers(response.result);
 
     setIsLoading(false);
-    console.log(JSON.parse(response.result[0].contact_locations).length);
+    // console.log(JSON.parse(response.result[0].contact_locations).length);
     // await getAlerts(properties_unique)
   };
 
@@ -232,7 +232,7 @@ function OwnerContacts() {
       created_by: user.user_uid,
     };
 
-    console.log(newContact);
+    // console.log(newContact);
     const response = await post("/contact", newContact);
     setContactName("");
     setContactEmail("");

@@ -39,7 +39,7 @@ function ManagerCreateExpense(props) {
   };
 
   useEffect(() => {
-    console.log(properties[0]);
+    // console.log(properties[0]);
     if (properties.length === undefined) {
       setSelectedProperty(JSON.stringify(decycle(properties)));
     }
@@ -56,11 +56,6 @@ function ManagerCreateExpense(props) {
         parseInt(percentageSplitTenant) !==
       100
     ) {
-      console.log(
-        parseInt(
-          percentageSplitManager + percentageSplitOwner + percentageSplitTenant
-        )
-      );
       setErrorMessage("Check your percentages");
       return;
     }
@@ -74,10 +69,10 @@ function ManagerCreateExpense(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -112,7 +107,7 @@ function ManagerCreateExpense(props) {
       purchase_status: payStatus,
     };
 
-    console.log(newExpense);
+    // console.log(newExpense);
     const response = await post("/createExpenses", newExpense);
     reload();
     // }
@@ -141,11 +136,6 @@ function ManagerCreateExpense(props) {
       ""
     );
 
-  console.log(
-    new Date().toISOString().split("T")[0] +
-      " " +
-      new Date().toISOString().split("T")[1].substring(0, 8)
-  );
   return (
     <div className="d-flex flex-column w-100 p-2 overflow-hidden">
       <h5 className="m-2">Add New Expense Payment</h5>
@@ -393,7 +383,7 @@ function ManagerCreateExpense(props) {
         category === "Maintenance" ||
         category === "Repairs" ? (
           <div>
-            {console.log(JSON.parse(selectedProperty))}
+            {/* {console.log(JSON.parse(selectedProperty))} */}
             <Form.Group className="mx-2 my-3">
               <Form.Label as="h6" className="mb-0 ms-2">
                 Payer

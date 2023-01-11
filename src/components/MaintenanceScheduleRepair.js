@@ -77,15 +77,8 @@ function MaintenanceScheduleRepair(props) {
 
   // This one is for doing the sendToDatabase Post Call
   const dateFormat = (date) => {
-    console.log("dateFormat", date);
-    console.log(
-      "dateFormat",
-      date.getFullYear() +
-        "-" +
-        doubleDigitMonth(date) +
-        "-" +
-        doubleDigitDay(date)
-    );
+    // console.log("dateFormat", date);
+
     return (
       date.getFullYear() +
       "-" +
@@ -98,7 +91,7 @@ function MaintenanceScheduleRepair(props) {
     axios
       .get(BASE_URL + `/UserDetails/${quotes.rentalInfo[0].tenant_id}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setAccessTokenTenant(response.data.result[0].google_auth_token);
         setUserEmail(response.data.result[0].email);
         setAttendees([{ email: response.data.result[0].email }]);
@@ -144,7 +137,7 @@ function MaintenanceScheduleRepair(props) {
                 return response.json();
               })
               .then((responseData) => {
-                console.log(responseData);
+                // console.log(responseData);
                 return responseData;
               })
               .then((data) => {
@@ -183,7 +176,7 @@ function MaintenanceScheduleRepair(props) {
     axios
       .get(BASE_URL + `/UserDetails/${quotes.quote_business_uid}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setAccessTokenMaintenance(response.data.result[0].google_auth_token);
 
         var old_at = response.data.result[0].google_auth_token;
@@ -228,7 +221,7 @@ function MaintenanceScheduleRepair(props) {
                 return response.json();
               })
               .then((responseData) => {
-                console.log(responseData);
+                // console.log(responseData);
                 return responseData;
               })
               .then((data) => {
@@ -344,7 +337,7 @@ function MaintenanceScheduleRepair(props) {
             // + duration minutes
             appt_start_time += 60 * 30;
           }
-          console.log("freebusy tenant", free);
+          // console.log("freebusy tenant", free);
           setTimeSlotsTenant(free);
         })
         .catch((error) => {
@@ -402,7 +395,7 @@ function MaintenanceScheduleRepair(props) {
             // + duration minutes
             appt_start_time += 60 * 30;
           }
-          console.log("freebusy", freeM);
+          // console.log("freebusy", freeM);
           setTimeSlotsMaintenance(freeM);
         })
         .catch((error) => {
@@ -430,7 +423,7 @@ function MaintenanceScheduleRepair(props) {
             "20:00"
         )
         .then((res) => {
-          console.log("This is the information we got" + res);
+          // console.log("This is the information we got" + res);
 
           res.data.result.map((r) => {
             timeAASlotsTenant.push(r["begin_time"]);
@@ -452,11 +445,11 @@ function MaintenanceScheduleRepair(props) {
             "20:00"
         )
         .then((response) => {
-          console.log("This is the information we got", response.data.result);
+          // console.log("This is the information we got", response.data.result);
           response.data.result.map((r) => {
             timeAASlotsMaintenance.push(r["begin_time"]);
           });
-          console.log("This is the information we got", timeAASlotsMaintenance);
+          // console.log("This is the information we got", timeAASlotsMaintenance);
           setTimeAASlotsMaintenance(timeAASlotsMaintenance);
         });
     }
@@ -466,7 +459,7 @@ function MaintenanceScheduleRepair(props) {
   const dateChange = (date) => {
     setTimeSelected(true);
     setShowTimes(true);
-    console.log(date);
+    // console.log(date);
     setDate(date);
     setDateString(date);
     dateStringChange(date);
@@ -480,7 +473,7 @@ function MaintenanceScheduleRepair(props) {
     setDateString(dateFormat(date));
   };
   function selectApptTime(element) {
-    console.log("selected time", element);
+    // console.log("selected time", element);
     setSelectedTime(element);
     setMeetDate(dateString);
     setMeetTime(element);
@@ -517,9 +510,9 @@ function MaintenanceScheduleRepair(props) {
             timeAASlotsTenant.some((o2) => o1 === o2)
           ));
     }
-    console.log("TimeSlots Tenant", timeAASlotsTenant);
-    console.log("TimeSlots Tenant", timeSlotsTenant);
-    console.log("TimeSlots Tenant", resultTenant);
+    // console.log("TimeSlots Tenant", timeAASlotsTenant);
+    // console.log("TimeSlots Tenant", timeSlotsTenant);
+    // console.log("TimeSlots Tenant", resultTenant);
     {
       timeSlotsMaintenance.length === 0
         ? (resultMaintenance = timeAASlotsMaintenance)
@@ -529,14 +522,14 @@ function MaintenanceScheduleRepair(props) {
             timeAASlotsMaintenance.some((o2) => o1 === o2)
           ));
     }
-    console.log("TimeSlots Maintenance", timeAASlotsMaintenance);
-    console.log("TimeSlots Maintenance", timeSlotsMaintenance);
-    console.log("TimeSlots Maintenance", resultMaintenance);
+    // console.log("TimeSlots Maintenance", timeAASlotsMaintenance);
+    // console.log("TimeSlots Maintenance", timeSlotsMaintenance);
+    // console.log("TimeSlots Maintenance", resultMaintenance);
 
     result = resultTenant.filter((o1) =>
       resultMaintenance.some((o2) => o1 === o2)
     );
-    console.log("TimeSlots joined", result);
+    // console.log("TimeSlots joined", result);
     return (
       <div style={{ height: "10rem" }}>
         <Grid
@@ -567,7 +560,7 @@ function MaintenanceScheduleRepair(props) {
   }
 
   const scheduleRequest = async () => {
-    console.log("selected", meetTime, dateString);
+    // console.log("selected", meetTime, dateString);
     let meeting = {
       maintenance_request_uid: quotes.maintenance_request_uid,
       request_status: "SCHEDULED",
@@ -579,16 +572,16 @@ function MaintenanceScheduleRepair(props) {
   };
 
   function createMeet() {
-    console.log("selected", meetTime, dateString);
+    // console.log("selected", meetTime, dateString);
     let start_time = meetDate + "T" + meetTime;
-    console.log(start_time);
+    // console.log(start_time);
     let d = convert(quotes.event_duration);
     let et = Date.parse(start_time) / 1000 + d;
-    //console.log(d);
-    console.log(et);
+    // console.log(d);
+    // console.log(et);
     let end_time = moment(new Date(et * 1000)).format();
     attendees.push({ email: userEmail });
-    console.log(attendees);
+    // console.log(attendees);
     var meet = {
       summary: quotes.title,
       location:
@@ -615,7 +608,7 @@ function MaintenanceScheduleRepair(props) {
       },
       attendees: attendees,
     };
-    console.log(meet);
+    // console.log(meet);
 
     const headers = {
       "Content-Type": "application/json",

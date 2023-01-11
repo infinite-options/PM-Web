@@ -85,7 +85,7 @@ function RepairRequest(props) {
         newRequest[key] = file.image;
       }
     }
-    console.log(files);
+    // console.log(files);
     setShowSpinner(true);
     await post("/maintenanceRequests", newRequest, null, files);
     // navigate(`/${property_uid}/repairStatus`);

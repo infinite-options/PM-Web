@@ -13,7 +13,7 @@ function LandingNavbar() {
   const navigate = useNavigate();
   const { userData } = React.useContext(AppContext);
   const { user } = userData;
-  console.log(user);
+  // console.log(user);
   const availableRoles = user != null ? user.role.split(",") : [];
   const [selectedRole, setSelectedRole] = React.useState(null);
   const [currentRole, setCurrentRole] = React.useState(
@@ -21,8 +21,8 @@ function LandingNavbar() {
   );
   const navigateToRole = (role) => {
     // add navigation to correct role pages
-    console.log("role in navigatetorole", role);
-    console.log(`load ${role}`);
+    // console.log("role in navigatetorole", role);
+    // console.log(`load ${role}`);
     if (role === "OWNER") {
       navigate("/owner");
     } else if (role === "MANAGER") {
@@ -30,7 +30,7 @@ function LandingNavbar() {
     } else if (role === "PM_EMPLOYEE") {
       navigate("/manager");
     } else if (role === "TENANT") {
-      console.log("here after tenant clicked");
+      // console.log("here after tenant clicked");
       navigate("/tenant");
     } else if (role === "MAINTENANCE") {
       navigate("/maintenance", { state: { roles: role } });
@@ -41,7 +41,7 @@ function LandingNavbar() {
 
   // const navigateToRole_original = (role) => {
   //   // add navigation to correct role pages
-  //   console.log("role in navigatetorole", role);
+  // console.log("role in navigatetorole", role);
   //   console.log(`load ${role}`);
   //   if (role === "OWNER") {
   //     navigate("/owner_original");
@@ -58,7 +58,7 @@ function LandingNavbar() {
   //   }
   // };
 
-  console.log("in landing navbar", availableRoles);
+  // console.log("in landing navbar", availableRoles);
   const selectRole = () => {
     navigateToRole(selectedRole);
   };
@@ -77,11 +77,11 @@ function LandingNavbar() {
   };
 
   const handleClick = () => {
-    console.log("here handleclick");
+    // console.log("here handleclick");
     setOpen(!open);
   };
   const handleClickRoles = () => {
-    console.log("here handleclickroles");
+    // console.log("here handleclickroles");
     setOpenRoles(!openRoles);
   };
 

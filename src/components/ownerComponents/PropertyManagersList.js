@@ -70,7 +70,7 @@ function PropertyManagersList(props) {
     // console.log(response.result);
     setPropertyManagers(response.result);
     setSelectedPropertyManagers(response.result[0]);
-    console.log(selectedPropertyManagers);
+    // console.log(selectedPropertyManagers);
     // await getAlerts(properties_unique)
   };
 
@@ -82,13 +82,13 @@ function PropertyManagersList(props) {
     const files = JSON.parse(property.images);
     const business_uid = selectedPropertyManagers.business_uid;
     if (property.property_manager.length > 0) {
-      console.log("in if");
+      // console.log("in if");
       for (const prop of property.property_manager) {
         if (
           business_uid === prop.manager_id &&
           prop.management_status === "REFUSED"
         ) {
-          console.log("here in if");
+          // console.log("here in if");
 
           // alert("youve already rejected this Management Company");
           setShowDialog(true);
@@ -98,7 +98,7 @@ function PropertyManagersList(props) {
             },
           });
         } else {
-          console.log("here in else");
+          // console.log("here in else");
           const newProperty = {
             property_uid: property.property_uid,
             manager_id: business_uid,
@@ -139,17 +139,17 @@ function PropertyManagersList(props) {
       // reload();
       setStage("LIST");
     } else {
-      console.log("in else");
+      // console.log("in else");
       if (
         business_uid === property.property_manager[0].manager_id &&
         property.property_manager[0].management_status === "REJECTED"
       ) {
-        console.log("here in if");
+        // console.log("here in if");
         setShowDialog(true);
         setStage("LIST");
         // alert("youve already rejected this Management Company");
       } else {
-        console.log("here in else");
+        // console.log("here in else");
         const newProperty = {
           property_uid: property.property_uid,
           manager_id: business_uid,
@@ -278,7 +278,7 @@ function PropertyManagersList(props) {
             }}
           >
             Fees Charged:
-            {console.log(selectedPropertyManagers.business_services_fees)}
+            {/* {console.log(selectedPropertyManagers.business_services_fees)} */}
             {JSON.parse(selectedPropertyManagers.business_services_fees).map(
               (bsf) => {
                 return (

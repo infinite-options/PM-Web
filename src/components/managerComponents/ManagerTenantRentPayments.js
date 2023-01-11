@@ -44,7 +44,7 @@ function ManagerTenantRentPayments(props) {
     lateFeePer,
     available,
   } = props;
-  console.log(props);
+  // console.log(props);
   const [newFee, setNewFee] = useState(null);
   const [editingFee, setEditingFee] = useState(null);
   const emptyFee = {
@@ -59,7 +59,7 @@ function ManagerTenantRentPayments(props) {
     late_fee: lateFee,
     perDay_late_fee: lateFeePer,
   };
-  console.log(feeState.length);
+  // console.log(feeState.length);
   useEffect(() => {
     const depositFee = {
       fee_name: "Deposit",
@@ -89,8 +89,8 @@ function ManagerTenantRentPayments(props) {
     const newFeeState = [];
     newFeeState.push({ ...depositFee });
     newFeeState.push({ ...rentFee });
-    console.log(rentFee);
-    console.log(depositFee);
+    // console.log(rentFee);
+    // console.log(depositFee);
     setFeeState(newFeeState);
   }, [available, dueDate, lateAfter, lateFee, lateFeePer]);
 

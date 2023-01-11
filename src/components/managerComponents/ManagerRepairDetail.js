@@ -137,8 +137,8 @@ function ManagerRepairDetail(props) {
       ...business,
       quote_requested: false,
     }));
-    console.log("repair", repair);
-    console.log("request_response.result[0]", request_response.result[0]);
+    // console.log("repair", repair);
+    // console.log("request_response.result[0]", request_response.result[0]);
     // console.log(businesses)
     setBusinesses(businesses);
     setTitle(request_response.result[0].title);
@@ -196,7 +196,7 @@ function ManagerRepairDetail(props) {
     const response = await get(
       `/maintenanceQuotes?linked_request_uid=${repair.maintenance_request_uid}`
     );
-    console.log(response.result);
+    // console.log(response.result);
     setQuotes(response.result);
   };
 
@@ -239,7 +239,7 @@ function ManagerRepairDetail(props) {
       return;
     }
 
-    console.log("Quotes Requested from", business_ids);
+    // console.log("Quotes Requested from", business_ids);
     const quote_details = {
       linked_request_uid: repair.maintenance_request_uid,
       quote_business_uid: business_ids,
@@ -272,10 +272,10 @@ function ManagerRepairDetail(props) {
       }
     }
 
-    console.log("Repair Object to be updated", newRepair);
+    // console.log("Repair Object to be updated", newRepair);
 
     const response = await put("/maintenanceRequests", newRepair, null, files);
-    console.log(response.result);
+    // console.log(response.result);
     setTitle(title);
     setDescription(description);
     setIssueType(issueType);
@@ -310,8 +310,8 @@ function ManagerRepairDetail(props) {
       notes: morePicturesNotes,
     };
 
-    console.log("Repair Object to be updated");
-    console.log(newRepair);
+    // console.log("Repair Object to be updated");
+    // console.log(newRepair);
     setShowSpinner(true);
     const response = await put("/RequestMorePictures", newRepair);
     setShowSpinner(false);
@@ -754,7 +754,7 @@ function ManagerRepairDetail(props) {
                   <div style={subHeading} className="pt-1 mb-2">
                     Owner Info
                   </div>
-                  {console.log(repair)}
+                  {/* {console.log(repair)} */}
                   <Table
                     responsive="md"
                     classes={{ root: classes.customTable }}
@@ -1038,7 +1038,7 @@ function ManagerRepairDetail(props) {
 
           {!edit && !requestQuote && quotes && quotes.length > 0 && (
             <div className="pb-4 mb-4">
-              {console.log("here")}
+              {/* {console.log("here")} */}
               {quotes &&
                 quotes.length > 0 &&
                 quotes.map((quote, i) => (

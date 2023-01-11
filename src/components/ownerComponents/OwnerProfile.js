@@ -84,16 +84,16 @@ function OwnerProfile(props) {
       return;
     }
     const response = await get("/ownerProfileInfo", access_token);
-    console.log(response);
+    // console.log(response);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
       return;
     }
 
     if (user.role.indexOf("OWNER") === -1) {
-      console.log("no owner profile");
+      // console.log("no owner profile");
       props.onConfirm();
     }
 
@@ -141,13 +141,13 @@ function OwnerProfile(props) {
       return;
     }
 
-    console.log(u);
+    // console.log(u);
     const user = {
       email: email,
       password: password,
       user_uid: u.user_uid,
     };
-    console.log(user);
+    // console.log(user);
     const response = await post("/update_email_password", user);
     if (response.code !== 200) {
       setErrorMessage(response.message);

@@ -135,7 +135,7 @@ function ManagerUtilities(props) {
         : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
     const responseData = await response.json();
-    console.log(responseData.publicKey);
+    // console.log(responseData.publicKey);
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
 
@@ -156,21 +156,21 @@ function ManagerUtilities(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
     }
     setManagerID(management_buid);
     const response = await get("/managerDashboard", access_token);
-    console.log("second");
-    console.log(response);
+    // console.log("second");
+    // console.log(response);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
@@ -185,7 +185,7 @@ function ManagerUtilities(props) {
     const mr = [];
     properties.forEach((property) => {
       if (pids.has(property.property_uid)) {
-        console.log("here in if");
+        // console.log("here in if");
         // properties_unique[properties_unique.length-1].tenants.push(property)
         const index = properties_unique.findIndex(
           (item) => item.property_uid === property.property_uid
@@ -194,18 +194,18 @@ function ManagerUtilities(props) {
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          console.log("here", property);
+          // console.log("here", property);
           properties_unique[index].tenants.push(property);
         }
       } else {
-        console.log("here in else");
+        // console.log("here in else");
         pids.add(property.property_uid);
         properties_unique.push(property);
         if (
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          console.log("here", property);
+          // console.log("here", property);
           properties_unique[properties_unique.length - 1].tenants = [property];
         }
       }
@@ -215,16 +215,16 @@ function ManagerUtilities(props) {
     let expense = [];
     properties_unique.forEach((property) => {
       if (property.expenses.length > 0) {
-        console.log("has expense");
+        // console.log("has expense");
         property.expenses.forEach((ex) => {
-          console.log("has expense", ex);
+          // console.log("has expense", ex);
           expense.push(ex);
         });
       }
     });
 
-    console.log(expense);
-    console.log(properties_unique);
+    // console.log(expense);
+    // console.log(properties_unique);
     const grouped = groupBy(expense, "purchase_uid");
     const keys = Object.keys(grouped);
     var output = [];
@@ -266,14 +266,14 @@ function ManagerUtilities(props) {
       });
       output.push(out);
     });
-    console.log(output);
+    // console.log(output);
     setExpenseUnique(output);
 
     setExpenses(expense);
     setIsLoading(false);
   };
   useEffect(() => {
-    console.log("in use effect");
+    // console.log("in use effect");
     fetchProperties();
   }, []);
   useEffect(() => {
@@ -338,7 +338,7 @@ function ManagerUtilities(props) {
     if (newUtility.split_type === "Area") {
       let total_area = 0;
       newUtility.properties.forEach((p) => (total_area = total_area + p.area));
-      // console.log(total_area)
+      // console.log(total_area);
       newUtility.properties.forEach(
         (p) => (p.charge = (p.area / total_area) * charge)
       );
@@ -351,10 +351,10 @@ function ManagerUtilities(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -380,7 +380,7 @@ function ManagerUtilities(props) {
     new_bill.bill_docs = JSON.stringify(files);
     const response = await post("/bills", new_bill, null, files);
     const bill_uid = response.bill_uid;
-    console.log(bill_uid);
+    // console.log(bill_uid);
     let today_date = new Date().toISOString().split("T")[0];
     const new_purchase_pm = {
       linked_bill_id: bill_uid,
@@ -396,13 +396,13 @@ function ManagerUtilities(props) {
       next_payment:
         newUtility.due_date == "" ? today_date : newUtility.due_date,
     };
-    console.log("new purchase pm", new_purchase_pm);
+    // console.log("new purchase pm", new_purchase_pm);
     const response_pm = await post("/purchases", new_purchase_pm, null, null);
     const purchase_uid = response_pm.purchase_uid;
-    console.log(response_pm);
+    // console.log(response_pm);
     splitFees(newUtility);
     for (const property of newUtility.properties) {
-      console.log(property);
+      // console.log(property);
       const new_purchase = {
         linked_bill_id: bill_uid,
         pur_property_id: [property.property_uid],
@@ -431,7 +431,7 @@ function ManagerUtilities(props) {
         new_purchase.payer = [property.owner_id];
       }
 
-      console.log("New Purchase", new_purchase);
+      // console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
     navigate(`/managerPaymentPage/${purchase_uid}`, {
@@ -913,7 +913,6 @@ function ManagerUtilities(props) {
                       </Form.Group>
                     </Col>
                   </Row>
-                  {console.log(properties)}
                   <Row className="mx-1 mt-3 mb-2">
                     <h6 style={mediumBold}>Properties</h6>
                     {properties.map((property, i) => (
@@ -1179,13 +1178,6 @@ function ManagerUtilities(props) {
                                   setPayment(expense);
                                 }}
                               >
-                                {console.log(
-                                  "purchase",
-                                  expense.purchase_uid,
-                                  user.user_uid,
-                                  expense.receiver,
-                                  expense.receiver !== user.user_uid
-                                )}
                                 <TableCell
                                   padding="none"
                                   size="small"

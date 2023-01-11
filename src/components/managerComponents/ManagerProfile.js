@@ -98,9 +98,9 @@ function ManagerProfile(props) {
       return;
     }
     const busi_res = await get(`/businesses?business_email=${user.email}`);
-    console.log("busi_res", busi_res);
+    // console.log("busi_res", busi_res);
     if (user.role.indexOf("MANAGER") === -1 || busi_res.result.length > 0) {
-      console.log("no manager profile");
+      // console.log("no manager profile");
       // props.onConfirm();
     }
 
@@ -200,13 +200,13 @@ function ManagerProfile(props) {
       return;
     }
 
-    console.log(u);
+    // console.log(u);
     const user = {
       email: email,
       password: password,
       user_uid: u.user_uid,
     };
-    console.log(user);
+    // console.log(user);
     const response = await post("/update_email_password", user);
     if (response.code !== 200) {
       setErrorMessage(response.message);

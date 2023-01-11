@@ -24,15 +24,12 @@ function RepairStatus(props) {
 
   var sortedRepairs = [];
 
-
   useEffect(() => {
     if (repairs.length !== 0) {
       setIsLoading(false);
     }
   }, [repairs]);
-  function sortDateTime() {
-
-  }
+  function sortDateTime() {}
   function sortRepairs(repairs1) {
     let highCount = 0;
     let medCount = 0;
@@ -61,31 +58,32 @@ function RepairStatus(props) {
       const response = await get(
         `/maintenanceRequests?property_uid=${property_uid}`
       );
-      console.log(response.result);
+      // console.log(response.result);
       if (response.result.length !== 0) {
         sortRepairs(response.result);
         setRepairs(sortedRepairs);
       }
       for (let repair of response.result) {
-        console.log(repair);
+        // console.log(repair);
         if (repair.request_status === "SCHEDULED") {
           scheduledCount++;
         }
         if (repair.request_status === "INFO") {
           moreInfoCount++;
         }
-        if (repair.request_status === "NEW" || repair.request_status === "PROCESSING") {
+        if (
+          repair.request_status === "NEW" ||
+          repair.request_status === "PROCESSING"
+        ) {
           requestedCount++;
         }
       }
-      console.log(scheduledCount, moreInfoCount, requestedCount);
-
+      // console.log(scheduledCount, moreInfoCount, requestedCount);
     };
     fetchRepairs();
   }, []);
 
   return (
-
     <div className="h-100 d-flex flex-column">
       <Header
         title="Repairs"
@@ -96,95 +94,103 @@ function RepairStatus(props) {
       <Container className="pt-1 mb-4" style={{ minHeight: "100%" }}>
         {/* Container for NEW repair status*/}
         <Container className="pt-1 mb-4">
-          {moreInfoCount > 0 ?
+          {moreInfoCount > 0 ? (
             <Row style={headings}>
               <div>URGENT: More information needed</div>
             </Row>
-            : null}
-          {repairs.length === 0 || isLoading === true ? (
-            null
-          ) : (
-            repairs.map((repair, i) => {
-              return (
-                <div>
-                  {repair.request_status === "INFO" ? (
-                    <Row className="mt-2 mb-2">
-                      <Col style={{ padding: "5px" }}>
-                        {JSON.parse(repair.images).length > 0 ? (
-                          <img
-                            key={i}
-                            src={JSON.parse(repair.images)[0]}
-                            //className="w-100 h-100"
-                            style={{
-                              objectFit: "cover",
-                              width: "110px",
-                              height: "100%",
-                              border: "1px solid #C4C4C4",
-                              borderRadius: "5px",
-                            }}
-                            alt="repairs2"
-                          />
-                        ) : (
-                          <img
-                            src={RepairImg}
-                            //className="w-100 h-100"
-                            style={{
-                              objectFit: "cover",
-                              width: "110px",
-                              // height: "100%",
-                              border: "1px solid #C4C4C4",
-                              borderRadius: "5px",
-                            }}
-                            alt="repairs23"
-                          />
-                        )}
-                      </Col>
-                      <Col
-                        xs={8}
-                        style={{ paddingLeft: "15px", cursor: "pointer" }}
-                      >
-                        <div
-                          onClick={() =>
-                            navigate(
-                              `/${property_uid}/${repair.maintenance_request_uid}/detailRepairStatus`
-                            )
-                          }
-                        >
-                          <Row style={subHeading}>
-                            <Col className="px-0">{repair.title}</Col>
-                            <Col
-                              xs={5}
+          ) : null}
+          {repairs.length === 0 || isLoading === true
+            ? null
+            : repairs.map((repair, i) => {
+                return (
+                  <div>
+                    {repair.request_status === "INFO" ? (
+                      <Row className="mt-2 mb-2">
+                        <Col style={{ padding: "5px" }}>
+                          {JSON.parse(repair.images).length > 0 ? (
+                            <img
+                              key={i}
+                              src={JSON.parse(repair.images)[0]}
+                              //className="w-100 h-100"
                               style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "right",
-                                justifyContent: "right",
+                                objectFit: "cover",
+                                width: "110px",
+                                height: "100%",
+                                border: "1px solid #C4C4C4",
+                                borderRadius: "5px",
                               }}
-                            >
-                              {repair.priority === "High" ? (
-                                <img style={{ width: '100px', height: '25px' }} src={HighPriority} />
-                              ) : repair.priority === "Medium" ? (
-                                <img style={{ width: '100px', height: '25px' }} src={MediumPriority} />
-                              ) : (
-                                <img style={{ width: '100px', height: '25px' }} src={LowPriority} />
-                              )}
-                            </Col>
-                          </Row>
-                          <Row style={subText}>
-                            {repair.description}
-                            <hr />
-                          </Row>
-                          <Row style={blue} className="mt=0 pt=0">
-                            Property manager has <br /> requested additional information
-                          </Row>
-                        </div>
-                      </Col>
-                    </Row>
-                  ) : null}
-                </div>
-              );
-            })
-          )}
+                              alt="repairs2"
+                            />
+                          ) : (
+                            <img
+                              src={RepairImg}
+                              //className="w-100 h-100"
+                              style={{
+                                objectFit: "cover",
+                                width: "110px",
+                                // height: "100%",
+                                border: "1px solid #C4C4C4",
+                                borderRadius: "5px",
+                              }}
+                              alt="repairs23"
+                            />
+                          )}
+                        </Col>
+                        <Col
+                          xs={8}
+                          style={{ paddingLeft: "15px", cursor: "pointer" }}
+                        >
+                          <div
+                            onClick={() =>
+                              navigate(
+                                `/${property_uid}/${repair.maintenance_request_uid}/detailRepairStatus`
+                              )
+                            }
+                          >
+                            <Row style={subHeading}>
+                              <Col className="px-0">{repair.title}</Col>
+                              <Col
+                                xs={5}
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "row",
+                                  alignItems: "right",
+                                  justifyContent: "right",
+                                }}
+                              >
+                                {repair.priority === "High" ? (
+                                  <img
+                                    style={{ width: "100px", height: "25px" }}
+                                    src={HighPriority}
+                                  />
+                                ) : repair.priority === "Medium" ? (
+                                  <img
+                                    style={{ width: "100px", height: "25px" }}
+                                    src={MediumPriority}
+                                  />
+                                ) : (
+                                  <img
+                                    style={{ width: "100px", height: "25px" }}
+                                    src={LowPriority}
+                                  />
+                                )}
+                              </Col>
+                            </Row>
+                            <Row style={subText}>
+                              {repair.description}
+                              <hr />
+                            </Row>
+                            <Row style={blue} className="mt=0 pt=0">
+                              Property manager has <br /> requested additional
+                              information
+                            </Row>
+                          </div>
+                        </Col>
+                      </Row>
+                    ) : null}
+                  </div>
+                );
+              })}
         </Container>
         <Container>
           <Row style={headings}>
@@ -195,7 +201,6 @@ function RepairStatus(props) {
               <div style={blue}>No Scheduled Repairs</div>
             </Row>
           ) : (
-
             repairs.map((repair, i) => {
               return (
                 <div>
@@ -253,11 +258,20 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img style={{ width: '100px', height: '25px' }} src={HighPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={HighPriority}
+                                />
                               ) : repair.priority === "Medium" ? (
-                                <img style={{ width: '100px', height: '25px' }} src={MediumPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={MediumPriority}
+                                />
                               ) : (
-                                <img style={{ width: '100px', height: '25px' }} src={LowPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={LowPriority}
+                                />
                               )}
                             </Col>
                           </Row>
@@ -266,7 +280,8 @@ function RepairStatus(props) {
                             <hr />
                           </Row>
                           <Row style={blue} className="mt=0 pt=0">
-                            Repair Approved:  <br /> Date set for {repair.scheduled_date}
+                            Repair Approved: <br /> Date set for{" "}
+                            {repair.scheduled_date}
                           </Row>
                         </div>
                       </Col>
@@ -289,7 +304,8 @@ function RepairStatus(props) {
             repairs.map((repair, i) => {
               return (
                 <div>
-                  {repair.request_status === "NEW" || repair.request_status === "PROCESSING" ? (
+                  {repair.request_status === "NEW" ||
+                  repair.request_status === "PROCESSING" ? (
                     <Row className="mt-2 mb-2">
                       <Col style={{ padding: "5px" }}>
                         {JSON.parse(repair.images).length > 0 ? (
@@ -343,11 +359,20 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img style={{ width: '100px', height: '25px' }} src={HighPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={HighPriority}
+                                />
                               ) : repair.priority === "Medium" ? (
-                                <img style={{ width: '100px', height: '25px' }} src={MediumPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={MediumPriority}
+                                />
                               ) : (
-                                <img style={{ width: '100px', height: '25px' }} src={LowPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={LowPriority}
+                                />
                               )}
                             </Col>
                           </Row>
@@ -433,11 +458,20 @@ function RepairStatus(props) {
                               }}
                             >
                               {repair.priority === "High" ? (
-                                <img style={{ width: '100px', height: '25px' }} src={HighPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={HighPriority}
+                                />
                               ) : repair.priority === "Medium" ? (
-                                <img style={{ width: '100px', height: '25px' }} src={MediumPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={MediumPriority}
+                                />
                               ) : (
-                                <img style={{ width: '100px', height: '25px' }} src={LowPriority} />
+                                <img
+                                  style={{ width: "100px", height: "25px" }}
+                                  src={LowPriority}
+                                />
                               )}
                             </Col>
                           </Row>
