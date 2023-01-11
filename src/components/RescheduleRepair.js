@@ -51,7 +51,7 @@ function RescheduleRepair(props) {
         .then((res) => {
           // console.log("This is the information we got" + res);
           // setTimeAASlots(res.data.result);
-          console.log("Timeslots Array " + timeSlots);
+          // console.log("Timeslots Array " + timeSlots);
 
           res.data.result.map((r) => {
             timeAASlots.push(r["begin_time"]);

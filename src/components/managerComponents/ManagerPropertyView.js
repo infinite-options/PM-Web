@@ -5135,6 +5135,7 @@ function ManagerPropertyView(props) {
                   <Row style={{ overflow: "scroll" }}>
                     <ManagerTenantAgreementView
                       property={property}
+                      closeAgreement={closeAgreement}
                       selectedAgreement={selectedAgreement}
                       renewLease={renewLease}
                       acceptedTenantApplications={acceptedTenantApplications}

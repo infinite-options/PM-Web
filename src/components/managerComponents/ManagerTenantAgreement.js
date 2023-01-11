@@ -128,11 +128,6 @@ function ManagerTenantAgreement(props) {
     setFiles(newFiles);
     setNewFile(null);
   };
-  const deleteDocument = (i) => {
-    const newFiles = [...files];
-    newFiles.splice(i, 1);
-    setFiles(newFiles);
-  };
 
   const loadAgreement = () => {
     setTenantID(agreement.tenant_id);
