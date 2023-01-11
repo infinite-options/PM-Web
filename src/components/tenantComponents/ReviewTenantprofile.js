@@ -115,7 +115,7 @@ function ReviewTenantProfile(props) {
       children: childrenApplication,
       pets: petsApplication,
       vehicles: vehiclesApplication,
-      references: referencesApplication,
+      referred: referencesApplication,
       documents: application_docs,
     };
     console.log(application_docs);
