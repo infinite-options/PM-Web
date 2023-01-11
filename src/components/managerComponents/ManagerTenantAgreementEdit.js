@@ -41,9 +41,9 @@ const useStyles = makeStyles({
 function ManagerTenantAgreementEdit(props) {
   const classes = useStyles();
   const { back, property, agreement } = props;
-  console.log("here", agreement);
+  // console.log("here", agreement);
 
-  console.log("here", props);
+  // console.log("here", props);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -148,7 +148,7 @@ function ManagerTenantAgreementEdit(props) {
     // setReferences(JSON.parse(agreement.referred));
   };
   useEffect(() => {
-    console.log("in useeffect");
+    // console.log("in useeffect");
 
     if (agreement.adults) {
       setAdults(JSON.parse(agreement.adults));
@@ -170,12 +170,12 @@ function ManagerTenantAgreementEdit(props) {
       loadAgreement();
     }
   }, [agreement]);
-  console.log(feeState);
+  // console.log(feeState);
 
   const save = async () => {
     setShowSpinner(true);
 
-    console.log(lateFee);
+    // console.log(lateFee);
     const newAgreement = {
       rental_property_id: property.property_uid,
       lease_start: startDate,
@@ -195,7 +195,7 @@ function ManagerTenantAgreementEdit(props) {
       referred: JSON.stringify(referred),
     };
 
-    console.log(newAgreement);
+    // console.log(newAgreement);
     // for (let i = 0; i < files.length; i++) {
     //   let key = `img_${i}`;
     //   newAgreement[key] = files[i];
@@ -207,9 +207,9 @@ function ManagerTenantAgreementEdit(props) {
     }
     newAgreement.documents = JSON.stringify(files);
     if (agreement !== null) {
-      console.log("in if");
+      // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
-      console.log(newAgreement);
+      // console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
     }
 
@@ -226,7 +226,7 @@ function ManagerTenantAgreementEdit(props) {
     ) : (
       ""
     );
-  console.log("feeState in tenantagreemnt", feeState);
+  // console.log("feeState in tenantagreemnt", feeState);
 
   return (
     <div className="flex-1">

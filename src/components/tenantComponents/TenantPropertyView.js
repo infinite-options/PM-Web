@@ -279,7 +279,7 @@ function TenantPropertyView(props) {
     const response = await get(
       `/propertiesTenantDetail?property_uid=${property_uid}&tenant_id=${user.user_uid}`
     );
-    console.log(response.result[0]);
+    // console.log(response.result[0]);
     setImagesProperty(JSON.parse(response.result[0].images));
 
     applianceState[1](JSON.parse(response.result[0].appliances));
@@ -297,11 +297,11 @@ function TenantPropertyView(props) {
         setFeeState(JSON.parse(rental.rent_payments));
 
         setContactState(JSON.parse(rental.assigned_contacts));
-        console.log(rental["r.documents"]);
+        // console.log(rental["r.documents"]);
         setFiles(JSON.parse(rental["r.documents"]));
         let app = rental.application_status === "TENANT END EARLY";
 
-        console.log(app);
+        // console.log(app);
         if (app) {
           setTenantEndEarly(true);
         }
@@ -833,7 +833,7 @@ function TenantPropertyView(props) {
                         <TableCell>Images</TableCell>
                       </TableRow>
                     </TableHead>
-                    {console.log("appliances", appliances, applianceState)}
+                    {/* {console.log("appliances", appliances, applianceState)} */}
                     <TableBody>
                       {appliances.map((appliance, i) => {
                         return applianceState[0][appliance]["available"] ==
@@ -875,9 +875,6 @@ function TenantPropertyView(props) {
                             applianceState[0][appliance]["images"].length >
                               0 ? (
                               <TableCell>
-                                {console.log(
-                                  applianceState[0][appliance]["images"][0]
-                                )}
                                 <Row className="d-flex justify-content-center align-items-center p-1">
                                   <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                     <img
@@ -1094,7 +1091,7 @@ function TenantPropertyView(props) {
               ) : (
                 " "
               )}
-              {console.log("selectedAgreement", selectedAgreement)}
+
               {selectedAgreement ? (
                 <div
                   className="mx-3 p-2"

@@ -61,10 +61,10 @@ function ManagerDocuments(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -73,10 +73,10 @@ function ManagerDocuments(props) {
       `/managerDocuments?manager_id=${management_buid}`
     );
     setDocuments(response.result);
-    console.log(response.result[0]);
+    // console.log(response.result[0]);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
       return;
     }
@@ -87,28 +87,28 @@ function ManagerDocuments(props) {
         return Object.assign(cur, { [key]: documents[key] });
       }, {});
 
-    console.log(active_lease_docs);
+    // console.log(active_lease_docs);
     setActiveLeaseDocuments(active_lease_docs);
     var past_lease_docs = Object.keys(documents)
       .filter((key) => key.includes("past_lease_docs"))
       .reduce((cur, key) => {
         return Object.assign(cur, { [key]: documents[key] });
       }, {});
-    console.log(past_lease_docs);
+    // console.log(past_lease_docs);
     setPastLeaseDocuments(past_lease_docs);
     var active_manager_docs = Object.keys(documents)
       .filter((key) => key.includes("active_manager_docs"))
       .reduce((cur, key) => {
         return Object.assign(cur, { [key]: documents[key] });
       }, {});
-    console.log(active_manager_docs);
+    // console.log(active_manager_docs);
     setActiveManagerDocuments(active_manager_docs);
     var past_manager_docs = Object.keys(documents)
       .filter((key) => key.includes("past_manager_docs"))
       .reduce((cur, key) => {
         return Object.assign(cur, { [key]: documents[key] });
       }, {});
-    console.log(past_manager_docs);
+    // console.log(past_manager_docs);
     setPastManagerDocuments(past_manager_docs);
     setIsLoading(false);
   };
@@ -118,8 +118,8 @@ function ManagerDocuments(props) {
     }
     fetchProfile();
   }, [access_token]);
-  console.log(documents);
-  console.log(activeLeaseDocuments.length);
+  // console.log(documents);
+  // console.log(activeLeaseDocuments.length);
 
   return (
     <div className="w-100 overflow-hidden">

@@ -90,12 +90,12 @@ function ReviewTenantProfile(props) {
   //   setNewFile(newFile);
   // };
 
-  console.log("Files", files);
-  console.log("Files Copy", filesCopy);
-  console.log("New Files", filesOrigignal);
+  // console.log("Files", files);
+  // console.log("Files Copy", filesCopy);
+  // console.log("New Files", filesOrigignal);
   const apply = async () => {
-    console.log(files);
-    console.log(filesOrigignal);
+    // console.log(files);
+    // console.log(filesOrigignal);
     let application_docs = [];
     for (let i = 0; i < filesCopy.length; i++) {
       if (filesCopy[i].shared === true) {
@@ -106,8 +106,8 @@ function ReviewTenantProfile(props) {
     //   setErrorMessage("Please fill out the type of pets");
     //   return;
     // }
-    console.log(application_docs);
-    console.log(adultsApplication);
+    // console.log(application_docs);
+    // console.log(adultsApplication);
     const newApplication = {
       property_uid: property_uid,
       message: message,
@@ -118,7 +118,7 @@ function ReviewTenantProfile(props) {
       referred: referencesApplication,
       documents: application_docs,
     };
-    console.log(application_docs);
+    // console.log(application_docs);
     const response = await post("/applications", newApplication, access_token);
 
     const tenantProfile = {};
@@ -149,7 +149,7 @@ function ReviewTenantProfile(props) {
       }
     }
 
-    console.log(update_tenant_docs);
+    // console.log(update_tenant_docs);
 
     for (let i = 0; i < update_tenant_docs.length; i++) {
       let key = `doc_${i}`;
@@ -175,9 +175,9 @@ function ReviewTenantProfile(props) {
   const editDocument = (i) => {
     const newFiles = [...filesCopy];
     const file = newFiles.splice(i, 1)[0];
-    console.log(file);
+    // console.log(file);
     file["shared"] = !file.shared;
-    console.log(file);
+    // console.log(file);
     setFiles(newFiles);
     // setNewFile({ ...file });
     // newFile.push(file);
@@ -219,7 +219,7 @@ function ReviewTenantProfile(props) {
       return;
     }
     if (user.role.indexOf("TENANT") === -1) {
-      console.log("no tenant profile");
+      // console.log("no tenant profile");
       props.onConfirm();
     }
   };
@@ -228,7 +228,7 @@ function ReviewTenantProfile(props) {
     fetchProfileInfo();
   }, []);
 
-  console.log(files);
+  // console.log(files);
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -267,7 +267,7 @@ function ReviewTenantProfile(props) {
         : [reference, ...nums]
     );
   };
-  console.log("adultsApplication", adultsApplication);
+  // console.log("adultsApplication", adultsApplication);
   // function handleDocumentClick(i){
   //   console.log("clicked");
   //   const temp = documentClick;
@@ -467,7 +467,6 @@ function ReviewTenantProfile(props) {
             <h3>Documents</h3>
           </Row>
           <Row className="m-3">
-            {console.log("files", filesCopy.length)}
             {filesCopy.length > 0 ? (
               <div className="mb-4">
                 {filesCopy.map((file, i) => (

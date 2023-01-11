@@ -94,10 +94,10 @@ function ManagerCreateAnnouncement(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -108,7 +108,7 @@ function ManagerCreateAnnouncement(props) {
     setIsLoading(false);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
@@ -188,14 +188,14 @@ function ManagerCreateAnnouncement(props) {
         });
       }
     });
-    console.log(tenat_info);
+    // console.log(tenat_info);
     setTenants(tenat_info);
     setTenantState(tenat_info);
     setProperties(properties_unique);
     setPropertyState(properties_unique);
   };
   useEffect(() => {
-    console.log("in use effect");
+    // console.log("in use effect");
     fetchProperties();
   }, []);
 
@@ -206,16 +206,16 @@ function ManagerCreateAnnouncement(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
     }
     setManagerID(management_buid);
-    console.log(newAnnouncement);
+    // console.log(newAnnouncement);
     let receiver_uid = [];
     let receiver_properties_id = [];
     if (byProperty) {

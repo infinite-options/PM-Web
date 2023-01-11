@@ -127,7 +127,7 @@ function OwnerUtilities(props) {
 
   const PayBill = async (pid) => {
     let response = await get(`/purchases?purchase_uid=${pid}`);
-    console.log("GET PURCHASE RESPONSE", response);
+    // console.log("GET PURCHASE RESPONSE", response);
     setPurchase(response.result[0]);
     setTotalSum(response.result[0].amount_due);
     setAmount(response.result[0].amount_due - response.result[0].amount_paid);
@@ -140,7 +140,7 @@ function OwnerUtilities(props) {
         : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
     let response = await fetch(url);
     const responseData = await response.json();
-    console.log(responseData.publicKey);
+    // console.log(responseData.publicKey);
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
   };
@@ -181,7 +181,7 @@ function OwnerUtilities(props) {
 
     const response = await get("/ownerDashboard", access_token);
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
@@ -355,7 +355,7 @@ function OwnerUtilities(props) {
     new_bill.bill_docs = JSON.stringify(files);
     const response = await post("/bills", new_bill, null, files);
     const bill_uid = response.bill_uid;
-    console.log(bill_uid);
+    // console.log(bill_uid);
 
     const new_purchase_pm = {
       linked_bill_id: bill_uid,
@@ -370,16 +370,16 @@ function OwnerUtilities(props) {
       purchase_frequency: "One-time",
       next_payment: newUtility.due_date,
     };
-    console.log(new_purchase_pm);
+    // console.log(new_purchase_pm);
     const response_pm = await post("/purchases", new_purchase_pm, null, null);
     const purchase_uid = response_pm.purchase_uid;
     setPurchaseUID(response_pm.purchase_uid);
-    console.log(response_pm);
+    // console.log(response_pm);
     splitFees(newUtility);
-    console.log(tenantPay, ownerPay);
+    // console.log(tenantPay, ownerPay);
     for (const property of newUtility.properties) {
-      console.log("in for loop");
-      console.log(property);
+      // console.log("in for loop");
+      // console.log(property);
       const new_purchase = {
         linked_bill_id: bill_uid,
         pur_property_id: [property.property_uid],
@@ -399,7 +399,7 @@ function OwnerUtilities(props) {
       }
       if (tenantPay) {
         if (property.rental_status === "ACTIVE") {
-          console.log("property.tenants", property.rentalInfo[0]);
+          // console.log("property.tenants", property.rentalInfo[0]);
           let tenant_ids = property.rentalInfo[0].tenant_id;
           new_purchase.payer = [tenant_ids];
         } else {
@@ -409,7 +409,7 @@ function OwnerUtilities(props) {
         new_purchase.payer = [property.owner_id];
       }
 
-      console.log("New Purchase", new_purchase);
+      // console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
     setNewUtility({ ...emptyUtility });
@@ -1143,13 +1143,6 @@ function OwnerUtilities(props) {
                                   setPayment(expense);
                                 }}
                               >
-                                {console.log(
-                                  "purchase",
-                                  expense.purchase_uid,
-                                  user.user_uid,
-                                  expense.receiver,
-                                  expense.receiver !== user.user_uid
-                                )}
                                 <TableCell
                                   padding="none"
                                   size="small"
@@ -1738,7 +1731,7 @@ function OwnerUtilities(props) {
                 height: "100%",
               }}
             >
-              {console.log(payment)}
+              {/* {console.log(payment)} */}
               <Row
                 className="my-2 align-items-center justify-content-center"
                 style={headings}
@@ -1879,7 +1872,7 @@ function OwnerUtilities(props) {
                 height: "100%",
               }}
             >
-              {console.log(payment)}
+              {/* {console.log(payment)} */}
               <Row
                 className="my-2 align-items-center justify-content-center"
                 style={headings}
@@ -2013,7 +2006,7 @@ function OwnerUtilities(props) {
                 height: "100%",
               }}
             >
-              {console.log(payment)}
+              {/* {console.log(payment)} */}
               <Row
                 className="my-2 align-items-center justify-content-center"
                 style={headings}
@@ -2165,7 +2158,7 @@ function OwnerUtilities(props) {
                 </Row>
                 <div className="mt-3" hidden={stripePayment}>
                   <Form.Group style={mediumBold}>
-                    {console.log(purchaseUID)}
+                    {/* {console.log(purchaseUID)} */}
                     <Form.Label>Amount</Form.Label>
                     {purchaseUID.length === 1 ? (
                       <Form.Control

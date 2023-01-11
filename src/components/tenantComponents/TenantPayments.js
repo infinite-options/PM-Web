@@ -44,12 +44,12 @@ export default function TenantDuePayments(props) {
       return;
     }
     const response = await get("/tenantDashboard", access_token);
-    console.log("second");
-    console.log(response);
+    // console.log("second");
+    // console.log(response);
     setIsLoading(false);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
@@ -67,11 +67,11 @@ export default function TenantDuePayments(props) {
     setTenantExpenses(response.result[0].properties[0].tenantExpenses);
   };
   useEffect(() => {
-    console.log("in use effect");
+    // console.log("in use effect");
     fetchTenantPayments();
   }, [paymentOptions]);
   const handlePaymentOption = (index) => {
-    console.log("payment choice called");
+    // console.log("payment choice called");
     let temp = paymentOptions.slice();
     for (var i = 0; i < temp.length; i++) {
       if (i == index) {
@@ -83,7 +83,7 @@ export default function TenantDuePayments(props) {
 
     setPaymentOptions(temp);
   };
-  console.log(paymentOptions);
+  // console.log(paymentOptions);
 
   return (
     <div className="w-100 overflow-hidden">

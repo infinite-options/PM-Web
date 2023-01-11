@@ -236,7 +236,7 @@ function ManagerTenantListDetail(props) {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
-  console.log(selectedTenant);
+  // console.log(selectedTenant);
 
   function MaskCharacter(str, mask, n = 1) {
     return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
@@ -582,9 +582,6 @@ function ManagerTenantListDetail(props) {
                           <div style={redPill}>Late</div>
                         ) : (
                           <div style={greenPill}>On-time</div>
-                        )}
-                        {console.log(
-                          payment.payment_date > payment.next_payment
                         )}
                       </Col>
                     </Row>

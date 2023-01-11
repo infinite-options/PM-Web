@@ -72,7 +72,7 @@ function OwnerRepairRequest(props) {
       }
     }
 
-    console.log(newRequest);
+    // console.log(newRequest);
 
     setShowSpinner(true);
     await post("/maintenanceRequests", newRequest, null, files);

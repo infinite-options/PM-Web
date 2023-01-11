@@ -37,7 +37,7 @@ function StripePayment(props) {
       }
     );
     const clientSecret = await response.json();
-    console.log(clientSecret);
+    // console.log(clientSecret);
     const cardElement = await elements.getElement(CardElement);
     const stripeResponse = await stripe.createPaymentMethod({
       type: "card",
@@ -46,17 +46,17 @@ function StripePayment(props) {
         name: `${user.first_name} ${user.last_name}`,
       },
     });
-    console.log(stripeResponse);
+    // console.log(stripeResponse);
     const confirmedCardPayment = await stripe.confirmCardPayment(clientSecret, {
       payment_method: stripeResponse.paymentMethod.id,
       setup_future_usage: "off_session",
     });
-    console.log(confirmedCardPayment);
+    // console.log(confirmedCardPayment);
     const paymentIntentID = confirmedCardPayment.paymentIntent.id;
-    console.log(paymentIntentID);
+    // console.log(paymentIntentID);
     let newPayment = {};
     if (purchases.length === 1) {
-      console.log(purchases[0]);
+      // console.log(purchases[0]);
       newPayment = {
         pay_purchase_id: purchases[0].purchase_uid,
         //Need to make change here
@@ -68,7 +68,7 @@ function StripePayment(props) {
       await post("/payments", newPayment);
     } else {
       for (let purchase of purchases) {
-        console.log(purchase);
+        // console.log(purchase);
         newPayment = {
           pay_purchase_id: purchase.purchase_uid,
           //Need to make change here

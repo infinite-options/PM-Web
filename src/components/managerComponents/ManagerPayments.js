@@ -50,10 +50,10 @@ export default function ManagerPayments(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -62,27 +62,27 @@ export default function ManagerPayments(props) {
     const response = await get(
       `/managerPayments?manager_id=${management_buid}`
     );
-    console.log("second");
-    console.log(response);
+    // console.log("second");
+    // console.log(response);
     setIsLoading(false);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
     }
     setPropertyData(response);
     let upcoming = [];
-    console.log(response.result);
+    // console.log(response.result);
     setUpcomingPaymentsData(response.result);
   };
   useEffect(() => {
-    console.log("in use effect");
+    // console.log("in use effect");
     fetchManagerPayments();
   }, [paymentOptions, verified]);
   const handlePaymentOption = (index) => {
-    console.log("payment choice called");
+    // console.log("payment choice called");
     let temp = paymentOptions.slice();
     for (var i = 0; i < temp.length; i++) {
       if (i == index) {
@@ -94,7 +94,7 @@ export default function ManagerPayments(props) {
 
     setPaymentOptions(temp);
   };
-  console.log(paymentOptions);
+  // console.log(paymentOptions);
 
   return (
     <div className="w-100 overflow-hidden">

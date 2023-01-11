@@ -48,7 +48,7 @@ function TenantDuePayments(props) {
     const currentDay = new Date().getDate();
     const currentYear = new Date().getFullYear();
     for (let expense of tenantExpenses) {
-      console.log(expense);
+      // console.log(expense);
       let dueDate;
       let currentDate;
       let date = expense.next_payment;
@@ -80,7 +80,7 @@ function TenantDuePayments(props) {
         }
       }
     }
-    console.log(tempPurchaseUID);
+    // console.log(tempPurchaseUID);
     setPurchaseUIDs(tempPurchaseUID);
   };
 
@@ -96,17 +96,17 @@ function TenantDuePayments(props) {
   };
 
   useEffect(() => {
-    console.log("This is the selected property", selectedProperty);
+    // console.log("This is the selected property", selectedProperty);
     setTenantExpenses(selectedProperty.property.tenantExpenses);
     parseExpenses();
     setDuePayments(tempDuePayments);
     setUpcomingPayments(tempUpcomingPayments);
-    console.log("Upcoming payments", upcomingPayments);
+    // console.log("Upcoming payments", upcomingPayments);
   }, [tenantExpenses]);
 
   useEffect(() => {
-    console.log("Due payments", duePayments);
-    console.log("Upcoming payments", upcomingPayments);
+    // console.log("Due payments", duePayments);
+    // console.log("Upcoming payments", upcomingPayments);
   }, [duePayments, upcomingPayments]);
 
   return (

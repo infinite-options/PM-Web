@@ -83,10 +83,10 @@ function ManagerRepairsOverview(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -120,7 +120,7 @@ function ManagerRepairsOverview(props) {
     );
 
     let repairs = response.result;
-    console.log(repairs);
+    // console.log(repairs);
     repairs.forEach((repair, i) => {
       const request_created_date = new Date(
         Date.parse(repair.request_created_date)
@@ -145,7 +145,7 @@ function ManagerRepairsOverview(props) {
     });
 
     let repairs_sorted = sort_repairs(repairs);
-    console.log(repairs_sorted);
+    // console.log(repairs_sorted);
 
     const new_repairs = repairs_sorted.filter(
       (item) => item.request_status === "NEW"
@@ -173,7 +173,7 @@ function ManagerRepairsOverview(props) {
   };
 
   useEffect(fetchRepairs, [access_token]);
-  console.log(repairIter);
+  // console.log(repairIter);
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));

@@ -18,7 +18,7 @@ function SwitchRole(props) {
   );
   const navigateToRole = (role) => {
     // add navigation to correct role pages
-    console.log(`load ${role}`);
+    // console.log(`load ${role}`);
     if (role === "OWNER") {
       navigate("/owner");
     } else if (role === "MANAGER") {

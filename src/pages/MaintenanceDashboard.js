@@ -33,46 +33,53 @@ function MaintenanceDashboard(props) {
 
   let access_token = userData.access_token;
 
-  const sort_quotes = (quotes) =>  {
-    quotes.sort((a,b) => ((b.priority_n - a.priority_n) || (b.days_since - a.days_since)))
-    return quotes
-  }
+  const sort_quotes = (quotes) => {
+    quotes.sort(
+      (a, b) => b.priority_n - a.priority_n || b.days_since - a.days_since
+    );
+    return quotes;
+  };
 
   const fetchProfile = async () => {
     let business_uid = "";
     for (const business of userData.user.businesses) {
       if (business.business_type === "MAINTENANCE") {
         business_uid = business.business_uid;
-        console.log(business_uid);
+        // console.log(business_uid);
         break;
       }
     }
     if (business_uid === "") {
-      console.log("no maintenance business found");
+      // console.log("no maintenance business found");
     }
     const response = await get(`/businesses?business_uid=${business_uid}`);
-    console.log(response);
+    // console.log(response);
     setProfile(response.result[0]);
 
-    const quotes_response  = await get(`/maintenanceQuotes?quote_business_uid=${business_uid}`);
-    console.log("Quotes associated with business")
-    console.log(quotes_response.result)
-    const quotes_unsorted = quotes_response.result
+    const quotes_response = await get(
+      `/maintenanceQuotes?quote_business_uid=${business_uid}`
+    );
+    // console.log("Quotes associated with business")
+    // console.log(quotes_response.result)
+    const quotes_unsorted = quotes_response.result;
     quotes_unsorted.forEach((quote, i) => {
       const quote_created_date = new Date(Date.parse(quote.quote_created_date));
       const current_date = new Date();
-      quotes_unsorted[i].days_since = Math.ceil((current_date.getTime() - quote_created_date.getTime()) / (1000 * 3600 * 24))
+      quotes_unsorted[i].days_since = Math.ceil(
+        (current_date.getTime() - quote_created_date.getTime()) /
+          (1000 * 3600 * 24)
+      );
 
-      quote.priority_n = 0
+      quote.priority_n = 0;
       if (quote.priority.toLowerCase() === "high") {
-        quote.priority_n = 3
+        quote.priority_n = 3;
       } else if (quote.priority.toLowerCase() === "medium") {
-        quote.priority_n = 2
+        quote.priority_n = 2;
       } else if (quote.priority.toLowerCase() === "low") {
-        quote.priority_n = 1
+        quote.priority_n = 1;
       }
     });
-    setQuotes(sort_quotes(quotes_unsorted))
+    setQuotes(sort_quotes(quotes_unsorted));
   };
   //console.log(profile);
   useEffect(() => {
@@ -91,31 +98,41 @@ function MaintenanceDashboard(props) {
     navigate("/ScheduledJobs");
   };
   const goToJobsCompleted = () => {
-    const quotes_rejected = quotes.filter(quote => quote.request_status === "COMPLETE")
-    navigate(`/jobsCompleted`, { state: {quotes: quotes_rejected }});
+    const quotes_rejected = quotes.filter(
+      (quote) => quote.request_status === "COMPLETE"
+    );
+    navigate(`/jobsCompleted`, { state: { quotes: quotes_rejected } });
   };
   const goToQuotesRejectedM = () => {
-    const quotes_rejected = quotes.filter(quote => quote.quote_status === "REJECTED")
-    navigate(`/quotesRejectedPM`, { state: {quotes: quotes_rejected }});
+    const quotes_rejected = quotes.filter(
+      (quote) => quote.quote_status === "REJECTED"
+    );
+    navigate(`/quotesRejectedPM`, { state: { quotes: quotes_rejected } });
   };
   const goToQuotesRejectedY = () => {
-    const quotes_rejected = quotes.filter(quote => quote.quote_status === "REFUSED")
-    navigate(`/quotesRejectedM`, { state: {quotes: quotes_rejected }});
+    const quotes_rejected = quotes.filter(
+      (quote) => quote.quote_status === "REFUSED"
+    );
+    navigate(`/quotesRejectedM`, { state: { quotes: quotes_rejected } });
   };
   const goToScheduledJobs = () => {
-    const quotes_accepted = quotes.filter(quote => quote.quote_status === "ACCEPTED")
-    const quotes_scheduled = quotes.filter(quote => quote.quote_status === "SCHEDULED")
-    const quotes_total = [...quotes_accepted, ...quotes_scheduled]
-    navigate(`/quotes-scheduled`, { state: {quotes: quotes_total}});
+    const quotes_accepted = quotes.filter(
+      (quote) => quote.quote_status === "ACCEPTED"
+    );
+    const quotes_scheduled = quotes.filter(
+      (quote) => quote.quote_status === "SCHEDULED"
+    );
+    const quotes_total = [...quotes_accepted, ...quotes_scheduled];
+    navigate(`/quotes-scheduled`, { state: { quotes: quotes_total } });
   };
   const goToQuotesSent = () => {
-    const quotes_sent = quotes.filter(quote => quote.quote_status === "SENT")
-    navigate(`/quotes-sent`, { state: {quotes: quotes_sent }});
+    const quotes_sent = quotes.filter((quote) => quote.quote_status === "SENT");
+    navigate(`/quotes-sent`, { state: { quotes: quotes_sent } });
   };
   const goToSearchPM = () => {
     navigate("/maintenancePropertyManagers");
   };
-  console.log(profile);
+  // console.log(profile);
   return (
     <div className="h-100">
       <Header title="Home" />
@@ -173,9 +190,9 @@ function MaintenanceDashboard(props) {
           </Col>
           <Col xs={3} style={actions}>
             <img
-                style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                src={Documents}
-                onClick={goToQuotesSent}
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              src={Documents}
+              onClick={goToQuotesSent}
             />
             <div>Quotes Sent</div>
           </Col>

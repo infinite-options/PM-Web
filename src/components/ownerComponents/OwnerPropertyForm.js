@@ -467,9 +467,9 @@ function OwnerPropertyForm(props) {
       } else {
         newProperty[key] = file.image;
       }
-      console.log(newProperty[key]);
+      // console.log(newProperty[key]);
     }
-    console.log(files);
+    // console.log(files);
     setShowSpinner(true);
     if (property) {
       newProperty.owner_id = property.owner_id;
@@ -508,7 +508,7 @@ function OwnerPropertyForm(props) {
           availableToRent == true || availableToRent == 1 ? "true" : "false",
       };
       const files = imageState[0];
-      console.log(files, imageState);
+      // console.log(files, imageState);
       let i = 0;
       for (const file of imageState[0]) {
         let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
@@ -517,7 +517,7 @@ function OwnerPropertyForm(props) {
         } else {
           newProperty[key] = file.image;
         }
-        console.log(newProperty[key]);
+        // console.log(newProperty[key]);
       }
       const response = await post("/properties", newProperty, null, files);
     }
@@ -560,7 +560,7 @@ function OwnerPropertyForm(props) {
     setShowSpinner(false);
     navigate("/owner");
   };
-  console.log(activeDate);
+  // console.log(activeDate);
   return (
     <div
       className="d-flex flex-column w-100 overflow-hidden p-2"

@@ -27,7 +27,7 @@ function ServicesProvided(props) {
     setTotalEstimate,
     businessType,
   } = props;
-  console.log(serviceState);
+  // console.log(serviceState);
   const [newService, setNewService] = React.useState(null);
   const [editingService, setEditingService] = React.useState(null);
   // const [totalEstimate, setTotalEstimate] = React.useState(0)
@@ -72,11 +72,11 @@ function ServicesProvided(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    console.log(newService);
+    // console.log(newService);
     const newServiceState = [...serviceState];
-    console.log(newServiceState);
+    // console.log(newServiceState);
     newServiceState.push({ ...newService });
-    console.log(newServiceState);
+    // console.log(newServiceState);
     setServiceState(newServiceState);
     setNewService(null);
     setErrorMessage("");

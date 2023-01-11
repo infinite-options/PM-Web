@@ -37,7 +37,7 @@ function PropertyManagerDocs(props) {
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  console.log(user);
+  // console.log(user);
   let pageURL = window.location.href.split("/");
 
   const navigate = useNavigate();
@@ -150,20 +150,20 @@ function PropertyManagerDocs(props) {
     const response = await get(
       `/contracts?property_uid=${property.property_uid}`
     );
-    console.log(response.result);
+    // console.log(response.result);
     const ac = response.result;
 
-    console.log(management_buid);
+    // console.log(management_buid);
 
     if (response.result.length > 0) {
       ac.forEach((contract) => {
         if (contract.business_uid === management_buid) {
-          console.log("here");
+          // console.log("here");
           const aContract = contract;
           aContract.fees = JSON.parse(contract.contract_fees);
           aContract.contacts = JSON.parse(contract.assigned_contacts);
           aContract.docs = JSON.parse(contract.documents);
-          console.log(aContract);
+          // console.log(aContract);
           setActiveContract(aContract);
         }
       });
@@ -185,7 +185,7 @@ function PropertyManagerDocs(props) {
       }
     }
   }, []);
-  console.log("selectedBusiness", selectedBusiness);
+  // console.log("selectedBusiness", selectedBusiness);
   return (
     <div className="d-flex flex-column flex-grow-1 w-100 justify-content-center">
       <Row className="m-3">
@@ -510,7 +510,7 @@ function PropertyManagerDocs(props) {
       ) : (
         ""
       )}
-      {console.log(activeContract)}
+      {/* {console.log(activeContract)} */}
       {activeContract !== null &&
       property.management_status === "OWNER END EARLY" ? (
         <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">

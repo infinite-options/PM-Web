@@ -49,14 +49,14 @@ export default function PropertyInfo() {
     },
   };
   const data = location.state.property;
-  console.log(data);
+  // console.log(data);
   const type = location.state.type;
   const imgs = data.images;
-  console.log(imgs);
+  // console.log(imgs);
   const util = Object.entries(JSON.parse(data.utilities));
   // const [currentImg, setCurrentImg] = React.useState(0);
   const [currentImg, setCurrentImg] = React.useState(0);
-  console.log(util);
+  // console.log(util);
   var counter = 0;
   var counter2 = 0;
   var counter3 = 0;
@@ -126,7 +126,7 @@ export default function PropertyInfo() {
                 {imgs.map((imagesGroup) => {
                   return (
                     <div className="d-flex align-items-center justify-content-center">
-                      {console.log(imagesGroup)}
+                      {/* {console.log(imagesGroup)} */}
                       <img
                         key={Date.now()}
                         src={imagesGroup}

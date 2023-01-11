@@ -43,7 +43,7 @@ function CreateRevenue(props) {
       next_payment: date,
     };
 
-    console.log(newRevenue);
+    // console.log(newRevenue);
     const response = await post("/createRevenues", newRevenue);
     reload();
     props.back();

@@ -34,7 +34,7 @@ import {
 function TenantProfileInfo(props) {
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
-  console.log("user", user);
+  // console.log("user", user);
   const navigate = useNavigate();
   const { autofillState, setAutofillState } = props;
 
@@ -587,13 +587,13 @@ function TenantProfileInfo(props) {
       return;
     }
     if (user.role.indexOf("TENANT") === -1) {
-      console.log("no tenant profile");
+      // console.log("no tenant profile");
       props.onConfirm();
     }
     const fetchProfileInfo = async () => {
       const response = await get("/tenantProfileInfo", access_token);
       if (response.result && response.result.length !== 0) {
-        console.log("tenant profile already set up");
+        // console.log("tenant profile already set up");
         // eventually update page with current info, allow user to update and save new info
         props.onConfirm();
         return;
@@ -665,7 +665,7 @@ function TenantProfileInfo(props) {
       tenantProfile[key] = files[i].file;
       delete files[i].file;
     }
-    console.log(tenantProfile);
+    // console.log(tenantProfile);
     tenantProfile.documents = JSON.stringify(files);
     await post("/tenantProfileInfo", tenantProfile, access_token, files);
     updateAutofillState(tenantProfile);

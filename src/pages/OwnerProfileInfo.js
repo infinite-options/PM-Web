@@ -47,13 +47,13 @@ function OwnerProfileInfo(props) {
     }
     const userRole = context.userData.user.role;
     if (userRole.indexOf("OWNER") === -1) {
-      console.log("no owner profile");
+      // console.log("no owner profile");
       props.onConfirm();
     }
     const fetchProfileInfo = async () => {
       const response = await get("/ownerProfileInfo", access_token);
       if (response.result.length !== 0) {
-        console.log("owner profile already set up");
+        // console.log("owner profile already set up");
         // eventually update page with current info, allow user to update and save new info
         props.onConfirm();
         return;

@@ -50,7 +50,7 @@ export default function RenterLanding() {
     //     console.log(err);
     //   });
     const response = await get(`/availableProperties`);
-    console.log(response);
+    // console.log(response);
     const res = response.result;
     if (res) {
       res.forEach((property) => {
@@ -65,11 +65,11 @@ export default function RenterLanding() {
     // so that this program doesn't run too many times.
     getDataFromApi();
   }, []);
-  console.log(data);
+  // console.log(data);
 
   const featuredProperties = data;
 
-  console.log(featuredProperties);
+  // console.log(featuredProperties);
   const colors = ["#628191", "#FB8500", "rgb(255,183,3)", "rgb(33,158,188)"];
 
   const handleRequestSort = (event, property) => {

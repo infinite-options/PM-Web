@@ -39,7 +39,7 @@ function RentPayment(props) {
   const useLiveStripeKey = false;
   const [message, setMessage] = React.useState("");
   const [amount, setAmount] = React.useState(0);
-  console.log(amount);
+  // console.log(amount);
 
   const submitForm = () => {
     const requestTitle = requestTitleRef.current.value;
@@ -58,7 +58,7 @@ function RentPayment(props) {
     const stripePromise = loadStripe(responseData.publicKey);
     setStripePromise(stripePromise);
     response = await get(`/purchases?purchase_uid=${purchase_uid}`);
-    console.log(response.result[0]);
+    // console.log(response.result[0]);
     setPurchase(response.result[0]);
     setAmount(response.result[0].amount_due - response.result[0].amount_paid);
   }, []);

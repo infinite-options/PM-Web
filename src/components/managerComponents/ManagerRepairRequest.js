@@ -38,7 +38,7 @@ function ManagerRepairRequest(props) {
   // const properties = location.state.properties;
   const { properties } = props;
   const imageState = useState([]);
-  console.log(properties.length);
+  // console.log(properties.length);
   const [issueType, setIssueType] = useState("Plumbing");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -61,18 +61,18 @@ function ManagerRepairRequest(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
     }
 
-    console.log(sp);
+    // console.log(sp);
     let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
-    console.log(typeof JSON.parse(sp));
+    // console.log(typeof JSON.parse(sp));
     const newRequest = {
       property_uid: selectedProperty.property_uid,
       title: title,
@@ -92,7 +92,7 @@ function ManagerRepairRequest(props) {
       }
     }
 
-    console.log(newRequest);
+    // console.log(newRequest);
 
     setShowSpinner(true);
     await post("/maintenanceRequests", newRequest, null, files);

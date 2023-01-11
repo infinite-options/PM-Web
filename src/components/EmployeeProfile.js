@@ -42,10 +42,10 @@ function EmployeeProfile(props) {
     );
 
   useEffect(async () => {
-    console.log(props);
+    // console.log(props);
     const fetchEmployee = async () => {
       const emp_res = await get(`/employees?employee_email=${user.email}`);
-      console.log("emp_res manangement", emp_res.result, businessType);
+      // console.log("emp_res manangement", emp_res.result, businessType);
       let emp_res_type = [];
 
       if (emp_res.result.length > 0) {
@@ -55,23 +55,19 @@ function EmployeeProfile(props) {
             let buid = emp.business_uid;
             const fetchBusinesses = async () => {
               const busi_res = await get(`/businesses?business_uid=${buid}`);
-              console.log(
-                "busi_res maintenance",
-                busi_res.result[0].business_type,
-                businessType
-              );
+
               let busi_res_type = [];
               busi_res.result.length > 1
                 ? busi_res.result.map((busi) => {
                     busi_res_type.push(busi.business_type);
                   })
                 : busi_res_type.push(busi_res.result[0].business_type);
-              console.log("maintenance", busi_res_type);
+              // console.log("maintenance", busi_res_type);
               if (
                 busi_res.result.length !== 0 &&
                 busi_res_type.includes(businessType)
               ) {
-                console.log("business profile already set up");
+                // console.log("business profile already set up");
                 // eventually update page with current info, allow user to update and save new info
                 props.onConfirm();
                 return;
@@ -85,9 +81,9 @@ function EmployeeProfile(props) {
           emp_res_type.push(emp_res.result[0].employee_role);
         }
       }
-      console.log("manangement", emp_res_type);
+      // console.log("manangement", emp_res_type);
       if (emp_res.result.length !== 0 && emp_res_type.includes(businessType)) {
-        console.log("employee profile already set up");
+        // console.log("employee profile already set up");
         // eventually update page with current info, allow user to update and save new info
         props.onConfirm();
         return;
@@ -100,11 +96,11 @@ function EmployeeProfile(props) {
         `${businessType === "MANAGEMENT" ? "PM" : "MAINT"}_EMPLOYEE`
       ) === -1
     ) {
-      console.log("no employee profile");
+      // console.log("no employee profile");
       props.onConfirm();
     }
     const response = await get(`/businesses?business_type=${businessType}`);
-    console.log("response", response.result);
+    // console.log("response", response.result);
     setBusinesses(response.result);
     setCompany(JSON.stringify(response.result[0]));
   }, []);
@@ -124,7 +120,7 @@ function EmployeeProfile(props) {
       setErrorMessage("Please include at least one identification number");
       return;
     }
-    console.log(company);
+    // console.log(company);
     const employeeInfo = {
       user_uid: user.user_uid,
       business_uid: JSON.parse(company).business_uid,
@@ -136,7 +132,7 @@ function EmployeeProfile(props) {
       ssn: ssn,
       ein_number: einNumber,
     };
-    console.log(employeeInfo);
+    // console.log(employeeInfo);
     const response = await post("/employees", employeeInfo, access_token);
     updateAutofillState(employeeInfo);
     onConfirm();
@@ -239,7 +235,7 @@ function EmployeeProfile(props) {
             value={company}
             onChange={(e) => setCompany(e.target.value)}
           >
-            {console.log("businesses", businesses)}
+            {/* {console.log("businesses", businesses)} */}
             {businesses.map((business, i) => (
               <option key={i} value={JSON.stringify(business)}>
                 {business.business_name}

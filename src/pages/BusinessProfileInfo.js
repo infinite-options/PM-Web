@@ -52,23 +52,19 @@ function BusinessProfileInfo(props) {
 
     const fetchBusinessesManagement = async () => {
       const busi_res = await get(`/businesses?business_email=${user.email}`);
-      console.log(
-        "busi_res manangement",
-        busi_res.result[0].business_type,
-        businessType
-      );
+
       let busi_res_type = [];
       busi_res.result.length > 1
         ? busi_res.result.map((busi) => {
             busi_res_type.push(busi.business_type);
           })
         : busi_res_type.push(busi_res.result[0].business_type);
-      console.log("manangement", busi_res_type);
+      // console.log("manangement", busi_res_type);
       if (
         busi_res.result.length !== 0 &&
         busi_res_type.includes(businessType)
       ) {
-        console.log("business profile already set up");
+        // console.log("business profile already set up");
         // eventually update page with current info, allow user to update and save new info
         props.onConfirm();
         return;
@@ -78,23 +74,19 @@ function BusinessProfileInfo(props) {
     // const busi_res = await get(`/businesses?business_email=${user.email}`);
     const fetchBusinessesMaintenance = async () => {
       const busi_res = await get(`/businesses?business_email=${user.email}`);
-      console.log(
-        "busi_res maintenance",
-        busi_res.result[0].business_type,
-        businessType
-      );
+
       let busi_res_type = [];
       busi_res.result.length > 1
         ? busi_res.result.map((busi) => {
             busi_res_type.push(busi.business_type);
           })
         : busi_res_type.push(busi_res.result[0].business_type);
-      console.log("maintenance", busi_res_type);
+      // console.log("maintenance", busi_res_type);
       if (
         busi_res.result.length !== 0 &&
         busi_res_type.includes(businessType)
       ) {
-        console.log("business profile already set up");
+        // console.log("business profile already set up");
         // eventually update page with current info, allow user to update and save new info
         props.onConfirm();
         return;
@@ -105,12 +97,12 @@ function BusinessProfileInfo(props) {
       businessType === "MAINTENANCE" &&
       user.role.indexOf("MAINTENANCE") === -1
     ) {
-      console.log("no maintenance business in user role");
+      // console.log("no maintenance business in user role");
       props.onConfirm();
       return;
     }
     if (businessType === "MANAGEMENT" && user.role.indexOf("MANAGER") === -1) {
-      console.log("no manager business in user role");
+      // console.log("no manager business in user role");
       props.onConfirm();
       return;
     }
@@ -119,7 +111,7 @@ function BusinessProfileInfo(props) {
       // const busi_res = await get(`/businesses?business_email=${user.email}`);
       const response = await get("/businessProfileInfo", access_token);
       if (response.result.length !== 0) {
-        console.log("business profile already set up");
+        // console.log("business profile already set up");
         // eventually update page with current info, allow user to update and save new info
         props.onConfirm();
         return;
@@ -171,7 +163,7 @@ function BusinessProfileInfo(props) {
       account_number: accountNumber,
       routing_number: routingNumber,
     };
-    console.log(businessProfile);
+    // console.log(businessProfile);
     await post("/businesses", businessProfile, access_token);
     updateAutofillState(businessProfile);
     props.onConfirm();

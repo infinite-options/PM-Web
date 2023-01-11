@@ -40,7 +40,7 @@ function NotManagedProperties(props) {
       console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -105,7 +105,7 @@ function NotManagedProperties(props) {
     //   );
     // });
 
-    console.log(properties_unique);
+    // console.log(properties_unique);
     setProperties(properties_unique);
   };
 

@@ -29,25 +29,25 @@ function ManagerDocs(props) {
   const [showDialog, setShowDialog] = useState(false);
 
   const [files, setFiles] = useState([]);
-  console.log(property);
+  // console.log(property);
   const updateBusiness = async () => {
     const files = JSON.parse(property.images);
     const business_uid = JSON.parse(selectedBusiness).business_uid;
 
     if (property.property_manager.length > 0) {
-      console.log("in if");
+      // console.log("in if");
       for (const prop of property.property_manager) {
         if (
           business_uid === prop.manager_id &&
           prop.management_status === "REFUSED"
         ) {
-          console.log("here in if");
+          // console.log("here in if");
 
           // alert("youve already rejected this Management Company");
           setShowDialog(true);
           reload();
         } else {
-          console.log("here in else");
+          // console.log("here in else");
           const newProperty = {
             property_uid: property.property_uid,
             manager_id: business_uid,
@@ -82,16 +82,16 @@ function ManagerDocs(props) {
       setAddPropertyManager(false);
       reload();
     } else {
-      console.log("in else");
+      // console.log("in else");
       if (
         business_uid === property.property_manager[0].manager_id &&
         property.property_manager[0].management_status === "REJECTED"
       ) {
-        console.log("here in if");
+        // console.log("here in if");
         setShowDialog(true);
         // alert("youve already rejected this Management Company");
       } else {
-        console.log("here in else");
+        // console.log("here in else");
         const newProperty = {
           property_uid: property.property_uid,
           manager_id: business_uid,
@@ -157,9 +157,9 @@ function ManagerDocs(props) {
             style={smallPillButton}
             // onClick={() => setAddPropertyManager(true)}
             onClick={() => {
-              console.log(addPropertyManager);
+              // console.log(addPropertyManager);
               setAddPropertyManager(true);
-              console.log(addPropertyManager);
+              // console.log(addPropertyManager);
               navigate("/pm-list", {
                 state: {
                   property: property,
@@ -173,14 +173,14 @@ function ManagerDocs(props) {
         </div>
       ) : addPropertyManager ? (
         <div className="mt-2 mb-4">
-          {console.log("here")}
+          {/* {console.log("here")} */}
           <Form.Group>
             <Form.Select
               style={squareForm}
               value={selectedBusiness}
               onChange={(e) => setSelectedBusiness(e.target.value)}
             >
-              {console.log("here")}
+              {/* {console.log("here")} */}
               {businesses.map((business, i) => (
                 <option key={i} value={JSON.stringify(business)}>
                   {business.business_name}
@@ -213,9 +213,9 @@ function ManagerDocs(props) {
             variant="outline-primary"
             style={smallPillButton}
             onClick={() => {
-              console.log(addPropertyManager);
+              // console.log(addPropertyManager);
               setAddPropertyManager(true);
-              console.log(addPropertyManager);
+              // console.log(addPropertyManager);
               navigate("/pm-list", {
                 state: {
                   property: property,
@@ -228,7 +228,7 @@ function ManagerDocs(props) {
           </Button>
         </div>
       ) : (
-        console.log("ere")
+        ""
       )}
     </div>
   );

@@ -92,10 +92,10 @@ function ManagerTenantList(props) {
     );
     let management_buid = null;
     if (management_businesses.length < 1) {
-      console.log("No associated PM Businesses");
+      // console.log("No associated PM Businesses");
       return;
     } else if (management_businesses.length > 1) {
-      console.log("Multiple associated PM Businesses");
+      // console.log("Multiple associated PM Businesses");
       management_buid = management_businesses[0].business_uid;
     } else {
       management_buid = management_businesses[0].business_uid;
@@ -122,12 +122,12 @@ function ManagerTenantList(props) {
       setRentDetails(JSON.parse(response.result[0].rent_payments));
       setLateFeePer(response.result[0].perDay_late_fee);
       setMaintenanceRequests(response.result[0].user_repairRequests);
-      console.log(selectedTenant);
+      // console.log(selectedTenant);
     }
 
     // await getAlerts(properties_unique)
   };
-  console.log(showDetails);
+  // console.log(showDetails);
   useEffect(fetchTenants, [access_token]);
   const stopPropagation = (e) => {
     e.stopPropagation();

@@ -450,9 +450,9 @@ function TenantPropertyForm(props) {
       } else {
         newProperty[key] = file.image;
       }
-      console.log(newProperty[key]);
+      // console.log(newProperty[key]);
     }
-    console.log(files);
+    // console.log(files);
     setShowSpinner(true);
     if (property) {
       newProperty.owner_id = property.owner_id;
@@ -486,7 +486,7 @@ function TenantPropertyForm(props) {
         deposit_for_rent: depositForRent,
       };
       const files = imageState[0];
-      console.log(files, imageState);
+      // console.log(files, imageState);
       let i = 0;
       for (const file of imageState[0]) {
         let key = file.coverPhoto ? "img_cover" : `img_${i++}`;
@@ -495,7 +495,7 @@ function TenantPropertyForm(props) {
         } else {
           newProperty[key] = file.image;
         }
-        console.log(newProperty[key]);
+        // console.log(newProperty[key]);
       }
       const response = await post("/properties", newProperty, null, files);
     }
@@ -869,7 +869,7 @@ function TenantPropertyForm(props) {
       {edit ? (
         <div className="my-3 ps-4">
           <PropertyImages state={imageState} />
-          {console.log("imageState", imageState)}
+          {/* {console.log("imageState", imageState)} */}
           <div
             className="text-center"
             style={errorMessage === "" ? hidden : {}}

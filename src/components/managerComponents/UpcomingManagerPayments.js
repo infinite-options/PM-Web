@@ -57,7 +57,7 @@ export default function UpcomingManagerPayments(props) {
   }
   function navigateToPaymentPage() {
     if (props.paymentSelection[1].isActive == true) {
-      console.log("zelle selected");
+      // console.log("zelle selected");
       navigate("/zelle", {
         state: {
           amount: totalSum,

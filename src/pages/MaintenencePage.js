@@ -52,12 +52,12 @@ export default function MaintenancePage() {
       return;
     }
     const response = await get("/tenantDashboard", access_token);
-    console.log("second");
-    console.log(response);
+    // console.log("second");
+    // console.log(response);
     setIsLoading(false);
 
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
@@ -74,17 +74,17 @@ export default function MaintenancePage() {
         setMaintenanceRequests(response.data); //useState is getting the data
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
   useEffect(() => {
-    console.log("in use effect");
+    // console.log("in use effect");
     fetchTenantDashboard();
     getMaintenanceRequests();
   }, []);
 
   const handleSubmit = async () => {
-    console.log(data);
+    // console.log(data);
     if (issueDescription === "") {
       setErrorMessage("Please fill out required fields");
       return;
@@ -108,7 +108,7 @@ export default function MaintenancePage() {
       }
     }
 
-    console.log(files);
+    // console.log(files);
     //   console.log(newRequest);
     await post("/maintenanceRequests", newRequest, null, files);
     navigate("/tenant");

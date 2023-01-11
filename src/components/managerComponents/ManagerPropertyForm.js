@@ -133,7 +133,7 @@ function ManagerPropertyForm(props) {
   const [showDialog, setShowDialog] = useState(false);
 
   const { property, edit, setEdit, hideEdit } = props;
-  console.log(hideEdit);
+
   const loadProperty = () => {
     setAddress(property.address);
     setUnit(property.unit);
@@ -224,7 +224,7 @@ function ManagerPropertyForm(props) {
         newProperty[key] = file.image;
       }
     }
-    console.log(newProperty);
+    // console.log(newProperty);
     setShowSpinner(true);
     if (property) {
       newProperty.owner_id = property.owner_id;
@@ -272,7 +272,7 @@ function ManagerPropertyForm(props) {
         } else {
           newProperty[key] = file.image;
         }
-        console.log(newProperty[key]);
+        // console.log(newProperty[key]);
       }
       const response = await post("/properties", newProperty, null, files);
     }
@@ -696,7 +696,6 @@ function ManagerPropertyForm(props) {
             <p>Yes</p>
           </Col>
         </Container>
-        {console.log(featured)}
       </div>
 
       {edit ? (

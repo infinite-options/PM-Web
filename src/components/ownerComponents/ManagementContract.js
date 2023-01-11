@@ -24,7 +24,7 @@ function ManagementContract(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const { back, property, contract, reload } = props;
-  console.log(property);
+  // console.log(property);
   let pageURL = window.location.href.split("/");
   const [pmID, setPmID] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -39,7 +39,7 @@ function ManagementContract(props) {
     setShowDialog(false);
   };
 
-  console.log(contract);
+  // console.log(contract);
   const loadContract = () => {
     setStartDate(contract.start_date);
     setEndDate(contract.end_date);
@@ -68,7 +68,7 @@ function ManagementContract(props) {
     //   }
     //   updatedManagementContract[key] = files[i + 1];
     // }
-    console.log(files);
+    // console.log(files);
     const response2 = await put(
       "/properties",
       updatedManagementContract,
@@ -94,7 +94,7 @@ function ManagementContract(props) {
     //   }
     //   updatedManagementContract[key] = files[i + 1];
     // }
-    console.log(updatedManagementContract);
+    // console.log(updatedManagementContract);
     const response2 = await put(
       "/properties",
       updatedManagementContract,

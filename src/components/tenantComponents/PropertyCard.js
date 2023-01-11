@@ -5,7 +5,7 @@ import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 //this is the colored boxed property card
 export default function PropertyCard(props) {
-  console.log("in property card 2", props.property);
+  // console.log("in property card 2", props.property);
   // if(part!=2){
   // const imgS = JSON.parse(props.imgSrc)
 

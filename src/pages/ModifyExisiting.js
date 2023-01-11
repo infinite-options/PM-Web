@@ -22,7 +22,7 @@ function ModifyExisiting(props) {
     "Property Maintenance (Employee)": "MAINT_EMPLOYEE",
   };
   const availableRoles = Object.keys(roleCodes);
-  console.log(availableRoles, roleCodes);
+  // console.log(availableRoles, roleCodes);
   const addRole = (role) => {
     const roleCode = roleCodes[role];
     const index = userRoles.indexOf(roleCode);
@@ -61,16 +61,16 @@ function ModifyExisiting(props) {
       setErrorMessage("Please select a role to proceed");
       return;
     }
-    console.log(userRoles, userRoles.join(","));
+    // console.log(userRoles, userRoles.join(","));
     const submitSignUpForm = async () => {
       const userSignUp = {
         email: user.email,
         role: userRoles.join(","),
       };
-      console.log(userSignUp);
+      // console.log(userSignUp);
       const res = await put("/users", userSignUp);
-      console.log(res);
-      console.log("login", res.result);
+      // console.log(res);
+      // console.log("login", res.result);
       context.updateUserData(res.result);
 
       setErrorMessage("");
@@ -82,7 +82,7 @@ function ModifyExisiting(props) {
   };
 
   const [errorMessage, setErrorMessage] = React.useState("");
-  console.log(availableRoles);
+  // console.log(availableRoles);
   return (
     <div className="h-100 mb-2">
       <Container>
@@ -108,12 +108,6 @@ function ModifyExisiting(props) {
         {availableRoles.map((role, i) => {
           return user.role.includes(roleCodes[role]) ? null : (
             <div key={i} className="d-flex">
-              {console.log(
-                role,
-                user.role,
-                roleCodes[role],
-                user.role.includes(roleCodes[role])
-              )}
               <Checkbox
                 type="CIRCLE"
                 checked={userRoles.indexOf(roleCodes[role]) !== -1}

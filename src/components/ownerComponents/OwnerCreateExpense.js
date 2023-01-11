@@ -33,7 +33,7 @@ function OwnerCreateExpense(props) {
     props.onSubmit();
   };
   useEffect(() => {
-    console.log(properties[0]);
+    // console.log(properties[0]);
     if (properties.length === undefined) {
       setSelectedProperty(JSON.stringify(decycle(properties)));
     }
@@ -75,7 +75,7 @@ function OwnerCreateExpense(props) {
         next_date: date,
       };
       mortgage.push(newMortgage);
-      console.log(newMortgage);
+      // console.log(newMortgage);
       // let formData = new FormData();
       const updateMortgage = {
         property_uid: selectedProperty.property_uid,
@@ -159,7 +159,7 @@ function OwnerCreateExpense(props) {
         purchase_status: payStatus,
       };
 
-      console.log(newExpense);
+      // console.log(newExpense);
       const response = await post("/createExpenses", newExpense);
       reload();
     }

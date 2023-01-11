@@ -49,13 +49,13 @@ function ManagerProfileInfo(props) {
       return;
     }
     if (user.role.indexOf("MANAGER") === -1) {
-      console.log("no manager profile");
+      // console.log("no manager profile");
       props.onConfirm();
     }
     const fetchProfileInfo = async () => {
       const response = await get("/managerProfileInfo", access_token);
       if (response.result.length !== 0) {
-        console.log("manager profile already set up");
+        // console.log("manager profile already set up");
         // eventually update page with current info, allow user to update and save new info
         props.onConfirm();
         return;
@@ -65,7 +65,7 @@ function ManagerProfileInfo(props) {
   }, []);
   const [errorMessage, setErrorMessage] = useState("");
   const submitInfo = async () => {
-    console.log(paymentState[0]);
+    // console.log(paymentState[0]);
     const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
       paymentState[0];
     if (

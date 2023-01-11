@@ -115,11 +115,11 @@ function OwnerRepairList(props) {
     let scheduledrepairs = "";
     let completedrepairs = "";
     for (let r = 0; r < maint_response.result.length; r++) {
-      console.log(maint_response.result[r]);
+      // console.log(maint_response.result[r]);
 
       let repairs = maint_response.result[r].maintenanceRequests;
       repairs.forEach((repair, i) => {
-        console.log(repair);
+        // console.log(repair);
         const request_created_date = new Date(
           Date.parse(repair.request_created_date)
         );
@@ -141,10 +141,10 @@ function OwnerRepairList(props) {
           repair.priority_n = 1;
         }
       });
-      console.log("repairs unsorted", repairs);
+      // console.log("repairs unsorted", repairs);
       let repairs_sorted = sort_repairs(repairs);
       sort_repairs_address(repairs);
-      console.log("repairs sorted", repairs_sorted);
+      // console.log("repairs sorted", repairs_sorted);
 
       repairs_sorted.forEach((repair_sorted, i) => {
         // console.log("repairs sorted in for each ", i, repair_sorted);
@@ -174,11 +174,11 @@ function OwnerRepairList(props) {
         { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
         { title: "Completed", repairs_list: completed_repairs },
       ];
-      console.log(repairI);
+      // console.log(repairI);
       repairIT.push(repairI);
       // setRepairIter(repairI.push(repairI));
     }
-    console.log("repairs_sorted", repairI, repairIT);
+    // console.log("repairs_sorted", repairI, repairIT);
     setRepairIter(repairI);
 
     setIsLoading(false);
@@ -210,7 +210,7 @@ function OwnerRepairList(props) {
 
   const sort_repairs_address = (repairs) => {
     repairs.forEach((repair, i) => {
-      console.log("");
+      // console.log("");
     });
   };
 

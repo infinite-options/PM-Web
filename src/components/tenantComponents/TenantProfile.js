@@ -35,7 +35,7 @@ import {
 } from "../../utils/styles";
 
 function TenantProfile(props) {
-  console.log("in tenant profile");
+  // console.log("in tenant profile");
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
   const { access_token, user } = userData;
@@ -180,16 +180,16 @@ function TenantProfile(props) {
   useEffect(() => {
     const fetchProfile = async () => {
       const response = await get("/tenantProfileInfo", access_token);
-      console.log(response);
+      // console.log(response);
 
       if (response.msg === "Token has expired") {
-        console.log("here msg");
+        // console.log("here msg");
         refresh();
         return;
       }
 
       if (user.role.indexOf("TENANT") === -1) {
-        console.log("no tenant profile");
+        // console.log("no tenant profile");
         props.onConfirm();
       }
       setFirstName(response.result[0].tenant_first_name);
@@ -279,7 +279,7 @@ function TenantProfile(props) {
     // updateAutofillState(tenantProfile);
     // props.onConfirm();
   };
-  console.log(usePreviousAddress, previousAddressState[0]);
+  // console.log(usePreviousAddress, previousAddressState[0]);
 
   const allFrequency = [
     "Weekly",
@@ -299,13 +299,13 @@ function TenantProfile(props) {
       return;
     }
 
-    console.log(u);
+    // console.log(u);
     const user = {
       email: email,
       password: password,
       user_uid: u.user_uid,
     };
-    console.log(user);
+    // console.log(user);
     const response = await post("/update_email_password", user);
     if (response.code !== 200) {
       setErrorMessage(response.message);

@@ -21,10 +21,6 @@ function SignupExisting() {
     });
     // setSignupStage("NAME");
   };
-  console.log("userRoles", userRoles, userRoles.join(","));
-
-  console.log("signupRoles", signupRoles);
-  console.log("email", email);
   // const confirmName = (firstName, lastName, phoneNumber) => {
   //   setUserFirstName(firstName);
   //   setUserLastName(lastName);

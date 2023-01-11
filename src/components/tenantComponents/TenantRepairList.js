@@ -70,7 +70,7 @@ function TenantRepairList(props) {
     const properties = responseProperties.result[0].properties;
     setProperties(properties);
     let repairs = response.result;
-    console.log(repairs);
+    // console.log(repairs);
     setMaintenanceRequests(response.result);
     repairs.forEach((repair, i) => {
       const request_created_date = new Date(
@@ -96,7 +96,7 @@ function TenantRepairList(props) {
     });
 
     let repairs_sorted = sort_repairs(repairs);
-    console.log(repairs_sorted);
+    // console.log(repairs_sorted);
 
     const new_repairs = repairs_sorted.filter(
       (item) => item.request_status === "NEW"
@@ -149,7 +149,7 @@ function TenantRepairList(props) {
 
   const sort_repairs_address = (repairs) => {
     repairs.forEach((repair, i) => {
-      console.log("");
+      // console.log("");
     });
   };
 
@@ -345,7 +345,6 @@ function TenantRepairList(props) {
                 />
               </Col>
             </Row>
-            {console.log(repairIter)}
             <div
               className="mx-3 my-3 p-2"
               style={{

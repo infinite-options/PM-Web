@@ -254,7 +254,6 @@ function ManagerFees(props) {
               style={smallPillButton}
               onClick={() => setNewFee({ ...emptyFee })}
             >
-              {console.log(pageURL)}
               Add Fee
             </Button>
           ) : (newFee === null) & (pageURL[3] === "propertyDetails") ? (
