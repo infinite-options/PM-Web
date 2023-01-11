@@ -43,7 +43,7 @@ function ManagerTenantApplications(props) {
     if (access_token === null) {
       return;
     }
-    console.log("in fetch applicaions");
+    // console.log("in fetch applicaions");
     const response = await get(
       `/applications?property_uid=${property.property_uid}`
     );
@@ -51,12 +51,12 @@ function ManagerTenantApplications(props) {
       refresh();
       return;
     }
-    console.log(response.result);
+    // console.log(response.result);
     const applications = response.result.map((application) => ({
       ...application,
       application_selected: false,
     }));
-    console.log(applications);
+    // console.log(applications);
     setApplications(applications);
     setNewApplications(
       applications.filter((a) => a.application_status === "NEW")
@@ -72,8 +72,8 @@ function ManagerTenantApplications(props) {
   useEffect(fetchApplications, [property]);
 
   const rejectApplication = async (application) => {
-    console.log(newApplications);
-    console.log(application);
+    // console.log(newApplications);
+    // console.log(application);
     const request_body = {
       application_uid: newApplications[0].application_uid,
       message: "Application has been rejected by the Property Manager",
@@ -139,7 +139,7 @@ function ManagerTenantApplications(props) {
                   <TableCell align="center">Children</TableCell>
                   <TableCell align="center">Pets</TableCell>
                   <TableCell align="center">Vehicles</TableCell>
-                  <TableCell align="center">References</TableCell>
+                  <TableCell align="center">referred</TableCell>
                   <TableCell align="center">Application Date</TableCell>
                   <TableCell align="center">Documents</TableCell>
                 </TableRow>
@@ -238,12 +238,12 @@ function ManagerTenantApplications(props) {
                         0
                       </TableCell>
                     )}
-                    {application.references ? (
+                    {application.referred ? (
                       <TableCell
                         align="center"
                         onClick={() => selectTenantApplication(application)}
                       >
-                        {JSON.parse(application.references).length}
+                        {JSON.parse(application.referred).length}
                       </TableCell>
                     ) : (
                       <TableCell

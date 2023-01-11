@@ -262,7 +262,7 @@ export default function ManagerPaymentHistory(props) {
       payment_verify: "Unverified",
     };
     const response = await put("/payments", verifyObj);
-    setVerified(true);
+    setVerified(false);
   };
   return (
     <div className="payment-history">

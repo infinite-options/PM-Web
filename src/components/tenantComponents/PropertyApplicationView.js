@@ -163,7 +163,7 @@ function PropertyApplicationView(props) {
     };
     fetchProperty();
   }, []);
-  console.log("propertyApplicationView", property);
+  // console.log("propertyApplicationView", property);
   return (
     <div className="w-100 overflow-hidden p-0 m-0">
       <div className="flex-1 mb-5">
@@ -182,7 +182,7 @@ function PropertyApplicationView(props) {
           </div>
         )}
 
-        <div className="w-100">
+        <div className="w-100 overflow-scroll">
           {forPropertyLease ? (
             ""
           ) : (
@@ -361,7 +361,7 @@ function PropertyApplicationView(props) {
                       <TableCell>Images</TableCell>
                     </TableRow>
                   </TableHead>
-                  {console.log("appliances", appliances, applianceState)}
+                  {/* {console.log("appliances", appliances, applianceState)} */}
                   <TableBody>
                     {appliances.map((appliance, i) => {
                       return applianceState[0][appliance]["available"] ==
@@ -377,9 +377,6 @@ function PropertyApplicationView(props) {
                             undefined &&
                           applianceState[0][appliance]["images"].length > 0 ? (
                             <TableCell>
-                              {console.log(
-                                applianceState[0][appliance]["images"][0]
-                              )}
                               <Row className="d-flex justify-content-center align-items-center p-1">
                                 <Col className="d-flex justify-content-center align-items-center p-0 m-0">
                                   <img
@@ -559,7 +556,7 @@ function PropertyApplicationView(props) {
           ) : (
             ""
           )}
-          {console.log(forPropertyLease)}
+          {/* {console.log(forPropertyLease)} */}
           {/* ====================  < Button >==================================== */}
           {!property && forPropertyLease ? (
             ""

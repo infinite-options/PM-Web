@@ -103,7 +103,7 @@ export default function TenantDashboard() {
     const response = await get("/tenantDashboard", access_token);
     const appRes = await get(`/applications?tenant_id=${user.user_uid}`);
     if (response.msg === "Token has expired") {
-      console.log("here msg");
+      // console.log("here msg");
       refresh();
 
       return;
@@ -116,7 +116,7 @@ export default function TenantDashboard() {
         appRes.result[i].application_status === "REJECTED" &&
         days(new Date(appRes.result[i].application_date), new Date()) > 30
       ) {
-        console.log("skip ");
+        // console.log("skip ");
       } else if (
         appRes.result[i].application_status !== "RENTED" &&
         appRes.result[i].application_status !== "PM END EARLY" &&
@@ -909,7 +909,7 @@ export default function TenantDashboard() {
                   <h3>Payment Summary</h3>
                 </Col>
               </Row>
-              <Row className="my-1 ms-3">
+              <Row className="my-1">
                 {tenantData.length !== 0 && (
                   <TenantUpcomingPayments
                     data={upcomingPaymentsData}
@@ -1133,7 +1133,9 @@ export default function TenantDashboard() {
                   </Table>
                 </Row>
               ) : (
-                <Row className="m-3">No maintenance requests and repairs</Row>
+                <Row className="m-3">
+                  <Col>No maintenance requests and repairs</Col>
+                </Row>
               )}
             </div>
             <div

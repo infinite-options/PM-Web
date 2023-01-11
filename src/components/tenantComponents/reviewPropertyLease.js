@@ -41,7 +41,7 @@ function ReviewPropertyLease(props) {
   const application_uid = location.state.application_uid;
   const application_status_1 = location.state.application_status_1;
   const application = location.state.application;
-  console.log(application);
+  // console.log(application);
   const [properties, setProperties] = useState([]);
   const [images, setImages] = useState({});
   const [showLease, setShowLease] = useState("True");
@@ -71,7 +71,7 @@ function ReviewPropertyLease(props) {
       const response = await get(
         `/leaseTenants?linked_tenant_id=${user.user_uid}`
       );
-      console.log("rentals", response);
+      // console.log("rentals", response);
 
       const filteredRentals = [];
       for (let i = 0; i < response.result.length; i++) {
@@ -80,7 +80,7 @@ function ReviewPropertyLease(props) {
           filteredRentals.push(response.result[i]);
         }
       }
-      console.log("required1", filteredRentals);
+      // console.log("required1", filteredRentals);
 
       if (filteredRentals && filteredRentals.length) {
         const leaseDoc = filteredRentals[0].documents
@@ -89,7 +89,7 @@ function ReviewPropertyLease(props) {
         const rentPayments = filteredRentals[0].rent_payments
           ? JSON.parse(filteredRentals[0].rent_payments)
           : [];
-        console.log("payment0", rentPayments);
+        // console.log("payment0", rentPayments);
 
         setLease(leaseDoc);
         setRentPayments(rentPayments);
@@ -115,15 +115,15 @@ function ReviewPropertyLease(props) {
       parseInt(tempEndEarlyDate[1]) - 1,
       parseInt(tempEndEarlyDate[2])
     );
-    console.log(newEndEarlyDate);
-    console.log(currentDate);
+    // console.log(newEndEarlyDate);
+    // console.log(currentDate);
     let difference = newEndEarlyDate - currentDate;
-    console.log(difference);
+    // console.log(difference);
     if (difference < 864000000) {
       setDisable(true);
-      console.log("disabled");
+      // console.log("disabled");
     } else {
-      console.log("enabled");
+      // console.log("enabled");
       setDisable(false);
     }
   }, [endEarlyDate]);
@@ -131,7 +131,7 @@ function ReviewPropertyLease(props) {
   useEffect(() => {
     const fetchProperties = async () => {
       const response = await get(`/propertyInfo?property_uid=${property_uid}`);
-      console.log(response);
+      // console.log(response);
       const imageParsed = response.result.length
         ? JSON.parse(response.result[0].images)
         : [];
@@ -140,7 +140,7 @@ function ReviewPropertyLease(props) {
     };
     fetchProperties();
   }, [property_uid]);
-  console.log(properties);
+  // console.log(properties);
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
@@ -175,7 +175,7 @@ function ReviewPropertyLease(props) {
   };
 
   const extendLease = async () => {
-    console.log("Extending Lease");
+    // console.log("Extending Lease");
     const extendObject = {
       application_uid: application_uid,
       application_status: "LEASE EXTENSION",
@@ -183,11 +183,11 @@ function ReviewPropertyLease(props) {
       message: "requesting EXTENSION",
     };
     const response6 = await put("/extendLease", extendObject, access_token);
-    console.log(response6.result);
+    // console.log(response6.result);
     navigate("/tenant");
   };
   const endLeaseEarly = async () => {
-    console.log("ending lease early");
+    // console.log("ending lease early");
     const currentMonth = new Date().getMonth() + 1;
     const currentDay = new Date().getDate();
     const currentYear = new Date().getFullYear();
@@ -200,30 +200,30 @@ function ReviewPropertyLease(props) {
       early_end_date: endEarlyDate,
       message: endLeaseMessage,
     };
-    console.log(updatedRental);
+    // console.log(updatedRental);
     const response3 = await put("/endEarly", updatedRental, access_token);
-    console.log(response3.result);
+    // console.log(response3.result);
     navigate("/tenant");
   };
   const approveEndEarly = async () => {
-    console.log("Approved end lease early.");
+    // console.log("Approved end lease early.");
     const updatedApprove = {
       application_uid: application_uid,
       application_status: "TENANT ENDED",
       property_uid: rentals[0].rental_property_id,
     };
     const response4 = await put("/endEarly", updatedApprove, access_token);
-    console.log(response4.result);
+    // console.log(response4.result);
     navigate("/tenant");
   };
   const denyEndEarly = async () => {
-    console.log("Deny end lease early.");
+    // console.log("Deny end lease early.");
     const updatedApprove = {
       application_status: "REFUSED",
       property_uid: rentals[0].rental_property_id,
     };
     const response5 = await put("/endEarly", updatedApprove, access_token);
-    console.log(response5.result);
+    // console.log(response5.result);
     navigate("/tenant");
   };
   const rejectLease = async () => {
@@ -251,7 +251,7 @@ function ReviewPropertyLease(props) {
     const currentDay = new Date().getDate();
     const currentYear = new Date().getFullYear();
     let currentDate = new Date(currentYear, currentMonth, currentDay);
-    console.log(rentals);
+    // console.log(rentals);
     let tempEndDate = rentals.length > 0 ? rentals[0].lease_end : "";
     tempEndDate = tempEndDate.split("-");
     let endDate = new Date(
@@ -264,11 +264,11 @@ function ReviewPropertyLease(props) {
     if (difference <= 5184000000) {
       // within60 = true;
       setWithin60(true);
-      console.log(true);
+      // console.log(true);
     } else {
       // within60 = false;
       setWithin60(false);
-      console.log(false);
+      // console.log(false);
     }
   };
 
@@ -305,7 +305,10 @@ function ReviewPropertyLease(props) {
           <div className="w-100 overflow-hidden">
             <PropertyApplicationView forPropertyLease="true" />
           </div>
-          {console.log(application_status_1)}
+          {/* {console.log(
+            "application.applicant_info",
+            application.applicant_info
+          )} */}
 
           {application_status_1 === "FORWARDED" ? (
             <div>
@@ -317,14 +320,14 @@ function ReviewPropertyLease(props) {
                   opacity: 1,
                 }}
               >
-                {console.log("here forwarded")}
+                {/* {console.log("here forwarded")} */}
                 <Row className="m-3">
                   <Col>
                     <h3>Application Details</h3>
                   </Col>
                   <Col xs={2}> </Col>
                 </Row>
-                {console.log("application", application.applicant_info)}
+                {/* {console.log("application", application.applicant_info)} */}
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <Table classes={{ root: classes.customTable }} size="small">
                     <TableHead>
@@ -336,7 +339,7 @@ function ReviewPropertyLease(props) {
                         <TableCell>Children</TableCell>
                         <TableCell>Pets</TableCell>
                         <TableCell>Vehicles</TableCell>
-                        <TableCell>References</TableCell>
+                        <TableCell>referred</TableCell>
                         <TableCell>Application Date</TableCell>
                         <TableCell>Documents</TableCell>
                       </TableRow>
@@ -377,9 +380,9 @@ function ReviewPropertyLease(props) {
                         ) : (
                           <TableCell>0</TableCell>
                         )}
-                        {application.references ? (
+                        {application.referred ? (
                           <TableCell>
-                            {JSON.parse(application.references).length}
+                            {JSON.parse(application.referred).length}
                           </TableCell>
                         ) : (
                           <TableCell>0</TableCell>
@@ -450,9 +453,7 @@ function ReviewPropertyLease(props) {
                                   <TableCell align="center">Children</TableCell>
                                   <TableCell align="center">Pets</TableCell>
                                   <TableCell align="center">Vehicles</TableCell>
-                                  <TableCell align="center">
-                                    References
-                                  </TableCell>
+                                  <TableCell align="center">referred</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -496,9 +497,9 @@ function ReviewPropertyLease(props) {
                                   ) : (
                                     <TableCell align="center">0</TableCell>
                                   )}
-                                  {applicant.references ? (
+                                  {applicant.referred ? (
                                     <TableCell align="center">
-                                      {JSON.parse(applicant.references).length}
+                                      {JSON.parse(applicant.referred).length}
                                     </TableCell>
                                   ) : (
                                     <TableCell align="center">0</TableCell>
@@ -640,14 +641,14 @@ function ReviewPropertyLease(props) {
                 opacity: 1,
               }}
             >
-              {console.log("here forwarded")}
+              {/* {console.log("here forwarded")} */}
               <Row className="m-3">
                 <Col>
                   <h3>Application Details</h3>
                 </Col>
                 <Col xs={2}> </Col>
               </Row>
-              {console.log("application", application.applicant_info)}
+              {/* {console.log("application", application.applicant_info)} */}
               <Row className="m-3" style={{ overflow: "scroll" }}>
                 <Table classes={{ root: classes.customTable }} size="small">
                   <TableHead>
@@ -659,7 +660,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>References</TableCell>
+                      <TableCell>referred</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -700,9 +701,9 @@ function ReviewPropertyLease(props) {
                       ) : (
                         <TableCell>0</TableCell>
                       )}
-                      {application.references ? (
+                      {application.referred ? (
                         <TableCell>
-                          {JSON.parse(application.references).length}
+                          {JSON.parse(application.referred).length}
                         </TableCell>
                       ) : (
                         <TableCell>0</TableCell>
@@ -772,7 +773,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">References</TableCell>
+                                <TableCell align="center">referred</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -816,9 +817,9 @@ function ReviewPropertyLease(props) {
                                 ) : (
                                   <TableCell align="center">0</TableCell>
                                 )}
-                                {applicant.references ? (
+                                {applicant.referred ? (
                                   <TableCell align="center">
-                                    {JSON.parse(applicant.references).length}
+                                    {JSON.parse(applicant.referred).length}
                                   </TableCell>
                                 ) : (
                                   <TableCell align="center">0</TableCell>
@@ -973,7 +974,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>References</TableCell>
+                      <TableCell>referred</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -1014,9 +1015,9 @@ function ReviewPropertyLease(props) {
                       ) : (
                         <TableCell>0</TableCell>
                       )}
-                      {application.references ? (
+                      {application.referred ? (
                         <TableCell>
-                          {JSON.parse(application.references).length}
+                          {JSON.parse(application.referred).length}
                         </TableCell>
                       ) : (
                         <TableCell>0</TableCell>
@@ -1054,7 +1055,7 @@ function ReviewPropertyLease(props) {
                 </Table>
               </Row>
 
-              {console.log("application", application.applicant_info)}
+              {/* {console.log("application", application.applicant_info)} */}
               {application.applicant_info.length > 0
                 ? application.applicant_info.map((applicant) =>
                     applicant.application_uid !==
@@ -1087,7 +1088,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">References</TableCell>
+                                <TableCell align="center">referred</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -1131,9 +1132,9 @@ function ReviewPropertyLease(props) {
                                 ) : (
                                   <TableCell align="center">0</TableCell>
                                 )}
-                                {applicant.references ? (
+                                {applicant.referred ? (
                                   <TableCell align="center">
-                                    {JSON.parse(applicant.references).length}
+                                    {JSON.parse(applicant.referred).length}
                                   </TableCell>
                                 ) : (
                                   <TableCell align="center">0</TableCell>
@@ -1173,7 +1174,17 @@ function ReviewPropertyLease(props) {
                       float: "right",
                       marginRight: "5rem",
                     }}
-                    // onClick={() => selectContract(activeContract)}
+                    onClick={() =>
+                      navigate(`/reviewTenantProfileEdit/${application_uid}`, {
+                        state: {
+                          property_uid: application.property_uid,
+                          application: application,
+                          application_uid: application.application_uid,
+                          application_status_1: application.application_status,
+                          message: application.message,
+                        },
+                      })
+                    }
                   />
                 </Col>
               </Row>
@@ -1188,7 +1199,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>References</TableCell>
+                      <TableCell>referred</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -1229,9 +1240,9 @@ function ReviewPropertyLease(props) {
                       ) : (
                         <TableCell>0</TableCell>
                       )}
-                      {application.references ? (
+                      {application.referred ? (
                         <TableCell>
-                          {JSON.parse(application.references).length}
+                          {JSON.parse(application.referred).length}
                         </TableCell>
                       ) : (
                         <TableCell>0</TableCell>
@@ -1268,7 +1279,7 @@ function ReviewPropertyLease(props) {
                   </TableBody>
                 </Table>
               </Row>
-              {console.log("application", application.applicant_info)}
+              {/* {console.log("application", application.applicant_info)} */}
               {application.applicant_info.length > 0
                 ? application.applicant_info.map((applicant) =>
                     applicant.application_uid !==
@@ -1301,7 +1312,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">References</TableCell>
+                                <TableCell align="center">referred</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -1345,9 +1356,9 @@ function ReviewPropertyLease(props) {
                                 ) : (
                                   <TableCell align="center">0</TableCell>
                                 )}
-                                {applicant.references ? (
+                                {applicant.referred ? (
                                   <TableCell align="center">
-                                    {JSON.parse(applicant.references).length}
+                                    {JSON.parse(applicant.referred).length}
                                   </TableCell>
                                 ) : (
                                   <TableCell align="center">0</TableCell>
@@ -1565,7 +1576,7 @@ function ReviewPropertyLease(props) {
                 type="date"
                 style={{ width: "80%", margin: "2% 10%" }}
                 onChange={(e) => {
-                  console.log(e.target.value);
+                  // console.log(e.target.value);
                   setEndEarlyDate(e.target.value);
                 }}
               ></input>

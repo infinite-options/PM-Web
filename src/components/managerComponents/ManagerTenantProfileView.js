@@ -47,12 +47,12 @@ function ManagerTenantProfileView(props) {
     }
   }, []);
 
-  console.log(application);
+  // console.log(application);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
   const applicationsResponse = () => {
-    console.log("applicationsResponse", application);
+    // console.log("applicationsResponse", application);
     createNewTenantAgreement([application]);
   };
   const rejectApplication = async () => {
@@ -373,7 +373,6 @@ function ManagerTenantProfileView(props) {
               style={{
                 boxShadow: " 0px 1px 6px #00000029",
                 borderRadius: "5px",
-                cursor: "pointer",
               }}
             >
               <Row className="mx-2">
@@ -419,7 +418,12 @@ function ManagerTenantProfileView(props) {
                       })}
                     </div>
                   ) : (
-                    ""
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Adults</Row>
+                      <Row style={gray}>
+                        <Col>None</Col>
+                      </Row>
+                    </div>
                   )}
                   {applicant.children &&
                   JSON.parse(applicant.children).length > 0 ? (
@@ -443,7 +447,12 @@ function ManagerTenantProfileView(props) {
                       })}
                     </div>
                   ) : (
-                    ""
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Children</Row>
+                      <Row style={gray}>
+                        <Col>None</Col>
+                      </Row>
+                    </div>
                   )}
 
                   {applicant.pets && JSON.parse(applicant.pets).length > 0 ? (
@@ -469,7 +478,12 @@ function ManagerTenantProfileView(props) {
                       })}
                     </div>
                   ) : (
-                    ""
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Pets</Row>
+                      <Row style={gray}>
+                        <Col>None</Col>
+                      </Row>
+                    </div>
                   )}
 
                   {applicant.vehicles &&
@@ -498,13 +512,18 @@ function ManagerTenantProfileView(props) {
                       })}
                     </div>
                   ) : (
-                    ""
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Vehicles</Row>
+                      <Row style={gray}>
+                        <Col>None</Col>
+                      </Row>
+                    </div>
                   )}
 
-                  {applicant.references &&
-                  JSON.parse(applicant.references).length > 0 ? (
+                  {applicant.referred &&
+                  JSON.parse(applicant.referred).length > 0 ? (
                     <div className="mx-3 ">
-                      <Row style={subHeading}>References</Row>
+                      <Row style={subHeading}>referred</Row>
                       <Row style={subHeading}>
                         <Col>Name</Col>
                         <Col>Address</Col>
@@ -512,7 +531,7 @@ function ManagerTenantProfileView(props) {
                         <Col>Email</Col>
                         <Col>Relationship</Col>
                       </Row>
-                      {JSON.parse(applicant.references).map((reference) => {
+                      {JSON.parse(applicant.referred).map((reference) => {
                         return (
                           <div>
                             <Row style={gray}>
@@ -527,7 +546,48 @@ function ManagerTenantProfileView(props) {
                       })}
                     </div>
                   ) : (
-                    ""
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>referred</Row>
+                      <Row style={gray}>
+                        <Col>None</Col>
+                      </Row>
+                    </div>
+                  )}
+                  {applicant["a.documents"] &&
+                  applicant["a.documents"].length > 0 ? (
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Documents</Row>
+                      {JSON.parse(applicant["a.documents"]).map(
+                        (document, i) => {
+                          return (
+                            <Row>
+                              <Col>
+                                <h6>{document.name}</h6>
+                              </Col>
+                              <Col>
+                                <a href={document.link} target="_blank">
+                                  <img
+                                    src={File}
+                                    style={{
+                                      width: "15px",
+                                      height: "15px",
+                                    }}
+                                    alt="Document"
+                                  />
+                                </a>
+                              </Col>
+                            </Row>
+                          );
+                        }
+                      )}{" "}
+                    </div>
+                  ) : (
+                    <div className="mx-3 ">
+                      <Row style={subHeading}>Documents</Row>
+                      <Row style={gray}>
+                        <Col>None</Col>
+                      </Row>
+                    </div>
                   )}
                 </Row>
               </Row>
@@ -579,7 +639,7 @@ function ManagerTenantProfileView(props) {
                         <TableCell>Children</TableCell>
                         <TableCell>Pets</TableCell>
                         <TableCell>Vehicles</TableCell>
-                        <TableCell>References</TableCell>
+                        <TableCell>referred</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -623,9 +683,9 @@ function ManagerTenantProfileView(props) {
                         ) : (
                           <TableCell>0</TableCell>
                         )}
-                        {application.references ? (
+                        {application.referred ? (
                           <TableCell>
-                            {JSON.parse(application.references).length}
+                            {JSON.parse(application.referred).length}
                           </TableCell>
                         ) : (
                           <TableCell>0</TableCell>
