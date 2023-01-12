@@ -27,6 +27,7 @@ import PropertyManagerDocs from "./PropertyManagerDocs";
 import AppContext from "../../AppContext";
 import ManagerManagementContract from "./ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
+import ManagerTenantAgreementEdit from "./ManagerTenantAgreementEdit";
 import ConfirmDialog from "../ConfirmDialog";
 import ManagerRepairRequest from "./ManagerRepairRequest";
 import ManagerPropertyForm from "./ManagerPropertyForm";
@@ -41,7 +42,6 @@ import RepairImg from "../../icons/RepairImg.svg";
 import { green, red } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
-import ManagerTenantAgreementEdit from "./ManagerTenantAgreementEdit";
 
 const useStyles = makeStyles({
   customTable: {
@@ -67,6 +67,7 @@ function ManagerPropertyView(props) {
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [property, setProperty] = useState({ images: "[]" });
   const [hideEdit, setHideEdit] = useState(true);
+  const [editAppliances, setEditAppliances] = useState(false);
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -349,17 +350,21 @@ function ManagerPropertyView(props) {
   };
 
   const headerBack = () => {
-    editProperty
-      ? reloadProperty()
-      : showTenantProfile
-      ? setShowTenantProfile(false)
-      : showAddRequest
-      ? setShowAddRequest(false)
-      : showCreateExpense
-      ? setShowCreateExpense(false)
-      : showCreateRevenue
-      ? setShowCreateRevenue(false)
-      : navigate("../manager");
+    if (editAppliances && editProperty) {
+      setEditAppliances(false);
+    } else {
+      editProperty
+        ? reloadProperty()
+        : showTenantProfile
+        ? setShowTenantProfile(false)
+        : showAddRequest
+        ? setShowAddRequest(false)
+        : showCreateExpense
+        ? setShowCreateExpense(false)
+        : showCreateRevenue
+        ? setShowCreateRevenue(false)
+        : navigate("../manager");
+    }
   };
 
   useEffect(() => {
@@ -784,6 +789,8 @@ function ManagerPropertyView(props) {
                 property={property}
                 edit={editProperty}
                 setEdit={setEditProperty}
+                editAppliances={editAppliances}
+                setEditAppliances={setEditAppliances}
                 hideEdit={hideEdit}
                 onSubmit={reloadProperty}
               />

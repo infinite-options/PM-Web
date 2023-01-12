@@ -95,7 +95,7 @@ function OwnerPropertyView(props) {
       items: 1,
     },
   };
-
+  const [editAppliances, setEditAppliances] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -315,15 +315,19 @@ function OwnerPropertyView(props) {
   // console.log("contract", contracts);
 
   const headerBack = () => {
-    editProperty
-      ? reloadProperty()
-      : showAddRequest
-      ? setShowAddRequest(false)
-      : showCreateExpense
-      ? setShowCreateExpense(false)
-      : showCreateRevenue
-      ? setShowCreateRevenue(false)
-      : navigate("../owner");
+    if (editAppliances && editProperty) {
+      setEditAppliances(false);
+    } else {
+      editProperty
+        ? reloadProperty()
+        : showAddRequest
+        ? setShowAddRequest(false)
+        : showCreateExpense
+        ? setShowCreateExpense(false)
+        : showCreateRevenue
+        ? setShowCreateRevenue(false)
+        : navigate("../owner");
+    }
     // navigate("../owner");
   };
 
@@ -950,6 +954,8 @@ function OwnerPropertyView(props) {
                   edit={editProperty}
                   setEdit={setEditProperty}
                   onSubmit={reloadProperty}
+                  editAppliances={editAppliances}
+                  setEditAppliances={setEditAppliances}
                 />
               ) : showAddRequest ? (
                 <OwnerRepairRequest

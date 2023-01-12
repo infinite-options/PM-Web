@@ -77,10 +77,10 @@ function ApplianceImages(props) {
             className="mx-2"
             style={{
               position: "relative",
-              minHeight: "100px",
-              minWidth: "100px",
-              height: "100px",
-              width: "100px",
+              minHeight: "50px",
+              minWidth: "50px",
+              height: "50px",
+              width: "50px",
             }}
             key={i}
           >
@@ -118,7 +118,7 @@ function ApplianceImages(props) {
           onChange={addFile}
           className="d-none"
         />
-        <div className="mx-2" style={{ minHeight: "100px", minWidth: "100px" }}>
+        <div className="mx-2" style={{ minHeight: "50px", minWidth: "50px" }}>
           <label
             htmlFor="file"
             style={tileImg}

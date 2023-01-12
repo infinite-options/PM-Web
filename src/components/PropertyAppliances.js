@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
 import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "./Checkbox";
 import ApplianceImages from "./ApplianceImages";
@@ -8,7 +15,7 @@ import ConfirmDialog from "../components/ConfirmDialog";
 import AddIcon from "../icons/AddIcon.svg";
 import MinusIcon from "../icons/MinusIcon.svg";
 import { squareForm, pillButton, mediumBold } from "../utils/styles";
-import { put } from "../utils/api";
+import { get, put } from "../utils/api";
 
 function PropertyAppliances(props) {
   const navigate = useNavigate();
@@ -130,6 +137,7 @@ function PropertyAppliances(props) {
     newApplianceState[appliance]["serial_num"] = applianceSerialNum;
     newApplianceState[appliance]["warranty_info"] = applianceWarrantyInfo;
     newApplianceState[appliance]["warranty_till"] = applianceWarrantyTill;
+
     if (imageState[0].length === 0) {
       newApplianceState[appliance]["images"] = imageState[0];
     }
@@ -161,7 +169,11 @@ function PropertyAppliances(props) {
 
     setAddApplianceInfo(false);
     setShowDetails(false);
-    setApplianceState(newApplianceState);
+    const getNewApplianceInfo = await get(
+      `/appliances?property_uid=${property.property_uid}`
+    );
+    let newinfo = JSON.parse(getNewApplianceInfo.result[0].appliances);
+    setApplianceState(newinfo);
     imageState[0] = [];
     setApplianceName("");
     setAppliancePurchasedOn("");
@@ -287,8 +299,491 @@ function PropertyAppliances(props) {
           )}
         </Col>
       </Row>
-      <Row className="d-flex flex-column justify-content-left">
-        {appliances.map((appliance, i) => (
+      <Row className="d-flex flex-column justify-content-left overflow-scroll">
+        <Table responsive="md" size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Appliance</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Purchased From</TableCell>
+              <TableCell>Purchased On</TableCell>
+              <TableCell>Purchase Order Number</TableCell>
+              <TableCell>Installed On</TableCell>
+              <TableCell>Serial Number</TableCell>
+              <TableCell>Model Number</TableCell>
+              <TableCell>Warranty Till</TableCell>
+              <TableCell>Warranty Info</TableCell>
+              <TableCell>Images</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {appliances.map((appliance, i) => {
+              return (
+                <TableRow>
+                  <TableCell size="small">
+                    {" "}
+                    <Checkbox
+                      type="BOX"
+                      checked={applianceState[appliance]["available"]}
+                      onClick={
+                        edit ? () => toggleAppliance(appliance) : () => {}
+                      }
+                    />
+                  </TableCell>
+                  <TableCell
+                    onClick={
+                      edit
+                        ? () => {
+                            showApplianceDetail(appliance);
+                          }
+                        : () => {}
+                    }
+                  >
+                    {appliance}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        {" "}
+                        <Form.Control
+                          style={squareForm}
+                          type="text"
+                          value={
+                            applianceName || applianceState[appliance]["name"]
+                          }
+                          placeholder="Appliance Name"
+                          onChange={(e) => setApplianceName(e.target.value)}
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["name"]}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        {" "}
+                        <Form.Control
+                          style={squareForm}
+                          value={
+                            appliancePurchasedFrom ||
+                            applianceState[appliance]["purchased_from"]
+                          }
+                          placeholder="Purchased From"
+                          onChange={(e) =>
+                            setAppliancePurchasedFrom(e.target.value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["purchased_from"]}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        {" "}
+                        <Form.Control
+                          style={squareForm}
+                          type="date"
+                          value={
+                            appliancePurchasedOn ||
+                            applianceState[appliance]["purchased"]
+                          }
+                          onChange={(e) =>
+                            setAppliancePurchasedOn(e.target.value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["purchased"]}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        {" "}
+                        <Form.Control
+                          style={squareForm}
+                          value={
+                            appliancePurchasesOrderNumber ||
+                            applianceState[appliance]["purchased_order"]
+                          }
+                          placeholder="Purchase Order Number"
+                          onChange={(e) =>
+                            setAppliancePurchasesOrderNumber(e.target.value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["purchased_order"]}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        <Form.Control
+                          style={squareForm}
+                          type="date"
+                          value={
+                            applianceInstalledOn ||
+                            applianceState[appliance]["installed"]
+                          }
+                          onChange={(e) =>
+                            setApplianceInstalledOn(e.target.value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["installed"]}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        <Form.Control
+                          style={squareForm}
+                          value={
+                            applianceSerialNum ||
+                            applianceState[appliance]["serial_num"]
+                          }
+                          placeholder="Serial Number"
+                          onChange={(e) =>
+                            setApplianceSerialNum(e.target.value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["serial_num"]}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        <Form.Control
+                          style={squareForm}
+                          value={
+                            applianceModelNum ||
+                            applianceState[appliance]["model_num"]
+                          }
+                          placeholder="Model Number"
+                          onChange={(e) => setApplianceModelNum(e.target.value)}
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["model_num"]}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        <Form.Control
+                          style={squareForm}
+                          type="date"
+                          value={
+                            applianceWarrantyTill ||
+                            applianceState[appliance]["warranty_till"]
+                          }
+                          onChange={(e) =>
+                            setApplianceWarrantyTill(e.target.value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["warranty_till"]}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {addApplianceInfo == true &&
+                    showDetails == true &&
+                    (applianceState[appliance]["available"] == true ||
+                      applianceState[appliance]["available"] == "True") &&
+                    applianceType == appliance ? (
+                      <div>
+                        <Form.Control
+                          style={squareForm}
+                          value={
+                            applianceWarrantyInfo ||
+                            applianceState[appliance]["warranty_info"]
+                          }
+                          placeholder="Warranty Info"
+                          onChange={(e) =>
+                            setApplianceWarrantyInfo(e.target.value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div>{applianceState[appliance]["warranty_info"]}</div>
+                    )}
+                  </TableCell>
+                  {addApplianceInfo == true &&
+                  showDetails == true &&
+                  (applianceState[appliance]["available"] == true ||
+                    applianceState[appliance]["available"] == "True") &&
+                  applianceType == appliance ? (
+                    <div>
+                      {property ? <ApplianceImages state={imageState} /> : ""}
+                    </div>
+                  ) : (
+                    <div>
+                      {applianceState[appliance]["images"] !== undefined &&
+                      applianceState[appliance]["images"].length > 0 ? (
+                        <TableCell>
+                          <Row className="d-flex justify-content-center align-items-center p-1">
+                            <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                              <img
+                                key={Date.now()}
+                                src={`${
+                                  applianceState[appliance]["images"][0]
+                                }?${Date.now()}`}
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "contain",
+                                  width: "50px",
+                                  height: "50px",
+                                }}
+                                alt="Property"
+                              />
+                            </Col>
+                          </Row>
+                        </TableCell>
+                      ) : (
+                        <TableCell>None</TableCell>
+                      )}
+                    </div>
+                  )}
+                  {!og_appliances.includes(appliance) ? (
+                    <TableCell>
+                      <img
+                        src={MinusIcon}
+                        onClick={() => {
+                          setShowDialog(true);
+                          setApplianceRem(appliance);
+                        }}
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                      />
+                    </TableCell>
+                  ) : (
+                    ""
+                  )}
+                  {addApplianceInfo == true &&
+                  showDetails == true &&
+                  (applianceState[appliance]["available"] == true ||
+                    applianceState[appliance]["available"] == "True") &&
+                  applianceType == appliance ? (
+                    <TableCell>
+                      {showSpinner ? (
+                        <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                          <ReactBootStrap.Spinner
+                            animation="border"
+                            role="status"
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div className="text-center my-3">
+                        <Button
+                          variant="outline-primary"
+                          style={pillButton}
+                          className="mx-2"
+                          onClick={
+                            edit ? () => updateAppliance(appliance) : () => {}
+                          }
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          variant="outline-primary"
+                          style={pillButton}
+                          className="mx-2"
+                          onClick={() => cancelAppliance(appliance)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </TableCell>
+                  ) : (
+                    ""
+                  )}
+                </TableRow>
+              );
+            })}
+            {!edit ? (
+              ""
+            ) : newAppliance === null ? (
+              ""
+            ) : (
+              <TableRow>
+                <TableCell>
+                  <Checkbox type="BOX" checked={true} />
+                </TableCell>
+                <TableCell>
+                  {" "}
+                  <Form.Control
+                    style={squareForm}
+                    value={newAppliance}
+                    placeholder="Appliance"
+                    onChange={(e) => setNewAppliance(e.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    type="text"
+                    value={applianceName}
+                    placeholder="Appliance Name"
+                    onChange={(e) => setApplianceName(e.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    value={appliancePurchasedFrom}
+                    placeholder="Purchased From"
+                    onChange={(e) => setAppliancePurchasedFrom(e.target.value)}
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    type="date"
+                    value={appliancePurchasedOn}
+                    onChange={(e) => setAppliancePurchasedOn(e.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    value={appliancePurchasesOrderNumber}
+                    placeholder="Purchase Order Number"
+                    onChange={(e) =>
+                      setAppliancePurchasesOrderNumber(e.target.value)
+                    }
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    type="date"
+                    value={applianceInstalledOn}
+                    onChange={(e) => setApplianceInstalledOn(e.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    value={applianceSerialNum}
+                    placeholder="Serial Number"
+                    onChange={(e) => setApplianceSerialNum(e.target.value)}
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    value={applianceModelNum}
+                    placeholder="Model Number"
+                    onChange={(e) => setApplianceModelNum(e.target.value)}
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    type="date"
+                    value={applianceWarrantyTill}
+                    onChange={(e) => setApplianceWarrantyTill(e.target.value)}
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <Form.Control
+                    style={squareForm}
+                    value={applianceWarrantyInfo}
+                    placeholder="Warranty Info"
+                    onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {property ? <ApplianceImages state={imageState} /> : ""}
+                </TableCell>
+                <TableCell>
+                  {showSpinner ? (
+                    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                      <ReactBootStrap.Spinner
+                        animation="border"
+                        role="status"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <div className="text-center my-3">
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      className="mx-2"
+                      onClick={addAppliance}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      className="mx-2"
+                      onClick={() => setNewAppliance(null)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        {/* {appliances.map((appliance, i) => (
           <Row className="d-flex flex-column ps-2 align-items-center" key={i}>
             <Row>
               <Col xs={1}>
@@ -511,162 +1006,9 @@ function PropertyAppliances(props) {
               ) : null}
             </Row>
           </Row>
-        ))}
+        ))} */}
       </Row>
-
-      {!edit ? (
-        ""
-      ) : newAppliance === null ? (
-        ""
-      ) : (
-        <div>
-          <div className="d-flex ps-2 align-items-center">
-            <Checkbox type="BOX" checked={true} />
-            <Form.Control
-              style={squareForm}
-              value={newAppliance}
-              placeholder="Appliance"
-              onChange={(e) => setNewAppliance(e.target.value)}
-            />
-          </div>
-          <Row>
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Name</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  type="text"
-                  value={applianceName}
-                  placeholder="Appliance Name"
-                  onChange={(e) => setApplianceName(e.target.value)}
-                />
-              </Col>
-            </Row>
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Purchased From</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  value={appliancePurchasedFrom}
-                  placeholder="Purchased From"
-                  onChange={(e) => setAppliancePurchasedFrom(e.target.value)}
-                />
-              </Col>
-            </Row>
-
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Purchased On</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={appliancePurchasedOn}
-                  onChange={(e) => setAppliancePurchasedOn(e.target.value)}
-                />
-              </Col>
-            </Row>
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Purchase Order Number</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  value={appliancePurchasesOrderNumber}
-                  placeholder="Purchase Order Number"
-                  onChange={(e) =>
-                    setAppliancePurchasesOrderNumber(e.target.value)
-                  }
-                />
-              </Col>
-            </Row>
-
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Installed On</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={applianceInstalledOn}
-                  onChange={(e) => setApplianceInstalledOn(e.target.value)}
-                />
-              </Col>
-            </Row>
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Serial Number</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  value={applianceSerialNum}
-                  placeholder="Serial Number"
-                  onChange={(e) => setApplianceSerialNum(e.target.value)}
-                />
-              </Col>
-            </Row>
-
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Model Number</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  value={applianceModelNum}
-                  placeholder="Model Number"
-                  onChange={(e) => setApplianceModelNum(e.target.value)}
-                />
-              </Col>
-            </Row>
-
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Warranty Till</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  type="date"
-                  value={applianceWarrantyTill}
-                  onChange={(e) => setApplianceWarrantyTill(e.target.value)}
-                />
-              </Col>
-            </Row>
-
-            <Row className="mx-1 mt-1 p-0">
-              <Col>Warranty Info</Col>
-              <Col>
-                <Form.Control
-                  style={squareForm}
-                  value={applianceWarrantyInfo}
-                  placeholder="Warranty Info"
-                  onChange={(e) => setApplianceWarrantyInfo(e.target.value)}
-                />
-              </Col>
-            </Row>
-          </Row>
-
-          {property ? <ApplianceImages state={imageState} /> : ""}
-          {showSpinner ? (
-            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-              <ReactBootStrap.Spinner animation="border" role="status" />
-            </div>
-          ) : (
-            ""
-          )}
-          <div className="text-center my-3">
-            <Button
-              variant="outline-primary"
-              style={pillButton}
-              className="mx-2"
-              onClick={() => setNewAppliance(null)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="outline-primary"
-              style={pillButton}
-              className="mx-2"
-              onClick={addAppliance}
-            >
-              Save
-            </Button>
-          </div>
-        </div>
-      )}
+      <Row className="d-flex flex-column justify-content-left overflow-scroll"></Row>
     </Container>
   );
 }
