@@ -662,7 +662,7 @@ function ManagerTenantAgreementView(props) {
                   variant="outline-primary"
                   onClick={save}
                 >
-                  Update Lease
+                  Add document without updating lease
                 </Button>
               </Col>
             </Row>

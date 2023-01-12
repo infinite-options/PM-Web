@@ -2,6 +2,14 @@ import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Switch } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import PropertyAppliances from "../PropertyAppliances";
 import PropertyUtilities from "../PropertyUtilities";
@@ -12,6 +20,7 @@ import AppContext from "../../AppContext";
 import Edit from "../../icons/Edit.svg";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
+import EditIconNew from "../../icons/EditIconNew.svg";
 import {
   pillButton,
   squareForm,
@@ -25,7 +34,16 @@ import {
 } from "../../utils/styles";
 import { post, put } from "../../utils/api";
 
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function OwnerPropertyForm(props) {
+  const classes = useStyles();
   const { userData } = useContext(AppContext);
   const { user } = userData;
   const navigate = useNavigate();
@@ -138,8 +156,15 @@ function OwnerPropertyForm(props) {
 
   const [showDialogDelete, setShowDialogDelete] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
-  const { property, edit, setEdit, hideEdit } = props;
-
+  const {
+    property,
+    edit,
+    setEdit,
+    hideEdit,
+    editAppliances,
+    setEditAppliances,
+  } = props;
+  const appliances = Object.keys(applianceState[0]);
   const onConfirm = () => {
     setShowDialog(false);
   };
@@ -561,7 +586,26 @@ function OwnerPropertyForm(props) {
     navigate("/owner");
   };
   // console.log(activeDate);
-  return (
+  return editAppliances ? (
+    <div className="d-flex flex-column w-100 overflow-hidden p-2">
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <PropertyAppliances
+          state={applianceState}
+          property={property}
+          editAppliances={editAppliances}
+          setEditAppliances={setEditAppliances}
+          edit={edit}
+        />
+      </div>
+    </div>
+  ) : (
     <div
       className="d-flex flex-column w-100 overflow-hidden p-2"
       style={{
@@ -875,11 +919,115 @@ function OwnerPropertyForm(props) {
           opacity: 1,
         }}
       >
-        <PropertyAppliances
-          state={applianceState}
-          property={property}
-          edit={edit}
-        />
+        <Row className="mx-2">
+          <Col>
+            <h6 style={mediumBold}>Appliances</h6>
+          </Col>
+          <Col>
+            <img
+              src={EditIconNew}
+              onClick={() => {
+                window.scrollTo(0, 0);
+                setEditAppliances(true);
+              }}
+              style={{
+                width: "30px",
+                height: "30px",
+                float: "right",
+                marginRight: "5rem",
+              }}
+            />
+          </Col>
+        </Row>
+        <Row className="m-2" style={{ overflow: "scroll" }}>
+          <div>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Appliance</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Purchased From</TableCell>
+                  <TableCell>Purchased On</TableCell>
+                  <TableCell>Purchase Order Number</TableCell>
+                  <TableCell>Installed On</TableCell>
+                  <TableCell>Serial Number</TableCell>
+                  <TableCell>Model Number</TableCell>
+                  <TableCell>Warranty Till</TableCell>
+                  <TableCell>Warranty Info</TableCell>
+                  <TableCell>Images</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {appliances.map((appliance, i) => {
+                  return applianceState[0][appliance]["available"] == true ||
+                    applianceState[0][appliance]["available"] == "True" ? (
+                    <TableRow>
+                      <TableCell>{appliance}</TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["name"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["purchased_from"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["purchased"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["purchased_order"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["installed"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["serial_num"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["model_num"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["warranty_till"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["warranty_info"]}
+                      </TableCell>
+
+                      {applianceState[0][appliance]["images"] !== undefined &&
+                      applianceState[0][appliance]["images"].length > 0 ? (
+                        <TableCell>
+                          <Row className="d-flex justify-content-center align-items-center p-1">
+                            <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                              <img
+                                key={Date.now()}
+                                src={`${
+                                  applianceState[0][appliance]["images"][0]
+                                }?${Date.now()}`}
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "contain",
+                                  width: "50px",
+                                  height: "50px",
+                                }}
+                                alt="Property"
+                              />
+                            </Col>
+                          </Row>
+                        </TableCell>
+                      ) : (
+                        <TableCell>None</TableCell>
+                      )}
+                    </TableRow>
+                  ) : (
+                    ""
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </Row>
       </div>
 
       <div

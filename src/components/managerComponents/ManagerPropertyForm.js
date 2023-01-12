@@ -2,13 +2,21 @@ import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Switch } from "@material-ui/core";
 import * as ReactBootStrap from "react-bootstrap";
-import Checkbox from "../Checkbox";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import PropertyAppliances from "../PropertyAppliances";
 import PropertyUtilities from "../PropertyUtilities";
 import PropertyImages from "../PropertyImages";
 import ConfirmDialog2 from "../ConfirmDialog2";
 import AppContext from "../../AppContext";
 import Edit from "../../icons/Edit.svg";
+import EditIconNew from "../../icons/EditIconNew.svg";
 import {
   pillButton,
   squareForm,
@@ -19,9 +27,18 @@ import {
 } from "../../utils/styles";
 import { post, put } from "../../utils/api";
 
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function ManagerPropertyForm(props) {
   const { userData } = useContext(AppContext);
   const { user } = userData;
+  const classes = useStyles();
   const applianceState = useState({
     Microwave: {
       available: false,
@@ -127,13 +144,19 @@ function ManagerPropertyForm(props) {
   const [depositForRent, setDepositForRent] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [availableToRent, setAvailableToRent] = useState(false);
-
   const [featured, setFeatured] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
 
-  const { property, edit, setEdit, hideEdit } = props;
-
+  const {
+    property,
+    edit,
+    setEdit,
+    hideEdit,
+    editAppliances,
+    setEditAppliances,
+  } = props;
+  const appliances = Object.keys(applianceState[0]);
   const loadProperty = () => {
     setAddress(property.address);
     setUnit(property.unit);
@@ -154,6 +177,7 @@ function ManagerPropertyForm(props) {
 
     setFeatured(property.featured);
     applianceState[1](JSON.parse(property.appliances));
+
     utilityState[1](JSON.parse(property.utilities));
     loadImages();
   };
@@ -309,14 +333,33 @@ function ManagerPropertyForm(props) {
     style: "currency",
     currency: "USD",
   });
-
-  return (
+  return editAppliances ? (
+    <div className="d-flex flex-column w-100 overflow-hidden p-2">
+      <div
+        className="mx-3 my-3 p-2"
+        style={{
+          background: "#E9E9E9 0% 0% no-repeat padding-box",
+          borderRadius: "10px",
+          opacity: 1,
+        }}
+      >
+        <PropertyAppliances
+          state={applianceState}
+          property={property}
+          editAppliances={editAppliances}
+          setEditAppliances={setEditAppliances}
+          edit={edit}
+        />
+      </div>
+    </div>
+  ) : (
     <div className="d-flex flex-column w-100 overflow-hidden p-2">
       <ConfirmDialog2
         title={"Can't edit here. Click on the edit icon to make any changes"}
         isOpen={showDialog}
         onConfirm={onConfirm}
       />
+
       <div
         className="mx-3 my-3 p-2"
         style={{
@@ -328,7 +371,7 @@ function ManagerPropertyForm(props) {
         {edit ? (
           <div className="d-flex flex-column w-100">
             <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                 Address {required}
               </Form.Label>
               <Form.Control
@@ -341,7 +384,7 @@ function ManagerPropertyForm(props) {
             <div className="d-flex my-3">
               <Col>
                 <Form.Group className="mx-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
+                  <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                     Unit
                   </Form.Label>
                   <Form.Control
@@ -354,7 +397,7 @@ function ManagerPropertyForm(props) {
               </Col>
               <Col>
                 <Form.Group className="mx-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
+                  <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                     City {required}
                   </Form.Label>
                   <Form.Control
@@ -369,7 +412,7 @@ function ManagerPropertyForm(props) {
             <div className="d-flex my-3">
               <Col>
                 <Form.Group className="mx-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
+                  <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                     State {required}
                   </Form.Label>
                   <Form.Control
@@ -382,7 +425,7 @@ function ManagerPropertyForm(props) {
               </Col>
               <Col>
                 <Form.Group className="mx-2">
-                  <Form.Label as="h6" className="mb-0 ms-2">
+                  <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                     Zip Code {required}
                   </Form.Label>
                   <Form.Control
@@ -441,7 +484,7 @@ function ManagerPropertyForm(props) {
         )}
         {edit ? (
           <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Type {required}
             </Form.Label>
             <Form.Control
@@ -460,7 +503,7 @@ function ManagerPropertyForm(props) {
         {edit ? (
           <div className="d-flex my-3">
             <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                 Bedroom {required}
               </Form.Label>
               <Form.Control
@@ -471,7 +514,7 @@ function ManagerPropertyForm(props) {
               />
             </Form.Group>
             <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                 Bath {required}
               </Form.Label>
               <Form.Control
@@ -482,7 +525,7 @@ function ManagerPropertyForm(props) {
               />
             </Form.Group>
             <Form.Group className="mx-2">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
                 Sq. Ft. {required}
               </Form.Label>
               <Form.Control
@@ -539,7 +582,7 @@ function ManagerPropertyForm(props) {
         )}
         {edit ? (
           <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Monthly Rent {required}
             </Form.Label>
             <Form.Control
@@ -557,7 +600,7 @@ function ManagerPropertyForm(props) {
         )}
         {edit ? (
           <Form.Group className="mx-2 my-3">
-            <Form.Label as="h6" className="mb-0 ms-2">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Deposit {required}
             </Form.Label>
             <Form.Control
@@ -582,11 +625,115 @@ function ManagerPropertyForm(props) {
           opacity: 1,
         }}
       >
-        <PropertyAppliances
-          state={applianceState}
-          property={property}
-          edit={edit}
-        />
+        <Row className="mx-2">
+          <Col>
+            <h6 style={mediumBold}>Appliances</h6>
+          </Col>
+          <Col>
+            <img
+              src={EditIconNew}
+              onClick={() => {
+                window.scrollTo(0, 0);
+                setEditAppliances(true);
+              }}
+              style={{
+                width: "30px",
+                height: "30px",
+                float: "right",
+                marginRight: "5rem",
+              }}
+            />
+          </Col>
+        </Row>
+        <Row className="m-2" style={{ overflow: "scroll" }}>
+          <div>
+            <Table
+              responsive="md"
+              classes={{ root: classes.customTable }}
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Appliance</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Purchased From</TableCell>
+                  <TableCell>Purchased On</TableCell>
+                  <TableCell>Purchase Order Number</TableCell>
+                  <TableCell>Installed On</TableCell>
+                  <TableCell>Serial Number</TableCell>
+                  <TableCell>Model Number</TableCell>
+                  <TableCell>Warranty Till</TableCell>
+                  <TableCell>Warranty Info</TableCell>
+                  <TableCell>Images</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {appliances.map((appliance, i) => {
+                  return applianceState[0][appliance]["available"] == true ||
+                    applianceState[0][appliance]["available"] == "True" ? (
+                    <TableRow>
+                      <TableCell>{appliance}</TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["name"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["purchased_from"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["purchased"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["purchased_order"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["installed"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["serial_num"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["model_num"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["warranty_till"]}
+                      </TableCell>
+                      <TableCell>
+                        {applianceState[0][appliance]["warranty_info"]}
+                      </TableCell>
+
+                      {applianceState[0][appliance]["images"] !== undefined &&
+                      applianceState[0][appliance]["images"].length > 0 ? (
+                        <TableCell>
+                          <Row className="d-flex justify-content-center align-items-center p-1">
+                            <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                              <img
+                                key={Date.now()}
+                                src={`${
+                                  applianceState[0][appliance]["images"][0]
+                                }?${Date.now()}`}
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "contain",
+                                  width: "50px",
+                                  height: "50px",
+                                }}
+                                alt="Property"
+                              />
+                            </Col>
+                          </Row>
+                        </TableCell>
+                      ) : (
+                        <TableCell>None</TableCell>
+                      )}
+                    </TableRow>
+                  ) : (
+                    ""
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </Row>
       </div>
       <div
         className="mx-3 my-3 p-2"

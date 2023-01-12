@@ -226,7 +226,7 @@ export default function TenantPaymentHistory(props) {
                             }}
                           />
                         ) : (
-                          ""
+                          "Unverified"
                         )}
                       </TableCell>
                       <TableCell align="right">
