@@ -1089,17 +1089,12 @@ function ManagerPropertyView(props) {
                               ).toFixed(2)}
                             </TableCell>
                           </TableRow>
-                          {console.log(
-                            "before rent",
-                            cashflowData.manager_revenue,
-                            isLoading
-                          )}
+
                           {isLoading === false &&
                             cashflowData.manager_revenue.map(
                               (revenue, index) => {
                                 return revenue.purchase_type === "RENT" ? (
                                   <TableRow hidden={!monthlyRent}>
-                                    {console.log("in rent", revenue)}
                                     <TableCell>
                                       &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                       {revenue.unit}

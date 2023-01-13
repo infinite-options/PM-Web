@@ -139,6 +139,7 @@ function ManagerPropertyForm(props) {
   const [rent, setRent] = useState("");
   const [activeDate, setActiveDate] = useState("");
   const [description, setDescription] = useState("");
+  const [notes, setNotes] = useState("");
   const [deposit, setDeposit] = useState("");
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [depositForRent, setDepositForRent] = useState(false);
@@ -170,6 +171,7 @@ function ManagerPropertyForm(props) {
     setRent(property.listed_rent);
     setActiveDate(property.active_date);
     setDescription(property.description);
+    setNotes(property.notes);
     setDeposit(property.deposit);
     setPetsAllowed(property.pets_allowed);
     setDepositForRent(property.deposit_for_rent);
@@ -218,6 +220,7 @@ function ManagerPropertyForm(props) {
       manager_id: "",
       active_date: activeDate,
       description: description,
+      notes: notes,
       address: address,
       unit: unit,
       city: city,
@@ -266,6 +269,7 @@ function ManagerPropertyForm(props) {
         manager_id: "",
         active_date: activeDate,
         description: description,
+        notes: notes,
         address: address,
         unit: unit,
         city: city,
@@ -480,6 +484,24 @@ function ManagerPropertyForm(props) {
           <Row className="mx-2">
             <h6>Description</h6>
             <p>{description}</p>
+          </Row>
+        )}
+        {edit ? (
+          <Form.Group className="mx-2 my-3">
+            <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
+              Notes
+            </Form.Label>
+            <Form.Control
+              style={squareForm}
+              placeholder="Describe the property"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
+          </Form.Group>
+        ) : (
+          <Row className="mx-2">
+            <h6>notes</h6>
+            <p>{notes}</p>
           </Row>
         )}
         {edit ? (

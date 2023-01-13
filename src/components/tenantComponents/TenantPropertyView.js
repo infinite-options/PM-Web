@@ -625,6 +625,25 @@ function TenantPropertyView(props) {
                       </TableRow>
                     </TableBody>
                   </Table>
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <TableRow>
+                      <TableCell padding="none" size="small" align="center">
+                        Description
+                      </TableCell>
+                      <TableCell padding="none" size="small" align="center">
+                        {" "}
+                        {property.description == "null" ||
+                        property.description == "" ||
+                        property.description == null
+                          ? "Not Available"
+                          : property.description}
+                      </TableCell>
+                    </TableRow>
+                  </Table>
                 </Row>
               </div>
               <div
@@ -1025,16 +1044,18 @@ function TenantPropertyView(props) {
                     opacity: 1,
                   }}
                 >
-                  <Row className="m-3">
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     <Table classes={{ root: classes.customTable }} size="small">
                       <TableHead>
                         <TableRow>
                           <TableCell>Application Status</TableCell>
                           <TableCell>Name</TableCell>
                           <TableCell>Message</TableCell>
-                          <TableCell>Occupants</TableCell>
-                          <TableCell>No.of Pets</TableCell>
-                          <TableCell>Type of Pets</TableCell>
+                          <TableCell>Adults</TableCell>
+                          <TableCell>Children</TableCell>
+                          <TableCell>Pets</TableCell>
+                          <TableCell>Vehicles</TableCell>
+                          <TableCell>Referred</TableCell>
                           <TableCell>Application Date</TableCell>
                           <TableCell>Documents</TableCell>
                         </TableRow>
@@ -1050,12 +1071,42 @@ function TenantPropertyView(props) {
                           <TableCell>
                             Note: {selectedAgreement.message}
                           </TableCell>
-                          <TableCell>
-                            {selectedAgreement.adult_occupants} adults <br />
-                            {selectedAgreement.children_occupants} children
-                          </TableCell>
-                          <TableCell>{selectedAgreement.num_pets}</TableCell>
-                          <TableCell>{selectedAgreement.type_pets}</TableCell>
+                          {selectedAgreement.adults ? (
+                            <TableCell align="center">
+                              {JSON.parse(selectedAgreement.adults).length}
+                            </TableCell>
+                          ) : (
+                            <TableCell align="center">0</TableCell>
+                          )}
+                          {selectedAgreement.children ? (
+                            <TableCell align="center">
+                              {JSON.parse(selectedAgreement.children).length}
+                            </TableCell>
+                          ) : (
+                            <TableCell align="center">0</TableCell>
+                          )}
+
+                          {selectedAgreement.pets ? (
+                            <TableCell align="center">
+                              {JSON.parse(selectedAgreement.pets).length}
+                            </TableCell>
+                          ) : (
+                            <TableCell align="center">0</TableCell>
+                          )}
+                          {selectedAgreement.vehicles ? (
+                            <TableCell align="center">
+                              {JSON.parse(selectedAgreement.vehicles).length}
+                            </TableCell>
+                          ) : (
+                            <TableCell align="center">0</TableCell>
+                          )}
+                          {selectedAgreement.referred ? (
+                            <TableCell align="center">
+                              {JSON.parse(selectedAgreement.referred).length}
+                            </TableCell>
+                          ) : (
+                            <TableCell align="center">0</TableCell>
+                          )}
                           <TableCell>
                             {selectedAgreement.application_date.split(" ")[0]}
                           </TableCell>
@@ -1191,7 +1242,7 @@ function TenantPropertyView(props) {
                         </Table>
                       </Row>
 
-                      <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+                      <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
                         <h5>Lease Payments</h5>
                         <Table
                           responsive="md"

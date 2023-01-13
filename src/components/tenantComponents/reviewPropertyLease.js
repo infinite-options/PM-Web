@@ -339,7 +339,7 @@ function ReviewPropertyLease(props) {
                         <TableCell>Children</TableCell>
                         <TableCell>Pets</TableCell>
                         <TableCell>Vehicles</TableCell>
-                        <TableCell>referred</TableCell>
+                        <TableCell>Referred</TableCell>
                         <TableCell>Application Date</TableCell>
                         <TableCell>Documents</TableCell>
                       </TableRow>
@@ -453,7 +453,7 @@ function ReviewPropertyLease(props) {
                                   <TableCell align="center">Children</TableCell>
                                   <TableCell align="center">Pets</TableCell>
                                   <TableCell align="center">Vehicles</TableCell>
-                                  <TableCell align="center">referred</TableCell>
+                                  <TableCell align="center">Referred</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -660,7 +660,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>referred</TableCell>
+                      <TableCell>Referred</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -773,7 +773,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">referred</TableCell>
+                                <TableCell align="center">Referred</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -974,7 +974,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>referred</TableCell>
+                      <TableCell>Referred</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -1088,7 +1088,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">referred</TableCell>
+                                <TableCell align="center">Referred</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -1207,7 +1207,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>referred</TableCell>
+                      <TableCell>Referred</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -1320,7 +1320,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">referred</TableCell>
+                                <TableCell align="center">Referred</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
