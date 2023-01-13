@@ -336,7 +336,7 @@ function ManagerPropertyForm(props) {
   return editAppliances ? (
     <div className="d-flex flex-column w-100 overflow-hidden p-2">
       <div
-        className="mx-3 my-3 p-2"
+        className="mx-3 my-3 p-0"
         style={{
           background: "#E9E9E9 0% 0% no-repeat padding-box",
           borderRadius: "10px",
@@ -705,7 +705,7 @@ function ManagerPropertyForm(props) {
                       applianceState[0][appliance]["images"].length > 0 ? (
                         <TableCell>
                           <Row className="d-flex justify-content-center align-items-center p-1">
-                            <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                            <Col className="d-flex justify-content-center align-items-center">
                               <img
                                 key={Date.now()}
                                 src={`${
