@@ -8,6 +8,7 @@ import {
   TableBody,
   TableHead,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Checkbox from "./Checkbox";
 import ApplianceImages from "./ApplianceImages";
@@ -16,9 +17,17 @@ import AddIcon from "../icons/AddIcon.svg";
 import MinusIcon from "../icons/MinusIcon.svg";
 import { squareForm, pillButton, mediumBold } from "../utils/styles";
 import { get, put } from "../utils/api";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function PropertyAppliances(props) {
   const navigate = useNavigate();
+  const classes = useStyles();
   const { state, edit, property } = props;
   const [applianceRem, setApplianceRem] = useState("");
   const [applianceState, setApplianceState] = state;
@@ -269,14 +278,14 @@ function PropertyAppliances(props) {
   };
 
   return (
-    <Container style={({ padding: "0px" }, mediumBold)} className="my-4">
+    <div style={({ padding: "0px" }, mediumBold)} className="my-4">
       <ConfirmDialog
         title={"Are you sure you want to delete this appliance?"}
         isOpen={showDialog}
         onConfirm={removeappliance}
         onCancel={onCancel}
       />
-      <Row className="d-flex">
+      <Row className="d-flex justify-content-center align-items-center">
         <Col className="d-flex">
           <h6 style={mediumBold} className="mt-2">
             Appliances
@@ -299,8 +308,12 @@ function PropertyAppliances(props) {
           )}
         </Col>
       </Row>
-      <Row className="d-flex flex-column justify-content-left overflow-scroll">
-        <Table responsive="md" size="small">
+      <Row className="d-flex justify-content-center align-items-center overflow-scroll p-3">
+        <Table
+          classes={{ root: classes.customTable }}
+          responsive="md"
+          size="small"
+        >
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
@@ -315,6 +328,12 @@ function PropertyAppliances(props) {
               <TableCell>Warranty Till</TableCell>
               <TableCell>Warranty Info</TableCell>
               <TableCell>Images</TableCell>
+              <TableCell></TableCell>
+              {addApplianceInfo == true && showDetails == true ? (
+                <TableCell></TableCell>
+              ) : (
+                ""
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -554,16 +573,16 @@ function PropertyAppliances(props) {
                   (applianceState[appliance]["available"] == true ||
                     applianceState[appliance]["available"] == "True") &&
                   applianceType == appliance ? (
-                    <div>
+                    <TableCell>
                       {property ? <ApplianceImages state={imageState} /> : ""}
-                    </div>
+                    </TableCell>
                   ) : (
-                    <div>
+                    <TableCell>
                       {applianceState[appliance]["images"] !== undefined &&
                       applianceState[appliance]["images"].length > 0 ? (
-                        <TableCell>
-                          <Row className="d-flex justify-content-center align-items-center p-1">
-                            <Col className="d-flex justify-content-center align-items-center p-0 m-0">
+                        <div>
+                          <Row className="d-flex justify-content-center align-items-center ">
+                            <Col className="d-flex justify-content-center align-items-center">
                               <img
                                 key={Date.now()}
                                 src={`${
@@ -579,11 +598,11 @@ function PropertyAppliances(props) {
                               />
                             </Col>
                           </Row>
-                        </TableCell>
+                        </div>
                       ) : (
-                        <TableCell>None</TableCell>
+                        <div>None</div>
                       )}
-                    </div>
+                    </TableCell>
                   )}
                   {!og_appliances.includes(appliance) ? (
                     <TableCell>
@@ -597,12 +616,11 @@ function PropertyAppliances(props) {
                           width: "15px",
                           height: "15px",
                           float: "right",
-                          marginRight: "5rem",
                         }}
                       />
                     </TableCell>
                   ) : (
-                    ""
+                    <TableCell></TableCell>
                   )}
                   {addApplianceInfo == true &&
                   showDetails == true &&
@@ -641,6 +659,8 @@ function PropertyAppliances(props) {
                         </Button>
                       </div>
                     </TableCell>
+                  ) : addApplianceInfo == true && showDetails == true ? (
+                    <TableCell></TableCell>
                   ) : (
                     ""
                   )}
@@ -1009,7 +1029,7 @@ function PropertyAppliances(props) {
         ))} */}
       </Row>
       <Row className="d-flex flex-column justify-content-left overflow-scroll"></Row>
-    </Container>
+    </div>
   );
 }
 

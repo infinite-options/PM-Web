@@ -28,6 +28,8 @@ export default function ManagerPaymentHistory(props) {
   const history = props.data; //array of objects
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("payment_date");
+  const [orderIncoming, setOrderIncoming] = useState("asc");
+  const [orderIncomingBy, setOrderIncomingBy] = useState("payment_date");
   const { verified, setVerified } = props;
   const managerID = props.managerID;
   const handleRequestSort = (event, property) => {
@@ -95,7 +97,7 @@ export default function ManagerPaymentHistory(props) {
 
     {
       id: "payment_date",
-      numeric: false,
+      numeric: true,
       label: "Date Paid",
     },
     {
@@ -156,6 +158,39 @@ export default function ManagerPaymentHistory(props) {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
+  const handleRequestSortIncoming = (event, property) => {
+    const isAsc = orderIncomingBy === property && orderIncoming === "asc";
+    setOrderIncoming(isAsc ? "desc" : "asc");
+    setOrderIncomingBy(property);
+  };
+
+  function descendingComparatorIncoming(a, b, orderIncomingBy) {
+    if (b[orderIncomingBy] < a[orderIncomingBy]) {
+      return -1;
+    }
+    if (b[orderIncomingBy] > a[orderIncomingBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparatorIncoming(orderIncoming, orderIncomingBy) {
+    return orderIncoming === "desc"
+      ? (a, b) => descendingComparatorIncoming(a, b, orderIncomingBy)
+      : (a, b) => -descendingComparatorIncoming(a, b, orderIncomingBy);
+  }
+
+  function stableSortIncoming(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const orderIncoming = comparator(a[0], b[0]);
+      if (orderIncoming !== 0) {
+        return orderIncoming;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
   const paymentsIncomingHeadCell = [
     {
       id: "purchase_uid",
@@ -186,9 +221,9 @@ export default function ManagerPaymentHistory(props) {
     },
 
     {
-      id: "next_payment",
-      numeric: false,
-      label: "Date Due",
+      id: "payment_date",
+      numeric: true,
+      label: "Date Paid",
     },
     {
       id: "payment_verify",
@@ -203,9 +238,9 @@ export default function ManagerPaymentHistory(props) {
   ];
 
   function EnhancedTableHeadIncomingPayments(props) {
-    const { order, orderBy, onRequestSort } = props;
-    const createSortHandler = (property) => (event) => {
-      onRequestSort(event, property);
+    const { orderIncoming, orderIncomingBy, onRequestSortIncoming } = props;
+    const createSortHandlerIncoming = (property) => (event) => {
+      onRequestSortIncoming(event, property);
     };
 
     return (
@@ -216,18 +251,22 @@ export default function ManagerPaymentHistory(props) {
               key={headCell.id}
               align="right"
               size="small"
-              sortDirection={orderBy === headCell.id ? order : false}
+              sortDirection={
+                orderIncomingBy === headCell.id ? orderIncoming : false
+              }
             >
               <TableSortLabel
                 align="center"
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
+                active={orderIncomingBy === headCell.id}
+                direction={
+                  orderIncomingBy === headCell.id ? orderIncoming : "asc"
+                }
+                onClick={createSortHandlerIncoming(headCell.id)}
               >
                 {headCell.label}
-                {orderBy === headCell.id ? (
+                {orderIncomingBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
+                    {orderIncoming === "desc"
                       ? "sorted descending"
                       : "sorted ascending"}
                   </Box>
@@ -242,10 +281,10 @@ export default function ManagerPaymentHistory(props) {
 
   EnhancedTableHeadIncomingPayments.propTypes = {
     numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
+    onRequestSortIncoming: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-    orderBy: PropTypes.string.isRequired,
+    orderIncoming: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderIncomingBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
   const verifyPayment = async (payID) => {
@@ -301,12 +340,7 @@ export default function ManagerPaymentHistory(props) {
                   return row.purchase_status === "PAID" &&
                     row.receiver !== managerID &&
                     row.amount_paid > 0 ? (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.purchase_uid}
-                    >
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                       <TableCell align="right">{row.purchase_uid}</TableCell>
                       <TableCell align="right" style={{ width: "300px" }}>
                         {row.address +
@@ -337,7 +371,7 @@ export default function ManagerPaymentHistory(props) {
                         style={{ width: "83px" }}
                       ></TableCell>
                       <TableCell align="right">
-                        {Math.abs(row.amount_paid).toFixed(2)}
+                        {Math.abs(row.amount).toFixed(2)}
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -368,89 +402,82 @@ export default function ManagerPaymentHistory(props) {
             size="small"
           >
             <EnhancedTableHeadIncomingPayments
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
+              orderIncoming={orderIncoming}
+              orderIncomingBy={orderIncomingBy}
+              onRequestSortIncoming={handleRequestSortIncoming}
               rowCount={history.length}
             />{" "}
             <TableBody>
-              {stableSort(history, getComparator(order, orderBy)).map(
-                (row, index) => {
-                  return (row.purchase_status === "PAID" &&
-                    row.receiver === managerID &&
-                    row.amount_paid > 0) ||
-                    (row.purchase_status === "PAID" &&
-                      row.receiver !== managerID &&
-                      row.amount_paid < 0) ? (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.purchase_uid}
-                    >
-                      <TableCell align="right">{row.purchase_uid}</TableCell>
-                      <TableCell align="right" style={{ width: "300px" }}>
-                        {row.address +
-                          " " +
-                          row.unit +
-                          "," +
-                          row.city +
-                          ", " +
-                          row.state +
-                          " " +
-                          row.zip}
-                      </TableCell>
+              {stableSortIncoming(
+                history,
+                getComparatorIncoming(orderIncoming, orderIncomingBy)
+              ).map((row, index) => {
+                return (row.purchase_status === "PAID" &&
+                  row.receiver === managerID &&
+                  row.amount_paid > 0) ||
+                  (row.purchase_status === "PAID" &&
+                    row.receiver !== managerID &&
+                    row.amount_paid < 0) ? (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    <TableCell align="right">{row.purchase_uid}</TableCell>
+                    <TableCell align="right" style={{ width: "300px" }}>
+                      {row.address +
+                        " " +
+                        row.unit +
+                        "," +
+                        row.city +
+                        ", " +
+                        row.state +
+                        " " +
+                        row.zip}
+                    </TableCell>
 
-                      <TableCell align="right"> {row.payer}</TableCell>
-                      <TableCell align="right" style={{ width: "200px" }}>
-                        {row.purchase_frequency === "One-time" ||
-                        row.purchase_frequency === "Annually"
-                          ? row.description
-                          : row.purchase_notes + " " + row.description}
-                      </TableCell>
-                      <TableCell align="right">{row.purchase_type}</TableCell>
-                      <TableCell align="right">
-                        {row.payment_date !== null
-                          ? row.payment_date.substring(0, 10)
-                          : "Not Available"}
-                      </TableCell>
-                      <TableCell align="right" style={{ width: "83px" }}>
-                        {row.payment_verify === "Verified" ? (
-                          <img
-                            src={Verified}
-                            style={{
-                              width: "25px",
-                              height: "25px",
-                              objectFit: "contain",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => unverifyPayment(row.payment_uid)}
-                          />
-                        ) : (
-                          <button
-                            style={{
-                              backgroundColor:
-                                new Date(row.payment_date) < new Date()
-                                  ? "red"
-                                  : "green",
-                              color: "white",
-                              border: "none",
-                            }}
-                            onClick={() => verifyPayment(row.payment_uid)}
-                          >
-                            Verify
-                          </button>
-                        )}
-                      </TableCell>
-                      <TableCell align="right">
-                        {Math.abs(row.amount_paid).toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    ""
-                  );
-                }
-              )}
+                    <TableCell align="right"> {row.payer}</TableCell>
+                    <TableCell align="right" style={{ width: "200px" }}>
+                      {row.purchase_frequency === "One-time" ||
+                      row.purchase_frequency === "Annually"
+                        ? row.description
+                        : row.purchase_notes + " " + row.description}
+                    </TableCell>
+                    <TableCell align="right">{row.purchase_type}</TableCell>
+                    <TableCell align="right">
+                      {row.payment_date !== null
+                        ? row.payment_date.substring(0, 10)
+                        : "Not Available"}
+                    </TableCell>
+                    <TableCell align="right" style={{ width: "83px" }}>
+                      {row.payment_verify === "Verified" ? (
+                        <img
+                          src={Verified}
+                          style={{
+                            width: "25px",
+                            height: "25px",
+                            objectFit: "contain",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => unverifyPayment(row.payment_uid)}
+                        />
+                      ) : (
+                        <button
+                          style={{
+                            backgroundColor: "red",
+                            color: "white",
+                            border: "none",
+                          }}
+                          onClick={() => verifyPayment(row.payment_uid)}
+                        >
+                          Verify
+                        </button>
+                      )}
+                    </TableCell>
+                    <TableCell align="right">
+                      {Math.abs(row.amount).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  ""
+                );
+              })}
             </TableBody>
           </Table>
         </Row>

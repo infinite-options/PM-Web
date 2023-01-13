@@ -917,7 +917,7 @@ export default function TenantDashboard() {
                   />
                 )}
               </Row>
-              <Row className="my-1 ms-3">
+              <Row className="my-1">
                 {tenantData.length !== 0 && (
                   <TenantPaymentHistory data={paymentHistoryData} />
                 )}

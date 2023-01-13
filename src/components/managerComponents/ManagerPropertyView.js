@@ -347,6 +347,7 @@ function ManagerPropertyView(props) {
       } else recent_mr.push(request);
     });
     // console.log(recent_mr, past_mr);
+    setIsLoading(false);
   };
 
   const headerBack = () => {
@@ -730,7 +731,6 @@ function ManagerPropertyView(props) {
   const yearCashFlowExpectedAmortized = (
     yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
   ).toFixed(2);
-
   // console.log(cashflowData);
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
@@ -1093,11 +1093,8 @@ function ManagerPropertyView(props) {
                           {isLoading === false &&
                             cashflowData.manager_revenue.map(
                               (revenue, index) => {
-                                // console.log("revenue", revenue);
-
                                 return revenue.purchase_type === "RENT" ? (
                                   <TableRow hidden={!monthlyRent}>
-                                    {/* {console.log("in rent", revenue)} */}
                                     <TableCell>
                                       &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                       {revenue.unit}
