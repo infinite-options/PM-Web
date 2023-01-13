@@ -239,6 +239,7 @@ function TenantPropertyView(props) {
       message: message,
     };
     const response = await put("/endEarly", request_body);
+    setTenantEndEarly(true);
     reloadProperty();
   };
 
@@ -260,15 +261,15 @@ function TenantPropertyView(props) {
       request_body.application_status = "REFUSED";
     }
     const response = await put("/endEarly", request_body);
-    setTenantEndEarly(true);
-    reloadProperty();
+
+    navigate("../tenant");
   };
   const endEarlyWithdraw = async () => {
     let request_body = {
       application_status: "RENTED",
       property_uid: property.property_uid,
       early_end_date: "",
-      message: "",
+      message: "Lease details forwarded for review",
     };
 
     const response = await put("/endEarly", request_body);
@@ -1455,17 +1456,16 @@ function TenantPropertyView(props) {
                               </Row>
                             </div>
                           ) : (
-                            <Row
-                              hidden={
-                                selectedAgreement === null ||
-                                tenantEndEarly ||
-                                pmEndEarly
-                              }
-                            >
+                            <Row>
                               <Col className="d-flex flex-row justify-content-evenly">
                                 <Button
                                   style={redPillButton}
                                   variant="outline-primary"
+                                  hidden={
+                                    selectedAgreement === null ||
+                                    tenantEndEarly ||
+                                    pmEndEarly
+                                  }
                                   onClick={() => setTerminateLease(true)}
                                 >
                                   Terminate Lease

@@ -123,7 +123,6 @@ function BusinessContact(props) {
   };
   return (
     <div>
-      {console.log(contactState)}
       {contactState.length !== 0 ? (
         <Table classes={{ root: classes.customTable }} size="small">
           <TableHead>
