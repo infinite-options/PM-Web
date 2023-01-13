@@ -18,6 +18,7 @@ import Check from "../../icons/Check.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
+import File from "../../icons/File.svg";
 import { get, put, post } from "../../utils/api";
 import {
   squareForm,
@@ -843,7 +844,9 @@ function TenantProfile(props) {
                         type="tel"
                         pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                         // disabled="disabled"
-                        onChange={(e) => setPhone(e.target.value)}
+                        onChange={(e) =>
+                          setPhone(formatPhoneNumber(e.target.value))
+                        }
                       />
                     </Form.Group>
                   </Col>
@@ -1637,7 +1640,14 @@ function TenantProfile(props) {
                           onClick={() => deleteDocument(i)}
                         />
                         <a href={file.link} target="_blank">
-                          <img src={File} />
+                          <img
+                            src={File}
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              float: "right",
+                            }}
+                          />
                         </a>
                       </div>
                     </div>
