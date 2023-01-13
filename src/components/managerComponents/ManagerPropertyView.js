@@ -347,6 +347,7 @@ function ManagerPropertyView(props) {
       } else recent_mr.push(request);
     });
     // console.log(recent_mr, past_mr);
+    setIsLoading(false);
   };
 
   const headerBack = () => {
@@ -730,7 +731,6 @@ function ManagerPropertyView(props) {
   const yearCashFlowExpectedAmortized = (
     yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
   ).toFixed(2);
-
   // console.log(cashflowData);
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
@@ -1089,12 +1089,17 @@ function ManagerPropertyView(props) {
                               ).toFixed(2)}
                             </TableCell>
                           </TableRow>
-                          {console.log(cashflowData.manager_revenue)}
+                          {console.log(
+                            "before rent",
+                            cashflowData.manager_revenue,
+                            isLoading
+                          )}
                           {isLoading === false &&
                             cashflowData.manager_revenue.map(
                               (revenue, index) => {
                                 return revenue.purchase_type === "RENT" ? (
                                   <TableRow hidden={!monthlyRent}>
+                                    {console.log("in rent", revenue)}
                                     <TableCell>
                                       &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                       {revenue.unit}
