@@ -5122,21 +5122,17 @@ function ManagerPropertyView(props) {
                       <h3>Tenant Info</h3>
                     </Col>
                     <Col xs={2}>
-                      {property.rental_status === "PROCESSING" ? (
-                        <img
-                          src={EditIconNew}
-                          alt="Edit"
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            float: "right",
-                            marginRight: "5rem",
-                          }}
-                          onClick={() => selectAgreement(selectedAgreement)}
-                        />
-                      ) : (
-                        ""
-                      )}
+                      <img
+                        src={EditIconNew}
+                        alt="Edit"
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          float: "right",
+                          marginRight: "5rem",
+                        }}
+                        onClick={() => selectAgreement(selectedAgreement)}
+                      />
                     </Col>
                   </Row>
                   <Row style={{ overflow: "scroll" }}>

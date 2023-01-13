@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 
 function ManagerTenantAgreementEdit(props) {
   const classes = useStyles();
-  const { back, property, agreement } = props;
+  const { back, property, agreement, acceptedTenantApplications } = props;
   // console.log("here", agreement);
 
   // console.log("here", props);
@@ -175,44 +175,96 @@ function ManagerTenantAgreementEdit(props) {
   const save = async () => {
     setShowSpinner(true);
 
-    // console.log(lateFee);
-    const newAgreement = {
-      rental_property_id: property.property_uid,
-      lease_start: startDate,
-      lease_end: endDate,
-      rental_status: rentalStatus,
-      rent_payments: JSON.stringify(feeState),
-      available_topay: available,
-      due_by: dueDate,
-      late_by: lateAfter,
-      late_fee: lateFee,
-      perDay_late_fee: lateFeePer,
-      assigned_contacts: JSON.stringify(contactState[0]),
-      adults: JSON.stringify(adults),
-      children: JSON.stringify(children),
-      pets: JSON.stringify(pets),
-      vehicles: JSON.stringify(vehicles),
-      referred: JSON.stringify(referred),
-    };
+    if (agreement.rental_status === "PROCESSING") {
+      // console.log(lateFee);
+      const newAgreement = {
+        rental_property_id: property.property_uid,
+        lease_start: startDate,
+        lease_end: endDate,
+        rental_status: rentalStatus,
+        rent_payments: JSON.stringify(feeState),
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+        assigned_contacts: JSON.stringify(contactState[0]),
+        adults: JSON.stringify(adults),
+        children: JSON.stringify(children),
+        pets: JSON.stringify(pets),
+        vehicles: JSON.stringify(vehicles),
+        referred: JSON.stringify(referred),
+      };
 
-    // console.log(newAgreement);
-    // for (let i = 0; i < files.length; i++) {
-    //   let key = `img_${i}`;
-    //   newAgreement[key] = files[i];
-    // }
-    for (let i = 0; i < files.length; i++) {
-      let key = `doc_${i}`;
-      newAgreement[key] = files[i].file;
-      delete files[i].file;
-    }
-    newAgreement.documents = JSON.stringify(files);
-    if (agreement !== null) {
-      // console.log("in if");
-      newAgreement.rental_uid = agreement.rental_uid;
       // console.log(newAgreement);
-      const response = await put(`/rentals`, newAgreement, null, files);
-    }
+      // for (let i = 0; i < files.length; i++) {
+      //   let key = `img_${i}`;
+      //   newAgreement[key] = files[i];
+      // }
+      for (let i = 0; i < files.length; i++) {
+        let key = `doc_${i}`;
+        newAgreement[key] = files[i].file;
+        delete files[i].file;
+      }
+      newAgreement.documents = JSON.stringify(files);
+      if (agreement !== null) {
+        // console.log("in if");
+        newAgreement.rental_uid = agreement.rental_uid;
+        // console.log(newAgreement);
+        const response = await put(`/rentals`, newAgreement, null, files);
+      }
+    } else {
+      console.log(agreement.linked_application_id);
+      for (const application of JSON.parse(agreement.linked_application_id)) {
+        console.log(application);
 
+        const request_body = {
+          application_uid: application,
+          message: "Lease details forwarded for review",
+          application_status: "FORWARDED",
+        };
+        // console.log(request_body)
+        const update_application = await put("/applications", request_body);
+        // console.log(response)
+      }
+
+      const newAgreement = {
+        rental_property_id: property.property_uid,
+        lease_start: startDate,
+        lease_end: endDate,
+        rental_status: "PROCESSING",
+        rent_payments: JSON.stringify(feeState),
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+        assigned_contacts: JSON.stringify(contactState[0]),
+        adults: JSON.stringify(adults),
+        children: JSON.stringify(children),
+        pets: JSON.stringify(pets),
+        vehicles: JSON.stringify(vehicles),
+        referred: JSON.stringify(referred),
+      };
+
+      // console.log(newAgreement);
+      // for (let i = 0; i < files.length; i++) {
+      //   let key = `img_${i}`;
+      //   newAgreement[key] = files[i];
+      // }
+      for (let i = 0; i < files.length; i++) {
+        let key = `doc_${i}`;
+        newAgreement[key] = files[i].file;
+        delete files[i].file;
+      }
+      newAgreement.documents = JSON.stringify(files);
+      if (agreement !== null) {
+        // console.log("in if");
+        newAgreement.rental_uid = agreement.rental_uid;
+        // console.log(newAgreement);
+        const response = await put(`/rentals`, newAgreement, null, files);
+      }
+    }
     setShowSpinner(false);
 
     back();
@@ -573,10 +625,7 @@ function ManagerTenantAgreementEdit(props) {
           ) : (
             ""
           )}
-          <Row
-            className="mt-4"
-            hidden={agreement.rental_status !== "PROCESSING"}
-          >
+          <Row className="mt-4">
             <div
               className="text-center"
               style={errorMessage === "" ? hidden : {}}

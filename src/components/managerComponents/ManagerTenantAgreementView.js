@@ -236,6 +236,7 @@ function ManagerTenantAgreementView(props) {
     const response = await put("/endEarly", request_body);
     setPmEndEarly(true);
     setTerminateLease(false);
+    closeAgreement();
   };
 
   const endEarlyRequestResponse = async (end_early) => {
@@ -256,6 +257,7 @@ function ManagerTenantAgreementView(props) {
       request_body.application_status = "REFUSED";
     }
     const response = await put("/endEarly", request_body);
+    closeAgreement();
   };
 
   const endEarlyWithdraw = async () => {
@@ -263,7 +265,7 @@ function ManagerTenantAgreementView(props) {
       application_status: "RENTED",
       property_uid: property.property_uid,
       early_end_date: "",
-      message: "",
+      message: "Lease details forwarded for review",
     };
 
     const response = await put("/endEarly", request_body);
