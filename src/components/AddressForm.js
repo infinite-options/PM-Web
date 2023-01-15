@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import { squareForm, red } from "../utils/styles";
 import Checkbox from "../components/Checkbox";
-import { small, underline, gray } from "../utils/styles";
+import { small, underline, gray, headings } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
 
 function AddressForm(props) {
@@ -38,6 +38,11 @@ function AddressForm(props) {
   const updateAddressState = (event, field) => {
     const newAddressState = { ...addressState };
     newAddressState[field] = event.target.value;
+    setAddressState(newAddressState);
+  };
+  const handlePhoneNumber = (event, field) => {
+    const newAddressState = { ...addressState };
+    newAddressState[field] = formatPhoneNumber(event.target.value);
     setAddressState(newAddressState);
   };
   // const updateIfRent = () =>{
@@ -294,6 +299,24 @@ function AddressForm(props) {
       abbreviation: "WY",
     },
   ];
+  function formatPhoneNumber(value) {
+    if (!value) return value;
+
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
+  }
   return (
     <div>
       {editProfile ? (
@@ -434,9 +457,11 @@ function AddressForm(props) {
                     </Form.Label>
                     <Form.Control
                       style={squareForm}
-                      placeholder="Number"
                       value={pm_number}
-                      onChange={(e) => updateAddressState(e, "pm_number")}
+                      placeholder="(xxx)xxx-xxxx"
+                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                      // onChange={(e) => updateAddressState(e, "pm_number")}
+                      onChange={(e) => handlePhoneNumber(e, "pm_number")}
                     />
                   </Form.Group>
                 </Col>
@@ -520,6 +545,51 @@ function AddressForm(props) {
               <p style={gray}>{zip && zip !== "NULL" ? zip : ""}</p>
             </Col>
           </Row>
+
+          <div>
+            <Row className="mb-4" style={headings}>
+              <div>Additional details</div>
+            </Row>
+
+            <Row>
+              <Col>
+                <h6> Name of Property Manager (if renting)</h6>
+                <p style={gray}>
+                  {pm_name && pm_name !== "NULL"
+                    ? pm_name
+                    : "No  name Provided"}
+                </p>
+              </Col>
+              <Col>
+                {" "}
+                <h6>Property Manager's phone number (if renting)</h6>
+                <p style={gray}>
+                  {pm_number && pm_number !== "NULL"
+                    ? pm_number
+                    : "No phone number Provided"}
+                </p>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                <h6>Lease Start Date</h6>
+                <p style={gray}>
+                  {lease_start && lease_start !== "NULL" ? lease_start : ""}
+                </p>
+              </Col>
+              <Col>
+                <h6>Lease End Date</h6>
+                <p style={gray}>
+                  {lease_end && lease_end !== "NULL" ? lease_end : ""}
+                </p>
+              </Col>
+              <Col>
+                <h6> Monthly Rent</h6>
+                <p style={gray}>{rent && rent !== "NULL" ? rent : ""}</p>
+              </Col>
+            </Row>
+          </div>
         </div>
       )}
     </div>
