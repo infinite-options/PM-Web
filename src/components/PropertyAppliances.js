@@ -285,9 +285,16 @@ function PropertyAppliances(props) {
         onConfirm={removeappliance}
         onCancel={onCancel}
       />
+      <div>
+        <h5 className="mx-3 mt-2">
+          {property.address}
+          {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+          {property.city}, {property.state} {property.zip}
+        </h5>
+      </div>
       <Row className="d-flex justify-content-center align-items-center">
         <Col className="d-flex">
-          <h6 style={mediumBold} className="mt-2">
+          <h6 style={mediumBold} className="mx-3 mt-2">
             Appliances
           </h6>
         </Col>

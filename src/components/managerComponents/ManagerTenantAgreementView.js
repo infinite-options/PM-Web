@@ -12,6 +12,7 @@ import * as ReactBootStrap from "react-bootstrap";
 import MailDialogTenant from "../MailDialog";
 import MailDialogContact from "../MailDialog";
 import AppContext from "../../AppContext";
+import EditIconNew from "../../icons/EditIconNew.svg";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import File from "../../icons/File.svg";
@@ -41,6 +42,7 @@ function ManagerTenantAgreementView(props) {
     renewLease,
     selectedAgreement,
     acceptedTenantApplications,
+    selectAgreement,
     closeAgreement,
   } = props;
   const { userData, refresh } = useContext(AppContext);
@@ -319,6 +321,31 @@ function ManagerTenantAgreementView(props) {
             receiverEmail={selectedContact.email}
             onCancel={onCancelContact}
           />
+          {/* {console.log(agreement)} */}
+          <Row>
+            {agreement != null ? (
+              <Row className="m-3">
+                <Col>
+                  <h3>Tenant Info</h3>
+                </Col>
+                <Col xs={2}>
+                  <img
+                    src={EditIconNew}
+                    alt="Edit"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      float: "right",
+                      marginRight: "5rem",
+                    }}
+                    onClick={() => selectAgreement(selectedAgreement)}
+                  />
+                </Col>
+              </Row>
+            ) : (
+              <Col xs={2}></Col>
+            )}
+          </Row>
           <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
             <div>
               <Table

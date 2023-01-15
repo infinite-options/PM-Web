@@ -24,6 +24,7 @@ import CreateRevenue from "../CreateRevenue";
 import ManagerTenantApplications from "./ManagerTenantApplications";
 import ManagerTenantProfileView from "./ManagerTenantProfileView";
 import PropertyManagerDocs from "./PropertyManagerDocs";
+import PropertyAppliances from "../PropertyAppliances";
 import AppContext from "../../AppContext";
 import ManagerManagementContract from "./ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
@@ -215,6 +216,7 @@ function ManagerPropertyView(props) {
   const [monthlyRevenue, setMonthlyRevenue] = useState(false);
   const [monthlyRent, setMonthlyRent] = useState(false);
   const [monthlyExtra, setMonthlyExtra] = useState(false);
+  const [monthlyLateFee, setMonthlyLateFee] = useState(false);
   const [monthlyUtility, setMonthlyUtility] = useState(false);
   const [monthlyManagement, setMonthlyManagement] = useState(false);
   const [monthlyMaintenanceRevenue, setMonthlyMaintenanceRevenue] =
@@ -230,6 +232,7 @@ function ManagerPropertyView(props) {
   const [yearlyRevenue, setYearlyRevenue] = useState(false);
   const [yearlyRent, setYearlyRent] = useState(false);
   const [yearlyExtra, setYearlyExtra] = useState(false);
+  const [yearlyLateFee, setYearlyLateFee] = useState(false);
   const [yearlyManagement, setYearlyManagement] = useState(false);
   const [yearlyUtility, setYearlyUtility] = useState(false);
   const [yearlyMaintenanceRevenue, setYearlyMaintenanceRevenue] =
@@ -335,6 +338,16 @@ function ManagerPropertyView(props) {
         setSelectedAgreement(rental);
       }
     });
+    property_details.applications.forEach((application) => {
+      if (
+        application.application_status === "FORWARDED" ||
+        application.application_status === "ACCEPTED" ||
+        application.application_status === "PM END EARLY" ||
+        application.application_status === "TENANT END EARLY"
+      ) {
+        setAcceptedTenantApplications([application]);
+      }
+    });
     let recent_mr = [];
     let past_mr = [];
     // console.log(property_details.maintenanceRequests);
@@ -352,6 +365,9 @@ function ManagerPropertyView(props) {
 
   const headerBack = () => {
     if (editAppliances && editProperty) {
+      setEditAppliances(false);
+    } else if (editAppliances) {
+      reloadProperty();
       setEditAppliances(false);
     } else {
       editProperty
@@ -400,7 +416,7 @@ function ManagerPropertyView(props) {
   };
   const selectAgreement = (agreement) => {
     setSelectedAgreement(agreement);
-    setShowTenantAgreementEdit(true);
+    setShowTenantAgreement(true);
   };
   const closeAgreement = () => {
     // reload();
@@ -567,6 +583,7 @@ function ManagerPropertyView(props) {
   revenueTotal = (
     cashflowData.rental_revenue +
     cashflowData.extra_revenue +
+    cashflowData.latefee_revenue +
     cashflowData.utility_revenue +
     cashflowData.management_revenue +
     cashflowData.maintenance_revenue +
@@ -586,6 +603,7 @@ function ManagerPropertyView(props) {
   revenueTotalAmortized = (
     cashflowData.amortized_rental_revenue +
     cashflowData.amortized_extra_revenue +
+    cashflowData.amortized_latefee_revenue +
     cashflowData.amortized_utility_revenue +
     cashflowData.amortized_management_revenue +
     cashflowData.amortized_maintenance_revenue +
@@ -615,6 +633,7 @@ function ManagerPropertyView(props) {
   yearRevenueTotal = (
     cashflowData.rental_year_revenue +
     cashflowData.extra_year_revenue +
+    cashflowData.latefee_year_revenue +
     cashflowData.utility_year_revenue +
     cashflowData.management_year_revenue +
     cashflowData.maintenance_year_revenue +
@@ -634,6 +653,7 @@ function ManagerPropertyView(props) {
   yearRevenueTotalAmortized = (
     cashflowData.amortized_rental_year_revenue +
     cashflowData.amortized_extra_year_revenue +
+    cashflowData.amortized_latefee_year_revenue +
     cashflowData.amortized_utility_year_revenue +
     cashflowData.amortized_management_year_revenue +
     cashflowData.amortized_maintenance_year_revenue +
@@ -647,6 +667,7 @@ function ManagerPropertyView(props) {
   revenueExpectedTotal = (
     cashflowData.rental_expected_revenue +
     cashflowData.extra_expected_revenue +
+    cashflowData.latefee_expected_revenue +
     cashflowData.utility_expected_revenue +
     cashflowData.management_expected_revenue +
     cashflowData.maintenance_expected_revenue +
@@ -670,6 +691,7 @@ function ManagerPropertyView(props) {
   revenueExpectedTotalAmortized = (
     cashflowData.amortized_rental_expected_revenue +
     cashflowData.amortized_extra_expected_revenue +
+    cashflowData.amortized_latefee_expected_revenue +
     cashflowData.amortized_utility_expected_revenue +
     cashflowData.amortized_management_expected_revenue +
     cashflowData.amortized_maintenance_expected_revenue +
@@ -692,6 +714,7 @@ function ManagerPropertyView(props) {
   yearRevenueExpectedTotal = (
     cashflowData.rental_year_expected_revenue +
     cashflowData.extra_year_expected_revenue +
+    cashflowData.latefee_year_expected_revenue +
     cashflowData.utility_year_expected_revenue +
     cashflowData.management_year_expected_revenue +
     cashflowData.maintenance_year_expected_revenue +
@@ -714,6 +737,7 @@ function ManagerPropertyView(props) {
   yearRevenueExpectedTotalAmortized = (
     cashflowData.amortized_rental_year_expected_revenue +
     cashflowData.amortized_extra_year_expected_revenue +
+    cashflowData.amortized_latefee_year_expected_revenue +
     cashflowData.amortized_utility_year_expected_revenue +
     cashflowData.amortized_management_year_expected_revenue +
     cashflowData.amortized_maintenance_year_expected_revenue +
@@ -743,14 +767,6 @@ function ManagerPropertyView(props) {
       />
     ) : showTenantAgreement ? (
       <ManagerTenantAgreement
-        back={closeAgreement}
-        property={property}
-        agreement={selectedAgreement}
-        acceptedTenantApplications={acceptedTenantApplications}
-        setAcceptedTenantApplications={setAcceptedTenantApplications}
-      />
-    ) : showTenantAgreementEdit ? (
-      <ManagerTenantAgreementEdit
         back={closeAgreement}
         property={property}
         agreement={selectedAgreement}
@@ -794,6 +810,25 @@ function ManagerPropertyView(props) {
                 hideEdit={hideEdit}
                 onSubmit={reloadProperty}
               />
+            ) : editAppliances ? (
+              <div className="d-flex flex-column w-100 overflow-hidden p-2">
+                <div
+                  className="mx-3 my-3 p-0"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
+                    opacity: 1,
+                  }}
+                >
+                  <PropertyAppliances
+                    state={applianceState}
+                    property={property}
+                    editAppliances={editAppliances}
+                    setEditAppliances={setEditAppliances}
+                    edit={true}
+                  />
+                </div>
+              </div>
             ) : showTenantProfile ? (
               <ManagerTenantProfileView
                 back={closeTenantApplication}
@@ -908,6 +943,7 @@ function ManagerPropertyView(props) {
                                   setMonthlyExpense(false);
                                   setMonthlyRent(false);
                                   setMonthlyExtra(false);
+                                  setMonthlyLateFee(false);
                                   setMonthlyUtility(false);
                                   setMonthlyManagement(false);
                                   setMonthlyOwnerPayment(false);
@@ -932,6 +968,7 @@ function ManagerPropertyView(props) {
                                   setMonthlyExpense(false);
                                   setMonthlyRent(false);
                                   setMonthlyExtra(false);
+                                  setMonthlyLateFee(false);
                                   setMonthlyUtility(false);
                                   setMonthlyManagement(false);
                                   setMonthlyOwnerPayment(false);
@@ -980,6 +1017,7 @@ function ManagerPropertyView(props) {
                                   setMonthlyRevenue(!monthlyRevenue);
                                   setMonthlyRent(false);
                                   setMonthlyExtra(false);
+                                  setMonthlyLateFee(false);
                                   setMonthlyUtility(false);
                                   setMonthlyManagement(false);
                                   setMonthlyMaintenanceRevenue(false);
@@ -998,6 +1036,7 @@ function ManagerPropertyView(props) {
                                   setMonthlyRevenue(!monthlyRevenue);
                                   setMonthlyRent(false);
                                   setMonthlyExtra(false);
+                                  setMonthlyLateFee(false);
                                   setMonthlyUtility(false);
                                   setMonthlyManagement(false);
                                   setMonthlyMaintenanceRevenue(false);
@@ -1243,6 +1282,162 @@ function ManagerPropertyView(props) {
                                     <TableCell>
                                       &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                       {revenue.unit} <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
+
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          <TableRow hidden={!monthlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Late Fee{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={monthlyLateFee}
+                                onClick={() =>
+                                  setMonthlyLateFee(!monthlyLateFee)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!monthlyLateFee}
+                                onClick={() =>
+                                  setMonthlyLateFee(!monthlyLateFee)
+                                }
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.latefee_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.latefee_expected_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.latefee_revenue -
+                                cashflowData.latefee_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_latefee_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_latefee_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_latefee_revenue -
+                                cashflowData.amortized_latefee_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+
+                          {isLoading === false &&
+                            cashflowData.manager_revenue.map(
+                              (revenue, index) => {
+                                // console.log("revenue", revenue);
+
+                                return revenue.purchase_type === "LATE FEE" ? (
+                                  <TableRow hidden={!monthlyLateFee}>
+                                    {/* {console.log("in rent", revenue)} */}
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
                                       &nbsp;&nbsp;&nbsp; {
                                         revenue.description
                                       }{" "}
@@ -2637,6 +2832,7 @@ function ManagerPropertyView(props) {
                                   setYearlyExpense(false);
                                   setYearlyRent(false);
                                   setYearlyExtra(false);
+                                  setYearlyLateFee(false);
                                   setYearlyUtility(false);
                                   setYearlyManagement(false);
                                   setYearlyMaintenanceRevenue(false);
@@ -2660,6 +2856,7 @@ function ManagerPropertyView(props) {
                                   setYearlyExpense(false);
                                   setYearlyRent(false);
                                   setYearlyExtra(false);
+                                  setYearlyLateFee(false);
                                   setYearlyUtility(false);
                                   setYearlyManagement(false);
                                   setYearlyMaintenanceRevenue(false);
@@ -2710,6 +2907,7 @@ function ManagerPropertyView(props) {
                                   setYearlyRevenue(!yearlyRevenue);
                                   setYearlyRent(false);
                                   setYearlyExtra(false);
+                                  setYearlyLateFee(false);
                                   setYearlyUtility(false);
                                   setYearlyManagement(false);
                                   setYearlyMaintenanceRevenue(false);
@@ -2728,6 +2926,7 @@ function ManagerPropertyView(props) {
                                   setYearlyRevenue(!yearlyRevenue);
                                   setYearlyRent(false);
                                   setYearlyExtra(false);
+                                  setYearlyLateFee(false);
                                   setYearlyUtility(false);
                                   setYearlyManagement(false);
                                   setYearlyMaintenanceRevenue(false);
@@ -3067,7 +3266,156 @@ function ManagerPropertyView(props) {
                                 );
                               }
                             )}
+                          <TableRow hidden={!yearlyRevenue}>
+                            <TableCell width="180px">
+                              &nbsp;&nbsp; Late Fee{" "}
+                              <img
+                                src={SortLeft}
+                                hidden={yearlyLateFee}
+                                onClick={() => setYearlyLateFee(!yearlyLateFee)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                              <img
+                                src={SortDown}
+                                hidden={!yearlyLateFee}
+                                onClick={() => setYearlyLateFee(!yearlyLateFee)}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  float: "right",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              ${cashflowData.latefee_year_revenue.toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.latefee_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.latefee_year_revenue -
+                                cashflowData.latefee_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_latefee_year_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {cashflowData.amortized_latefee_year_expected_revenue.toFixed(
+                                2
+                              )}
+                            </TableCell>
+                            <TableCell width="180px" align="right">
+                              $
+                              {(
+                                cashflowData.amortized_latefee_year_revenue -
+                                cashflowData.amortized_latefee_year_expected_revenue
+                              ).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                          {isLoading === false &&
+                            cashflowData.manager_revenue_yearly.map(
+                              (revenue, index) => {
+                                return revenue.purchase_type === "LATE FEE" ? (
+                                  <TableRow hidden={!yearlyLateFee}>
+                                    <TableCell>
+                                      &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                      {revenue.unit}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp; {
+                                        revenue.description
+                                      }{" "}
+                                      <br />
+                                      &nbsp;&nbsp;&nbsp;{" "}
+                                      {revenue.purchase_frequency}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={green}
+                                      >
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    )}
 
+                                    {revenue.purchase_status === "UNPAID" ? (
+                                      <TableCell
+                                        width="180px"
+                                        align="right"
+                                        style={red}
+                                      >
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        ${revenue.amount_due.toFixed(2)}
+                                      </TableCell>
+                                    )}
+                                    <TableCell width="180px" align="right">
+                                      $
+                                      {(
+                                        revenue.amount_paid - revenue.amount_due
+                                      ).toFixed(2)}
+                                    </TableCell>
+                                    {revenue.purchase_status === "PAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_paid / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_status === "UNPAID" &&
+                                    revenue.purchase_frequency == "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        ${(revenue.amount_due / 12).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                    {revenue.purchase_frequency ==
+                                    "Annually" ? (
+                                      <TableCell width="180px" align="right">
+                                        $
+                                        {(
+                                          (revenue.amount_paid -
+                                            revenue.amount_due) /
+                                          12
+                                        ).toFixed(2)}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell width="180px" align="right">
+                                        $0.00
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
                           <TableRow hidden={!yearlyRevenue}>
                             <TableCell width="180px">
                               &nbsp; &nbsp;Management{" "}
@@ -4633,6 +4981,25 @@ function ManagerPropertyView(props) {
                           </TableCell>
                         </TableRow>
                       </Table>
+                      <Table
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                        responsive="md"
+                      >
+                        {" "}
+                        <TableRow>
+                          <TableCell style={{ width: "149px" }}>
+                            Notes
+                          </TableCell>
+                          <TableCell>
+                            {property.notes == "null" ||
+                            property.notes == "" ||
+                            property.notes == null
+                              ? "Not Available"
+                              : property.notes}
+                          </TableCell>
+                        </TableRow>
+                      </Table>
                     </div>
                   </Row>
                 </div>
@@ -4826,8 +5193,8 @@ function ManagerPropertyView(props) {
                         <img
                           src={EditIconNew}
                           onClick={() => {
-                            window.scrollTo(0, 1000);
-                            setEditProperty(true);
+                            window.scrollTo(0, 0);
+                            setEditAppliances(true);
                           }}
                           style={{
                             width: "30px",
@@ -5114,29 +5481,12 @@ function ManagerPropertyView(props) {
                     opacity: 1,
                   }}
                 >
-                  <Row className="m-3">
-                    <Col>
-                      <h3>Tenant Info</h3>
-                    </Col>
-                    <Col xs={2}>
-                      <img
-                        src={EditIconNew}
-                        alt="Edit"
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          float: "right",
-                          marginRight: "5rem",
-                        }}
-                        onClick={() => selectAgreement(selectedAgreement)}
-                      />
-                    </Col>
-                  </Row>
                   <Row style={{ overflow: "scroll" }}>
                     <ManagerTenantAgreementView
                       property={property}
                       closeAgreement={closeAgreement}
                       selectedAgreement={selectedAgreement}
+                      selectAgreement={selectAgreement}
                       renewLease={renewLease}
                       acceptedTenantApplications={acceptedTenantApplications}
                       setAcceptedTenantApplications={

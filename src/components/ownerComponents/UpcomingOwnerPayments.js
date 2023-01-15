@@ -73,63 +73,7 @@ export default function UpcomingOwnerPayments(props) {
       });
     }
   }
-  const rows = rents.map((row, index) => {
-    //row is an element in the array
-    if (row.purchase_status == "UNPAID") {
-      return (
-        <TableRow>
-          <TableCell align="center">{row.purchase_uid}</TableCell>
-          <TableCell align="center">
-            {"" +
-              row.address +
-              " " +
-              row.unit +
-              "," +
-              row.city +
-              ", " +
-              row.state +
-              " " +
-              row.zip}
-          </TableCell>
-          <TableCell align="center">
-            {row.purchase_frequency === "One-time" ||
-            row.purchase_frequency === "Annually"
-              ? row.description
-              : row.purchase_notes + " " + row.description}
-          </TableCell>
-          <TableCell align="center">{row.purchase_type}</TableCell>
 
-          <TableCell align="center">{row.receiver}</TableCell>
-          <TableCell
-            align="center"
-            style={{
-              color: new Date(row.next_payment) < new Date() ? "red" : "green",
-            }}
-          >
-            {row.next_payment.substring(0, 10)}
-          </TableCell>
-          <TableCell align="center">
-            {props.type ? (
-              <button className="yellow payB" onClick={goToPayment}>
-                Pay
-              </button>
-            ) : (
-              <label>
-                <input
-                  className="check"
-                  type="checkbox"
-                  onClick={(event) =>
-                    handleCheck(event, row.amount_due, row.purchase_uid)
-                  }
-                />
-              </label>
-            )}
-          </TableCell>
-          <TableCell align="right">{row.amount_due.toFixed(2)}</TableCell>
-        </TableRow>
-      );
-    }
-  });
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");

@@ -710,21 +710,6 @@ function ManagerTenantAgreement(props) {
               <Col>
                 <Form.Group>
                   <Form.Label as="h6" className="mb-0 ms-2">
-                    Late Fee (one-time) {lateFee === "" ? required : ""}
-                  </Form.Label>
-                  <Form.Control
-                    value={lateFee}
-                    type="number"
-                    min="0"
-                    style={squareForm}
-                    placeholder="amount($)"
-                    onChange={(e) => setLateFee(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label as="h6" className="mb-0 ms-2">
                     Late fees after (days)
                     {lateAfter === "" ? required : ""}
                   </Form.Label>
@@ -735,6 +720,21 @@ function ManagerTenantAgreement(props) {
                     type="number"
                     min="0"
                     onChange={(e) => setLateAfter(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Late Fee (one-time) {lateFee === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    value={lateFee}
+                    type="number"
+                    min="0"
+                    style={squareForm}
+                    placeholder="amount($)"
+                    onChange={(e) => setLateFee(e.target.value)}
                   />
                 </Form.Group>
               </Col>
