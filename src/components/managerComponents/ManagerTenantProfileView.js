@@ -741,9 +741,9 @@ function ManagerTenantProfileView(props) {
                           </TableCell>
 
                           <TableCell>{fee.frequency}</TableCell>
-                          <TableCell>{`${ordinal_suffix_of(
-                            fee.available_topay
-                          )} of the month`}</TableCell>
+                          <TableCell>
+                            {`${fee.available_topay} days before`}
+                          </TableCell>
                           <TableCell>
                             {fee.due_by == ""
                               ? `1st of the month`
