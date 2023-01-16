@@ -341,7 +341,7 @@ function ManagerPropertyView(props) {
     property_details.applications.forEach((application) => {
       if (
         application.application_status === "FORWARDED" ||
-        application.application_status === "ACCEPTED" ||
+        application.application_status === "RENTED" ||
         application.application_status === "PM END EARLY" ||
         application.application_status === "TENANT END EARLY"
       ) {
@@ -362,7 +362,7 @@ function ManagerPropertyView(props) {
     // console.log(recent_mr, past_mr);
     setIsLoading(false);
   };
-
+  console.log(acceptedTenantApplications);
   const headerBack = () => {
     if (editAppliances && editProperty) {
       setEditAppliances(false);
