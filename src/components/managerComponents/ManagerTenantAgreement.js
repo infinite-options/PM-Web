@@ -258,6 +258,50 @@ function ManagerTenantAgreement(props) {
       } else {
       }
     }
+    for (let i = 0; i < feeState.length; i++) {
+      if (feeState[i]["fee_name"] === "Rent") {
+        if (feeState[i]["charge"] !== property.listed_rent) {
+          const updateRent = {
+            property_uid: property.property_uid,
+            listed_rent: feeState[i]["charge"],
+          };
+
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateRent[key] = images[i + 1];
+          }
+
+          const response = await put("/properties", updateRent, null, images);
+        }
+      } else if (feeState[i]["fee_name"] === "Deposit") {
+        if (feeState[i]["charge"] !== property.deposit) {
+          const updateDeposit = {
+            property_uid: property.property_uid,
+            deposit: feeState[i]["charge"],
+          };
+
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateDeposit[key] = images[i + 1];
+          }
+
+          const response = await put(
+            "/properties",
+            updateDeposit,
+            null,
+            images
+          );
+        }
+      }
+    }
     const newAgreement = {
       rental_property_id: property.property_uid,
       tenant_id: null,
