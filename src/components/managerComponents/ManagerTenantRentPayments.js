@@ -126,6 +126,15 @@ function ManagerTenantRentPayments(props) {
       newFeeState.push({ ...rentFee });
       // console.log(rentFee);
       // console.log(depositFee);
+
+      for (let i = 0; i < feeState.length; i++) {
+        if (
+          feeState[i]["fee_name"] !== "Deposit" &&
+          feeState[i]["fee_name"] !== "Rent"
+        ) {
+          newFeeState.push(feeState[i]);
+        }
+      }
       setFeeState(newFeeState);
     }
   }, [available, dueDate, lateAfter, lateFee, lateFeePer]);
@@ -226,9 +235,7 @@ function ManagerTenantRentPayments(props) {
               </TableCell>
               <TableCell>{fee.fee_type === "%" ? `${fee.of}` : ""}</TableCell>
               <TableCell>{fee.frequency}</TableCell>
-              <TableCell>{`${ordinal_suffix_of(
-                fee.available_topay
-              )} of the month`}</TableCell>
+              <TableCell>{`${fee.available_topay} days before`}</TableCell>
               <TableCell>
                 {fee.due_by == ""
                   ? `1st of the month`
