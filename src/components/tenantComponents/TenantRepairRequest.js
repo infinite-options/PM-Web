@@ -144,11 +144,11 @@ function TenantRepairRequest(props) {
           </Form.Select>
         ) : (
           <Row style={formLabel} as="h5" className="ms-1 mb-0">
-            {properties[0].address} {properties[0].unit}
+            {properties.address} {properties.unit}
             ,&nbsp;
-            {properties[0].city}
+            {properties.city}
             ,&nbsp;
-            {properties[0].state}&nbsp; {properties[0].zip}
+            {properties.state}&nbsp; {properties.zip}
           </Row>
         )}
       </Form.Group>

@@ -273,6 +273,7 @@ function BusinessProfileInfo(props) {
         <ManagerLocations
           locationState={locationState}
           setLocationState={setLocationState}
+          editProfile={true}
         />
 
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>

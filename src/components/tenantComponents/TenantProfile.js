@@ -62,6 +62,7 @@ function TenantProfile(props) {
   const [dlNumber, setDLNumber] = useState("");
   const defaultState = "--";
   const [selectedState, setSelectedState] = useState(defaultState);
+  const [selectedDlState, setSelectedDlState] = useState(defaultState);
   const [selectedPrevState, setSelectedPrevState] = useState(defaultState);
   const { autofillState, setAutofillState } = props;
   const [width, setWindowWidth] = useState(0);
@@ -202,6 +203,7 @@ function TenantProfile(props) {
       setJobTitle(response.result[0].tenant_current_job_title);
       setCompany(response.result[0].tenant_current_job_company);
       setDLNumber(response.result[0].tenant_drivers_license_number);
+      setSelectedDlState(response.result[0].tenant_drivers_license_state);
       setCompany(response.result[0].tenant_current_job_company);
 
       setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
@@ -253,7 +255,7 @@ function TenantProfile(props) {
       current_job_company: company,
       ssn: ssn,
       drivers_license_number: dlNumber,
-      drivers_license_state: "CA",
+      drivers_license_state: selectedDlState,
       current_address: JSON.stringify(currentAddressState[0]),
       previous_address: usePreviousAddress
         ? JSON.stringify(previousAddressState[0])
@@ -289,6 +291,68 @@ function TenantProfile(props) {
     "Annual",
     "Hourly Rate",
   ];
+  const usDlStates = [
+    { name: "ALABAMA", abbreviation: "AL" },
+    { name: "ALASKA", abbreviation: "AK" },
+    { name: "AMERICAN SAMOA", abbreviation: "AS" },
+    { name: "ARIZONA", abbreviation: "AZ" },
+    { name: "ARKANSAS", abbreviation: "AR" },
+    { name: "CALIFORNIA", abbreviation: "CA" },
+    { name: "COLORADO", abbreviation: "CO" },
+    { name: "CONNECTICUT", abbreviation: "CT" },
+    { name: "DELAWARE", abbreviation: "DE" },
+    { name: "DISTRICT OF COLUMBIA", abbreviation: "DC" },
+    { name: "FEDERATED STATES OF MICRONESIA", abbreviation: "FM" },
+    { name: "FLORIDA", abbreviation: "FL" },
+    { name: "GEORGIA", abbreviation: "GA" },
+    { name: "GUAM", abbreviation: "GU" },
+    { name: "HAWAII", abbreviation: "HI" },
+    { name: "IDAHO", abbreviation: "ID" },
+    { name: "ILLINOIS", abbreviation: "IL" },
+    { name: "INDIANA", abbreviation: "IN" },
+    { name: "IOWA", abbreviation: "IA" },
+    { name: "KANSAS", abbreviation: "KS" },
+    { name: "KENTUCKY", abbreviation: "KY" },
+    { name: "LOUISIANA", abbreviation: "LA" },
+    { name: "MAINE", abbreviation: "ME" },
+    { name: "MARSHALL ISLANDS", abbreviation: "MH" },
+    { name: "MARYLAND", abbreviation: "MD" },
+    { name: "MASSACHUSETTS", abbreviation: "MA" },
+    { name: "MICHIGAN", abbreviation: "MI" },
+    { name: "MINNESOTA", abbreviation: "MN" },
+    { name: "MISSISSIPPI", abbreviation: "MS" },
+    { name: "MISSOURI", abbreviation: "MO" },
+    { name: "MONTANA", abbreviation: "MT" },
+    { name: "NEBRASKA", abbreviation: "NE" },
+    { name: "NEVADA", abbreviation: "NV" },
+    { name: "NEW HAMPSHIRE", abbreviation: "NH" },
+    { name: "NEW JERSEY", abbreviation: "NJ" },
+    { name: "NEW MEXICO", abbreviation: "NM" },
+    { name: "NEW YORK", abbreviation: "NY" },
+    { name: "NORTH CAROLINA", abbreviation: "NC" },
+    { name: "NORTH DAKOTA", abbreviation: "ND" },
+    { name: "NORTHERN MARIANA ISLANDS", abbreviation: "MP" },
+    { name: "OHIO", abbreviation: "OH" },
+    { name: "OKLAHOMA", abbreviation: "OK" },
+    { name: "OREGON", abbreviation: "OR" },
+    { name: "PALAU", abbreviation: "PW" },
+    { name: "PENNSYLVANIA", abbreviation: "PA" },
+    { name: "PUERTO RICO", abbreviation: "PR" },
+    { name: "RHODE ISLAND", abbreviation: "RI" },
+    { name: "SOUTH CAROLINA", abbreviation: "SC" },
+    { name: "SOUTH DAKOTA", abbreviation: "SD" },
+    { name: "TENNESSEE", abbreviation: "TN" },
+    { name: "TEXAS", abbreviation: "TX" },
+    { name: "UTAH", abbreviation: "UT" },
+    { name: "VERMONT", abbreviation: "VT" },
+    { name: "VIRGIN ISLANDS", abbreviation: "VI" },
+    { name: "VIRGINIA", abbreviation: "VA" },
+    { name: "WASHINGTON", abbreviation: "WA" },
+    { name: "WEST VIRGINIA", abbreviation: "WV" },
+    { name: "WISCONSIN", abbreviation: "WI" },
+    { name: "WYOMING", abbreviation: "WY" },
+  ];
+
   const updatePassword = async (u) => {
     if (password === "" || confirmPassword === "") {
       setErrorMessage("Please fill out all fields");
@@ -886,6 +950,22 @@ function TenantProfile(props) {
                       />
                     </Form.Group>
                   </Col>
+                  {/* <Col>
+                    {" "}
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Driver's License Number
+                      </Form.Label>
+                      <Form.Control
+                        style={squareForm}
+                        placeholder="1234567890"
+                        value={dlNumber}
+                        onChange={(e) => setDLNumber(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col> */}
+                </Row>
+                <Row>
                   <Col>
                     {" "}
                     <Form.Group className="my-2">
@@ -898,6 +978,25 @@ function TenantProfile(props) {
                         value={dlNumber}
                         onChange={(e) => setDLNumber(e.target.value)}
                       />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="my-2">
+                      <Form.Label as="h6" className="mb-0 ms-2">
+                        Driver's License State{" "}
+                        {selectedDlState === "" ? required : ""}
+                      </Form.Label>
+                      <Form.Select
+                        style={{
+                          ...squareForm,
+                        }}
+                        value={selectedDlState}
+                        onChange={(e) => setSelectedDlState(e.target.value)}
+                      >
+                        {usDlStates.map((state, i) => (
+                          <option key={i}>{state.abbreviation}</option>
+                        ))}
+                      </Form.Select>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -1047,6 +1146,14 @@ function TenantProfile(props) {
                         : "No DL Provided"}
                     </p>
                   </Col>
+                  <Col>
+                    <h6>DL State</h6>
+                    <p style={gray}>
+                      {selectedDlState && selectedDlState !== "NULL"
+                        ? selectedDlState
+                        : "No DL state Provided"}
+                    </p>
+                  </Col>
                 </Row>
               </div>
               <div className="my-2">
@@ -1148,6 +1255,8 @@ function TenantProfile(props) {
                   <h5 className="mx-2 my-3">Previous Address</h5>
                   <AddressForm
                     editProfile={editProfile}
+                    hideRentingCheckbox="true"
+                    errorMessage={errorMessage}
                     state={previousAddressState}
                     selectedState={selectedPrevState}
                     setSelectedState={setSelectedPrevState}

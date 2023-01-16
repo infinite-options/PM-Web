@@ -67,6 +67,7 @@ export default function ManagerDashboard() {
   const [monthlyRevenue, setMonthlyRevenue] = useState(false);
   const [monthlyRent, setMonthlyRent] = useState(false);
   const [monthlyExtra, setMonthlyExtra] = useState(false);
+  const [monthlyLateFee, setMonthlyLateFee] = useState(false);
   const [monthlyUtility, setMonthlyUtility] = useState(false);
   const [monthlyManagement, setMonthlyManagement] = useState(false);
   const [monthlyMaintenanceRevenue, setMonthlyMaintenanceRevenue] =
@@ -82,6 +83,7 @@ export default function ManagerDashboard() {
   const [yearlyRevenue, setYearlyRevenue] = useState(false);
   const [yearlyRent, setYearlyRent] = useState(false);
   const [yearlyExtra, setYearlyExtra] = useState(false);
+  const [yearlyLateFee, setYearlyLateFee] = useState(false);
   const [yearlyUtility, setYearlyUtility] = useState(false);
   const [yearlyManagement, setYearlyManagement] = useState(false);
   const [yearlyMaintenanceRevenue, setYearlyMaintenanceRevenue] =
@@ -624,6 +626,7 @@ export default function ManagerDashboard() {
   revenueTotal = (
     cashflowData.rental_revenue +
     cashflowData.extra_revenue +
+    cashflowData.latefee_revenue +
     cashflowData.utility_revenue +
     cashflowData.management_revenue +
     cashflowData.maintenance_revenue +
@@ -643,6 +646,7 @@ export default function ManagerDashboard() {
   revenueTotalAmortized = (
     cashflowData.amortized_rental_revenue +
     cashflowData.amortized_extra_revenue +
+    cashflowData.amortized_latefee_revenue +
     cashflowData.amortized_utility_revenue +
     cashflowData.amortized_management_revenue +
     cashflowData.amortized_maintenance_revenue +
@@ -672,6 +676,7 @@ export default function ManagerDashboard() {
   yearRevenueTotal = (
     cashflowData.rental_year_revenue +
     cashflowData.extra_year_revenue +
+    cashflowData.latefee_year_revenue +
     cashflowData.utility_year_revenue +
     cashflowData.management_year_revenue +
     cashflowData.maintenance_year_revenue +
@@ -691,6 +696,7 @@ export default function ManagerDashboard() {
   yearRevenueTotalAmortized = (
     cashflowData.amortized_rental_year_revenue +
     cashflowData.amortized_extra_year_revenue +
+    cashflowData.amortized_latefee_year_revenue +
     cashflowData.amortized_utility_year_revenue +
     cashflowData.amortized_management_year_revenue +
     cashflowData.amortized_maintenance_year_revenue +
@@ -704,6 +710,7 @@ export default function ManagerDashboard() {
   revenueExpectedTotal = (
     cashflowData.rental_expected_revenue +
     cashflowData.extra_expected_revenue +
+    cashflowData.latefee_expected_revenue +
     cashflowData.utility_expected_revenue +
     cashflowData.management_expected_revenue +
     cashflowData.maintenance_expected_revenue +
@@ -727,6 +734,7 @@ export default function ManagerDashboard() {
   revenueExpectedTotalAmortized = (
     cashflowData.amortized_rental_expected_revenue +
     cashflowData.amortized_extra_expected_revenue +
+    cashflowData.amortized_latefee_expected_revenue +
     cashflowData.amortized_utility_expected_revenue +
     cashflowData.amortized_management_expected_revenue +
     cashflowData.amortized_maintenance_expected_revenue +
@@ -749,6 +757,7 @@ export default function ManagerDashboard() {
   yearRevenueExpectedTotal = (
     cashflowData.rental_year_expected_revenue +
     cashflowData.extra_year_expected_revenue +
+    cashflowData.latefee_year_expected_revenue +
     cashflowData.utility_year_expected_revenue +
     cashflowData.management_year_expected_revenue +
     cashflowData.maintenance_year_expected_revenue +
@@ -771,6 +780,7 @@ export default function ManagerDashboard() {
   yearRevenueExpectedTotalAmortized = (
     cashflowData.amortized_rental_year_expected_revenue +
     cashflowData.amortized_extra_year_expected_revenue +
+    cashflowData.amortized_latefee_year_expected_revenue +
     cashflowData.amortized_utility_year_expected_revenue +
     cashflowData.amortized_management_year_expected_revenue +
     cashflowData.amortized_maintenance_year_expected_revenue +
@@ -867,6 +877,7 @@ export default function ManagerDashboard() {
                               setMonthlyExpense(false);
                               setMonthlyRent(false);
                               setMonthlyExtra(false);
+                              setMonthlyLateFee(false);
                               setMonthlyUtility(false);
                               setMonthlyManagement(false);
                               setMonthlyOwnerPayment(false);
@@ -891,6 +902,7 @@ export default function ManagerDashboard() {
                               setMonthlyExpense(false);
                               setMonthlyRent(false);
                               setMonthlyExtra(false);
+                              setMonthlyLateFee(false);
                               setMonthlyUtility(false);
                               setMonthlyManagement(false);
                               setMonthlyOwnerPayment(false);
@@ -939,6 +951,7 @@ export default function ManagerDashboard() {
                               setMonthlyRevenue(!monthlyRevenue);
                               setMonthlyRent(false);
                               setMonthlyExtra(false);
+                              setMonthlyLateFee(false);
                               setMonthlyUtility(false);
                               setMonthlyManagement(false);
                               setMonthlyMaintenanceRevenue(false);
@@ -957,6 +970,7 @@ export default function ManagerDashboard() {
                               setMonthlyRevenue(!monthlyRevenue);
                               setMonthlyRent(false);
                               setMonthlyExtra(false);
+                              setMonthlyLateFee(false);
                               setMonthlyUtility(false);
                               setMonthlyManagement(false);
                               setMonthlyMaintenanceRevenue(false);
@@ -1193,6 +1207,146 @@ export default function ManagerDashboard() {
                               <TableCell>
                                 &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                 {revenue.unit} <br />
+                                &nbsp;&nbsp;&nbsp; {revenue.description} <br />
+                                &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
+                              </TableCell>
+                              {revenue.purchase_status === "PAID" ? (
+                                <TableCell
+                                  width="180px"
+                                  align="right"
+                                  style={green}
+                                >
+                                  ${revenue.amount_paid.toFixed(2)}
+                                </TableCell>
+                              ) : (
+                                <TableCell width="180px" align="right">
+                                  ${revenue.amount_paid.toFixed(2)}
+                                </TableCell>
+                              )}
+
+                              {revenue.purchase_status === "UNPAID" ? (
+                                <TableCell
+                                  width="180px"
+                                  align="right"
+                                  style={red}
+                                >
+                                  ${revenue.amount_due.toFixed(2)}
+                                </TableCell>
+                              ) : (
+                                <TableCell width="180px" align="right">
+                                  ${revenue.amount_due.toFixed(2)}
+                                </TableCell>
+                              )}
+                              <TableCell width="180px" align="right">
+                                $
+                                {(
+                                  revenue.amount_paid - revenue.amount_due
+                                ).toFixed(2)}
+                              </TableCell>
+                              {revenue.purchase_status === "PAID" &&
+                              revenue.purchase_frequency == "Annually" ? (
+                                <TableCell width="180px" align="right">
+                                  ${(revenue.amount_paid / 12).toFixed(2)}
+                                </TableCell>
+                              ) : (
+                                <TableCell width="180px" align="right">
+                                  $0.00
+                                </TableCell>
+                              )}
+                              {revenue.purchase_status === "UNPAID" &&
+                              revenue.purchase_frequency == "Annually" ? (
+                                <TableCell width="180px" align="right">
+                                  ${(revenue.amount_due / 12).toFixed(2)}
+                                </TableCell>
+                              ) : (
+                                <TableCell width="180px" align="right">
+                                  $0.00
+                                </TableCell>
+                              )}
+                              {revenue.purchase_frequency == "Annually" ? (
+                                <TableCell width="180px" align="right">
+                                  $
+                                  {(
+                                    (revenue.amount_paid - revenue.amount_due) /
+                                    12
+                                  ).toFixed(2)}
+                                </TableCell>
+                              ) : (
+                                <TableCell width="180px" align="right">
+                                  $0.00
+                                </TableCell>
+                              )}
+                            </TableRow>
+                          ) : (
+                            ""
+                          );
+                        })}
+                      <TableRow hidden={!monthlyRevenue}>
+                        <TableCell width="180px">
+                          &nbsp;&nbsp; Late Fee{" "}
+                          <img
+                            src={SortLeft}
+                            hidden={monthlyLateFee}
+                            onClick={() => setMonthlyLateFee(!monthlyLateFee)}
+                            style={{
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                          <img
+                            src={SortDown}
+                            hidden={!monthlyLateFee}
+                            onClick={() => setMonthlyLateFee(!monthlyLateFee)}
+                            style={{
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          ${cashflowData.latefee_revenue.toFixed(2)}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          ${cashflowData.latefee_expected_revenue.toFixed(2)}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          $
+                          {(
+                            cashflowData.latefee_revenue -
+                            cashflowData.latefee_expected_revenue
+                          ).toFixed(2)}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          ${cashflowData.amortized_latefee_revenue.toFixed(2)}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          $
+                          {cashflowData.amortized_latefee_expected_revenue.toFixed(
+                            2
+                          )}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          $
+                          {(
+                            cashflowData.amortized_latefee_revenue -
+                            cashflowData.amortized_latefee_expected_revenue
+                          ).toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+
+                      {isLoading === false &&
+                        cashflowData.manager_revenue.map((revenue, index) => {
+                          // console.log("revenue", revenue);
+
+                          return revenue.purchase_type === "LATE FEE" ? (
+                            <TableRow hidden={!monthlyLateFee}>
+                              {/* {console.log("in rent", revenue)} */}
+                              <TableCell>
+                                &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                {revenue.unit}
+                                <br />
                                 &nbsp;&nbsp;&nbsp; {revenue.description} <br />
                                 &nbsp;&nbsp;&nbsp; {revenue.purchase_frequency}
                               </TableCell>
@@ -2464,6 +2618,7 @@ export default function ManagerDashboard() {
                               setYearlyExpense(false);
                               setYearlyRent(false);
                               setYearlyExtra(false);
+                              setYearlyLateFee(false);
                               setYearlyUtility(false);
                               setYearlyManagement(false);
                               setYearlyMaintenanceRevenue(false);
@@ -2488,6 +2643,7 @@ export default function ManagerDashboard() {
                               setYearlyRent(false);
                               setYearlyExtra(false);
                               setYearlyUtility(false);
+                              setYearlyLateFee(false);
                               setYearlyManagement(false);
                               setYearlyMaintenanceRevenue(false);
                               setYearlyRepairsRevenue(false);
@@ -2536,6 +2692,7 @@ export default function ManagerDashboard() {
                               setYearlyRevenue(!yearlyRevenue);
                               setYearlyRent(false);
                               setYearlyExtra(false);
+                              setYearlyLateFee(false);
                               setYearlyUtility(false);
                               setYearlyManagement(false);
                               setYearlyMaintenanceRevenue(false);
@@ -2555,6 +2712,7 @@ export default function ManagerDashboard() {
                               setYearlyRent(false);
                               setYearlyExtra(false);
                               setYearlyUtility(false);
+                              setYearlyLateFee(false);
                               setYearlyManagement(false);
                               setYearlyMaintenanceRevenue(false);
                               setYearlyRepairsRevenue(false);
@@ -2879,7 +3037,153 @@ export default function ManagerDashboard() {
                             );
                           }
                         )}
+                      <TableRow hidden={!yearlyRevenue}>
+                        <TableCell width="180px">
+                          &nbsp;&nbsp; Late Fee{" "}
+                          <img
+                            src={SortLeft}
+                            hidden={yearlyLateFee}
+                            onClick={() => setYearlyLateFee(!yearlyLateFee)}
+                            style={{
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                          <img
+                            src={SortDown}
+                            hidden={!yearlyLateFee}
+                            onClick={() => setYearlyLateFee(!yearlyLateFee)}
+                            style={{
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          ${cashflowData.latefee_year_revenue.toFixed(2)}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          $
+                          {cashflowData.latefee_year_expected_revenue.toFixed(
+                            2
+                          )}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          $
+                          {(
+                            cashflowData.latefee_year_revenue -
+                            cashflowData.latefee_year_expected_revenue
+                          ).toFixed(2)}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          $
+                          {cashflowData.amortized_latefee_year_revenue.toFixed(
+                            2
+                          )}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          $
+                          {cashflowData.amortized_latefee_year_expected_revenue.toFixed(
+                            2
+                          )}
+                        </TableCell>
+                        <TableCell width="180px" align="right">
+                          $
+                          {(
+                            cashflowData.amortized_latefee_year_revenue -
+                            cashflowData.amortized_latefee_year_expected_revenue
+                          ).toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                      {isLoading === false &&
+                        cashflowData.manager_revenue_yearly.map(
+                          (revenue, index) => {
+                            return revenue.purchase_type === "LATE FEE" ? (
+                              <TableRow hidden={!yearlyLateFee}>
+                                <TableCell>
+                                  &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
+                                  {revenue.unit}
+                                  <br />
+                                  &nbsp;&nbsp;&nbsp; {revenue.description}{" "}
+                                  <br />
+                                  &nbsp;&nbsp;&nbsp;{" "}
+                                  {revenue.purchase_frequency}
+                                </TableCell>
+                                {revenue.purchase_status === "PAID" ? (
+                                  <TableCell
+                                    width="180px"
+                                    align="right"
+                                    style={green}
+                                  >
+                                    ${revenue.amount_paid.toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    ${revenue.amount_paid.toFixed(2)}
+                                  </TableCell>
+                                )}
 
+                                {revenue.purchase_status === "UNPAID" ? (
+                                  <TableCell
+                                    width="180px"
+                                    align="right"
+                                    style={red}
+                                  >
+                                    ${revenue.amount_due.toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    ${revenue.amount_due.toFixed(2)}
+                                  </TableCell>
+                                )}
+                                <TableCell width="180px" align="right">
+                                  $
+                                  {(
+                                    revenue.amount_paid - revenue.amount_due
+                                  ).toFixed(2)}
+                                </TableCell>
+                                {revenue.purchase_status === "PAID" &&
+                                revenue.purchase_frequency == "Annually" ? (
+                                  <TableCell width="180px" align="right">
+                                    ${(revenue.amount_paid / 12).toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    $0.00
+                                  </TableCell>
+                                )}
+                                {revenue.purchase_status === "UNPAID" &&
+                                revenue.purchase_frequency == "Annually" ? (
+                                  <TableCell width="180px" align="right">
+                                    ${(revenue.amount_due / 12).toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    $0.00
+                                  </TableCell>
+                                )}
+                                {revenue.purchase_frequency == "Annually" ? (
+                                  <TableCell width="180px" align="right">
+                                    $
+                                    {(
+                                      (revenue.amount_paid -
+                                        revenue.amount_due) /
+                                      12
+                                    ).toFixed(2)}
+                                  </TableCell>
+                                ) : (
+                                  <TableCell width="180px" align="right">
+                                    $0.00
+                                  </TableCell>
+                                )}
+                              </TableRow>
+                            ) : (
+                              ""
+                            );
+                          }
+                        )}
                       <TableRow hidden={!yearlyRevenue}>
                         <TableCell width="180px">
                           &nbsp; &nbsp;Management{" "}

@@ -957,6 +957,7 @@ function TenantProfileInfo(props) {
             <AddressForm
               state={previousAddressState}
               hideRentingCheckbox="true"
+              editProfile={true}
               errorMessage={errorMessage}
               selectedState={selectedPrevState}
               setSelectedState={setSelectedPrevState}

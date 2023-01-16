@@ -49,7 +49,7 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  // console.log("here", acceptedTenantApplications);
+  console.log("here", acceptedTenantApplications[0]);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -60,6 +60,7 @@ function ManagerTenantAgreement(props) {
   const contactState = useState([]);
   const [files, setFiles] = useState([]);
 
+  const [rentalStatus, setRentalStatus] = useState("");
   const [newFile, setNewFile] = useState(null);
   const [editingDoc, setEditingDoc] = useState(null);
 
@@ -137,6 +138,7 @@ function ManagerTenantAgreement(props) {
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
     setAvailable(agreement.available_topay);
+    setRentalStatus(agreement.rental_status);
     setDueDate(agreement.due_by);
     setLateAfter(agreement.late_by);
     setLateFee(agreement.late_fee);
@@ -149,6 +151,9 @@ function ManagerTenantAgreement(props) {
   };
   useEffect(() => {
     // console.log("in useeffect", acceptedTenantApplications);
+    if (agreement) {
+      loadAgreement();
+    }
     if (acceptedTenantApplications[0].adults) {
       setAdults(JSON.parse(acceptedTenantApplications[0].adults));
     }
@@ -165,47 +170,102 @@ function ManagerTenantAgreement(props) {
     if (acceptedTenantApplications[0].referred) {
       setReferences(JSON.parse(acceptedTenantApplications[0].referred));
     }
-
-    if (agreement) {
-      loadAgreement();
-    }
   }, [agreement]);
 
   const save = async () => {
     setShowSpinner(true);
-    const newAgreement = {
-      rental_property_id: property.property_uid,
-      tenant_id: acceptedTenantApplications[0].tenant_id,
-      lease_start: startDate,
-      lease_end: endDate,
-      rent_payments: JSON.stringify(feeState),
-      assigned_contacts: JSON.stringify(contactState[0]),
-      adults: adults,
-      children: children,
-      pets: pets,
-      vehicles: vehicles,
-      referred: referred,
-    };
-    newAgreement.linked_application_id = JSON.stringify(
-      acceptedTenantApplications.map(
-        (application) => application.application_uid
-      )
-    );
-    for (let i = 0; i < files.length; i++) {
-      let key = `doc_${i}`;
-      newAgreement[key] = files[i].file;
-      delete files[i].file;
-    }
-    if (agreement) {
+
+    if (agreement.rental_status === "PROCESSING") {
+      // console.log(lateFee);
+      const newAgreement = {
+        rental_property_id: property.property_uid,
+        lease_start: startDate,
+        lease_end: endDate,
+        rental_status: rentalStatus,
+        rent_payments: JSON.stringify(feeState),
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+        assigned_contacts: JSON.stringify(contactState[0]),
+        adults: JSON.stringify(adults),
+        children: JSON.stringify(children),
+        pets: JSON.stringify(pets),
+        vehicles: JSON.stringify(vehicles),
+        referred: JSON.stringify(referred),
+      };
+
+      console.log(newAgreement);
+
+      for (let i = 0; i < files.length; i++) {
+        let key = `doc_${i}`;
+        newAgreement[key] = files[i].file;
+        delete files[i].file;
+      }
+      newAgreement.documents = JSON.stringify(files);
+
+      // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
       // console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
+
+      setShowSpinner(false);
+      back();
     } else {
-      newAgreement.tenant_id = acceptedTenantApplications;
-      const response = await post("/rentals", newAgreement, null, files);
+      console.log(agreement.linked_application_id);
+      for (const application of JSON.parse(agreement.linked_application_id)) {
+        console.log(application);
+
+        const request_body = {
+          application_uid: application,
+          message: "Lease details forwarded for review",
+          application_status: "FORWARDED",
+        };
+        // console.log(request_body)
+        const update_application = await put("/applications", request_body);
+        // console.log(response)
+      }
+
+      const newAgreement = {
+        rental_property_id: property.property_uid,
+        lease_start: startDate,
+        lease_end: endDate,
+        rental_status: "PROCESSING",
+        rent_payments: JSON.stringify(feeState),
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+        assigned_contacts: JSON.stringify(contactState[0]),
+        adults: JSON.stringify(adults),
+        children: JSON.stringify(children),
+        pets: JSON.stringify(pets),
+        vehicles: JSON.stringify(vehicles),
+        referred: JSON.stringify(referred),
+      };
+
+      console.log(newAgreement);
+      // for (let i = 0; i < files.length; i++) {
+      //   let key = `img_${i}`;
+      //   newAgreement[key] = files[i];
+      // }
+      for (let i = 0; i < files.length; i++) {
+        let key = `doc_${i}`;
+        newAgreement[key] = files[i].file;
+        delete files[i].file;
+      }
+      newAgreement.documents = JSON.stringify(files);
+      if (agreement !== null) {
+        // console.log("in if");
+        newAgreement.rental_uid = agreement.rental_uid;
+        // console.log(newAgreement);
+        const response = await put(`/rentals`, newAgreement, null, files);
+      }
+      setShowSpinner(false);
+      back();
     }
-    setShowSpinner(false);
-    back();
   };
   const [errorMessage, setErrorMessage] = useState("");
   const required =
@@ -256,6 +316,50 @@ function ManagerTenantAgreement(props) {
         feeState[i]["late_fee"] = lateFee;
         feeState[i]["perDay_late_fee"] = lateFeePer;
       } else {
+      }
+    }
+    for (let i = 0; i < feeState.length; i++) {
+      if (feeState[i]["fee_name"] === "Rent") {
+        if (feeState[i]["charge"] !== property.listed_rent) {
+          const updateRent = {
+            property_uid: property.property_uid,
+            listed_rent: feeState[i]["charge"],
+          };
+
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateRent[key] = images[i + 1];
+          }
+
+          const response = await put("/properties", updateRent, null, images);
+        }
+      } else if (feeState[i]["fee_name"] === "Deposit") {
+        if (feeState[i]["charge"] !== property.deposit) {
+          const updateDeposit = {
+            property_uid: property.property_uid,
+            deposit: feeState[i]["charge"],
+          };
+
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateDeposit[key] = images[i + 1];
+          }
+
+          const response = await put(
+            "/properties",
+            updateDeposit,
+            null,
+            images
+          );
+        }
       }
     }
     const newAgreement = {
@@ -315,7 +419,11 @@ function ManagerTenantAgreement(props) {
     setShowSpinner(false);
     back();
   };
-
+  const days = (date_1, date_2) => {
+    let difference = date_2.getTime() - date_1.getTime();
+    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+    return TotalDays;
+  };
   const renewLease = async () => {
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
@@ -710,21 +818,6 @@ function ManagerTenantAgreement(props) {
               <Col>
                 <Form.Group>
                   <Form.Label as="h6" className="mb-0 ms-2">
-                    Late Fee (one-time) {lateFee === "" ? required : ""}
-                  </Form.Label>
-                  <Form.Control
-                    value={lateFee}
-                    type="number"
-                    min="0"
-                    style={squareForm}
-                    placeholder="amount($)"
-                    onChange={(e) => setLateFee(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label as="h6" className="mb-0 ms-2">
                     Late fees after (days)
                     {lateAfter === "" ? required : ""}
                   </Form.Label>
@@ -735,6 +828,21 @@ function ManagerTenantAgreement(props) {
                     type="number"
                     min="0"
                     onChange={(e) => setLateAfter(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Late Fee (one-time) {lateFee === "" ? required : ""}
+                  </Form.Label>
+                  <Form.Control
+                    value={lateFee}
+                    type="number"
+                    min="0"
+                    style={squareForm}
+                    placeholder="amount($)"
+                    onChange={(e) => setLateFee(e.target.value)}
                   />
                 </Form.Group>
               </Col>
@@ -768,6 +876,7 @@ function ManagerTenantAgreement(props) {
             <h5 style={mediumBold}>Rent Payments</h5>
             <div className="mx-2">
               <ManagerTenantRentPayments
+                agreement={agreement}
                 feeState={feeState}
                 setFeeState={setFeeState}
                 property={property}
@@ -936,18 +1045,60 @@ function ManagerTenantAgreement(props) {
               </Button>
             </Col>
           </Row>
-
-          <Row className="pt-1 mt-3 mb-2" hidden={agreement === null}>
-            <Col className="d-flex flex-row justify-content-evenly">
-              <Button
-                style={bluePillButton}
-                variant="outline-primary"
-                onClick={() => renewLease()}
+          {acceptedTenantApplications !== [] &&
+          acceptedTenantApplications[0] !== undefined &&
+          agreement !== null ? (
+            <Row className="pt-1 mt-3 mb-2">
+              <div
+                className="text-center"
+                style={errorMessage === "" ? hidden : {}}
               >
-                Forward New Lease Agreement
-              </Button>
-            </Col>
-          </Row>
+                <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
+              </div>
+              <Col className="d-flex justify-content-evenly">
+                <Button
+                  style={bluePillButton}
+                  onClick={save}
+                  hidden={
+                    acceptedTenantApplications[0].application_status !==
+                      "RENTED" &&
+                    acceptedTenantApplications[0].application_status !==
+                      "FORWARDED"
+                  }
+                >
+                  Send Updated Lease Details to Tenant(s)
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
+
+          {agreement !== null ? (
+            <Row
+              className="pt-1 mt-3 mb-2"
+              hidden={
+                (acceptedTenantApplications[0].application_status !==
+                  "RENTED" &&
+                  days(new Date(agreement.lease_end), new Date()) < -30) ||
+                (acceptedTenantApplications[0].application_status !==
+                  "FORWARDED" &&
+                  days(new Date(agreement.lease_end), new Date()) < -30)
+              }
+            >
+              <Col className="d-flex flex-row justify-content-evenly">
+                <Button
+                  style={bluePillButton}
+                  variant="outline-primary"
+                  onClick={() => renewLease()}
+                >
+                  Forward New Lease Agreement
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
         </div>
 
         <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">

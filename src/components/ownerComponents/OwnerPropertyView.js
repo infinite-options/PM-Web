@@ -5868,6 +5868,25 @@ function OwnerPropertyView(props) {
                             </TableCell>
                           </TableRow>
                         </Table>
+                        <Table
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                          responsive="md"
+                        >
+                          {" "}
+                          <TableRow>
+                            <TableCell style={{ width: "136px" }}>
+                              Notes
+                            </TableCell>
+                            <TableCell>
+                              {property.notes == "null" ||
+                              property.notes == "" ||
+                              property.notes == null
+                                ? "Not Available"
+                                : property.notes}
+                            </TableCell>
+                          </TableRow>
+                        </Table>
                       </div>
                     </Row>
                   </div>
