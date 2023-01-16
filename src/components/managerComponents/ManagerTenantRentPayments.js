@@ -95,6 +95,38 @@ function ManagerTenantRentPayments(props) {
       // console.log(rentFee);
       // console.log(depositFee);
       setFeeState(newFeeState);
+    } else {
+      const depositFee = {
+        fee_name: "Deposit",
+        fee_type: "$",
+        charge: property.deposit.toString(),
+        of: "Gross Rent",
+        frequency: "One-time",
+        available_topay: available,
+        due_by: startDate.split("-")[2],
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+      };
+      const rentFee = {
+        fee_name: "Rent",
+        fee_type: "$",
+        charge: property.listed_rent.toString(),
+        of: "Gross Rent",
+        frequency: "Monthly",
+        available_topay: available,
+        due_by: dueDate,
+        late_by: lateAfter,
+        late_fee: lateFee,
+        perDay_late_fee: lateFeePer,
+      };
+
+      const newFeeState = [];
+      newFeeState.push({ ...depositFee });
+      newFeeState.push({ ...rentFee });
+      // console.log(rentFee);
+      // console.log(depositFee);
+      setFeeState(newFeeState);
     }
   }, [available, dueDate, lateAfter, lateFee, lateFeePer]);
 

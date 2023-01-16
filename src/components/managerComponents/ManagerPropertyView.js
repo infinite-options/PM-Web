@@ -420,9 +420,9 @@ function ManagerPropertyView(props) {
   };
   const closeAgreement = () => {
     // reload();
-    setAcceptedTenantApplications([]);
+
     setShowTenantAgreement(false);
-    setShowTenantAgreementEdit(false);
+    setAcceptedTenantApplications([]);
     reloadProperty();
   };
 

@@ -49,7 +49,7 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  console.log("here", acceptedTenantApplications);
+  console.log("here", acceptedTenantApplications[0]);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -197,22 +197,19 @@ function ManagerTenantAgreement(props) {
       };
 
       console.log(newAgreement);
-      // for (let i = 0; i < files.length; i++) {
-      //   let key = `img_${i}`;
-      //   newAgreement[key] = files[i];
-      // }
+
       for (let i = 0; i < files.length; i++) {
         let key = `doc_${i}`;
         newAgreement[key] = files[i].file;
         delete files[i].file;
       }
       newAgreement.documents = JSON.stringify(files);
-      if (agreement !== null) {
-        // console.log("in if");
-        newAgreement.rental_uid = agreement.rental_uid;
-        // console.log(newAgreement);
-        const response = await put(`/rentals`, newAgreement, null, files);
-      }
+
+      // console.log("in if");
+      newAgreement.rental_uid = agreement.rental_uid;
+      // console.log(newAgreement);
+      const response = await put(`/rentals`, newAgreement, null, files);
+
       setShowSpinner(false);
       back();
     } else {
@@ -1048,7 +1045,9 @@ function ManagerTenantAgreement(props) {
               </Button>
             </Col>
           </Row>
-          {acceptedTenantApplications !== [] && agreement !== null ? (
+          {acceptedTenantApplications !== [] &&
+          acceptedTenantApplications[0] !== undefined &&
+          agreement !== null ? (
             <Row className="pt-1 mt-3 mb-2">
               <div
                 className="text-center"
