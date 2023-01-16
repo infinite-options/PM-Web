@@ -45,6 +45,7 @@ function ManagerTenantAgreementView(props) {
     selectAgreement,
     closeAgreement,
   } = props;
+  console.log(props);
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   // console.log(user);
@@ -153,13 +154,13 @@ function ManagerTenantAgreementView(props) {
   const loadAgreement = async (agg) => {
     // console.log("load agreement");
 
-    // console.log("in useeffect");
+    console.log("in useeffect");
     setAgreement(agg);
     setIsLoading(false);
     // loadAgreement(agg);
     let tenant = [];
     let ti = {};
-    // console.log("selectedagg", agg);
+    console.log("selectedagg", agg);
 
     if (agg.tenant_first_name.includes(",")) {
       let tenant_ids = agg.tenant_id.split(",");
@@ -236,6 +237,28 @@ function ManagerTenantAgreementView(props) {
       message: message,
     };
     const response = await put("/endEarly", request_body);
+    const new_announcement = {
+      pm_id: property.managerInfo.linked_business_id,
+      announcement_title: "Requested Lease End",
+      announcement_msg:
+        "Property Manager has requested to end the lease early on " + lastDate,
+      announcement_mode: "Properties",
+      receiver: [agreement.tenant_id],
+      receiver_properties: [property.property_uid],
+    };
+    // setShowSpinner(true);
+    const responseAnnouncement = await post("/announcement", new_announcement);
+    const send_announcement = {
+      announcement_msg: new_announcement.announcement_msg,
+      announcement_title: new_announcement.announcement_title,
+      tenant_name: responseAnnouncement["tenant_name"],
+      tenant_pno: responseAnnouncement["tenant_pno"],
+      tenant_email: responseAnnouncement["tenant_email"],
+    };
+    const resSendAnnouncement = await post(
+      "/SendAnnouncement",
+      send_announcement
+    );
     setPmEndEarly(true);
     setTerminateLease(false);
     closeAgreement();
@@ -259,6 +282,39 @@ function ManagerTenantAgreementView(props) {
       request_body.application_status = "REFUSED";
     }
     const response = await put("/endEarly", request_body);
+    if (request_body.application_status == "PM ENDED") {
+      const newMessage = {
+        sender_name: property.managerInfo.manager_business_name,
+        sender_email: property.managerInfo.manager_email,
+        sender_phone: property.managerInfo.manager_phone_number,
+        message_subject: "End Lease Early Request Accepted",
+        message_details:
+          "Property Manager has accepted your request to end the lease early on " +
+          lastDate,
+        message_created_by: property.managerInfo.manager_id,
+        user_messaged: property.rentalInfo[0].tenant_id,
+        message_status: "PENDING",
+        receiver_email: property.rentalInfo[0].tenant_email,
+      };
+      // console.log(newMessage);
+      const responseMsg = await post("/message", newMessage);
+    } else {
+      const newMessage = {
+        sender_name: property.managerInfo.manager_business_name,
+        sender_email: property.managerInfo.manager_email,
+        sender_phone: property.managerInfo.manager_phone_number,
+        message_subject: "End Lease Early Request Declined",
+        message_details:
+          "Property Manager has refused to end the lease early on " + lastDate,
+        message_created_by: property.managerInfo.manager_id,
+        user_messaged: property.rentalInfo[0].tenant_id,
+        message_status: "PENDING",
+        receiver_email: property.rentalInfo[0].tenant_email,
+      };
+      // console.log(newMessage);
+      const responseMsg = await post("/message", newMessage);
+    }
+
     closeAgreement();
   };
 
@@ -271,6 +327,21 @@ function ManagerTenantAgreementView(props) {
     };
 
     const response = await put("/endEarly", request_body);
+    const newMessage = {
+      sender_name: property.managerInfo.manager_business_name,
+      sender_email: property.managerInfo.manager_email,
+      sender_phone: property.managerInfo.manager_phone_number,
+      message_subject: "End Lease Early Request Withdraw",
+      message_details:
+        "Property Manager has withdrawn the request to end the lease early on " +
+        lastDate,
+      message_created_by: property.managerInfo.manager_id,
+      user_messaged: property.rentalInfo[0].tenant_id,
+      message_status: "PENDING",
+      receiver_email: property.rentalInfo[0].tenant_email,
+    };
+    // console.log(newMessage);
+    const responseMsg = await post("/message", newMessage);
     setTerminateLease(false);
     setPmEndEarly(false);
   };

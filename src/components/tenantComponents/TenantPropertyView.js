@@ -36,7 +36,7 @@ import {
   bluePillButton,
   redPillButton,
 } from "../../utils/styles";
-import { get, put } from "../../utils/api";
+import { get, put, post } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
 
 const useStyles = makeStyles({
@@ -239,6 +239,23 @@ function TenantPropertyView(props) {
       message: message,
     };
     const response = await put("/endEarly", request_body);
+    const newMessage = {
+      sender_name:
+        property.rentalInfo[0].tenant_first_name +
+        " " +
+        property.rentalInfo[0].tenant_last_name,
+      sender_email: property.rentalInfo[0].tenant_email,
+      sender_phone: property.rentalInfo[0].tenant_phone_number,
+      message_subject: "End Lease Early",
+      message_details:
+        "Tenant has requested to end the lease early on " + lastDate,
+      message_created_by: property.rentalInfo[0].tenant_id,
+      user_messaged: property.property_manager[0].manager_id,
+      message_status: "PENDING",
+      receiver_email: property.property_manager[0].manager_email,
+    };
+    // console.log(newMessage);
+    const responseMsg = await post("/message", newMessage);
     setTenantEndEarly(true);
     reloadProperty();
   };
@@ -261,6 +278,44 @@ function TenantPropertyView(props) {
       request_body.application_status = "REFUSED";
     }
     const response = await put("/endEarly", request_body);
+    if (request_body.application_status == "TENANT ENDED") {
+      const newMessage = {
+        sender_name:
+          property.rentalInfo[0].tenant_first_name +
+          " " +
+          property.rentalInfo[0].tenant_last_name,
+        sender_email: property.rentalInfo[0].tenant_email,
+        sender_phone: property.rentalInfo[0].tenant_phone_number,
+        message_subject: "End Lease Early Request Accepted",
+        message_details:
+          "Tenant has accepted your request  to end the lease early on " +
+          lastDate,
+        message_created_by: property.rentalInfo[0].tenant_id,
+        user_messaged: property.property_manager[0].manager_id,
+        message_status: "PENDING",
+        receiver_email: property.property_manager[0].manager_email,
+      };
+      // console.log(newMessage);
+      const responseMsg = await post("/message", newMessage);
+    } else {
+      const newMessage = {
+        sender_name:
+          property.rentalInfo[0].tenant_first_name +
+          " " +
+          property.rentalInfo[0].tenant_last_name,
+        sender_email: property.rentalInfo[0].tenant_email,
+        sender_phone: property.rentalInfo[0].tenant_phone_number,
+        message_subject: "End Lease Early Request Declined",
+        message_details:
+          "Tenant has refused to end the lease early on " + lastDate,
+        message_created_by: property.rentalInfo[0].tenant_id,
+        user_messaged: property.property_manager[0].manager_id,
+        message_status: "PENDING",
+        receiver_email: property.property_manager[0].manager_email,
+      };
+      // console.log(newMessage);
+      const responseMsg = await post("/message", newMessage);
+    }
 
     navigate("../tenant");
   };
@@ -273,6 +328,24 @@ function TenantPropertyView(props) {
     };
 
     const response = await put("/endEarly", request_body);
+    const newMessage = {
+      sender_name:
+        property.rentalInfo[0].tenant_first_name +
+        " " +
+        property.rentalInfo[0].tenant_last_name,
+      sender_email: property.rentalInfo[0].tenant_email,
+      sender_phone: property.rentalInfo[0].tenant_phone_number,
+      message_subject: "End Lease Early Request Withdraw",
+      message_details:
+        "Tenant has withdrawn the request to end the lease early on " +
+        lastDate,
+      message_created_by: property.rentalInfo[0].tenant_id,
+      user_messaged: property.property_manager[0].manager_id,
+      message_status: "PENDING",
+      receiver_email: property.property_manager[0].manager_email,
+    };
+    // console.log(newMessage);
+    const responseMsg = await post("/message", newMessage);
     setTerminateLease(false);
     setTenantEndEarly(false);
   };
@@ -314,7 +387,7 @@ function TenantPropertyView(props) {
       }
     });
   };
-
+  console.log(property);
   useState(() => {
     fetchProperty();
   });
