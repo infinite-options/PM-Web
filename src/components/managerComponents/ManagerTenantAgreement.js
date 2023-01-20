@@ -303,7 +303,7 @@ function ManagerTenantAgreement(props) {
         newAgreement[key] = files[i].file;
         delete files[i].file;
       }
-      newAgreement.documents = JSON.stringify(files);
+      newAgreement.documents = files;
       if (agreement !== null) {
         // console.log("in if");
         newAgreement.rental_uid = agreement.rental_uid;
