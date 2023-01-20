@@ -28,7 +28,6 @@ import PropertyAppliances from "../PropertyAppliances";
 import AppContext from "../../AppContext";
 import ManagerManagementContract from "./ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
-import ManagerTenantAgreementEdit from "./ManagerTenantAgreementEdit";
 import ConfirmDialog from "../ConfirmDialog";
 import ManagerRepairRequest from "./ManagerRepairRequest";
 import ManagerPropertyForm from "./ManagerPropertyForm";

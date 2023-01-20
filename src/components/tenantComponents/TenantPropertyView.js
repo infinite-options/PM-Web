@@ -1263,7 +1263,7 @@ function TenantPropertyView(props) {
                   opacity: 1,
                 }}
               >
-                <Row style={{ overflow: "scroll" }}>
+                <Row>
                   {selectedAgreement ? (
                     <div>
                       <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>

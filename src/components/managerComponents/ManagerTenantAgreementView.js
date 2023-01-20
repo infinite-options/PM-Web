@@ -59,6 +59,7 @@ function ManagerTenantAgreementView(props) {
   // const [renewLease, setRenewLease] = useState(false)
   const [terminateLease, setTerminateLease] = useState(false);
   const [lastDate, setLastDate] = useState("");
+  const [effectiveDate, setEffectiveDate] = useState("");
   const [message, setMessage] = useState("");
   const [tenantEndEarly, setTenantEndEarly] = useState(false);
 
@@ -132,6 +133,7 @@ function ManagerTenantAgreementView(props) {
       pets: agreement.pets,
       vehicles: agreement.vehicles,
       referred: agreement.referred,
+      effective_date: agreement.effective_date,
     };
 
     for (let i = 0; i < files.length; i++) {
