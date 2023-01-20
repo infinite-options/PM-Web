@@ -56,6 +56,7 @@ function ManagerTenantAgreement(props) {
   const [tenantID, setTenantID] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [effectiveDate, setEffectiveDate] = useState("");
   const [feeState, setFeeState] = useState([]);
   const contactState = useState([]);
   const [files, setFiles] = useState([]);
@@ -134,6 +135,7 @@ function ManagerTenantAgreement(props) {
     setTenantID(agreement.tenant_id);
     setStartDate(agreement.lease_start);
     setEndDate(agreement.lease_end);
+    setEffectiveDate(agreement.effective_date);
     setFeeState(JSON.parse(agreement.rent_payments));
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
@@ -174,7 +176,50 @@ function ManagerTenantAgreement(props) {
 
   const save = async () => {
     setShowSpinner(true);
+    for (let i = 0; i < feeState.length; i++) {
+      if (feeState[i]["fee_name"] === "Rent") {
+        if (feeState[i]["charge"] != property.listed_rent) {
+          const updateRent = {
+            property_uid: property.property_uid,
+            listed_rent: feeState[i]["charge"],
+          };
 
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateRent[key] = images[i + 1];
+          }
+
+          const response = await put("/properties", updateRent, null, images);
+        }
+      } else if (feeState[i]["fee_name"] === "Deposit") {
+        if (feeState[i]["charge"] != property.deposit) {
+          const updateDeposit = {
+            property_uid: property.property_uid,
+            deposit: feeState[i]["charge"],
+          };
+
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateDeposit[key] = images[i + 1];
+          }
+
+          const response = await put(
+            "/properties",
+            updateDeposit,
+            null,
+            images
+          );
+        }
+      }
+    }
     if (agreement.rental_status === "PROCESSING") {
       // console.log(lateFee);
       const newAgreement = {
@@ -194,6 +239,7 @@ function ManagerTenantAgreement(props) {
         pets: JSON.stringify(pets),
         vehicles: JSON.stringify(vehicles),
         referred: JSON.stringify(referred),
+        effective_date: effectiveDate,
       };
 
       console.log(newAgreement);
@@ -232,18 +278,19 @@ function ManagerTenantAgreement(props) {
         lease_start: startDate,
         lease_end: endDate,
         rental_status: "PROCESSING",
-        rent_payments: JSON.stringify(feeState),
+        rent_payments: feeState,
         available_topay: available,
         due_by: dueDate,
         late_by: lateAfter,
         late_fee: lateFee,
         perDay_late_fee: lateFeePer,
-        assigned_contacts: JSON.stringify(contactState[0]),
-        adults: JSON.stringify(adults),
-        children: JSON.stringify(children),
-        pets: JSON.stringify(pets),
-        vehicles: JSON.stringify(vehicles),
-        referred: JSON.stringify(referred),
+        assigned_contacts: contactState[0],
+        adults: adults,
+        children: children,
+        pets: pets,
+        vehicles: vehicles,
+        referred: referred,
+        effective_date: effectiveDate,
       };
 
       console.log(newAgreement);
@@ -256,12 +303,12 @@ function ManagerTenantAgreement(props) {
         newAgreement[key] = files[i].file;
         delete files[i].file;
       }
-      newAgreement.documents = JSON.stringify(files);
+      newAgreement.documents = files;
       if (agreement !== null) {
         // console.log("in if");
         newAgreement.rental_uid = agreement.rental_uid;
         // console.log(newAgreement);
-        const response = await put(`/rentals`, newAgreement, null, files);
+        const response = await put(`/UpdateActiveLease`, newAgreement);
       }
       setShowSpinner(false);
       back();
@@ -379,6 +426,7 @@ function ManagerTenantAgreement(props) {
       pets: JSON.stringify(pets),
       vehicles: JSON.stringify(vehicles),
       referred: JSON.stringify(referred),
+      effective_date: startDate,
     };
     for (let i = 0; i < files.length; i++) {
       let key = `doc_${i}`;
@@ -740,7 +788,10 @@ function ManagerTenantAgreement(props) {
                     style={squareForm}
                     type="date"
                     value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    onChange={(e) => {
+                      setStartDate(e.target.value);
+                      setEffectiveDate(e.target.value);
+                    }}
                   />
                 </Form.Group>
               </Col>
@@ -795,7 +846,6 @@ function ManagerTenantAgreement(props) {
                   <Form.Select
                     style={{
                       ...squareForm,
-                      backgroundImage: `url(${ArrowDown})`,
                     }}
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
@@ -810,6 +860,22 @@ function ManagerTenantAgreement(props) {
                     <option value="20">20th of the month</option>
                     <option value="25">25th of the month</option>
                   </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label as="h6" className="mb-0 ms-2">
+                    Effective Date
+                  </Form.Label>
+                  <Form.Control
+                    type="date"
+                    style={{
+                      ...squareForm,
+                      padding: "3px",
+                    }}
+                    value={effectiveDate}
+                    onChange={(e) => setEffectiveDate(e.target.value)}
+                  />
                 </Form.Group>
               </Col>
             </Row>

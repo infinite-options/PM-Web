@@ -1382,6 +1382,11 @@ export default function TenantDashboard() {
                                   <h6 style={{ mediumBold, color: "green" }}>
                                     {application.application_status}
                                   </h6>
+                                ) : application.application_status ===
+                                  "ACCEPTED" ? (
+                                  <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
                                 ) : (
                                   ""
                                 )}

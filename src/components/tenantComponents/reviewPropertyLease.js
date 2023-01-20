@@ -156,20 +156,33 @@ function ReviewPropertyLease(props) {
     return i + "th";
   }
   const approveLease = async () => {
-    const updatedApplication = {
-      application_uid: application_uid,
-      application_status: "RENTED",
-      property_uid: property_uid,
-    };
-    const response2 = await put(
-      "/applications",
-      updatedApplication,
-      access_token
-    );
+    if (rentals.length > 0) {
+      console.log(rentals);
+      if (new Date(rentals[0].lease_start) > new Date()) {
+        const updatedApplication = {
+          application_uid: application_uid,
+          application_status: "RENTED",
+          property_uid: property_uid,
+        };
+        const response2 = await put(
+          "/applications",
+          updatedApplication,
+          access_token
+        );
 
-    navigate("/tenant");
+        navigate("/tenant");
+      } else {
+        const updateLease = {
+          linked_application_id: application_uid,
+          rental_status: "ACTIVE",
+          rental_uid: rentals[0].rental_uid,
+        };
+        const response2 = await put("/UpdateActiveLease", updateLease);
+
+        navigate("/tenant");
+      }
+    }
   };
-
   const displayLease = (path) => {
     window.location.href = path;
   };
@@ -296,7 +309,7 @@ function ReviewPropertyLease(props) {
         >
           <SideBar />
         </div>
-        <div className="mb-5" style={{ width: "87%" }}>
+        <div className="mb-5" style={{ width: "100%" }}>
           <Header
             title="Property Lease Details"
             leftText="< Back"
@@ -572,7 +585,7 @@ function ReviewPropertyLease(props) {
                 )}
 
                 {rentPayments && rentPayments.length ? (
-                  <Row className="m-3" style={{ hidden: "overflow" }}>
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
                     <h5>Lease Payments</h5>
                     <Table
                       responsive="md"
@@ -890,7 +903,7 @@ function ReviewPropertyLease(props) {
               </div>
 
               {rentPayments && rentPayments.length ? (
-                <Row className="m-3" style={{ hidden: "overflow" }}>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
                   <h5>Lease Payments</h5>
                   <Table
                     responsive="md"
@@ -1676,40 +1689,40 @@ function ReviewPropertyLease(props) {
             </Row>
           ) : null}
           {/* ========== Tenant has requested to end the lease early ==========
-      {application_status_1 === "TENANT END EARLY" ? 
-        <Row>
-          <Row
-            className="my-3 mx-2"
-            style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
-          >
-            <b>Action Needed: Approve/Deny</b>
-            <p style={{fontSize: '16px'}}>The Property Manager has requested to terminate this lease early</p>
-          </Row>
-          <Row
-            style={{
-              margin: "0px",
-              padding: "0px 0px 25px 0px",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              paddingBottom: '20px'
-            }}
-            >
-            <Button 
-              style={{...bluePillButton, width: "90px", textAlign: 'center'}}
-              onClick={approveEndEarly}
-            >
-              Approve
-            </Button>
-            <Button
-              style={{...redPillButton, width: "90px", textAlign: 'center'}}
-              onClick={denyEndEarly}
-            >
-              Deny
-            </Button>
-          </Row>
-        </Row>: null
-      } */}
+          {application_status_1 === "TENANT END EARLY" ? 
+            <Row>
+              <Row
+                className="my-3 mx-2"
+                style={{padding: '0px 40px 0px 40px', fontSize: '22px'}}
+              >
+                <b>Action Needed: Approve/Deny</b>
+                <p style={{fontSize: '16px'}}>The Property Manager has requested to terminate this lease early</p>
+              </Row>
+              <Row
+                style={{
+                  margin: "0px",
+                  padding: "0px 0px 25px 0px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  paddingBottom: '20px'
+                }}
+                >
+                <Button 
+                  style={{...bluePillButton, width: "90px", textAlign: 'center'}}
+                  onClick={approveEndEarly}
+                >
+                  Approve
+                </Button>
+                <Button
+                  style={{...redPillButton, width: "90px", textAlign: 'center'}}
+                  onClick={denyEndEarly}
+                >
+                  Deny
+                </Button>
+              </Row>
+            </Row>: null
+          } */}
 
           {rentals.length > 0 &&
           rentals[0].rental_status !== "ACTIVE" &&
@@ -1814,9 +1827,9 @@ function ReviewPropertyLease(props) {
               ""
             )}
           </Row>
-        </div>
-        <div hidden={responsive.showSidebar} className="w-100 mt-3">
-          <TenantFooter />
+          <div hidden={responsive.showSidebar} className="w-100 mt-3">
+            <TenantFooter />
+          </div>
         </div>
       </div>
     </div>
