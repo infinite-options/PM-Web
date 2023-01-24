@@ -45,7 +45,7 @@ function ManagerTenantAgreementView(props) {
     selectAgreement,
     closeAgreement,
   } = props;
-  console.log(props);
+  // console.log(props);
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   // console.log(user);
@@ -145,7 +145,7 @@ function ManagerTenantAgreementView(props) {
     if (agreement !== null) {
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
-      console.log(newAgreement);
+      // console.log(newAgreement);
       const response = await put(`/rentals`, newAgreement, null, files);
     }
 
@@ -156,13 +156,13 @@ function ManagerTenantAgreementView(props) {
   const loadAgreement = async (agg) => {
     // console.log("load agreement");
 
-    console.log("in useeffect");
+    // console.log("in useeffect");
     setAgreement(agg);
     setIsLoading(false);
     // loadAgreement(agg);
     let tenant = [];
     let ti = {};
-    console.log("selectedagg", agg);
+    // console.log("selectedagg", agg);
 
     if (agg.tenant_first_name.includes(",")) {
       let tenant_ids = agg.tenant_id.split(",");

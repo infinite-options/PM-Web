@@ -361,7 +361,7 @@ function ManagerPropertyView(props) {
     // console.log(recent_mr, past_mr);
     setIsLoading(false);
   };
-  console.log(acceptedTenantApplications);
+  // console.log(acceptedTenantApplications);
   const headerBack = () => {
     if (editAppliances && editProperty) {
       setEditAppliances(false);
