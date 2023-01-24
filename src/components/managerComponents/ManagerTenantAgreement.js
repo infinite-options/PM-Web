@@ -14,6 +14,7 @@ import BusinessContact from "../BusinessContact";
 import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
 import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
+import ConfirmDialog from "../ConfirmDialog3";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
@@ -49,7 +50,7 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  console.log("here", acceptedTenantApplications[0]);
+  // console.log("here", acceptedTenantApplications[0]);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -58,9 +59,11 @@ function ManagerTenantAgreement(props) {
   const [endDate, setEndDate] = useState("");
   const [effectiveDate, setEffectiveDate] = useState("");
   const [feeState, setFeeState] = useState([]);
+  const [oldAgreement, setOldAgreement] = useState([]);
+  const [updatedAgreement, setUpdatedAgreement] = useState([]);
   const contactState = useState([]);
   const [files, setFiles] = useState([]);
-
+  const [showDialog, setShowDialog] = useState(false);
   const [rentalStatus, setRentalStatus] = useState("");
   const [newFile, setNewFile] = useState(null);
   const [editingDoc, setEditingDoc] = useState(null);
@@ -91,6 +94,9 @@ function ManagerTenantAgreement(props) {
   };
   const responsiveSidebar = {
     showSidebar: width > 1023,
+  };
+  const onCancel = () => {
+    setShowDialog(false);
   };
   const addFile = (e) => {
     const file = e.target.files[0];
@@ -132,6 +138,8 @@ function ManagerTenantAgreement(props) {
   };
 
   const loadAgreement = () => {
+    // console.log(agreement);
+    setOldAgreement(agreement);
     setTenantID(agreement.tenant_id);
     setStartDate(agreement.lease_start);
     setEndDate(agreement.lease_end);
@@ -242,7 +250,7 @@ function ManagerTenantAgreement(props) {
         effective_date: effectiveDate,
       };
 
-      console.log(newAgreement);
+      // console.log(newAgreement);
 
       for (let i = 0; i < files.length; i++) {
         let key = `doc_${i}`;
@@ -259,9 +267,9 @@ function ManagerTenantAgreement(props) {
       setShowSpinner(false);
       back();
     } else {
-      console.log(agreement.linked_application_id);
+      // console.log(agreement.linked_application_id);
       for (const application of JSON.parse(agreement.linked_application_id)) {
-        console.log(application);
+        // console.log(application);
 
         const request_body = {
           application_uid: application,
@@ -293,7 +301,7 @@ function ManagerTenantAgreement(props) {
         effective_date: effectiveDate,
       };
 
-      console.log(newAgreement);
+      // console.log(newAgreement);
       // for (let i = 0; i < files.length; i++) {
       //   let key = `img_${i}`;
       //   newAgreement[key] = files[i];
@@ -472,6 +480,58 @@ function ManagerTenantAgreement(props) {
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
   };
+
+  const filterAgreement = () => {
+    let og = oldAgreement;
+    const newAgreement = {
+      rental_property_id: property.property_uid,
+      lease_start: startDate,
+      lease_end: endDate,
+      rental_status: rentalStatus,
+      rent_payments: feeState,
+      available_topay: available,
+      due_by: dueDate,
+      late_by: lateAfter,
+      late_fee: lateFee,
+      perDay_late_fee: lateFeePer,
+      assigned_contacts: contactState[0],
+      adults: adults,
+      children: children,
+      pets: pets,
+      vehicles: vehicles,
+      referred: referred,
+      effective_date: effectiveDate,
+      documents: files,
+    };
+    let up = newAgreement;
+    let fg = {};
+    // console.log(og);
+
+    // console.log(up);
+    Object.keys(og).forEach((key) => {
+      if (up.hasOwnProperty(key)) {
+        if (key == "assigned_contacts") {
+          // console.log(key);
+          JSON.parse(og[key]).forEach((o) => {
+            // console.log(o);
+          });
+        } else if (key == "documents") {
+          // console.log(key);
+          JSON.parse(og[key]).forEach((o) => {
+            // console.log(o);
+          });
+        } else if (og[key] !== up[key]) {
+          // console.log(key);
+          // console.log(typeof og[key]);
+          fg[key] = up[key];
+          // console.log(fg[key]);
+        }
+      }
+    });
+    // console.log(fg);
+    setUpdatedAgreement([fg]);
+    setShowDialog(true);
+  };
   const renewLease = async () => {
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
@@ -527,6 +587,15 @@ function ManagerTenantAgreement(props) {
   // console.log(acceptedTenantApplications.children);
   return (
     <div className="flex-1">
+      <ConfirmDialog
+        title={"Review the lease"}
+        body={updatedAgreement}
+        button1={"Go back to Edit"}
+        button2={"Send Updated Lease Details to Tenant(s)"}
+        isOpen={showDialog}
+        onConfirm={save}
+        onCancel={onCancel}
+      />
       <div
         hidden={!responsiveSidebar.showSidebar}
         style={{
@@ -1124,7 +1193,9 @@ function ManagerTenantAgreement(props) {
               <Col className="d-flex justify-content-evenly">
                 <Button
                   style={bluePillButton}
-                  onClick={save}
+                  // onClick={save}
+                  onClick={filterAgreement}
+                  on
                   hidden={
                     acceptedTenantApplications[0].application_status !==
                       "RENTED" &&
@@ -1132,7 +1203,7 @@ function ManagerTenantAgreement(props) {
                       "FORWARDED"
                   }
                 >
-                  Send Updated Lease Details to Tenant(s)
+                  Review Changes to the Lease
                 </Button>
               </Col>
             </Row>

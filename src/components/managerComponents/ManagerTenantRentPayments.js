@@ -45,7 +45,7 @@ function ManagerTenantRentPayments(props) {
     available,
     agreement,
   } = props;
-  console.log(agreement);
+  // console.log(agreement);
   const [newFee, setNewFee] = useState(null);
   const [defaultFee, setDefaultFee] = useState([null]);
   const [editingFee, setEditingFee] = useState(null);
@@ -61,7 +61,7 @@ function ManagerTenantRentPayments(props) {
     late_fee: lateFee,
     perDay_late_fee: lateFeePer,
   };
-  console.log(feeState);
+  // console.log(feeState);
   useEffect(() => {
     if (agreement === null) {
       const depositFee = {
@@ -274,12 +274,22 @@ function ManagerTenantRentPayments(props) {
                 <Form.Label as="h6" className="mb-0 ms-2">
                   Fee Name {newFee.fee_name === "" ? required : ""}
                 </Form.Label>
-                <Form.Control
-                  style={squareForm}
-                  placeholder="Service Charge"
-                  value={newFee.fee_name}
-                  onChange={(e) => changeNewFee(e, "fee_name")}
-                />
+                {agreement !== null && editingFee !== null ? (
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="Service Charge"
+                    value={newFee.fee_name}
+                    onChange={(e) => changeNewFee(e, "fee_name")}
+                    disabled
+                  />
+                ) : (
+                  <Form.Control
+                    style={squareForm}
+                    placeholder="Service Charge"
+                    value={newFee.fee_name}
+                    onChange={(e) => changeNewFee(e, "fee_name")}
+                  />
+                )}
               </Form.Group>
             </Col>
             <Col className="px-0">
@@ -342,22 +352,42 @@ function ManagerTenantRentPayments(props) {
                 <Form.Label as="h6" className="mb-0 ms-2">
                   Frequency
                 </Form.Label>
-                <Form.Select
-                  style={{
-                    ...squareForm,
-                    backgroundImage: `url(${ArrowDown})`,
-                  }}
-                  value={newFee.frequency}
-                  onChange={(e) => changeNewFee(e, "frequency")}
-                >
-                  <option>Weekly</option>
-                  <option>Biweekly</option>
-                  <option>Monthly</option>
-                  <option>Annually</option>
-                  <option>Move-Out Charge</option>
-                  <option>Move-In Charge</option>
-                  <option>One-time</option>
-                </Form.Select>
+                {agreement !== null && editingFee !== null ? (
+                  <Form.Select
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                    value={newFee.frequency}
+                    onChange={(e) => changeNewFee(e, "frequency")}
+                    disabled
+                  >
+                    <option>Weekly</option>
+                    <option>Biweekly</option>
+                    <option>Monthly</option>
+                    <option>Annually</option>
+                    <option>Move-Out Charge</option>
+                    <option>Move-In Charge</option>
+                    <option>One-time</option>
+                  </Form.Select>
+                ) : (
+                  <Form.Select
+                    style={{
+                      ...squareForm,
+                      backgroundImage: `url(${ArrowDown})`,
+                    }}
+                    value={newFee.frequency}
+                    onChange={(e) => changeNewFee(e, "frequency")}
+                  >
+                    <option>Weekly</option>
+                    <option>Biweekly</option>
+                    <option>Monthly</option>
+                    <option>Annually</option>
+                    <option>Move-Out Charge</option>
+                    <option>Move-In Charge</option>
+                    <option>One-time</option>
+                  </Form.Select>
+                )}
               </Form.Group>
             </Col>
           </Row>
