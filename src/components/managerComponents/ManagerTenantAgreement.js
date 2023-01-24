@@ -267,9 +267,9 @@ function ManagerTenantAgreement(props) {
       setShowSpinner(false);
       back();
     } else {
-      // console.log(agreement.linked_application_id);
+      console.log(agreement.linked_application_id);
       for (const application of JSON.parse(agreement.linked_application_id)) {
-        // console.log(application);
+        console.log(application);
 
         const request_body = {
           application_uid: application,
@@ -278,7 +278,7 @@ function ManagerTenantAgreement(props) {
         };
         // console.log(request_body)
         const update_application = await put("/applications", request_body);
-        // console.log(response)
+        console.log(update_application);
       }
 
       const newAgreement = {

@@ -96,6 +96,11 @@ function ConfirmDialog3(props) {
                         ) : (
                           ""
                         )}
+                        {body[0].effective_date !== undefined ? (
+                          <TableCell>Effective Date</TableCell>
+                        ) : (
+                          ""
+                        )}
                         {body[0].due_by !== undefined ? (
                           <TableCell>Rent Due</TableCell>
                         ) : (
@@ -127,6 +132,11 @@ function ConfirmDialog3(props) {
                         )}
                         {body[0].lease_end !== undefined ? (
                           <TableCell>{body[0].lease_end}</TableCell>
+                        ) : (
+                          ""
+                        )}
+                        {body[0].effective_date !== undefined ? (
+                          <TableCell>{body[0].effective_date}</TableCell>
                         ) : (
                           ""
                         )}
