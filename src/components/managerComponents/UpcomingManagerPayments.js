@@ -37,7 +37,6 @@ export default function UpcomingManagerPayments(props) {
   const [purchaseUIDs, setPurchaseUIDs] = useState([]); //figure out which payment is being payed for
   const rents = props.data; //array of objects
   const { deleted, setDeleted } = props;
-  console.log(deleted);
   const managerID = props.managerID;
   const goToPayment = () => {
     navigate("/tenantDuePayments");
@@ -85,7 +84,6 @@ export default function UpcomingManagerPayments(props) {
     let delPurchase = {
       purchase_uid: purchase_id,
     };
-    console.log(delPurchase);
     const response = await put("/DeletePurchase", delPurchase);
     setDeleted(!deleted);
   };

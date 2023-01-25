@@ -15,7 +15,7 @@ import BusinessContact from "../BusinessContact";
 import ManagerTenantRentPayments from "./ManagerTenantRentPayments";
 import ManagerFooter from "./ManagerFooter";
 import SideBar from "./SideBar";
-import ConfirmDialog from "../ConfirmDialog3";
+import UpdateConfirmDialog from "./UpdateConfirmDialog";
 import ArrowDown from "../../icons/ArrowDown.svg";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
@@ -508,32 +508,33 @@ function ManagerTenantAgreement(props) {
       documents: files,
     };
     let up = newAgreement;
-    let fg = {};
-    // console.log(og);
+    // let fg = {};
+    // // console.log(og);
 
-    // console.log(up);
-    Object.keys(og).forEach((key) => {
-      if (up.hasOwnProperty(key)) {
-        if (key == "assigned_contacts") {
-          // console.log(key);
-          JSON.parse(og[key]).forEach((o) => {
-            // console.log(o);
-          });
-        } else if (key == "documents") {
-          // console.log(key);
-          JSON.parse(og[key]).forEach((o) => {
-            // console.log(o);
-          });
-        } else if (og[key] !== up[key]) {
-          // console.log(key);
-          // console.log(typeof og[key]);
-          fg[key] = up[key];
-          // console.log(fg[key]);
-        }
-      }
-    });
-    // console.log(fg);
-    setUpdatedAgreement([fg]);
+    // // console.log(up);
+    // Object.keys(og).forEach((key) => {
+    //   if (up.hasOwnProperty(key)) {
+    //     if (key == "assigned_contacts") {
+    //       // console.log(key);
+    //       JSON.parse(og[key]).forEach((o) => {
+    //         // console.log(o);
+    //       });
+    //     } else if (key == "documents") {
+    //       // console.log(key);
+    //       JSON.parse(og[key]).forEach((o) => {
+    //         // console.log(o);
+    //       });
+    //     } else if (og[key] !== up[key]) {
+    //       // console.log(key);
+    //       // console.log(typeof og[key]);
+    //       fg[key] = up[key];
+    //       // console.log(fg[key]);
+    //     }
+    //   }
+    // });
+    // // console.log(fg);
+    // setUpdatedAgreement([fg]);
+    setUpdatedAgreement(up);
     setShowDialog(true);
   };
   const renewLease = async () => {
@@ -591,9 +592,10 @@ function ManagerTenantAgreement(props) {
   // console.log(acceptedTenantApplications.children);
   return (
     <div className="flex-1">
-      <ConfirmDialog
+      <UpdateConfirmDialog
         title={"Review the lease"}
-        body={updatedAgreement}
+        updatedAgreement={updatedAgreement}
+        oldAgreement={oldAgreement}
         button1={"Go back to Edit"}
         button2={"Send Updated Lease Details to Tenant(s)"}
         isOpen={showDialog}
