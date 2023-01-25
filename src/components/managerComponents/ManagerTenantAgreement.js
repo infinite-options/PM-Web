@@ -268,7 +268,8 @@ function ManagerTenantAgreement(props) {
       const response = await put(`/rentals`, newAgreement, null, files);
 
       setShowSpinner(false);
-      back();
+
+      navigate("../manager");
     } else {
       console.log(agreement.linked_application_id);
       for (const application of JSON.parse(agreement.linked_application_id)) {
