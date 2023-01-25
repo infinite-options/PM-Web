@@ -7,6 +7,7 @@ import {
   TableBody,
   TableHead,
 } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import Header from "../Header";
@@ -43,6 +44,8 @@ const useStyles = makeStyles({
 
 function ManagerTenantAgreement(props) {
   const classes = useStyles();
+
+  const navigate = useNavigate();
   const {
     back,
     property,
@@ -319,7 +322,7 @@ function ManagerTenantAgreement(props) {
         const response = await put(`/UpdateActiveLease`, newAgreement);
       }
       setShowSpinner(false);
-      back();
+      navigate("../manager");
     }
   };
   const [errorMessage, setErrorMessage] = useState("");

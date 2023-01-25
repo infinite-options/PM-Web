@@ -10,9 +10,11 @@ import {
   Box,
 } from "@material-ui/core";
 import { Container, Row, Col } from "react-bootstrap";
+import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
-import { makeStyles } from "@material-ui/core/styles";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
+import { put } from "../../utils/api";
 import { headings, subHeading } from "../../utils/styles";
 
 const useStyles = makeStyles({
@@ -34,6 +36,8 @@ export default function UpcomingManagerPayments(props) {
   const [orderIncomingBy, setOrderIncomingBy] = useState("next_payment");
   const [purchaseUIDs, setPurchaseUIDs] = useState([]); //figure out which payment is being payed for
   const rents = props.data; //array of objects
+  const { deleted, setDeleted } = props;
+  console.log(deleted);
   const managerID = props.managerID;
   const goToPayment = () => {
     navigate("/tenantDuePayments");
@@ -77,7 +81,14 @@ export default function UpcomingManagerPayments(props) {
       });
     }
   }
-
+  const deletePurchase = async (purchase_id) => {
+    let delPurchase = {
+      purchase_uid: purchase_id,
+    };
+    console.log(delPurchase);
+    const response = await put("/DeletePurchase", delPurchase);
+    setDeleted(!deleted);
+  };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -501,13 +512,26 @@ export default function UpcomingManagerPayments(props) {
                     rents,
                     getComparatorIncoming(orderIncoming, orderIncomingBy)
                   ).map((row, index) => {
-                    return (row.purchase_status === "UNPAID" &&
+                    return ((row.purchase_status === "UNPAID" ||
+                      row.purchase_status === "DELETED") &&
                       row.receiver === managerID &&
                       row.amount_due > 0) ||
-                      (row.purchase_status === "UNPAID" &&
+                      ((row.purchase_status === "UNPAID" ||
+                        row.purchase_status === "DELETED") &&
                         row.receiver !== managerID &&
                         row.amount_due < 0) ? (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={index}
+                        style={{
+                          textDecoration:
+                            row.purchase_status === "DELETED"
+                              ? "line-through"
+                              : "none",
+                        }}
+                      >
                         <TableCell align="right">{row.purchase_uid}</TableCell>
                         <TableCell align="right">
                           {row.address +
@@ -542,6 +566,14 @@ export default function UpcomingManagerPayments(props) {
 
                         <TableCell align="right">
                           {Math.abs(row.amount_due).toFixed(2)}
+                        </TableCell>
+                        <TableCell>
+                          <img
+                            src={DeleteIcon}
+                            alt="Delete"
+                            className="px-1 mx-2"
+                            onClick={() => deletePurchase(row.purchase_uid)}
+                          />
                         </TableCell>
                       </TableRow>
                     ) : (
