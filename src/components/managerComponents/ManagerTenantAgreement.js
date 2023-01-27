@@ -146,7 +146,7 @@ function ManagerTenantAgreement(props) {
     setTenantID(agreement.tenant_id);
     setStartDate(agreement.lease_start);
     setEndDate(agreement.lease_end);
-    setEffectiveDate(agreement.effective_date);
+    // setEffectiveDate(agreement.effective_date);
     setFeeState(JSON.parse(agreement.rent_payments));
     contactState[1](JSON.parse(agreement.assigned_contacts));
     setFiles(JSON.parse(agreement.documents));
