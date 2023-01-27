@@ -219,7 +219,15 @@ function OwnerPropertyView(props) {
     const res = await get(
       `/contracts?property_uid=${response.result[0].property_uid}`
     );
-
+    // if (res.result.length > 0) {
+    //   res.result.forEach((r) => {
+    //     if (r.contract_status !== "INACTIVE") {
+    //       setContracts(r);
+    //     }
+    //   });
+    // } else {
+    //   ;
+    // }
     setContracts(res.result);
     setRentalInfo(response.result[0].rentalInfo);
     setIsLoading(false);
@@ -6366,7 +6374,8 @@ function OwnerPropertyView(props) {
 
                                   {contracts.map((contract, i) =>
                                     contract.business_uid ===
-                                    property.managerInfo.manager_id ? (
+                                      property.managerInfo.manager_id &&
+                                    contract.contract_status === "ACTIVE" ? (
                                       contract.contract_name != null ? (
                                         <TableCell>
                                           {contract.contract_name}{" "}
@@ -6381,7 +6390,8 @@ function OwnerPropertyView(props) {
 
                                   {contracts.map((contract, i) =>
                                     contract.business_uid ===
-                                    property.managerInfo.manager_id ? (
+                                      property.managerInfo.manager_id &&
+                                    contract.contract_status === "ACTIVE" ? (
                                       <TableCell>
                                         {contract.start_date}
                                       </TableCell>
@@ -6391,7 +6401,8 @@ function OwnerPropertyView(props) {
                                   )}
                                   {contracts.map((contract, i) =>
                                     contract.business_uid ===
-                                    property.managerInfo.manager_id ? (
+                                      property.managerInfo.manager_id &&
+                                    contract.contract_status === "ACTIVE" ? (
                                       <TableCell>{contract.end_date}</TableCell>
                                     ) : (
                                       ""
@@ -6447,7 +6458,8 @@ function OwnerPropertyView(props) {
                                 <TableBody>
                                   {contracts.map((contract, i) =>
                                     contract.business_uid ===
-                                    property.managerInfo.manager_id ? (
+                                      property.managerInfo.manager_id &&
+                                    contract.contract_status === "ACTIVE" ? (
                                       JSON.parse(contract.documents).length ===
                                       0 ? (
                                         <TableRow>
@@ -6500,7 +6512,8 @@ function OwnerPropertyView(props) {
                             </Row>
                             {contracts.map((contract, i) =>
                               contract.business_uid ===
-                              property.managerInfo.manager_id ? (
+                                property.managerInfo.manager_id &&
+                              contract.contract_status === "ACTIVE" ? (
                                 <ManagerFees
                                   feeState={JSON.parse(contract.contract_fees)}
                                   setFeeState={setFeeState}
@@ -6516,7 +6529,8 @@ function OwnerPropertyView(props) {
 
                         {contracts.map((contract, i) =>
                           contract.business_uid ===
-                          property.managerInfo.manager_id ? (
+                            property.managerInfo.manager_id &&
+                          contract.contract_status === "ACTIVE" ? (
                             JSON.parse(contract.assigned_contacts).length ===
                             0 ? (
                               ""
@@ -6531,7 +6545,8 @@ function OwnerPropertyView(props) {
                         )}
                         {contracts.map((contract, i) =>
                           contract.business_uid ===
-                          property.managerInfo.manager_id ? (
+                            property.managerInfo.manager_id &&
+                          contract.contract_status === "ACTIVE" ? (
                             JSON.parse(contract.assigned_contacts).length ===
                             0 ? (
                               ""
@@ -6596,7 +6611,8 @@ function OwnerPropertyView(props) {
                           <Row className="mt-4">
                             {contracts.map((contract, i) =>
                               contract.business_uid ===
-                              property.managerInfo.manager_id ? (
+                                property.managerInfo.manager_id &&
+                              contract.contract_status === "ACTIVE" ? (
                                 contract.contract_name != null ? (
                                   <h6
                                     className="d-flex justify-content-center"
@@ -6621,7 +6637,8 @@ function OwnerPropertyView(props) {
                           <Row className="d-flex flex-grow-1 w-100 justify-content-center mt-3 mb-4">
                             {contracts.map((contract, i) =>
                               contract.business_uid ===
-                              property.managerInfo.manager_id ? (
+                                property.managerInfo.manager_id &&
+                              contract.contract_status === "ACTIVE" ? (
                                 contract.contract_name != null ? (
                                   <h6
                                     className="d-flex justify-content-center"
@@ -6835,7 +6852,10 @@ function OwnerPropertyView(props) {
                           ""
                         ) : p.management_status === "SENT" ? (
                           <div>
-                            <Row className="m-3" style={{ overflow: "scroll" }}>
+                            <Row
+                              className="mt-1"
+                              style={{ overflow: "scroll" }}
+                            >
                               <div>
                                 <Table
                                   responsive="md"
@@ -6873,7 +6893,9 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                       {contracts.map((contract, i) =>
                                         contract.business_uid ===
-                                        p.manager_id ? (
+                                          p.manager_id &&
+                                        contract.contract_status ===
+                                          "ACTIVE" ? (
                                           contract.contract_name != null ? (
                                             <TableCell>
                                               {contract.contract_name}{" "}
@@ -6900,7 +6922,9 @@ function OwnerPropertyView(props) {
                                       )}
                                       {contracts.map((contract, i) =>
                                         contract.business_uid ===
-                                        p.manager_id ? (
+                                          p.manager_id &&
+                                        contract.contract_status ===
+                                          "ACTIVE" ? (
                                           <TableCell>
                                             {contract.end_date}
                                           </TableCell>
@@ -6951,7 +6975,8 @@ function OwnerPropertyView(props) {
                                 </TableHead>
                                 <TableBody>
                                   {contracts.map((contract, i) =>
-                                    contract.business_uid === p.manager_id ? (
+                                    contract.business_uid === p.manager_id &&
+                                    contract.contract_status === "ACTIVE" ? (
                                       JSON.parse(contract.documents).length ===
                                       0 ? (
                                         <TableRow>
@@ -7003,7 +7028,8 @@ function OwnerPropertyView(props) {
                               <h5>Property Manager Fee Details</h5>
                             </Row>
                             {contracts.map((contract, i) =>
-                              contract.business_uid === p.manager_id ? (
+                              contract.business_uid === p.manager_id &&
+                              contract.contract_status === "ACTIVE" ? (
                                 <ManagerFees
                                   feeState={JSON.parse(contract.contract_fees)}
                                   setFeeState={setFeeState}
@@ -7016,10 +7042,11 @@ function OwnerPropertyView(props) {
                               <h5>Property Manager Contact Details</h5>
                             </Row>
                             {contracts.map((contract, i) =>
-                              contract.business_uid === p.manager_id ? (
+                              contract.business_uid === p.manager_id &&
+                              contract.contract_status === "ACTIVE" ? (
                                 JSON.parse(contract.assigned_contacts)
                                   .length === 0 ? (
-                                  ""
+                                  "No Contacts Provided"
                                 ) : (
                                   <BusinessContact state={contactState} />
                                 )
@@ -7112,7 +7139,8 @@ function OwnerPropertyView(props) {
                                 </TableCell>
                                 {contracts.map((contract, i) =>
                                   contract.business_uid ===
-                                  property.property_manager[0].manager_id ? (
+                                    property.property_manager[0].manager_id &&
+                                  contract.contract_status === "ACTIVE" ? (
                                     contract.contract_name != null ? (
                                       <TableCell>
                                         {contract.contract_name}{" "}
@@ -7127,7 +7155,8 @@ function OwnerPropertyView(props) {
 
                                 {contracts.map((contract, i) =>
                                   contract.business_uid ===
-                                  property.property_manager[0].manager_id ? (
+                                    property.property_manager[0].manager_id &&
+                                  contract.contract_status === "ACTIVE" ? (
                                     <TableCell>{contract.start_date}</TableCell>
                                   ) : (
                                     ""
@@ -7135,7 +7164,8 @@ function OwnerPropertyView(props) {
                                 )}
                                 {contracts.map((contract, i) =>
                                   contract.business_uid ===
-                                  property.property_manager[0].manager_id ? (
+                                    property.property_manager[0].manager_id &&
+                                  contract.contract_status === "ACTIVE" ? (
                                     <TableCell>{contract.end_date}</TableCell>
                                   ) : (
                                     ""
@@ -7184,7 +7214,8 @@ function OwnerPropertyView(props) {
                             <TableBody>
                               {contracts.map((contract, i) =>
                                 contract.business_uid ===
-                                property.property_manager[0].manager_id ? (
+                                  property.property_manager[0].manager_id &&
+                                contract.contract_status === "ACTIVE" ? (
                                   JSON.parse(contract.documents).length ===
                                   0 ? (
                                     <TableRow>
@@ -7237,7 +7268,8 @@ function OwnerPropertyView(props) {
                         </Row>
                         {contracts.map((contract, i) =>
                           contract.business_uid ===
-                          property.property_manager[0].manager_id ? (
+                            property.property_manager[0].manager_id &&
+                          contract.contract_status === "ACTIVE" ? (
                             <ManagerFees
                               feeState={JSON.parse(contract.contract_fees)}
                               setFeeState={setFeeState}
@@ -7251,10 +7283,11 @@ function OwnerPropertyView(props) {
                         </Row>
                         {contracts.map((contract, i) =>
                           contract.business_uid ===
-                          property.property_manager[0].manager_id ? (
+                            property.property_manager[0].manager_id &&
+                          contract.contract_status === "ACTIVE" ? (
                             JSON.parse(contract.assigned_contacts).length ===
                             0 ? (
-                              ""
+                              "No Contacts Provided"
                             ) : (
                               <BusinessContact state={contactState} />
                             )

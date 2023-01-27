@@ -107,12 +107,7 @@ function PropertyManagerDocs(props) {
 
     await put("/cancelAgreement", updatedManagementContract, null, files);
 
-    navigate(`/managerPropertyDetails/${property.property_uid}`, {
-      state: {
-        property: property,
-        property_uid: property.property_uid,
-      },
-    });
+    navigate("../manager");
   };
 
   const rejectCancelAgreement = async () => {

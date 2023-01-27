@@ -276,6 +276,7 @@ function PropertyAppliances(props) {
     setApplianceWarrantyInfo("");
     setApplianceType("");
   };
+  console.log(property);
 
   return (
     <div style={({ padding: "0px" }, mediumBold)} className="my-4">
@@ -285,13 +286,20 @@ function PropertyAppliances(props) {
         onConfirm={removeappliance}
         onCancel={onCancel}
       />
-      <div>
-        <h5 className="mx-3 mt-2">
-          {property.address}
-          {property.unit !== "" ? ` ${property.unit}, ` : ", "}
-          {property.city}, {property.state} {property.zip}
-        </h5>
-      </div>
+      {property !== undefined ? (
+        <div>
+          <h5 className="mx-3 mt-2">
+            {property.address}
+            {property.unit !== "" ? ` ${property.unit}, ` : ", "}
+            {property.city}, {property.state} {property.zip}
+          </h5>
+        </div>
+      ) : (
+        <div>
+          <h5 className="mx-3 mt-2">New Property</h5>
+        </div>
+      )}
+
       <Row className="d-flex justify-content-center align-items-center">
         <Col className="d-flex">
           <h6 style={mediumBold} className="mx-3 mt-2">

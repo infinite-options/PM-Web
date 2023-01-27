@@ -760,13 +760,13 @@ function OwnerPropertyForm(props) {
           </Row>
         )}
         {edit ? (
-          <Form.Group className="mx-2 my-3">
+          <Form.Group className="mx-2 my-3 ps-4">
             <Form.Label as="h6" className="mb-0 ms-2" style={mediumBold}>
               Notes
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="Describe the property"
+              placeholder="Notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
