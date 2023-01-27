@@ -403,7 +403,7 @@ function ManagerTenantProfileView(props) {
                       <Row style={subHeading}>
                         <Col>Name</Col>
                         <Col>Relationship</Col>
-                        <Col>DOB</Col>
+                        <Col>DOB(YYYY-MM-DD)</Col>
                       </Row>
                       {JSON.parse(applicant.adults).map((adult) => {
                         return (
@@ -432,7 +432,7 @@ function ManagerTenantProfileView(props) {
                       <Row style={subHeading}>
                         <Col>Name</Col>
                         <Col>Relationship</Col>
-                        <Col>DOB</Col>
+                        <Col>DOB(YYYY-MM-DD)</Col>
                       </Row>
                       {JSON.parse(applicant.children).map((child) => {
                         return (

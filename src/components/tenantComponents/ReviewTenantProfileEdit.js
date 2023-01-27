@@ -526,7 +526,7 @@ function ReviewTenantProfileEdit(props) {
                     <Col xs={1}></Col>
                     <Col>Name</Col>
                     <Col>Relationship</Col>
-                    <Col>DOB</Col>
+                    <Col>DOB(YYYY-MM-DD)</Col>
                   </Row>
                   {Object.values(adults).map((adult, i) => {
                     return (
@@ -569,7 +569,7 @@ function ReviewTenantProfileEdit(props) {
                     <Col xs={1}></Col>
                     <Col>Name</Col>
                     <Col>Relationship</Col>
-                    <Col>DOB</Col>
+                    <Col>DOB(YYYY-MM-DD)</Col>
                   </Row>
                   {Object.values(children).map((child, i) => {
                     return (

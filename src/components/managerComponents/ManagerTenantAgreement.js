@@ -678,7 +678,7 @@ function ManagerTenantAgreement(props) {
                             <Row style={subHeading}>
                               <Col>Name</Col>
                               <Col>Relationship</Col>
-                              <Col>DOB</Col>
+                              <Col>DOB(YYYY-MM-DD)</Col>
                             </Row>
                             {JSON.parse(application.adults).map((adult) => {
                               return (
@@ -712,7 +712,7 @@ function ManagerTenantAgreement(props) {
                             <Row style={subHeading}>
                               <Col>Name</Col>
                               <Col>Relationship</Col>
-                              <Col>DOB</Col>
+                              <Col>DOB(YYYY-MM-DD)</Col>
                             </Row>
                             {JSON.parse(application.children).map((child) => {
                               return (
