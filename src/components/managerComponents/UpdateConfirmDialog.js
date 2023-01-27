@@ -196,287 +196,6 @@ function ConfirmDialog3(props) {
                 </Table>
               </div>
             </Row>
-            {console.log(oldAgreement.length !== 0)}
-            {/* {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
-              <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
-                <h5>Lease Payments</h5>
-                <div>
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Fee Name</TableCell>
-                        <TableCell>Amount</TableCell>
-                        <TableCell>Of</TableCell>
-                        <TableCell>Frequency</TableCell>
-                        <TableCell>Available to Pay</TableCell>
-                        <TableCell>Due Date</TableCell>
-                        <TableCell>Late Fees After (days)</TableCell>
-                        <TableCell>Late Fee (one-time)</TableCell>
-                        <TableCell>Late Fee (per day)</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    {console.log(JSON.parse(oldAgreement.rent_payments))}
-                    {console.log(updatedAgreement.rent_payments)}
-                    <TableBody>
-                      {updatedAgreement.rent_payments.map((fee, i) => {
-                        return JSON.parse(
-                          oldAgreement.rent_payments
-                        ).includesObj(fee) ? (
-                          <TableRow>
-                            {console.log(
-                              JSON.parse(
-                                oldAgreement.rent_payments
-                              ).includesObj(fee)
-                            )}
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {fee.fee_name}
-                            </TableCell>
-
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {fee.fee_type === "%"
-                                ? `${fee.charge}%`
-                                : `$${fee.charge}`}
-                            </TableCell>
-
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {fee.fee_type === "%" ? `${fee.of}` : ""}
-                            </TableCell>
-
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {fee.frequency}
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {`${fee.available_topay} days before`}
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {fee.due_by == ""
-                                ? `1st of the month`
-                                : `${ordinal_suffix_of(
-                                    fee.due_by
-                                  )} of the month`}
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {fee.late_by} days
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              ${fee.late_fee}
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              ${fee.perDay_late_fee}/day
-                            </TableCell>
-                          </TableRow>
-                        ) : (
-                          <TableRow>
-                            {console.log(
-                              "here false",
-                              JSON.parse(
-                                oldAgreement.rent_payments
-                              ).includesObj(fee),
-                              updatedAgreement.rent_payments[i]
-                            )}
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {updatedAgreement.rent_payments[i].fee_name}
-                            </TableCell>
-
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {updatedAgreement.rent_payments[i].fee_type ===
-                              "%"
-                                ? `${updatedAgreement.rent_payments[i].charge}%`
-                                : `$${updatedAgreement.rent_payments[i].charge}`}
-                            </TableCell>
-
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {updatedAgreement.rent_payments[i].fee_type ===
-                              "%"
-                                ? `${updatedAgreement.rent_payments[i].of}`
-                                : ""}
-                            </TableCell>
-
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {updatedAgreement.rent_payments[i].frequency}
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {`${updatedAgreement.rent_payments[i].available_topay} days before`}
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {updatedAgreement.rent_payments[i].due_by == ""
-                                ? `1st of the month`
-                                : `${ordinal_suffix_of(
-                                    updatedAgreement.rent_payments[i].due_by
-                                  )} of the month`}
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              {updatedAgreement.rent_payments[i].late_by} days
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              ${updatedAgreement.rent_payments[i].late_fee}
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: JSON.parse(
-                                  oldAgreement.rent_payments
-                                ).includesObj(fee)
-                                  ? "black"
-                                  : "red",
-                              }}
-                            >
-                              $
-                              {
-                                updatedAgreement.rent_payments[i]
-                                  .perDay_late_fee
-                              }
-                              /day
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
-              </Row>
-            ) : (
-              ""
-            )} */}
 
             {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
               <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
@@ -501,19 +220,18 @@ function ConfirmDialog3(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {JSON.parse(oldAgreement.rent_payments).map((fee, i) => {
-                        return updatedAgreement.rent_payments.includesObj(
-                          fee
-                        ) ? (
+                      {updatedAgreement.rent_payments.map((fee) => {
+                        return JSON.parse(
+                          oldAgreement.rent_payments
+                        ).includesObj(fee) ? (
                           <TableRow>
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               {fee.fee_name}
@@ -521,12 +239,11 @@ function ConfirmDialog3(props) {
 
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               {fee.fee_type === "%"
@@ -536,12 +253,11 @@ function ConfirmDialog3(props) {
 
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               {fee.fee_type === "%" ? `${fee.of}` : ""}
@@ -549,36 +265,33 @@ function ConfirmDialog3(props) {
 
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               {fee.frequency}
                             </TableCell>
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               {`${fee.available_topay} days before`}
                             </TableCell>
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               {fee.due_by == ""
@@ -589,54 +302,52 @@ function ConfirmDialog3(props) {
                             </TableCell>
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               {fee.late_by} days
                             </TableCell>
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               ${fee.late_fee}
                             </TableCell>
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               ${fee.perDay_late_fee}/day
                             </TableCell>
                           </TableRow>
-                        ) : !updatedAgreement.rent_payments.includesObj(fee) &&
-                          updatedAgreement.rent_payments.some(
+                        ) : !JSON.parse(oldAgreement.rent_payments).includesObj(
+                            fee
+                          ) &&
+                          JSON.parse(oldAgreement.rent_payments).some(
                             (e) => fee.fee_name === e.fee_name
                           ) ? (
                           <TableRow>
                             <TableCell
                               style={{
-                                color:
-                                  updatedAgreement.rent_payments.includesObj(
-                                    fee
-                                  )
-                                    ? "black"
-                                    : "red",
+                                color: JSON.parse(
+                                  oldAgreement.rent_payments
+                                ).includesObj(fee)
+                                  ? "black"
+                                  : "red",
                               }}
                             >
                               {fee.fee_name}
@@ -646,27 +357,31 @@ function ConfirmDialog3(props) {
                               {/* {fee.fee_type === "%"
                                 ? `${fee.charge}%`
                                 : `$${fee.charge}`} */}
-                              {updatedAgreement.rent_payments.find(
+                              {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).charge == fee.charge ? (
-                                <div style={{ color: "black" }}>
+                              ).charge != fee.charge ? (
+                                <div style={{ color: "red" }}>
                                   {fee.fee_type === "%"
                                     ? `${fee.charge}%`
                                     : `$${fee.charge}`}
                                 </div>
                               ) : (
-                                <div style={{ color: "red" }}>
-                                  {updatedAgreement.rent_payments.find(
+                                <div style={{ color: "black" }}>
+                                  {JSON.parse(oldAgreement.rent_payments).find(
                                     (temp) => fee.fee_name === temp.fee_name
                                   ).fee_type === "%"
                                     ? `${
-                                        updatedAgreement.rent_payments.find(
+                                        JSON.parse(
+                                          oldAgreement.rent_payments
+                                        ).find(
                                           (temp) =>
                                             fee.fee_name === temp.fee_name
                                         ).charge
                                       }%`
                                     : `$${
-                                        updatedAgreement.rent_payments.find(
+                                        JSON.parse(
+                                          oldAgreement.rent_payments
+                                        ).find(
                                           (temp) =>
                                             fee.fee_name === temp.fee_name
                                         ).charge
@@ -676,19 +391,21 @@ function ConfirmDialog3(props) {
                             </TableCell>
 
                             <TableCell>
-                              {updatedAgreement.rent_payments.find(
+                              {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
                               ).of == fee.of ? (
-                                <div style={{ color: "black" }}>
-                                  {fee.fee_type === "%" ? `${fee.of}` : ""}
+                                <div style={{ color: "red" }}>
+                                  {fee.fee_type !== "%" ? `${fee.of}` : ""}
                                 </div>
                               ) : (
-                                <div style={{ color: "red" }}>
-                                  {updatedAgreement.rent_payments.find(
+                                <div style={{ color: "black" }}>
+                                  {JSON.parse(oldAgreement.rent_payments).find(
                                     (temp) => fee.fee_name === temp.fee_name
                                   ).fee_type === "%"
                                     ? `${
-                                        updatedAgreement.rent_payments.find(
+                                        JSON.parse(
+                                          oldAgreement.rent_payments
+                                        ).find(
                                           (temp) =>
                                             fee.fee_name === temp.fee_name
                                         ).of
@@ -699,16 +416,16 @@ function ConfirmDialog3(props) {
                             </TableCell>
 
                             <TableCell>
-                              {updatedAgreement.rent_payments.find(
+                              {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).frequency == fee.frequency ? (
-                                <div style={{ color: "black" }}>
+                              ).frequency != fee.frequency ? (
+                                <div style={{ color: "red" }}>
                                   {fee.frequency}
                                 </div>
                               ) : (
-                                <div style={{ color: "red" }}>
+                                <div style={{ color: "black" }}>
                                   {
-                                    updatedAgreement.rent_payments.find(
+                                    JSON.parse(oldAgreement.rent_payments).find(
                                       (temp) => fee.fee_name === temp.fee_name
                                     ).frequency
                                   }
@@ -716,16 +433,16 @@ function ConfirmDialog3(props) {
                               )}
                             </TableCell>
                             <TableCell>
-                              {updatedAgreement.rent_payments.find(
+                              {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).available_topay == fee.available_topay ? (
-                                <div style={{ color: "black" }}>
+                              ).available_topay != fee.available_topay ? (
+                                <div style={{ color: "red" }}>
                                   {`${fee.available_topay} days before`}
                                 </div>
                               ) : (
-                                <div style={{ color: "red" }}>
+                                <div style={{ color: "black" }}>
                                   {
-                                    updatedAgreement.rent_payments.find(
+                                    JSON.parse(oldAgreement.rent_payments).find(
                                       (temp) => fee.fee_name === temp.fee_name
                                     ).available_topay
                                   }
@@ -733,10 +450,10 @@ function ConfirmDialog3(props) {
                               )}
                             </TableCell>
                             <TableCell>
-                              {updatedAgreement.rent_payments.find(
+                              {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).due_by == fee.due_by ? (
-                                <div style={{ color: "black" }}>
+                              ).due_by != fee.due_by ? (
+                                <div style={{ color: "red" }}>
                                   {fee.due_by == ""
                                     ? `1st of the month`
                                     : `${ordinal_suffix_of(
@@ -744,8 +461,8 @@ function ConfirmDialog3(props) {
                                       )} of the month`}
                                 </div>
                               ) : (
-                                <div style={{ color: "red" }}>
-                                  {updatedAgreement.rent_payments.find(
+                                <div style={{ color: "black" }}>
+                                  {JSON.parse(oldAgreement.rent_payments).find(
                                     (temp) => fee.fee_name === temp.fee_name
                                   ).due_by == ""
                                     ? `1st of the month`
@@ -761,16 +478,16 @@ function ConfirmDialog3(props) {
                                   )} of the month`}
                             </TableCell>
                             <TableCell>
-                              {updatedAgreement.rent_payments.find(
+                              {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).late_by == fee.late_by ? (
-                                <div style={{ color: "black" }}>
+                              ).late_by != fee.late_by ? (
+                                <div style={{ color: "red" }}>
                                   {fee.late_by} days
                                 </div>
                               ) : (
-                                <div style={{ color: "red" }}>
+                                <div style={{ color: "black" }}>
                                   {
-                                    updatedAgreement.rent_payments.find(
+                                    JSON.parse(oldAgreement.rent_payments).find(
                                       (temp) => fee.fee_name === temp.fee_name
                                     ).late_by
                                   }{" "}
@@ -779,17 +496,17 @@ function ConfirmDialog3(props) {
                               )}
                             </TableCell>
                             <TableCell>
-                              {updatedAgreement.rent_payments.find(
+                              {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).late_fee == fee.late_fee ? (
-                                <div style={{ color: "black" }}>
+                              ).late_fee != fee.late_fee ? (
+                                <div style={{ color: "red" }}>
                                   ${fee.late_fee}
                                 </div>
                               ) : (
-                                <div style={{ color: "red" }}>
+                                <div style={{ color: "black" }}>
                                   $
                                   {
-                                    updatedAgreement.rent_payments.find(
+                                    JSON.parse(oldAgreement.rent_payments).find(
                                       (temp) => fee.fee_name === temp.fee_name
                                     ).late_fee
                                   }
@@ -797,17 +514,17 @@ function ConfirmDialog3(props) {
                               )}
                             </TableCell>
                             <TableCell>
-                              {updatedAgreement.rent_payments.find(
+                              {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).perDay_late_fee == fee.perDay_late_fee ? (
-                                <div style={{ color: "black" }}>
+                              ).perDay_late_fee != fee.perDay_late_fee ? (
+                                <div style={{ color: "red" }}>
                                   ${fee.perDay_late_fee}
                                 </div>
                               ) : (
-                                <div style={{ color: "red" }}>
+                                <div style={{ color: "black" }}>
                                   $
                                   {
-                                    updatedAgreement.rent_payments.find(
+                                    JSON.parse(oldAgreement.rent_payments).find(
                                       (temp) => fee.fee_name === temp.fee_name
                                     ).perDay_late_fee
                                   }
@@ -816,38 +533,119 @@ function ConfirmDialog3(props) {
                               /day
                             </TableCell>
                           </TableRow>
-                        ) : (
-                          <TableRow style={{ textDecoration: "line-through" }}>
-                            <TableCell>{fee.fee_name}</TableCell>
+                        ) : !JSON.parse(oldAgreement.rent_payments).includesObj(
+                            fee
+                          ) ? (
+                          <TableRow>
+                            <TableCell style={{ color: "red" }}>
+                              {fee.fee_name}
+                            </TableCell>
 
-                            <TableCell>
+                            <TableCell style={{ color: "red" }}>
                               {fee.fee_type === "%"
                                 ? `${fee.charge}%`
                                 : `$${fee.charge}`}
                             </TableCell>
 
-                            <TableCell>
+                            <TableCell style={{ color: "red" }}>
                               {fee.fee_type === "%" ? `${fee.of}` : ""}
                             </TableCell>
 
-                            <TableCell>{fee.frequency}</TableCell>
-                            <TableCell>
+                            <TableCell style={{ color: "red" }}>
+                              {fee.frequency}
+                            </TableCell>
+                            <TableCell style={{ color: "red" }}>
                               {`${fee.available_topay} days before`}
                             </TableCell>
-                            <TableCell>
+                            <TableCell style={{ color: "red" }}>
                               {fee.due_by == ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
                                     fee.due_by
                                   )} of the month`}
                             </TableCell>
-                            <TableCell>{fee.late_by} days</TableCell>
-                            <TableCell>${fee.late_fee}</TableCell>
-                            <TableCell>
+                            <TableCell style={{ color: "red" }}>
+                              {fee.late_by} days
+                            </TableCell>
+                            <TableCell style={{ color: "red" }}>
+                              ${fee.late_fee}
+                            </TableCell>
+                            <TableCell style={{ color: "red" }}>
                               ${fee.perDay_late_fee}
                               /day
                             </TableCell>
                           </TableRow>
+                        ) : (
+                          ""
+                        );
+                      })}
+                      {JSON.parse(oldAgreement.rent_payments).map((fee) => {
+                        return !updatedAgreement.rent_payments.includesObj(
+                          fee
+                        ) &&
+                          updatedAgreement.rent_payments.some(
+                            (e) => fee.fee_name !== e.fee_name
+                          ) ? (
+                          <TableRow>
+                            {console.log(fee)}
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {fee.fee_name}
+                            </TableCell>
+
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {fee.fee_type === "%"
+                                ? `${fee.charge}%`
+                                : `$${fee.charge}`}
+                            </TableCell>
+
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {fee.fee_type === "%" ? `${fee.of}` : ""}
+                            </TableCell>
+
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {fee.frequency}
+                            </TableCell>
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {`${fee.available_topay} days before`}
+                            </TableCell>
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {fee.due_by == ""
+                                ? `1st of the month`
+                                : `${ordinal_suffix_of(
+                                    fee.due_by
+                                  )} of the month`}
+                            </TableCell>
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              {fee.late_by} days
+                            </TableCell>
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              ${fee.late_fee}
+                            </TableCell>
+                            <TableCell
+                              style={{ textDecoration: "line-through" }}
+                            >
+                              ${fee.perDay_late_fee}
+                              /day
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
                         );
                       })}
                     </TableBody>
@@ -1029,6 +827,85 @@ function ConfirmDialog3(props) {
             ) : (
               ""
             )} */}
+            {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
+              <Row className="m-3">
+                <h5 style={mediumBold}>Lease Documents</h5>
+                {updatedAgreement.rent_payments.length > 0 ? (
+                  <div>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Document Name</TableCell>
+                          <TableCell>View Document</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {updatedAgreement.rent_payments.map((fee) => {
+                          return JSON.parse(
+                            oldAgreement.rent_payments
+                          ).includesObj(fee) ? (
+                            <TableRow>
+                              <TableCell>{fee.fee_name}</TableCell>
+                              <TableCell>{fee.charge}</TableCell>
+                            </TableRow>
+                          ) : !JSON.parse(
+                              oldAgreement.rent_payments
+                            ).includesObj(fee) ? (
+                            <TableRow>
+                              <TableCell style={{ color: "red" }}>
+                                {fee.fee_name}
+                              </TableCell>
+                              <TableCell style={{ color: "red" }}>
+                                {fee.charge}
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            <TableRow>
+                              <TableCell style={{ color: "red" }}>
+                                {fee.fee_name}
+                              </TableCell>
+                              <TableCell>{fee.charge}</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                        {JSON.parse(oldAgreement.rent_payments).map((fee) => {
+                          return !updatedAgreement.rent_payments.includesObj(
+                            fee
+                          ) &&
+                            updatedAgreement.rent_payments.some(
+                              (e) => fee.fee_name === e.fee_name
+                            ) ? (
+                            <TableRow>
+                              {console.log(fee)}
+                              <TableCell
+                                style={{ textDecoration: "line-through" }}
+                              >
+                                {fee.fee_name}
+                              </TableCell>
+                              <TableCell
+                                style={{ textDecoration: "line-through" }}
+                              >
+                                {fee.charge}
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            ""
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+                ) : (
+                  <div>No documents uploaded</div>
+                )}
+              </Row>
+            ) : (
+              ""
+            )}
             {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
               <Row className="m-3">
                 <h5 style={mediumBold}>Lease Documents</h5>
