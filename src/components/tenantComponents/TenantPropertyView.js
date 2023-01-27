@@ -387,7 +387,7 @@ function TenantPropertyView(props) {
       }
     });
   };
-  console.log(property);
+  // console.log(property);
   useState(() => {
     fetchProperty();
   });

@@ -157,7 +157,7 @@ function ReviewPropertyLease(props) {
   }
   const approveLease = async () => {
     if (rentals.length > 0) {
-      console.log(rentals);
+      // console.log(rentals);
       if (new Date(rentals[0].lease_start) > new Date()) {
         const updatedApplication = {
           application_uid: application_uid,
