@@ -22,8 +22,7 @@ import TenantFooter from "../components/tenantComponents/TenantFooter";
 import TenantUpcomingPayments from "../components/tenantComponents/TenantUpcomingPayments";
 import TenantPaymentHistory from "../components/tenantComponents/TenantPaymentHistory";
 import TenantRepairRequest from "../components/tenantComponents/TenantRepairRequest";
-import SortDown from "../icons/Sort-down.svg";
-import SortLeft from "../icons/Sort-left.svg";
+import ConfirmDialog2 from "../components/ConfirmDialog2";
 import SearchProperties_Black from "../icons/SearchProperties_Black.svg";
 import Phone from "../icons/Phone.svg";
 import Message from "../icons/Message.svg";
@@ -75,7 +74,7 @@ export default function TenantDashboard() {
 
   const [orderApplications, setOrderApplications] = useState("asc");
   const [orderApplicationsBy, setOrderApplicationsBy] = useState("calories");
-
+  const [showDialog, setShowDialog] = useState(false);
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -89,15 +88,26 @@ export default function TenantDashboard() {
   const responsive = {
     showSidebar: width > 1023,
   };
+  const onCancel = () => {
+    setShowDialog(false);
+  };
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
   };
+  const ProfileNotComplete = async (app) => {
+    setShowDialog(false);
+    navigate("../tenantProfile");
+  };
   const fetchTenantDashboard = async () => {
     if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
       return;
+    }
+    const check = await get("/CheckTenantProfileComplete", access_token);
+    if (check["message"] == "Incomplete Profile") {
+      setShowDialog(true);
     }
 
     const response = await get("/tenantDashboard", access_token);
@@ -654,6 +664,11 @@ export default function TenantDashboard() {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
+      <ConfirmDialog2
+        title={"Please Complete your Profile"}
+        isOpen={showDialog}
+        onConfirm={ProfileNotComplete}
+      />
       {!isLoading && tenantData.length > 0 ? (
         <div className="flex-1">
           <div

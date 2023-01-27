@@ -45,9 +45,9 @@ function TenantProfile(props) {
   const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
+  console.log("user info", user);
   const [editProfile, setEditProfile] = useState(false);
-
+  const [tenantInfo, setTenantInfo] = useState([]);
   const [resetPassword, setResetPassword] = useState(false);
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -194,93 +194,150 @@ function TenantProfile(props) {
         // console.log("no tenant profile");
         props.onConfirm();
       }
-      setFirstName(response.result[0].tenant_first_name);
-      setLastName(response.result[0].tenant_last_name);
-      setSsn(response.result[0].tenant_ssn);
-      setPhone(response.result[0].tenant_phone_number);
-      setEmail(response.result[0].tenant_email);
-      setSalary(response.result[0].tenant_current_salary);
-      setJobTitle(response.result[0].tenant_current_job_title);
-      setCompany(response.result[0].tenant_current_job_company);
-      setDLNumber(response.result[0].tenant_drivers_license_number);
-      setSelectedDlState(response.result[0].tenant_drivers_license_state);
-      setCompany(response.result[0].tenant_current_job_company);
+      if (response.result.length > 0) {
+        console.log("Profile complete");
+        setTenantInfo(response.result);
+        setFirstName(response.result[0].tenant_first_name);
+        setLastName(response.result[0].tenant_last_name);
+        setSsn(response.result[0].tenant_ssn);
+        setPhone(response.result[0].tenant_phone_number);
+        setEmail(response.result[0].tenant_email);
+        setSalary(response.result[0].tenant_current_salary);
+        setJobTitle(response.result[0].tenant_current_job_title);
+        setCompany(response.result[0].tenant_current_job_company);
+        setDLNumber(response.result[0].tenant_drivers_license_number);
+        setSelectedDlState(response.result[0].tenant_drivers_license_state);
+        setCompany(response.result[0].tenant_current_job_company);
 
-      setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
+        setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
 
-      setChildren(JSON.parse(response.result[0].tenant_children_occupants));
+        setChildren(JSON.parse(response.result[0].tenant_children_occupants));
 
-      setPets(JSON.parse(response.result[0].tenant_pet_occupants));
-      setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
-      setReferences(JSON.parse(response.result[0].tenant_references));
-      const currentAddress = JSON.parse(
-        response.result[0].tenant_current_address
-      );
-      const documents = response.result[0].documents
-        ? JSON.parse(response.result[0].documents)
-        : [];
-      setFiles(JSON.parse(response.result[0].documents));
-      currentAddressState[1](currentAddress);
-      setSelectedState(currentAddress.state);
-      if (response.result[0].tenant_previous_address != null) {
-        const prevAddress = JSON.parse(
-          response.result[0].tenant_previous_address
+        setPets(JSON.parse(response.result[0].tenant_pet_occupants));
+        setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
+        setReferences(JSON.parse(response.result[0].tenant_references));
+        const currentAddress = JSON.parse(
+          response.result[0].tenant_current_address
         );
-        if (prevAddress) {
-          previousAddressState[1](prevAddress);
-          setSelectedPrevState(prevAddress.state);
-          if (prevAddress.street) {
-            setUsePreviousAddress(true);
+        const documents = response.result[0].documents
+          ? JSON.parse(response.result[0].documents)
+          : [];
+        setFiles(JSON.parse(response.result[0].documents));
+        currentAddressState[1](currentAddress);
+        setSelectedState(currentAddress.state);
+        if (response.result[0].tenant_previous_address != null) {
+          const prevAddress = JSON.parse(
+            response.result[0].tenant_previous_address
+          );
+          if (prevAddress) {
+            previousAddressState[1](prevAddress);
+            setSelectedPrevState(prevAddress.state);
+            if (prevAddress.street) {
+              setUsePreviousAddress(true);
+            }
           }
         }
+      } else {
+        console.log("Profile Incomplete");
+        setFirstName(user.first_name);
+        setLastName(user.last_name);
+        setPhone(user.phone_number);
+        setEmail(user.email);
       }
     };
     fetchProfile();
   }, []);
 
   const submitInfo = async () => {
-    currentAddressState[0].state = selectedState;
-    if (previousAddressState && previousAddressState.length) {
-      previousAddressState[0].state = selectedPrevState;
+    if (tenantInfo.length > 0) {
+      console.log("update profile because tenant prolfile exits");
+      currentAddressState[0].state = selectedState;
+      if (previousAddressState && previousAddressState.length) {
+        previousAddressState[0].state = selectedPrevState;
+      }
+
+      const tenantProfile = {
+        first_name: firstName,
+        last_name: lastName,
+        current_salary: salary,
+        phone_number: phone,
+        email: email,
+        salary_frequency: frequency,
+        current_job_title: jobTitle,
+        current_job_company: company,
+        ssn: ssn,
+        drivers_license_number: dlNumber,
+        drivers_license_state: selectedDlState,
+        current_address: JSON.stringify(currentAddressState[0]),
+        previous_address: usePreviousAddress
+          ? JSON.stringify(previousAddressState[0])
+          : null,
+        adult_occupants: JSON.stringify(adults),
+        children_occupants: JSON.stringify(children),
+        pet_occupants: JSON.stringify(pets),
+        references: JSON.stringify(references),
+        vehicle_info: JSON.stringify(vehicles),
+      };
+
+      for (let i = 0; i < files.length; i++) {
+        let key = `doc_${i}`;
+        tenantProfile[key] = files[i].file;
+        delete files[i].file;
+      }
+      tenantProfile.documents = JSON.stringify(files);
+
+      await put(`/tenantProfileInfo`, tenantProfile, access_token, files);
+
+      setEditProfile(false);
+      props.onConfirm();
+      // await post('/tenantProfileInfo', tenantProfile, access_token, files);
+      // updateAutofillState(tenantProfile);
+      // props.onConfirm();
+    } else {
+      console.log("post becuase create new tenant profile");
+      currentAddressState[0].state = selectedState;
+      if (previousAddressState && previousAddressState.length) {
+        previousAddressState[0].state = selectedPrevState;
+      }
+
+      const tenantProfile = {
+        tenant_first_name: firstName,
+        tenant_last_name: lastName,
+        tenant_current_salary: salary,
+        tenant_phone_number: phone,
+        tenant_email: email,
+        tenant_salary_frequency: frequency,
+        tenant_current_job_title: jobTitle,
+        tenant_current_job_company: company,
+        tenant_ssn: ssn,
+        tenant_drivers_license_number: dlNumber,
+        tenant_drivers_license_state: selectedDlState,
+        tenant_current_address: JSON.stringify(currentAddressState[0]),
+        tenant_previous_address: usePreviousAddress
+          ? JSON.stringify(previousAddressState[0])
+          : null,
+        tenant_adult_occupants: JSON.stringify(adults),
+        tenant_children_occupants: JSON.stringify(children),
+        tenant_pet_occupants: JSON.stringify(pets),
+        tenant_references: JSON.stringify(references),
+        tenant_vehicle_info: JSON.stringify(vehicles),
+      };
+
+      for (let i = 0; i < files.length; i++) {
+        let key = `doc_${i}`;
+        tenantProfile[key] = files[i].file;
+        delete files[i].file;
+      }
+      tenantProfile.documents = JSON.stringify(files);
+
+      await post("/tenantProfileInfo", tenantProfile, access_token, files);
+
+      setEditProfile(false);
+      props.onConfirm();
+
+      // updateAutofillState(tenantProfile);
+      // props.onConfirm();
     }
-
-    const tenantProfile = {
-      first_name: firstName,
-      last_name: lastName,
-      current_salary: salary,
-      phone_number: phone,
-      email: email,
-      salary_frequency: frequency,
-      current_job_title: jobTitle,
-      current_job_company: company,
-      ssn: ssn,
-      drivers_license_number: dlNumber,
-      drivers_license_state: selectedDlState,
-      current_address: JSON.stringify(currentAddressState[0]),
-      previous_address: usePreviousAddress
-        ? JSON.stringify(previousAddressState[0])
-        : null,
-      adult_occupants: JSON.stringify(adults),
-      children_occupants: JSON.stringify(children),
-      pet_occupants: JSON.stringify(pets),
-      references: JSON.stringify(references),
-      vehicle_info: JSON.stringify(vehicles),
-    };
-
-    for (let i = 0; i < files.length; i++) {
-      let key = `doc_${i}`;
-      tenantProfile[key] = files[i].file;
-      delete files[i].file;
-    }
-    tenantProfile.documents = JSON.stringify(files);
-
-    await put(`/tenantProfileInfo`, tenantProfile, access_token, files);
-
-    setEditProfile(false);
-    props.onConfirm();
-    // await post('/tenantProfileInfo', tenantProfile, access_token, files);
-    // updateAutofillState(tenantProfile);
-    // props.onConfirm();
   };
   // console.log(usePreviousAddress, previousAddressState[0]);
 
