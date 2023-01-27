@@ -47,6 +47,7 @@ function ManagerTenantRentPayments(props) {
   } = props;
   // console.log(agreement);
   const [newFee, setNewFee] = useState(null);
+  const [oneTimeFee, setOneTimeFee] = useState(startDate);
   const [defaultFee, setDefaultFee] = useState([null]);
   const [editingFee, setEditingFee] = useState(null);
   const emptyFee = {
@@ -71,7 +72,11 @@ function ManagerTenantRentPayments(props) {
         of: "Gross Rent",
         frequency: "One-time",
         available_topay: available,
-        due_by: startDate.split("-")[2],
+        // due_by: startDate,
+        due_by:
+          startDate && startDate.split("-")[2].charAt(0) == "0"
+            ? startDate.split("-")[2].charAt(1)
+            : startDate.split("-")[2],
         late_by: lateAfter,
         late_fee: lateFee,
         perDay_late_fee: lateFeePer,
@@ -103,7 +108,11 @@ function ManagerTenantRentPayments(props) {
         of: "Gross Rent",
         frequency: "One-time",
         available_topay: available,
-        due_by: startDate.split("-")[2],
+        // due_by: startDate,
+        due_by:
+          startDate && startDate.split("-")[2].charAt(0) == "0"
+            ? startDate.split("-")[2].charAt(1)
+            : startDate.split("-")[2],
         late_by: lateAfter,
         late_fee: lateFee,
         perDay_late_fee: lateFeePer,
@@ -237,6 +246,11 @@ function ManagerTenantRentPayments(props) {
               <TableCell>{fee.frequency}</TableCell>
               <TableCell>{`${fee.available_topay} days before`}</TableCell>
               <TableCell>
+                {/* {fee.due_by == ""
+                  ? `1st of the month`
+                  : fee.frequency == "One-time"
+                  ? `${fee.due_by}`
+                  : `${ordinal_suffix_of(fee.due_by)} of the month`} */}
                 {fee.due_by == ""
                   ? `1st of the month`
                   : `${ordinal_suffix_of(fee.due_by)} of the month`}
@@ -507,16 +521,31 @@ function ManagerTenantRentPayments(props) {
                     <option>{startDate}</option>
                   </Form.Select>
                 ) : (
-                  <Form.Select
-                    value={newFee.due_by}
-                    onChange={(e) => changeNewFee(e, "due_by")}
-                    style={{
-                      ...squareForm,
-                      backgroundImage: `url(${ArrowDown})`,
+                  <Form.Control
+                    style={squareForm}
+                    type="date"
+                    value={oneTimeFee}
+                    onChange={(e) => {
+                      const changedFee = { ...newFee };
+                      changedFee["due_by"] =
+                        e.target.value.split("-")[2].charAt(0) == "0"
+                          ? e.target.value.split("-")[2].charAt(1)
+                          : e.target.value.split("-")[2];
+                      // changedFee["due_by"] = e.target.value;
+                      setOneTimeFee(e.target.value);
+                      setNewFee(changedFee);
                     }}
-                  >
-                    <option>{startDate}</option>
-                  </Form.Select>
+                  />
+                  // <Form.Select
+                  //   value={newFee.due_by}
+                  //   onChange={(e) => changeNewFee(e, "due_by")}
+                  //   style={{
+                  //     ...squareForm,
+                  //     backgroundImage: `url(${ArrowDown})`,
+                  //   }}
+                  // >
+                  //   <option>{startDate}</option>
+                  // </Form.Select>
                 )}
               </Form.Group>
             </Col>

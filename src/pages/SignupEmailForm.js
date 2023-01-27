@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
-
+import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import AppleLogin from "../icons/AppleLogin.svg";
@@ -28,6 +28,7 @@ function SignupEmailForm(props) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
   const submitForm = async () => {
     if (
       email === "" ||
@@ -41,11 +42,16 @@ function SignupEmailForm(props) {
     if (email !== confirmEmail) {
       setErrorMessage("Emails must match");
       return;
+    } else if (email === confirmEmail) {
+      setErrorMessage("");
     }
     if (password !== confirmPassword) {
       setErrorMessage("Passwords must match");
       return;
+    } else if (password == confirmPassword) {
+      setErrorMessage("");
     }
+    setShowSpinner(true);
     const user = {
       first_name: props.firstName,
       last_name: props.lastName,
@@ -63,6 +69,7 @@ function SignupEmailForm(props) {
     setErrorMessage("");
     context.updateUserData(response.result);
     // save to app state / context
+    setShowSpinner(false);
     props.onConfirm();
   };
   const goToLogin = () => {
@@ -160,12 +167,20 @@ function SignupEmailForm(props) {
                 />
               </Form.Group>
             </Form>
+            {showSpinner ? (
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                <ReactBootStrap.Spinner animation="border" role="status" />
+              </div>
+            ) : (
+              ""
+            )}
             <div
               className="text-center"
               style={errorMessage === "" ? hidden : {}}
             >
               <p style={{ ...red, ...small }}>{errorMessage || "error"}</p>
             </div>
+
             <div className="text-center pt-1 pb-3">
               <Button
                 variant="outline-primary"

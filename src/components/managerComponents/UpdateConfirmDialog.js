@@ -395,7 +395,7 @@ function ConfirmDialog3(props) {
                                 (temp) => fee.fee_name === temp.fee_name
                               ).of == fee.of ? (
                                 <div style={{ color: "red" }}>
-                                  {fee.fee_type !== "%" ? `${fee.of}` : ""}
+                                  {fee.fee_type === "%" ? `${fee.of}` : ""}
                                 </div>
                               ) : (
                                 <div style={{ color: "black" }}>
@@ -454,6 +454,13 @@ function ConfirmDialog3(props) {
                                 (temp) => fee.fee_name === temp.fee_name
                               ).due_by != fee.due_by ? (
                                 <div style={{ color: "red" }}>
+                                  {/* {fee.due_by == ""
+                                    ? `1st of the month`
+                                    : fee.frequency == "One-time"
+                                    ? `${fee.due_by}`
+                                    : `${ordinal_suffix_of(
+                                        fee.due_by
+                                      )} of the month`} */}
                                   {fee.due_by == ""
                                     ? `1st of the month`
                                     : `${ordinal_suffix_of(
@@ -471,11 +478,6 @@ function ConfirmDialog3(props) {
                                       )} of the month`}
                                 </div>
                               )}
-                              {fee.due_by == ""
-                                ? `1st of the month`
-                                : `${ordinal_suffix_of(
-                                    fee.due_by
-                                  )} of the month`}
                             </TableCell>
                             <TableCell>
                               {JSON.parse(oldAgreement.rent_payments).find(
@@ -558,6 +560,13 @@ function ConfirmDialog3(props) {
                               {`${fee.available_topay} days before`}
                             </TableCell>
                             <TableCell style={{ color: "red" }}>
+                              {/* {fee.due_by == ""
+                                ? `1st of the month`
+                                : fee.frequency == "One-time"
+                                ? `${fee.due_by}`
+                                : `${ordinal_suffix_of(
+                                    fee.due_by
+                                  )} of the month`} */}
                               {fee.due_by == ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
@@ -621,6 +630,13 @@ function ConfirmDialog3(props) {
                             <TableCell
                               style={{ textDecoration: "line-through" }}
                             >
+                              {/* {fee.due_by == ""
+                                ? `1st of the month`
+                                : fee.frequency == "One-time"
+                                ? `${fee.due_by}`
+                                : `${ordinal_suffix_of(
+                                    fee.due_by
+                                  )} of the month`} */}
                               {fee.due_by == ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
@@ -655,181 +671,10 @@ function ConfirmDialog3(props) {
             ) : (
               ""
             )}
-            {/* {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
-              <Row className="mb-4 m-3">
-                <h5 style={mediumBold}>Contact Details</h5>
 
-                <div>
-                  <Table classes={{ root: classes.customTable }} size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Contact Name</TableCell>
-                        <TableCell>Role</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Phone Number</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {JSON.parse(oldAgreement.assigned_contacts).map(
-                        (contact, i) => {
-                          return updatedAgreement.assigned_contacts.includesObj(
-                            contact
-                          ) ? (
-                            <TableRow key={i}>
-                              <TableCell>
-                                {contact.first_name} {contact.last_name}
-                              </TableCell>
-                              <TableCell>{contact.company_role}</TableCell>
-                              <TableCell>{contact.email}</TableCell>
-                              <TableCell>{contact.phone_number}</TableCell>
-                            </TableRow>
-                          ) : !updatedAgreement.assigned_contacts.includesObj(
-                              contact
-                            ) &&
-                            updatedAgreement.assigned_contacts.some(
-                              (e) => contact.first_name === e.first_name
-                            ) ? (
-                            <TableRow key={i}>
-                              <TableCell
-                                style={{
-                                  color:
-                                    updatedAgreement.assigned_contacts.includesObj(
-                                      contact
-                                    )
-                                      ? "black"
-                                      : "red",
-                                }}
-                              >
-                                {updatedAgreement.assigned_contacts.find(
-                                  (temp) =>
-                                    contact.first_name === temp.first_name
-                                ).first_name == contact.first_name &&
-                                updatedAgreement.assigned_contacts.find(
-                                  (temp) =>
-                                    contact.first_name === temp.first_name
-                                ).last_name == contact.last_name ? (
-                                  <div style={{ color: "black" }}>
-                                    {contact.first_name} {contact.last_name}
-                                  </div>
-                                ) : (
-                                  <div style={{ color: "red" }}>
-                                    {
-                                      updatedAgreement.assigned_contacts.find(
-                                        (temp) =>
-                                          contact.first_name === temp.first_name
-                                      ).first_name
-                                    }{" "}
-                                    {
-                                      updatedAgreement.assigned_contacts.find(
-                                        (temp) =>
-                                          contact.first_name === temp.first_name
-                                      ).last_name
-                                    }
-                                  </div>
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {" "}
-                                {updatedAgreement.assigned_contacts.find(
-                                  (temp) =>
-                                    contact.first_name === temp.first_name
-                                ).company_role == contact.company_role ? (
-                                  <div style={{ color: "black" }}>
-                                    {contact.company_role}
-                                  </div>
-                                ) : (
-                                  <div style={{ color: "red" }}>
-                                    {
-                                      updatedAgreement.assigned_contacts.find(
-                                        (temp) =>
-                                          contact.first_name === temp.first_name
-                                      ).company_role
-                                    }
-                                  </div>
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {" "}
-                                {updatedAgreement.assigned_contacts.find(
-                                  (temp) =>
-                                    contact.first_name === temp.first_name
-                                ).email == contact.email ? (
-                                  <div style={{ color: "black" }}>
-                                    {contact.email}
-                                  </div>
-                                ) : (
-                                  <div style={{ color: "red" }}>
-                                    {
-                                      updatedAgreement.assigned_contacts.find(
-                                        (temp) =>
-                                          contact.first_name === temp.first_name
-                                      ).email
-                                    }
-                                  </div>
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {" "}
-                                {updatedAgreement.assigned_contacts.find(
-                                  (temp) =>
-                                    contact.first_name === temp.first_name
-                                ).phone_number == contact.phone_number ? (
-                                  <div style={{ color: "black" }}>
-                                    {contact.phone_number}
-                                  </div>
-                                ) : (
-                                  <div style={{ color: "red" }}>
-                                    {
-                                      updatedAgreement.assigned_contacts.find(
-                                        (temp) =>
-                                          contact.first_name === temp.first_name
-                                      ).phone_number
-                                    }
-                                  </div>
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ) : (
-                            <TableRow
-                              key={i}
-                              style={{ textDecoration: "line-through" }}
-                            >
-                              <TableCell>
-                                {contact.first_name} {contact.last_name}
-                              </TableCell>
-                              <TableCell>{contact.company_role}</TableCell>
-                              <TableCell>{contact.email}</TableCell>
-                              <TableCell>{contact.phone_number}</TableCell>
-                              <TableCell>
-                                <a href={`tel:${contact.phone_number}`}>
-                                  <img
-                                    src={Phone}
-                                    alt="Phone"
-                                    style={smallImg}
-                                  />
-                                </a>
-                                <a>
-                                  <img
-                                    src={Message}
-                                    alt="Message"
-                                    style={smallImg}
-                                  />
-                                </a>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        }
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </Row>
-            ) : (
-              ""
-            )} */}
             {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
               <Row className="m-3">
-                <h5 style={mediumBold}>Lease Documents</h5>
+                <h5 style={mediumBold}>Payments Summary</h5>
                 {updatedAgreement.rent_payments.length > 0 ? (
                   <div>
                     <Table
@@ -839,8 +684,8 @@ function ConfirmDialog3(props) {
                     >
                       <TableHead>
                         <TableRow>
-                          <TableCell>Document Name</TableCell>
-                          <TableCell>View Document</TableCell>
+                          <TableCell>Payment Type</TableCell>
+                          <TableCell>Amount</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>

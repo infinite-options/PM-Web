@@ -486,6 +486,12 @@ function ManagerTenantAgreement(props) {
   };
 
   const filterAgreement = () => {
+    if (effectiveDate === "") {
+      setErrorMessage("Please fill out the effective date");
+      return;
+    } else {
+      setErrorMessage("");
+    }
     let og = oldAgreement;
     const newAgreement = {
       rental_property_id: property.property_uid,
