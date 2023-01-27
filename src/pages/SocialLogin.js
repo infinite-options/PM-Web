@@ -6,6 +6,7 @@ import axios from "axios";
 import { Grid, Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { Col, Container, Form, Modal, Row } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import Apple from "../icons/AppleLogin.svg";
 import Google from "../icons/GoogleLogin.svg";
 import AppContext from "../AppContext";
@@ -29,6 +30,7 @@ function SocialLogin(props) {
   const navigate = useNavigate();
   const [loginStage, setLoginStage] = useState("LOGIN");
   const [socialSignUpModalShow, setSocialSignUpModalShow] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newFName, setNewFName] = useState("");
   const [newLName, setNewLName] = useState("");
@@ -54,6 +56,7 @@ function SocialLogin(props) {
   // console.log(signupStage);
 
   const socialGoogle = async (e) => {
+    setShowSpinner(true);
     if (signupStage === "NAME") {
       const user = {
         email: e,
@@ -83,6 +86,7 @@ function SocialLogin(props) {
       // console.log("login", response.result);
       updateUserData(response.result);
       // save to app state / context
+      setShowSpinner(false);
       setLoginStage("ROLE");
       props.setLoginStage("ROLE");
     }
@@ -184,6 +188,7 @@ function SocialLogin(props) {
       });
 
       //  _socialLoginAttempt(email, accessToken, socialId, "GOOGLE");
+
       socialGoogle(email);
     }
   };
@@ -471,6 +476,13 @@ function SocialLogin(props) {
               />
             </Button>
           </div>
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+              <ReactBootStrap.Spinner animation="border" role="status" />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       ) : loginStage === "ROLE" ? (
         <div className="d-flex flex-column h-100 pb-5">

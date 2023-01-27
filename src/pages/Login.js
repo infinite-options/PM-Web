@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
+import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import SocialLogin from "./SocialLogin";
@@ -18,6 +19,7 @@ function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
   // console.log("stage", loginStage, props.signupStage);
   useEffect(() => {
     if (userData.access_token !== null) {
@@ -29,6 +31,8 @@ function Login(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
+
+    setShowSpinner(true);
     const user = {
       email: email,
       password: password,
@@ -41,6 +45,7 @@ function Login(props) {
     }
     // console.log("login", response.result);
     updateUserData(response.result);
+    setShowSpinner(false);
     // save to app state / context
     setLoginStage("ROLE");
   };
@@ -154,12 +159,20 @@ function Login(props) {
                 />
               </Form.Group>
             </Form>
+
             <div className="text-center pt-1 pb-2">
               <div className="text-center mb-4">
                 <p style={boldSmall} onClick={onReset}>
                   Forgot Password?
                 </p>
               </div>
+              {showSpinner ? (
+                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                  <ReactBootStrap.Spinner animation="border" role="status" />
+                </div>
+              ) : (
+                ""
+              )}
               <Button
                 variant="outline-primary"
                 style={pillButton}
