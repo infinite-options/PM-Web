@@ -45,7 +45,7 @@ function TenantProfile(props) {
   const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  console.log("user info", user);
+  // console.log("user info", user);
   const [editProfile, setEditProfile] = useState(false);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [resetPassword, setResetPassword] = useState(false);
@@ -195,7 +195,7 @@ function TenantProfile(props) {
         props.onConfirm();
       }
       if (response.result.length > 0) {
-        console.log("Profile complete");
+        // console.log("Profile complete");
         setTenantInfo(response.result);
         setFirstName(response.result[0].tenant_first_name);
         setLastName(response.result[0].tenant_last_name);
@@ -238,7 +238,7 @@ function TenantProfile(props) {
           }
         }
       } else {
-        console.log("Profile Incomplete");
+        // console.log("Profile Incomplete");
         setFirstName(user.first_name);
         setLastName(user.last_name);
         setPhone(user.phone_number);
@@ -250,7 +250,7 @@ function TenantProfile(props) {
 
   const submitInfo = async () => {
     if (tenantInfo.length > 0) {
-      console.log("update profile because tenant prolfile exits");
+      // console.log("update profile because tenant prolfile exits");
       currentAddressState[0].state = selectedState;
       if (previousAddressState && previousAddressState.length) {
         previousAddressState[0].state = selectedPrevState;
@@ -294,7 +294,7 @@ function TenantProfile(props) {
       // updateAutofillState(tenantProfile);
       // props.onConfirm();
     } else {
-      console.log("post becuase create new tenant profile");
+      // console.log("post becuase create new tenant profile");
       currentAddressState[0].state = selectedState;
       if (previousAddressState && previousAddressState.length) {
         previousAddressState[0].state = selectedPrevState;

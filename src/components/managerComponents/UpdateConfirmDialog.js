@@ -38,8 +38,8 @@ function ConfirmDialog3(props) {
     button1,
     button2,
   } = props;
-  console.log("updatedAgreement", updatedAgreement);
-  console.log("oldAgreement", oldAgreement);
+  // console.log("updatedAgreement", updatedAgreement);
+  // console.log("oldAgreement", oldAgreement);
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
@@ -596,7 +596,6 @@ function ConfirmDialog3(props) {
                             (e) => fee.fee_name !== e.fee_name
                           ) ? (
                           <TableRow>
-                            {console.log(fee)}
                             <TableCell
                               style={{ textDecoration: "line-through" }}
                             >
@@ -725,7 +724,6 @@ function ConfirmDialog3(props) {
                               (e) => fee.fee_name === e.fee_name
                             ) ? (
                             <TableRow>
-                              {console.log(fee)}
                               <TableCell
                                 style={{ textDecoration: "line-through" }}
                               >
