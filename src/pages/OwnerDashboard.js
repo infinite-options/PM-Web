@@ -45,7 +45,7 @@ export default function OwnerDashboard2() {
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [ownerData, setOwnerData] = useState([]);
   const [cashflowData, setCashflowData] = useState({});
-
+  const [editAppliances, setEditAppliances] = useState(false);
   const [stage, setStage] = useState("LIST");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -111,6 +111,14 @@ export default function OwnerDashboard2() {
   };
   const responsive = {
     showSidebar: width > 1023,
+  };
+  const headerBack = () => {
+    if (editAppliances && stage == "NEW") {
+      setEditAppliances(false);
+    } else {
+      navigate("../owner");
+    }
+    // navigate("../owner");
   };
   const fetchOwnerDashboard = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
@@ -5588,11 +5596,13 @@ export default function OwnerDashboard2() {
           <Header
             title="Add a new Property"
             leftText="< Back"
-            leftFn={() => setStage("LIST")}
+            leftFn={() => headerBack()}
           />
           <OwnerPropertyForm
             edit
             cancel={() => setStage("LIST")}
+            editAppliances={editAppliances}
+            setEditAppliances={setEditAppliances}
             onSubmit={addProperty}
           />
         </div>

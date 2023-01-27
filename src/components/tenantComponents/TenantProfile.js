@@ -178,74 +178,75 @@ function TenantProfile(props) {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  const fetchProfile = async () => {
+    const response = await get("/tenantProfileInfo", access_token);
+    // console.log(response);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const response = await get("/tenantProfileInfo", access_token);
-      // console.log(response);
+    if (response.msg === "Token has expired") {
+      // console.log("here msg");
+      refresh();
+      return;
+    }
 
-      if (response.msg === "Token has expired") {
-        // console.log("here msg");
-        refresh();
-        return;
-      }
+    if (user.role.indexOf("TENANT") === -1) {
+      // console.log("no tenant profile");
+      props.onConfirm();
+    }
+    if (response.result.length > 0) {
+      // console.log("Profile complete");
+      setTenantInfo(response.result);
+      setFirstName(response.result[0].tenant_first_name);
+      setLastName(response.result[0].tenant_last_name);
+      setSsn(response.result[0].tenant_ssn);
+      setPhone(response.result[0].tenant_phone_number);
+      setEmail(response.result[0].tenant_email);
+      setSalary(response.result[0].tenant_current_salary);
+      setJobTitle(response.result[0].tenant_current_job_title);
+      setCompany(response.result[0].tenant_current_job_company);
+      setDLNumber(response.result[0].tenant_drivers_license_number);
+      setSelectedDlState(response.result[0].tenant_drivers_license_state);
+      setCompany(response.result[0].tenant_current_job_company);
 
-      if (user.role.indexOf("TENANT") === -1) {
-        // console.log("no tenant profile");
-        props.onConfirm();
-      }
-      if (response.result.length > 0) {
-        // console.log("Profile complete");
-        setTenantInfo(response.result);
-        setFirstName(response.result[0].tenant_first_name);
-        setLastName(response.result[0].tenant_last_name);
-        setSsn(response.result[0].tenant_ssn);
-        setPhone(response.result[0].tenant_phone_number);
-        setEmail(response.result[0].tenant_email);
-        setSalary(response.result[0].tenant_current_salary);
-        setJobTitle(response.result[0].tenant_current_job_title);
-        setCompany(response.result[0].tenant_current_job_company);
-        setDLNumber(response.result[0].tenant_drivers_license_number);
-        setSelectedDlState(response.result[0].tenant_drivers_license_state);
-        setCompany(response.result[0].tenant_current_job_company);
+      setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
 
-        setAdults(JSON.parse(response.result[0].tenant_adult_occupants));
+      setChildren(JSON.parse(response.result[0].tenant_children_occupants));
 
-        setChildren(JSON.parse(response.result[0].tenant_children_occupants));
-
-        setPets(JSON.parse(response.result[0].tenant_pet_occupants));
-        setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
-        setReferences(JSON.parse(response.result[0].tenant_references));
-        const currentAddress = JSON.parse(
-          response.result[0].tenant_current_address
+      setPets(JSON.parse(response.result[0].tenant_pet_occupants));
+      setVehicles(JSON.parse(response.result[0].tenant_vehicle_info));
+      setReferences(JSON.parse(response.result[0].tenant_references));
+      const currentAddress = JSON.parse(
+        response.result[0].tenant_current_address
+      );
+      const documents = response.result[0].documents
+        ? JSON.parse(response.result[0].documents)
+        : [];
+      setFiles(JSON.parse(response.result[0].documents));
+      currentAddressState[1](currentAddress);
+      setSelectedState(currentAddress.state);
+      if (response.result[0].tenant_previous_address != null) {
+        const prevAddress = JSON.parse(
+          response.result[0].tenant_previous_address
         );
-        const documents = response.result[0].documents
-          ? JSON.parse(response.result[0].documents)
-          : [];
-        setFiles(JSON.parse(response.result[0].documents));
-        currentAddressState[1](currentAddress);
-        setSelectedState(currentAddress.state);
-        if (response.result[0].tenant_previous_address != null) {
-          const prevAddress = JSON.parse(
-            response.result[0].tenant_previous_address
-          );
-          if (prevAddress) {
-            previousAddressState[1](prevAddress);
-            setSelectedPrevState(prevAddress.state);
-            if (prevAddress.street) {
-              setUsePreviousAddress(true);
-            }
+        if (prevAddress) {
+          previousAddressState[1](prevAddress);
+          setSelectedPrevState(prevAddress.state);
+          if (prevAddress.street) {
+            setUsePreviousAddress(true);
           }
         }
-      } else {
-        // console.log("Profile Incomplete");
-        setFirstName(user.first_name);
-        setLastName(user.last_name);
-        setPhone(user.phone_number);
-        setEmail(user.email);
       }
-    };
+    } else {
+      // console.log("Profile Incomplete");
+      //  setEditProfile(true);
+      setFirstName(user.first_name);
+      setLastName(user.last_name);
+      setPhone(user.phone_number);
+      setEmail(user.email);
+    }
+  };
+  useEffect(() => {
     fetchProfile();
+    setEditProfile(true);
   }, []);
 
   const submitInfo = async () => {
@@ -1514,7 +1515,7 @@ function TenantProfile(props) {
                     <Row style={subHeading}>
                       <Col>Name</Col>
                       <Col>Relationship</Col>
-                      <Col>DOB</Col>
+                      <Col>DOB(YYYY-MM-DD)</Col>
                     </Row>
                     {Object.values(adults).map((adult) => {
                       return (
@@ -1542,7 +1543,7 @@ function TenantProfile(props) {
                     <Row style={subHeading}>
                       <Col>Name</Col>
                       <Col>Relationship</Col>
-                      <Col>DOB</Col>
+                      <Col>DOB(YYYY-MM-DD)</Col>
                     </Row>
                     {Object.values(children).map((child) => {
                       return (

@@ -45,7 +45,7 @@ function ManagerTenantAgreementView(props) {
     selectAgreement,
     closeAgreement,
   } = props;
-  // console.log(props);
+  console.log(property);
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   // console.log(user);
@@ -401,19 +401,25 @@ function ManagerTenantAgreementView(props) {
                 <Col>
                   <h3>Tenant Info</h3>
                 </Col>
-                <Col xs={2}>
-                  <img
-                    src={EditIconNew}
-                    alt="Edit"
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      float: "right",
-                      marginRight: "5rem",
-                    }}
-                    onClick={() => selectAgreement(selectedAgreement)}
-                  />
-                </Col>
+                {property.management_status === "ACCEPTED" ||
+                property.management_status === "OWNER END EARLY" ||
+                property.management_status === "PM END EARLY" ? (
+                  <Col xs={2}>
+                    <img
+                      src={EditIconNew}
+                      alt="Edit"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        float: "right",
+                        marginRight: "5rem",
+                      }}
+                      onClick={() => selectAgreement(selectedAgreement)}
+                    />
+                  </Col>
+                ) : (
+                  ""
+                )}
               </Row>
             ) : (
               <Col xs={2}></Col>
@@ -771,20 +777,26 @@ function ManagerTenantAgreementView(props) {
           ) : (
             ""
           )}
-          <Row
-            className="pt-4 my-4"
-            hidden={agreement === null || tenantEndEarly || pmEndEarly}
-          >
-            <Col className="d-flex flex-row justify-content-evenly">
-              <Button
-                style={bluePillButton}
-                variant="outline-primary"
-                onClick={() => renewLease(agreement)}
-              >
-                Renew Lease
-              </Button>
-            </Col>
-          </Row>
+          {property.management_status === "ACCEPTED" ||
+          property.management_status === "OWNER END EARLY" ||
+          property.management_status === "PM END EARLY" ? (
+            <Row
+              className="pt-4 my-4"
+              hidden={agreement === null || tenantEndEarly || pmEndEarly}
+            >
+              <Col className="d-flex flex-row justify-content-evenly">
+                <Button
+                  style={bluePillButton}
+                  variant="outline-primary"
+                  onClick={() => renewLease(agreement)}
+                >
+                  Renew Lease
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
 
           {terminateLease ? (
             <div hidden={agreement === null || tenantEndEarly || pmEndEarly}>
@@ -838,15 +850,21 @@ function ManagerTenantAgreementView(props) {
             </div>
           ) : (
             <Row hidden={agreement === null || tenantEndEarly || pmEndEarly}>
-              <Col className="d-flex flex-row justify-content-evenly">
-                <Button
-                  style={redPillButton}
-                  variant="outline-primary"
-                  onClick={() => setTerminateLease(true)}
-                >
-                  Terminate Lease
-                </Button>
-              </Col>
+              {property.management_status === "ACCEPTED" ||
+              property.management_status === "OWNER END EARLY" ||
+              property.management_status === "PM END EARLY" ? (
+                <Col className="d-flex flex-row justify-content-evenly">
+                  <Button
+                    style={redPillButton}
+                    variant="outline-primary"
+                    onClick={() => setTerminateLease(true)}
+                  >
+                    Terminate Lease
+                  </Button>
+                </Col>
+              ) : (
+                ""
+              )}
             </Row>
           )}
 
