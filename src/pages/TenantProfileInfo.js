@@ -151,7 +151,7 @@ function TenantProfileInfo(props) {
 
   function handleAddAdults() {
     const fields = [...adults];
-    fields.push({ name: "", relationship: "", dob: "" });
+    fields.push({ name: "", relationship: "self", dob: "" });
     setAdults(fields);
   }
   function handleRemoveAdults(i) {

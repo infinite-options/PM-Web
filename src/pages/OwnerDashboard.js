@@ -115,8 +115,11 @@ export default function OwnerDashboard2() {
   const headerBack = () => {
     if (editAppliances && stage == "NEW") {
       setEditAppliances(false);
+    } else if (stage === "NEW") {
+      setEditAppliances(false);
+      setStage("LIST");
     } else {
-      navigate("../owner");
+      setStage("LIST");
     }
     // navigate("../owner");
   };
@@ -5189,13 +5192,25 @@ export default function OwnerDashboard2() {
                               size="small"
                               align="center"
                             >
-                              {property.property_manager.length !== 0 &&
-                              (property.management_status == "ACCEPTED" ||
-                                property.management_status == "PM END EARLY" ||
-                                property.management_status == "OWNER END EARLY")
-                                ? property.property_manager[0]
-                                    .manager_business_name
-                                : "None"}
+                              {property.property_manager.length > 1 ? (
+                                Object.values(property.property_manager).map(
+                                  (pm) =>
+                                    pm.management_status == "ACCEPTED" ||
+                                    pm.management_status == "PM END EARLY" ||
+                                    pm.management_status == "OWNER END EARLY"
+                                      ? pm.manager_business_name
+                                      : ""
+                                )
+                              ) : property.property_manager.length == 1 ? (
+                                <div>
+                                  {
+                                    property.property_manager[0]
+                                      .manager_business_name
+                                  }
+                                </div>
+                              ) : (
+                                "None"
+                              )}
                               <div className="d-flex align-items-center flex-column">
                                 {property.management.forwarded > 0 ? (
                                   <div

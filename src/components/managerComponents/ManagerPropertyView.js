@@ -5432,46 +5432,41 @@ function ManagerPropertyView(props) {
                     </div>
                   </Row>
                 </div>
-                {property.rental_status === "ACTIVE" ? (
-                  ""
-                ) : (
-                  <div
-                    className="mx-3 p-2"
-                    style={{
-                      background: "#E9E9E9 0% 0% no-repeat padding-box",
-                      borderRadius: "10px 10px 0px 0px",
-                      opacity: 1,
-                    }}
-                  >
-                    <Row className="m-3">
-                      <Col>
-                        <h3>Tenant Applications</h3>
-                      </Col>
-                      <Col xs={2}></Col>
-                    </Row>
-                  </div>
-                )}
-                {property.rental_status === "ACTIVE" ? (
-                  ""
-                ) : (
-                  <div
-                    className="mx-3 p-2"
-                    style={{
-                      background: "#E9E9E9 0% 0% no-repeat padding-box",
-                      borderRadius: "0px 0px 10px 10px",
-                      opacity: 1,
-                    }}
-                  >
-                    <Row style={{ overflow: "scroll" }}>
-                      <ManagerTenantApplications
-                        property={property}
-                        reload={reloadProperty}
-                        createNewTenantAgreement={createNewTenantAgreement}
-                        selectTenantApplication={selectTenantApplication}
-                      />
-                    </Row>
-                  </div>
-                )}
+
+                <div
+                  className="mx-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px 10px 0px 0px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3">
+                    <Col>
+                      <h3>Tenant Applications</h3>
+                    </Col>
+                    <Col xs={2}></Col>
+                  </Row>
+                </div>
+
+                <div
+                  className="mx-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "0px 0px 10px 10px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row style={{ overflow: "scroll" }}>
+                    <ManagerTenantApplications
+                      property={property}
+                      reload={reloadProperty}
+                      createNewTenantAgreement={createNewTenantAgreement}
+                      selectTenantApplication={selectTenantApplication}
+                    />
+                  </Row>
+                </div>
+
                 <div
                   className="mx-3 my-3 p-2"
                   style={{

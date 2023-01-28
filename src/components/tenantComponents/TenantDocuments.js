@@ -67,9 +67,9 @@ function TenantDocuments(props) {
     const newFile = {
       name: file.name,
       description: "",
-      created_date: new Date().toLocaleDateString().split("T")[0],
       file: file,
       shared: false,
+      created_date: new Date().toISOString().split("T")[0],
     };
     setNewFile(newFile);
   };
