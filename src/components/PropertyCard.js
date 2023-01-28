@@ -68,18 +68,6 @@ function PropertyCard(props) {
           <div style={{ fontWeight: "bold", fontSize: "18px", color: "black" }}>
             ${property.listed_rent}/month | {property.area} sqFt
           </div>
-
-          {applied === "NEW" ? (
-            <p style={{ ...greenPill, height: "25px" }} className="mb-0">
-              {applied}
-            </p>
-          ) : applied === "REFUSED" ? (
-            <p style={{ ...redPillButton, height: "25px" }} className="mb-0">
-              {applied}
-            </p>
-          ) : (
-            ""
-          )}
         </div>
 
         <div style={{ marginTop: "10px", fontSize: "14px", color: "gray" }}>

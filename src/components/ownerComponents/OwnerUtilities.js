@@ -505,6 +505,8 @@ function OwnerUtilities(props) {
       name: file.name,
       description: "",
       file: file,
+      shared: false,
+      created_date: new Date().toISOString().split("T")[0],
     };
     setNewFile(newFile);
   };

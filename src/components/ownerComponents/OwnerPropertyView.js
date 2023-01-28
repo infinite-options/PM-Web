@@ -197,6 +197,9 @@ function OwnerPropertyView(props) {
   const [tenantInfo, setTenantInfo] = useState([]);
   const [rentalInfo, setRentalInfo] = useState([]);
   const [cancel, setCancel] = useState(false);
+  const [showDetailPM, setShowDetailPM] = useState("");
+
+  const [showDetailPMToggle, setShowDetailPMToggle] = useState(false);
   const [endEarlyDate, setEndEarlyDate] = useState("");
   // sorting variables
   const [order, setOrder] = React.useState("asc");
@@ -364,13 +367,15 @@ function OwnerPropertyView(props) {
   };
 
   const approvePropertyManager = async (pID) => {
-    const files = JSON.parse(property.images);
+    // const files = JSON.parse(property.images);
     let pid = pID;
     const updatedManagementContract = {
       property_uid: property.property_uid,
       management_status: "ACCEPTED",
       manager_id: pid,
     };
+    const files = JSON.parse(property.images);
+
     for (let i = -1; i < files.length - 1; i++) {
       let key = `img_${i}`;
       if (i === -1) {
@@ -6714,7 +6719,7 @@ function OwnerPropertyView(props) {
                       /> */}
                       </Col>
                     </Row>
-
+                    {console.log(property.property_manager)}
                     {property.property_manager.length == 0 ? (
                       ""
                     ) : property.property_manager.length > 1 ? (
@@ -6723,7 +6728,13 @@ function OwnerPropertyView(props) {
                           ""
                         ) : p.management_status === "FORWARDED" ? (
                           <Row className="p-0 m-3">
-                            <Row className="d-flex justify-content-between mt-3 mx-2">
+                            <Row
+                              className="d-flex justify-content-between mt-3 mx-2"
+                              onClick={() => {
+                                setShowDetailPM(p.manager_id);
+                                setShowDetailPMToggle(!showDetailPMToggle);
+                              }}
+                            >
                               <Col
                                 xs={8}
                                 className="d-flex justify-content-start flex-column"
@@ -6755,6 +6766,93 @@ function OwnerPropertyView(props) {
                                 </a>
                               </Col>
                             </Row>
+                            {showDetailPM == p.manager_id &&
+                            showDetailPMToggle ? (
+                              <div>
+                                <Row
+                                  className="m-2 p-2"
+                                  style={{
+                                    background:
+                                      "#F3F3F3 0% 0% no-repeat padding-box",
+                                    borderRadius: "5px",
+                                  }}
+                                >
+                                  {" "}
+                                  Fees Charged:
+                                  {JSON.parse(p.business_services_fees).map(
+                                    (bsf) => {
+                                      return (
+                                        <Row
+                                          className="m-2 p-1"
+                                          style={{
+                                            background:
+                                              " #FFFFFF 0% 0% no-repeat padding-box",
+                                            boxShadow: " 0px 1px 6px #00000029",
+                                            borderRadius: "5px",
+                                          }}
+                                        >
+                                          <Col> {bsf.fee_name}&nbsp;</Col>
+                                          <Col>
+                                            {bsf.fee_type === "%"
+                                              ? `${bsf.charge}% of ${bsf.of}`
+                                              : `$${bsf.charge}`}{" "}
+                                            {bsf.frequency}
+                                          </Col>
+                                        </Row>
+                                      );
+                                    }
+                                  )}
+                                </Row>
+                                <Row
+                                  className="m-2 p-2"
+                                  style={{
+                                    background:
+                                      "#F3F3F3 0% 0% no-repeat padding-box",
+                                    borderRadius: "5px",
+                                  }}
+                                >
+                                  <Row>
+                                    <Col>Locations of Service</Col>
+                                    <Col xs={3}>(-)(+) miles</Col>
+                                  </Row>
+                                  {JSON.parse(p.business_locations).map(
+                                    (bl) => {
+                                      return (
+                                        <Row>
+                                          <Col
+                                            className="m-2 p-2"
+                                            style={{
+                                              background:
+                                                " #FFFFFF 0% 0% no-repeat padding-box",
+                                              boxShadow:
+                                                " 0px 1px 6px #00000029",
+                                              borderRadius: "5px",
+                                            }}
+                                          >
+                                            {bl.location}
+                                          </Col>
+                                          <Col
+                                            xs={3}
+                                            className="m-2 p-2"
+                                            style={{
+                                              background:
+                                                " #FFFFFF 0% 0% no-repeat padding-box",
+                                              boxShadow:
+                                                " 0px 1px 6px #00000029",
+                                              borderRadius: "5px",
+                                            }}
+                                          >
+                                            {bl.distance}
+                                          </Col>
+                                        </Row>
+                                      );
+                                    }
+                                  )}
+                                </Row>
+                              </div>
+                            ) : (
+                              ""
+                            )}
                             <Row className="mt-4">
                               <Col
                                 style={{
@@ -6785,7 +6883,15 @@ function OwnerPropertyView(props) {
                     ) : property.property_manager[0].management_status ===
                       "FORWARDED" ? (
                       <Row className="p-0 m-3">
-                        <Row className="d-flex justify-content-between mt-3">
+                        <Row
+                          className="d-flex justify-content-between mt-3"
+                          onClick={() => {
+                            setShowDetailPM(
+                              property.property_manager[0].manager_id
+                            );
+                            setShowDetailPMToggle(!showDetailPMToggle);
+                          }}
+                        >
                           <Col
                             xs={8}
                             className="d-flex flex-column justify-content-start p-0"
@@ -6816,6 +6922,93 @@ function OwnerPropertyView(props) {
                             </a>
                           </Col>
                         </Row>
+                        {showDetailPM ==
+                          property.property_manager[0].manager_id &&
+                        showDetailPMToggle ? (
+                          <div>
+                            <Row
+                              className="m-2 p-2"
+                              style={{
+                                background:
+                                  "#F3F3F3 0% 0% no-repeat padding-box",
+                                borderRadius: "5px",
+                              }}
+                            >
+                              {" "}
+                              Fees Charged:
+                              {JSON.parse(
+                                property.property_manager[0]
+                                  .business_services_fees
+                              ).map((bsf) => {
+                                return (
+                                  <Row
+                                    className="m-2 p-1"
+                                    style={{
+                                      background:
+                                        " #FFFFFF 0% 0% no-repeat padding-box",
+                                      boxShadow: " 0px 1px 6px #00000029",
+                                      borderRadius: "5px",
+                                    }}
+                                  >
+                                    <Col> {bsf.fee_name}&nbsp;</Col>
+                                    <Col>
+                                      {bsf.fee_type === "%"
+                                        ? `${bsf.charge}% of ${bsf.of}`
+                                        : `$${bsf.charge}`}{" "}
+                                      {bsf.frequency}
+                                    </Col>
+                                  </Row>
+                                );
+                              })}
+                            </Row>
+                            <Row
+                              className="m-2 p-2"
+                              style={{
+                                background:
+                                  "#F3F3F3 0% 0% no-repeat padding-box",
+                                borderRadius: "5px",
+                              }}
+                            >
+                              <Row>
+                                <Col>Locations of Service</Col>
+                                <Col xs={3}>(-)(+) miles</Col>
+                              </Row>
+                              {JSON.parse(
+                                property.property_manager[0].business_locations
+                              ).map((bl) => {
+                                return (
+                                  <Row>
+                                    <Col
+                                      className="m-2 p-2"
+                                      style={{
+                                        background:
+                                          " #FFFFFF 0% 0% no-repeat padding-box",
+                                        boxShadow: " 0px 1px 6px #00000029",
+                                        borderRadius: "5px",
+                                      }}
+                                    >
+                                      {bl.location}
+                                    </Col>
+                                    <Col
+                                      xs={3}
+                                      className="m-2 p-2"
+                                      style={{
+                                        background:
+                                          " #FFFFFF 0% 0% no-repeat padding-box",
+                                        boxShadow: " 0px 1px 6px #00000029",
+                                        borderRadius: "5px",
+                                      }}
+                                    >
+                                      {bl.distance}
+                                    </Col>
+                                  </Row>
+                                );
+                              })}
+                            </Row>
+                          </div>
+                        ) : (
+                          ""
+                        )}
                         <Row className="mt-4">
                           <Col
                             style={{
