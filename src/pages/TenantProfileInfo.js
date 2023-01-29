@@ -592,7 +592,9 @@ function TenantProfileInfo(props) {
       props.onConfirm();
     }
     const fetchProfileInfo = async () => {
-      const response = await get("/tenantProfileInfo", access_token);
+      const response = await get(
+        `/tenantProfileInfo?tenant_id=${user.user_uid}`
+      );
       if (response.result && response.result.length !== 0) {
         // console.log("tenant profile already set up");
         // eventually update page with current info, allow user to update and save new info
@@ -668,7 +670,8 @@ function TenantProfileInfo(props) {
     }
     // console.log(tenantProfile);
     tenantProfile.documents = JSON.stringify(files);
-    await post("/tenantProfileInfo", tenantProfile, access_token, files);
+    tenantProfile.tenant_id = user.user_uid;
+    await post("/tenantProfileInfo", tenantProfile, null, files);
     updateAutofillState(tenantProfile);
     props.onConfirm();
   };

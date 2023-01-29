@@ -145,10 +145,11 @@ function ReviewTenantProfileEdit(props) {
       delete update_tenant_docs[i].file;
     }
     tenantProfile.documents = JSON.stringify(update_tenant_docs);
+    tenantProfile.tenant_id = user.user_uid;
     const res = await put(
       "/tenantProfileInfo",
       tenantProfile,
-      access_token,
+      null,
       update_tenant_docs
     );
     goToShowApplied();
@@ -173,7 +174,7 @@ function ReviewTenantProfileEdit(props) {
   };
 
   const fetchProfileInfo = async () => {
-    const response = await get("/tenantProfileInfo", access_token);
+    const response = await get(`/tenantProfileInfo?tenant_id=${user.user_uid}`);
     if (response.result && response.result.length !== 0) {
       const res = response.result[0];
 

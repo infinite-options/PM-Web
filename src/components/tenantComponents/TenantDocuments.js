@@ -107,7 +107,9 @@ function TenantDocuments(props) {
       delete newFiles[i].file;
     }
     tenantProfile.documents = JSON.stringify(newFiles);
-    await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    tenantProfile.tenant_id = user.user_uid;
+    // await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    await put("/tenantProfileInfo", tenantProfile, null, files);
     setAddDoc(!addDoc);
     setNewFile(null);
   };
@@ -125,7 +127,8 @@ function TenantDocuments(props) {
       delete newFiles[i].file;
     }
     tenantProfile.documents = JSON.stringify(newFiles);
-    await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    tenantProfile.tenant_id = user.user_uid;
+    await put("/tenantProfileInfo", tenantProfile, null, files);
     setAddDoc(!addDoc);
   };
 
@@ -134,7 +137,9 @@ function TenantDocuments(props) {
       navigate("/");
       return;
     }
-    const responseProfile = await get("/tenantProfileInfo", access_token);
+    const responseProfile = await get(
+      `/tenantProfileInfo?tenant_id=${user.user_uid}`
+    );
 
     if (responseProfile.msg === "Token has expired") {
       refresh();
