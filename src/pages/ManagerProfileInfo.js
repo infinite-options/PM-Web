@@ -152,6 +152,19 @@ function ManagerProfileInfo(props) {
 
     return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
   }
+  function formatEIN(value) {
+    if (!value) return value;
+
+    const ein = value.replace(/[^\d]/g, "");
+
+    const einLength = ein.length;
+
+    if (einLength < 4) return ein;
+    if (einLength < 10) {
+      return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
+    }
+    return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
+  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -239,7 +252,7 @@ function ManagerProfileInfo(props) {
                 placeholder="xx-xxxxxxx"
                 value={einNumber}
                 pattern="[0-9]{2}-[0-9]{7}"
-                onChange={(e) => setEinNumber(e.target.value)}
+                onChange={(e) => setEinNumber(formatEIN(e.target.value))}
               />
             </Col>
           </Row>

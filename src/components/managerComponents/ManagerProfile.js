@@ -26,6 +26,7 @@ function ManagerProfile(props) {
   const { access_token, user } = userData;
   const navigate = useNavigate();
   const [profileInfo, setProfileInfo] = useState(null);
+  const [businessInfo, setBusinessInfo] = useState([]);
   const [editProfile, setEditProfile] = useState(false);
 
   const [resetPassword, setResetPassword] = useState(false);
@@ -66,13 +67,14 @@ function ManagerProfile(props) {
     showSidebar: width > 1023,
   };
   const loadProfile = (profile) => {
+    console.log(profile);
     setProfileInfo(profile);
     setCompanyName(profile.business_name);
     setFirstName(profile.employee_first_name);
     setLastName(profile.employee_last_name);
     setEmail(profile.employee_email);
     setPhoneNumber(profile.employee_phone_number);
-    setEinNumber(profile.employee_ein_number);
+    setEinNumber(profile.business_ein_number);
     setSsn(profile.employee_ssn);
     setPaymentState({
       paypal: profile.business_paypal ? profile.business_paypal : "",
@@ -111,6 +113,8 @@ function ManagerProfile(props) {
         `/businesses?business_uid=${employee.business_uid}`
       );
       const business = business_response.result[0];
+      setBusinessInfo(business);
+      console.log(business);
       const profile = { ...employee, ...business };
       // console.log(profile)
       loadProfile(profile);
@@ -120,40 +124,84 @@ function ManagerProfile(props) {
   useEffect(fetchProfileInfo, [access_token]);
 
   const saveProfile = async () => {
-    const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
-      paymentState;
-    const employee_info = {
-      employee_uid: profileInfo.employee_uid,
-      user_uid: profileInfo.user_uid,
-      business_uid: profileInfo.business_uid,
-      first_name: firstName,
-      last_name: lastName,
-      phone_number: phoneNumber,
-      email: email,
-      ein_number: einNumber,
-      ssn: ssn,
-    };
-    const business_info = {
-      business_uid: profileInfo.business_uid,
-      type: profileInfo.business_type,
-      name: profileInfo.business_name,
-      phone_number: profileInfo.business_phone_number,
-      email: profileInfo.business_email,
-      ein_number: profileInfo.business_ein_number,
-      services_fees: feeState,
-      locations: locationState,
-      paypal: paypal || null,
-      apple_pay: applePay || null,
-      zelle: zelle || null,
-      venmo: venmo || null,
-      account_number: accountNumber || null,
-      routing_number: routingNumber || null,
-    };
+    console.log(businessInfo.length);
+    if (businessInfo.length === 0) {
+      console.log("in if");
+      const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
+        paymentState;
+      // const employee_info = {
+      //   employee_uid: profileInfo.employee_uid,
+      //   user_uid: profileInfo.user_uid,
+      //   business_uid: profileInfo.business_uid,
+      //   first_name: firstName,
+      //   last_name: lastName,
+      //   phone_number: phoneNumber,
+      //   email: email,
+      //   ein_number: einNumber,
+      //   ssn: ssn,
+      // };
+      const business_info = {
+        // business_uid: profileInfo.business_uid,
+        type: "MANAGEMENT",
+        name: companyName,
+        phone_number: phoneNumber,
+        email: email,
+        ein_number: einNumber,
+        services_fees: feeState,
+        locations: locationState,
+        paypal: paypal || null,
+        apple_pay: applePay || null,
+        zelle: zelle || null,
+        venmo: venmo || null,
+        account_number: accountNumber || null,
+        routing_number: routingNumber || null,
+      };
 
-    const employee_response = await put("/employees", employee_info);
-    const business_response = await put("/businesses", business_info);
-    setEditProfile(false);
-    fetchProfileInfo();
+      // const employee_response = await put("/employees", employee_info);
+      const business_response = await post(
+        "/businesses",
+        business_info,
+        access_token
+      );
+      setEditProfile(false);
+      fetchProfileInfo();
+    } else {
+      console.log("in else");
+      const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
+        paymentState;
+      const employee_info = {
+        employee_uid: profileInfo.employee_uid,
+        user_uid: profileInfo.user_uid,
+        business_uid: profileInfo.business_uid,
+        first_name: firstName,
+        last_name: lastName,
+        phone_number: phoneNumber,
+        email: email,
+        ein_number: einNumber,
+        ssn: ssn,
+      };
+      const business_info = {
+        business_uid: profileInfo.business_uid,
+        type: profileInfo.business_type,
+        name: companyName,
+        phone_number: phoneNumber,
+        email: profileInfo.business_email,
+        ein_number: einNumber,
+        services_fees: feeState,
+        locations: locationState,
+        paypal: paypal || null,
+        apple_pay: applePay || null,
+        zelle: zelle || null,
+        venmo: venmo || null,
+        account_number: accountNumber || null,
+        routing_number: routingNumber || null,
+      };
+
+      const employee_response = await put("/employees", employee_info);
+      const business_response = await put("/businesses", business_info);
+      setEditProfile(false);
+      fetchProfileInfo();
+    }
   };
   function formatPhoneNumber(value) {
     if (!value) return value;
@@ -217,6 +265,19 @@ function ManagerProfile(props) {
     navigate("/");
     window.scrollTo(0, 0);
   };
+  function formatEIN(value) {
+    if (!value) return value;
+
+    const ein = value.replace(/[^\d]/g, "");
+
+    const einLength = ein.length;
+
+    if (einLength < 4) return ein;
+    if (einLength < 10) {
+      return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
+    }
+    return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
+  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -352,7 +413,9 @@ function ManagerProfile(props) {
                         placeholder="xx-xxxxxxx"
                         value={einNumber}
                         pattern="[0-9]{2}-[0-9]{7}"
-                        onChange={(e) => setEinNumber(e.target.value)}
+                        onChange={(e) =>
+                          setEinNumber(formatEIN(e.target.value))
+                        }
                       />
                     </Form.Group>
                   </Col>
@@ -444,7 +507,7 @@ function ManagerProfile(props) {
                     <h6>EIN</h6>
                     <p style={gray}>
                       {einNumber && einNumber !== "NULL"
-                        ? ssn
+                        ? einNumber
                         : "No EIN Provided"}
                     </p>
                   </Col>

@@ -186,6 +186,19 @@ function BusinessProfileInfo(props) {
       6
     )}-${phoneNumber.slice(6, 10)}`;
   }
+  function formatEIN(value) {
+    if (!value) return value;
+
+    const ein = value.replace(/[^\d]/g, "");
+
+    const einLength = ein.length;
+
+    if (einLength < 4) return ein;
+    if (einLength < 10) {
+      return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
+    }
+    return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
+  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -245,7 +258,11 @@ function BusinessProfileInfo(props) {
         {businessType === "MANAGEMENT" ? (
           <Container className="px-2">
             <h6 className="mb-3">Fees you charge:</h6>
-            <ManagerFees feeState={feeState} setFeeState={setFeeState} />
+            <ManagerFees
+              feeState={feeState}
+              setFeeState={setFeeState}
+              editProfile={true}
+            />
           </Container>
         ) : (
           <ServicesProvided
@@ -264,7 +281,7 @@ function BusinessProfileInfo(props) {
             placeholder="xx-xxxxxxx"
             value={einNumber}
             pattern="[0-9]{2}-[0-9]{7}"
-            onChange={(e) => setEinNumber(e.target.value)}
+            onChange={(e) => setEinNumber(formatEIN(e.target.value))}
           />
         </Form.Group>
 

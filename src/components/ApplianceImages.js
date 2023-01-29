@@ -67,7 +67,7 @@ function ApplianceImages(props) {
 
   return (
     <Container>
-      <h6 style={mediumBold}>Take Pictures</h6>
+      <h6 style={mediumBold}>Upload Photos</h6>
       <p style={{ ...xSmall, ...bold }} className="my-1">
         File size under 5MB
       </p>

@@ -246,7 +246,7 @@ function DetailQuote(props) {
           <Row>
             <Col>
               <Button variant="outline-primary" style={blueBorderButton}>
-                Take Pictures
+                Upload Photos
               </Button>
             </Col>
           </Row>
@@ -263,7 +263,7 @@ function DetailQuote(props) {
           <Row>
             <Col>
               <Button variant="outline-primary" style={blueBorderButton}>
-                Take Pictures
+                Upload Photos
               </Button>
             </Col>
           </Row>

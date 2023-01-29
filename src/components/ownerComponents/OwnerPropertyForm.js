@@ -1134,7 +1134,7 @@ function OwnerPropertyForm(props) {
             <p> {property.featured}</p>
           </Container>
         )}
-        {edit ? (
+        {edit && property ? (
           <Container className="d-flex my-3 ps-4">
             <Col className="p-2">
               <h6> Delete Property</h6>
