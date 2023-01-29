@@ -179,7 +179,7 @@ function TenantProfile(props) {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const fetchProfile = async () => {
-    const response = await get("/tenantProfileInfo", access_token);
+    const response = await get(`/tenantProfileInfo?tenant_id=${user.user_uid}`);
     // console.log(response);
 
     if (response.msg === "Token has expired") {
@@ -286,14 +286,11 @@ function TenantProfile(props) {
         delete files[i].file;
       }
       tenantProfile.documents = JSON.stringify(files);
-
-      await put(`/tenantProfileInfo`, tenantProfile, access_token, files);
+      tenantProfile.tenant_id = user.user_uid;
+      await put(`/tenantProfileInfo`, tenantProfile, null, files);
 
       setEditProfile(false);
       props.onConfirm();
-      // await post('/tenantProfileInfo', tenantProfile, access_token, files);
-      // updateAutofillState(tenantProfile);
-      // props.onConfirm();
     } else {
       // console.log("post becuase create new tenant profile");
       currentAddressState[0].state = selectedState;
@@ -331,7 +328,8 @@ function TenantProfile(props) {
       }
       tenantProfile.documents = JSON.stringify(files);
 
-      await post("/tenantProfileInfo", tenantProfile, access_token, files);
+      tenantProfile.tenant_id = user.user_uid;
+      await post("/tenantProfileInfo", tenantProfile, null, files);
 
       setEditProfile(false);
       props.onConfirm();

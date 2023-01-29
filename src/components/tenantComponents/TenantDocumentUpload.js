@@ -69,7 +69,8 @@ function TenantDocumentUpload(props) {
       delete newFiles[i].file;
     }
     tenantProfile.documents = JSON.stringify(newFiles);
-    await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    tenantProfile.tenant_id = user.user_uid;
+    await put("/tenantProfileInfo", tenantProfile, null, files);
     setNewFile(null);
   };
   const deleteDocument = (i) => {
@@ -81,7 +82,9 @@ function TenantDocumentUpload(props) {
   // ===========================================<Fetch documents / profile info>=================
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await get("/tenantProfileInfo", access_token);
+      const response = await get(
+        `/tenantProfileInfo?tenant_id=${user.user_uid}`
+      );
 
       if (response.msg === "Token has expired") {
         refresh();
@@ -108,7 +111,8 @@ function TenantDocumentUpload(props) {
       delete files[i].file;
     }
     tenantProfile.documents = JSON.stringify(files);
-    await put("/tenantProfileInfo", tenantProfile, access_token, files);
+    tenantProfile.tenant_id = user.user_uid;
+    await put("/tenantProfileInfo", tenantProfile, null, files);
     props.onConfirm();
   };
 
