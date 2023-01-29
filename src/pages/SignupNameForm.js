@@ -99,7 +99,7 @@ function SignupNameForm(props) {
             onClick={submitForm}
             style={pillButton}
           >
-            Proceed
+            Next
           </Button>
         </div>
       </div>

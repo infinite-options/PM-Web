@@ -107,12 +107,13 @@ function SignupEmailForm(props) {
         <hr className={showEmailForm ? "mt-4 mb-1" : "my-4"} />
         <div className="text-center d-flex justify-content-center">
           <div onClick={() => setShowEmailForm(!showEmailForm)}>
-            <p
+            {/* <p
               style={showEmailForm ? boldSmall : { ...boldSmall, ...underline }}
               className={showEmailForm ? "" : "mb-4"}
             >
               Or continue with email
-            </p>
+            </p> */}
+            <Button style={pillButton}>Or continue with email</Button>
           </div>
         </div>
         {showEmailForm ? (
