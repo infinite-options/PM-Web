@@ -23,6 +23,7 @@ import {
   smallPillButton,
   small,
   mediumBold,
+  subHeading,
 } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
@@ -517,6 +518,7 @@ function TenantDocuments(props) {
                               return (
                                 <TableRow>
                                   <TableCell width="380px">
+                                    <h6 style={subHeading}>{tud.name}</h6>
                                     {tud.description != "" ? (
                                       <p className="mx-3">{tud.description}</p>
                                     ) : (
