@@ -74,6 +74,7 @@ function TenantDocuments(props) {
     };
     setNewFile(newFile);
   };
+
   // console.log(newFile);
   const updateNewFile = (field, value) => {
     const newFileCopy = { ...newFile };
@@ -101,31 +102,54 @@ function TenantDocuments(props) {
     const newFiles = [...files];
     newFiles.push(newFile);
     setFiles(newFiles);
+    console.log("in for", newFiles);
     const tenantProfile = {};
     for (let i = 0; i < newFiles.length; i++) {
       let key = `doc_${i}`;
-      tenantProfile[key] = newFiles[i].file;
+      console.log("in for", key, newFiles[i].file);
+      if (newFiles[i].file !== undefined) {
+        console.log("in if", newFiles[i].file);
+        tenantProfile[key] = newFiles[i].file;
+      } else {
+        console.log("in else");
+        console.log("in if", newFiles[i].file, newFiles[i].link);
+        tenantProfile[key] = newFiles[i].link;
+      }
+
       delete newFiles[i].file;
     }
+    console.log("newFiles", newFiles);
+    console.log("files", files);
+
     tenantProfile.documents = JSON.stringify(newFiles);
     tenantProfile.tenant_id = user.user_uid;
+    console.log("tenantProfile", tenantProfile);
+    console.log("tenantProfile.documents", tenantProfile.documents);
     // await put("/tenantProfileInfo", tenantProfile, access_token, files);
-    await put("/tenantProfileInfo", tenantProfile, null, files);
+    await put("/tenantProfileInfo", tenantProfile, null, newFiles);
     setAddDoc(!addDoc);
     setNewFile(null);
   };
   const deleteDocument = async (i) => {
-    // console.log("in delete doc", i);
-    const newFiles = [...files];
-    // console.log("in delete doc", newFiles);
-    newFiles.splice(i, 1);
-    // console.log("in delete doc", newFiles);
+    const newFiles = files.filter((file, index) => index !== i);
+
     setFiles(newFiles);
+    // // console.log("in delete doc", i);
+    // const newFiles = [...files];
+    // // console.log("in delete doc", newFiles);
+    // newFiles.splice(i, 1);
+    // // console.log("in delete doc", newFiles);
+    // setFiles(newFiles);
     const tenantProfile = {};
     for (let i = 0; i < newFiles.length; i++) {
       let key = `doc_${i}`;
-      tenantProfile[key] = newFiles[i].file;
-      delete newFiles[i].file;
+      // tenantProfile[key] = newFiles[i].file;
+      // delete newFiles[i].file;
+      if (newFiles[i].file !== undefined) {
+        tenantProfile[key] = newFiles[i].file;
+      } else {
+        tenantProfile[key] = newFiles[i].link;
+      }
     }
     tenantProfile.documents = JSON.stringify(newFiles);
     tenantProfile.tenant_id = user.user_uid;

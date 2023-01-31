@@ -163,8 +163,11 @@ function TenantProfile(props) {
     setNewFile(null);
   };
   const deleteDocument = (i) => {
-    const newFiles = [...files];
-    newFiles.splice(i, 1);
+    // const newFiles = [...files];
+    // newFiles.splice(i, 1);
+    // setFiles(newFiles);
+    const newFiles = files.filter((file, index) => index !== i);
+
     setFiles(newFiles);
   };
   //popover open and close
