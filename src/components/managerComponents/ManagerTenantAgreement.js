@@ -33,6 +33,7 @@ import {
   subHeading,
   gray,
 } from "../../utils/styles";
+import DocumentsUploadPost from "../DocumentsUploadPost";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -68,9 +69,8 @@ function ManagerTenantAgreement(props) {
   const [files, setFiles] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [rentalStatus, setRentalStatus] = useState("");
-  const [newFile, setNewFile] = useState(null);
   const [editingDoc, setEditingDoc] = useState(null);
-
+  const [addDoc, setAddDoc] = useState(false);
   const [dueDate, setDueDate] = useState("1");
   const [lateAfter, setLateAfter] = useState("");
   const [lateFee, setLateFee] = useState("");
@@ -100,46 +100,6 @@ function ManagerTenantAgreement(props) {
   };
   const onCancel = () => {
     setShowDialog(false);
-  };
-  const addFile = (e) => {
-    const file = e.target.files[0];
-    const newFile = {
-      name: file.name,
-      description: "",
-      file: file,
-      shared: false,
-      created_date: new Date().toISOString().split("T")[0],
-    };
-    setNewFile(newFile);
-  };
-
-  const updateNewFile = (field, value) => {
-    const newFileCopy = { ...newFile };
-    newFileCopy[field] = value;
-    setNewFile(newFileCopy);
-  };
-  const cancelEdit = () => {
-    setNewFile(null);
-    if (editingDoc !== null) {
-      const newFiles = [...files];
-      newFiles.push(editingDoc);
-      setFiles(newFiles);
-    }
-    setEditingDoc(null);
-  };
-  const editDocument = (i) => {
-    const newFiles = [...files];
-    const file = newFiles.splice(i, 1)[0];
-    setFiles(newFiles);
-    setEditingDoc(file);
-    setNewFile({ ...file });
-  };
-  const saveNewFile = (e) => {
-    // copied from addFile, change e.target.files to state.newFile
-    const newFiles = [...files];
-    newFiles.push(newFile);
-    setFiles(newFiles);
-    setNewFile(null);
   };
 
   const loadAgreement = () => {
@@ -191,7 +151,7 @@ function ManagerTenantAgreement(props) {
     setShowSpinner(true);
     for (let i = 0; i < feeState.length; i++) {
       if (feeState[i]["fee_name"] === "Rent") {
-        if (feeState[i]["charge"] != property.listed_rent) {
+        if (parseInt(feeState[i]["charge"]) != parseInt(property.listed_rent)) {
           const updateRent = {
             property_uid: property.property_uid,
             listed_rent: feeState[i]["charge"],
@@ -209,7 +169,7 @@ function ManagerTenantAgreement(props) {
           const response = await put("/properties", updateRent, null, images);
         }
       } else if (feeState[i]["fee_name"] === "Deposit") {
-        if (feeState[i]["charge"] != property.deposit) {
+        if (parseInt(feeState[i]["charge"]) != parseInt(property.deposit)) {
           const updateDeposit = {
             property_uid: property.property_uid,
             deposit: feeState[i]["charge"],
@@ -256,18 +216,24 @@ function ManagerTenantAgreement(props) {
       };
 
       // console.log(newAgreement);
+      const newFiles = [...files];
 
-      for (let i = 0; i < files.length; i++) {
+      for (let i = 0; i < newFiles.length; i++) {
         let key = `doc_${i}`;
-        newAgreement[key] = files[i].file;
-        delete files[i].file;
+        if (newFiles[i].file !== undefined) {
+          newAgreement[key] = newFiles[i].file;
+        } else {
+          newAgreement[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
       }
-      newAgreement.documents = JSON.stringify(files);
+      newAgreement.documents = JSON.stringify(newFiles);
 
       // console.log("in if");
       newAgreement.rental_uid = agreement.rental_uid;
       // console.log(newAgreement);
-      const response = await put(`/rentals`, newAgreement, null, files);
+      const response = await put(`/rentals`, newAgreement, null, newFiles);
 
       setShowSpinner(false);
 
@@ -307,17 +273,19 @@ function ManagerTenantAgreement(props) {
         effective_date: effectiveDate,
       };
 
-      // console.log(newAgreement);
-      // for (let i = 0; i < files.length; i++) {
-      //   let key = `img_${i}`;
-      //   newAgreement[key] = files[i];
-      // }
-      for (let i = 0; i < files.length; i++) {
+      const newFiles = [...files];
+
+      for (let i = 0; i < newFiles.length; i++) {
         let key = `doc_${i}`;
-        newAgreement[key] = files[i].file;
-        delete files[i].file;
+        if (newFiles[i].file !== undefined) {
+          newAgreement[key] = newFiles[i].file;
+        } else {
+          newAgreement[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
       }
-      newAgreement.documents = files;
+      newAgreement.documents = newFiles;
       if (agreement !== null) {
         // console.log("in if");
         newAgreement.rental_uid = agreement.rental_uid;
@@ -381,7 +349,7 @@ function ManagerTenantAgreement(props) {
     }
     for (let i = 0; i < feeState.length; i++) {
       if (feeState[i]["fee_name"] === "Rent") {
-        if (feeState[i]["charge"] !== property.listed_rent) {
+        if (parseInt(feeState[i]["charge"]) != parseInt(property.listed_rent)) {
           const updateRent = {
             property_uid: property.property_uid,
             listed_rent: feeState[i]["charge"],
@@ -399,7 +367,7 @@ function ManagerTenantAgreement(props) {
           const response = await put("/properties", updateRent, null, images);
         }
       } else if (feeState[i]["fee_name"] === "Deposit") {
-        if (feeState[i]["charge"] !== property.deposit) {
+        if (parseInt(feeState[i]["charge"]) != parseInt(property.deposit)) {
           const updateDeposit = {
             property_uid: property.property_uid,
             deposit: feeState[i]["charge"],
@@ -442,11 +410,19 @@ function ManagerTenantAgreement(props) {
       referred: JSON.stringify(referred),
       effective_date: startDate,
     };
-    for (let i = 0; i < files.length; i++) {
+    const newFiles = [...files];
+
+    for (let i = 0; i < newFiles.length; i++) {
       let key = `doc_${i}`;
-      newAgreement[key] = files[i].file;
-      delete files[i].file;
+      if (newFiles[i].file !== undefined) {
+        newAgreement[key] = newFiles[i].file;
+      } else {
+        newAgreement[key] = newFiles[i].link;
+      }
+
+      delete newFiles[i].file;
     }
+    newAgreement.documents = JSON.stringify(newFiles);
     newAgreement.linked_application_id = JSON.stringify(
       acceptedTenantApplications.map(
         (application) => application.application_uid
@@ -454,7 +430,6 @@ function ManagerTenantAgreement(props) {
     );
     // alert('ok')
     // return
-    newAgreement.documents = JSON.stringify(files);
 
     for (const application of acceptedTenantApplications) {
       newAgreement.tenant_id = application.tenant_id;
@@ -516,32 +491,7 @@ function ManagerTenantAgreement(props) {
       documents: files,
     };
     let up = newAgreement;
-    // let fg = {};
-    // // console.log(og);
 
-    // // console.log(up);
-    // Object.keys(og).forEach((key) => {
-    //   if (up.hasOwnProperty(key)) {
-    //     if (key == "assigned_contacts") {
-    //       // console.log(key);
-    //       JSON.parse(og[key]).forEach((o) => {
-    //         // console.log(o);
-    //       });
-    //     } else if (key == "documents") {
-    //       // console.log(key);
-    //       JSON.parse(og[key]).forEach((o) => {
-    //         // console.log(o);
-    //       });
-    //     } else if (og[key] !== up[key]) {
-    //       // console.log(key);
-    //       // console.log(typeof og[key]);
-    //       fg[key] = up[key];
-    //       // console.log(fg[key]);
-    //     }
-    //   }
-    // });
-    // // console.log(fg);
-    // setUpdatedAgreement([fg]);
     setUpdatedAgreement(up);
     setShowDialog(true);
   };
@@ -583,13 +533,19 @@ function ManagerTenantAgreement(props) {
       late_fee: lateFee,
       perDay_late_fee: lateFeePer,
     };
-    for (let i = 0; i < files.length; i++) {
-      let key = `doc_${i}`;
-      newAgreement[key] = files[i].file;
-      delete files[i].file;
-    }
+    const newFiles = [...files];
 
-    newAgreement.documents = JSON.stringify(files);
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      if (newFiles[i].file !== undefined) {
+        newAgreement[key] = newFiles[i].file;
+      } else {
+        newAgreement[key] = newFiles[i].link;
+      }
+
+      delete newFiles[i].file;
+    }
+    newAgreement.documents = JSON.stringify(newFiles);
     newAgreement.tenant_id = JSON.stringify(
       acceptedTenantApplications.map((application) => application.tenant_id)
     );
@@ -1061,118 +1017,15 @@ function ManagerTenantAgreement(props) {
             }}
           >
             <h5 style={mediumBold}>Lease Documents</h5>
-            {files.length > 0 ? (
-              <Table
-                responsive="md"
-                classes={{ root: classes.customTable }}
-                size="small"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Document Name</TableCell>
-                    <TableCell>View Document</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {files.map((file) => {
-                    return (
-                      <TableRow>
-                        <TableCell>{file.description}</TableCell>
-                        <TableCell>
-                          <a href={file.link} target="_blank">
-                            <img
-                              src={File}
-                              style={{
-                                width: "15px",
-                                height: "15px",
-                              }}
-                            />
-                          </a>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            ) : (
-              ""
-            )}
 
-            {newFile !== null ? (
-              <div>
-                <Row>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label as="h6" className="mb-0 ms-2">
-                        Document Name
-                      </Form.Label>
-                      <Form.Control
-                        style={squareForm}
-                        value={newFile.name}
-                        placeholder="Name"
-                        onChange={(e) => updateNewFile("name", e.target.value)}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    {" "}
-                    <Form.Group>
-                      <Form.Label as="h6" className="mb-0 ms-2">
-                        Description
-                      </Form.Label>
-                      <Form.Control
-                        style={squareForm}
-                        value={newFile.description}
-                        placeholder="Description"
-                        onChange={(e) =>
-                          updateNewFile("description", e.target.value)
-                        }
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-
-                <div className="text-center my-3">
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                    onClick={cancelEdit}
-                    className="mx-2"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                    onClick={saveNewFile}
-                    className="mx-2"
-                  >
-                    Save Document
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <input
-                  id="file"
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={addFile}
-                  className="d-none"
-                />
-                <label htmlFor="file">
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                  >
-                    Add Document
-                  </Button>
-                </label>
-              </div>
-            )}
+            <DocumentsUploadPost
+              files={files}
+              setFiles={setFiles}
+              addDoc={addDoc}
+              setAddDoc={setAddDoc}
+              editingDoc={editingDoc}
+              setEditingDoc={setEditingDoc}
+            />
           </div>
           {showSpinner ? (
             <div className="w-100 d-flex flex-column justify-content-center align-items-center">

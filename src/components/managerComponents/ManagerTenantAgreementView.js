@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import MailDialogTenant from "../MailDialog";
 import MailDialogContact from "../MailDialog";
+import DocumentsUploadPut from "../DocumentsUploadPut";
 import AppContext from "../../AppContext";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import Phone from "../../icons/Phone.svg";
@@ -45,7 +46,7 @@ function ManagerTenantAgreementView(props) {
     selectAgreement,
     closeAgreement,
   } = props;
-  console.log(property);
+  // console.log(property);
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   // console.log(user);
@@ -67,10 +68,9 @@ function ManagerTenantAgreementView(props) {
   const [agreement, setAgreement] = useState([]);
   const [selectedTenant, setSelectedTenant] = useState("");
   const [selectedContact, setSelectedContact] = useState("");
-  const [newFile, setNewFile] = useState(null);
-  const [editingDoc, setEditingDoc] = useState(null);
 
-  const [newDocAdded, setNewDocAdded] = useState(false);
+  const [addDoc, setAddDoc] = useState(false);
+  const [editingDoc, setEditingDoc] = useState(null);
   const [showMailForm, setShowMailForm] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const onCancel = () => {
@@ -80,81 +80,9 @@ function ManagerTenantAgreementView(props) {
   const onCancelContact = () => {
     setShowMessageFormContact(false);
   };
-  const addFile = (e) => {
-    const file = e.target.files[0];
-    const newFile = {
-      name: file.name,
-      description: "",
-      file: file,
-      shared: false,
-      created_date: new Date().toISOString().split("T")[0],
-    };
-    setNewFile(newFile);
-  };
-
-  const updateNewFile = (field, value) => {
-    const newFileCopy = { ...newFile };
-    newFileCopy[field] = value;
-    setNewFile(newFileCopy);
-  };
-  const cancelEdit = () => {
-    setNewFile(null);
-    if (editingDoc !== null) {
-      const newFiles = [...files];
-      newFiles.push(editingDoc);
-      setFiles(newFiles);
-    }
-    setEditingDoc(null);
-  };
-  const saveNewFile = async (e) => {
-    // copied from addFile, change e.target.files to state.newFile
-    const newFiles = [...files];
-    newFiles.push(newFile);
-    setFiles(newFiles);
-    setNewFile(null);
-    setNewDocAdded(true);
-  };
-
-  const save = async () => {
-    setShowSpinner(true);
-
-    const newAgreement = {
-      rental_property_id: property.property_uid,
-      lease_start: agreement.lease_start,
-      lease_end: agreement.lease_end,
-      rental_status: agreement.rental_status,
-      rent_payments: agreement.rent_payments,
-      available_topay: agreement.available_topay,
-      due_by: agreement.due_by,
-      late_by: agreement.late_by,
-      late_fee: agreement.late_fee,
-      perDay_late_fee: agreement.perDay_late_fee,
-      assigned_contacts: agreement.assigned_contacts,
-      adults: agreement.adults,
-      children: agreement.children,
-      pets: agreement.pets,
-      vehicles: agreement.vehicles,
-      referred: agreement.referred,
-      effective_date: agreement.effective_date,
-    };
-
-    for (let i = 0; i < files.length; i++) {
-      let key = `doc_${i}`;
-      newAgreement[key] = files[i].file;
-      delete files[i].file;
-    }
-    newAgreement.documents = JSON.stringify(files);
-    if (agreement !== null) {
-      // console.log("in if");
-      newAgreement.rental_uid = agreement.rental_uid;
-      // console.log(newAgreement);
-      const response = await put(`/rentals`, newAgreement, null, files);
-    }
-
-    setNewDocAdded(false);
-    setShowSpinner(false);
+  useEffect(() => {
     closeAgreement();
-  };
+  }, [addDoc]);
   const loadAgreement = async (agg) => {
     // console.log("load agreement");
 
@@ -641,144 +569,18 @@ function ManagerTenantAgreementView(props) {
           </Row>
           <Row className="m-3">
             <h5 style={mediumBold}>Lease Documents</h5>
-            {files.length > 0 ? (
-              <div>
-                <Table
-                  responsive="md"
-                  classes={{ root: classes.customTable }}
-                  size="small"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Document Name</TableCell>
-                      <TableCell>View Document</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {files.map((file) => {
-                      return (
-                        <TableRow>
-                          <TableCell>{file.description}</TableCell>
-                          <TableCell>
-                            <a href={file.link} target="_blank">
-                              <img
-                                src={File}
-                                style={{
-                                  width: "15px",
-                                  height: "15px",
-                                }}
-                              />
-                            </a>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            ) : (
-              <div>No documents uploaded</div>
-            )}
+            <DocumentsUploadPut
+              files={files}
+              setFiles={setFiles}
+              addDoc={addDoc}
+              setAddDoc={setAddDoc}
+              endpoint="/rentals"
+              editingDoc={editingDoc}
+              setEditingDoc={setEditingDoc}
+              id={agreement.rental_uid}
+            />
           </Row>
-          <Row className="m-3">
-            {" "}
-            {newFile !== null ? (
-              <div>
-                <Row>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label as="h6" className="mb-0 ms-2">
-                        Document Name
-                      </Form.Label>
-                      <Form.Control
-                        style={squareForm}
-                        value={newFile.name}
-                        placeholder="Name"
-                        onChange={(e) => updateNewFile("name", e.target.value)}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    {" "}
-                    <Form.Group>
-                      <Form.Label as="h6" className="mb-0 ms-2">
-                        Description
-                      </Form.Label>
-                      <Form.Control
-                        style={squareForm}
-                        value={newFile.description}
-                        placeholder="Description"
-                        onChange={(e) =>
-                          updateNewFile("description", e.target.value)
-                        }
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                {showSpinner ? (
-                  <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                    <ReactBootStrap.Spinner animation="border" role="status" />
-                  </div>
-                ) : (
-                  ""
-                )}
-                <div className="text-center my-3">
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                    onClick={cancelEdit}
-                    className="mx-2"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                    onClick={saveNewFile}
-                    className="mx-2"
-                  >
-                    Save Document
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <input
-                  id="file"
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={addFile}
-                  className="d-none"
-                />
-                <label htmlFor="file">
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                  >
-                    Add Document
-                  </Button>
-                </label>
-              </div>
-            )}
-          </Row>
-          {newDocAdded !== false ? (
-            <Row className="pt-2 my-2">
-              <Col className="d-flex flex-row justify-content-evenly">
-                <Button
-                  style={bluePillButton}
-                  variant="outline-primary"
-                  onClick={save}
-                >
-                  Add document without updating lease
-                </Button>
-              </Col>
-            </Row>
-          ) : (
-            ""
-          )}
+
           {property.management_status === "ACCEPTED" ||
           property.management_status === "OWNER END EARLY" ||
           property.management_status === "PM END EARLY" ? (
