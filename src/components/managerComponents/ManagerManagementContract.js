@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import * as ReactBootStrap from "react-bootstrap";
 import {
@@ -25,11 +25,10 @@ import {
   red,
   squareForm,
   mediumBold,
-  smallPillButton,
-  subHeading,
   headings,
   pillButton,
 } from "../../utils/styles";
+import DocumentsUploadPost from "../DocumentsUploadPost";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -41,21 +40,23 @@ const useStyles = makeStyles({
 
 function ManagerManagementContract(props) {
   const classes = useStyles();
-  const { userData, refresh } = React.useContext(AppContext);
+  const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const { back, property, contract, selectedBusiness, reload } = props;
 
   const [showSpinner, setShowSpinner] = useState(false);
-  const [contractName, setContractName] = React.useState("");
+  const [contractName, setContractName] = useState("");
 
-  const [startDate, setStartDate] = React.useState("");
-  const [endDate, setEndDate] = React.useState("");
-  const [feeState, setFeeState] = React.useState([]);
-  const contactState = React.useState([]);
-  const [files, setFiles] = React.useState([]);
-  const [newFile, setNewFile] = React.useState(null);
-  const [editingDoc, setEditingDoc] = React.useState(null);
+  const [addDoc, setAddDoc] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [feeState, setFeeState] = useState([]);
+  const contactState = useState([]);
+  const [files, setFiles] = useState([]);
+  const [newFile, setNewFile] = useState(null);
+  const [editingDoc, setEditingDoc] = useState(null);
   const [width, setWindowWidth] = useState(0);
+
   useEffect(() => {
     updateDimensions();
 
@@ -69,31 +70,7 @@ function ManagerManagementContract(props) {
   const responsive = {
     showSidebar: width > 1023,
   };
-  const addFile = (e) => {
-    const file = e.target.files[0];
-    const newFile = {
-      name: file.name,
-      description: "",
-      file: file,
-      shared: false,
-      created_date: new Date().toISOString().split("T")[0],
-    };
-    setNewFile(newFile);
-  };
-  const updateNewFile = (field, value) => {
-    const newFileCopy = { ...newFile };
-    newFileCopy[field] = value;
-    setNewFile(newFileCopy);
-  };
-  const cancelEdit = () => {
-    setNewFile(null);
-    if (editingDoc !== null) {
-      const newFiles = [...files];
-      newFiles.push(editingDoc);
-      setFiles(newFiles);
-    }
-    setEditingDoc(null);
-  };
+
   const editDocument = (i) => {
     const newFiles = [...files];
     const file = newFiles.splice(i, 1)[0];
@@ -101,13 +78,13 @@ function ManagerManagementContract(props) {
     setEditingDoc(file);
     setNewFile({ ...file });
   };
-  const saveNewFile = (e) => {
-    // copied from addFile, change e.target.files to state.newFile
-    const newFiles = [...files];
-    newFiles.push(newFile);
-    setFiles(newFiles);
-    setNewFile(null);
-  };
+  // const saveNewFile = (e) => {
+  //   // copied from addFile, change e.target.files to state.newFile
+  //   const newFiles = [...files];
+  //   newFiles.push(newFile);
+  //   setFiles(newFiles);
+  //   setNewFile(null);
+  // };
   const deleteDocument = (i) => {
     const newFiles = [...files];
     newFiles.splice(i, 1);
@@ -123,7 +100,7 @@ function ManagerManagementContract(props) {
     contactState[1](JSON.parse(contract.assigned_contacts));
     setFiles(JSON.parse(contract.documents));
   };
-  React.useEffect(() => {
+  useEffect(() => {
     if (contract) {
       loadContract();
     } else {
@@ -161,20 +138,28 @@ function ManagerManagementContract(props) {
       assigned_contacts: JSON.stringify(contactState[0]),
       contract_status: "ACTIVE",
     };
-    for (let i = 0; i < files.length; i++) {
-      let key = `doc_${i}`;
-      newContract[key] = files[i].file;
-      delete files[i].file;
-    }
-    newContract.documents = JSON.stringify(files);
+    const newFiles = [...files];
 
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      if (newFiles[i].file !== undefined) {
+        newContract[key] = newFiles[i].file;
+      } else {
+        newContract[key] = newFiles[i].link;
+      }
+
+      delete newFiles[i].file;
+    }
+    newContract.documents = JSON.stringify(newFiles);
+    // newContract.documents = JSON.stringify(files);
+    // console.log(newContract);
     if (contract) {
       newContract.contract_uid = contract.contract_uid;
-      // console.log(newContract);
-      const response = await put(`/contracts`, newContract, null, files);
+
+      const response = await put(`/contracts`, newContract, null, newFiles);
     } else {
       // console.log(newContract);
-      const response = await post("/contracts", newContract, null, files);
+      const response = await post("/contracts", newContract, null, newFiles);
     }
 
     const newProperty = {
@@ -195,7 +180,7 @@ function ManagerManagementContract(props) {
     back();
     reload();
   };
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">
@@ -418,73 +403,13 @@ function ManagerManagementContract(props) {
             ) : (
               ""
             )}
-            {newFile !== null ? (
-              <div>
-                <Form.Group>
-                  <Form.Label style={mediumBold} className="mb-0 ms-2">
-                    Document Name
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={newFile.name}
-                    placeholder="Name"
-                    onChange={(e) => updateNewFile("name", e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label style={mediumBold} className="mb-0 ms-2">
-                    Description
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={newFile.description}
-                    placeholder="Description"
-                    onChange={(e) =>
-                      updateNewFile("description", e.target.value)
-                    }
-                  />
-                </Form.Group>
-                <div className="text-center my-3">
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                    onClick={cancelEdit}
-                    className="mx-2"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                    onClick={saveNewFile}
-                    className="mx-2"
-                  >
-                    Save Document
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <input
-                  id="file"
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={addFile}
-                  className="d-none"
-                />
-                <label htmlFor="file">
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                  >
-                    Add Document
-                  </Button>
-                </label>
-              </div>
-            )}
+
+            <DocumentsUploadPost
+              files={files}
+              setFiles={setFiles}
+              addDoc={addDoc}
+              setAddDoc={setAddDoc}
+            />
           </div>
           {showSpinner ? (
             <div className="w-100 d-flex flex-column justify-content-center align-items-center">

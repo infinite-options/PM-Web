@@ -14,6 +14,7 @@ import Header from "../Header";
 import AddressForm from "../AddressForm";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
+import DocumentsUploadPut from "../DocumentsUploadPut";
 import Check from "../../icons/Check.svg";
 import AddIcon from "../../icons/AddIcon.svg";
 import EditIcon from "../../icons/EditIcon.svg";
@@ -47,6 +48,7 @@ function TenantProfile(props) {
   const [lastName, setLastName] = useState("");
   // console.log("user info", user);
   const [editProfile, setEditProfile] = useState(false);
+  const [addDoc, setAddDoc] = useState(false);
   const [tenantInfo, setTenantInfo] = useState([]);
   const [resetPassword, setResetPassword] = useState(false);
   const [phone, setPhone] = useState("");
@@ -123,31 +125,6 @@ function TenantProfile(props) {
     setAutofillState(newAutofillState);
   };
 
-  const addFile = (e) => {
-    const file = e.target.files[0];
-    const newFile = {
-      name: file.name,
-      description: "",
-      file: file,
-      shared: false,
-      created_date: new Date().toISOString().split("T")[0],
-    };
-    setNewFile(newFile);
-  };
-  const updateNewFile = (field, value) => {
-    const newFileCopy = { ...newFile };
-    newFileCopy[field] = value;
-    setNewFile(newFileCopy);
-  };
-  const cancelEdit = () => {
-    setNewFile(null);
-    if (editingDoc !== null) {
-      const newFiles = [...files];
-      newFiles.push(editingDoc);
-      setFiles(newFiles);
-    }
-    setEditingDoc(null);
-  };
   const editDocument = (i) => {
     const newFiles = [...files];
     const file = newFiles.splice(i, 1)[0];
@@ -155,26 +132,11 @@ function TenantProfile(props) {
     setEditingDoc(file);
     setNewFile({ ...file });
   };
-  const saveNewFile = (e) => {
-    // copied from addFile, change e.target.files to state.newFile
-    const newFiles = [...files];
-    newFiles.push(newFile);
-    setFiles(newFiles);
-    setNewFile(null);
-  };
-  const deleteDocument = (i) => {
-    const newFiles = [...files];
-    newFiles.splice(i, 1);
-    setFiles(newFiles);
-  };
+
   //popover open and close
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -190,7 +152,7 @@ function TenantProfile(props) {
 
     if (user.role.indexOf("TENANT") === -1) {
       // console.log("no tenant profile");
-      props.onConfirm();
+      // props.onConfirm();
     }
     if (response.result.length > 0) {
       // console.log("Profile complete");
@@ -279,18 +241,23 @@ function TenantProfile(props) {
         references: JSON.stringify(references),
         vehicle_info: JSON.stringify(vehicles),
       };
-
-      for (let i = 0; i < files.length; i++) {
+      const newFiles = [...files];
+      for (let i = 0; i < newFiles.length; i++) {
         let key = `doc_${i}`;
-        tenantProfile[key] = files[i].file;
-        delete files[i].file;
+        if (newFiles[i].file !== undefined) {
+          tenantProfile[key] = newFiles[i].file;
+        } else {
+          tenantProfile[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
       }
-      tenantProfile.documents = JSON.stringify(files);
+      tenantProfile.documents = JSON.stringify(newFiles);
       tenantProfile.tenant_id = user.user_uid;
       await put(`/tenantProfileInfo`, tenantProfile, null, files);
 
       setEditProfile(false);
-      props.onConfirm();
+      // props.onConfirm();
     } else {
       // console.log("post becuase create new tenant profile");
       currentAddressState[0].state = selectedState;
@@ -320,19 +287,24 @@ function TenantProfile(props) {
         tenant_references: JSON.stringify(references),
         tenant_vehicle_info: JSON.stringify(vehicles),
       };
-
-      for (let i = 0; i < files.length; i++) {
+      const newFiles = [...files];
+      for (let i = 0; i < newFiles.length; i++) {
         let key = `doc_${i}`;
-        tenantProfile[key] = files[i].file;
-        delete files[i].file;
+        if (newFiles[i].file !== undefined) {
+          tenantProfile[key] = newFiles[i].file;
+        } else {
+          tenantProfile[key] = newFiles[i].link;
+        }
+
+        delete newFiles[i].file;
       }
-      tenantProfile.documents = JSON.stringify(files);
+      tenantProfile.documents = JSON.stringify(newFiles);
 
       tenantProfile.tenant_id = user.user_uid;
       await post("/tenantProfileInfo", tenantProfile, null, files);
 
       setEditProfile(false);
-      props.onConfirm();
+      // props.onConfirm();
 
       // updateAutofillState(tenantProfile);
       // props.onConfirm();
@@ -1671,103 +1643,16 @@ function TenantProfile(props) {
                 <div>Tenant Documents</div>
               </Row>
 
-              {files.map((file, i) => (
-                <div key={i}>
-                  <div className="d-flex justify-content-between align-items-end">
-                    <div>
-                      <h6 style={subHeading}>{file.name}</h6>
-                      <p style={small} className="m-0">
-                        {file.description}
-                      </p>
-                    </div>
-                    <div>
-                      <img
-                        src={EditIcon}
-                        alt="Edit"
-                        className="px-1 mx-2"
-                        onClick={() => editDocument(i)}
-                      />
-                      <img
-                        src={DeleteIcon}
-                        alt="Delete"
-                        className="px-1 mx-2"
-                        onClick={() => deleteDocument(i)}
-                      />
-                      <a href={file.link} target="_blank">
-                        <img src={File} />
-                      </a>
-                    </div>
-                  </div>
-                  <hr style={{ opacity: 1 }} />
-                </div>
-              ))}
-              {newFile !== null ? (
-                <div>
-                  <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Document Name
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      value={newFile.name}
-                      placeholder="Name"
-                      onChange={(e) => updateNewFile("name", e.target.value)}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label as="h6" className="mb-0 ms-2">
-                      Description
-                    </Form.Label>
-                    <Form.Control
-                      style={squareForm}
-                      value={newFile.description}
-                      placeholder="Description"
-                      onChange={(e) =>
-                        updateNewFile("description", e.target.value)
-                      }
-                    />
-                  </Form.Group>
-                  <div className="text-center my-3">
-                    <Button
-                      variant="outline-primary"
-                      style={smallPillButton}
-                      as="p"
-                      onClick={cancelEdit}
-                      className="mx-2"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="outline-primary"
-                      style={smallPillButton}
-                      as="p"
-                      onClick={saveNewFile}
-                      className="mx-2"
-                    >
-                      Save Document
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <input
-                    id="file"
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={addFile}
-                    className="d-none"
-                  />
-                  <label htmlFor="file">
-                    <Button
-                      variant="outline-primary"
-                      style={smallPillButton}
-                      as="p"
-                    >
-                      Add Document
-                    </Button>
-                  </label>
-                </div>
-              )}
+              <DocumentsUploadPut
+                files={files}
+                setFiles={setFiles}
+                addDoc={addDoc}
+                setAddDoc={setAddDoc}
+                endpoint="/tenantProfileInfo"
+                editingDoc={editingDoc}
+                setEditingDoc={setEditingDoc}
+                id={user.user_uid}
+              />
             </div>
           ) : (
             <div
@@ -1792,18 +1677,6 @@ function TenantProfile(props) {
                         </p>
                       </div>
                       <div>
-                        <img
-                          src={EditIcon}
-                          alt="Edit"
-                          className="px-1 mx-2"
-                          onClick={() => editDocument(i)}
-                        />
-                        <img
-                          src={DeleteIcon}
-                          alt="Delete"
-                          className="px-1 mx-2"
-                          onClick={() => deleteDocument(i)}
-                        />
                         <a href={file.link} target="_blank">
                           <img
                             src={File}

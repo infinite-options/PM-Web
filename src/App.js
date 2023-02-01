@@ -34,7 +34,6 @@ import QuotesRejectedPM from "./components/QuotesRejectedPM";
 import DetailQuoteRequest from "./components/DetailQuoteRequest";
 import QuotesAccepted from "./components/QuotesAccepted";
 import MaintenanceScheduleRepair from "./components/MaintenanceScheduleRepair";
-import TenantDocumentUpload from "./components/tenantComponents/TenantDocumentUpload";
 import ReviewTenantProfile from "./components/tenantComponents/ReviewTenantprofile";
 import PropertyApplicationView from "./components/tenantComponents/PropertyApplicationView";
 import ReviewPropertyLease from "./components/tenantComponents/reviewPropertyLease";
@@ -165,10 +164,7 @@ function App() {
             />
             <Route path="maintenencePage" element={<MaintenencePage />} />
             <Route path="OwnersTab" element={<OwnersTab />} />
-            <Route
-              path="uploadTenantDocuments"
-              element={<TenantDocumentUpload />}
-            />
+
             <Route path="applyToProperty" element={<ApplyToProperty />} />
             <Route
               path="reviewTenantProfile/:property_uid"

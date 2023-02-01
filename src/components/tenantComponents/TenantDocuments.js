@@ -13,18 +13,12 @@ import AppContext from "../../AppContext";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import TenantFooter from "./TenantFooter";
-import TenantDocumentUpload from "./TenantDocumentUpload";
+import DocumentsUploadPut from "../DocumentsUploadPut";
 import File from "../../icons/File.svg";
 import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
 import { get, put, post } from "../../utils/api";
-import {
-  squareForm,
-  smallPillButton,
-  small,
-  mediumBold,
-  subHeading,
-} from "../../utils/styles";
+import { subHeading } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -62,33 +56,6 @@ function TenantDocuments(props) {
   const responsiveSidebar = {
     showSidebar: width > 1023,
   };
-  // ============================= <File addition/Updation>============================================================
-  const addFile = (e) => {
-    const file = e.target.files[0];
-    const newFile = {
-      name: file.name,
-      description: "",
-      file: file,
-      shared: false,
-      created_date: new Date().toISOString().split("T")[0],
-    };
-    setNewFile(newFile);
-  };
-  // console.log(newFile);
-  const updateNewFile = (field, value) => {
-    const newFileCopy = { ...newFile };
-    newFileCopy[field] = value;
-    setNewFile(newFileCopy);
-  };
-  const cancelEdit = () => {
-    setNewFile(null);
-    if (editingDoc !== null) {
-      const newFiles = [...files];
-      newFiles.push(editingDoc);
-      setFiles(newFiles);
-    }
-    setEditingDoc(null);
-  };
   const editDocument = (i) => {
     const newFiles = [...files];
     const file = newFiles.splice(i, 1)[0];
@@ -96,36 +63,20 @@ function TenantDocuments(props) {
     setEditingDoc(file);
     setNewFile({ ...file });
   };
-  const saveNewFile = async (e) => {
-    // copied from addFile, change e.target.files to state.newFile
-    const newFiles = [...files];
-    newFiles.push(newFile);
-    setFiles(newFiles);
-    const tenantProfile = {};
-    for (let i = 0; i < newFiles.length; i++) {
-      let key = `doc_${i}`;
-      tenantProfile[key] = newFiles[i].file;
-      delete newFiles[i].file;
-    }
-    tenantProfile.documents = JSON.stringify(newFiles);
-    tenantProfile.tenant_id = user.user_uid;
-    // await put("/tenantProfileInfo", tenantProfile, access_token, files);
-    await put("/tenantProfileInfo", tenantProfile, null, files);
-    setAddDoc(!addDoc);
-    setNewFile(null);
-  };
+
   const deleteDocument = async (i) => {
-    // console.log("in delete doc", i);
-    const newFiles = [...files];
-    // console.log("in delete doc", newFiles);
-    newFiles.splice(i, 1);
-    // console.log("in delete doc", newFiles);
+    const newFiles = files.filter((file, index) => index !== i);
     setFiles(newFiles);
     const tenantProfile = {};
     for (let i = 0; i < newFiles.length; i++) {
       let key = `doc_${i}`;
-      tenantProfile[key] = newFiles[i].file;
-      delete newFiles[i].file;
+      // tenantProfile[key] = newFiles[i].file;
+      // delete newFiles[i].file;
+      if (newFiles[i].file !== undefined) {
+        tenantProfile[key] = newFiles[i].file;
+      } else {
+        tenantProfile[key] = newFiles[i].link;
+      }
     }
     tenantProfile.documents = JSON.stringify(newFiles);
     tenantProfile.tenant_id = user.user_uid;
@@ -490,172 +441,17 @@ function TenantDocuments(props) {
                   }}
                 >
                   <Row className="m-3" style={{ overflow: "scroll" }}>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <TableHead></TableHead>
-                      <TableBody>
-                        {" "}
-                        <TableRow>
-                          <TableCell width="380px">
-                            {" "}
-                            <h5>Tenant Documents</h5>{" "}
-                          </TableCell>{" "}
-                          <TableCell width="180px"></TableCell>
-                          <TableCell width="180px"></TableCell>
-                          <TableCell width="180px">Created Date</TableCell>
-                          <TableCell width="180px">Created By</TableCell>
-                          <TableCell width="180px">Created For</TableCell>
-                          <TableCell width="180px"></TableCell>
-                          <TableCell width="180px"></TableCell>
-                        </TableRow>
-                        {/* {console.log(tenantUploadDocuments)} */}
-                        {Object.values(tenantUploadDocuments)[0].length > 0 ? (
-                          Object.values(tenantUploadDocuments)[0].map(
-                            (tud, i) => {
-                              return (
-                                <TableRow>
-                                  <TableCell width="380px">
-                                    <h6 style={subHeading}>{tud.name}</h6>
-                                    {tud.description != "" ? (
-                                      <p className="mx-3">{tud.description}</p>
-                                    ) : (
-                                      <p className="mx-3">Document {i + 1}</p>
-                                    )}
-                                  </TableCell>{" "}
-                                  <TableCell width="180px"></TableCell>
-                                  <TableCell width="180px"></TableCell>
-                                  <TableCell width="180px">
-                                    {tud.created_date}
-                                  </TableCell>
-                                  <TableCell width="180px">
-                                    {Object.values(
-                                      tud.created_by.first_name
-                                    ).includes(",") &&
-                                    Object.values(
-                                      tud.created_by.last_name
-                                    ).includes(",") ? (
-                                      Object.values(
-                                        tud.created_by.first_name.split(",")
-                                      ).map((name, index) => {
-                                        return (
-                                          <p>
-                                            {
-                                              Object.values(
-                                                tud.created_by.first_name.split(
-                                                  ","
-                                                )
-                                              )[index]
-                                            }{" "}
-                                            {
-                                              Object.values(
-                                                tud.created_by.last_name.split(
-                                                  ","
-                                                )
-                                              )[index]
-                                            }
-                                          </p>
-                                        );
-                                      })
-                                    ) : (
-                                      <p>
-                                        {Object.values(
-                                          tud.created_by.first_name
-                                        )}{" "}
-                                        {Object.values(
-                                          tud.created_by.last_name
-                                        )}
-                                      </p>
-                                    )}
-                                  </TableCell>
-                                  <TableCell width="180px">
-                                    {Object.values(
-                                      tud.created_for.first_name
-                                    ).includes(",") &&
-                                    Object.values(
-                                      tud.created_for.last_name
-                                    ).includes(",") ? (
-                                      Object.values(
-                                        tud.created_for.first_name.split(",")
-                                      ).map((name, index) => {
-                                        return (
-                                          <p>
-                                            {
-                                              Object.values(
-                                                tud.created_for.first_name.split(
-                                                  ","
-                                                )
-                                              )[index]
-                                            }{" "}
-                                            {
-                                              Object.values(
-                                                tud.created_for.last_name.split(
-                                                  ","
-                                                )
-                                              )[index]
-                                            }
-                                          </p>
-                                        );
-                                      })
-                                    ) : (
-                                      <p>
-                                        {Object.values(
-                                          tud.created_for.first_name
-                                        )}{" "}
-                                        {Object.values(
-                                          tud.created_for.last_name
-                                        )}
-                                      </p>
-                                    )}
-                                  </TableCell>
-                                  <TableCell width="180px">
-                                    <a href={tud.link} target="_blank">
-                                      <img
-                                        src={File}
-                                        style={{
-                                          width: "30px",
-                                          height: "30px",
-                                          float: "right",
-                                        }}
-                                      />
-                                    </a>
-                                    <img
-                                      src={EditIcon}
-                                      alt="Edit"
-                                      className="px-1 mx-2"
-                                      onClick={() => editDocument(i)}
-                                    />
-                                    <img
-                                      src={DeleteIcon}
-                                      alt="Delete"
-                                      className="px-1 mx-2"
-                                      onClick={() => deleteDocument(i)}
-                                    />
-                                  </TableCell>
-                                  <TableCell width="180px"></TableCell>
-                                </TableRow>
-                              );
-                            }
-                          )
-                        ) : (
-                          <TableRow>
-                            {" "}
-                            <TableCell width="180px">
-                              <p className="mx-3">No documents</p>
-                            </TableCell>
-                            <TableCell width="180px"></TableCell>
-                            <TableCell width="180px"></TableCell>
-                            <TableCell width="180px"></TableCell>
-                            <TableCell width="180px"></TableCell>
-                            <TableCell width="180px"></TableCell>
-                            <TableCell width="180px"></TableCell>
-                            <TableCell width="180px"></TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
+                    <h5>Tenant Documents</h5>{" "}
+                    <DocumentsUploadPut
+                      files={files}
+                      setFiles={setFiles}
+                      addDoc={addDoc}
+                      setAddDoc={setAddDoc}
+                      endpoint="/tenantProfileInfo"
+                      editingDoc={editingDoc}
+                      setEditingDoc={setEditingDoc}
+                      id={user.user_uid}
+                    />
                   </Row>
                 </div>
               </div>
@@ -663,75 +459,7 @@ function TenantDocuments(props) {
               <Row></Row>
             )}
           </Row>
-          <Row className="m-3">
-            {newFile !== null ? (
-              <div>
-                <Form.Group>
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Document Name
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={newFile.name}
-                    placeholder="Name"
-                    onChange={(e) => updateNewFile("name", e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label as="h6" className="mb-0 ms-2">
-                    Description
-                  </Form.Label>
-                  <Form.Control
-                    style={squareForm}
-                    value={newFile.description}
-                    placeholder="Description"
-                    onChange={(e) =>
-                      updateNewFile("description", e.target.value)
-                    }
-                  />
-                </Form.Group>
-                <div className="text-center my-3">
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                    onClick={cancelEdit}
-                    className="mx-2"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                    onClick={saveNewFile}
-                    className="mx-2"
-                  >
-                    Save Document
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <input
-                  id="file"
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={addFile}
-                  className="d-none"
-                />
-                <label htmlFor="file">
-                  <Button
-                    variant="outline-primary"
-                    style={smallPillButton}
-                    as="p"
-                  >
-                    Add Document
-                  </Button>
-                </label>
-              </div>
-            )}
-          </Row>
+
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
             <TenantFooter />
           </div>
