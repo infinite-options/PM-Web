@@ -243,7 +243,7 @@ export default function UpcomingOwnerPayments(props) {
                           <TableCell align="right">
                             {row.purchase_uid}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" style={{ width: "300px" }}>
                             {row.address +
                               " " +
                               row.unit +
@@ -255,7 +255,7 @@ export default function UpcomingOwnerPayments(props) {
                               row.zip}
                           </TableCell>
                           <TableCell align="right"> {row.receiver}</TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" style={{ width: "200px" }}>
                             {row.purchase_frequency === "One-time" ||
                             row.purchase_frequency === "Annually"
                               ? row.description
@@ -275,7 +275,7 @@ export default function UpcomingOwnerPayments(props) {
                           >
                             {row.next_payment.substring(0, 10)}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" style={{ width: "83px" }}>
                             {props.type ? (
                               <button
                                 style={{

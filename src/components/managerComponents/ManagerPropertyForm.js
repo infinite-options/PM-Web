@@ -380,7 +380,7 @@ function ManagerPropertyForm(props) {
               </Form.Label>
               <Form.Control
                 style={squareForm}
-                placeholder="address"
+                placeholder="Address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
@@ -393,7 +393,7 @@ function ManagerPropertyForm(props) {
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
-                    placeholder="unit"
+                    placeholder="Unit"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
                   />
@@ -406,7 +406,7 @@ function ManagerPropertyForm(props) {
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
-                    placeholder="city"
+                    placeholder="City"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                   />
@@ -421,7 +421,7 @@ function ManagerPropertyForm(props) {
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
-                    placeholder="state"
+                    placeholder="State"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
                   />
@@ -434,7 +434,7 @@ function ManagerPropertyForm(props) {
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
-                    placeholder="zipcode"
+                    placeholder="Zipcode"
                     value={zip}
                     onChange={(e) => setZip(e.target.value)}
                   />
@@ -493,7 +493,7 @@ function ManagerPropertyForm(props) {
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="Describe the property"
+              placeholder="Notes for the property"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
@@ -552,7 +552,7 @@ function ManagerPropertyForm(props) {
               </Form.Label>
               <Form.Control
                 style={squareForm}
-                placeholder="sqft"
+                placeholder="Sqft"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
               />
@@ -609,7 +609,7 @@ function ManagerPropertyForm(props) {
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="rent($)"
+              placeholder="Rent ($)"
               value={rent}
               onChange={(e) => setRent(e.target.value)}
             />
@@ -627,7 +627,7 @@ function ManagerPropertyForm(props) {
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="deposit($)"
+              placeholder="Deposit ($)"
               value={deposit}
               onChange={(e) => setDeposit(e.target.value)}
             />

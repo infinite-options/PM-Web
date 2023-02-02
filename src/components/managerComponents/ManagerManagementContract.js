@@ -48,13 +48,13 @@ function ManagerManagementContract(props) {
   const [contractName, setContractName] = useState("");
 
   const [addDoc, setAddDoc] = useState(false);
+  const [editingDoc, setEditingDoc] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [feeState, setFeeState] = useState([]);
   const contactState = useState([]);
   const [files, setFiles] = useState([]);
   const [newFile, setNewFile] = useState(null);
-  const [editingDoc, setEditingDoc] = useState(null);
   const [width, setWindowWidth] = useState(0);
 
   useEffect(() => {
@@ -71,25 +71,6 @@ function ManagerManagementContract(props) {
     showSidebar: width > 1023,
   };
 
-  const editDocument = (i) => {
-    const newFiles = [...files];
-    const file = newFiles.splice(i, 1)[0];
-    setFiles(newFiles);
-    setEditingDoc(file);
-    setNewFile({ ...file });
-  };
-  // const saveNewFile = (e) => {
-  //   // copied from addFile, change e.target.files to state.newFile
-  //   const newFiles = [...files];
-  //   newFiles.push(newFile);
-  //   setFiles(newFiles);
-  //   setNewFile(null);
-  // };
-  const deleteDocument = (i) => {
-    const newFiles = [...files];
-    newFiles.splice(i, 1);
-    setFiles(newFiles);
-  };
   const loadContract = () => {
     if (contract.contract_name) {
       setContractName(contract.contract_name);
@@ -128,6 +109,7 @@ function ManagerManagementContract(props) {
     if (management_businesses.length >= 1) {
       management_buid = management_businesses[0].business_uid;
     }
+    setShowSpinner(true);
     const newContract = {
       property_uid: property.property_uid,
       business_uid: management_buid,
@@ -175,8 +157,9 @@ function ManagerManagementContract(props) {
       }
       newProperty[key] = images[i + 1];
     }
-    setShowSpinner(true);
+
     await put("/properties", newProperty, null, images);
+    setShowSpinner(false);
     back();
     reload();
   };
@@ -351,64 +334,14 @@ function ManagerManagementContract(props) {
             }}
           >
             <h5 style={mediumBold}>Property Manager Documents</h5>
-            {files.length > 0 ? (
-              <Table
-                responsive="md"
-                classes={{ root: classes.customTable }}
-                size="small"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Document Name</TableCell>
-                    <TableCell>Actions</TableCell>
-                    <TableCell>View Document</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {files.map((file, i) => {
-                    return (
-                      <TableRow>
-                        <TableCell>{file.description}</TableCell>
-                        <TableCell>
-                          {" "}
-                          <img
-                            src={EditIcon}
-                            alt="Edit"
-                            className="px-1 mx-2"
-                            onClick={() => editDocument(i)}
-                          />
-                          <img
-                            src={DeleteIcon}
-                            alt="Delete"
-                            className="px-1 mx-2"
-                            onClick={() => deleteDocument(i)}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <a href={file.link} target="_blank">
-                            <img
-                              src={File}
-                              style={{
-                                width: "15px",
-                                height: "15px",
-                              }}
-                            />
-                          </a>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            ) : (
-              ""
-            )}
 
             <DocumentsUploadPost
               files={files}
               setFiles={setFiles}
               addDoc={addDoc}
               setAddDoc={setAddDoc}
+              editingDoc={editingDoc}
+              setEditingDoc={setEditingDoc}
             />
           </div>
           {showSpinner ? (

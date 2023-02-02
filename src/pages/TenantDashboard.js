@@ -1149,7 +1149,9 @@ export default function TenantDashboard() {
                 </Row>
               ) : (
                 <Row className="m-3">
-                  <Col>No maintenance requests and repairs</Col>
+                  <div className="m-3">
+                    No maintenance requests and repairs{" "}
+                  </div>
                 </Row>
               )}
             </div>

@@ -14,6 +14,7 @@ import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import * as ReactBootStrap from "react-bootstrap";
 import moment from "moment";
 import SideBar from "./SideBar";
 import Header from "../Header";
@@ -47,7 +48,8 @@ function ManagerTenantList(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [tenants, setTenants] = useState([]);
-  const [showDetails, setShowDetails] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedTenant, setSelectedTenant] = useState([]);
   const [userPayments, setUserPayments] = useState([]);
   const [lateAfter, setLateAfter] = useState("");
@@ -124,7 +126,7 @@ function ManagerTenantList(props) {
       setMaintenanceRequests(response.result[0].user_repairRequests);
       // console.log(selectedTenant);
     }
-
+    setIsLoading(false);
     // await getAlerts(properties_unique)
   };
   // console.log(showDetails);
@@ -421,7 +423,13 @@ function ManagerTenantList(props) {
               {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
             </Col>
           </Row>
-          {tenants.length > 0 ? (
+          {isLoading ? (
+            <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                <ReactBootStrap.Spinner animation="border" role="status" />
+              </div>
+            </div>
+          ) : tenants.length > 0 ? (
             <div
               className="mx-3 my-3 p-2"
               style={{
@@ -584,7 +592,9 @@ function ManagerTenantList(props) {
               </Row>
             </div>
           ) : (
-            <div className="m-3"> No tenants</div>
+            <Row className="m-3">
+              <div className="m-3"> No tenants</div>
+            </Row>
           )}
         </div>
       </div>
