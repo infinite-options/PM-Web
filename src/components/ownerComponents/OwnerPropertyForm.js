@@ -645,7 +645,7 @@ function OwnerPropertyForm(props) {
               </Form.Label>
               <Form.Control
                 style={squareForm}
-                placeholder="address"
+                placeholder="Address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
@@ -658,7 +658,7 @@ function OwnerPropertyForm(props) {
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
-                    placeholder="unit"
+                    placeholder="Unit"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
                   />
@@ -671,7 +671,7 @@ function OwnerPropertyForm(props) {
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
-                    placeholder="city"
+                    placeholder="City"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                   />
@@ -708,7 +708,7 @@ function OwnerPropertyForm(props) {
                   </Form.Label>
                   <Form.Control
                     style={squareForm}
-                    placeholder="zipcode"
+                    placeholder="Zipcode"
                     value={zip}
                     onChange={(e) => setZip(e.target.value)}
                   />
@@ -766,7 +766,7 @@ function OwnerPropertyForm(props) {
             </Form.Label>
             <Form.Control
               style={squareForm}
-              placeholder="Notes"
+              placeholder="Notes for the property"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
@@ -806,7 +806,7 @@ function OwnerPropertyForm(props) {
                 </Form.Label>
                 <Form.Control
                   style={squareForm}
-                  placeholder="# of bedrooms"
+                  placeholder="# of beds"
                   value={numBeds}
                   onChange={(e) => setNumBeds(e.target.value)}
                 />
@@ -832,7 +832,7 @@ function OwnerPropertyForm(props) {
                 </Form.Label>
                 <Form.Control
                   style={squareForm}
-                  placeholder="sqft"
+                  placeholder="Sqft"
                   value={area}
                   onChange={(e) => setArea(e.target.value)}
                 />
@@ -894,7 +894,7 @@ function OwnerPropertyForm(props) {
                 </Form.Label>
                 <Form.Control
                   style={squareForm}
-                  placeholder="amount($)"
+                  placeholder="Rent ($)"
                   value={rent}
                   onChange={(e) => setRent(e.target.value)}
                 />
@@ -907,7 +907,7 @@ function OwnerPropertyForm(props) {
                 </Form.Label>
                 <Form.Control
                   style={squareForm}
-                  placeholder="amount($)"
+                  placeholder="Deposit ($)"
                   value={deposit}
                   onChange={(e) => setDeposit(e.target.value)}
                 />

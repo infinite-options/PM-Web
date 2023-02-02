@@ -5845,10 +5845,25 @@ function OwnerPropertyView(props) {
                                 size="small"
                                 align="center"
                               >
-                                {property.property_manager.length !== 0
-                                  ? property.property_manager[0]
-                                      .manager_business_name
-                                  : "None"}
+                                {property.property_manager.length > 1 ? (
+                                  Object.values(property.property_manager).map(
+                                    (pm) =>
+                                      pm.management_status == "ACCEPTED" ||
+                                      pm.management_status == "PM END EARLY" ||
+                                      pm.management_status == "OWNER END EARLY"
+                                        ? pm.manager_business_name
+                                        : ""
+                                  )
+                                ) : property.property_manager.length == 1 ? (
+                                  <div>
+                                    {
+                                      property.property_manager[0]
+                                        .manager_business_name
+                                    }
+                                  </div>
+                                ) : (
+                                  "None"
+                                )}
                               </TableCell>
                               <TableCell
                                 padding="none"

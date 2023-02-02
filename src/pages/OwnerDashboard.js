@@ -687,7 +687,7 @@ export default function OwnerDashboard2() {
 
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
-      {!isLoading && ownerData.length > 1 ? (
+      {!isLoading && ownerData.length > 0 ? (
         <div className="flex-1">
           <div
             hidden={!responsive.showSidebar}
@@ -5500,25 +5500,6 @@ export default function OwnerDashboard2() {
             </div>
           </div>
         </div>
-      ) : !isLoading && ownerData.length == 1 ? (
-        <div className="flex-1">
-          {/* <div
-            hidden={!responsive.showSidebar}
-            style={{
-              backgroundColor: "#229ebc",
-              width: "11rem",
-              minHeight: "100%",
-            }}
-          >
-            <SideBar />
-          </div> */}
-          <div className="w-100 mb-5 overflow-scroll">
-            <OwnerPropertyView property_uid={ownerData[0].property_uid} />
-          </div>
-          {/* <div hidden={responsive.showSidebar} className="w-100 mt-3">
-            <OwnerFooter />
-          </div> */}
-        </div>
       ) : !isLoading && ownerData.length == 0 ? (
         <div className="flex-1">
           <div
@@ -5609,7 +5590,11 @@ export default function OwnerDashboard2() {
         </div>
         <div className="w-100 mb-5 overflow-scroll">
           <Header
-            title="Add a new Property"
+            title={
+              stage === "NEW" && editAppliances
+                ? "Add appliances"
+                : "Add a new Property"
+            }
             leftText="< Back"
             leftFn={() => headerBack()}
           />

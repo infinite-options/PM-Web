@@ -8,6 +8,7 @@ import {
   TableBody,
   TableHead,
 } from "@material-ui/core";
+import * as ReactBootStrap from "react-bootstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import MailDialog from "../MailDialog";
 import AppContext from "../../AppContext";
@@ -402,7 +403,11 @@ function PropertyManagerDocs(props) {
           )}
         </Row>
       ) : (
-        ""
+        <div>
+          <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          </div>
+        </div>
       )}
 
       {property.management_status === "FORWARDED" ? (

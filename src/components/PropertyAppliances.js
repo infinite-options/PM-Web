@@ -306,7 +306,7 @@ function PropertyAppliances(props) {
             Appliances
           </h6>
         </Col>
-        <Col>
+        {/* <Col>
           {newAppliance === null && edit ? (
             <img
               src={AddIcon}
@@ -321,7 +321,7 @@ function PropertyAppliances(props) {
           ) : (
             ""
           )}
-        </Col>
+        </Col> */}
       </Row>
       <Row className="d-flex justify-content-center align-items-center overflow-scroll p-3">
         <Table
@@ -1042,6 +1042,24 @@ function PropertyAppliances(props) {
             </Row>
           </Row>
         ))} */}
+      </Row>
+      <Row className="d-flex justify-content-center align-items-center">
+        <Col>
+          {newAppliance === null && edit ? (
+            <img
+              src={AddIcon}
+              onClick={() => setNewAppliance("")}
+              style={{
+                width: "15px",
+                height: "15px",
+                float: "left",
+                marginRight: "5rem",
+              }}
+            />
+          ) : (
+            ""
+          )}
+        </Col>
       </Row>
       <Row className="d-flex flex-column justify-content-left overflow-scroll"></Row>
     </div>
