@@ -836,7 +836,7 @@ function ManagerPropertyView(props) {
               />
             ) : showAddRequest ? (
               <ManagerRepairRequest
-                properties={property}
+                properties={[property]}
                 cancel={() => setShowAddRequest(false)}
                 onSubmit={reloadProperty}
               />
@@ -895,18 +895,22 @@ function ManagerPropertyView(props) {
                     <Col>
                       <h3>Property Cashflow Summary</h3>
                     </Col>
-                    <Col>
-                      <img
-                        src={AddIcon}
-                        onClick={() => setShowCreateExpense(true)}
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          float: "right",
-                          marginRight: "5rem",
-                        }}
-                      />
-                    </Col>
+                    {property.management_status === "ACCEPTED" ? (
+                      <Col>
+                        <img
+                          src={AddIcon}
+                          onClick={() => setShowCreateExpense(true)}
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            float: "right",
+                            marginRight: "5rem",
+                          }}
+                        />
+                      </Col>
+                    ) : (
+                      <Col></Col>
+                    )}
                   </Row>
                   <Row className="m-3" style={{ overflow: "scroll" }}>
                     <div>
@@ -5014,19 +5018,23 @@ function ManagerPropertyView(props) {
                     <Col>
                       <h3>Maintenance and Repair Requests</h3>
                     </Col>
-                    <Col xs={2}>
-                      {" "}
-                      <img
-                        src={AddIcon}
-                        onClick={() => setShowAddRequest(true)}
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          float: "right",
-                          marginRight: "5rem",
-                        }}
-                      />
-                    </Col>
+                    {property.management_status === "ACCEPTED" ? (
+                      <Col xs={2}>
+                        {" "}
+                        <img
+                          src={AddIcon}
+                          onClick={() => setShowAddRequest(true)}
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            float: "right",
+                            marginRight: "5rem",
+                          }}
+                        />
+                      </Col>
+                    ) : (
+                      <Col></Col>
+                    )}
                   </Row>
                   <Row className="m-3" style={{ overflow: "scroll" }}>
                     {property.maintenanceRequests.length > 0 ? (

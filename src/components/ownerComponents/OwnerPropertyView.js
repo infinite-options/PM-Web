@@ -972,7 +972,7 @@ function OwnerPropertyView(props) {
                 />
               ) : showAddRequest ? (
                 <OwnerRepairRequest
-                  properties={property}
+                  properties={[property]}
                   cancel={() => setShowAddRequest(false)}
                   onSubmit={reloadProperty}
                 />
@@ -6097,8 +6097,10 @@ function OwnerPropertyView(props) {
                           </Table>
                         </div>
                       ) : (
-                      <Row className="m-3">
-                        <div className="m-3">No maintenance or repair requests</div>
+                        <Row className="m-3">
+                          <div className="m-3">
+                            No maintenance or repair requests
+                          </div>
                         </Row>
                       )}
                     </Row>
@@ -6888,7 +6890,7 @@ function OwnerPropertyView(props) {
                                   variant="outline-primary"
                                   style={redPillButton}
                                 >
-                                  Reject
+                                  Withdraw
                                 </Button>
                               </Col>
                             </Row>
@@ -7046,7 +7048,7 @@ function OwnerPropertyView(props) {
                               variant="outline-primary"
                               style={redPillButton}
                             >
-                              Reject
+                              Withdraw
                             </Button>
                           </Col>
                         </Row>

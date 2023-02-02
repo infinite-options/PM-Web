@@ -74,7 +74,7 @@ function DocumentsUploadPost(props) {
     setEditingDoc(file);
     setNewFile({ ...file });
   };
-  console.log(files);
+  // console.log(files);
   const deleteDocument = (i) => {
     const newFiles = [...files];
     newFiles.splice(i, 1);

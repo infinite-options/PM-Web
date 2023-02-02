@@ -38,7 +38,7 @@ function ManagerRepairRequest(props) {
   // const properties = location.state.properties;
   const { properties } = props;
   const imageState = useState([]);
-  // console.log(properties, properties.length);
+  console.log(properties, properties.length);
   const [issueType, setIssueType] = useState("Plumbing");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

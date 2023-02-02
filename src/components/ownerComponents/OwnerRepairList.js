@@ -373,7 +373,7 @@ function OwnerRepairList(props) {
     orderBy: PropTypes.string.isRequired,
     // rowCount: PropTypes.number.isRequired,
   };
-
+  // console.log(repairIter);
   return stage === "LIST" ? (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
@@ -455,6 +455,7 @@ function OwnerRepairList(props) {
                                     state: {
                                       repair: repair,
                                       property: repair.address,
+                                      propert_manager: repair.property_manager,
                                     },
                                   }
                                 );
@@ -491,6 +492,7 @@ function OwnerRepairList(props) {
                                   />
                                 )}
                               </TableCell>
+                              {console.log(row, repair)}
                               <TableCell
                                 padding="none"
                                 size="small"

@@ -196,13 +196,6 @@ function OwnerRepairDetails(props) {
       !newBusinesses[index].quote_requested;
     setBusinesses(newBusinesses);
   };
-  function editRepair() {
-    setIsEditing(true);
-  }
-  const reload = () => {
-    setIsEditing(false);
-  };
-
   const acceptQuote = async (quote) => {
     const body = {
       maintenance_quote_uid: quote.maintenance_quote_uid,
@@ -263,6 +256,7 @@ function OwnerRepairDetails(props) {
 
     fetchBusinesses();
   };
+  // console.log(repair);
 
   return (
     <div className="w-100 overflow-hidden">

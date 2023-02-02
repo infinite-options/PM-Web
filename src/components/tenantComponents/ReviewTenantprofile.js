@@ -106,7 +106,7 @@ function ReviewTenantProfile(props) {
     //   setErrorMessage("Please fill out the type of pets");
     //   return;
     // }
-    console.log(application_docs);
+    // console.log(application_docs);
     // console.log(adultsApplication);
     const newApplication = {
       property_uid: property_uid,
@@ -118,7 +118,7 @@ function ReviewTenantProfile(props) {
       referred: referencesApplication,
       documents: application_docs,
     };
-    console.log(application_docs);
+    // console.log(application_docs);
     const response = await post("/applications", newApplication, access_token);
 
     const tenantProfile = {};
@@ -149,7 +149,7 @@ function ReviewTenantProfile(props) {
       }
     }
 
-    console.log(update_tenant_docs);
+    // console.log(update_tenant_docs);
 
     for (let i = 0; i < update_tenant_docs.length; i++) {
       let key = `doc_${i}`;
@@ -157,7 +157,7 @@ function ReviewTenantProfile(props) {
       delete update_tenant_docs[i].file;
     }
     tenantProfile.documents = JSON.stringify(update_tenant_docs);
-    console.log(update_tenant_docs);
+    // console.log(update_tenant_docs);
 
     const res = await put(
       "/tenantProfileInfo",
