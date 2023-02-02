@@ -173,7 +173,7 @@ function ManagerRepairsOverview(props) {
     //   { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
     //   { title: "Completed", repairs_list: completed_repairs },
     // ]);
-    console.log(response.result);
+    // console.log(response.result);
     setRepairIter(repairs_sorted);
     setIsLoading(false);
   };
