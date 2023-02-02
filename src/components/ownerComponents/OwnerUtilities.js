@@ -43,6 +43,7 @@ import {
   bluePillButton,
   greenPill,
 } from "../../utils/styles";
+import DocumentsUploadPost from "../DocumentsUploadPost";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -67,6 +68,7 @@ function OwnerUtilities(props) {
   const [propertyState, setPropertyState] = useState(properties);
   const [files, setFiles] = useState([]);
   const [newFile, setNewFile] = useState(null);
+  const [addDoc, setAddDoc] = useState(false);
   const [editingDoc, setEditingDoc] = useState(null);
   const [tenantPay, setTenantPay] = useState(false);
   const [ownerPay, setOwnerPay] = useState(false);
@@ -346,14 +348,18 @@ function OwnerUtilities(props) {
       bill_algorithm: newUtility.split_type,
       bill_docs: files,
     };
-    for (let i = 0; i < files.length; i++) {
-      let key = `file_${i}`;
-      new_bill[key] = files[i].file;
-      delete files[i].file;
-    }
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      if (newFiles[i].file !== undefined) {
+        new_bill[key] = newFiles[i].file;
+      } else {
+        new_bill[key] = newFiles[i].link;
+      }
 
-    new_bill.bill_docs = JSON.stringify(files);
-    const response = await post("/bills", new_bill, null, files);
+      delete newFiles[i].file;
+    }
+    new_bill.bill_docs = JSON.stringify(newFiles);
+    const response = await post("/bills", new_bill, null, newFiles);
     const bill_uid = response.bill_uid;
     // console.log(bill_uid);
 
@@ -499,54 +505,6 @@ function OwnerUtilities(props) {
       ""
     );
 
-  const addFile = (e) => {
-    const file = e.target.files[0];
-    const newFile = {
-      name: file.name,
-      description: "",
-      file: file,
-      shared: false,
-      created_date: new Date().toISOString().split("T")[0],
-    };
-    setNewFile(newFile);
-  };
-
-  const updateNewFile = (field, value) => {
-    const newFileCopy = { ...newFile };
-    newFileCopy[field] = value;
-    setNewFile(newFileCopy);
-  };
-
-  const editDocument = (i) => {
-    const newFiles = [...files];
-    const file = newFiles.splice(i, 1)[0];
-    setFiles(newFiles);
-    setEditingDoc(file);
-    setNewFile({ ...file });
-  };
-
-  const cancelDocumentEdit = () => {
-    setNewFile(null);
-    if (editingDoc !== null) {
-      const newFiles = [...files];
-      newFiles.push(editingDoc);
-      setFiles(newFiles);
-    }
-    setEditingDoc(null);
-  };
-
-  const saveNewFile = (e) => {
-    // copied from addFile, change e.target.files to state.newFile
-    const newFiles = [...files];
-    newFiles.push(newFile);
-    setFiles(newFiles);
-    setNewFile(null);
-  };
-  const deleteDocument = (i) => {
-    const newFiles = [...files];
-    newFiles.splice(i, 1);
-    setFiles(newFiles);
-  };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -903,108 +861,16 @@ function OwnerUtilities(props) {
                     ))}
                   </Row>
 
-                  {/*Add Documents functionality*/}
                   <Row className="mx-1 mt-3 mb-2">
                     <h6 style={mediumBold}>Documents</h6>
-                    {files.map((file, i) => (
-                      <div key={i}>
-                        <div className="d-flex justify-content-between align-items-end">
-                          <div>
-                            <h6 style={mediumBold}>{file.name}</h6>
-                            <p style={small} className="m-0">
-                              {file.description}
-                            </p>
-                          </div>
-                          <div>
-                            <img
-                              src={EditIcon}
-                              alt="Edit"
-                              className="px-1 mx-2"
-                              onClick={() => editDocument(i)}
-                            />
-                            <img
-                              src={DeleteIcon}
-                              alt="Delete"
-                              className="px-1 mx-2"
-                              onClick={() => deleteDocument(i)}
-                            />
-                            <a href={file.link} target="_blank">
-                              <img src={File} />
-                            </a>
-                          </div>
-                        </div>
-                        <hr style={{ opacity: 1 }} />
-                      </div>
-                    ))}
-                    {newFile !== null ? (
-                      <div>
-                        <Form.Group>
-                          <Form.Label style={mediumBold} className="mb-0 ms-2">
-                            Document Name
-                          </Form.Label>
-                          <Form.Control
-                            style={squareForm}
-                            value={newFile.name}
-                            placeholder="Name"
-                            onChange={(e) =>
-                              updateNewFile("name", e.target.value)
-                            }
-                          />
-                        </Form.Group>
-                        <Form.Group>
-                          <Form.Label style={mediumBold} className="mb-0 ms-2">
-                            Description
-                          </Form.Label>
-                          <Form.Control
-                            style={squareForm}
-                            value={newFile.description}
-                            placeholder="Description"
-                            onChange={(e) =>
-                              updateNewFile("description", e.target.value)
-                            }
-                          />
-                        </Form.Group>
-                        <div className="text-center my-3">
-                          <Button
-                            variant="outline-primary"
-                            style={smallPillButton}
-                            as="p"
-                            onClick={cancelDocumentEdit}
-                            className="mx-2"
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            variant="outline-primary"
-                            style={smallPillButton}
-                            as="p"
-                            onClick={saveNewFile}
-                            className="mx-2"
-                          >
-                            Save Document
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div>
-                        <input
-                          id="file"
-                          type="file"
-                          accept="image/*,.pdf"
-                          onChange={addFile}
-                          className="d-none"
-                        />
-                        <label htmlFor="file">
-                          <Button
-                            variant="outline-primary"
-                            style={smallPillButton}
-                            as="p"
-                          >
-                            Add Document
-                          </Button>
-                        </label>
-                      </div>
-                    )}
+                    <DocumentsUploadPost
+                      files={files}
+                      setFiles={setFiles}
+                      addDoc={addDoc}
+                      setAddDoc={setAddDoc}
+                      editingDoc={editingDoc}
+                      setEditingDoc={setEditingDoc}
+                    />
                     <Row>
                       <Col>
                         <Form.Group
