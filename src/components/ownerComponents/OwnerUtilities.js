@@ -348,6 +348,7 @@ function OwnerUtilities(props) {
       bill_algorithm: newUtility.split_type,
       bill_docs: files,
     };
+    const newFiles = [...files];
     for (let i = 0; i < newFiles.length; i++) {
       let key = `doc_${i}`;
       if (newFiles[i].file !== undefined) {
