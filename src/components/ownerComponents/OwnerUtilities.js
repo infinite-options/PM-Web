@@ -1693,7 +1693,7 @@ function OwnerUtilities(props) {
                 <Row className="m-3">
                   <Col>
                     {" "}
-                    <h3>No utilities </h3>
+                    <h3>No Utilities </h3>
                   </Col>
 
                   <Col>

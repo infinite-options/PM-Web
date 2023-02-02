@@ -594,9 +594,9 @@ function OwnerRepairList(props) {
                   </Row>
                 </div>
               ) : (
-                <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                  No maintenance and repair requests
-                </div>
+                <Row className="m-3">
+                  <div className="m-3">No maintenance and repair requests</div>
+                </Row>
               )
             ) : (
               <div className="w-100 d-flex flex-column justify-content-center align-items-center">

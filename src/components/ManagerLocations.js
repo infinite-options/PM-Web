@@ -70,7 +70,7 @@ function ManagerLocations(props) {
       ""
     );
   return (
-    <Container className="px-2 py-4">
+    <Container className="py-4">
       {editProfile ? (
         <div>
           <Row className="mb-4" style={headings}>

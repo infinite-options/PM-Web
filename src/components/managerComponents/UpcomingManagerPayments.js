@@ -284,6 +284,11 @@ export default function UpcomingManagerPayments(props) {
       label: "Date Due",
     },
     {
+      id: "",
+      numeric: false,
+      label: "Delete",
+    },
+    {
       id: "amount_due",
       numeric: true,
       label: "Amount",
@@ -385,7 +390,7 @@ export default function UpcomingManagerPayments(props) {
                           <TableCell align="right">
                             {row.purchase_uid}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" style={{ width: "300px" }}>
                             {row.address +
                               " " +
                               row.unit +
@@ -397,7 +402,7 @@ export default function UpcomingManagerPayments(props) {
                               row.zip}
                           </TableCell>
                           <TableCell align="right"> {row.receiver}</TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" style={{ width: "200px" }}>
                             {row.purchase_frequency === "One-time" ||
                             row.purchase_frequency === "Annually"
                               ? row.description
@@ -417,7 +422,7 @@ export default function UpcomingManagerPayments(props) {
                           >
                             {row.next_payment.substring(0, 10)}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" style={{ width: "83px" }}>
                             {props.type ? (
                               <button
                                 style={{
@@ -531,7 +536,7 @@ export default function UpcomingManagerPayments(props) {
                         }}
                       >
                         <TableCell align="right">{row.purchase_uid}</TableCell>
-                        <TableCell align="right">
+                        <TableCell align="right" style={{ width: "300px" }}>
                           {row.address +
                             " " +
                             row.unit +
@@ -543,7 +548,7 @@ export default function UpcomingManagerPayments(props) {
                             row.zip}
                         </TableCell>
                         <TableCell align="right"> {row.payer}</TableCell>
-                        <TableCell align="right">
+                        <TableCell align="right" style={{ width: "200px" }}>
                           {row.purchase_frequency === "One-time" ||
                           row.purchase_frequency === "Annually"
                             ? row.description
@@ -561,17 +566,16 @@ export default function UpcomingManagerPayments(props) {
                         >
                           {row.next_payment.substring(0, 10)}
                         </TableCell>
-
-                        <TableCell align="right">
-                          {Math.abs(row.amount_due).toFixed(2)}
-                        </TableCell>
-                        <TableCell>
+                        <TableCell align="right" style={{ width: "83px" }}>
                           <img
                             src={DeleteIcon}
                             alt="Delete"
                             className="px-1 mx-2"
                             onClick={() => deletePurchase(row.purchase_uid)}
                           />
+                        </TableCell>
+                        <TableCell align="right">
+                          {Math.abs(row.amount_due).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (

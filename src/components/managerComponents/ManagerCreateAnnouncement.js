@@ -816,7 +816,10 @@ function ManagerCreateAnnouncement(props) {
                     {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
                   </Col>
                 </Row>{" "}
-                <Row className="m-3">No announcements</Row>
+                <Row className="m-3">
+                  {" "}
+                  <div className="m-3">No announcements</div>
+                </Row>
               </div>
             )}
           </div>

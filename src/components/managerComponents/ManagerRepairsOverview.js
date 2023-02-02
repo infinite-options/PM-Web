@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import * as ReactBootStrap from "react-bootstrap";
 import { visuallyHidden } from "@mui/utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppContext from "../../AppContext";
@@ -35,13 +36,14 @@ function ManagerRepairsOverview(props) {
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [repairIter, setRepairIter] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState([]);
   const [stage, setStage] = useState("LIST");
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
   const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
+  const [orderBy, setOrderBy] = useState("request_status");
   const [width, setWindowWidth] = useState(0);
   useEffect(() => {
     updateDimensions();
@@ -92,6 +94,11 @@ function ManagerRepairsOverview(props) {
       management_buid = management_businesses[0].business_uid;
     }
     const responseProperties = await get("/managerDashboard", access_token);
+
+    if (responseProperties.msg === "Token has expired") {
+      refresh();
+      return;
+    }
     const properties = responseProperties.result.filter(
       (property) => property.management_status !== "REJECTED"
     );
@@ -110,10 +117,6 @@ function ManagerRepairsOverview(props) {
         properties_unique[properties_unique.length - 1].tenants = [property];
       }
     });
-    if (responseProperties.msg === "Token has expired") {
-      refresh();
-      return;
-    }
     setProperties(properties);
     const response = await get(
       `/maintenanceRequestsandQuotes?manager_id=${management_buid}`
@@ -163,13 +166,16 @@ function ManagerRepairsOverview(props) {
       (item) => item.request_status === "COMPLETE"
     );
 
-    setRepairIter([
-      { title: "New", repairs_list: new_repairs },
-      { title: "Info Requested", repairs_list: info_repairs },
-      { title: "Processing", repairs_list: processing_repairs },
-      { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
-      { title: "Completed", repairs_list: completed_repairs },
-    ]);
+    // setRepairIter([
+    //   { title: "New", repairs_list: new_repairs },
+    //   { title: "Info Requested", repairs_list: info_repairs },
+    //   { title: "Processing", repairs_list: processing_repairs },
+    //   { title: "Upcoming, Scheduled", repairs_list: scheduled_repairs },
+    //   { title: "Completed", repairs_list: completed_repairs },
+    // ]);
+    console.log(response.result);
+    setRepairIter(repairs_sorted);
+    setIsLoading(false);
   };
 
   useEffect(fetchRepairs, [access_token]);
@@ -225,7 +231,7 @@ function ManagerRepairsOverview(props) {
       label: "Repair Images",
     },
     {
-      id: "status",
+      id: "request_status",
       numeric: false,
       label: "Status",
     },
@@ -325,139 +331,6 @@ function ManagerRepairsOverview(props) {
           <SideBar />
         </div>
         <div className="w-100 mb-5 overflow-scroll">
-          {/* <div
-            className="mx-2 my-2 p-3"
-            style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-          >
-            {repairIter.map(
-              (row, i) =>
-                row.repairs_list.length > 0 && (
-                  <div className="pt-1 mb-4" key={i}>
-                    <h4 className="mt-2 mb-3" style={{ fontWeight: "600" }}>
-                      {row.title}
-                    </h4>
-
-                    {row.repairs_list.map((repair, j) => (
-                      <Row
-                        className="mb-4"
-                        key={j}
-                        // onClick={() =>
-                        //   navigate(
-                        //     `/manager-repairs/${repair.maintenance_request_uid}`,
-                        //     {
-                        //       state: {
-                        //         repair: repair,
-                        //       },
-                        //     }
-                        //   )
-                        // }
-
-                        onClick={() => selectRepair(repair)}
-                      >
-                        <Col xs={2}>
-                          <div>
-                            {JSON.parse(repair.images).length > 0 ? (
-                              <img
-                                src={JSON.parse(repair.images)[0]}
-                                alt="Repair Image"
-                                className="h-100 w-100"
-                                style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                }}
-                              />
-                            ) : (
-                              <img
-                                src={No_Image}
-                                alt="No Repair Image"
-                                className="h-100 w-100"
-                                style={{
-                                  borderRadius: "4px",
-                                  objectFit: "cover",
-                                }}
-                              />
-                            )}
-                          </div>
-                        </Col>
-                        <Col className="ps-0">
-                          <div className="d-flex justify-content-between align-items-center">
-                            <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                              {repair.title}
-                            </h5>
-                            {repair.priority === "Low" ? (
-                              <p style={greenPill} className="mb-0">
-                                Low Priority
-                              </p>
-                            ) : repair.priority === "Medium" ? (
-                              <p style={orangePill} className="mb-0">
-                                Medium Priority
-                              </p>
-                            ) : repair.priority === "High" ? (
-                              <p style={redPill} className="mb-0">
-                                High Priority
-                              </p>
-                            ) : (
-                              <p style={greenPill} className="mb-0">
-                                No Priority
-                              </p>
-                            )}
-                          </div>
-                          <p style={gray} className="mt-2 mb-0">
-
-                            {repair.address}
-                            {repair.unit !== "" ? " " + repair.unit : ""},{" "}
-                            {repair.city}, {repair.state} <br />
-                            {repair.zip}
-                          </p>
-                          <div className="d-flex">
-                            <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                              <p
-                                style={{ ...blue, ...xSmall }}
-                                className="mb-0"
-                              >
-                                Requested{" "}
-                                {days(
-                                  new Date(repair.request_created_date),
-                                  new Date()
-                                )}{" "}
-                                days ago
-                              </p>
-                            </div>
-                          </div>
-                          <div className="d-flex">
-                            <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                              <p
-                                style={{ ...blue, ...xSmall }}
-                                className="mb-0"
-                              >
-                                Request Created on{" "}
-                                {repair.request_created_date.split(" ")[0]}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="d-flex">
-                            <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                              <p
-                                style={{ ...blue, ...xSmall }}
-                                className="mb-0"
-                              >
-                                {repair.quotes_to_review > 0
-                                  ? `${repair.quotes_to_review} new quote(s) to review`
-                                  : "No new quotes"}
-                              </p>
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    ))}
-                  </div>
-                )
-            )}
-          </div> */}
           <Header title="Maintenance and Repairs" />
           <Row className="m-3">
             <Col>
@@ -478,118 +351,130 @@ function ManagerRepairsOverview(props) {
               />
             </Col>
           </Row>
-          <div
-            className="mx-3 my-3 p-2"
-            style={{
-              background: "#E9E9E9 0% 0% no-repeat padding-box",
-              borderRadius: "10px",
-              opacity: 1,
-            }}
-          >
-            {" "}
-            <Row className="m-3" style={{ overflow: "scroll" }}>
-              <Table
-                responsive="md"
-                classes={{ root: classes.customTable }}
-                size="small"
-              >
-                <EnhancedTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                  // rowCount="4"
-                />{" "}
-                <TableBody>
-                  {repairIter.map((row, index) => {
-                    return stableSort(
-                      row.repairs_list,
-                      getComparator(order, orderBy)
-                    ).map((repair, j) => (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={j}
-                        onClick={() => {
-                          navigate(`./${repair.maintenance_request_uid}`, {
-                            state: {
-                              repair: repair,
-                            },
-                          });
-                        }}
-                      >
-                        <TableCell padding="none" size="small" align="center">
-                          {JSON.parse(repair.images).length > 0 ? (
-                            <img
-                              src={JSON.parse(repair.images)[0]}
-                              // onClick={() => selectRepair(repair)}
 
-                              alt="repair"
-                              style={{
-                                borderRadius: "4px",
-                                objectFit: "cover",
-                                width: "100px",
-                                height: "100px",
-                              }}
-                            />
-                          ) : (
-                            <img
-                              src={RepairImg}
-                              alt="Repair"
-                              style={{
-                                borderRadius: "4px",
-                                objectFit: "cover",
-                                width: "100px",
-                                height: "100px",
-                              }}
-                            />
-                          )}
-                        </TableCell>
-                        <TableCell
-                          padding="none"
-                          size="small"
-                          align="center"
-                          style={{
-                            color: row.title === "New" ? "green" : "black",
+          {isLoading ? (
+            <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                <ReactBootStrap.Spinner animation="border" role="status" />
+              </div>
+            </div>
+          ) : repairIter.length > 0 ? (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
+                  <EnhancedTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    // rowCount="4"
+                  />{" "}
+                  <TableBody>
+                    {stableSort(repairIter, getComparator(order, orderBy)).map(
+                      (repair, j) => (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={j}
+                          onClick={() => {
+                            navigate(`./${repair.maintenance_request_uid}`, {
+                              state: {
+                                repair: repair,
+                              },
+                            });
                           }}
                         >
-                          {row.title}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {repair.title}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {repair.description}
-                        </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {JSON.parse(repair.images).length > 0 ? (
+                              <img
+                                src={JSON.parse(repair.images)[0]}
+                                // onClick={() => selectRepair(repair)}
 
-                        <TableCell padding="none" size="small" align="center">
-                          {repair.address}
-                          {repair.unit !== "" ? " " + repair.unit : ""},{" "}
-                          {repair.city}, {repair.state} <br />
-                          {repair.zip}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {repair.priority}
-                        </TableCell>
+                                alt="repair"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src={RepairImg}
+                                alt="Repair"
+                                style={{
+                                  borderRadius: "4px",
+                                  objectFit: "cover",
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
+                            )}
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            size="small"
+                            align="center"
+                            style={{
+                              color:
+                                repair.request_status === "New"
+                                  ? "green"
+                                  : "black",
+                            }}
+                          >
+                            {repair.request_status}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.title}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.description}
+                          </TableCell>
 
-                        <TableCell padding="none" size="small" align="center">
-                          {repair.request_created_date.split(" ")[0]}
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {repair.days_open} days
-                        </TableCell>
-                        <TableCell padding="none" size="small" align="center">
-                          {repair.quotes_to_review > 0
-                            ? `${repair.quotes_to_review} new quote(s) to review`
-                            : "No new quotes"}
-                        </TableCell>
-                      </TableRow>
-                    ));
-                  })}
-                </TableBody>
-              </Table>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.address}
+                            {repair.unit !== "" ? " " + repair.unit : ""},{" "}
+                            {repair.city}, {repair.state} <br />
+                            {repair.zip}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.priority}
+                          </TableCell>
+
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.request_created_date.split(" ")[0]}
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.days_open} days
+                          </TableCell>
+                          <TableCell padding="none" size="small" align="center">
+                            {repair.quotes_to_review > 0
+                              ? `${repair.quotes_to_review} new quote(s) to review`
+                              : "No new quotes"}
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+          ) : (
+            <Row className="m-3">
+              <div className="m-3">No maintenance and repairs</div>
             </Row>
-          </div>
+          )}
         </div>
       </div>
       <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">

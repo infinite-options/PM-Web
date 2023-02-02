@@ -6097,7 +6097,9 @@ function OwnerPropertyView(props) {
                           </Table>
                         </div>
                       ) : (
-                        <div>No maintenance or repair requests</div>
+                      <Row className="m-3">
+                        <div className="m-3">No maintenance or repair requests</div>
+                        </Row>
                       )}
                     </Row>
                   </div>

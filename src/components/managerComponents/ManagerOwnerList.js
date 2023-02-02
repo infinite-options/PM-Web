@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import * as ReactBootStrap from "react-bootstrap";
 import { visuallyHidden } from "@mui/utils";
 import SideBar from "./SideBar";
 import Header from "../Header";
@@ -36,9 +37,11 @@ function ManagerOwnerList(props) {
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
+  const [isLoading, setIsLoading] = useState(true);
   const [owners, setOwners] = useState([]);
   const [selectedOwner, setSelectedOwner] = useState("");
   const [showDetails, setShowDetails] = useState(false);
+
   // search variables
   const [search, setSearch] = useState("");
   // sorting variables
@@ -94,6 +97,7 @@ function ManagerOwnerList(props) {
     if (response.result.length > 0) {
       setSelectedOwner(response.result[0]);
     }
+    setIsLoading(false);
     // console.log(selectedOwner);
     // await getAlerts(properties_unique)
   };
@@ -245,7 +249,13 @@ function ManagerOwnerList(props) {
               {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
             </Col>
           </Row>
-          {owners.length > 0 ? (
+          {isLoading ? (
+            <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                <ReactBootStrap.Spinner animation="border" role="status" />
+              </div>
+            </div>
+          ) : owners.length > 0 ? (
             <div
               className="mx-3 my-3 p-2"
               style={{
@@ -385,7 +395,9 @@ function ManagerOwnerList(props) {
               </Row>
             </div>
           ) : (
-            <div className="m-3">No active owners</div>
+            <Row className="m-3">
+              <div className="m-3">No active owners</div>
+            </Row>
           )}
         </div>
       </div>

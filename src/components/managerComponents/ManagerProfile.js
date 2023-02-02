@@ -539,7 +539,7 @@ function ManagerProfile(props) {
             />
           </div>
           <div
-            className="mx-3 my-3 p-2"
+            className="mx-3 my-3"
             style={{
               background: "#E9E9E9 0% 0% no-repeat padding-box",
               borderRadius: "10px",

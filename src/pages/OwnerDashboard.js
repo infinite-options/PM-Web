@@ -5492,7 +5492,11 @@ export default function OwnerDashboard2() {
                   </Table>
                 </Row>
               ) : (
-                <Row className="m-3">No maintenance requests and repairs</Row>
+                <Row className="m-3">
+                  <div className="m-3">
+                    No maintenance requests and repairs{" "}
+                  </div>
+                </Row>
               )}
             </div>
             <div hidden={responsive.showSidebar} className="w-100 mt-3">
