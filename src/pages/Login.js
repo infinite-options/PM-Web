@@ -5,6 +5,7 @@ import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import SocialLogin from "./SocialLogin";
+import GoogleSignIn from "../Google/GoogleSignIn";
 import Homepage from "./Homepage";
 import PasswordModal from "./PasswordModal";
 import { post, put } from "../utils/api";
@@ -123,7 +124,12 @@ function Login(props) {
               {/* <img src={AppleLogin} alt="Apple Login" className="m-1" />
               <img src={FacebookLogin} alt="Facebook Login" className="m-1" />
               <img src={GoogleLogin} alt="Google Login" className="m-1" /> */}
-              <SocialLogin
+              {/* <SocialLogin
+                signupStage={props.signupStage}
+                loginStage={loginStage}
+                setLoginStage={setLoginStage}
+              /> */}
+              <GoogleSignIn
                 signupStage={props.signupStage}
                 loginStage={loginStage}
                 setLoginStage={setLoginStage}
@@ -221,6 +227,11 @@ function Login(props) {
           <Container className="px-4">
             <div className="text-center">
               <SocialLogin
+                signupStage={props.signupStage}
+                role={props.role}
+                onConfirm={props.onConfirm}
+              />
+              <GoogleSignIn
                 signupStage={props.signupStage}
                 role={props.role}
                 onConfirm={props.onConfirm}
