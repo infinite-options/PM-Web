@@ -18,6 +18,7 @@ import {
   hidden,
 } from "../utils/styles";
 import SocialSignUp from "./SocialSignUp";
+import GoogleSignUp from "../Google/GoogleSignUp";
 
 function SignupEmailForm(props) {
   const context = useContext(AppContext);
@@ -96,7 +97,14 @@ function SignupEmailForm(props) {
           {/* <img src={AppleLogin} alt="Apple Login" className="m-1" />
           <img src={FacebookLogin} alt="Facebook Login" className="m-1" />
           <img src={GoogleLogin} alt="Google Login" className="m-1" /> */}
-          <SocialSignUp
+          {/* <SocialSignUp
+            first_name={props.firstName}
+            last_name={props.lastName}
+            phone_number={props.phoneNumber}
+            role={props.role}
+            onConfirm={props.onConfirm}
+          /> */}
+          <GoogleSignUp
             first_name={props.firstName}
             last_name={props.lastName}
             phone_number={props.phoneNumber}
