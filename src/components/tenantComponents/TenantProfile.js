@@ -209,7 +209,7 @@ function TenantProfile(props) {
   useEffect(() => {
     fetchProfile();
     setEditProfile(true);
-  }, []);
+  }, [addDoc]);
 
   const submitInfo = async () => {
     if (tenantInfo.length > 0) {
