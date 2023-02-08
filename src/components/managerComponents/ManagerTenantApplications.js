@@ -72,10 +72,15 @@ function ManagerTenantApplications(props) {
   useEffect(fetchApplications, [property]);
 
   const rejectApplication = async (application) => {
-    // console.log(newApplications);
-    // console.log(application);
+    const selected_applications = newApplications.filter(
+      (a) => a.application_selected
+    );
+    if (selected_applications.length === 0) {
+      alert("Please select at least one application");
+      return;
+    }
     const request_body = {
-      application_uid: newApplications[0].application_uid,
+      application_uid: selected_applications[0].application_uid,
       message: "Application has been rejected by the Property Manager",
       application_status: "REJECTED",
     };
