@@ -153,16 +153,20 @@ function ReviewTenantProfile(props) {
 
     for (let i = 0; i < update_tenant_docs.length; i++) {
       let key = `doc_${i}`;
-      tenantProfile[key] = update_tenant_docs[i].file;
+      if (update_tenant_docs[i].file !== undefined) {
+        tenantProfile[key] = update_tenant_docs[i].file;
+      } else {
+        tenantProfile[key] = update_tenant_docs[i].link;
+      }
+
       delete update_tenant_docs[i].file;
     }
     tenantProfile.documents = JSON.stringify(update_tenant_docs);
-    // console.log(update_tenant_docs);
-
+    tenantProfile.tenant_id = user.user_uid;
     const res = await put(
       "/tenantProfileInfo",
       tenantProfile,
-      access_token,
+      null,
       update_tenant_docs
     );
     goToShowApplied();

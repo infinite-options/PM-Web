@@ -273,7 +273,7 @@ function ManagerTenantApplications(props) {
                             className="d-flex justify-content-between align-items-end ps-0"
                             key={i}
                           >
-                            <h6>{document.name}</h6>
+                            <h6>{document.description}</h6>
                             <a href={document.link} target="_blank">
                               <img
                                 src={File}
