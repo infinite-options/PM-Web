@@ -105,8 +105,14 @@ function ManagerUtilities(props) {
   const requestDescriptionRef = React.createRef();
   const tagPriorityRef = React.createRef();
   // sorting variables
+  const [orderManager, setOrderManager] = React.useState("asc");
+  const [orderManagerBy, setOrderManagerBy] =
+    React.useState("bill_utility_type");
+  const [orderTenant, setOrderTenant] = React.useState("asc");
+  const [orderTenantBy, setOrderTenantBy] = React.useState("bill_utility_type");
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
+
   const [expenseUnique, setExpenseUnique] = useState("");
 
   const [width, setWindowWidth] = useState(0);
@@ -545,6 +551,264 @@ function ManagerUtilities(props) {
       ""
     );
 
+  const handleRequestSortManager = (event, property) => {
+    const isAsc = orderManagerBy === property && orderManager === "asc";
+    setOrderManager(isAsc ? "desc" : "asc");
+    setOrderManagerBy(property);
+  };
+
+  function descendingComparatorManager(a, b, orderManagerBy) {
+    if (b[orderManagerBy] < a[orderManagerBy]) {
+      return -1;
+    }
+    if (b[orderManagerBy] > a[orderManagerBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparatorManager(orderManager, orderManagerBy) {
+    return orderManager === "desc"
+      ? (a, b) => descendingComparatorManager(a, b, orderManagerBy)
+      : (a, b) => -descendingComparatorManager(a, b, orderManagerBy);
+  }
+
+  function stableSortManager(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const orderManager = comparator(a[0], b[0]);
+      if (orderManager !== 0) {
+        return orderManager;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const headCellsManager = [
+    {
+      id: "bill_utility_type",
+      numeric: false,
+      label: "Bill Type",
+    },
+    {
+      id: "description",
+      numeric: false,
+      label: "Description",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    {
+      id: "bill_algorithm",
+      numeric: false,
+      label: "Split Method",
+    },
+    {
+      id: "payer",
+      numeric: false,
+      label: "Payer",
+    },
+    {
+      id: "receiver",
+      numeric: false,
+      label: "Payee",
+    },
+    {
+      id: "amount",
+      numeric: false,
+      label: "Amount",
+    },
+    {
+      id: "purchase_date",
+      numeric: false,
+      label: "Date Added",
+    },
+    {
+      id: "purchase_status",
+      numeric: false,
+      label: "Purchase Status",
+    },
+  ];
+  function EnhancedTableHeadManager(props) {
+    const { orderManager, orderManagerBy, onRequestSortManager } = props;
+    const createSortHandlerManager = (property) => (event) => {
+      onRequestSortManager(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCellsManager.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={
+                orderManagerBy === headCell.id ? orderManager : false
+              }
+            >
+              <TableSortLabel
+                active={orderManagerBy === headCell.id}
+                direction={
+                  orderManagerBy === headCell.id ? orderManager : "asc"
+                }
+                onClick={createSortHandlerManager(headCell.id)}
+              >
+                {headCell.label}
+                {orderManagerBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {orderManager === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadManager.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSortManager: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    orderManager: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderManagerBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
+  const handleRequestSortTenant = (event, property) => {
+    const isAsc = orderTenantBy === property && orderTenant === "asc";
+    setOrderTenant(isAsc ? "desc" : "asc");
+    setOrderTenantBy(property);
+  };
+
+  function descendingComparatorTenant(a, b, orderTenantBy) {
+    if (b[orderTenantBy] < a[orderTenantBy]) {
+      return -1;
+    }
+    if (b[orderTenantBy] > a[orderTenantBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparatorTenant(orderTenant, orderTenantBy) {
+    return orderTenant === "desc"
+      ? (a, b) => descendingComparatorTenant(a, b, orderTenantBy)
+      : (a, b) => -descendingComparatorTenant(a, b, orderTenantBy);
+  }
+
+  function stableSortTenant(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const orderTenant = comparator(a[0], b[0]);
+      if (orderTenant !== 0) {
+        return orderTenant;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const headCellsTenant = [
+    {
+      id: "bill_utility_type",
+      numeric: false,
+      label: "Bill Type",
+    },
+    {
+      id: "description",
+      numeric: false,
+      label: "Description",
+    },
+    {
+      id: "address",
+      numeric: false,
+      label: "Address",
+    },
+    {
+      id: "bill_algorithm",
+      numeric: false,
+      label: "Split Method",
+    },
+    {
+      id: "payer",
+      numeric: false,
+      label: "Payer",
+    },
+    {
+      id: "receiver",
+      numeric: false,
+      label: "Payee",
+    },
+    {
+      id: "amount",
+      numeric: false,
+      label: "Amount",
+    },
+    {
+      id: "purchase_date",
+      numeric: false,
+      label: "Date Added",
+    },
+    {
+      id: "purchase_status",
+      numeric: false,
+      label: "Purchase Status",
+    },
+  ];
+  function EnhancedTableHeadTenant(props) {
+    const { orderTenant, orderTenantBy, onRequestSortTenant } = props;
+    const createSortHandlerTenant = (property) => (event) => {
+      onRequestSortTenant(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCellsTenant.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align="center"
+              size="small"
+              sortDirection={
+                orderTenantBy === headCell.id ? orderTenant : false
+              }
+            >
+              <TableSortLabel
+                active={orderTenantBy === headCell.id}
+                direction={orderTenantBy === headCell.id ? orderTenant : "asc"}
+                onClick={createSortHandlerTenant(headCell.id)}
+              >
+                {headCell.label}
+                {orderTenantBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {orderTenant === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHeadTenant.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+    onRequestSortTenant: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    orderTenant: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderTenantBy: PropTypes.string.isRequired,
+    // rowCount: PropTypes.number.isRequired,
+  };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -1023,16 +1287,16 @@ function ManagerUtilities(props) {
                         classes={{ root: classes.customTable }}
                         size="small"
                       >
-                        <EnhancedTableHead
-                          order={order}
-                          orderBy={orderBy}
-                          onRequestSort={handleRequestSort}
+                        <EnhancedTableHeadManager
+                          orderManager={orderManager}
+                          orderManagerBy={orderManagerBy}
+                          onRequestSortManager={handleRequestSortManager}
                           // rowCount="4"
                         />{" "}
                         <TableBody>
-                          {stableSort(
+                          {stableSortManager(
                             expenseUnique,
-                            getComparator(order, orderBy)
+                            getComparatorManager(orderManager, orderManagerBy)
                           ).map((expense, index) => {
                             return expense.purchase_type === "UTILITY" &&
                               expense.payer.includes(managerID) &&
@@ -1041,7 +1305,7 @@ function ManagerUtilities(props) {
                                 hover
                                 role="checkbox"
                                 tabIndex={-1}
-                                key={expense.address}
+                                key={index}
                                 onClick={() => {
                                   setExpenseDetailManager(true);
                                   setPayment(expense);
@@ -1234,16 +1498,16 @@ function ManagerUtilities(props) {
                         classes={{ root: classes.customTable }}
                         size="small"
                       >
-                        <EnhancedTableHead
-                          order={order}
-                          orderBy={orderBy}
-                          onRequestSort={handleRequestSort}
+                        <EnhancedTableHeadTenant
+                          orderTenant={orderTenant}
+                          orderTenantBy={orderTenantBy}
+                          onRequestSortTenant={handleRequestSortTenant}
                           // rowCount="4"
                         />{" "}
                         <TableBody>
-                          {stableSort(
+                          {stableSortTenant(
                             expenseUnique,
-                            getComparator(order, orderBy)
+                            getComparatorTenant(orderTenant, orderTenantBy)
                           ).map((expense, index) => {
                             return expense.purchase_type === "UTILITY" &&
                               !expense.payer.includes(managerID) &&
@@ -1252,7 +1516,7 @@ function ManagerUtilities(props) {
                                 hover
                                 role="checkbox"
                                 tabIndex={-1}
-                                key={expense.address}
+                                key={index}
                                 onClick={() => {
                                   setExpenseDetail(true);
                                   setPayment(expense);
@@ -1441,7 +1705,7 @@ function ManagerUtilities(props) {
                                 hover
                                 role="checkbox"
                                 tabIndex={-1}
-                                key={expense.address}
+                                key={expense.purchase_uid}
                                 onClick={() => {
                                   setExpenseDetail(true);
                                   setPayment(expense);

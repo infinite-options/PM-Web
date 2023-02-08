@@ -50,6 +50,7 @@ import {
   gray,
 } from "../../utils/styles";
 import "react-multi-carousel/lib/styles.css";
+import PropertyManagersList from "./PropertyManagersList";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -275,6 +276,8 @@ function OwnerPropertyView(props) {
   const [currentImg, setCurrentImg] = useState(0);
   const [editProperty, setEditProperty] = useState(false);
 
+  const [searchPM, setSearchPM] = useState(false);
+
   const [contracts, setContracts] = useState([]);
   const [showCreateExpense, setShowCreateExpense] = useState(false);
   const [showCreateRevenue, setShowCreateRevenue] = useState(false);
@@ -331,6 +334,8 @@ function OwnerPropertyView(props) {
     } else {
       editProperty
         ? reloadProperty()
+        : searchPM
+        ? setSearchPM(false)
         : showAddRequest
         ? setShowAddRequest(false)
         : showCreateExpense
@@ -920,7 +925,7 @@ function OwnerPropertyView(props) {
         back={closeContract}
         property={property}
         contract={selectedContract}
-        reload={reloadProperty}
+        reload={fetchProperty}
       />
     ) : (
       <div className="w-100">
@@ -956,7 +961,13 @@ function OwnerPropertyView(props) {
 
           <div className="w-100 mb-5 overflow-scroll overflow-hidden">
             <Header
-              title="Property Details"
+              title={
+                editProperty
+                  ? "Edit Property"
+                  : searchPM
+                  ? "Property Managers"
+                  : "Property Details"
+              }
               leftText={location.state == null ? "" : "< Back"}
               leftFn={headerBack}
             />
@@ -969,6 +980,12 @@ function OwnerPropertyView(props) {
                   onSubmit={reloadProperty}
                   editAppliances={editAppliances}
                   setEditAppliances={setEditAppliances}
+                />
+              ) : searchPM ? (
+                <PropertyManagersList
+                  property={property}
+                  property_uid={property.property_uid}
+                  reload={reloadProperty}
                 />
               ) : showAddRequest ? (
                 <OwnerRepairRequest
@@ -7562,6 +7579,8 @@ function OwnerPropertyView(props) {
                       property={property}
                       addDocument={addContract}
                       selectContract={selectContract}
+                      searchPM={searchPM}
+                      setSearchPM={setSearchPM}
                       // reload={reloadProperty}
                       // setStage={setStage}
                     />
