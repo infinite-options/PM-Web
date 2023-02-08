@@ -6,6 +6,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import PropertyManagersList from "./PropertyManagersList";
 import File from "../../icons/File.svg";
 import { get, put } from "../../utils/api";
 import {
@@ -18,7 +19,15 @@ import {
 function ManagerDocs(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { addDocument, property, selectContract, reload, setStage } = props;
+  const {
+    addDocument,
+    property,
+    selectContract,
+    reload,
+    setStage,
+    searchPM,
+    setSearchPM,
+  } = props;
   const [contracts, setContracts] = useState([]);
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -158,14 +167,15 @@ function ManagerDocs(props) {
             // onClick={() => setAddPropertyManager(true)}
             onClick={() => {
               // console.log(addPropertyManager);
-              setAddPropertyManager(true);
+              // setAddPropertyManager(true);
+              setSearchPM(true);
               // console.log(addPropertyManager);
-              navigate("/pm-list", {
-                state: {
-                  property: property,
-                  property_uid: property.property_uid,
-                },
-              });
+              // navigate("/pm-list", {
+              //   state: {
+              //     property: property,
+              //     property_uid: property.property_uid,
+              //   },
+              // });
             }}
           >
             Change Property Manager
@@ -214,14 +224,16 @@ function ManagerDocs(props) {
             style={smallPillButton}
             onClick={() => {
               // console.log(addPropertyManager);
-              setAddPropertyManager(true);
+              // setAddPropertyManager(true);
+              // setAddPropertyManager(true);
+              setSearchPM(true);
               // console.log(addPropertyManager);
-              navigate("/pm-list", {
-                state: {
-                  property: property,
-                  property_uid: property.property_uid,
-                },
-              });
+              // navigate("/pm-list", {
+              //   state: {
+              //     property: property,
+              //     property_uid: property.property_uid,
+              //   },
+              // });
             }}
           >
             Search Property Managers

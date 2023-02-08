@@ -10,6 +10,7 @@ import Message from "../../icons/Message.svg";
 import BlueFilledBox from "../../icons/BlueFilledBox.svg";
 import UnFilledBox from "../../icons/UnFilledBox.svg";
 import Mail from "../../icons/Mail.svg";
+import Verified from "../../icons/Verified.jpg";
 import { get, put } from "../../utils/api";
 import {
   mediumBold,
@@ -25,11 +26,11 @@ function PropertyManagersList(props) {
   const navigate = useNavigate();
 
   const location = useLocation();
-  // const { back, property_uid, property, reload } = props;
+  const { property_uid, property, reload } = props;
 
-  const property_uid = location.state.property_uid;
+  // const property_uid = location.state.property_uid;
 
-  const property = location.state.property;
+  // const property = location.state.property;
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [propertyManagers, setPropertyManagers] = useState([]);
@@ -92,11 +93,11 @@ function PropertyManagersList(props) {
 
           // alert("youve already rejected this Management Company");
           setShowDialog(true);
-          navigate(`/propertyDetails/${property_uid}`, {
-            state: {
-              property_uid: property_uid,
-            },
-          });
+          // navigate(`/propertyDetails/${property_uid}`, {
+          //   state: {
+          //     property_uid: property_uid,
+          //   },
+          // });
         } else {
           // console.log("here in else");
           const newProperty = {
@@ -113,12 +114,13 @@ function PropertyManagersList(props) {
           }
           const response = await put("/properties", newProperty, null, files);
           //   setAddPropertyManager(false);
-          navigate(`/propertyDetails/${property_uid}`, {
-            state: {
-              property_uid: property_uid,
-            },
-          });
-          setStage("LIST");
+          // navigate(`/propertyDetails/${property_uid}`, {
+          //   state: {
+          //     property_uid: property_uid,
+          //   },
+          // });
+          // reload();
+          // setStage("LIST");
         }
       }
     } else if (property.property_manager.length == 0) {
@@ -137,7 +139,7 @@ function PropertyManagersList(props) {
       const response = await put("/properties", newProperty, null, files);
       //   setAddPropertyManager(false);
       // reload();
-      setStage("LIST");
+      // setStage("LIST");
     } else {
       // console.log("in else");
       if (
@@ -167,69 +169,74 @@ function PropertyManagersList(props) {
         // navigate(`/propertyDetails/${property_uid}`);
         setStage("LIST");
       }
-      setStage("LIST");
     }
+    reload();
+    setStage("LIST");
   };
-
+  console.log("Property Managers", propertyManagers);
+  console.log("Property", property);
   return stage === "LIST" ? (
     <div className="flex-1">
-      <div
-        hidden={!responsiveSidebar.showSidebar}
-        style={{
-          backgroundColor: "#229ebc",
-          width: "11rem",
-          minHeight: "100%",
-        }}
-      >
-        <SideBar />
-      </div>
       <div className="w-100  mb-5">
-        <Header
-          title="Property Managers"
-          leftText="< Back"
-          leftFn={() =>
-            navigate(`/propertyDetails/${property.property_uid}`, {
-              state: {
-                property_uid: property.property_uid,
-              },
-            })
-          }
-        />
         <Row className="m-3">
-          {propertyManagers.map((property, i) => (
-            <Container key={i} className="pt-1" style={{ height: "100px" }}>
+          {propertyManagers.map((pm, i) => (
+            <Container
+              className="pt-1"
+              style={{
+                height: "100px",
+              }}
+            >
               <Row
+                key={i}
                 className="h-100"
                 onClick={() => {
                   setStage("PMDETAILS");
-                  setSelectedPropertyManagers(property);
+                  setSelectedPropertyManagers(pm);
                 }}
               >
+                <Col xs={1}>
+                  {property.property_manager.some(
+                    (prop, i) => prop.linked_business_id === pm.business_uid
+                  ) ? (
+                    <img
+                      src={Verified}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "contain",
+                        cursor: "pointer",
+                      }}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </Col>
                 <Col className="ps-0">
                   <div className="d-flex justify-content-between align-items-center">
                     <h5 className="mb-0" style={{ fontWeight: "600" }}>
-                      {property.business_name}
+                      {pm.business_name}
                     </h5>
                   </div>
                   <div>
                     <p style={gray} className="mt-1 mb-0">
-                      {property.business_type}
+                      {pm.business_type}
                     </p>
                   </div>
                 </Col>
+
                 <Col>
                   <div className="d-flex  justify-content-end ">
                     <div
-                      style={property.business_uid ? {} : hidden}
+                      style={pm.business_uid ? {} : hidden}
                       onClick={stopPropagation}
                     >
-                      <a href={`tel:${property.business_phone_number}`}>
+                      <a href={`tel:${pm.business_phone_number}`}>
                         <img src={Phone} alt="Phone" style={smallImg} />
                       </a>
-                      <a href={`mailto:${property.business_email}`}>
+                      <a href={`mailto:${pm.business_email}`}>
                         <img src={Message} alt="Message" style={smallImg} />
                       </a>
-                      <a href={`mailto:${property.business_email}`}>
+                      <a href={`mailto:${pm.business_email}`}>
                         <img src={Mail} alt="Mail" style={smallImg} />
                       </a>
                     </div>
@@ -247,19 +254,7 @@ function PropertyManagersList(props) {
     </div>
   ) : stage === "PMDETAILS" ? (
     <div className="flex-1">
-      <div
-        hidden={!responsiveSidebar.showSidebar}
-        style={{
-          backgroundColor: "#229ebc",
-          width: "11rem",
-          minHeight: "100%",
-        }}
-      >
-        <SideBar />
-      </div>
       <div className="w-100  mb-5">
-        <Header title="" leftText="< Back" leftFn={() => setStage("LIST")} />
-
         <div
           className="mx-2 my-2 p-3"
           style={{
@@ -417,10 +412,15 @@ function PropertyManagersList(props) {
             >
               Request Quote from PM
             </Button>
+            <Button
+              variant="outline-primary"
+              style={pillButton}
+              className="mx-1"
+              onClick={() => setStage("LIST")}
+            >
+              Cancel
+            </Button>
           </div>
-        </div>
-        <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-5">
-          <OwnerFooter />
         </div>
       </div>
     </div>
