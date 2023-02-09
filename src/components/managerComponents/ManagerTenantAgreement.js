@@ -306,6 +306,7 @@ function ManagerTenantAgreement(props) {
       ""
     );
   // console.log("feeState in tenantagreemnt", feeState);
+  console.log(startDate, startDate.split("-")[2]);
   const forwardLeaseAgreement = async () => {
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
@@ -334,7 +335,10 @@ function ManagerTenantAgreement(props) {
     for (let i = 0; i < feeState.length; i++) {
       if (feeState[i]["fee_name"] === "Deposit") {
         feeState[i]["available_topay"] = available;
-        feeState[i]["due_by"] = "";
+        feeState[i]["due_by"] =
+          startDate && startDate.split("-")[2].charAt(0) == "0"
+            ? startDate.split("-")[2].charAt(1)
+            : startDate.split("-")[2];
         feeState[i]["late_by"] = lateAfter;
         feeState[i]["late_fee"] = lateFee;
         feeState[i]["perDay_late_fee"] = lateFeePer;
