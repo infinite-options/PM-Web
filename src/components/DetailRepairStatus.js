@@ -187,7 +187,7 @@ function DetailRepairStatus(props) {
   };
 
   function displayMessage() {
-    if (repairsDetail.length == 0) return "loading";
+    if (repairsDetail.length === 0) return "loading";
     else if ((apiDateString !== "") & (scheduledTime !== "")) {
       if (!showAccept) setShowAccept(true);
       return (
@@ -466,11 +466,11 @@ function DetailRepairStatus(props) {
                   ) : (
                     <Col>
                       {priority === "High" ? (
-                        <img src={HighPriority} />
+                        <img alt="low priority" src={HighPriority} />
                       ) : priority === "Medium" ? (
-                        <img src={MediumPriority} />
+                        <img alt="medium priority" src={MediumPriority} />
                       ) : (
-                        <img src={LowPriority} />
+                        <img alt="high priority" src={LowPriority} />
                       )}
                     </Col>
                   )}
@@ -541,6 +541,7 @@ function DetailRepairStatus(props) {
                           (window.location.href = `tel:${profile.manager_phone_number}`)
                         }
                         src={Phone}
+                        alt="Phone"
                       />
                     </Col>
                     <Col xs={2} className="mt-1 mb-1">
@@ -549,6 +550,7 @@ function DetailRepairStatus(props) {
                           (window.location.href = `mailto:${profile.manager_email}`)
                         }
                         src={Message}
+                        alt="Message"
                       />
                     </Col>
                     <hr />
@@ -573,6 +575,7 @@ function DetailRepairStatus(props) {
                             (window.location.href = `tel:${busineesAssigned.business_phone_number}`)
                           }
                           src={Phone}
+                          alt="Phone"
                         />
                       </Col>
                       <Col xs={2} className="mt-1 mb-1">
@@ -581,6 +584,7 @@ function DetailRepairStatus(props) {
                             (window.location.href = `mailto:${busineesAssigned.business_email}`)
                           }
                           src={Message}
+                          alt="Message"
                         />
                       </Col>
                       <hr />

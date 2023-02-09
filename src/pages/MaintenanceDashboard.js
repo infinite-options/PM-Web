@@ -83,7 +83,7 @@ function MaintenanceDashboard(props) {
   };
   //console.log(profile);
   useEffect(() => {
-    if (profile != undefined) {
+    if (profile !== undefined) {
       setIsLoading(false);
     }
   }, [profile]);
@@ -159,10 +159,10 @@ function MaintenanceDashboard(props) {
               </div>
             </Col>
             <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-              <img src={Phone} />
+              <img src={Phone} alt="Phone" />
             </Col>
             <Col xs={2} style={upcomingText} className="mt-1 mb-1">
-              <img src={Message} />
+              <img src={Message} alt="Message" />
             </Col>
           </Row>
         ) : (

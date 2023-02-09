@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { Col, Row, Container, Form, Modal } from "react-bootstrap";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Grid, Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import * as ReactBootStrap from "react-bootstrap";
@@ -10,14 +9,6 @@ import AppContext from "../AppContext";
 import Header from "../components/Header";
 import SelectRole from "../components/SelectRole";
 import { post } from "../utils/api";
-
-const useStyles = makeStyles({
-  textFieldBackgorund: {
-    backgroundColor: "#F3F3F8",
-    border: "2px solid #636366",
-    borderRadius: "3px",
-  },
-});
 
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
@@ -41,12 +32,11 @@ function GoogleSignIn(props) {
     console.log("User object", userObject);
     if (userObject) {
       let email = userObject.email;
+      setNewEmail(email);
       let user_id = "";
       axios.get(BASE_URL + `/UserToken/${email}`).then((response) => {
         // console.log("in events", response);
         setAccessToken(response["data"]["result"][0]["google_auth_token"]);
-        let url =
-          "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=";
 
         user_id = response["data"]["result"][0]["user_uid"];
         var old_at = response["data"]["result"][0]["google_auth_token"];
@@ -54,8 +44,6 @@ function GoogleSignIn(props) {
         var refreshToken =
           response["data"]["result"][0]["google_refresh_token"];
 
-        let checkExp_url = url + old_at;
-        // console.log("in events", checkExp_url);
         fetch(
           `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${old_at}`,
           {
@@ -102,7 +90,6 @@ function GoogleSignIn(props) {
                 .then((data) => {
                   // console.log(data);
                   let at = data["access_token"];
-                  var id_token = data["id_token"];
                   setAccessToken(at);
                   // console.log("in events", at);
                   let url = BASE_URL + `/UpdateAccessToken/${user_id}`;
@@ -145,6 +132,7 @@ function GoogleSignIn(props) {
       const response = await post("/login", user);
       // console.log(response);
       if (response.code !== 200) {
+        setNewEmail(e);
         setSocialSignUpModalShow(!socialSignUpModalShow);
         return;
         // add validation
@@ -159,6 +147,7 @@ function GoogleSignIn(props) {
       };
       const response = await post("/login", user);
       if (response.code !== 200) {
+        setNewEmail(e);
         setSocialSignUpModalShow(!socialSignUpModalShow);
         return;
         // add validation
@@ -176,7 +165,7 @@ function GoogleSignIn(props) {
     if (userData.access_token !== null) {
       setLoginStage("ROLE");
     }
-  }, []);
+  }, [userData.access_token]);
   useEffect(() => {
     /* global google */
 
@@ -196,7 +185,7 @@ function GoogleSignIn(props) {
       });
       // access tokens
     }
-  }, [handleCallBackResponse]);
+  }, []);
   const hideSignUp = () => {
     //setSignUpModalShow(false);
     setSocialSignUpModalShow(false);
@@ -227,9 +216,6 @@ function GoogleSignIn(props) {
     };
     const bodyStyle = {
       backgroundColor: " #F3F3F8",
-    };
-    const colHeader = {
-      margin: "5px",
     };
     return (
       <Modal

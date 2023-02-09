@@ -46,7 +46,7 @@ export default function OwnersTab() {
       <div className="grids">
         <Grid container spacing={1}>
           <Grid className="aligned" item xs={4}>
-            <img src={LOGO1} className="bottomimages" />
+            <img alt="magnifying glass" src={LOGO1} className="bottomimages" />
             <h4 className="texts">Improve Visibility</h4>
             <h2 className="bottomcaptions">
               Get a complete overview of your property portfolio and dive into
@@ -54,7 +54,7 @@ export default function OwnersTab() {
             </h2>
           </Grid>
           <Grid className="aligned" item xs={4}>
-            <img src={LOGO2} className="bottomimages" />
+            <img alt="customer support" src={LOGO2} className="bottomimages" />
             <h4 className="texts">Quick Customer Support</h4>
             <h2 className="bottomcaptions">
               Responses in less than 2 business hours for owners, less than 4
@@ -62,7 +62,7 @@ export default function OwnersTab() {
             </h2>
           </Grid>
           <Grid className="aligned" item xs={4}>
-            <img src={LOGO5} className="bottomimages" />
+            <img alt="easy reporting" src={LOGO5} className="bottomimages" />
             <h4 className="texts">Easy Reporting</h4>
             <h2 className="bottomcaptions">
               See each property's cash flow in your dashboard and easy access to
@@ -70,14 +70,14 @@ export default function OwnersTab() {
             </h2>
           </Grid>
           <Grid className="aligned" item xs={4}>
-            <img src={LOGO6} className="bottomimages" />
+            <img alt="maintenance" src={LOGO6} className="bottomimages" />
             <h2 className="texts">Track Maintenance Requests</h2>
             <h2 className="bottomcaptions">
               See all Maintenance requests and track cost and resolution time.
             </h2>
           </Grid>
           <Grid className="aligned" item xs={4}>
-            <img src={LOGO3} className="bottomimages" />
+            <img alt="heart" src={LOGO3} className="bottomimages" />
             <h2 className="texts">Improve Residential Satisfaction</h2>
             <h2 className="bottomcaptions">
               Residents will be more likely to renew leases and pay bills on
@@ -85,7 +85,7 @@ export default function OwnersTab() {
             </h2>
           </Grid>
           <Grid className="aligned" item xs={4}>
-            <img src={LOGO4} className="bottomimages" />
+            <img alt="house" src={LOGO4} className="bottomimages" />
             <h2 className="texts">Monitor Rent Payments</h2>
             <h2 className="bottomcaptions">
               See who has paid and who hasn't. Track late fees and bill

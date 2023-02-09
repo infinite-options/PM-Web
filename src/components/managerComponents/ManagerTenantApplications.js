@@ -274,9 +274,14 @@ function ManagerTenantApplications(props) {
                             key={i}
                           >
                             <h6>{document.description}</h6>
-                            <a href={document.link} target="_blank">
+                            <a
+                              href={document.link}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
                               <img
                                 src={File}
+                                alt="open document"
                                 style={{
                                   width: "15px",
                                   height: "15px",

@@ -181,7 +181,7 @@ function ManagerDocuments(props) {
                               return (
                                 <TableRow>
                                   <TableCell width="380px">
-                                    {ald.description != "" ? (
+                                    {ald.description !== "" ? (
                                       <p className="mx-3">{ald.description}</p>
                                     ) : (
                                       <p className="mx-3">Document {i + 1}</p>
@@ -240,9 +240,14 @@ function ManagerDocuments(props) {
                                     )}
                                   </TableCell>
                                   <TableCell width="180px">
-                                    <a href={ald.link} target="_blank">
+                                    <a
+                                      href={ald.link}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
                                       <img
                                         src={File}
+                                        alt="open document"
                                         style={{
                                           width: "30px",
                                           height: "30px",
@@ -308,7 +313,7 @@ function ManagerDocuments(props) {
                               return (
                                 <TableRow>
                                   <TableCell width="380px">
-                                    {amd.description != "" ? (
+                                    {amd.description !== "" ? (
                                       <p className="mx-3">{amd.description}</p>
                                     ) : (
                                       <p className="mx-3">Document {i + 1}</p>
@@ -331,9 +336,14 @@ function ManagerDocuments(props) {
                                     {amd.created_for}
                                   </TableCell>
                                   <TableCell width="180px" xs={1}>
-                                    <a href={amd.link} target="_blank">
+                                    <a
+                                      href={amd.link}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
                                       <img
                                         src={File}
+                                        alt="open document"
                                         style={{
                                           width: "30px",
                                           height: "30px",
@@ -399,7 +409,7 @@ function ManagerDocuments(props) {
                             return (
                               <TableRow>
                                 <TableCell width="380px">
-                                  {pld.description != "" ? (
+                                  {pld.description !== "" ? (
                                     <p className="mx-3">{pld.description}</p>
                                   ) : (
                                     <p className="mx-3">Document {i + 1}</p>
@@ -457,9 +467,14 @@ function ManagerDocuments(props) {
                                   )}
                                 </TableCell>
                                 <TableCell width="180px">
-                                  <a href={pld.link} target="_blank">
+                                  <a
+                                    href={pld.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
                                     <img
                                       src={File}
+                                      alt="open document"
                                       style={{
                                         width: "30px",
                                         height: "30px",
@@ -526,7 +541,7 @@ function ManagerDocuments(props) {
                               return (
                                 <TableRow>
                                   <TableCell width="380px">
-                                    {pmd.description != "" ? (
+                                    {pmd.description !== "" ? (
                                       <p className="mx-3">{pmd.description}</p>
                                     ) : (
                                       <p className="mx-3">Document {i + 1}</p>
@@ -548,9 +563,14 @@ function ManagerDocuments(props) {
                                     {pmd.created_for}
                                   </TableCell>
                                   <TableCell width="180px">
-                                    <a href={pmd.link} target="_blank">
+                                    <a
+                                      href={pmd.link}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
                                       <img
                                         src={File}
+                                        alt="open document"
                                         style={{
                                           width: "30px",
                                           height: "30px",

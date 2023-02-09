@@ -92,7 +92,7 @@ function ModifyExisiting(props) {
             <div key={i} className="d-flex">
               <Checkbox
                 type="CIRCLE"
-                checked={userRoles.indexOf(roleCodes[role]) == -1}
+                checked={userRoles.indexOf(roleCodes[role]) === -1}
                 // onClick={(checked) =>
                 //   checked ? addRole(role) : removeRole(role)
                 // }

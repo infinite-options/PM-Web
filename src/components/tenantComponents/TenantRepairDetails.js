@@ -584,11 +584,11 @@ function TenantRepairDetails(props) {
                       >
                         <Col>
                           {priority === "High" ? (
-                            <img src={HighPriority} />
+                            <img alt="Low priority" src={HighPriority} />
                           ) : priority === "Medium" ? (
-                            <img src={MediumPriority} />
+                            <img alt="Medium priority" src={MediumPriority} />
                           ) : (
-                            <img src={LowPriority} />
+                            <img alt="High priority" src={LowPriority} />
                           )}
                         </Col>
                       </Row>

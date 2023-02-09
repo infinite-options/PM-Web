@@ -408,7 +408,7 @@ function ManagerUtilities(props) {
       purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
       purchase_frequency: "One-time",
       next_payment:
-        newUtility.due_date == "" ? today_date : newUtility.due_date,
+        newUtility.due_date === "" ? today_date : newUtility.due_date,
     };
     // console.log("new purchase pm", new_purchase_pm);
     const response_pm = await post("/purchases", new_purchase_pm, null, null);
@@ -1262,6 +1262,7 @@ function ManagerUtilities(props) {
                       <Col>
                         <img
                           src={AddIcon}
+                          alt="Add Icon"
                           onClick={() => {
                             setNewUtility({ ...emptyUtility });
                             propertyState.forEach(
@@ -1342,7 +1343,7 @@ function ManagerUtilities(props) {
                                   size="small"
                                   align="center"
                                 >
-                                  {expense.bill_algorithm != null
+                                  {expense.bill_algorithm !== null
                                     ? expense.bill_algorithm
                                     : "None"}
                                 </TableCell>
@@ -1473,6 +1474,7 @@ function ManagerUtilities(props) {
                       <Col>
                         <img
                           src={AddIcon}
+                          alt="Add Icon"
                           onClick={() => {
                             setNewUtility({ ...emptyUtility });
                             propertyState.forEach(
@@ -1549,7 +1551,7 @@ function ManagerUtilities(props) {
                                   size="small"
                                   align="center"
                                 >
-                                  {expense.bill_algorithm != null
+                                  {expense.bill_algorithm !== null
                                     ? expense.bill_algorithm
                                     : "None"}
                                 </TableCell>
@@ -1738,7 +1740,7 @@ function ManagerUtilities(props) {
                                   size="small"
                                   align="center"
                                 >
-                                  {expense.bill_algorithm != null
+                                  {expense.bill_algorithm !== null
                                     ? expense.bill_algorithm
                                     : "None"}
                                 </TableCell>
@@ -1857,6 +1859,7 @@ function ManagerUtilities(props) {
                   <Col>
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={() => {
                         setNewUtility({ ...emptyUtility });
                         propertyState.forEach((prop) => (prop.checked = false));

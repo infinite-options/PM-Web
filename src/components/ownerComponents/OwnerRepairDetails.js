@@ -591,11 +591,11 @@ function OwnerRepairDetails(props) {
                     >
                       <Col>
                         {priority === "High" ? (
-                          <img src={HighPriority} />
+                          <img alt="low priority" src={HighPriority} />
                         ) : priority === "Medium" ? (
-                          <img src={MediumPriority} />
+                          <img alt="medium priority" src={MediumPriority} />
                         ) : (
-                          <img src={LowPriority} />
+                          <img alt="high priority" src={LowPriority} />
                         )}
                       </Col>
                     </Row>
@@ -652,11 +652,11 @@ function OwnerRepairDetails(props) {
               <Col>{repair.title}</Col>
               <Col xs={4}>
                 {repair.priority === "High" ? (
-                  <img src={HighPriority} />
+                  <img alt="low priority" src={HighPriority} />
                 ) : repair.priority === "Medium" ? (
-                  <img src={MediumPriority} />
+                  <img alt="medium priority" src={MediumPriority} />
                 ) : (
-                  <img src={LowPriority} />
+                  <img alt="high priority" src={LowPriority} />
                 )}
               </Col>
             </Row>
@@ -699,6 +699,7 @@ function OwnerRepairDetails(props) {
                           <a href={`tel:${businesses.business_phone_number}`}>
                             <img
                               src={Phone}
+                              alt="Phone"
                               className="mx-1"
                               style={{ width: "30px", height: "30px" }}
                             />
@@ -706,6 +707,7 @@ function OwnerRepairDetails(props) {
                           <a href={`mailto:${businesses.business_email}`}>
                             <img
                               src={Message}
+                              alt="Message"
                               style={{ width: "30px", height: "30px" }}
                             />
                           </a>

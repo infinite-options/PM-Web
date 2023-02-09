@@ -139,7 +139,7 @@ function RescheduleRepair(props) {
     }
   };
   function formatTime(date, time) {
-    if (time == null) {
+    if (time === null) {
       return "?";
     } else {
       var newDate = new Date((date + "T" + time).replace(/\s/, "T"));

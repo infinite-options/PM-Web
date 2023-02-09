@@ -205,13 +205,13 @@ function TenantPropertyView(props) {
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
-    if (j == 1 && k != 11) {
+    if (j === 1 && k !== 11) {
       return i + "st";
     }
-    if (j == 2 && k != 12) {
+    if (j === 2 && k !== 12) {
       return i + "nd";
     }
-    if (j == 3 && k != 13) {
+    if (j === 3 && k !== 13) {
       return i + "rd";
     }
     return i + "th";
@@ -278,7 +278,7 @@ function TenantPropertyView(props) {
       request_body.application_status = "REFUSED";
     }
     const response = await put("/endEarly", request_body);
-    if (request_body.application_status == "TENANT ENDED") {
+    if (request_body.application_status === "TENANT ENDED") {
       const newMessage = {
         sender_name:
           property.rentalInfo[0].tenant_first_name +
@@ -555,7 +555,7 @@ function TenantPropertyView(props) {
         <div className="w-100 mb-5 overflow-scroll overflow-hidden">
           <Header
             title="Property Details"
-            leftText={location.state == null ? "" : "< Back"}
+            leftText={location.state === null ? "" : "< Back"}
             leftFn={headerBack}
           />
           {showAddRequest ? (
@@ -709,9 +709,9 @@ function TenantPropertyView(props) {
                       </TableCell>
                       <TableCell padding="none" size="small" align="center">
                         {" "}
-                        {property.description == "null" ||
-                        property.description == "" ||
-                        property.description == null
+                        {property.description === "null" ||
+                        property.description === "" ||
+                        property.description === null
                           ? "Not Available"
                           : property.description}
                       </TableCell>
@@ -735,6 +735,7 @@ function TenantPropertyView(props) {
                     {" "}
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={() => setShowAddRequest(true)}
                       style={{
                         width: "30px",
@@ -839,7 +840,7 @@ function TenantPropertyView(props) {
                                 size="small"
                                 align="center"
                               >
-                                {request.request_type != null
+                                {request.request_type !== null
                                   ? request.request_type
                                   : "None"}
                               </TableCell>
@@ -855,8 +856,8 @@ function TenantPropertyView(props) {
                                 size="small"
                                 align="center"
                               >
-                                {request.assigned_business != null ||
-                                request.assigned_business != "null"
+                                {request.assigned_business !== null ||
+                                request.assigned_business !== "null"
                                   ? request.assigned_business
                                   : "None"}
                               </TableCell>
@@ -1083,10 +1084,10 @@ function TenantPropertyView(props) {
                     <TableBody>
                       <TableRow>
                         <TableCell>
-                          {property.pets_allowed == 0 ? "No" : "Yes"}
+                          {property.pets_allowed === 0 ? "No" : "Yes"}
                         </TableCell>
                         <TableCell>
-                          {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                          {property.deposit_for_rent === 0 ? "No" : "Yes"}
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -1198,9 +1199,14 @@ function TenantPropertyView(props) {
                                     key={i}
                                   >
                                     <h6>{document.name}</h6>
-                                    <a href={document.link} target="_blank">
+                                    <a
+                                      href={document.link}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
                                       <img
                                         src={File}
+                                        alt="open document"
                                         style={{
                                           width: "15px",
                                           height: "15px",
@@ -1357,7 +1363,7 @@ function TenantPropertyView(props) {
                                 <TableCell>{fee.frequency}</TableCell>
                                 <TableCell>{`${fee.available_topay} days before`}</TableCell>
                                 <TableCell>
-                                  {fee.due_by == ""
+                                  {fee.due_by === ""
                                     ? `1st of the month`
                                     : `${ordinal_suffix_of(
                                         fee.due_by
@@ -1442,9 +1448,14 @@ function TenantPropertyView(props) {
                                 <TableRow>
                                   <TableCell>{file.description}</TableCell>
                                   <TableCell>
-                                    <a href={file.link} target="_blank">
+                                    <a
+                                      href={file.link}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
                                       <img
                                         src={File}
+                                        alt="open document"
                                         style={{
                                           width: "15px",
                                           height: "15px",

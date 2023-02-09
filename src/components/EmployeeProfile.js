@@ -50,7 +50,7 @@ function EmployeeProfile(props) {
 
       if (emp_res.result.length > 0) {
         emp_res.result.map((emp) => {
-          if (emp.employee_role != "Owner") {
+          if (emp.employee_role !== "Owner") {
             emp_res_type.push(emp);
             let buid = emp.business_uid;
             const fetchBusinesses = async () => {
@@ -77,7 +77,7 @@ function EmployeeProfile(props) {
           }
         });
       } else {
-        if (emp_res.result[0].employee_role != "Owner") {
+        if (emp_res.result[0].employee_role !== "Owner") {
           emp_res_type.push(emp_res.result[0].employee_role);
         }
       }

@@ -57,7 +57,7 @@ function OwnerCreateExpense(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
+    let selectedProperty = sp === undefined ? properties : JSON.parse(sp);
     let today_date = new Date().toISOString().split("T")[0];
     if (addToRent) {
       setDate("0000-00-00 00:00:00");
@@ -86,7 +86,7 @@ function OwnerCreateExpense(props) {
       reload();
     } else if (category === "Insurance") {
       let insurance =
-        selectedProperty.insurance == null
+        selectedProperty.insurance === null
           ? []
           : JSON.parse(selectedProperty.insurance);
       // console.log(insurance);
@@ -111,7 +111,7 @@ function OwnerCreateExpense(props) {
       reload();
     } else if (category === "Tax") {
       let taxes =
-        selectedProperty.taxes == null
+        selectedProperty.taxes === null
           ? []
           : JSON.parse(selectedProperty.taxes);
       // console.log(taxes);
@@ -154,8 +154,8 @@ function OwnerCreateExpense(props) {
         amount_due: amount,
         purchase_frequency: frequency,
         payment_frequency:
-          frequency == "One-time" ? "One-time" : frequencyOfPayment,
-        next_payment: frequency == "One-time" ? today_date : date,
+          frequency === "One-time" ? "One-time" : frequencyOfPayment,
+        next_payment: frequency === "One-time" ? today_date : date,
         purchase_status: payStatus,
       };
 
@@ -493,7 +493,7 @@ function OwnerCreateExpense(props) {
                 </Col>
 
                 {JSON.parse(selectedProperty) !== null &&
-                JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+                JSON.parse(selectedProperty).rentalInfo.length !== 0 ? (
                   <Col xs={4}>
                     {" "}
                     <Form.Check
@@ -514,7 +514,7 @@ function OwnerCreateExpense(props) {
                   ""
                 )}
                 {JSON.parse(selectedProperty) !== null &&
-                JSON.parse(selectedProperty).property_manager.length != 0 ? (
+                JSON.parse(selectedProperty).property_manager.length !== 0 ? (
                   <Col xs={4}>
                     <Form.Check
                       inline
@@ -577,7 +577,7 @@ function OwnerCreateExpense(props) {
                 </Col>
 
                 {JSON.parse(selectedProperty) !== null &&
-                JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+                JSON.parse(selectedProperty).rentalInfo.length !== 0 ? (
                   <Col>
                     <Form.Group className="mx-2 my-3 d-flex flex-row">
                       <Form.Control
@@ -611,7 +611,7 @@ function OwnerCreateExpense(props) {
                 )}
 
                 {JSON.parse(selectedProperty) !== null &&
-                JSON.parse(selectedProperty).property_manager.length != 0 ? (
+                JSON.parse(selectedProperty).property_manager.length !== 0 ? (
                   <Col xs={4}>
                     <Form.Group className="mx-2 my-3 d-flex flex-row">
                       <Form.Control

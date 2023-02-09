@@ -129,7 +129,7 @@ function ManagerFees(props) {
                       />
                       <img
                         src={DeleteIcon}
-                        alt="Delete"
+                        alt="Delete Icon"
                         className="px-1 mx-2"
                         onClick={() => deleteFee(i)}
                       />

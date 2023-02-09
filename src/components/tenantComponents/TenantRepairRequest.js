@@ -56,7 +56,7 @@ function TenantRepairRequest(props) {
       return;
     }
 
-    let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
+    let selectedProperty = sp === undefined ? properties : JSON.parse(sp);
     // console.log(typeof JSON.parse(sp));
     const newRequest = {
       property_uid:

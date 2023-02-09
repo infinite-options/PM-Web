@@ -834,6 +834,7 @@ export default function ManagerDashboard() {
                 <Col>
                   <img
                     src={AddIcon}
+                    alt="Add Icon"
                     onClick={() => setStage("ADDEXPENSE")}
                     style={{
                       width: "30px",
@@ -870,6 +871,7 @@ export default function ManagerDashboard() {
                           &nbsp;
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyCashFlow}
                             onClick={() => {
                               setMonthlyCashFlow(!monthlyCashFlow);
@@ -895,6 +897,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyCashFlow}
                             onClick={() => {
                               setMonthlyCashFlow(!monthlyCashFlow);
@@ -946,6 +949,7 @@ export default function ManagerDashboard() {
                           &nbsp; Revenue{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyRevenue}
                             onClick={() => {
                               setMonthlyRevenue(!monthlyRevenue);
@@ -965,6 +969,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyRevenue}
                             onClick={() => {
                               setMonthlyRevenue(!monthlyRevenue);
@@ -1011,6 +1016,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Rent{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyRent}
                             onClick={() => setMonthlyRent(!monthlyRent)}
                             style={{
@@ -1021,6 +1027,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyRent}
                             onClick={() => setMonthlyRent(!monthlyRent)}
                             style={{
@@ -1109,7 +1116,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {revenue.purchase_status === "PAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -1119,7 +1126,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {revenue.purchase_status === "UNPAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -1128,7 +1135,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {revenue.purchase_frequency == "Annually" ? (
+                              {revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -1151,6 +1158,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Extra Charges
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyExtra}
                             onClick={() => setMonthlyExtra(!monthlyExtra)}
                             style={{
@@ -1161,6 +1169,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyExtra}
                             onClick={() => setMonthlyExtra(!monthlyExtra)}
                             style={{
@@ -1244,7 +1253,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {revenue.purchase_status === "PAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -1254,7 +1263,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {revenue.purchase_status === "UNPAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -1263,7 +1272,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {revenue.purchase_frequency == "Annually" ? (
+                              {revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -1286,6 +1295,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Late Fee{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyLateFee}
                             onClick={() => setMonthlyLateFee(!monthlyLateFee)}
                             style={{
@@ -1296,6 +1306,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyLateFee}
                             onClick={() => setMonthlyLateFee(!monthlyLateFee)}
                             style={{
@@ -1384,7 +1395,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {revenue.purchase_status === "PAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -1394,7 +1405,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {revenue.purchase_status === "UNPAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -1403,7 +1414,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {revenue.purchase_frequency == "Annually" ? (
+                              {revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -1426,6 +1437,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Utility
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyUtility}
                             onClick={() => setMonthlyUtility(!monthlyUtility)}
                             style={{
@@ -1436,6 +1448,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyUtility}
                             onClick={() => setMonthlyUtility(!monthlyUtility)}
                             style={{
@@ -1520,7 +1533,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {revenue.purchase_status === "PAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -1530,7 +1543,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {revenue.purchase_status === "UNPAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -1539,7 +1552,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {revenue.purchase_frequency == "Annually" ? (
+                              {revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -1562,6 +1575,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Management
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyManagement}
                             onClick={() =>
                               setMonthlyManagement(!monthlyManagement)
@@ -1574,6 +1588,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyManagement}
                             onClick={() =>
                               setMonthlyManagement(!monthlyManagement)
@@ -1661,7 +1676,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {revenue.purchase_status === "PAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -1671,7 +1686,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {revenue.purchase_status === "UNPAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -1680,7 +1695,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {revenue.purchase_frequency == "Annually" ? (
+                              {revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -1703,6 +1718,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Maintenance
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyMaintenanceRevenue}
                             onClick={() =>
                               setMonthlyMaintenanceRevenue(
@@ -1717,6 +1733,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyMaintenanceRevenue}
                             onClick={() =>
                               setMonthlyMaintenanceRevenue(
@@ -1809,7 +1826,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {revenue.purchase_status === "PAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -1819,7 +1836,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {revenue.purchase_status === "UNPAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -1828,7 +1845,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {revenue.purchase_frequency == "Annually" ? (
+                              {revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -1851,6 +1868,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Repairs
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyRepairsRevenue}
                             onClick={() =>
                               setMonthlyRepairsRevenue(!monthlyRepairsRevenue)
@@ -1863,6 +1881,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyRepairsRevenue}
                             onClick={() =>
                               setMonthlyRepairsRevenue(!monthlyRepairsRevenue)
@@ -1949,7 +1968,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {revenue.purchase_status === "PAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -1959,7 +1978,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {revenue.purchase_status === "UNPAID" &&
-                              revenue.purchase_frequency == "Annually" ? (
+                              revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(revenue.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -1968,7 +1987,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {revenue.purchase_frequency == "Annually" ? (
+                              {revenue.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -1991,6 +2010,7 @@ export default function ManagerDashboard() {
                           &nbsp; Expenses{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyExpense}
                             onClick={() => {
                               setMonthlyExpense(!monthlyExpense);
@@ -2007,6 +2027,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyExpense}
                             onClick={() => {
                               setMonthlyExpense(!monthlyExpense);
@@ -2051,6 +2072,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Owner Payment
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyOwnerPayment}
                             onClick={() =>
                               setMonthlyOwnerPayment(!monthlyOwnerPayment)
@@ -2063,6 +2085,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyOwnerPayment}
                             onClick={() =>
                               setMonthlyOwnerPayment(!monthlyOwnerPayment)
@@ -2150,7 +2173,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {expense.purchase_status === "PAID" &&
-                              expense.purchase_frequency == "Annually" ? (
+                              expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(expense.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -2160,7 +2183,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {expense.purchase_status === "UNPAID" &&
-                              expense.purchase_frequency == "Annually" ? (
+                              expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(expense.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -2169,7 +2192,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {expense.purchase_frequency == "Annually" ? (
+                              {expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -2192,6 +2215,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Maintenance
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyMaintenance}
                             onClick={() =>
                               setMonthlyMaintenance(!monthlyMaintenance)
@@ -2204,6 +2228,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyMaintenance}
                             onClick={() =>
                               setMonthlyMaintenance(!monthlyMaintenance)
@@ -2294,7 +2319,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {expense.purchase_status === "PAID" &&
-                              expense.purchase_frequency == "Annually" ? (
+                              expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(expense.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -2304,7 +2329,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {expense.purchase_status === "UNPAID" &&
-                              expense.purchase_frequency == "Annually" ? (
+                              expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(expense.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -2313,7 +2338,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {expense.purchase_frequency == "Annually" ? (
+                              {expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -2336,6 +2361,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Repairs{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyRepairs}
                             onClick={() => setMonthlyRepairs(!monthlyRepairs)}
                             style={{
@@ -2346,6 +2372,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyRepairs}
                             onClick={() => setMonthlyRepairs(!monthlyRepairs)}
                             style={{
@@ -2428,7 +2455,7 @@ export default function ManagerDashboard() {
                                 ${expense.amount_paid - expense.amount_due}
                               </TableCell>
                               {expense.purchase_status === "PAID" &&
-                              expense.purchase_frequency == "Annually" ? (
+                              expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(expense.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -2438,7 +2465,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {expense.purchase_status === "UNPAID" &&
-                              expense.purchase_frequency == "Annually" ? (
+                              expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(expense.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -2447,7 +2474,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {expense.purchase_frequency == "Annually" ? (
+                              {expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -2470,6 +2497,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Utility{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={monthlyUtilityExpense}
                             onClick={() =>
                               setMonthlyUtilityExpense(!monthlyUtilityExpense)
@@ -2482,6 +2510,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!monthlyUtilityExpense}
                             onClick={() =>
                               setMonthlyUtilityExpense(!monthlyUtilityExpense)
@@ -2569,7 +2598,7 @@ export default function ManagerDashboard() {
                                 ).toFixed(2)}
                               </TableCell>
                               {expense.purchase_status === "PAID" &&
-                              expense.purchase_frequency == "Annually" ? (
+                              expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(expense.amount_paid / 12).toFixed(2)}
                                 </TableCell>
@@ -2579,7 +2608,7 @@ export default function ManagerDashboard() {
                                 </TableCell>
                               )}
                               {expense.purchase_status === "UNPAID" &&
-                              expense.purchase_frequency == "Annually" ? (
+                              expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   ${(expense.amount_due / 12).toFixed(2)}
                                 </TableCell>
@@ -2588,7 +2617,7 @@ export default function ManagerDashboard() {
                                   $0.00
                                 </TableCell>
                               )}
-                              {expense.purchase_frequency == "Annually" ? (
+                              {expense.purchase_frequency === "Annually" ? (
                                 <TableCell width="180px" align="right">
                                   $
                                   {(
@@ -2612,6 +2641,7 @@ export default function ManagerDashboard() {
                           {new Date().getFullYear()} &nbsp;
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             onClick={() => {
                               setYearlyCashFlow(!yearlyCashFlow);
                               setYearlyRevenue(false);
@@ -2636,6 +2666,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             onClick={() => {
                               setYearlyCashFlow(!yearlyCashFlow);
                               setYearlyRevenue(false);
@@ -2687,6 +2718,7 @@ export default function ManagerDashboard() {
                           &nbsp; Revenue{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyRevenue}
                             onClick={() => {
                               setYearlyRevenue(!yearlyRevenue);
@@ -2706,6 +2738,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyRevenue}
                             onClick={() => {
                               setYearlyRevenue(!yearlyRevenue);
@@ -2755,6 +2788,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Rent{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyRent}
                             onClick={() => setYearlyRent(!yearlyRent)}
                             style={{
@@ -2765,6 +2799,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyRent}
                             onClick={() => setYearlyRent(!yearlyRent)}
                             style={{
@@ -2856,7 +2891,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -2866,7 +2901,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -2875,7 +2910,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {revenue.purchase_frequency == "Annually" ? (
+                                {revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -2900,6 +2935,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Extra Charges
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyExtra}
                             onClick={() => setYearlyExtra(!yearlyExtra)}
                             style={{
@@ -2910,6 +2946,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyExtra}
                             onClick={() => setYearlyExtra(!yearlyExtra)}
                             style={{
@@ -2998,7 +3035,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -3008,7 +3045,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -3017,7 +3054,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {revenue.purchase_frequency == "Annually" ? (
+                                {revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -3042,6 +3079,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Late Fee{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyLateFee}
                             onClick={() => setYearlyLateFee(!yearlyLateFee)}
                             style={{
@@ -3052,6 +3090,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyLateFee}
                             onClick={() => setYearlyLateFee(!yearlyLateFee)}
                             style={{
@@ -3145,7 +3184,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -3155,7 +3194,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -3164,7 +3203,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {revenue.purchase_frequency == "Annually" ? (
+                                {revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -3189,6 +3228,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Management{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyManagement}
                             onClick={() =>
                               setYearlyManagement(!yearlyManagement)
@@ -3201,6 +3241,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyManagement}
                             onClick={() =>
                               setYearlyManagement(!yearlyManagement)
@@ -3296,7 +3337,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -3306,7 +3347,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -3315,7 +3356,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {revenue.purchase_frequency == "Annually" ? (
+                                {revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -3340,6 +3381,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Utility{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyUtility}
                             onClick={() => setYearlyUtility(!yearlyUtility)}
                             style={{
@@ -3350,6 +3392,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyUtility}
                             onClick={() => setYearlyUtility(!yearlyUtility)}
                             style={{
@@ -3443,7 +3486,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -3453,7 +3496,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -3462,7 +3505,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {revenue.purchase_frequency == "Annually" ? (
+                                {revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -3487,6 +3530,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Maintenance{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyMaintenanceRevenue}
                             onClick={() =>
                               setYearlyMaintenanceRevenue(
@@ -3501,6 +3545,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyMaintenanceRevenue}
                             onClick={() =>
                               setYearlyMaintenanceRevenue(
@@ -3598,7 +3643,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -3608,7 +3653,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -3617,7 +3662,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {revenue.purchase_frequency == "Annually" ? (
+                                {revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -3642,6 +3687,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Repairs{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyRepairsRevenue}
                             onClick={() =>
                               setYearlyRepairsRevenue(!yearlyRepairsRevenue)
@@ -3654,6 +3700,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyRepairsRevenue}
                             onClick={() =>
                               setYearlyRepairsRevenue(!yearlyRepairsRevenue)
@@ -3749,7 +3796,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {revenue.purchase_status === "PAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -3759,7 +3806,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {revenue.purchase_status === "UNPAID" &&
-                                revenue.purchase_frequency == "Annually" ? (
+                                revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(revenue.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -3768,7 +3815,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {revenue.purchase_frequency == "Annually" ? (
+                                {revenue.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -3793,6 +3840,7 @@ export default function ManagerDashboard() {
                           &nbsp; Expenses{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyExpense}
                             onClick={() => {
                               setYearlyExpense(!yearlyExpense);
@@ -3809,6 +3857,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyExpense}
                             onClick={() => {
                               setYearlyExpense(!yearlyExpense);
@@ -3855,6 +3904,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Management{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyOwnerPayment}
                             onClick={() =>
                               setYearlyOwnerPayment(!yearlyOwnerPayment)
@@ -3867,6 +3917,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyOwnerPayment}
                             onClick={() =>
                               setYearlyOwnerPayment(!yearlyOwnerPayment)
@@ -3962,7 +4013,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {expense.purchase_status === "PAID" &&
-                                expense.purchase_frequency == "Annually" ? (
+                                expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(expense.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -3972,7 +4023,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {expense.purchase_status === "UNPAID" &&
-                                expense.purchase_frequency == "Annually" ? (
+                                expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(expense.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -3981,7 +4032,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {expense.purchase_frequency == "Annually" ? (
+                                {expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -4006,6 +4057,7 @@ export default function ManagerDashboard() {
                           &nbsp;&nbsp; Maintenance{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyMaintenance}
                             onClick={() =>
                               setYearlyMaintenance(!yearlyMaintenance)
@@ -4018,6 +4070,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyMaintenance}
                             onClick={() =>
                               setYearlyMaintenance(!yearlyMaintenance)
@@ -4113,7 +4166,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {expense.purchase_status === "PAID" &&
-                                expense.purchase_frequency == "Annually" ? (
+                                expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(expense.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -4123,7 +4176,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {expense.purchase_status === "UNPAID" &&
-                                expense.purchase_frequency == "Annually" ? (
+                                expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(expense.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -4132,7 +4185,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {expense.purchase_frequency == "Annually" ? (
+                                {expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -4157,6 +4210,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Repairs{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyRepairs}
                             onClick={() => setYearlyRepairs(!yearlyRepairs)}
                             style={{
@@ -4167,6 +4221,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyRepairs}
                             onClick={() => setYearlyRepairs(!yearlyRepairs)}
                             style={{
@@ -4261,7 +4316,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {expense.purchase_status === "PAID" &&
-                                expense.purchase_frequency == "Annually" ? (
+                                expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(expense.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -4271,7 +4326,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {expense.purchase_status === "UNPAID" &&
-                                expense.purchase_frequency == "Annually" ? (
+                                expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(expense.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -4280,7 +4335,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {expense.purchase_frequency == "Annually" ? (
+                                {expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -4305,6 +4360,7 @@ export default function ManagerDashboard() {
                           &nbsp; &nbsp;Utility{" "}
                           <img
                             src={SortLeft}
+                            alt="Expand closed"
                             hidden={yearlyUtilityExpense}
                             onClick={() =>
                               setYearlyUtilityExpense(!yearlyUtilityExpense)
@@ -4317,6 +4373,7 @@ export default function ManagerDashboard() {
                           />
                           <img
                             src={SortDown}
+                            alt="Expand open"
                             hidden={!yearlyUtilityExpense}
                             onClick={() =>
                               setYearlyUtilityExpense(!yearlyUtilityExpense)
@@ -4413,7 +4470,7 @@ export default function ManagerDashboard() {
                                   ).toFixed(2)}
                                 </TableCell>
                                 {expense.purchase_status === "PAID" &&
-                                expense.purchase_frequency == "Annually" ? (
+                                expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(expense.amount_paid / 12).toFixed(2)}
                                   </TableCell>
@@ -4423,7 +4480,7 @@ export default function ManagerDashboard() {
                                   </TableCell>
                                 )}
                                 {expense.purchase_status === "UNPAID" &&
-                                expense.purchase_frequency == "Annually" ? (
+                                expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     ${(expense.amount_due / 12).toFixed(2)}
                                   </TableCell>
@@ -4432,7 +4489,7 @@ export default function ManagerDashboard() {
                                     $0.00
                                   </TableCell>
                                 )}
-                                {expense.purchase_frequency == "Annually" ? (
+                                {expense.purchase_frequency === "Annually" ? (
                                   <TableCell width="180px" align="right">
                                     $
                                     {(
@@ -4471,7 +4528,7 @@ export default function ManagerDashboard() {
                 </Col>
                 <Col>
                   {/* <img
-                  src={AddIcon}
+                  src={AddIcon} alt="Add Icon"
                   onClick={() => setStage("NEW")}
                   style={{
                     width: "30px",
@@ -4707,10 +4764,10 @@ export default function ManagerDashboard() {
                                   size="small"
                                   style={{
                                     color:
-                                      property.available_to_rent == 0 &&
-                                      property.rentalInfo == "Not Rented"
+                                      property.available_to_rent === 0 &&
+                                      property.rentalInfo === "Not Rented"
                                         ? "red"
-                                        : property.rentalInfo == "Not Rented"
+                                        : property.rentalInfo === "Not Rented"
                                         ? "green"
                                         : "black",
                                   }}
@@ -4729,7 +4786,7 @@ export default function ManagerDashboard() {
                                         </div>
                                       );
                                     })
-                                  ) : property.available_to_rent == 0 &&
+                                  ) : property.available_to_rent === 0 &&
                                     property.rentalInfo === "Not Rented" ? (
                                     <div
                                       onClick={() => {
@@ -4845,17 +4902,17 @@ export default function ManagerDashboard() {
                                   }}
                                   style={{
                                     color:
-                                      property.available_to_rent == 0 &&
-                                      property.rent_status == "No Rent Info"
+                                      property.available_to_rent === 0 &&
+                                      property.rent_status === "No Rent Info"
                                         ? "red"
-                                        : property.rent_status == "PAID"
+                                        : property.rent_status === "PAID"
                                         ? "black"
-                                        : property.rent_status == "UNPAID"
+                                        : property.rent_status === "UNPAID"
                                         ? "red"
                                         : "green",
                                   }}
                                 >
-                                  {property.available_to_rent == 0 &&
+                                  {property.available_to_rent === 0 &&
                                   property.rent_status === "No Rent Info" ? (
                                     <div
                                       onClick={() => {
@@ -4897,7 +4954,7 @@ export default function ManagerDashboard() {
                                   size="small"
                                   align="center"
                                 >
-                                  {property.late_date != "Not Applicable" ? (
+                                  {property.late_date !== "Not Applicable" ? (
                                     <div>{property.late_date} days</div>
                                   ) : (
                                     <div>{property.late_date}</div>
@@ -4932,7 +4989,7 @@ export default function ManagerDashboard() {
                                   {property.quote_accepted_mr}
                                 </TableCell>
                                 {/* <TableCell padding="none" size="small" align="center">
-                            {property.oldestOpenMR != "Not Applicable" ? (
+                            {property.oldestOpenMR !=="Not Applicable" ? (
                               <div>{property.oldestOpenMR} days</div>
                             ) : (
                               <div>{property.oldestOpenMR}</div>
@@ -5226,9 +5283,9 @@ export default function ManagerDashboard() {
                                   size="small"
                                   style={{
                                     color:
-                                      property.available_to_rent == 0
+                                      property.available_to_rent === 0
                                         ? "Red"
-                                        : property.rentalInfo == "Not Rented"
+                                        : property.rentalInfo === "Not Rented"
                                         ? "green"
                                         : "black",
                                   }}
@@ -5247,7 +5304,7 @@ export default function ManagerDashboard() {
                                         </div>
                                       );
                                     })
-                                  ) : property.available_to_rent == 0 ? (
+                                  ) : property.available_to_rent === 0 ? (
                                     <div
                                       onClick={() => {
                                         navigate(
@@ -5349,16 +5406,16 @@ export default function ManagerDashboard() {
                                   }}
                                   style={{
                                     color:
-                                      property.available_to_rent == 0
+                                      property.available_to_rent === 0
                                         ? "red"
-                                        : property.rent_status == "PAID"
+                                        : property.rent_status === "PAID"
                                         ? "black"
-                                        : property.rent_status == "UNPAID"
+                                        : property.rent_status === "UNPAID"
                                         ? "red"
                                         : "green",
                                   }}
                                 >
-                                  {property.available_to_rent == 0 ? (
+                                  {property.available_to_rent === 0 ? (
                                     <div
                                       onClick={() => {
                                         navigate(
@@ -5399,7 +5456,7 @@ export default function ManagerDashboard() {
                                   size="small"
                                   align="center"
                                 >
-                                  {property.late_date != "Not Applicable" ? (
+                                  {property.late_date !== "Not Applicable" ? (
                                     <div>{property.late_date} days</div>
                                   ) : (
                                     <div>{property.late_date}</div>
@@ -5434,7 +5491,7 @@ export default function ManagerDashboard() {
                                   {property.quote_accepted_mr}
                                 </TableCell>
                                 {/* <TableCell padding="none" size="small" align="center">
-                            {property.oldestOpenMR != "Not Applicable" ? (
+                            {property.oldestOpenMR !=="Not Applicable" ? (
                               <div>{property.oldestOpenMR} days</div>
                             ) : (
                               <div>{property.oldestOpenMR}</div>
@@ -5522,6 +5579,7 @@ export default function ManagerDashboard() {
                 <Col>
                   <img
                     src={AddIcon}
+                    alt="Add Icon"
                     onClick={() => {
                       window.scrollTo(0, 0);
                       setStage("ADDREQUEST");
@@ -5668,7 +5726,7 @@ export default function ManagerDashboard() {
                               size="small"
                               align="center"
                             >
-                              {request.request_type != null
+                              {request.request_type !== null
                                 ? request.request_type
                                 : "None"}
                             </TableCell>
@@ -5757,7 +5815,7 @@ export default function ManagerDashboard() {
             </div>
           </div>
         </div>
-      ) : !isLoading && processingManagerData.length == 0 ? (
+      ) : !isLoading && processingManagerData.length === 0 ? (
         <div className="flex-1">
           <div
             hidden={!responsive.showSidebar}
@@ -5787,7 +5845,7 @@ export default function ManagerDashboard() {
             </div>
           </div>
         </div>
-      ) : !isLoading && processingManagerData.length == 0 ? (
+      ) : !isLoading && processingManagerData.length === 0 ? (
         <div className="flex-1">
           <div
             hidden={!responsive.showSidebar}

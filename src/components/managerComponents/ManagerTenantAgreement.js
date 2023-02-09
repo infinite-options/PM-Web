@@ -151,7 +151,9 @@ function ManagerTenantAgreement(props) {
     setShowSpinner(true);
     for (let i = 0; i < feeState.length; i++) {
       if (feeState[i]["fee_name"] === "Rent") {
-        if (parseInt(feeState[i]["charge"]) != parseInt(property.listed_rent)) {
+        if (
+          parseInt(feeState[i]["charge"]) !== parseInt(property.listed_rent)
+        ) {
           const updateRent = {
             property_uid: property.property_uid,
             listed_rent: feeState[i]["charge"],
@@ -169,7 +171,7 @@ function ManagerTenantAgreement(props) {
           const response = await put("/properties", updateRent, null, images);
         }
       } else if (feeState[i]["fee_name"] === "Deposit") {
-        if (parseInt(feeState[i]["charge"]) != parseInt(property.deposit)) {
+        if (parseInt(feeState[i]["charge"]) !== parseInt(property.deposit)) {
           const updateDeposit = {
             property_uid: property.property_uid,
             deposit: feeState[i]["charge"],
@@ -336,7 +338,7 @@ function ManagerTenantAgreement(props) {
       if (feeState[i]["fee_name"] === "Deposit") {
         feeState[i]["available_topay"] = available;
         feeState[i]["due_by"] =
-          startDate && startDate.split("-")[2].charAt(0) == "0"
+          startDate && startDate.split("-")[2].charAt(0) === "0"
             ? startDate.split("-")[2].charAt(1)
             : startDate.split("-")[2];
         feeState[i]["late_by"] = lateAfter;
@@ -353,7 +355,9 @@ function ManagerTenantAgreement(props) {
     }
     for (let i = 0; i < feeState.length; i++) {
       if (feeState[i]["fee_name"] === "Rent") {
-        if (parseInt(feeState[i]["charge"]) != parseInt(property.listed_rent)) {
+        if (
+          parseInt(feeState[i]["charge"]) !== parseInt(property.listed_rent)
+        ) {
           const updateRent = {
             property_uid: property.property_uid,
             listed_rent: feeState[i]["charge"],
@@ -371,7 +375,7 @@ function ManagerTenantAgreement(props) {
           const response = await put("/properties", updateRent, null, images);
         }
       } else if (feeState[i]["fee_name"] === "Deposit") {
-        if (parseInt(feeState[i]["charge"]) != parseInt(property.deposit)) {
+        if (parseInt(feeState[i]["charge"]) !== parseInt(property.deposit)) {
           const updateDeposit = {
             property_uid: property.property_uid,
             deposit: feeState[i]["charge"],

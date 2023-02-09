@@ -14,7 +14,7 @@ function LandingNavbar() {
   const { userData } = React.useContext(AppContext);
   const { user } = userData;
   // console.log(user);
-  const availableRoles = user != null ? user.role.split(",") : [];
+  const availableRoles = user !== null ? user.role.split(",") : [];
   const [selectedRole, setSelectedRole] = React.useState(null);
   const [currentRole, setCurrentRole] = React.useState(
     window.location.href.split("/")[3]
@@ -146,7 +146,7 @@ function LandingNavbar() {
               alt="Manifest logo"
             />
           </Col>
-          {user == null ? (
+          {user === null ? (
             <Col className="buttonNav">
               <div
                 className="buttonNavButtons"
@@ -266,7 +266,7 @@ function LandingNavbar() {
         <Row className="w-100 m-0">
           <nav class="headerNav">
             {" "}
-            {user == null ? (
+            {user === null ? (
               <div
                 style={{
                   display: "flex",
@@ -358,7 +358,7 @@ function LandingNavbar() {
                 flexDirection: "row",
               }}
             >
-              {user != null ? (
+              {user !== null ? (
                 <div>
                   {openRoles ? (
                     <img
@@ -383,7 +383,7 @@ function LandingNavbar() {
               )}
 
               <div className={openRoles ? "nav-links active" : "nav-links"}>
-                {availableRoles != null
+                {availableRoles !== null
                   ? availableRoles.map((role, i) => (
                       <div key={i}>
                         <div

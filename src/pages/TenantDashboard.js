@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Carousel, CarouselItem } from "react-bootstrap";
+import { Row, Col, Carousel, CarouselItem } from "react-bootstrap";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -29,8 +29,7 @@ import Message from "../icons/Message.svg";
 import AddIcon from "../icons/AddIcon.svg";
 import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
-import No_Image from "../icons/No_Image_Available.jpeg";
-import { get, put } from "../utils/api";
+import { get } from "../utils/api";
 import {
   xSmall,
   blue,
@@ -88,9 +87,7 @@ export default function TenantDashboard() {
   const responsive = {
     showSidebar: width > 1023,
   };
-  const onCancel = () => {
-    setShowDialog(false);
-  };
+
   const days = (date_1, date_2) => {
     let difference = date_2.getTime() - date_1.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
@@ -106,7 +103,7 @@ export default function TenantDashboard() {
       return;
     }
     const check = await get("/CheckTenantProfileComplete", access_token);
-    if (check["message"] == "Incomplete Profile") {
+    if (check["message"] === "Incomplete Profile") {
       setShowDialog(true);
     }
 
@@ -953,6 +950,7 @@ export default function TenantDashboard() {
                 <Col>
                   <img
                     src={AddIcon}
+                    alt="Add Icon"
                     onClick={() => {
                       setStage("ADDREQUEST");
                       window.scrollTo(0, 0);
@@ -1052,7 +1050,7 @@ export default function TenantDashboard() {
                               align="center"
                               style={{
                                 color:
-                                  request.request_status == "NEW"
+                                  request.request_status === "NEW"
                                     ? "green"
                                     : "black",
                               }}
@@ -1099,7 +1097,7 @@ export default function TenantDashboard() {
                               size="small"
                               align="center"
                             >
-                              {request.request_type != null
+                              {request.request_type !== null
                                 ? request.request_type
                                 : "None"}
                             </TableCell>
@@ -1226,6 +1224,7 @@ export default function TenantDashboard() {
                 <Col>
                   <img
                     src={SearchProperties_Black}
+                    alt="Search Icon"
                     onClick={() => {
                       navigate("/tenantAvailableProperties");
                       window.scrollTo(0, 0);
@@ -1424,7 +1423,7 @@ export default function TenantDashboard() {
             </div>
           </div>
         </div>
-      ) : !isLoading && tenantData.length == 0 ? (
+      ) : !isLoading && tenantData.length === 0 ? (
         <div className="flex-1">
           <div
             hidden={!responsive.showSidebar}
@@ -1496,6 +1495,7 @@ export default function TenantDashboard() {
                 <Col>
                   <img
                     src={SearchProperties_Black}
+                    alt="Search Icon"
                     onClick={() => {
                       navigate("/tenantAvailableProperties");
                       window.scrollTo(0, 0);

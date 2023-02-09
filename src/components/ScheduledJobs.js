@@ -87,11 +87,11 @@ function ScheduledJobs(props) {
                   <Col>{quote.title}</Col>
                   <Col xs={5}>
                     {quote.priority === "Low" ? (
-                      <img src={LowPriority} />
+                      <img alt="low priority" src={LowPriority} />
                     ) : quote.priority === "Medium" ? (
-                      <img src={MediumPriority} />
+                      <img alt="medium priority" src={MediumPriority} />
                     ) : quote.priority === "High" ? (
-                      <img src={HighPriority} />
+                      <img alt="high priority" src={HighPriority} />
                     ) : (
                       ""
                     )}

@@ -71,13 +71,13 @@ function ManagerTenantProfileView(props) {
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
-    if (j == 1 && k != 11) {
+    if (j === 1 && k !== 11) {
       return i + "st";
     }
-    if (j == 2 && k != 12) {
+    if (j === 2 && k !== 12) {
       return i + "nd";
     }
-    if (j == 3 && k != 13) {
+    if (j === 3 && k !== 13) {
       return i + "rd";
     }
     return i + "th";
@@ -565,9 +565,14 @@ function ManagerTenantProfileView(props) {
                                 <h6>{document.name}</h6>
                               </Col>
                               <Col>
-                                <a href={document.link} target="_blank">
+                                <a
+                                  href={document.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
                                   <img
                                     src={File}
+                                    alt="open document"
                                     style={{
                                       width: "15px",
                                       height: "15px",
@@ -745,7 +750,7 @@ function ManagerTenantProfileView(props) {
                             {`${fee.available_topay} days before`}
                           </TableCell>
                           <TableCell>
-                            {fee.due_by == ""
+                            {fee.due_by === ""
                               ? `1st of the month`
                               : `${ordinal_suffix_of(fee.due_by)} of the month`}
                           </TableCell>
@@ -839,9 +844,14 @@ function ManagerTenantProfileView(props) {
                           <TableRow>
                             <TableCell>{file.description}</TableCell>
                             <TableCell>
-                              <a href={file.link} target="_blank">
+                              <a
+                                href={file.link}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
                                 <img
                                   src={File}
+                                  alt="open document"
                                   style={{
                                     width: "15px",
                                     height: "15px",

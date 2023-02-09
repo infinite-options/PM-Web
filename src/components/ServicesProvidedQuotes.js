@@ -132,7 +132,7 @@ function ServicesProvidedQuotes(props) {
                 />
                 <img
                   src={DeleteIcon}
-                  alt="Delete"
+                  alt="Delete Icon"
                   className="px-1 mx-2"
                   onClick={() => deleteService(i)}
                 />

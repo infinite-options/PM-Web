@@ -1,26 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import axios from "axios";
 import { Grid, Button } from "@material-ui/core";
-import { useNavigate } from "react-router-dom";
 import AppContext from "../AppContext";
-import { get, post } from "../utils/api";
+import { post } from "../utils/api";
 
 let CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 let CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
 const GOOGLE_LOGIN = process.env.REACT_APP_GOOGLE_LOGIN;
 let SCOPES = "https://www.googleapis.com/auth/calendar";
-const useStyles = makeStyles({
-  textFieldBackgorund: {
-    backgroundColor: "#F3F3F8",
-    border: "2px solid #636366",
-    borderRadius: "3px",
-  },
-});
+
 function GoogleSignUp(props) {
-  const classes = useStyles();
   const context = useContext(AppContext);
-  const navigate = useNavigate();
 
   const [newEmail, setNewEmail] = useState("");
   const [newFName, setNewFName] = useState("");

@@ -82,7 +82,7 @@ function DetailAnnouncements(props) {
                 {announcement.announcement_msg}
               </div>
             </Row>
-            {announcement.announcement_mode == "Tenants" ? (
+            {announcement.announcement_mode === "Tenants" ? (
               <Row
                 style={{
                   background: "#F3F3F3 0% 0% no-repeat padding-box",
@@ -109,11 +109,11 @@ function DetailAnnouncements(props) {
                       </Col>
                       <Col xs={2} className="mt-1 mb-1">
                         <a href={`tel:${receiver.teanant_phone_number}`}>
-                          <img src={Phone} />
+                          <img src={Phone} alt="Phone" />
                         </a>
                       </Col>
                       <Col xs={2} className="mt-1 mb-1">
-                        <img src={Message} />
+                        <img src={Message} alt="Message" />
                       </Col>
                       <hr />
                     </Row>
@@ -147,11 +147,11 @@ function DetailAnnouncements(props) {
                       </Col>
                       <Col xs={2} className="mt-1 mb-1">
                         <a href={`tel:${receiver.teanant_phone_number}`}>
-                          <img src={Phone} />
+                          <img src={Phone} alt="Phone" />
                         </a>
                       </Col>
                       <Col xs={2} className="mt-1 mb-1">
-                        <img src={Message} />
+                        <img src={Message} alt="Message" />
                       </Col>
                       <hr />
                     </Row>

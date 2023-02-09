@@ -61,7 +61,7 @@ export default function UpcomingManagerPayments(props) {
     setPurchaseUIDs(tempPurchaseUID);
   }
   function navigateToPaymentPage() {
-    if (props.paymentSelection[1].isActive == true) {
+    if (props.paymentSelection[1].isActive === true) {
       // console.log("zelle selected");
       navigate("/zelle", {
         state: {
@@ -466,7 +466,7 @@ export default function UpcomingManagerPayments(props) {
             </TableBody>
           </Table>
         </Row>
-        {props.type == false && (
+        {props.type === false && (
           <div className="amount-pay">
             <h4 className="amount">Amount: ${totalSum}</h4>
             {totalSum === 0 ? (
@@ -569,7 +569,7 @@ export default function UpcomingManagerPayments(props) {
                         <TableCell align="right" style={{ width: "83px" }}>
                           <img
                             src={DeleteIcon}
-                            alt="Delete"
+                            alt="Delete Icon"
                             className="px-1 mx-2"
                             onClick={() => deletePurchase(row.purchase_uid)}
                           />

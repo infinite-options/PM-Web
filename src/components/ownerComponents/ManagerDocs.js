@@ -74,7 +74,7 @@ function ManagerDocs(props) {
           reload();
         }
       }
-    } else if (property.property_manager.length == 0) {
+    } else if (property.property_manager.length === 0) {
       const newProperty = {
         property_uid: property.property_uid,
         manager_id: business_uid,

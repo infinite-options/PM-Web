@@ -366,7 +366,7 @@ function PropertyApplicationView(props) {
                     {appliances.map((appliance, i) => {
                       return applianceState[0][appliance]["available"] ==
                         true ||
-                        applianceState[0][appliance]["available"] == "True" ? (
+                        applianceState[0][appliance]["available"] === "True" ? (
                         <TableRow>
                           <TableCell>{appliance}</TableCell>
                           <TableCell>
@@ -434,7 +434,7 @@ function PropertyApplicationView(props) {
                   <TableRow>
                     <TableCell>Pets Allowed</TableCell>
                     <TableCell>
-                      {property.pets_allowed == 0 ? "No" : "Yes"}
+                      {property.pets_allowed === 0 ? "No" : "Yes"}
                     </TableCell>
                   </TableRow>
 
@@ -443,7 +443,7 @@ function PropertyApplicationView(props) {
                       Deposit can be used for last month's rent
                     </TableCell>
                     <TableCell>
-                      {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                      {property.deposit_for_rent === 0 ? "No" : "Yes"}
                     </TableCell>
                   </TableRow>
                 </Table>

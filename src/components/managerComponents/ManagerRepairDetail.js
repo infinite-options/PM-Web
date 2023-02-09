@@ -401,11 +401,11 @@ function ManagerRepairDetail(props) {
               <Col>{title}</Col>
               <Col xs={4}>
                 {priority === "High" ? (
-                  <img src={HighPriority} />
+                  <img alt="low priority" src={HighPriority} />
                 ) : priority === "Medium" ? (
-                  <img src={MediumPriority} />
+                  <img alt="medium priority" src={MediumPriority} />
                 ) : (
-                  <img src={LowPriority} />
+                  <img alt="high priority" src={LowPriority} />
                 )}
               </Col>
               <Row>
@@ -851,8 +851,12 @@ function ManagerRepairDetail(props) {
                                         {rp.description}
                                       </Col>
                                       <Col className=" d-flex justify-content-end">
-                                        <a href={rp.link} target="_blank">
-                                          <img src={File} />
+                                        <a
+                                          href={rp.link}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                        >
+                                          <img src={File} alt="open document" />
                                         </a>
                                       </Col>
                                     </Row>
@@ -954,11 +958,11 @@ function ManagerRepairDetail(props) {
               <Col>{repair.title}</Col>
               <Col xs={4}>
                 {repair.priority === "High" ? (
-                  <img src={HighPriority} />
+                  <img alt="low priority" src={HighPriority} />
                 ) : repair.priority === "Medium" ? (
-                  <img src={MediumPriority} />
+                  <img alt="medium priority" src={MediumPriority} />
                 ) : (
-                  <img src={LowPriority} />
+                  <img alt="high priority" src={LowPriority} />
                 )}
               </Col>
             </Row>
@@ -1008,6 +1012,7 @@ function ManagerRepairDetail(props) {
                           <a href={`mailto:${businesses.business_email}`}>
                             <img
                               src={Message}
+                              alt="Message"
                               style={{ width: "30px", height: "30px" }}
                             />
                           </a>

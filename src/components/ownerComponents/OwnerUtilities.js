@@ -1218,6 +1218,7 @@ function OwnerUtilities(props) {
                       <Col>
                         <img
                           src={AddIcon}
+                          alt="Add Icon"
                           onClick={() => {
                             setNewUtility({ ...emptyUtility });
                             propertyState.forEach(
@@ -1298,7 +1299,7 @@ function OwnerUtilities(props) {
                                   size="small"
                                   align="center"
                                 >
-                                  {expense.bill_algorithm != null
+                                  {expense.bill_algorithm !== null
                                     ? expense.bill_algorithm
                                     : "None"}
                                 </TableCell>
@@ -1437,6 +1438,7 @@ function OwnerUtilities(props) {
                       <Col>
                         <img
                           src={AddIcon}
+                          alt="Add Icon"
                           onClick={() => {
                             setNewUtility({ ...emptyUtility });
                             propertyState.forEach(
@@ -1512,7 +1514,7 @@ function OwnerUtilities(props) {
                                   size="small"
                                   align="center"
                                 >
-                                  {expense.bill_algorithm != null
+                                  {expense.bill_algorithm !== null
                                     ? expense.bill_algorithm
                                     : "None"}
                                 </TableCell>
@@ -1702,7 +1704,7 @@ function OwnerUtilities(props) {
                                   size="small"
                                   align="center"
                                 >
-                                  {expense.bill_algorithm != null
+                                  {expense.bill_algorithm !== null
                                     ? expense.bill_algorithm
                                     : "None"}
                                 </TableCell>
@@ -1821,6 +1823,7 @@ function OwnerUtilities(props) {
                   <Col>
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={() => {
                         setNewUtility({ ...emptyUtility });
                         propertyState.forEach((prop) => (prop.checked = false));

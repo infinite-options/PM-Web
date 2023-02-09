@@ -43,13 +43,13 @@ function ConfirmDialog3(props) {
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
-    if (j == 1 && k != 11) {
+    if (j === 1 && k !== 11) {
       return i + "st";
     }
-    if (j == 2 && k != 12) {
+    if (j === 2 && k !== 12) {
       return i + "nd";
     }
-    if (j == 3 && k != 13) {
+    if (j === 3 && k !== 13) {
       return i + "rd";
     }
     return i + "th";
@@ -294,7 +294,7 @@ function ConfirmDialog3(props) {
                                   : "red",
                               }}
                             >
-                              {fee.due_by == ""
+                              {fee.due_by === ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
                                     fee.due_by
@@ -359,7 +359,7 @@ function ConfirmDialog3(props) {
                                 : `$${fee.charge}`} */}
                               {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).charge != fee.charge ? (
+                              ).charge !== fee.charge ? (
                                 <div style={{ color: "red" }}>
                                   {fee.fee_type === "%"
                                     ? `${fee.charge}%`
@@ -393,7 +393,7 @@ function ConfirmDialog3(props) {
                             <TableCell>
                               {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).of == fee.of ? (
+                              ).of === fee.of ? (
                                 <div style={{ color: "red" }}>
                                   {fee.fee_type === "%" ? `${fee.of}` : ""}
                                 </div>
@@ -418,7 +418,7 @@ function ConfirmDialog3(props) {
                             <TableCell>
                               {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).frequency != fee.frequency ? (
+                              ).frequency !== fee.frequency ? (
                                 <div style={{ color: "red" }}>
                                   {fee.frequency}
                                 </div>
@@ -435,7 +435,7 @@ function ConfirmDialog3(props) {
                             <TableCell>
                               {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).available_topay != fee.available_topay ? (
+                              ).available_topay !== fee.available_topay ? (
                                 <div style={{ color: "red" }}>
                                   {`${fee.available_topay} days before`}
                                 </div>
@@ -452,16 +452,16 @@ function ConfirmDialog3(props) {
                             <TableCell>
                               {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).due_by != fee.due_by ? (
+                              ).due_by !== fee.due_by ? (
                                 <div style={{ color: "red" }}>
-                                  {/* {fee.due_by == ""
+                                  {/* {fee.due_by === ""
                                     ? `1st of the month`
-                                    : fee.frequency == "One-time"
+                                    : fee.frequency === "One-time"
                                     ? `${fee.due_by}`
                                     : `${ordinal_suffix_of(
                                         fee.due_by
                                       )} of the month`} */}
-                                  {fee.due_by == ""
+                                  {fee.due_by === ""
                                     ? `1st of the month`
                                     : `${ordinal_suffix_of(
                                         fee.due_by
@@ -471,7 +471,7 @@ function ConfirmDialog3(props) {
                                 <div style={{ color: "black" }}>
                                   {JSON.parse(oldAgreement.rent_payments).find(
                                     (temp) => fee.fee_name === temp.fee_name
-                                  ).due_by == ""
+                                  ).due_by === ""
                                     ? `1st of the month`
                                     : `${ordinal_suffix_of(
                                         fee.due_by
@@ -482,7 +482,7 @@ function ConfirmDialog3(props) {
                             <TableCell>
                               {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).late_by != fee.late_by ? (
+                              ).late_by !== fee.late_by ? (
                                 <div style={{ color: "red" }}>
                                   {fee.late_by} days
                                 </div>
@@ -500,7 +500,7 @@ function ConfirmDialog3(props) {
                             <TableCell>
                               {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).late_fee != fee.late_fee ? (
+                              ).late_fee !== fee.late_fee ? (
                                 <div style={{ color: "red" }}>
                                   ${fee.late_fee}
                                 </div>
@@ -518,7 +518,7 @@ function ConfirmDialog3(props) {
                             <TableCell>
                               {JSON.parse(oldAgreement.rent_payments).find(
                                 (temp) => fee.fee_name === temp.fee_name
-                              ).perDay_late_fee != fee.perDay_late_fee ? (
+                              ).perDay_late_fee !== fee.perDay_late_fee ? (
                                 <div style={{ color: "red" }}>
                                   ${fee.perDay_late_fee}
                                 </div>
@@ -560,14 +560,14 @@ function ConfirmDialog3(props) {
                               {`${fee.available_topay} days before`}
                             </TableCell>
                             <TableCell style={{ color: "red" }}>
-                              {/* {fee.due_by == ""
+                              {/* {fee.due_by === ""
                                 ? `1st of the month`
-                                : fee.frequency == "One-time"
+                                : fee.frequency === "One-time"
                                 ? `${fee.due_by}`
                                 : `${ordinal_suffix_of(
                                     fee.due_by
                                   )} of the month`} */}
-                              {fee.due_by == ""
+                              {fee.due_by === ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
                                     fee.due_by
@@ -629,14 +629,14 @@ function ConfirmDialog3(props) {
                             <TableCell
                               style={{ textDecoration: "line-through" }}
                             >
-                              {/* {fee.due_by == ""
+                              {/* {fee.due_by === ""
                                 ? `1st of the month`
-                                : fee.frequency == "One-time"
+                                : fee.frequency === "One-time"
                                 ? `${fee.due_by}`
                                 : `${ordinal_suffix_of(
                                     fee.due_by
                                   )} of the month`} */}
-                              {fee.due_by == ""
+                              {fee.due_by === ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
                                     fee.due_by
@@ -773,9 +773,14 @@ function ConfirmDialog3(props) {
                             <TableRow>
                               <TableCell>{file.description}</TableCell>
                               <TableCell>
-                                <a href={file.link} target="_blank">
+                                <a
+                                  href={file.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
                                   <img
                                     src={File}
+                                    alt="open document"
                                     style={{
                                       width: "15px",
                                       height: "15px",
@@ -792,9 +797,14 @@ function ConfirmDialog3(props) {
                                 {file.description}
                               </TableCell>
                               <TableCell style={{ color: "red" }}>
-                                <a href={file.link} target="_blank">
+                                <a
+                                  href={file.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
                                   <img
                                     src={File}
+                                    alt="open document"
                                     style={{
                                       width: "15px",
                                       height: "15px",
@@ -807,9 +817,14 @@ function ConfirmDialog3(props) {
                             <TableRow>
                               <TableCell>{file.description}</TableCell>
                               <TableCell>
-                                <a href={file.link} target="_blank">
+                                <a
+                                  href={file.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
                                   <img
                                     src={File}
+                                    alt="open document"
                                     style={{
                                       width: "15px",
                                       height: "15px",

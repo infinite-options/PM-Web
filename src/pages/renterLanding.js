@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
   Table,
   TableRow,
@@ -11,7 +10,7 @@ import {
   Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Row, Col } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import PropertyCard from "../components/tenantComponents/PropertyCard";
@@ -198,7 +197,7 @@ export default function RenterLanding() {
   };
 
   const mapProperty = featuredProperties?.map((prop, index) => {
-    if (prop.featured == "True") {
+    if (prop.featured === "True") {
       return (
         <PropertyCard
           color={colors[index % 4]}
@@ -222,7 +221,7 @@ export default function RenterLanding() {
   return (
     <div className="main-renter-page">
       {/* <LandingNavbar/> */}
-      <img className="main-img" src={RenterMap} />
+      <img className="main-img" alt="renter map" src={RenterMap} />
       <h3>Search For Your New Home </h3>
       <div className="options">
         {/* <div className="o">All cities</div>
@@ -314,7 +313,11 @@ export default function RenterLanding() {
                             </div>
                           </div>
                           <div>
-                            <img src={Phone} style={{ marginRight: "10px" }} />
+                            <img
+                              src={Phone}
+                              alt="Phone"
+                              style={{ marginRight: "10px" }}
+                            />
                             <div className="mask flex-center">
                               <p
                                 className="white-text"
@@ -327,6 +330,7 @@ export default function RenterLanding() {
                           <div>
                             <img
                               src={Message}
+                              alt="Message"
                               style={{ marginRight: "10px" }}
                             />
                             <div className="mask flex-center">

@@ -45,7 +45,7 @@ function OwnerRepairRequest(props) {
       setErrorMessage("Please fill out all fields");
       return;
     }
-    let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
+    let selectedProperty = sp === undefined ? properties : JSON.parse(sp);
 
     const newRequest = {
       property_uid:

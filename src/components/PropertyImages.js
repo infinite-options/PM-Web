@@ -104,7 +104,7 @@ function PropertyImages(props) {
 
             <img
               src={DeleteIcon}
-              alt="Delete"
+              alt="Delete Icon"
               onClick={() => deleteImage(file)}
               style={{ position: "absolute", left: "5px", top: "5px" }}
             />
@@ -129,13 +129,13 @@ function PropertyImages(props) {
             style={tileImg}
             className="d-flex justify-content-center align-items-center"
           >
-            <img src={Plus} />
+            <img src={Plus} alt="add an image" />
           </label>
         </div>
       </div>
       <p style={{ ...xSmall, ...bold }} className="my-1">
-        <img src={Heart} className="me-1" />a picture to make it the cover
-        picture for this property
+        <img src={Heart} className="me-1" alt="favorite image" />a picture to
+        make it the cover picture for this property
       </p>
 
       <div className="text-center" style={errorMessage === "" ? hidden : {}}>

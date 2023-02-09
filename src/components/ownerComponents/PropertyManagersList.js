@@ -123,7 +123,7 @@ function PropertyManagersList(props) {
           // setStage("LIST");
         }
       }
-    } else if (property.property_manager.length == 0) {
+    } else if (property.property_manager.length === 0) {
       const newProperty = {
         property_uid: property.property_uid,
         manager_id: business_uid,
@@ -306,9 +306,9 @@ function PropertyManagersList(props) {
             <Row>
               <Col xs={1}>
                 {selectedPropertyManagers.business_paypal === null ? (
-                  <img src={UnFilledBox} />
+                  <img alt="unfilled box" src={UnFilledBox} />
                 ) : (
-                  <img src={BlueFilledBox} />
+                  <img alt="filled box" src={BlueFilledBox} />
                 )}
               </Col>
               <Col>PayPal</Col>
@@ -316,9 +316,9 @@ function PropertyManagersList(props) {
             <Row>
               <Col xs={1}>
                 {selectedPropertyManagers.business_apple_pay === null ? (
-                  <img src={UnFilledBox} />
+                  <img alt="unfilled box" src={UnFilledBox} />
                 ) : (
-                  <img src={BlueFilledBox} />
+                  <img alt="filled box" src={BlueFilledBox} />
                 )}
               </Col>
               <Col>Apple Pay</Col>
@@ -326,9 +326,9 @@ function PropertyManagersList(props) {
             <Row>
               <Col xs={1}>
                 {selectedPropertyManagers.business_zelle === null ? (
-                  <img src={UnFilledBox} />
+                  <img alt="unfilled box" src={UnFilledBox} />
                 ) : (
-                  <img src={BlueFilledBox} />
+                  <img alt="filled box" src={BlueFilledBox} />
                 )}
               </Col>
               <Col>Zelle</Col>
@@ -336,9 +336,9 @@ function PropertyManagersList(props) {
             <Row>
               <Col xs={1}>
                 {selectedPropertyManagers.business_venmo === null ? (
-                  <img src={UnFilledBox} />
+                  <img alt="unfilled box" src={UnFilledBox} />
                 ) : (
-                  <img src={BlueFilledBox} />
+                  <img alt="filled box" src={BlueFilledBox} />
                 )}
               </Col>
               <Col>Venmo</Col>
@@ -346,9 +346,9 @@ function PropertyManagersList(props) {
             <Row>
               <Col xs={1}>
                 {selectedPropertyManagers.business_account_number === null ? (
-                  <img src={UnFilledBox} />
+                  <img alt="unfilled box" src={UnFilledBox} />
                 ) : (
-                  <img src={BlueFilledBox} />
+                  <img alt="filled box" src={BlueFilledBox} />
                 )}
               </Col>
               <Col>Checking Acct.</Col>

@@ -18,17 +18,19 @@ export default function TenantCard(props) {
   };
   return (
     // <div className="tenantCard">
-    <div className={props.type == 1 ? "tenantCard" : "tenantCard2"}>
-      <div className={props.type == 1 ? "card-spacing" : "card-spacing2"}>
-        {props.type == 1 && <img className="tenantImg" src={imgS[0]}></img>}
-        {props.type == 2 && (
+    <div className={props.type === 1 ? "tenantCard" : "tenantCard2"}>
+      <div className={props.type === 1 ? "card-spacing" : "card-spacing2"}>
+        {props.type === 1 && (
+          <img className="tenantImg" alt="property image" src={imgS[0]}></img>
+        )}
+        {props.type === 2 && (
           <img
             className="tenantImg2"
             onClick={goToActualDashboard}
             src={imgS[0]}
           />
         )}
-        {props.type == 1 && (
+        {props.type === 1 && (
           <div>
             <h3 id="lease-ends" className="green-text">
               Lease Ends: {props.leaseEnds}
@@ -46,7 +48,7 @@ export default function TenantCard(props) {
         )}
       </div>
       <div>
-        {props.type == 1 && (
+        {props.type === 1 && (
           <table className="card-table">
             <thead>
               <tr className="table-row blue-text">
@@ -66,7 +68,7 @@ export default function TenantCard(props) {
             </tbody>
           </table>
         )}
-        {props.type == 2 && (
+        {props.type === 2 && (
           <div>
             <h3 id="lease-ends" className="green-text">
               Lease Ends: {props.leaseEnds}

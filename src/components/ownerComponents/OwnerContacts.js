@@ -283,6 +283,7 @@ function OwnerContacts() {
                   <Col>
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={() => setAddContacts(true)}
                       style={{
                         width: "30px",
@@ -301,6 +302,7 @@ function OwnerContacts() {
                   <Col>
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={() => setAddContacts(true)}
                       style={{
                         width: "30px",

@@ -59,7 +59,7 @@ function DetailQuote(props) {
         </Row>
         <Row className="mt-2">
           <Col>
-            <img src={HighPriority} />
+            <img src={HighPriority} alt="high priority" />
           </Col>
         </Row>
         <Row className="mt-2">
@@ -82,7 +82,7 @@ function DetailQuote(props) {
               />
               <img
                 src={DeleteIcon}
-                alt="Delete"
+                alt="Delete Icon"
                 className="px-1 mx-2"
                 //onClick={() => deleteContact(i)}
               />

@@ -944,7 +944,7 @@ function OwnerPropertyView(props) {
           onCancel={onCancel2}
         />
         <div className="flex-1 mb-5">
-          {location.state == null ? (
+          {location.state === null ? (
             ""
           ) : (
             <div
@@ -968,7 +968,7 @@ function OwnerPropertyView(props) {
                   ? "Property Managers"
                   : "Property Details"
               }
-              leftText={location.state == null ? "" : "< Back"}
+              leftText={location.state === null ? "" : "< Back"}
               leftFn={headerBack}
             />
             <div className="w-100 mb-5 overflow-scroll">
@@ -1050,6 +1050,7 @@ function OwnerPropertyView(props) {
                       <Col>
                         <img
                           src={AddIcon}
+                          alt="Add Icon"
                           onClick={() => setShowCreateExpense(true)}
                           style={{
                             width: "30px",
@@ -1086,6 +1087,7 @@ function OwnerPropertyView(props) {
                               &nbsp;
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyCashFlow}
                                 onClick={() => {
                                   setMonthlyCashFlow(!monthlyCashFlow);
@@ -1113,6 +1115,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyCashFlow}
                                 onClick={() => {
                                   setMonthlyCashFlow(!monthlyCashFlow);
@@ -1166,6 +1169,7 @@ function OwnerPropertyView(props) {
                               &nbsp; Revenue{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyRevenue}
                                 onClick={() => {
                                   setMonthlyRevenue(!monthlyRevenue);
@@ -1183,6 +1187,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyRevenue}
                                 onClick={() => {
                                   setMonthlyRevenue(!monthlyRevenue);
@@ -1229,6 +1234,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Rent{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyRent}
                                 onClick={() => setMonthlyRent(!monthlyRent)}
                                 style={{
@@ -1239,6 +1245,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyRent}
                                 onClick={() => setMonthlyRent(!monthlyRent)}
                                 style={{
@@ -1328,7 +1335,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -1338,7 +1345,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -1347,7 +1354,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {revenue.purchase_frequency == "Annually" ? (
+                                  {revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -1371,6 +1378,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Extra Charges
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyExtra}
                                 onClick={() => setMonthlyExtra(!monthlyExtra)}
                                 style={{
@@ -1381,6 +1389,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyExtra}
                                 onClick={() => setMonthlyExtra(!monthlyExtra)}
                                 style={{
@@ -1469,7 +1478,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -1479,7 +1488,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -1488,7 +1497,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {revenue.purchase_frequency == "Annually" ? (
+                                  {revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -1512,6 +1521,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Utility
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyUtility}
                                 onClick={() =>
                                   setMonthlyUtility(!monthlyUtility)
@@ -1524,6 +1534,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyUtility}
                                 onClick={() =>
                                   setMonthlyUtility(!monthlyUtility)
@@ -1618,7 +1629,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -1628,7 +1639,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -1637,7 +1648,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {revenue.purchase_frequency == "Annually" ? (
+                                  {revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -1661,6 +1672,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Owner Payment{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyOwnerPayment}
                                 onClick={() =>
                                   setMonthlyOwnerPayment(!monthlyOwnerPayment)
@@ -1673,6 +1685,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyOwnerPayment}
                                 onClick={() =>
                                   setMonthlyOwnerPayment(!monthlyOwnerPayment)
@@ -1770,7 +1783,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -1780,7 +1793,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -1789,7 +1802,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {revenue.purchase_frequency == "Annually" ? (
+                                  {revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -1813,6 +1826,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Maintenance
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyMaintenanceRevenue}
                                 onClick={() =>
                                   setMonthlyMaintenanceRevenue(
@@ -1827,6 +1841,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyMaintenanceRevenue}
                                 onClick={() =>
                                   setMonthlyMaintenanceRevenue(
@@ -1925,7 +1940,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -1935,7 +1950,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -1944,7 +1959,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {revenue.purchase_frequency == "Annually" ? (
+                                  {revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -1968,6 +1983,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Repairs
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyRepairsRevenue}
                                 onClick={() =>
                                   setMonthlyRepairsRevenue(
@@ -1982,6 +1998,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyRepairsRevenue}
                                 onClick={() =>
                                   setMonthlyRepairsRevenue(
@@ -2078,7 +2095,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -2088,7 +2105,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -2097,7 +2114,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {revenue.purchase_frequency == "Annually" ? (
+                                  {revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -2121,6 +2138,7 @@ function OwnerPropertyView(props) {
                               &nbsp; Expenses{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyExpense}
                                 onClick={() => {
                                   setMonthlyExpense(!monthlyExpense);
@@ -2140,6 +2158,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyExpense}
                                 onClick={() => {
                                   setMonthlyExpense(!monthlyExpense);
@@ -2188,6 +2207,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Management
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyManagement}
                                 onClick={() =>
                                   setMonthlyManagement(!monthlyManagement)
@@ -2200,6 +2220,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyManagement}
                                 onClick={() =>
                                   setMonthlyManagement(!monthlyManagement)
@@ -2299,7 +2320,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {expense.purchase_status === "PAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
+                                  expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -2312,7 +2333,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {expense.purchase_status === "UNPAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
+                                  expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -2324,7 +2345,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {expense.purchase_frequency == "Annually" ? (
+                                  {expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -2347,20 +2368,20 @@ function OwnerPropertyView(props) {
                             cashflowData.owner_expense.map((expense, index) => {
                               return expense.purchase_type ===
                                 "OWNER PAYMENT" &&
-                                expense.contract_fees != undefined ? (
+                                expense.contract_fees !== undefined ? (
                                 <TableRow hidden={!monthlyManagement}>
                                   <TableCell>
                                     &nbsp;&nbsp;&nbsp; {expense.address}{" "}
                                     {expense.unit}
                                     <br />
                                     &nbsp;&nbsp;&nbsp;{" "}
-                                    {expense.contract_fees != undefined ? (
+                                    {expense.contract_fees !== undefined ? (
                                       <div>
                                         {JSON.parse(expense.contract_fees).map(
                                           (fee, i) => {
                                             return (
                                               <div style={gray}>
-                                                {fee.fee_type == "%"
+                                                {fee.fee_type === "%"
                                                   ? fee.charge +
                                                     fee.fee_type +
                                                     " Management fee"
@@ -2380,7 +2401,7 @@ function OwnerPropertyView(props) {
                                     </div>
                                   </TableCell>
                                   {expense.purchase_status === "PAID" &&
-                                  expense.contract_fees != undefined ? (
+                                  expense.contract_fees !== undefined ? (
                                     <TableCell
                                       width="180px"
                                       align="right"
@@ -2390,7 +2411,7 @@ function OwnerPropertyView(props) {
                                         (fee, i) => {
                                           return (
                                             <div style={red}>
-                                              {fee.fee_type == "%"
+                                              {fee.fee_type === "%"
                                                 ? "$" +
                                                   (
                                                     expense.amount_paid /
@@ -2411,7 +2432,7 @@ function OwnerPropertyView(props) {
                                         (fee, i) => {
                                           return (
                                             <div style={red}>
-                                              {fee.fee_type == "%"
+                                              {fee.fee_type === "%"
                                                 ? "$" +
                                                   (
                                                     expense.amount_paid /
@@ -2429,7 +2450,7 @@ function OwnerPropertyView(props) {
                                   )}
 
                                   {expense.purchase_status === "UNPAID" &&
-                                  expense.contract_fees != undefined ? (
+                                  expense.contract_fees !== undefined ? (
                                     <TableCell
                                       width="180px"
                                       align="right"
@@ -2439,7 +2460,7 @@ function OwnerPropertyView(props) {
                                         (fee, i) => {
                                           return (
                                             <div style={red}>
-                                              {fee.fee_type == "%"
+                                              {fee.fee_type === "%"
                                                 ? "$" +
                                                   (
                                                     expense.amount_due /
@@ -2460,7 +2481,7 @@ function OwnerPropertyView(props) {
                                         (fee, i) => {
                                           return (
                                             <div style={red}>
-                                              {fee.fee_type == "%"
+                                              {fee.fee_type === "%"
                                                 ? "$" +
                                                   (
                                                     expense.amount_due /
@@ -2476,7 +2497,7 @@ function OwnerPropertyView(props) {
                                       )}
                                     </TableCell>
                                   )}
-                                  {expense.contract_fees != undefined ? (
+                                  {expense.contract_fees !== undefined ? (
                                     <TableCell
                                       width="180px"
                                       align="right"
@@ -2486,7 +2507,7 @@ function OwnerPropertyView(props) {
                                         (fee, i) => {
                                           return (
                                             <div style={red}>
-                                              {fee.fee_type == "%"
+                                              {fee.fee_type === "%"
                                                 ? "$" +
                                                   (
                                                     expense.amount_paid /
@@ -2516,7 +2537,7 @@ function OwnerPropertyView(props) {
                                   )}
 
                                   {expense.purchase_status === "PAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
+                                  expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(expense.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -2526,7 +2547,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {expense.purchase_status === "UNPAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
+                                  expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(expense.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -2535,7 +2556,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {expense.purchase_frequency == "Annually" ? (
+                                  {expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -2559,6 +2580,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Maintenance
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyMaintenance}
                                 onClick={() =>
                                   setMonthlyMaintenance(!monthlyMaintenance)
@@ -2571,6 +2593,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyMaintenance}
                                 onClick={() =>
                                   setMonthlyMaintenance(!monthlyMaintenance)
@@ -2667,7 +2690,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {expense.purchase_status === "PAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
+                                  expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(expense.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -2677,7 +2700,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {expense.purchase_status === "UNPAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
+                                  expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(expense.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -2686,7 +2709,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {expense.purchase_frequency == "Annually" ? (
+                                  {expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -2710,6 +2733,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Repairs{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyRepairs}
                                 onClick={() =>
                                   setMonthlyRepairs(!monthlyRepairs)
@@ -2722,6 +2746,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyRepairs}
                                 onClick={() =>
                                   setMonthlyRepairs(!monthlyRepairs)
@@ -2814,7 +2839,7 @@ function OwnerPropertyView(props) {
                                     ${expense.amount_paid - expense.amount_due}
                                   </TableCell>
                                   {expense.purchase_status === "PAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
+                                  expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(expense.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -2824,7 +2849,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {expense.purchase_status === "UNPAID" &&
-                                  expense.purchase_frequency == "Annually" ? (
+                                  expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(expense.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -2833,7 +2858,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {expense.purchase_frequency == "Annually" ? (
+                                  {expense.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -2857,6 +2882,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Utility{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyUtilityExpense}
                                 onClick={() =>
                                   setMonthlyUtilityExpense(
@@ -2871,6 +2897,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyUtilityExpense}
                                 onClick={() =>
                                   setMonthlyUtilityExpense(
@@ -2969,7 +2996,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {expense.purchase_status === "PAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -2979,7 +3007,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {expense.purchase_status === "UNPAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -3014,6 +3043,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Mortgage{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyMortgage}
                                 onClick={() =>
                                   setMonthlyMortgage(!monthlyMortgage)
@@ -3026,6 +3056,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyMortgage}
                                 onClick={() =>
                                   setMonthlyMortgage(!monthlyMortgage)
@@ -3138,6 +3169,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Taxes{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyTaxes}
                                 onClick={() => setMonthlyTaxes(!monthlyTaxes)}
                                 style={{
@@ -3148,6 +3180,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyTaxes}
                                 onClick={() => setMonthlyTaxes(!monthlyTaxes)}
                                 style={{
@@ -3248,6 +3281,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Insurance{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={monthlyInsurance}
                                 onClick={() =>
                                   setMonthlyInsurance(!monthlyInsurance)
@@ -3260,6 +3294,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!monthlyInsurance}
                                 onClick={() =>
                                   setMonthlyInsurance(!monthlyInsurance)
@@ -3370,6 +3405,7 @@ function OwnerPropertyView(props) {
                               {new Date().getFullYear()} &nbsp;
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 onClick={() => {
                                   setYearlyCashFlow(!yearlyCashFlow);
                                   setYearlyRevenue(false);
@@ -3394,6 +3430,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 onClick={() => {
                                   setYearlyCashFlow(!yearlyCashFlow);
                                   setYearlyRevenue(false);
@@ -3446,6 +3483,7 @@ function OwnerPropertyView(props) {
                               &nbsp; Revenue{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyRevenue}
                                 onClick={() => {
                                   setYearlyRevenue(!yearlyRevenue);
@@ -3464,6 +3502,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyRevenue}
                                 onClick={() => {
                                   setYearlyRevenue(!yearlyRevenue);
@@ -3512,6 +3551,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Rent{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyRent}
                                 onClick={() => setYearlyRent(!yearlyRent)}
                                 style={{
@@ -3522,6 +3562,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyRent}
                                 onClick={() => setYearlyRent(!yearlyRent)}
                                 style={{
@@ -3617,7 +3658,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {revenue.purchase_status === "PAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -3627,7 +3669,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {revenue.purchase_status === "UNPAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -3662,6 +3705,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Extra Charges
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyExtra}
                                 onClick={() => setYearlyExtra(!yearlyExtra)}
                                 style={{
@@ -3672,6 +3716,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyExtra}
                                 onClick={() => setYearlyExtra(!yearlyExtra)}
                                 style={{
@@ -3768,7 +3813,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {revenue.purchase_status === "PAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -3778,7 +3824,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {revenue.purchase_status === "UNPAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -3813,6 +3860,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Utility{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyUtility}
                                 onClick={() => setYearlyUtility(!yearlyUtility)}
                                 style={{
@@ -3823,6 +3871,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyUtility}
                                 onClick={() => setYearlyUtility(!yearlyUtility)}
                                 style={{
@@ -3918,7 +3967,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {revenue.purchase_status === "PAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -3928,7 +3978,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {revenue.purchase_status === "UNPAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -3963,6 +4014,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Owner Payment{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyOwnerPayment}
                                 onClick={() =>
                                   setYearlyOwnerPayment(!yearlyOwnerPayment)
@@ -3975,6 +4027,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyOwnerPayment}
                                 onClick={() =>
                                   setYearlyOwnerPayment(!yearlyOwnerPayment)
@@ -4072,7 +4125,7 @@ function OwnerPropertyView(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                   {revenue.purchase_status === "PAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_paid / 12).toFixed(2)}
                                     </TableCell>
@@ -4082,7 +4135,7 @@ function OwnerPropertyView(props) {
                                     </TableCell>
                                   )}
                                   {revenue.purchase_status === "UNPAID" &&
-                                  revenue.purchase_frequency == "Annually" ? (
+                                  revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       ${(revenue.amount_due / 12).toFixed(2)}
                                     </TableCell>
@@ -4091,7 +4144,7 @@ function OwnerPropertyView(props) {
                                       $0.00
                                     </TableCell>
                                   )}
-                                  {revenue.purchase_frequency == "Annually" ? (
+                                  {revenue.purchase_frequency === "Annually" ? (
                                     <TableCell width="180px" align="right">
                                       $
                                       {(
@@ -4115,6 +4168,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Maintenance{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyMaintenanceRevenue}
                                 onClick={() =>
                                   setYearlyMaintenanceRevenue(
@@ -4129,6 +4183,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyMaintenanceRevenue}
                                 onClick={() =>
                                   setYearlyMaintenanceRevenue(
@@ -4229,7 +4284,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {revenue.purchase_status === "PAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -4239,7 +4295,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {revenue.purchase_status === "UNPAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -4274,6 +4331,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Repairs{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyRepairsRevenue}
                                 onClick={() =>
                                   setYearlyRepairsRevenue(!yearlyRepairsRevenue)
@@ -4286,6 +4344,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyRepairsRevenue}
                                 onClick={() =>
                                   setYearlyRepairsRevenue(!yearlyRepairsRevenue)
@@ -4383,7 +4442,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {revenue.purchase_status === "PAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -4393,7 +4453,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {revenue.purchase_status === "UNPAID" &&
-                                    revenue.purchase_frequency == "Annually" ? (
+                                    revenue.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(revenue.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -4428,6 +4489,7 @@ function OwnerPropertyView(props) {
                               &nbsp; Expenses{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyExpense}
                                 onClick={() => {
                                   setYearlyExpense(!yearlyExpense);
@@ -4447,6 +4509,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyExpense}
                                 onClick={() => {
                                   setYearlyExpense(!yearlyExpense);
@@ -4496,6 +4559,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Management{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyManagement}
                                 onClick={() =>
                                   setYearlyManagement(!yearlyManagement)
@@ -4508,6 +4572,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyManagement}
                                 onClick={() =>
                                   setYearlyManagement(!yearlyManagement)
@@ -4619,7 +4684,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {expense.purchase_status === "PAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         $
                                         {(
@@ -4632,7 +4698,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {expense.purchase_status === "UNPAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         $
                                         {(
@@ -4670,7 +4737,7 @@ function OwnerPropertyView(props) {
                               (expense, index) => {
                                 return expense.purchase_type ===
                                   "OWNER PAYMENT" &&
-                                  expense.contract_fees != undefined ? (
+                                  expense.contract_fees !== undefined ? (
                                   <TableRow hidden={!yearlyManagement}>
                                     <TableCell>
                                       &nbsp;&nbsp;&nbsp; {expense.address}{" "}
@@ -4693,7 +4760,7 @@ function OwnerPropertyView(props) {
                                           (fee, i) => {
                                             return (
                                               <div style={red}>
-                                                {fee.fee_type == "%"
+                                                {fee.fee_type === "%"
                                                   ? "$" +
                                                     (
                                                       expense.amount_paid /
@@ -4715,7 +4782,7 @@ function OwnerPropertyView(props) {
                                     )}
 
                                     {expense.purchase_status === "UNPAID" &&
-                                    expense.contract_fees != undefined ? (
+                                    expense.contract_fees !== undefined ? (
                                       <TableCell
                                         width="180px"
                                         align="right"
@@ -4725,7 +4792,7 @@ function OwnerPropertyView(props) {
                                           (fee, i) => {
                                             return (
                                               <div style={red}>
-                                                {fee.fee_type == "%"
+                                                {fee.fee_type === "%"
                                                   ? "$" +
                                                     (
                                                       expense.amount_due /
@@ -4745,7 +4812,7 @@ function OwnerPropertyView(props) {
                                         ${expense.amount_due.toFixed(2)}
                                       </TableCell>
                                     )}
-                                    {expense.contract_fees != undefined ? (
+                                    {expense.contract_fees !== undefined ? (
                                       <TableCell
                                         width="180px"
                                         align="right"
@@ -4755,7 +4822,7 @@ function OwnerPropertyView(props) {
                                           (fee, i) => {
                                             return (
                                               <div style={red}>
-                                                {fee.fee_type == "%"
+                                                {fee.fee_type === "%"
                                                   ? "$" +
                                                     (
                                                       expense.amount_paid /
@@ -4786,7 +4853,8 @@ function OwnerPropertyView(props) {
                                     )}
 
                                     {expense.purchase_status === "PAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -4796,7 +4864,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {expense.purchase_status === "UNPAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -4831,6 +4900,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Maintenance{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyMaintenance}
                                 onClick={() =>
                                   setYearlyMaintenance(!yearlyMaintenance)
@@ -4843,6 +4913,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyMaintenance}
                                 onClick={() =>
                                   setYearlyMaintenance(!yearlyMaintenance)
@@ -4942,7 +5013,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {expense.purchase_status === "PAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -4952,7 +5024,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {expense.purchase_status === "UNPAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -4987,6 +5060,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Repairs{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyRepairs}
                                 onClick={() => setYearlyRepairs(!yearlyRepairs)}
                                 style={{
@@ -4997,6 +5071,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={!yearlyRepairs}
                                 onClick={() => setYearlyRepairs(!yearlyRepairs)}
                                 style={{
@@ -5093,7 +5168,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {expense.purchase_status === "PAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -5103,7 +5179,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {expense.purchase_status === "UNPAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -5138,6 +5215,7 @@ function OwnerPropertyView(props) {
                               &nbsp; &nbsp;Utility{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyUtilityExpense}
                                 onClick={() =>
                                   setYearlyUtilityExpense(!yearlyUtilityExpense)
@@ -5150,6 +5228,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyUtilityExpense}
                                 onClick={() =>
                                   setYearlyUtilityExpense(!yearlyUtilityExpense)
@@ -5248,7 +5327,8 @@ function OwnerPropertyView(props) {
                                       ).toFixed(2)}
                                     </TableCell>
                                     {expense.purchase_status === "PAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_paid / 12).toFixed(2)}
                                       </TableCell>
@@ -5258,7 +5338,8 @@ function OwnerPropertyView(props) {
                                       </TableCell>
                                     )}
                                     {expense.purchase_status === "UNPAID" &&
-                                    expense.purchase_frequency == "Annually" ? (
+                                    expense.purchase_frequency ===
+                                      "Annually" ? (
                                       <TableCell width="180px" align="right">
                                         ${(expense.amount_due / 12).toFixed(2)}
                                       </TableCell>
@@ -5293,6 +5374,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Mortgage{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyMortgage}
                                 onClick={() =>
                                   setYearlyMortgage(!yearlyMortgage)
@@ -5305,6 +5387,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyMortgage}
                                 onClick={() =>
                                   setYearlyMortgage(!yearlyMortgage)
@@ -5419,6 +5502,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Taxes{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyTaxes}
                                 onClick={() => setYearlyTaxes(!yearlyTaxes)}
                                 style={{
@@ -5429,6 +5513,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyTaxes}
                                 onClick={() => setYearlyTaxes(!yearlyTaxes)}
                                 style={{
@@ -5535,6 +5620,7 @@ function OwnerPropertyView(props) {
                               &nbsp;&nbsp; Insurance{" "}
                               <img
                                 src={SortLeft}
+                                alt="Expand closed"
                                 hidden={yearlyInsurance}
                                 onClick={() =>
                                   setYearlyInsurance(!yearlyInsurance)
@@ -5547,6 +5633,7 @@ function OwnerPropertyView(props) {
                               />
                               <img
                                 src={SortDown}
+                                alt="Expand open"
                                 hidden={!yearlyInsurance}
                                 onClick={() =>
                                   setYearlyInsurance(!yearlyInsurance)
@@ -5675,6 +5762,7 @@ function OwnerPropertyView(props) {
                       <Col>
                         <img
                           src={EditIconNew}
+                          alt="Edit Icon"
                           onClick={() => {
                             window.scrollTo(0, 0);
                             setEditProperty(true);
@@ -5865,13 +5953,13 @@ function OwnerPropertyView(props) {
                                 {property.property_manager.length > 1 ? (
                                   Object.values(property.property_manager).map(
                                     (pm) =>
-                                      pm.management_status == "ACCEPTED" ||
-                                      pm.management_status == "PM END EARLY" ||
-                                      pm.management_status == "OWNER END EARLY"
+                                      pm.management_status === "ACCEPTED" ||
+                                      pm.management_status === "PM END EARLY" ||
+                                      pm.management_status === "OWNER END EARLY"
                                         ? pm.manager_business_name
                                         : ""
                                   )
-                                ) : property.property_manager.length == 1 ? (
+                                ) : property.property_manager.length === 1 ? (
                                   <div>
                                     {
                                       property.property_manager[0]
@@ -5905,9 +5993,9 @@ function OwnerPropertyView(props) {
                               Description
                             </TableCell>
                             <TableCell>
-                              {property.description == "null" ||
-                              property.description == "" ||
-                              property.description == null
+                              {property.description === "null" ||
+                              property.description === "" ||
+                              property.description === null
                                 ? "Not Available"
                                 : property.description}
                             </TableCell>
@@ -5924,9 +6012,9 @@ function OwnerPropertyView(props) {
                               Notes
                             </TableCell>
                             <TableCell>
-                              {property.notes == "null" ||
-                              property.notes == "" ||
-                              property.notes == null
+                              {property.notes === "null" ||
+                              property.notes === "" ||
+                              property.notes === null
                                 ? "Not Available"
                                 : property.notes}
                             </TableCell>
@@ -5951,6 +6039,7 @@ function OwnerPropertyView(props) {
                         {" "}
                         <img
                           src={AddIcon}
+                          alt="Add Icon"
                           onClick={() => {
                             window.scrollTo(0, 0);
                             setShowAddRequest(true);
@@ -6065,7 +6154,7 @@ function OwnerPropertyView(props) {
                                       size="small"
                                       align="center"
                                     >
-                                      {request.request_type != null
+                                      {request.request_type !== null
                                         ? request.request_type
                                         : "None"}
                                     </TableCell>
@@ -6137,6 +6226,7 @@ function OwnerPropertyView(props) {
                       <Col>
                         <img
                           src={EditIconNew}
+                          alt="Edit Icon"
                           onClick={() => {
                             window.scrollTo(0, 1000);
                             setEditProperty(true);
@@ -6177,7 +6267,7 @@ function OwnerPropertyView(props) {
                             {appliances.map((appliance, i) => {
                               return applianceState[0][appliance][
                                 "available"
-                              ] == true ||
+                              ] === true ||
                                 applianceState[0][appliance]["available"] ==
                                   "True" ? (
                                 <TableRow
@@ -6353,13 +6443,15 @@ function OwnerPropertyView(props) {
                           <TableBody>
                             <TableRow>
                               <TableCell>
-                                {property.pets_allowed == 0 ? "No" : "Yes"}
+                                {property.pets_allowed === 0 ? "No" : "Yes"}
                               </TableCell>
                               <TableCell>
-                                {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                                {property.deposit_for_rent === 0 ? "No" : "Yes"}
                               </TableCell>
                               <TableCell>
-                                {property.available_to_rent == 0 ? "No" : "Yes"}
+                                {property.available_to_rent === 0
+                                  ? "No"
+                                  : "Yes"}
                               </TableCell>
                               <TableCell>
                                 {property.featured ? "No" : "Yes"}
@@ -6417,7 +6509,7 @@ function OwnerPropertyView(props) {
                                     contract.business_uid ===
                                       property.managerInfo.manager_id &&
                                     contract.contract_status === "ACTIVE" ? (
-                                      contract.contract_name != null ? (
+                                      contract.contract_name !== null ? (
                                         <TableCell>
                                           {contract.contract_name}{" "}
                                         </TableCell>
@@ -6525,9 +6617,11 @@ function OwnerPropertyView(props) {
                                                   <a
                                                     href={file.link}
                                                     target="_blank"
+                                                    rel="noreferrer"
                                                   >
                                                     <img
                                                       src={File}
+                                                      alt="open document"
                                                       style={{
                                                         width: "15px",
                                                         height: "15px",
@@ -6654,7 +6748,7 @@ function OwnerPropertyView(props) {
                               contract.business_uid ===
                                 property.managerInfo.manager_id &&
                               contract.contract_status === "ACTIVE" ? (
-                                contract.contract_name != null ? (
+                                contract.contract_name !== null ? (
                                   <h6
                                     className="d-flex justify-content-center"
                                     style={mediumBold}
@@ -6680,7 +6774,7 @@ function OwnerPropertyView(props) {
                               contract.business_uid ===
                                 property.managerInfo.manager_id &&
                               contract.contract_status === "ACTIVE" ? (
-                                contract.contract_name != null ? (
+                                contract.contract_name !== null ? (
                                   <h6
                                     className="d-flex justify-content-center"
                                     style={mediumBold}
@@ -6736,7 +6830,7 @@ function OwnerPropertyView(props) {
                     <Row className="m-3">
                       <Col>
                         <h3>
-                          {Object.keys(property.managerInfo).length == 0 ||
+                          {Object.keys(property.managerInfo).length === 0 ||
                           property.management_status === "END EARLY"
                             ? "Select a Property Manager"
                             : "Change Property Manager"}
@@ -6744,7 +6838,7 @@ function OwnerPropertyView(props) {
                       </Col>
                       <Col>
                         {/* <img
-                        src={AddIcon}
+                        src={AddIcon} alt="Add Icon"
                         onClick={() => setShowCreateExpense(true)}
                         style={{
                           width: "30px",
@@ -6756,7 +6850,7 @@ function OwnerPropertyView(props) {
                       </Col>
                     </Row>
                     {console.log(property.property_manager)}
-                    {property.property_manager.length == 0 ? (
+                    {property.property_manager.length === 0 ? (
                       ""
                     ) : property.property_manager.length > 1 ? (
                       property.property_manager.map((p, i) =>
@@ -6802,7 +6896,7 @@ function OwnerPropertyView(props) {
                                 </a>
                               </Col>
                             </Row>
-                            {showDetailPM == p.manager_id &&
+                            {showDetailPM === p.manager_id &&
                             showDetailPMToggle ? (
                               <div>
                                 <Row
@@ -7073,7 +7167,7 @@ function OwnerPropertyView(props) {
                     ) : (
                       ""
                     )}
-                    {property.property_manager.length == 0 ? (
+                    {property.property_manager.length === 0 ? (
                       ""
                     ) : property.property_manager.length > 1 ? (
                       property.property_manager.map((p, i) =>
@@ -7125,7 +7219,7 @@ function OwnerPropertyView(props) {
                                           p.manager_id &&
                                         contract.contract_status ===
                                           "ACTIVE" ? (
-                                          contract.contract_name != null ? (
+                                          contract.contract_name !== null ? (
                                             <TableCell>
                                               {contract.contract_name}{" "}
                                             </TableCell>
@@ -7230,9 +7324,11 @@ function OwnerPropertyView(props) {
                                                   <a
                                                     href={file.link}
                                                     target="_blank"
+                                                    rel="noreferrer"
                                                   >
                                                     <img
                                                       src={File}
+                                                      alt="open document"
                                                       style={{
                                                         width: "15px",
                                                         height: "15px",
@@ -7370,7 +7466,7 @@ function OwnerPropertyView(props) {
                                   contract.business_uid ===
                                     property.property_manager[0].manager_id &&
                                   contract.contract_status === "ACTIVE" ? (
-                                    contract.contract_name != null ? (
+                                    contract.contract_name !== null ? (
                                       <TableCell>
                                         {contract.contract_name}{" "}
                                       </TableCell>
@@ -7469,9 +7565,11 @@ function OwnerPropertyView(props) {
                                               <a
                                                 href={file.link}
                                                 target="_blank"
+                                                rel="noreferrer"
                                               >
                                                 <img
                                                   src={File}
+                                                  alt="open document"
                                                   style={{
                                                     width: "15px",
                                                     height: "15px",
@@ -7650,8 +7748,15 @@ function OwnerPropertyView(props) {
                                               {rp.description}
                                             </Col>
                                             <Col className=" d-flex justify-content-end">
-                                              <a href={rp.link} target="_blank">
-                                                <img src={File} />
+                                              <a
+                                                href={rp.link}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                              >
+                                                <img
+                                                  src={File}
+                                                  alt="open document"
+                                                />
                                               </a>
                                             </Col>
                                           </Row>

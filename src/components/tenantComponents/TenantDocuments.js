@@ -213,7 +213,7 @@ function TenantDocuments(props) {
                               return (
                                 <TableRow>
                                   <TableCell width="380px">
-                                    {ald.description != "" ? (
+                                    {ald.description !== "" ? (
                                       <p className="mx-3">{ald.description}</p>
                                     ) : (
                                       <p className="mx-3">Document {i + 1}</p>
@@ -272,9 +272,14 @@ function TenantDocuments(props) {
                                     )}
                                   </TableCell>
                                   <TableCell width="180px">
-                                    <a href={ald.link} target="_blank">
+                                    <a
+                                      href={ald.link}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
                                       <img
                                         src={File}
+                                        alt="open document"
                                         style={{
                                           width: "30px",
                                           height: "30px",
@@ -340,7 +345,7 @@ function TenantDocuments(props) {
                             return (
                               <TableRow>
                                 <TableCell width="380px">
-                                  {pld.description != "" ? (
+                                  {pld.description !== "" ? (
                                     <p className="mx-3">{pld.description}</p>
                                   ) : (
                                     <p className="mx-3">Document {i + 1}</p>
@@ -397,9 +402,14 @@ function TenantDocuments(props) {
                                   )}
                                 </TableCell>
                                 <TableCell width="180px">
-                                  <a href={pld.link} target="_blank">
+                                  <a
+                                    href={pld.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
                                     <img
                                       src={File}
+                                      alt="open document"
                                       style={{
                                         width: "30px",
                                         height: "30px",

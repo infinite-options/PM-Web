@@ -214,7 +214,7 @@ function ManagerTenantAgreementView(props) {
       request_body.application_status = "REFUSED";
     }
     const response = await put("/endEarly", request_body);
-    if (request_body.application_status == "PM ENDED") {
+    if (request_body.application_status === "PM ENDED") {
       const newMessage = {
         sender_name: property.managerInfo.manager_business_name,
         sender_email: property.managerInfo.manager_email,
@@ -281,13 +281,13 @@ function ManagerTenantAgreementView(props) {
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
-    if (j == 1 && k != 11) {
+    if (j === 1 && k !== 11) {
       return i + "st";
     }
-    if (j == 2 && k != 12) {
+    if (j === 2 && k !== 12) {
       return i + "nd";
     }
-    if (j == 3 && k != 13) {
+    if (j === 3 && k !== 13) {
       return i + "rd";
     }
     return i + "th";
@@ -326,7 +326,7 @@ function ManagerTenantAgreementView(props) {
           />
           {/* {console.log(agreement)} */}
           <Row>
-            {agreement != null ? (
+            {agreement !== null ? (
               <Row className="m-3">
                 <Col>
                   <h3>Tenant Info</h3>
@@ -337,7 +337,7 @@ function ManagerTenantAgreementView(props) {
                   <Col xs={2}>
                     <img
                       src={EditIconNew}
-                      alt="Edit"
+                      alt="Edit Icon"
                       style={{
                         width: "30px",
                         height: "30px",
@@ -511,7 +511,7 @@ function ManagerTenantAgreementView(props) {
                         {`${fee.available_topay} days before`}
                       </TableCell>
                       <TableCell>
-                        {fee.due_by == ""
+                        {fee.due_by === ""
                           ? `1st of the month`
                           : `${ordinal_suffix_of(fee.due_by)} of the month`}
                       </TableCell>

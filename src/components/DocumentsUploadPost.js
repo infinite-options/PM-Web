@@ -124,15 +124,16 @@ function DocumentsUploadPost(props) {
                     />
                     <img
                       src={DeleteIcon}
-                      alt="Delete"
+                      alt="Delete Icon"
                       className="px-1 mx-2"
                       onClick={() => deleteDocument(i)}
                     />
                   </TableCell>
                   <TableCell>
-                    <a href={file.link} target="_blank">
+                    <a href={file.link} target="_blank" rel="noreferrer">
                       <img
                         src={File}
+                        alt="open document"
                         style={{
                           width: "15px",
                           height: "15px",

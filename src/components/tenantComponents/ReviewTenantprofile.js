@@ -102,7 +102,7 @@ function ReviewTenantProfile(props) {
         application_docs.push(filesCopy[i]);
       }
     }
-    // if (numPets > 0 && typePets == "") {
+    // if (numPets > 0 && typePets === "") {
     //   setErrorMessage("Please fill out the type of pets");
     //   return;
     // }
