@@ -189,7 +189,7 @@ function DocumentsUploadPost(props) {
               onClick={saveNewFile}
               className="mx-2"
             >
-              Save Document
+              Continue
             </Button>
           </div>
         </div>
