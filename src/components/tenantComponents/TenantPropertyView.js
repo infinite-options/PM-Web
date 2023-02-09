@@ -61,6 +61,8 @@ function TenantPropertyView(props) {
   const [property, setProperty] = useState({ images: "[]" });
   const [hideEdit, setHideEdit] = useState(true);
   const [showAddRequest, setShowAddRequest] = useState(false);
+
+  const [showSpinner, setShowSpinner] = useState(false);
   const [endEarlyDate, setEndEarlyDate] = useState("");
 
   const [imagesProperty, setImagesProperty] = useState([]);
@@ -231,6 +233,7 @@ function TenantPropertyView(props) {
       setErrorMessage("Please select a last date");
       return;
     }
+    setShowSpinner(true);
 
     const request_body = {
       application_status: "TENANT END EARLY",
@@ -257,10 +260,12 @@ function TenantPropertyView(props) {
     // console.log(newMessage);
     const responseMsg = await post("/message", newMessage);
     setTenantEndEarly(true);
+    setShowSpinner(false);
     reloadProperty();
   };
 
   const endEarlyRequestResponse = async (end_early) => {
+    setShowSpinner(true);
     let request_body = {
       application_status: "",
       property_uid: property.property_uid,
@@ -297,6 +302,7 @@ function TenantPropertyView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+      navigate("../tenant");
     } else {
       const newMessage = {
         sender_name:
@@ -315,11 +321,13 @@ function TenantPropertyView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+      setShowSpinner(false);
+      setPmEndEarly(false);
+      reloadProperty();
     }
-
-    navigate("../tenant");
   };
   const endEarlyWithdraw = async () => {
+    setShowSpinner(true);
     let request_body = {
       application_status: "RENTED",
       property_uid: property.property_uid,
@@ -348,6 +356,9 @@ function TenantPropertyView(props) {
     const responseMsg = await post("/message", newMessage);
     setTerminateLease(false);
     setTenantEndEarly(false);
+    setShowSpinner(false);
+    setLastDate("");
+    setMessage("");
   };
   const fetchProperty = async () => {
     const response = await get(
@@ -1211,7 +1222,6 @@ function TenantPropertyView(props) {
                                           width: "15px",
                                           height: "15px",
                                         }}
-                                        alt="Document"
                                       />
                                     </a>
                                   </div>
@@ -1571,6 +1581,7 @@ function TenantPropertyView(props) {
                                   </Form.Group>
                                 </Col>
                               </Row>
+
                               <Row>
                                 <Col className="d-flex flex-row justify-content-evenly">
                                   <Button
@@ -1671,6 +1682,16 @@ function TenantPropertyView(props) {
                           )}
                         </Row>
                       )}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {showSpinner ? (
+                    <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+                      <ReactBootStrap.Spinner
+                        animation="border"
+                        role="status"
+                      />
                     </div>
                   ) : (
                     ""

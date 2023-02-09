@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableRow,
@@ -37,6 +38,7 @@ const useStyles = makeStyles({
   },
 });
 function ManagerTenantAgreementView(props) {
+  const navigate = useNavigate();
   const classes = useStyles();
   const {
     property,
@@ -161,7 +163,7 @@ function ManagerTenantAgreementView(props) {
       setErrorMessage("Please select a last date");
       return;
     }
-
+    setShowSpinner(true);
     const request_body = {
       application_status: "PM END EARLY",
       property_uid: property.property_uid,
@@ -178,7 +180,7 @@ function ManagerTenantAgreementView(props) {
       receiver: [agreement.tenant_id],
       receiver_properties: [property.property_uid],
     };
-    // setShowSpinner(true);
+
     const responseAnnouncement = await post("/announcement", new_announcement);
     const send_announcement = {
       announcement_msg: new_announcement.announcement_msg,
@@ -191,12 +193,14 @@ function ManagerTenantAgreementView(props) {
       "/SendAnnouncement",
       send_announcement
     );
+    setShowSpinner(false);
     setPmEndEarly(true);
     setTerminateLease(false);
     closeAgreement();
   };
 
   const endEarlyRequestResponse = async (end_early) => {
+    setShowSpinner(true);
     let request_body = {
       application_status: "",
       property_uid: property.property_uid,
@@ -210,11 +214,6 @@ function ManagerTenantAgreementView(props) {
       );
       request_body.application_uid =
         apps.length > 0 ? apps[0].application_uid : null;
-    } else {
-      request_body.application_status = "REFUSED";
-    }
-    const response = await put("/endEarly", request_body);
-    if (request_body.application_status === "PM ENDED") {
       const newMessage = {
         sender_name: property.managerInfo.manager_business_name,
         sender_email: property.managerInfo.manager_email,
@@ -230,7 +229,10 @@ function ManagerTenantAgreementView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+      setShowSpinner(false);
+      navigate("../manager");
     } else {
+      request_body.application_status = "REFUSED";
       const newMessage = {
         sender_name: property.managerInfo.manager_business_name,
         sender_email: property.managerInfo.manager_email,
@@ -245,12 +247,14 @@ function ManagerTenantAgreementView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+      setTenantEndEarly(false);
+      setShowSpinner(false);
+      closeAgreement();
     }
-
-    closeAgreement();
   };
 
   const endEarlyWithdraw = async () => {
+    setShowSpinner(true);
     let request_body = {
       application_status: "RENTED",
       property_uid: property.property_uid,
@@ -274,6 +278,7 @@ function ManagerTenantAgreementView(props) {
     };
     // console.log(newMessage);
     const responseMsg = await post("/message", newMessage);
+    setShowSpinner(false);
     setTerminateLease(false);
     setPmEndEarly(false);
   };
@@ -691,7 +696,10 @@ function ManagerTenantAgreementView(props) {
                   <Button
                     style={redPillButton}
                     variant="outline-primary"
-                    onClick={() => endEarlyRequestResponse(false)}
+                    onClick={() => {
+                      endEarlyRequestResponse(false);
+                      // setTenantEndEarly(false);
+                    }}
                   >
                     Reject request
                   </Button>
@@ -729,6 +737,13 @@ function ManagerTenantAgreementView(props) {
                   </Button>
                 </Col>
               </Row>
+            </div>
+          ) : (
+            ""
+          )}
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+              <ReactBootStrap.Spinner animation="border" role="status" />
             </div>
           ) : (
             ""

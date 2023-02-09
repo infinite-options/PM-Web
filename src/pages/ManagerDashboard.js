@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,7 +18,6 @@ import { visuallyHidden } from "@mui/utils";
 import SideBar from "../components/managerComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
-import ManagerPropertyView from "../components/managerComponents/ManagerPropertyView";
 import ManagerCreateExpense from "../components/managerComponents/ManagerCreateExpense";
 import ManagerRepairRequest from "../components/managerComponents/ManagerRepairRequest";
 import ManagerFooter from "../components/managerComponents/ManagerFooter";
@@ -27,7 +26,7 @@ import SortLeft from "../icons/Sort-left.svg";
 import AddIcon from "../icons/AddIcon.svg";
 import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
-import { get, put } from "../utils/api";
+import { get } from "../utils/api";
 import { green, red, blue, xSmall } from "../utils/styles";
 
 const useStyles = makeStyles({
@@ -46,7 +45,6 @@ export default function ManagerDashboard() {
 
   const [processingManagerData, setProcessingManagerData] = useState([]);
   const [cashflowData, setCashflowData] = useState({});
-  const [selectedTenant, setSelectedTenant] = useState([]);
 
   const [stage, setStage] = useState("LIST");
   const [isLoading, setIsLoading] = useState(true);
@@ -180,8 +178,11 @@ export default function ManagerDashboard() {
         (a) => a.application_status === "FORWARDED"
       );
 
-      property.end_early_applications = property.applications.filter(
+      property.tenant_end_early_applications = property.applications.filter(
         (a) => a.application_status === "TENANT END EARLY"
+      );
+      property.pm_end_early_applications = property.applications.filter(
+        (a) => a.application_status === "PM END EARLY"
       );
     });
 
@@ -271,7 +272,6 @@ export default function ManagerDashboard() {
 
       return;
     }
-    setSelectedTenant(response.result);
     // console.log(response.result);
     navigate(`/tenant-list/${tenant_id}`, {
       state: {
@@ -4855,9 +4855,22 @@ export default function ManagerDashboard() {
                                         style={{ ...blue, ...xSmall }}
                                         className="mb-0"
                                       >
-                                        {property.end_early_applications
+                                        {property.tenant_end_early_applications
                                           .length > 0
                                           ? "Tenant(s) requested to end the lease early"
+                                          : ""}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {property.pm_end_early_applications
+                                          .length > 0
+                                          ? "You requested to end the lease early"
                                           : ""}
                                       </p>
                                     </div>
@@ -5359,9 +5372,22 @@ export default function ManagerDashboard() {
                                         style={{ ...blue, ...xSmall }}
                                         className="mb-0"
                                       >
-                                        {property.end_early_applications
+                                        {property.tenant_end_early_applications
                                           .length > 0
                                           ? "Tenant(s) requested to end the lease early"
+                                          : ""}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {property.pm_end_early_applications
+                                          .length > 0
+                                          ? "You requested to end the lease early"
                                           : ""}
                                       </p>
                                     </div>

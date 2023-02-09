@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -19,7 +19,6 @@ import SideBar from "../components/ownerComponents/SideBar";
 import Header from "../components/Header";
 import AppContext from "../AppContext";
 import OwnerPropertyForm from "../components/ownerComponents/OwnerPropertyForm";
-import OwnerPropertyView from "../components/ownerComponents/OwnerPropertyView";
 import OwnerCreateExpense from "../components/ownerComponents/OwnerCreateExpense";
 import OwnerRepairRequest from "../components/ownerComponents/OwnerRepairRequest";
 import OwnerFooter from "../components/ownerComponents/OwnerFooter";
@@ -28,7 +27,7 @@ import SortLeft from "../icons/Sort-left.svg";
 import AddIcon from "../icons/AddIcon.svg";
 import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
-import { get, put } from "../utils/api";
+import { get } from "../utils/api";
 import { green, red, blue, xSmall, gray } from "../utils/styles";
 
 const useStyles = makeStyles({

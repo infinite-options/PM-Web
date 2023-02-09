@@ -404,10 +404,8 @@ function PropertyManagerDocs(props) {
           )}
         </Row>
       ) : (
-        <div>
-          <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
-            <ReactBootStrap.Spinner animation="border" role="status" />
-          </div>
+        <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+          <ReactBootStrap.Spinner animation="border" role="status" />
         </div>
       )}
 
