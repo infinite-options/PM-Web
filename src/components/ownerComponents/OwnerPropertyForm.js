@@ -480,11 +480,12 @@ function OwnerPropertyForm(props) {
       deposit: deposit,
       appliances: JSON.stringify(applianceState[0]),
       utilities: JSON.stringify(utilityState[0]),
-      pets_allowed: petsAllowed == true || petsAllowed == 1 ? "true" : "false",
+      pets_allowed:
+        petsAllowed === true || petsAllowed === 1 ? "true" : "false",
       deposit_for_rent:
-        depositForRent == true || depositForRent == 1 ? "true" : "false",
+        depositForRent === true || depositForRent === 1 ? "true" : "false",
       available_to_rent:
-        availableToRent == true || availableToRent == 1 ? "true" : "false",
+        availableToRent === true || availableToRent === 1 ? "true" : "false",
     };
     const files = imageState[0];
     let i = 0;
@@ -530,11 +531,11 @@ function OwnerPropertyForm(props) {
         utilities: JSON.stringify(utilityState[0]),
 
         pets_allowed:
-          petsAllowed == true || petsAllowed == 1 ? "true" : "false",
+          petsAllowed === true || petsAllowed === 1 ? "true" : "false",
         deposit_for_rent:
-          depositForRent == true || depositForRent == 1 ? "true" : "false",
+          depositForRent === true || depositForRent === 1 ? "true" : "false",
         available_to_rent:
-          availableToRent == true || availableToRent == 1 ? "true" : "false",
+          availableToRent === true || availableToRent === 1 ? "true" : "false",
       };
       const files = imageState[0];
       // console.log(files, imageState);
@@ -947,6 +948,7 @@ function OwnerPropertyForm(props) {
           <Col>
             <img
               src={EditIconNew}
+              alt="Edit Icon"
               onClick={() => {
                 window.scrollTo(0, 0);
                 setEditAppliances(true);
@@ -984,8 +986,8 @@ function OwnerPropertyForm(props) {
               </TableHead>
               <TableBody>
                 {appliances.map((appliance, i) => {
-                  return applianceState[0][appliance]["available"] == true ||
-                    applianceState[0][appliance]["available"] == "True" ? (
+                  return applianceState[0][appliance]["available"] === true ||
+                    applianceState[0][appliance]["available"] === "True" ? (
                     <TableRow>
                       <TableCell>{appliance}</TableCell>
                       <TableCell>
@@ -1080,7 +1082,7 @@ function OwnerPropertyForm(props) {
               onChange={
                 edit
                   ? (e) => {
-                      petsAllowed == 1
+                      petsAllowed === 1
                         ? setPetsAllowed(false)
                         : setPetsAllowed(true);
                     }
@@ -1104,7 +1106,7 @@ function OwnerPropertyForm(props) {
               onChange={
                 edit
                   ? (e) => {
-                      depositForRent == 1
+                      depositForRent === 1
                         ? setDepositForRent(false)
                         : setDepositForRent(true);
                     }
@@ -1123,7 +1125,7 @@ function OwnerPropertyForm(props) {
         ) : (
           <Container className="d-flex my-3 ps-4">
             <h6>Available to Rent</h6>
-            <p> {property.available_to_rent == 1 ? "True" : "False"}</p>
+            <p> {property.available_to_rent === 1 ? "True" : "False"}</p>
           </Container>
         )}
         {edit ? (
@@ -1143,7 +1145,7 @@ function OwnerPropertyForm(props) {
             <Col className="p-2">
               <img
                 src={DeleteIcon}
-                alt="Delete"
+                alt="Delete Icon"
                 onClick={() => setShowDialogDelete(true)}
               />
             </Col>

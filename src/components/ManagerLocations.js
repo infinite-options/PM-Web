@@ -91,7 +91,7 @@ function ManagerLocations(props) {
                   />
                   <img
                     src={DeleteIcon}
-                    alt="Delete"
+                    alt="Delete Icon"
                     className="px-1 mx-2"
                     onClick={() => deleteLocation(i)}
                   />
@@ -192,7 +192,7 @@ function ManagerLocations(props) {
                   />
                   <img
                     src={DeleteIcon}
-                    alt="Delete"
+                    alt="Delete Icon"
                     className="px-1 mx-2"
                     onClick={() => deleteLocation(i)}
                   />

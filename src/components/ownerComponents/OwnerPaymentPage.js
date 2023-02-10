@@ -159,6 +159,7 @@ function OwnerPaymentPage(props) {
                 </Row>
                 <Row className="mt-2 mb-2">
                   <img
+                    alt=""
                     src={ConfirmCheck}
                     style={{ width: "58px", height: "58px" }}
                   />

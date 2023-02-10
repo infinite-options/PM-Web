@@ -54,7 +54,7 @@ export default function TenantUpcomingPayments(props) {
     setPurchaseUIDs(tempPurchaseUID);
   }
   function navigateToPaymentPage() {
-    if (props.paymentSelection[1].isActive == true) {
+    if (props.paymentSelection[1].isActive === true) {
       // console.log("zelle selected");
       navigate("/zelle", {
         state: {
@@ -312,7 +312,7 @@ export default function TenantUpcomingPayments(props) {
             </TableBody>
           </Table>
         </Row>
-        {props.type == false && (
+        {props.type === false && (
           <div className="amount-pay">
             <h4 className="amount">Amount: ${totalSum}</h4>
             {totalSum === 0 ? (

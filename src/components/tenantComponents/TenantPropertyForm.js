@@ -828,7 +828,7 @@ function TenantPropertyForm(props) {
             onChange={
               edit
                 ? (e) => {
-                    petsAllowed == 1
+                    petsAllowed === 1
                       ? setPetsAllowed(false)
                       : setPetsAllowed(true);
                   }
@@ -852,7 +852,7 @@ function TenantPropertyForm(props) {
             onChange={
               edit
                 ? (e) => {
-                    depositForRent == 1
+                    depositForRent === 1
                       ? setDepositForRent(false)
                       : setDepositForRent(true);
                   }

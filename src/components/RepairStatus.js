@@ -35,19 +35,19 @@ function RepairStatus(props) {
     let medCount = 0;
     let lowCount = 0;
     for (const repair of repairs1) {
-      if (repair.priority == "High") {
+      if (repair.priority === "High") {
         sortedRepairs.push(repair);
         highCount++;
       }
     }
     for (const repair of repairs1) {
-      if (repair.priority == "Medium") {
+      if (repair.priority === "Medium") {
         sortedRepairs.push(repair);
         medCount++;
       }
     }
     for (const repair of repairs1) {
-      if (repair.priority == "Low") {
+      if (repair.priority === "Low") {
         sortedRepairs.push(repair);
         lowCount++;
       }

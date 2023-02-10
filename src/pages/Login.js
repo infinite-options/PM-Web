@@ -8,11 +8,10 @@ import SocialLogin from "./SocialLogin";
 import GoogleSignIn from "../Google/GoogleSignIn";
 import Homepage from "./Homepage";
 import PasswordModal from "./PasswordModal";
-import { post, put } from "../utils/api";
+import { post } from "../utils/api";
 import { pillButton, boldSmall, red, small, hidden } from "../utils/styles";
 
 function Login(props) {
-  const context = useContext(AppContext);
   const { userData, updateUserData } = useContext(AppContext);
   const navigate = useNavigate();
   const [passModal, setpassModal] = useState(false);

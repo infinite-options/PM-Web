@@ -229,7 +229,7 @@ function ManagerManagementContract(props) {
               </h5>
               <h5 style={headings}>
                 Rental Status:{" "}
-                {property.rental_status == ""
+                {property.rental_status === ""
                   ? "Not Rented"
                   : property.rental_status}
               </h5>

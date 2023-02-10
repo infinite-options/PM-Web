@@ -44,10 +44,10 @@ function ServicesProvided(props) {
     // console.log(serviceState)
     // console.log(eventType)
     let hours = parseInt(eventType);
-    if (eventType != undefined && eventType.toLowerCase().includes("day")) {
+    if (eventType !== undefined && eventType.toLowerCase().includes("day")) {
       hours = hours * 24;
     }
-    if (serviceState == []) {
+    if (serviceState === []) {
       serviceState.forEach((service) => {
         if (service.per.toLocaleLowerCase() === "hour") {
           total = total + parseInt(service.charge) * hours;
@@ -139,7 +139,7 @@ function ServicesProvided(props) {
                 />
                 <img
                   src={DeleteIcon}
-                  alt="Delete"
+                  alt="Delete Icon"
                   className="px-1 mx-2"
                   onClick={() => deleteService(i)}
                 />
@@ -238,7 +238,7 @@ function ServicesProvided(props) {
           </Button>
         </div>
       )}
-      {serviceState.length !== 0 && businessType != "MAINTENANCE" ? (
+      {serviceState.length !== 0 && businessType !== "MAINTENANCE" ? (
         <div className="mt-4 mb-4">
           <Row>
             <div style={headings}>Event Type</div>
@@ -265,7 +265,7 @@ function ServicesProvided(props) {
           </div>
         </div>
       ) : null}
-      {serviceState.length != 0 && businessType != "MAINTENANCE" ? (
+      {serviceState.length !== 0 && businessType !== "MAINTENANCE" ? (
         <div className="mt-4 mb-4">
           <div style={headings}>Total Estimate</div>
           <div style={subText}>$ {totalEstimate}</div>

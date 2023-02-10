@@ -58,7 +58,7 @@ function QuotesAccepted(props) {
         </Row>
         <Row className="mt-2">
           <Col>
-            <img src={HighPriority} />
+            <img src={HighPriority} alt="high priority" />
           </Col>
         </Row>
         <Row className="mt-2">
@@ -122,10 +122,10 @@ function QuotesAccepted(props) {
             <div style={subText}>Property Manager</div>
           </Col>
           <Col xs={2} className="mt-1 mb-1">
-            <img src={Phone} />
+            <img src={Phone} alt="Phone" />
           </Col>
           <Col xs={2} className="mt-1 mb-1">
-            <img src={Message} />
+            <img src={Message} alt="Message" />
           </Col>
           <hr />
         </Row>

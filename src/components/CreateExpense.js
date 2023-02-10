@@ -45,7 +45,7 @@ function CreateExpense(props) {
       props.back();
     } else if (category === "Insurance") {
       let insurance =
-        property.insurance == null ? [] : JSON.parse(property.insurance);
+        property.insurance === null ? [] : JSON.parse(property.insurance);
       // console.log(insurance);
       const files = property.images;
       const newInsurance = {
@@ -68,7 +68,7 @@ function CreateExpense(props) {
       reload();
       props.back();
     } else if (category === "Tax") {
-      let taxes = property.taxes == null ? [] : JSON.parse(property.taxes);
+      let taxes = property.taxes === null ? [] : JSON.parse(property.taxes);
       // console.log(taxes);
       const files = property.images;
       const newTax = {

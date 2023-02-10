@@ -160,11 +160,11 @@ function DetailQuote(props) {
         <Row className="mt-2">
           <Col>
             {quote.priority === "Low" ? (
-              <img src={LowPriority} />
+              <img alt="low priority" src={LowPriority} />
             ) : quote.priority === "Medium" ? (
-              <img src={MediumPriority} />
+              <img alt="medium priority" src={MediumPriority} />
             ) : quote.priority === "High" ? (
-              <img src={HighPriority} />
+              <img alt="high priority" src={HighPriority} />
             ) : (
               ""
             )}
@@ -272,10 +272,10 @@ function DetailQuote(props) {
               <div style={subText}>Property Manager</div>
             </Col>
             <Col xs={2} className="mt-1 mb-1">
-              <img src={Phone} />
+              <img src={Phone} alt="Phone" />
             </Col>
             <Col xs={2} className="mt-1 mb-1">
-              <img src={Message} />
+              <img src={Message} alt="Message" />
             </Col>
             <hr />
           </Row>
@@ -325,10 +325,10 @@ function DetailQuote(props) {
             <div style={subText}>Property Manager</div>
           </Col>
           <Col xs={2} className="mt-1 mb-1">
-            <img src={Phone} />
+            <img src={Phone} alt="Phone" />
           </Col>
           <Col xs={2} className="mt-1 mb-1">
-            <img src={Message} />
+            <img src={Message} alt="Message" />
           </Col>
           <hr />
         </Row>
@@ -375,10 +375,10 @@ function DetailQuote(props) {
             <div style={subText}>Property Manager</div>
           </Col>
           <Col xs={2} className="mt-1 mb-1">
-            <img src={Phone} />
+            <img src={Phone} alt="Phone" />
           </Col>
           <Col xs={2} className="mt-1 mb-1">
-            <img src={Message} />
+            <img src={Message} alt="Message" />
           </Col>
           <hr />
         </Row>

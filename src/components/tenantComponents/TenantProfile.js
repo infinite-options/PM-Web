@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Container,
   Row,
   Col,
   Form,
@@ -17,16 +16,13 @@ import TenantFooter from "./TenantFooter";
 import DocumentsUploadPut from "../DocumentsUploadPut";
 import Check from "../../icons/Check.svg";
 import AddIcon from "../../icons/AddIcon.svg";
-import EditIcon from "../../icons/EditIcon.svg";
 import DeleteIcon from "../../icons/DeleteIcon.svg";
 import File from "../../icons/File.svg";
 import { get, put, post } from "../../utils/api";
 import {
   squareForm,
-  smallPillButton,
   small,
   underline,
-  mediumBold,
   headings,
   gray,
   subHeading,
@@ -40,7 +36,7 @@ function TenantProfile(props) {
   // console.log("in tenant profile");
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
-  const { access_token, user } = userData;
+  const { user } = userData;
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [expandFrequency, setExpandFrequency] = useState(false);
@@ -185,7 +181,7 @@ function TenantProfile(props) {
       setFiles(JSON.parse(response.result[0].documents));
       currentAddressState[1](currentAddress);
       setSelectedState(currentAddress.state);
-      if (response.result[0].tenant_previous_address != null) {
+      if (response.result[0].tenant_previous_address !== null) {
         const prevAddress = JSON.parse(
           response.result[0].tenant_previous_address
         );
@@ -472,6 +468,7 @@ function TenantProfile(props) {
         >
           <img
             src={DeleteIcon}
+            alt="Delete Icon"
             onClick={() => handleRemoveAdults(idx)}
             style={{
               width: "15px",
@@ -542,6 +539,7 @@ function TenantProfile(props) {
         >
           <img
             src={DeleteIcon}
+            alt="Delete Icon"
             onClick={() => handleRemoveChildren(idx)}
             style={{
               width: "15px",
@@ -622,6 +620,7 @@ function TenantProfile(props) {
         >
           <img
             src={DeleteIcon}
+            alt="Delete Icon"
             onClick={() => handleRemovePets(idx)}
             style={{
               width: "15px",
@@ -711,6 +710,7 @@ function TenantProfile(props) {
         >
           <img
             src={DeleteIcon}
+            alt="Delete Icon"
             onClick={() => handleRemoveVehicles(idx)}
             style={{
               width: "15px",
@@ -807,6 +807,7 @@ function TenantProfile(props) {
         >
           <img
             src={DeleteIcon}
+            alt="Delete Icon"
             onClick={() => handleRemoveReferences(idx)}
             style={{
               width: "15px",
@@ -1350,6 +1351,7 @@ function TenantProfile(props) {
                   <Col className="mx-2 my-3">
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={handleAddAdults}
                       style={{
                         width: "15px",
@@ -1372,6 +1374,7 @@ function TenantProfile(props) {
                   <Col className="mx-2 my-3">
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={handleAddChildren}
                       style={{
                         width: "15px",
@@ -1395,6 +1398,7 @@ function TenantProfile(props) {
                   <Col className="mx-2 my-3">
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={handleAddPets}
                       style={{
                         width: "15px",
@@ -1422,6 +1426,7 @@ function TenantProfile(props) {
                   <Col className="mx-2 my-3">
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={handleAddVehicles}
                       style={{
                         width: "15px",
@@ -1448,6 +1453,7 @@ function TenantProfile(props) {
                   <Col className="mx-2 my-3">
                     <img
                       src={AddIcon}
+                      alt="Add Icon"
                       onClick={handleAddReferences}
                       style={{
                         width: "15px",
@@ -1677,9 +1683,10 @@ function TenantProfile(props) {
                         </p>
                       </div>
                       <div>
-                        <a href={file.link} target="_blank">
+                        <a href={file.link} target="_blank" rel="noreferrer">
                           <img
                             src={File}
+                            alt="open document"
                             style={{
                               width: "30px",
                               height: "30px",

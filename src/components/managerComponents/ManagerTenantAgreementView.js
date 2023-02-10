@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableRow,
@@ -37,6 +38,7 @@ const useStyles = makeStyles({
   },
 });
 function ManagerTenantAgreementView(props) {
+  const navigate = useNavigate();
   const classes = useStyles();
   const {
     property,
@@ -63,7 +65,8 @@ function ManagerTenantAgreementView(props) {
   const [effectiveDate, setEffectiveDate] = useState("");
   const [message, setMessage] = useState("");
   const [tenantEndEarly, setTenantEndEarly] = useState(false);
-
+  const [tenantExtendLease, setTenantExtendLease] = useState(false);
+  const [pmExtendLease, setPmExtendLease] = useState(false);
   const [pmEndEarly, setPmEndEarly] = useState(false);
   const [agreement, setAgreement] = useState([]);
   const [selectedTenant, setSelectedTenant] = useState("");
@@ -133,11 +136,23 @@ function ManagerTenantAgreementView(props) {
     if (app.length > 0) {
       setTenantEndEarly(true);
     }
+    let appEL = property.applications.filter(
+      (a) => a.application_status === "TENANT LEASE EXTENSION"
+    );
+    if (appEL.length > 0) {
+      setTenantExtendLease(true);
+    }
     let appPM = property.applications.filter(
       (a) => a.application_status === "PM END EARLY"
     );
     if (appPM.length > 0) {
       setPmEndEarly(true);
+    }
+    let appPMEL = property.applications.filter(
+      (a) => a.application_status === "LEASE EXTENSION"
+    );
+    if (appPMEL.length > 0) {
+      setPmExtendLease(true);
     }
   };
   useEffect(() => {
@@ -154,14 +169,12 @@ function ManagerTenantAgreementView(props) {
       ""
     );
 
-  const renewLeaseAgreement = async () => {};
-
   const terminateLeaseAgreement = async () => {
     if (lastDate === "") {
       setErrorMessage("Please select a last date");
       return;
     }
-
+    setShowSpinner(true);
     const request_body = {
       application_status: "PM END EARLY",
       property_uid: property.property_uid,
@@ -178,7 +191,7 @@ function ManagerTenantAgreementView(props) {
       receiver: [agreement.tenant_id],
       receiver_properties: [property.property_uid],
     };
-    // setShowSpinner(true);
+
     const responseAnnouncement = await post("/announcement", new_announcement);
     const send_announcement = {
       announcement_msg: new_announcement.announcement_msg,
@@ -191,12 +204,14 @@ function ManagerTenantAgreementView(props) {
       "/SendAnnouncement",
       send_announcement
     );
+    setShowSpinner(false);
     setPmEndEarly(true);
     setTerminateLease(false);
     closeAgreement();
   };
 
   const endEarlyRequestResponse = async (end_early) => {
+    setShowSpinner(true);
     let request_body = {
       application_status: "",
       property_uid: property.property_uid,
@@ -210,11 +225,6 @@ function ManagerTenantAgreementView(props) {
       );
       request_body.application_uid =
         apps.length > 0 ? apps[0].application_uid : null;
-    } else {
-      request_body.application_status = "REFUSED";
-    }
-    const response = await put("/endEarly", request_body);
-    if (request_body.application_status == "PM ENDED") {
       const newMessage = {
         sender_name: property.managerInfo.manager_business_name,
         sender_email: property.managerInfo.manager_email,
@@ -230,7 +240,10 @@ function ManagerTenantAgreementView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+      setShowSpinner(false);
+      navigate("../manager");
     } else {
+      request_body.application_status = "REFUSED";
       const newMessage = {
         sender_name: property.managerInfo.manager_business_name,
         sender_email: property.managerInfo.manager_email,
@@ -245,12 +258,14 @@ function ManagerTenantAgreementView(props) {
       };
       // console.log(newMessage);
       const responseMsg = await post("/message", newMessage);
+      setTenantEndEarly(false);
+      setShowSpinner(false);
+      closeAgreement();
     }
-
-    closeAgreement();
   };
 
   const endEarlyWithdraw = async () => {
+    setShowSpinner(true);
     let request_body = {
       application_status: "RENTED",
       property_uid: property.property_uid,
@@ -274,20 +289,47 @@ function ManagerTenantAgreementView(props) {
     };
     // console.log(newMessage);
     const responseMsg = await post("/message", newMessage);
+    setShowSpinner(false);
     setTerminateLease(false);
     setPmEndEarly(false);
+  };
+
+  const rejectExtension = async () => {
+    setShowSpinner(true);
+    let request_body = {
+      application_status: "REFUSED",
+      property_uid: property.property_uid,
+    };
+
+    const response = await put("/extendLease", request_body);
+    const newMessage = {
+      sender_name: property.managerInfo.manager_business_name,
+      sender_email: property.managerInfo.manager_email,
+      sender_phone: property.managerInfo.manager_phone_number,
+      message_subject: "Extend Lease Request Declined",
+      message_details: "Property Manager has refused to extend the lease",
+      message_created_by: property.managerInfo.manager_id,
+      user_messaged: property.rentalInfo[0].tenant_id,
+      message_status: "PENDING",
+      receiver_email: property.rentalInfo[0].tenant_email,
+    };
+    // console.log(newMessage);
+    const responseMsg = await post("/message", newMessage);
+    setTenantExtendLease(false);
+    setShowSpinner(false);
+    closeAgreement();
   };
 
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
-    if (j == 1 && k != 11) {
+    if (j === 1 && k !== 11) {
       return i + "st";
     }
-    if (j == 2 && k != 12) {
+    if (j === 2 && k !== 12) {
       return i + "nd";
     }
-    if (j == 3 && k != 13) {
+    if (j === 3 && k !== 13) {
       return i + "rd";
     }
     return i + "th";
@@ -326,7 +368,7 @@ function ManagerTenantAgreementView(props) {
           />
           {/* {console.log(agreement)} */}
           <Row>
-            {agreement != null ? (
+            {agreement !== null ? (
               <Row className="m-3">
                 <Col>
                   <h3>Tenant Info</h3>
@@ -337,7 +379,7 @@ function ManagerTenantAgreementView(props) {
                   <Col xs={2}>
                     <img
                       src={EditIconNew}
-                      alt="Edit"
+                      alt="Edit Icon"
                       style={{
                         width: "30px",
                         height: "30px",
@@ -511,7 +553,7 @@ function ManagerTenantAgreementView(props) {
                         {`${fee.available_topay} days before`}
                       </TableCell>
                       <TableCell>
-                        {fee.due_by == ""
+                        {fee.due_by === ""
                           ? `1st of the month`
                           : `${ordinal_suffix_of(fee.due_by)} of the month`}
                       </TableCell>
@@ -580,24 +622,104 @@ function ManagerTenantAgreementView(props) {
               id={agreement.rental_uid}
             />
           </Row>
-
+          {pmExtendLease ? (
+            <div className="my-4">
+              <h5 style={mediumBold}>You requested to extend the lease</h5>
+              {property.management_status === "ACCEPTED" ||
+              property.management_status === "OWNER END EARLY" ||
+              property.management_status === "PM END EARLY" ? (
+                <Row
+                  className="pt-4 my-4"
+                  hidden={agreement === null || tenantEndEarly || pmEndEarly}
+                >
+                  <Col className="d-flex flex-row justify-content-evenly">
+                    <Button
+                      style={redPillButton}
+                      variant="outline-primary"
+                      onClick={() => {
+                        rejectExtension();
+                        // setTenantEndEarly(false);
+                      }}
+                    >
+                      Withdraw Request
+                    </Button>
+                  </Col>
+                </Row>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            ""
+          )}
+          {tenantExtendLease ? (
+            <div className="my-4">
+              <h5 style={mediumBold}>Tenant Requests to extend the lease</h5>
+              {property.management_status === "ACCEPTED" ||
+              property.management_status === "OWNER END EARLY" ||
+              property.management_status === "PM END EARLY" ? (
+                <Row
+                  className="pt-4 my-4"
+                  hidden={agreement === null || tenantEndEarly || pmEndEarly}
+                >
+                  <Col className="d-flex flex-row justify-content-evenly">
+                    <Button
+                      style={bluePillButton}
+                      variant="outline-primary"
+                      onClick={() => renewLease(agreement)}
+                    >
+                      Renew Lease
+                    </Button>
+                  </Col>
+                  <Col className="d-flex flex-row justify-content-evenly">
+                    <Button
+                      style={redPillButton}
+                      variant="outline-primary"
+                      onClick={() => {
+                        rejectExtension();
+                        // setTenantEndEarly(false);
+                      }}
+                    >
+                      Reject Request
+                    </Button>
+                  </Col>
+                </Row>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            ""
+          )}
           {property.management_status === "ACCEPTED" ||
           property.management_status === "OWNER END EARLY" ||
           property.management_status === "PM END EARLY" ? (
-            <Row
-              className="pt-4 my-4"
-              hidden={agreement === null || tenantEndEarly || pmEndEarly}
-            >
-              <Col className="d-flex flex-row justify-content-evenly">
-                <Button
-                  style={bluePillButton}
-                  variant="outline-primary"
-                  onClick={() => renewLease(agreement)}
-                >
-                  Renew Lease
-                </Button>
-              </Col>
-            </Row>
+            Math.floor(
+              (new Date(agreement.lease_end).getTime() - new Date().getTime()) /
+                (1000 * 60 * 60 * 24)
+            ) < 60 ? (
+              <Row
+                className="pt-4 my-4"
+                hidden={
+                  agreement === null ||
+                  tenantEndEarly ||
+                  pmEndEarly ||
+                  tenantExtendLease
+                }
+              >
+                <Col className="d-flex flex-row justify-content-evenly">
+                  <Button
+                    style={bluePillButton}
+                    variant="outline-primary"
+                    onClick={() => renewLease(agreement)}
+                  >
+                    Renew Lease
+                  </Button>
+                </Col>
+              </Row>
+            ) : (
+              ""
+            )
           ) : (
             ""
           )}
@@ -691,7 +813,10 @@ function ManagerTenantAgreementView(props) {
                   <Button
                     style={redPillButton}
                     variant="outline-primary"
-                    onClick={() => endEarlyRequestResponse(false)}
+                    onClick={() => {
+                      endEarlyRequestResponse(false);
+                      // setTenantEndEarly(false);
+                    }}
                   >
                     Reject request
                   </Button>
@@ -729,6 +854,13 @@ function ManagerTenantAgreementView(props) {
                   </Button>
                 </Col>
               </Row>
+            </div>
+          ) : (
+            ""
+          )}
+          {showSpinner ? (
+            <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+              <ReactBootStrap.Spinner animation="border" role="status" />
             </div>
           ) : (
             ""

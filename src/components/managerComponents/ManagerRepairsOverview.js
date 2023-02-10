@@ -339,6 +339,7 @@ function ManagerRepairsOverview(props) {
             <Col>
               <img
                 src={AddIcon}
+                alt="Add Icon"
                 onClick={() => {
                   setStage("ADDREQUEST");
                 }}

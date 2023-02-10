@@ -74,7 +74,7 @@ function ManagerTenantRentPayments(props) {
         available_topay: available,
         // due_by: startDate,
         due_by:
-          startDate && startDate.split("-")[2].charAt(0) == "0"
+          startDate && startDate.split("-")[2].charAt(0) === "0"
             ? startDate.split("-")[2].charAt(1)
             : startDate.split("-")[2],
         late_by: lateAfter,
@@ -110,7 +110,7 @@ function ManagerTenantRentPayments(props) {
         available_topay: available,
         // due_by: startDate,
         due_by:
-          startDate && startDate.split("-")[2].charAt(0) == "0"
+          startDate && startDate.split("-")[2].charAt(0) === "0"
             ? startDate.split("-")[2].charAt(1)
             : startDate.split("-")[2],
         late_by: lateAfter,
@@ -200,13 +200,13 @@ function ManagerTenantRentPayments(props) {
   function ordinal_suffix_of(i) {
     var j = i % 10,
       k = i % 100;
-    if (j == 1 && k != 11) {
+    if (j === 1 && k !== 11) {
       return i + "st";
     }
-    if (j == 2 && k != 12) {
+    if (j === 2 && k !== 12) {
       return i + "nd";
     }
-    if (j == 3 && k != 13) {
+    if (j === 3 && k !== 13) {
       return i + "rd";
     }
     return i + "th";
@@ -246,12 +246,12 @@ function ManagerTenantRentPayments(props) {
               <TableCell>{fee.frequency}</TableCell>
               <TableCell>{`${fee.available_topay} days before`}</TableCell>
               <TableCell>
-                {/* {fee.due_by == ""
+                {/* {fee.due_by === ""
                   ? `1st of the month`
-                  : fee.frequency == "One-time"
+                  : fee.frequency === "One-time"
                   ? `${fee.due_by}`
                   : `${ordinal_suffix_of(fee.due_by)} of the month`} */}
-                {fee.due_by == ""
+                {fee.due_by === ""
                   ? `1st of the month`
                   : `${ordinal_suffix_of(fee.due_by)} of the month`}
               </TableCell>
@@ -268,7 +268,7 @@ function ManagerTenantRentPayments(props) {
                 />
                 <img
                   src={DeleteIcon}
-                  alt="Delete"
+                  alt="Delete Icon"
                   className="px-1 mx-2"
                   onClick={() => deleteFee(i)}
                 />
@@ -528,7 +528,7 @@ function ManagerTenantRentPayments(props) {
                     onChange={(e) => {
                       const changedFee = { ...newFee };
                       changedFee["due_by"] =
-                        e.target.value.split("-")[2].charAt(0) == "0"
+                        e.target.value.split("-")[2].charAt(0) === "0"
                           ? e.target.value.split("-")[2].charAt(1)
                           : e.target.value.split("-")[2];
                       // changedFee["due_by"] = e.target.value;

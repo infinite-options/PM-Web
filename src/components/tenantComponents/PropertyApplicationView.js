@@ -203,7 +203,7 @@ function PropertyApplicationView(props) {
               </p>
             </div>
           )}
-          <div className="m-0 p-0">
+          <div className="m-0 p-0" style={{ maxWidth: "100%" }}>
             {property && JSON.parse(property.images).length > 0 ? (
               <Row className=" d-flex align-items-center justify-content-center m-3">
                 <Carousel
@@ -236,14 +236,14 @@ function PropertyApplicationView(props) {
 
           {property ? (
             <div
-              className="mx-3 my-3 p-2"
+              className="mx-3 my-3 p-2 "
               style={{
                 background: "#E9E9E9 0% 0% no-repeat padding-box",
                 borderRadius: "10px",
                 opacity: 1,
               }}
             >
-              <Row className="m-3">
+              <Row className="m-3 ">
                 <Col>
                   <h3>Property Summary</h3>
                 </Col>
@@ -366,7 +366,7 @@ function PropertyApplicationView(props) {
                     {appliances.map((appliance, i) => {
                       return applianceState[0][appliance]["available"] ==
                         true ||
-                        applianceState[0][appliance]["available"] == "True" ? (
+                        applianceState[0][appliance]["available"] === "True" ? (
                         <TableRow>
                           <TableCell>{appliance}</TableCell>
                           <TableCell>
@@ -434,7 +434,7 @@ function PropertyApplicationView(props) {
                   <TableRow>
                     <TableCell>Pets Allowed</TableCell>
                     <TableCell>
-                      {property.pets_allowed == 0 ? "No" : "Yes"}
+                      {property.pets_allowed === 0 ? "No" : "Yes"}
                     </TableCell>
                   </TableRow>
 
@@ -443,7 +443,7 @@ function PropertyApplicationView(props) {
                       Deposit can be used for last month's rent
                     </TableCell>
                     <TableCell>
-                      {property.deposit_for_rent == 0 ? "No" : "Yes"}
+                      {property.deposit_for_rent === 0 ? "No" : "Yes"}
                     </TableCell>
                   </TableRow>
                 </Table>

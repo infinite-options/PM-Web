@@ -225,7 +225,11 @@ function PaymentPage(props) {
                 </Form.Group>
                 <Row className="text-center mt-5">
                   <Col>
-                    <a href="https://www.bankofamerica.com" target="_blank">
+                    <a
+                      href="https://www.bankofamerica.com"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       <img
                         onClick={() => {
                           setBankPayment(true);
@@ -241,7 +245,11 @@ function PaymentPage(props) {
                     </a>
                   </Col>
                   <Col>
-                    <a href="https://www.chase.com" target="_blank">
+                    <a
+                      href="https://www.chase.com"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       <img
                         onClick={() => {
                           setBankPayment(true);
@@ -260,6 +268,7 @@ function PaymentPage(props) {
                     <a
                       href="https://www.citi.com/login?deepdrop=true&checkAuth=Y"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       <img
                         onClick={() => {
@@ -276,7 +285,11 @@ function PaymentPage(props) {
                     </a>
                   </Col>
                   <Col>
-                    <a href="https://www.wellsfargo.com" target="_blank">
+                    <a
+                      href="https://www.wellsfargo.com"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       <img
                         onClick={() => {
                           setBankPayment(true);

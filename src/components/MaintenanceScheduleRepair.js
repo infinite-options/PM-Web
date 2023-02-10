@@ -482,7 +482,7 @@ function MaintenanceScheduleRepair(props) {
   }
 
   function formatTime(date, time) {
-    if (time == null) {
+    if (time === null) {
       return "?";
     } else {
       var newDate = new Date((date + "T" + time).replace(/\s/, "T"));
@@ -756,6 +756,7 @@ function MaintenanceScheduleRepair(props) {
                 (window.location.href = `tel:${quotes.property_manager[0].manager_phone_number}`)
               }
               src={Phone}
+              alt="Phone"
             />
           </Col>
           <Col xs={2} className="mt-1 mb-1">
@@ -764,6 +765,7 @@ function MaintenanceScheduleRepair(props) {
                 (window.location.href = `mailto:${quotes.property_manager[0].manager_email}`)
               }
               src={Message}
+              alt="Message"
             />
           </Col>
         </Row>

@@ -188,11 +188,11 @@ function PropertyManagerDocs(props) {
         <Col>
           <h3>Property Owner Agreement</h3>
         </Col>
-        {activeContract != null ? (
+        {activeContract !== null ? (
           <Col xs={2}>
             <img
               src={EditIconNew}
-              alt="Edit"
+              alt="Edit Icon"
               style={{
                 width: "30px",
                 height: "30px",
@@ -384,9 +384,10 @@ function PropertyManagerDocs(props) {
                       <TableRow>
                         <TableCell>{file.description}</TableCell>
                         <TableCell>
-                          <a href={file.link} target="_blank">
+                          <a href={file.link} target="_blank" rel="noreferrer">
                             <img
                               src={File}
+                              alt="open document"
                               style={{
                                 width: "15px",
                                 height: "15px",
@@ -403,10 +404,8 @@ function PropertyManagerDocs(props) {
           )}
         </Row>
       ) : (
-        <div>
-          <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
-            <ReactBootStrap.Spinner animation="border" role="status" />
-          </div>
+        <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
+          <ReactBootStrap.Spinner animation="border" role="status" />
         </div>
       )}
 

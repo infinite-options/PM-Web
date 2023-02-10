@@ -403,6 +403,7 @@ function OwnerRepairList(props) {
               <Col>
                 <img
                   src={AddIcon}
+                  alt="Add Icon"
                   onClick={() => {
                     setStage("ADDREQUEST");
                   }}
@@ -562,7 +563,7 @@ function OwnerRepairList(props) {
                                 size="small"
                                 align="center"
                               >
-                                {repair.assigned_business != null
+                                {repair.assigned_business !== null
                                   ? repair.assigned_business
                                   : "None"}
                               </TableCell>

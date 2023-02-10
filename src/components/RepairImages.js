@@ -83,7 +83,7 @@ function RepairImages(props) {
               />
               <img
                 src={DeleteIcon}
-                alt="Delete"
+                alt="Delete Icon"
                 onClick={() => deleteImage(file)}
                 style={{ position: "absolute", left: "5px", top: "5px" }}
               />
@@ -109,7 +109,7 @@ function RepairImages(props) {
             style={tileImg}
             className="d-flex justify-content-center align-items-center"
           >
-            <img src={Plus} />
+            <img src={Plus} alt="plus" />
           </label>
         </div>
         <div className="text-center" style={errorMessage === "" ? hidden : {}}>

@@ -61,7 +61,7 @@ export default function PropertyCard(props) {
           className="card-img"
           src={props.part !== 2 ? props.imgSrc[0] : props.imgSrc[0]}
         ></img>
-        {props.part == 2 && (
+        {props.part === 2 && (
           <div className="contacts m-2">
             <div>
               {/* {console.log("im trying to print an apply button")} */}
@@ -82,6 +82,7 @@ export default function PropertyCard(props) {
                 //     (window.location.href = `tel:${property.manager_phone_number}`)
                 //     }
                 src={Phone}
+                alt="Phone"
                 style={{ marginRight: "10px" }}
               />
               <div className="mask flex-center">
@@ -99,6 +100,7 @@ export default function PropertyCard(props) {
                 //     (window.location.href = `mailto:${property.manager_email}`)
                 //     }
                 src={Message}
+                alt="Message"
                 style={{ marginRight: "10px" }}
               />
               <div className="mask flex-center">

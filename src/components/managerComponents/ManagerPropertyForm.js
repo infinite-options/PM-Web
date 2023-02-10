@@ -234,11 +234,12 @@ function ManagerPropertyForm(props) {
       deposit: deposit,
       appliances: JSON.stringify(applianceState[0]),
       utilities: JSON.stringify(utilityState[0]),
-      pets_allowed: petsAllowed == true || petsAllowed == 1 ? "true" : "false",
+      pets_allowed:
+        petsAllowed === true || petsAllowed === 1 ? "true" : "false",
       deposit_for_rent:
-        depositForRent == true || depositForRent == 1 ? "true" : "false",
+        depositForRent === true || depositForRent === 1 ? "true" : "false",
       available_to_rent:
-        availableToRent == true || availableToRent == 1 ? "true" : "false",
+        availableToRent === true || availableToRent === 1 ? "true" : "false",
       featured: featured,
     };
     const files = imageState[0];
@@ -284,11 +285,11 @@ function ManagerPropertyForm(props) {
         appliances: JSON.stringify(applianceState[0]),
         utilities: JSON.stringify(utilityState[0]),
         pets_allowed:
-          petsAllowed == true || petsAllowed == 1 ? "true" : "false",
+          petsAllowed === true || petsAllowed === 1 ? "true" : "false",
         deposit_for_rent:
-          depositForRent == true || depositForRent == 1 ? "true" : "false",
+          depositForRent === true || depositForRent === 1 ? "true" : "false",
         available_to_rent:
-          availableToRent == true || availableToRent == 1 ? "true" : "false",
+          availableToRent === true || availableToRent === 1 ? "true" : "false",
         featured: featured,
       };
       const files = imageState[0];
@@ -654,6 +655,7 @@ function ManagerPropertyForm(props) {
           <Col>
             <img
               src={EditIconNew}
+              alt="Edit Icon"
               onClick={() => {
                 window.scrollTo(0, 0);
                 setEditAppliances(true);
@@ -691,8 +693,8 @@ function ManagerPropertyForm(props) {
               </TableHead>
               <TableBody>
                 {appliances.map((appliance, i) => {
-                  return applianceState[0][appliance]["available"] == true ||
-                    applianceState[0][appliance]["available"] == "True" ? (
+                  return applianceState[0][appliance]["available"] === true ||
+                    applianceState[0][appliance]["available"] === "True" ? (
                     <TableRow>
                       <TableCell>{appliance}</TableCell>
                       <TableCell>
@@ -786,7 +788,7 @@ function ManagerPropertyForm(props) {
               onChange={
                 edit
                   ? (e) => {
-                      petsAllowed == 1
+                      petsAllowed === 1
                         ? setPetsAllowed(false)
                         : setPetsAllowed(true);
                     }
@@ -810,7 +812,7 @@ function ManagerPropertyForm(props) {
               onChange={
                 edit
                   ? (e) => {
-                      depositForRent == 1
+                      depositForRent === 1
                         ? setDepositForRent(false)
                         : setDepositForRent(true);
                     }
@@ -836,7 +838,7 @@ function ManagerPropertyForm(props) {
               onChange={
                 edit
                   ? (e) => {
-                      availableToRent == 1
+                      availableToRent === 1
                         ? setAvailableToRent(false)
                         : setAvailableToRent(true);
                     }
@@ -858,7 +860,7 @@ function ManagerPropertyForm(props) {
           <Col className="d-flex">
             <p>No</p>
             <Switch
-              checked={featured == true || featured == "True"}
+              checked={featured === true || featured === "True"}
               onChange={(event) => setFeatured(event.target.checked)}
               inputProps={{ "aria-label": "controlled" }}
             />{" "}

@@ -177,8 +177,8 @@ function ManagementContract(props) {
                   </p>
                 </div>
 
-                <a href={file.link} target="_blank">
-                  <img src={File} />
+                <a href={file.link} target="_blank" rel="noreferrer">
+                  <img src={File} alt="open document" />
                 </a>
               </div>
               <hr style={{ opacity: 1 }} />
@@ -186,7 +186,7 @@ function ManagementContract(props) {
           ))}
         </Row>
 
-        {property.property_manager.length == 0 ? (
+        {property.property_manager.length === 0 ? (
           ""
         ) : property.property_manager.length > 1 ? (
           property.property_manager.map((p, i) =>

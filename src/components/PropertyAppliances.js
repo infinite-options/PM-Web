@@ -220,25 +220,25 @@ function PropertyAppliances(props) {
     newApplianceState[newAppliance] = {};
     newApplianceState[newAppliance]["available"] = "True";
     newApplianceState[newAppliance]["model_num"] =
-      applianceModelNum == null ? "" : applianceModelNum;
+      applianceModelNum === null ? "" : applianceModelNum;
     newApplianceState[newAppliance]["name"] =
-      applianceName == null ? "" : applianceName;
+      applianceName === null ? "" : applianceName;
     newApplianceState[newAppliance]["purchased"] =
-      appliancePurchasedOn == null ? "" : appliancePurchasedOn;
+      appliancePurchasedOn === null ? "" : appliancePurchasedOn;
     newApplianceState[newAppliance]["purchased_from"] =
-      appliancePurchasedFrom == null ? "" : appliancePurchasedFrom;
+      appliancePurchasedFrom === null ? "" : appliancePurchasedFrom;
     newApplianceState[newAppliance]["purchased_order"] =
-      appliancePurchasesOrderNumber == null
+      appliancePurchasesOrderNumber === null
         ? ""
         : appliancePurchasesOrderNumber;
     newApplianceState[newAppliance]["installed"] =
-      applianceInstalledOn == null ? "" : applianceInstalledOn;
+      applianceInstalledOn === null ? "" : applianceInstalledOn;
     newApplianceState[newAppliance]["serial_num"] =
-      applianceSerialNum == null ? "" : applianceSerialNum;
+      applianceSerialNum === null ? "" : applianceSerialNum;
     newApplianceState[newAppliance]["warranty_info"] =
-      applianceWarrantyInfo == null ? "" : applianceWarrantyInfo;
+      applianceWarrantyInfo === null ? "" : applianceWarrantyInfo;
     newApplianceState[newAppliance]["warranty_till"] =
-      applianceWarrantyTill == null ? "" : applianceWarrantyTill;
+      applianceWarrantyTill === null ? "" : applianceWarrantyTill;
     setApplianceState(newApplianceState);
     if (property) {
       let newProperty = {
@@ -309,7 +309,7 @@ function PropertyAppliances(props) {
         {/* <Col>
           {newAppliance === null && edit ? (
             <img
-              src={AddIcon}
+              src={AddIcon} alt="Add Icon"
               onClick={() => setNewAppliance("")}
               style={{
                 width: "15px",
@@ -344,7 +344,7 @@ function PropertyAppliances(props) {
               <TableCell>Warranty Info</TableCell>
               <TableCell>Images</TableCell>
               <TableCell></TableCell>
-              {addApplianceInfo == true && showDetails == true ? (
+              {addApplianceInfo === true && showDetails === true ? (
                 <TableCell></TableCell>
               ) : (
                 ""
@@ -377,11 +377,11 @@ function PropertyAppliances(props) {
                     {appliance}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         {" "}
                         <Form.Control
@@ -399,11 +399,11 @@ function PropertyAppliances(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         {" "}
                         <Form.Control
@@ -423,11 +423,11 @@ function PropertyAppliances(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         {" "}
                         <Form.Control
@@ -447,11 +447,11 @@ function PropertyAppliances(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         {" "}
                         <Form.Control
@@ -471,11 +471,11 @@ function PropertyAppliances(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         <Form.Control
                           style={squareForm}
@@ -494,11 +494,11 @@ function PropertyAppliances(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         <Form.Control
                           style={squareForm}
@@ -517,11 +517,11 @@ function PropertyAppliances(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         <Form.Control
                           style={squareForm}
@@ -538,11 +538,11 @@ function PropertyAppliances(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         <Form.Control
                           style={squareForm}
@@ -561,11 +561,11 @@ function PropertyAppliances(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {addApplianceInfo == true &&
-                    showDetails == true &&
-                    (applianceState[appliance]["available"] == true ||
-                      applianceState[appliance]["available"] == "True") &&
-                    applianceType == appliance ? (
+                    {addApplianceInfo === true &&
+                    showDetails === true &&
+                    (applianceState[appliance]["available"] === true ||
+                      applianceState[appliance]["available"] === "True") &&
+                    applianceType === appliance ? (
                       <div>
                         <Form.Control
                           style={squareForm}
@@ -583,11 +583,11 @@ function PropertyAppliances(props) {
                       <div>{applianceState[appliance]["warranty_info"]}</div>
                     )}
                   </TableCell>
-                  {addApplianceInfo == true &&
-                  showDetails == true &&
-                  (applianceState[appliance]["available"] == true ||
-                    applianceState[appliance]["available"] == "True") &&
-                  applianceType == appliance ? (
+                  {addApplianceInfo === true &&
+                  showDetails === true &&
+                  (applianceState[appliance]["available"] === true ||
+                    applianceState[appliance]["available"] === "True") &&
+                  applianceType === appliance ? (
                     <TableCell>
                       {property ? <ApplianceImages state={imageState} /> : ""}
                     </TableCell>
@@ -637,11 +637,11 @@ function PropertyAppliances(props) {
                   ) : (
                     <TableCell></TableCell>
                   )}
-                  {addApplianceInfo == true &&
-                  showDetails == true &&
-                  (applianceState[appliance]["available"] == true ||
-                    applianceState[appliance]["available"] == "True") &&
-                  applianceType == appliance ? (
+                  {addApplianceInfo === true &&
+                  showDetails === true &&
+                  (applianceState[appliance]["available"] === true ||
+                    applianceState[appliance]["available"] === "True") &&
+                  applianceType === appliance ? (
                     <TableCell>
                       {showSpinner ? (
                         <div className="w-100 d-flex flex-column justify-content-center align-items-center">
@@ -674,7 +674,7 @@ function PropertyAppliances(props) {
                         </Button>
                       </div>
                     </TableCell>
-                  ) : addApplianceInfo == true && showDetails == true ? (
+                  ) : addApplianceInfo === true && showDetails === true ? (
                     <TableCell></TableCell>
                   ) : (
                     ""
@@ -861,11 +861,11 @@ function PropertyAppliances(props) {
               </Col>
             </Row>
             <Row>
-              {addApplianceInfo == true &&
-              showDetails == true &&
-              (applianceState[appliance]["available"] == true ||
-                applianceState[appliance]["available"] == "True") &&
-              applianceType == appliance ? (
+              {addApplianceInfo === true &&
+              showDetails === true &&
+              (applianceState[appliance]["available"] === true ||
+                applianceState[appliance]["available"] === "True") &&
+              applianceType === appliance ? (
                 <Row>
                   <Row className="mx-4 p-0">
                     <Col>Name</Col>
@@ -1048,6 +1048,7 @@ function PropertyAppliances(props) {
           {newAppliance === null && edit ? (
             <img
               src={AddIcon}
+              alt="Add Icon"
               onClick={() => setNewAppliance("")}
               style={{
                 width: "15px",

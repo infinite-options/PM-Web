@@ -77,7 +77,7 @@ function ManagerCreateExpense(props) {
     } else {
       management_buid = management_businesses[0].business_uid;
     }
-    let selectedProperty = sp == undefined ? properties : JSON.parse(sp);
+    let selectedProperty = sp === undefined ? properties : JSON.parse(sp);
     let today_date = new Date().toISOString().split("T")[0];
     if (addToRent) {
       setDate("0000-00-00 00:00:00");
@@ -102,8 +102,8 @@ function ManagerCreateExpense(props) {
       amount_due: amount,
       purchase_frequency: frequency,
       payment_frequency:
-        frequency == "One-time" ? "One-time" : frequencyOfPayment,
-      next_payment: frequency == "One-time" ? today_date : date,
+        frequency === "One-time" ? "One-time" : frequencyOfPayment,
+      next_payment: frequency === "One-time" ? today_date : date,
       purchase_status: payStatus,
     };
 
@@ -405,7 +405,7 @@ function ManagerCreateExpense(props) {
                 </Col>
 
                 {JSON.parse(selectedProperty) !== null &&
-                JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+                JSON.parse(selectedProperty).rentalInfo.length !== 0 ? (
                   <Col xs={4}>
                     {" "}
                     <Form.Check
@@ -483,7 +483,7 @@ function ManagerCreateExpense(props) {
                 </Col>
 
                 {JSON.parse(selectedProperty) !== null &&
-                JSON.parse(selectedProperty).rentalInfo.length != 0 ? (
+                JSON.parse(selectedProperty).rentalInfo.length !== 0 ? (
                   <Col>
                     <Form.Group className="mx-2 my-3 d-flex flex-row">
                       <Form.Control

@@ -1,23 +1,19 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Form, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import AppleLogin from "../icons/AppleLogin.svg";
-import FacebookLogin from "../icons/FacebookLogin.svg";
-import GoogleLogin from "../icons/GoogleLogin.svg";
 import { post } from "../utils/api";
 import {
   pillButton,
   boldSmall,
-  underline,
   gray,
   red,
   small,
   hidden,
 } from "../utils/styles";
-import SocialSignUp from "./SocialSignUp";
 import GoogleSignUp from "../Google/GoogleSignUp";
 
 function SignupEmailForm(props) {
@@ -49,7 +45,7 @@ function SignupEmailForm(props) {
     if (password !== confirmPassword) {
       setErrorMessage("Passwords must match");
       return;
-    } else if (password == confirmPassword) {
+    } else if (password === confirmPassword) {
       setErrorMessage("");
     }
     setShowSpinner(true);

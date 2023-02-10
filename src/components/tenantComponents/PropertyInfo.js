@@ -72,7 +72,7 @@ export default function PropertyInfo() {
   });
 
   const availUtils = util?.map((u) => {
-    if (u[1] == true) {
+    if (u[1] === true) {
       counter += 1;
       return (
         <ol>
@@ -82,7 +82,7 @@ export default function PropertyInfo() {
     }
   });
   const tenantUtils = util?.map((u) => {
-    if (u[1] == false) {
+    if (u[1] === false) {
       counter3 += 1;
       return (
         <ol>
@@ -179,6 +179,7 @@ export default function PropertyInfo() {
                         (window.location.href = `tel:${location.state.property.business_number}`)
                       }
                       src={Phone}
+                      alt="Phone"
                       style={{ marginRight: "10px" }}
                     />
                     <div className="mask flex-center">
@@ -196,6 +197,7 @@ export default function PropertyInfo() {
                         (window.location.href = `mailto:${location.state.property.business_email}`)
                       }
                       src={Message}
+                      alt="Message"
                       style={{ marginRight: "10px" }}
                     />
                     <div className="mask flex-center">
@@ -230,7 +232,7 @@ export default function PropertyInfo() {
       <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
         <TenantFooter />
       </div>
-      {type == 2 && (
+      {type === 2 && (
         <div>
           <div>
             <ReviewPropertyLease

@@ -333,6 +333,7 @@ function TenantRepairList(props) {
               <Col>
                 <img
                   src={AddIcon}
+                  alt="Add Icon"
                   onClick={() => {
                     setStage("ADDREQUEST");
                   }}

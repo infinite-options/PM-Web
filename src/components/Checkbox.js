@@ -61,9 +61,9 @@ class Checkbox extends React.Component {
           >
             <div className="h-100 w-100 d-flex justify-content-center align-items-center">
               {this.state.checked ? (
-                <img src={Checkbox_filled} alt="Check" />
+                <img src={Checkbox_filled} alt="Checkbox filled" />
               ) : (
-                <img src={Checkbox_unfilled} alt="Check" />
+                <img src={Checkbox_unfilled} alt="Check unfilled" />
               )}
             </div>
           </div>

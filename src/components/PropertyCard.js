@@ -51,7 +51,11 @@ function PropertyCard(props) {
             src={property.images[0]}
           />
         ) : (
-          <img style={{ width: "200px", height: "200px" }} src={No_Image} />
+          <img
+            style={{ width: "200px", height: "200px" }}
+            alt="No Image Uploaded"
+            src={No_Image}
+          />
         )}
       </div>
 
@@ -135,6 +139,7 @@ function PropertyCard(props) {
                 (window.location.href = `tel:${property.business_number}`)
               }
               src={Phone}
+              alt="Phone"
               style={{ marginRight: "10px" }}
             />
             <div className="mask flex-center">
@@ -149,6 +154,7 @@ function PropertyCard(props) {
                 (window.location.href = `mailto:${property.business_email}`)
               }
               src={Message}
+              alt="Message"
               style={{ marginRight: "10px" }}
             />
             <div className="mask flex-center">

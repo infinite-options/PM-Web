@@ -58,7 +58,7 @@ export default function OwnerPayments(props) {
     // console.log("payment choice called");
     let temp = paymentOptions.slice();
     for (var i = 0; i < temp.length; i++) {
-      if (i == index) {
+      if (i === index) {
         temp[index].isActive = !temp[index].isActive;
       } else {
         temp[i].isActive = false;
