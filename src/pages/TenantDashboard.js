@@ -1231,7 +1231,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h3>Find Your Next Place</h3>
+                  <h3>Manifest Your Next Place</h3>
                 </Col>
                 <Col>
                   <img
@@ -1512,7 +1512,7 @@ export default function TenantDashboard() {
             >
               <Row className="m-3">
                 <Col>
-                  <h3>Find Your Next Place</h3>
+                  <h3>Manifest Your Next Place</h3>
                 </Col>
                 <Col>
                   <img

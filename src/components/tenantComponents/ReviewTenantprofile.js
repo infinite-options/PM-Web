@@ -305,59 +305,68 @@ function ReviewTenantProfile(props) {
             }}
             //    rightFn ={() => setTab("PROFILE")}
           />
-          <Row className="m-3">
-            <h3>Tenant Profile</h3>
-          </Row>
+
           {profile ? (
             <Row className="m-3" style={{ overflow: "scroll" }}>
-              <Table
-                classes={{ root: classes.customTable }}
-                size="small"
-                responsive="md"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell> First Name</TableCell>
-                    <TableCell> Last Name</TableCell>
-                    <TableCell> Current Address</TableCell>
-                    <TableCell> Current Salary</TableCell>
-                    <TableCell> Current Job Title</TableCell>
-                    <TableCell> Current Company Name</TableCell>
-                    <TableCell> SSN</TableCell>
-                    <TableCell> Driver's Licence Number(State)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell> {user.first_name}</TableCell>
-                    <TableCell> {user.last_name}</TableCell>
-                    <TableCell>
-                      {profile.tenant_current_address.street}{" "}
-                      {profile.tenant_current_address.unit},{" "}
-                      {profile.tenant_current_address.city},{" "}
-                      {profile.tenant_current_address.state}{" "}
-                      {profile.tenant_current_address.zip}{" "}
-                    </TableCell>
-                    <TableCell>
-                      {profile.tenant_current_salary} /
-                      {profile.tenant_salary_frequency}
-                    </TableCell>
-                    <TableCell> {profile.tenant_current_job_title}</TableCell>
-                    <TableCell> {profile.tenant_current_job_company}</TableCell>
-                    <TableCell> {profile.tenant_ssn}</TableCell>
-                    <TableCell>
-                      {profile.tenant_drivers_license_number} (
-                      {profile.tenant_drivers_license_state})
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+              <div>
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <h3>Tenant Profile</h3>
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell> First Name</TableCell>
+                        <TableCell> Last Name</TableCell>
+                        <TableCell> Current Address</TableCell>
+                        <TableCell> Current Salary</TableCell>
+                        <TableCell> Current Job Title</TableCell>
+                        <TableCell> Current Company Name</TableCell>
+                        <TableCell> SSN</TableCell>
+                        <TableCell> Driver's Licence Number(State)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell> {user.first_name}</TableCell>
+                        <TableCell> {user.last_name}</TableCell>
+                        <TableCell>
+                          {profile.tenant_current_address.street}{" "}
+                          {profile.tenant_current_address.unit},{" "}
+                          {profile.tenant_current_address.city},{" "}
+                          {profile.tenant_current_address.state}{" "}
+                          {profile.tenant_current_address.zip}{" "}
+                        </TableCell>
+                        <TableCell>
+                          {profile.tenant_current_salary} /
+                          {profile.tenant_salary_frequency}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {profile.tenant_current_job_title}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {profile.tenant_current_job_company}
+                        </TableCell>
+                        <TableCell> {profile.tenant_ssn}</TableCell>
+                        <TableCell>
+                          {profile.tenant_drivers_license_number} (
+                          {profile.tenant_drivers_license_state})
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
 
               {/* ======================  <Current Address> ======================================== */}
               <div style={{ marginTop: "40px" }}>
                 {profile.tenant_current_address.pm_name ? (
                   <Row className="m-3" style={{ overflow: "scroll" }}>
-                    <h3>Current Address info</h3>
+                    <h3>Current Address</h3>
 
                     <Table
                       classes={{ root: classes.customTable }}
@@ -380,20 +389,30 @@ function ReviewTenantProfile(props) {
                         <TableRow>
                           <TableCell>
                             {" "}
-                            {profile.tenant_current_address.pm_name}
+                            {profile.tenant_current_address.pm_name == ""
+                              ? "No Info Provided"
+                              : profile.tenant_current_address.pm_name}
                           </TableCell>
                           <TableCell>
                             {" "}
-                            {profile.tenant_current_address.pm_number}
+                            {profile.tenant_current_address.pm_number == ""
+                              ? "No Info Provided"
+                              : profile.tenant_current_address.pm_number}
                           </TableCell>
                           <TableCell>
-                            {profile.tenant_current_address.lease_start}
+                            {profile.tenant_current_address.lease_start == ""
+                              ? "No Info Provided"
+                              : profile.tenant_current_address.lease_start}
                           </TableCell>
                           <TableCell>
-                            {profile.tenant_current_address.lease_end}
+                            {profile.tenant_current_address.lease_end == ""
+                              ? "No Info Provided"
+                              : profile.tenant_current_address.lease_end}
                           </TableCell>
                           <TableCell>
-                            {profile.tenant_current_address.rent}
+                            {profile.tenant_current_address.rent == ""
+                              ? "No Info Provided"
+                              : profile.tenant_current_address.rent}
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -404,59 +423,74 @@ function ReviewTenantProfile(props) {
                 )}
               </div>
               {/* =============================== <Previous Address> ==================================== */}
-              {profile.tenant_previous_address ? (
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <h3>Previous Address info</h3>
+              <div>
+                {profile.tenant_previous_address ? (
+                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <h3>Previous Address</h3>
 
-                  <Table
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                    responsive="md"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Address</TableCell>
-                        <TableCell> Name of the Property Manager</TableCell>
-                        <TableCell> Property Manager's Phone Number</TableCell>
-                        <TableCell> Lease Start Dates</TableCell>
-                        <TableCell> Lease End Dates</TableCell>
-                        <TableCell> Monthly Rent</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>
-                          {" "}
-                          {profile.tenant_previous_address.street}{" "}
-                          {profile.tenant_previous_address.unit},{" "}
-                          {profile.tenant_previous_address.city},{" "}
-                          {profile.tenant_previous_address.state}{" "}
-                          {profile.tenant_previous_address.zip}{" "}
-                        </TableCell>
-                        <TableCell>
-                          {" "}
-                          {profile.tenant_previous_address.pm_name}
-                        </TableCell>
-                        <TableCell>
-                          {" "}
-                          {profile.tenant_previous_address.pm_number}
-                        </TableCell>
-                        <TableCell>
-                          {profile.tenant_previous_address.lease_start}
-                        </TableCell>
-                        <TableCell>
-                          {profile.tenant_previous_address.lease_end}
-                        </TableCell>
-                        <TableCell>
-                          {profile.tenant_previous_address.rent}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </Row>
-              ) : (
-                ""
-              )}
+                    <Table
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                      responsive="md"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Address</TableCell>
+                          <TableCell> Name of the Property Manager</TableCell>
+                          <TableCell>
+                            {" "}
+                            Property Manager's Phone Number
+                          </TableCell>
+                          <TableCell> Lease Start Dates</TableCell>
+                          <TableCell> Lease End Dates</TableCell>
+                          <TableCell> Monthly Rent</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            {" "}
+                            {profile.tenant_previous_address.street}{" "}
+                            {profile.tenant_previous_address.unit},{" "}
+                            {profile.tenant_previous_address.city},{" "}
+                            {profile.tenant_previous_address.state}{" "}
+                            {profile.tenant_previous_address.zip}{" "}
+                          </TableCell>
+                          <TableCell>
+                            {" "}
+                            {profile.tenant_previous_address.pm_name == ""
+                              ? "No Info Provided"
+                              : profile.tenant_previous_address.pm_name}
+                          </TableCell>
+                          <TableCell>
+                            {" "}
+                            {profile.tenant_previous_address.pm_number == ""
+                              ? "No Info Provided"
+                              : profile.tenant_previous_address.pm_number}
+                          </TableCell>
+                          <TableCell>
+                            {profile.tenant_previous_address.lease_start == ""
+                              ? "No Info Provided"
+                              : profile.tenant_previous_address.lease_start}
+                          </TableCell>
+                          <TableCell>
+                            {profile.tenant_previous_address.lease_end == ""
+                              ? "No Info Provided"
+                              : profile.tenant_previous_address.lease_end}
+                          </TableCell>
+                          <TableCell>
+                            {profile.tenant_previous_address.rent == ""
+                              ? "No Info Provided"
+                              : profile.tenant_previous_address.rent}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Row>
+                ) : (
+                  ""
+                )}
+              </div>
             </Row>
           ) : (
             ""

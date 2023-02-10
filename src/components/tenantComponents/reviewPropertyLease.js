@@ -166,11 +166,7 @@ function ReviewPropertyLease(props) {
           application_status: "RENTED",
           property_uid: property_uid,
         };
-        const response2 = await put(
-          "/applications",
-          updatedApplication,
-          access_token
-        );
+        const response2 = await put("/applications", updatedApplication, null);
         navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "ACTIVE")) {
         const updateLease = {
@@ -263,11 +259,7 @@ function ReviewPropertyLease(props) {
       application_status: "REFUSED",
       property_uid: property_uid,
     };
-    const response2 = await put(
-      "/applications",
-      updatedApplication,
-      access_token
-    );
+    const response2 = await put("/applications", updatedApplication, null);
     navigate("/tenant");
   };
 

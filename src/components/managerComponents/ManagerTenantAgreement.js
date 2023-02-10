@@ -945,7 +945,7 @@ function ManagerTenantAgreement(props) {
               <Col>
                 <Form.Group>
                   <Form.Label as="h6" className="mb-0 ms-2">
-                    Effective Date
+                    Effective Date {effectiveDate === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
                     type="date"

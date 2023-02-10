@@ -142,7 +142,7 @@ function TenantProfileInfo(props) {
           />
         </Col>
         <Col>
-          <label htmlFor="numAdults">Date of Birth (Mon/Date/Year)</label>
+          <label htmlFor="numAdults">Date of Birth (MM/DD/YYYY)</label>
           <input
             type="date"
             className="form-control"
@@ -213,7 +213,7 @@ function TenantProfileInfo(props) {
           />
         </Col>
         <Col>
-          <label htmlFor="numChildren">Date of Birth (Mon/Date/Year)</label>
+          <label htmlFor="numChildren">Date of Birth (MM/DD/YYYY)</label>
           <input
             type="date"
             className="form-control"

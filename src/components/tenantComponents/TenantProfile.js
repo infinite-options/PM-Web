@@ -39,6 +39,7 @@ function TenantProfile(props) {
   const { user } = userData;
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [diff, setDiff] = useState(null);
   const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -195,7 +196,7 @@ function TenantProfile(props) {
       }
     } else {
       // console.log("Profile Incomplete");
-      //  setEditProfile(true);
+      setEditProfile(true);
       setFirstName(user.first_name);
       setLastName(user.last_name);
       setPhone(user.phone_number);
@@ -204,7 +205,7 @@ function TenantProfile(props) {
   };
   useEffect(() => {
     fetchProfile();
-    setEditProfile(true);
+    // setEditProfile(true);
   }, [addDoc]);
 
   const submitInfo = async () => {
@@ -228,9 +229,13 @@ function TenantProfile(props) {
         drivers_license_number: dlNumber,
         drivers_license_state: selectedDlState,
         current_address: JSON.stringify(currentAddressState[0]),
-        previous_address: usePreviousAddress
-          ? JSON.stringify(previousAddressState[0])
-          : null,
+        previous_address:
+          previousAddressState[0].street == "" ||
+          previousAddressState[0].street == "" ||
+          previousAddressState[0].city == "" ||
+          previousAddressState[0].state == ""
+            ? ""
+            : JSON.stringify(previousAddressState[0]),
         adult_occupants: JSON.stringify(adults),
         children_occupants: JSON.stringify(children),
         pet_occupants: JSON.stringify(pets),
@@ -448,7 +453,7 @@ function TenantProfile(props) {
           />
         </Col>
         <Col>
-          <label htmlFor="numAdults">Date of Birth (Mon/Date/Year)</label>
+          <label htmlFor="numAdults">Date of Birth (MM/DD/YYYY)</label>
           <input
             type="date"
             className="form-control"
@@ -519,7 +524,7 @@ function TenantProfile(props) {
           />
         </Col>
         <Col>
-          <label htmlFor="numChildren">Date of Birth (Mon/Date/Year)</label>
+          <label htmlFor="numChildren">Date of Birth (MM/DD/YYYY)</label>
           <input
             type="date"
             className="form-control"
@@ -861,6 +866,7 @@ function TenantProfile(props) {
 
     return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
   }
+  // console.log(previousAddressState);
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
@@ -1196,7 +1202,7 @@ function TenantProfile(props) {
                     <p style={gray}>
                       {jobTitle && jobTitle !== "NULL"
                         ? jobTitle
-                        : "No SSN Provided"}
+                        : "No Job Title Provided"}
                     </p>
                   </Col>
                   <Col>
@@ -1204,7 +1210,7 @@ function TenantProfile(props) {
                     <p style={gray}>
                       {company && company !== "NULL"
                         ? company
-                        : "No DL Provided"}
+                        : "No Company Provided"}
                     </p>
                   </Col>
                 </Row>
@@ -1220,7 +1226,7 @@ function TenantProfile(props) {
                     <p style={gray}>
                       {frequency && frequency !== "NULL"
                         ? frequency
-                        : "No DL Provided"}
+                        : "No SSN Provided"}
                     </p>
                   </Col>
                 </Row>
@@ -1241,45 +1247,17 @@ function TenantProfile(props) {
               </Row>
               <AddressForm
                 editProfile={editProfile}
+                hideRentingCheckbox="false"
                 state={currentAddressState}
                 selectedState={selectedState}
                 setSelectedState={setSelectedState}
+                diff={diff}
+                setDiff={setDiff}
+                usePreviousAddress={usePreviousAddress}
+                setUsePreviousAddress={setUsePreviousAddress}
+                // previousAddressState={previousAddressState}
               />
-              <Row>
-                <Col
-                  xs={2}
-                  className="px-0 d-flex justify-content-end align-items-center"
-                >
-                  <div
-                    onClick={() => setUsePreviousAddress(!usePreviousAddress)}
-                    style={{
-                      border: "1px solid #000000",
-                      width: "24px",
-                      height: "24px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {usePreviousAddress &&
-                    previousAddressState &&
-                    previousAddressState.state ? (
-                      <img
-                        src={Check}
-                        style={{ width: "13px", height: "9px" }}
-                      />
-                    ) : null}
-                  </div>
-                </Col>
-                <Col>
-                  <p
-                    style={{ ...underline, ...small }}
-                    className="text-primary mb-1 me-3"
-                  >
-                    Add another property manager reference if your last lease
-                    was for less than 2 years.
-                  </p>
-                </Col>
-              </Row>
-              {usePreviousAddress ? (
+              {diff > 0 && diff < 24 ? (
                 <div>
                   <h5 className="mx-2 my-3">Previous Address</h5>
                   <AddressForm
