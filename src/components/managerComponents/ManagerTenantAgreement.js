@@ -104,7 +104,7 @@ function ManagerTenantAgreement(props) {
 
   const loadAgreement = () => {
     // console.log(agreement);
-    setOldAgreement(agreement);
+    // setOldAgreement(agreement);
     setTenantID(agreement.tenant_id);
     setStartDate(agreement.lease_start);
     setEndDate(agreement.lease_end);
@@ -123,6 +123,26 @@ function ManagerTenantAgreement(props) {
     setPets(JSON.parse(agreement.pets));
     setVehicles(JSON.parse(agreement.vehicles));
     setReferences(JSON.parse(agreement.referred));
+    const newAgreement = {
+      rental_property_id: property.property_uid,
+      lease_start: agreement.lease_start,
+      lease_end: agreement.lease_end,
+      rental_status: agreement.rental_status,
+      rent_payments: JSON.parse(agreement.rent_payments),
+      available_topay: agreement.available_topay,
+      due_by: agreement.due_by,
+      late_by: agreement.late_by,
+      late_fee: agreement.late_fee,
+      perDay_late_fee: agreement.perDay_late_fee,
+      assigned_contacts: JSON.parse(agreement.assigned_contacts),
+      adults: JSON.parse(agreement.adults),
+      children: JSON.parse(agreement.children),
+      pets: JSON.parse(agreement.pets),
+      vehicles: JSON.parse(agreement.vehicles),
+      referred: JSON.parse(agreement.referred),
+      documents: JSON.parse(agreement.documents),
+    };
+    setOldAgreement(newAgreement);
   };
   useEffect(() => {
     // console.log("in useeffect", acceptedTenantApplications);
@@ -498,11 +518,11 @@ function ManagerTenantAgreement(props) {
       pets: pets,
       vehicles: vehicles,
       referred: referred,
-      effective_date: effectiveDate,
       documents: files,
     };
     let up = newAgreement;
-
+    console.log("og", oldAgreement);
+    console.log("up", up);
     setUpdatedAgreement(up);
     setShowDialog(true);
   };

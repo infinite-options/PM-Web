@@ -109,15 +109,15 @@ function ManagerTenantRentPayments(props) {
         charge: property.deposit.toString(),
         of: "Gross Rent",
         frequency: "One-time",
-        available_topay: available,
+        available_topay: available.toString(),
         // due_by: startDate,
         due_by:
           startDate && startDate.split("-")[2].charAt(0) === "0"
             ? startDate.split("-")[2].charAt(1)
             : startDate.split("-")[2],
-        late_by: lateAfter,
-        late_fee: lateFee,
-        perDay_late_fee: lateFeePer,
+        late_by: lateAfter.toString(),
+        late_fee: lateFee.toString(),
+        perDay_late_fee: lateFeePer.toString(),
       };
       const rentFee = {
         fee_name: "Rent",
@@ -125,11 +125,11 @@ function ManagerTenantRentPayments(props) {
         charge: property.listed_rent.toString(),
         of: "Gross Rent",
         frequency: "Monthly",
-        available_topay: available,
+        available_topay: available.toString(),
         due_by: dueDate,
-        late_by: lateAfter,
-        late_fee: lateFee,
-        perDay_late_fee: lateFeePer,
+        late_by: lateAfter.toString(),
+        late_fee: lateFee.toString(),
+        perDay_late_fee: lateFeePer.toString(),
       };
 
       const newFeeState = [];
