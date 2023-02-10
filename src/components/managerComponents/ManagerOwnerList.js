@@ -91,11 +91,28 @@ function ManagerOwnerList(props) {
       refresh();
       return;
     }
-
+    let resArr = [];
+    let po = [];
     // console.log(response.result);
-    setOwners(response.result);
+    // response.result.forEach((res) =>
+    //   res.owner_info !== [] ? po.push(res.owner_info) : ""
+    // );
+    response.result.forEach(function (item) {
+      // console.log(item);
+      if (item.owner_id !== "") {
+        // console.log("item in if", item);
+        var i = resArr.findIndex((x) => x.owner_id == item.owner_id);
+        if (i <= -1) {
+          resArr.push(item);
+          po.push(item.owner_info[0]);
+        }
+      }
+    });
+    // console.log(resArr);
+    // console.log(po);
+    setOwners(po);
     if (response.result.length > 0) {
-      setSelectedOwner(response.result[0]);
+      setSelectedOwner(po);
     }
     setIsLoading(false);
     // console.log(selectedOwner);

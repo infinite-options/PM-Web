@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   Row,
@@ -19,8 +19,14 @@ function AddressForm(props) {
     selectedState,
     setSelectedState,
     editProfile,
+    usePreviousAddress,
+    setUsePreviousAddress,
+    // previousAddressState,
+    diff,
+    setDiff,
   } = props;
   const [addressState, setAddressState] = props.state;
+
   // const extraDet = !!(addressState && (addressState.pm_name || addressState.pm_number));
   const [useDetailsIfRenting, setUseDetailsIfRenting] = React.useState(false);
   const {
@@ -299,6 +305,33 @@ function AddressForm(props) {
       abbreviation: "WY",
     },
   ];
+  function calcDifference() {
+    let d1 = lease_start;
+    let d2 = lease_end;
+    // console.log(d1, d2);
+
+    const yeard1 = d1.substr(3, 6);
+    const monthd1 = d1.substr(0, 2);
+
+    d1 = new Date(yeard1, monthd1 - 1);
+    const yeard2 = d2.substr(3, 6);
+    const monthd2 = d2.substr(0, 2);
+
+    d2 = new Date(yeard2, monthd2 - 1);
+
+    // console.log(d1, d2);
+    let difference = (d2 - d1) / (1000 * 60 * 60 * 24 * 30);
+    // console.log(difference);
+    // console.log(diff, setDiff);
+    if (diff !== undefined) {
+      setDiff(difference);
+      setUsePreviousAddress(true);
+    }
+  }
+  useEffect(() => {
+    calcDifference();
+  }, [lease_end, diff, setDiff]);
+
   function formatPhoneNumber(value) {
     if (!value) return value;
 
@@ -474,7 +507,7 @@ function AddressForm(props) {
                     </Form.Label>
                     <Form.Control
                       style={squareForm}
-                      placeholder="MM/YY"
+                      placeholder="MM/YYYY"
                       value={lease_start}
                       onChange={(e) => updateAddressState(e, "lease_start")}
                     />
@@ -487,7 +520,7 @@ function AddressForm(props) {
                     </Form.Label>
                     <Form.Control
                       style={squareForm}
-                      placeholder="MM/YY"
+                      placeholder="MM/YYYY"
                       value={lease_end}
                       onChange={(e) => updateAddressState(e, "lease_end")}
                     />
@@ -509,6 +542,28 @@ function AddressForm(props) {
                   </Form.Group>
                 </Col>
               </Row>
+              {/* <Row>
+                <Col
+                  xs={2}
+                  className="px-0 d-flex justify-content-end align-items-center"
+                >
+                  <div>
+                    <Checkbox
+                      type="BOX"
+                      onClick={() => setUsePreviousAddress(!usePreviousAddress)}
+                    />
+                  </div>
+                </Col>
+                <Col>
+                  <p
+                    style={{ ...underline, ...small }}
+                    className="text-primary mb-1 me-3"
+                  >
+                    Add another property manager reference if your last lease
+                    was for less than 2 years.
+                  </p>
+                </Col>
+              </Row> */}
             </div>
           ) : (
             ""

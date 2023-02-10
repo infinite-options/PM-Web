@@ -8,6 +8,14 @@ import {
   DropdownButton,
   Dropdown,
 } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import AppContext from "../../AppContext";
 import Header from "../Header";
 import AddressForm from "../AddressForm";
@@ -31,14 +39,28 @@ import {
   hidden,
   bluePillButton,
 } from "../../utils/styles";
-
+import {
+  MaskCharacter,
+  formatPhoneNumber,
+  formatSSN,
+} from "../../utils/helper";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function TenantProfile(props) {
+  const classes = useStyles();
   // console.log("in tenant profile");
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
   const { user } = userData;
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [diff, setDiff] = useState(null);
   const [expandFrequency, setExpandFrequency] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -57,6 +79,7 @@ function TenantProfile(props) {
   const [jobTitle, setJobTitle] = useState("");
   const [company, setCompany] = useState("");
   const [ssn, setSsn] = useState("");
+  const [showSSN, setShowSSN] = useState(true);
   const [dlNumber, setDLNumber] = useState("");
   const defaultState = "--";
   const [selectedState, setSelectedState] = useState(defaultState);
@@ -195,7 +218,7 @@ function TenantProfile(props) {
       }
     } else {
       // console.log("Profile Incomplete");
-      //  setEditProfile(true);
+      setEditProfile(true);
       setFirstName(user.first_name);
       setLastName(user.last_name);
       setPhone(user.phone_number);
@@ -204,7 +227,7 @@ function TenantProfile(props) {
   };
   useEffect(() => {
     fetchProfile();
-    setEditProfile(true);
+    // setEditProfile(true);
   }, [addDoc]);
 
   const submitInfo = async () => {
@@ -228,9 +251,13 @@ function TenantProfile(props) {
         drivers_license_number: dlNumber,
         drivers_license_state: selectedDlState,
         current_address: JSON.stringify(currentAddressState[0]),
-        previous_address: usePreviousAddress
-          ? JSON.stringify(previousAddressState[0])
-          : null,
+        previous_address:
+          previousAddressState[0].street == "" ||
+          previousAddressState[0].street == "" ||
+          previousAddressState[0].city == "" ||
+          previousAddressState[0].state == ""
+            ? ""
+            : JSON.stringify(previousAddressState[0]),
         adult_occupants: JSON.stringify(adults),
         children_occupants: JSON.stringify(children),
         pet_occupants: JSON.stringify(pets),
@@ -425,59 +452,79 @@ function TenantProfile(props) {
   }
 
   function addAdults() {
-    return adults.map((adult, idx) => (
-      <Row key={idx}>
-        <Col>
-          <label htmlFor="numAdults"> Adult {idx + 1} Name </label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={adult.name}
-            onChange={(e) => handleChangeAdults(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numAdults">Relationship to Applicant </label>
-          <input
-            type="text"
-            className="form-control"
-            name="relationship"
-            value={adult.relationship}
-            onChange={(e) => handleChangeAdults(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numAdults">Date of Birth (Mon/Date/Year)</label>
-          <input
-            type="date"
-            className="form-control"
-            name="dob"
-            value={adult.dob}
-            onChange={(e) => handleChangeAdults(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    return (
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemoveAdults(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-    ));
+          <TableHead>
+            <TableRow>
+              <TableCell>Adult Name</TableCell>
+              <TableCell>Relationship to Applicant</TableCell>
+              <TableCell>Date of Birth (MM/DD/YYYY)</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {adults.map((adult, idx) => (
+              <TableRow key={idx}>
+                <TableCell>
+                  {/* <label htmlFor="numAdults"> Adult {idx + 1} Name </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={adult.name}
+                    onChange={(e) => handleChangeAdults(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numAdults">Relationship to Applicant </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="relationship"
+                    value={adult.relationship}
+                    onChange={(e) => handleChangeAdults(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numAdults">Date of Birth (MM/DD/YYYY)</label> */}
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="dob"
+                    value={adult.dob}
+                    onChange={(e) => handleChangeAdults(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemoveAdults(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
   function handleChangeAdults(i, event) {
     const fields = [...adults];
@@ -497,57 +544,77 @@ function TenantProfile(props) {
   }
   function addChildren() {
     return children.map((child, idx) => (
-      <Row key={idx}>
-        <Col>
-          <label htmlFor="numChildren"> Children {idx + 1} Name </label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={child.name}
-            onChange={(e) => handleChangeChildren(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numChildren">Relationship to Applicant </label>
-          <input
-            type="text"
-            className="form-control"
-            name="relationship"
-            value={child.relationship}
-            onChange={(e) => handleChangeChildren(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numChildren">Date of Birth (Mon/Date/Year)</label>
-          <input
-            type="date"
-            className="form-control"
-            name="dob"
-            value={child.dob}
-            onChange={(e) => handleChangeChildren(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemoveChildren(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
+          <TableHead>
+            <TableRow>
+              <TableCell>Child Name</TableCell>
+              <TableCell>Relationship to Applicant</TableCell>
+              <TableCell>Date of Birth (MM/DD/YYYY)</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {children.map((child, idx) => (
+              <TableRow key={idx}>
+                <TableCell>
+                  {/* <label htmlFor="numChildren"> Children {idx + 1} Name </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={child.name}
+                    onChange={(e) => handleChangeChildren(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numChildren">Relationship to Applicant </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="relationship"
+                    value={child.relationship}
+                    onChange={(e) => handleChangeChildren(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numChildren">Date of Birth (MM/DD/YYYY)</label> */}
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="dob"
+                    value={child.dob}
+                    onChange={(e) => handleChangeChildren(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemoveChildren(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     ));
   }
   function handleChangeChildren(i, event) {
@@ -567,69 +634,90 @@ function TenantProfile(props) {
     setPets(fields);
   }
   function addPets() {
-    return pets.map((pet, idx) => (
-      <Row>
-        <Col>
-          <label htmlFor="numPets"> Pets {idx + 1} Name </label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={pet.name}
-            onChange={(e) => handleChangePets(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numPets">Type </label>
-          <input
-            type="text"
-            className="form-control"
-            name="type"
-            value={pet.type}
-            onChange={(e) => handleChangePets(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numPets">If Dog, What Breed?</label>
-          <input
-            type="text"
-            className="form-control"
-            name="breed"
-            value={pet.breed}
-            onChange={(e) => handleChangePets(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numPets">Weight</label>
-          <input
-            type="text"
-            className="form-control"
-            name="weight"
-            value={pet.weight}
-            onChange={(e) => handleChangePets(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    return (
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemovePets(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-    ));
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>If Dog, What Breed?</TableCell>
+              <TableCell>Weight</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {pets.map((pet, idx) => (
+              <TableRow>
+                <TableCell>
+                  {/* <label htmlFor="numPets"> Pets {idx + 1} Name </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={pet.name}
+                    onChange={(e) => handleChangePets(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numPets">Type </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="type"
+                    value={pet.type}
+                    onChange={(e) => handleChangePets(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numPets">If Dog, What Breed?</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="breed"
+                    value={pet.breed}
+                    onChange={(e) => handleChangePets(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numPets">Weight</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="weight"
+                    value={pet.weight}
+                    onChange={(e) => handleChangePets(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemovePets(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
   function handleChangePets(i, event) {
     const fields = [...pets];
@@ -647,79 +735,101 @@ function TenantProfile(props) {
     setVehicles(fields);
   }
   function addVehicles() {
-    return vehicles.map((vehicle, idx) => (
-      <Row>
-        <Col>
-          <label htmlFor="numVehicles"> Make </label>
-          <input
-            type="text"
-            className="form-control"
-            name="make"
-            value={vehicle.make}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numVehicles">Model </label>
-          <input
-            type="text"
-            className="form-control"
-            name="model"
-            value={vehicle.model}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numVehicles">Year</label>
-          <input
-            type="text"
-            className="form-control"
-            name="year"
-            value={vehicle.year}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numVehicles">State</label>
-          <input
-            type="text"
-            className="form-control"
-            name="state"
-            value={vehicle.state}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numVehicles">License</label>
-          <input
-            type="text"
-            className="form-control"
-            name="license"
-            value={vehicle.license}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    return (
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemoveVehicles(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-    ));
+          <TableHead>
+            <TableRow>
+              <TableCell>Make</TableCell>
+              <TableCell>Model</TableCell>
+              <TableCell>Year</TableCell>
+              <TableCell>State</TableCell>
+              <TableCell>License</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {vehicles.map((vehicle, idx) => (
+              <TableRow>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles"> Make </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="make"
+                    value={vehicle.make}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles">Model </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="model"
+                    value={vehicle.model}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles">Year</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="year"
+                    value={vehicle.year}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles">State</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="state"
+                    value={vehicle.state}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles">License</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="license"
+                    value={vehicle.license}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemoveVehicles(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
   function handleChangeVehicles(i, event) {
     const fields = [...vehicles];
@@ -744,79 +854,101 @@ function TenantProfile(props) {
     setReferences(fields);
   }
   function addReferences() {
-    return references.map((reference, idx) => (
-      <Row>
-        <Col>
-          <label htmlFor="numReferences"> Name </label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={reference.name}
-            onChange={(e) => handleChangeReferences(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numReferences">Address </label>
-          <input
-            type="text"
-            className="form-control"
-            name="address"
-            value={reference.address}
-            onChange={(e) => handleChangeReferences(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numReferences">Phone Number</label>
-          <input
-            type="text"
-            className="form-control"
-            name="phone"
-            value={reference.phone}
-            onChange={(e) => handlePhoneNumber(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numReferences">Email</label>
-          <input
-            type="text"
-            className="form-control"
-            name="email"
-            value={reference.email}
-            onChange={(e) => handleChangeReferences(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numReferences">Relationship</label>
-          <input
-            type="text"
-            className="form-control"
-            name="relationship"
-            value={reference.relationship}
-            onChange={(e) => handleChangeReferences(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    return (
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemoveReferences(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-    ));
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Address</TableCell>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Relationship to Applicant</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {references.map((reference, idx) => (
+              <TableRow>
+                <TableCell>
+                  {/* <label htmlFor="numReferences"> Name </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={reference.name}
+                    onChange={(e) => handleChangeReferences(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numReferences">Address </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="address"
+                    value={reference.address}
+                    onChange={(e) => handleChangeReferences(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numReferences">Phone Number</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="phone"
+                    value={reference.phone}
+                    onChange={(e) => handlePhoneNumber(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numReferences">Email</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="email"
+                    value={reference.email}
+                    onChange={(e) => handleChangeReferences(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numReferences">Relationship</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="relationship"
+                    value={reference.relationship}
+                    onChange={(e) => handleChangeReferences(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemoveReferences(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
   function handleChangeReferences(i, event) {
     const fields = [...references];
@@ -828,39 +960,8 @@ function TenantProfile(props) {
     fields[i][event.target.name] = formatPhoneNumber(event.target.value);
     setReferences(fields);
   };
-  function formatPhoneNumber(value) {
-    if (!value) return value;
 
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    const phoneNumberLength = phoneNumber.length;
-
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
-  function formatSSN(value) {
-    if (!value) return value;
-
-    const ssn = value.replace(/[^\d]/g, "");
-
-    const ssnLength = ssn.length;
-
-    if (ssnLength < 4) return ssn;
-
-    if (ssnLength < 6) {
-      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
-    }
-
-    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
-  }
+  // console.log(previousAddressState);
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
@@ -1163,8 +1264,12 @@ function TenantProfile(props) {
                 <Row>
                   <Col>
                     <h6>SSN</h6>
-                    <p style={gray}>
-                      {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}
+                    <p style={gray} onClick={() => setShowSSN(!showSSN)}>
+                      {ssn && ssn !== "NULL"
+                        ? showSSN
+                          ? MaskCharacter(ssn, "*")
+                          : ssn
+                        : "No SSN Provided"}
                     </p>
                   </Col>
                   <Col>
@@ -1196,7 +1301,7 @@ function TenantProfile(props) {
                     <p style={gray}>
                       {jobTitle && jobTitle !== "NULL"
                         ? jobTitle
-                        : "No SSN Provided"}
+                        : "No Job Title Provided"}
                     </p>
                   </Col>
                   <Col>
@@ -1204,7 +1309,7 @@ function TenantProfile(props) {
                     <p style={gray}>
                       {company && company !== "NULL"
                         ? company
-                        : "No DL Provided"}
+                        : "No Company Provided"}
                     </p>
                   </Col>
                 </Row>
@@ -1220,7 +1325,7 @@ function TenantProfile(props) {
                     <p style={gray}>
                       {frequency && frequency !== "NULL"
                         ? frequency
-                        : "No DL Provided"}
+                        : "No SSN Provided"}
                     </p>
                   </Col>
                 </Row>
@@ -1241,45 +1346,17 @@ function TenantProfile(props) {
               </Row>
               <AddressForm
                 editProfile={editProfile}
+                hideRentingCheckbox="false"
                 state={currentAddressState}
                 selectedState={selectedState}
                 setSelectedState={setSelectedState}
+                diff={diff}
+                setDiff={setDiff}
+                usePreviousAddress={usePreviousAddress}
+                setUsePreviousAddress={setUsePreviousAddress}
+                // previousAddressState={previousAddressState}
               />
-              <Row>
-                <Col
-                  xs={2}
-                  className="px-0 d-flex justify-content-end align-items-center"
-                >
-                  <div
-                    onClick={() => setUsePreviousAddress(!usePreviousAddress)}
-                    style={{
-                      border: "1px solid #000000",
-                      width: "24px",
-                      height: "24px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {usePreviousAddress &&
-                    previousAddressState &&
-                    previousAddressState.state ? (
-                      <img
-                        src={Check}
-                        style={{ width: "13px", height: "9px" }}
-                      />
-                    ) : null}
-                  </div>
-                </Col>
-                <Col>
-                  <p
-                    style={{ ...underline, ...small }}
-                    className="text-primary mb-1 me-3"
-                  >
-                    Add another property manager reference if your last lease
-                    was for less than 2 years.
-                  </p>
-                </Col>
-              </Row>
-              {usePreviousAddress ? (
+              {diff > 0 && diff < 24 ? (
                 <div>
                   <h5 className="mx-2 my-3">Previous Address</h5>
                   <AddressForm
@@ -1485,25 +1562,33 @@ function TenantProfile(props) {
                 <div>Who plans to live in the unit?</div>
               </Row>
               <div>
-                {adults && Object.values(adults).length > 0 ? (
+                {adults && Object.values(children).length > 0 ? (
                   <div className="mx-3 ">
-                    <Row style={subHeading}>Adults</Row>
-                    <Row style={subHeading}>
-                      <Col>Name</Col>
-                      <Col>Relationship</Col>
-                      <Col>DOB(YYYY-MM-DD)</Col>
-                    </Row>
-                    {Object.values(adults).map((adult) => {
-                      return (
-                        <div>
-                          <Row style={gray}>
-                            <Col>{adult.name}</Col>
-                            <Col>{adult.relationship}</Col>
-                            <Col>{adult.dob}</Col>
-                          </Row>
-                        </div>
-                      );
-                    })}
+                    <Row style={subHeading}>Children</Row>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Relationship</TableCell>
+                          <TableCell>DOB(YYYY-MM-DD)</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {Object.values(children).map((child) => {
+                          return (
+                            <TableRow>
+                              <TableCell>{child.name}</TableCell>
+                              <TableCell>{child.relationship}</TableCell>
+                              <TableCell>{child.dob}</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : (
                   <div className="mx-3 ">
@@ -1516,22 +1601,30 @@ function TenantProfile(props) {
                 {children && Object.values(children).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Children</Row>
-                    <Row style={subHeading}>
-                      <Col>Name</Col>
-                      <Col>Relationship</Col>
-                      <Col>DOB(YYYY-MM-DD)</Col>
-                    </Row>
-                    {Object.values(children).map((child) => {
-                      return (
-                        <div>
-                          <Row style={gray}>
-                            <Col>{child.name}</Col>
-                            <Col>{child.relationship}</Col>
-                            <Col>{child.dob}</Col>
-                          </Row>
-                        </div>
-                      );
-                    })}
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Relationship</TableCell>
+                          <TableCell>DOB(YYYY-MM-DD)</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {Object.values(children).map((child) => {
+                          return (
+                            <TableRow>
+                              <TableCell>{child.name}</TableCell>
+                              <TableCell>{child.relationship}</TableCell>
+                              <TableCell>{child.dob}</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : (
                   <div className="mx-3 ">
@@ -1544,24 +1637,34 @@ function TenantProfile(props) {
                 {pets && Object.values(pets).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Pets</Row>
-                    <Row style={subHeading}>
-                      <Col>Name</Col>
-                      <Col>Type</Col>
-                      <Col>Breed</Col>
-                      <Col>Weight</Col>
-                    </Row>
-                    {Object.values(pets).map((pet) => {
-                      return (
-                        <div>
-                          <Row style={gray}>
-                            <Col>{pet.name}</Col>
-                            <Col>{pet.type}</Col>
-                            <Col>{pet.breed}</Col>
-                            <Col>{pet.weight}</Col>
-                          </Row>
-                        </div>
-                      );
-                    })}
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        {" "}
+                        <TableRow style={subHeading}>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Type</TableCell>
+                          <TableCell>Breed</TableCell>
+                          <TableCell>Weight</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {Object.values(pets).map((pet) => {
+                          return (
+                            <TableRow>
+                              {" "}
+                              <TableCell>{pet.name}</TableCell>
+                              <TableCell>{pet.type}</TableCell>
+                              <TableCell>{pet.breed}</TableCell>
+                              <TableCell>{pet.weight}</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : (
                   <div className="mx-3 ">
@@ -1574,26 +1677,34 @@ function TenantProfile(props) {
                 {vehicles && Object.values(vehicles).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Vehicles</Row>
-                    <Row style={subHeading}>
-                      <Col>Make</Col>
-                      <Col>Model</Col>
-                      <Col>Year</Col>
-                      <Col>State</Col>
-                      <Col>License</Col>
-                    </Row>
-                    {Object.values(vehicles).map((vehicle) => {
-                      return (
-                        <div>
-                          <Row style={gray}>
-                            <Col>{vehicle.make}</Col>
-                            <Col>{vehicle.model}</Col>
-                            <Col>{vehicle.year}</Col>
-                            <Col>{vehicle.state}</Col>
-                            <Col>{vehicle.license}</Col>
-                          </Row>
-                        </div>
-                      );
-                    })}
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow style={subHeading}>
+                          <TableCell>Make</TableCell>
+                          <TableCell>Model</TableCell>
+                          <TableCell>Year</TableCell>
+                          <TableCell>State</TableCell>
+                          <TableCell>License</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {Object.values(vehicles).map((vehicle) => {
+                          return (
+                            <TableRow>
+                              <TableCell>{vehicle.make}</TableCell>
+                              <TableCell>{vehicle.model}</TableCell>
+                              <TableCell>{vehicle.year}</TableCell>
+                              <TableCell>{vehicle.state}</TableCell>
+                              <TableCell>{vehicle.license}</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : (
                   <div className="mx-3 ">
@@ -1606,26 +1717,36 @@ function TenantProfile(props) {
                 {references && Object.values(references).length > 0 ? (
                   <div className="mx-3 ">
                     <Row style={subHeading}>References</Row>
-                    <Row style={subHeading}>
-                      <Col>Name</Col>
-                      <Col>Address</Col>
-                      <Col>Phone Number</Col>
-                      <Col>Email</Col>
-                      <Col>Relationship</Col>
-                    </Row>
-                    {Object.values(references).map((reference) => {
-                      return (
-                        <div>
-                          <Row style={gray}>
-                            <Col>{reference.name}</Col>
-                            <Col>{reference.address}</Col>
-                            <Col>{reference.phone}</Col>
-                            <Col>{reference.email}</Col>
-                            <Col>{reference.relationship}</Col>
-                          </Row>
-                        </div>
-                      );
-                    })}
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow style={subHeading}>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Address</TableCell>
+                          <TableCell>Phone Number</TableCell>
+                          <TableCell>Email</TableCell>
+                          <TableCell>Relationship</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {Object.values(references).map((reference) => {
+                          return (
+                            <div>
+                              <TableRow>
+                                <TableCell>{reference.name}</TableCell>
+                                <TableCell>{reference.address}</TableCell>
+                                <TableCell>{reference.phone}</TableCell>
+                                <TableCell>{reference.email}</TableCell>
+                                <TableCell>{reference.relationship}</TableCell>
+                              </TableRow>
+                            </div>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : (
                   <div className="mx-3 ">

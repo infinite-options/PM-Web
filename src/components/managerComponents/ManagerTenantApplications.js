@@ -308,33 +308,36 @@ function ManagerTenantApplications(props) {
               </TableBody>
             </Table>
           </Row>
-          {applications.some((app) =>
-            app.application_status === "RENTED" ||
-            app.application_status === "LEASE EXTENSION" ||
-            app.application_status === "TENANT LEASE EXTENSION" ? (
-              <Row></Row>
-            ) : (
-              <Row className="mt-4 d-flex w-100">
-                <Col className="d-flex justify-content-evenly">
-                  <Button
-                    style={bluePillButton}
-                    onClick={applicationsResponse}
-                    hidden={forwardedApplications.length > 0}
-                  >
-                    Accept Selected Applicants
-                  </Button>
-                </Col>
-                <Col className="d-flex justify-content-evenly">
-                  <Button
-                    style={redPillButton}
-                    onClick={() => setShowDialog(true)}
-                    hidden={forwardedApplications.length > 0}
-                  >
-                    Reject Application
-                  </Button>
-                </Col>
-              </Row>
-            )
+
+          {applications.some(
+            (app) =>
+              app.application_status === "RENTED" ||
+              app.application_status === "FORWARDED" ||
+              app.application_status === "LEASE EXTENSION" ||
+              app.application_status === "TENANT LEASE EXTENSION"
+          ) ? (
+            <Row></Row>
+          ) : (
+            <Row className="mt-4 d-flex w-100">
+              <Col className="d-flex justify-content-evenly">
+                <Button
+                  style={bluePillButton}
+                  onClick={applicationsResponse}
+                  // hidden={forwardedApplications.length > 0}
+                >
+                  Accept Selected Applicants
+                </Button>
+              </Col>
+              <Col className="d-flex justify-content-evenly">
+                <Button
+                  style={redPillButton}
+                  onClick={() => setShowDialog(true)}
+                  // hidden={forwardedApplications.length > 0}
+                >
+                  Reject Application
+                </Button>
+              </Col>
+            </Row>
           )}
         </div>
       ) : (

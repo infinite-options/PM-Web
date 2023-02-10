@@ -19,6 +19,7 @@ import File from "../../icons/File.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
 import { get, put } from "../../utils/api";
 import { bluePillButton, greenPill, redPillButton } from "../../utils/styles";
+import { ordinal_suffix_of } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -142,20 +143,7 @@ function ReviewPropertyLease(props) {
     fetchProperties();
   }, [property_uid]);
   // console.log(properties);
-  function ordinal_suffix_of(i) {
-    var j = i % 10,
-      k = i % 100;
-    if (j === 1 && k !== 11) {
-      return i + "st";
-    }
-    if (j === 2 && k !== 12) {
-      return i + "nd";
-    }
-    if (j === 3 && k !== 13) {
-      return i + "rd";
-    }
-    return i + "th";
-  }
+
   const approveLease = async () => {
     console.log("in approvelease", rentals);
     if (rentals.length > 0) {
@@ -166,11 +154,7 @@ function ReviewPropertyLease(props) {
           application_status: "RENTED",
           property_uid: property_uid,
         };
-        const response2 = await put(
-          "/applications",
-          updatedApplication,
-          access_token
-        );
+        const response2 = await put("/applications", updatedApplication);
         navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "ACTIVE")) {
         const updateLease = {
@@ -263,11 +247,7 @@ function ReviewPropertyLease(props) {
       application_status: "REFUSED",
       property_uid: property_uid,
     };
-    const response2 = await put(
-      "/applications",
-      updatedApplication,
-      access_token
-    );
+    const response2 = await put("/applications", updatedApplication, null);
     navigate("/tenant");
   };
 
@@ -552,14 +532,14 @@ function ReviewPropertyLease(props) {
                   opacity: 1,
                 }}
               >
-                <Row className="m-3">
+                <Row>
                   <Col>
                     <h3>Lease Agreement</h3>
                   </Col>
                   <Col xs={2}></Col>
                 </Row>
                 {rentals && rentals.length ? (
-                  <Row className="m-3" style={{ hidden: "overflow" }}>
+                  <Row style={{ hidden: "overflow" }}>
                     <h5>Lease Details</h5>
                     <Table
                       responsive="md"
@@ -600,7 +580,7 @@ function ReviewPropertyLease(props) {
                 )}
 
                 {rentPayments && rentPayments.length ? (
-                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Row style={{ overflow: "scroll" }}>
                     <h5>Lease Payments</h5>
                     <Table
                       responsive="md"

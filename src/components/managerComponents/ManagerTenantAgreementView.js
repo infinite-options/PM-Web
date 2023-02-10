@@ -29,6 +29,7 @@ import {
   bluePillButton,
   redPillButton,
 } from "../../utils/styles";
+import { ordinal_suffix_of } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -320,20 +321,6 @@ function ManagerTenantAgreementView(props) {
     closeAgreement();
   };
 
-  function ordinal_suffix_of(i) {
-    var j = i % 10,
-      k = i % 100;
-    if (j === 1 && k !== 11) {
-      return i + "st";
-    }
-    if (j === 2 && k !== 12) {
-      return i + "nd";
-    }
-    if (j === 3 && k !== 13) {
-      return i + "rd";
-    }
-    return i + "th";
-  }
   return isLoading ? (
     <div>
       <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
@@ -611,6 +598,8 @@ function ManagerTenantAgreementView(props) {
           </Row>
           <Row className="m-3">
             <h5 style={mediumBold}>Lease Documents</h5>
+          </Row>
+          <div>
             <DocumentsUploadPut
               files={files}
               setFiles={setFiles}
@@ -621,7 +610,7 @@ function ManagerTenantAgreementView(props) {
               setEditingDoc={setEditingDoc}
               id={agreement.rental_uid}
             />
-          </Row>
+          </div>
           {pmExtendLease ? (
             <div className="my-4">
               <h5 style={mediumBold}>You requested to extend the lease</h5>

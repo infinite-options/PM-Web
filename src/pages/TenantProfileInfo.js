@@ -9,10 +9,19 @@ import {
   DropdownButton,
   Dropdown,
 } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Popover from "@material-ui/core/Popover";
 import AppContext from "../AppContext";
 import Header from "../components/Header";
 import Checkbox from "../components/Checkbox";
+import DocumentsUploadPost from "../components/DocumentsUploadPost";
 import AddressForm from "../components/AddressForm";
 import { get, post } from "../utils/api";
 import ArrowUp from "../icons/ArrowUp.svg";
@@ -30,9 +39,17 @@ import {
   mediumBold,
   smallPillButton,
 } from "../utils/styles";
-import DocumentsUploadPost from "../components/DocumentsUploadPost";
-
+import { formatPhoneNumber, formatSSN } from "../utils/helper";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function TenantProfileInfo(props) {
+  const classes = useStyles();
   const { userData } = useContext(AppContext);
   const { access_token, user } = userData;
   // console.log("user", user);
@@ -118,60 +135,137 @@ function TenantProfileInfo(props) {
     setAdults(fields);
   }
 
+  // function addAdults() {
+  //   return adults.map((adult, idx) => (
+  //     <Row key={idx}>
+  //       <Col>
+  //         <label htmlFor="numAdults"> Adult {idx + 1} Name </label>
+  //         <input
+  //           type="text"
+  //           className="form-control"
+  //           name="name"
+  //           value={adult.name}
+  //           onChange={(e) => handleChangeAdults(idx, e)}
+  //         />
+  //       </Col>
+  //       <Col>
+  //         <label htmlFor="numAdults">Relationship to Applicant </label>
+  //         <input
+  //           type="text"
+  //           className="form-control"
+  //           name="relationship"
+  //           value={adult.relationship}
+  //           onChange={(e) => handleChangeAdults(idx, e)}
+  //         />
+  //       </Col>
+  //       <Col>
+  //         <label htmlFor="numAdults">Date of Birth (MM/DD/YYYY)</label>
+  //         <input
+  //           type="date"
+  //           className="form-control"
+  //           name="dob"
+  //           value={adult.dob}
+  //           onChange={(e) => handleChangeAdults(idx, e)}
+  //         />
+  //       </Col>
+  //       <Col
+  //         xs={2}
+  //         style={{
+  //           paddingTop: "1.5rem",
+  //           display: "flex",
+  //           alignItems: "center",
+  //           justifyContent: "center",
+  //         }}
+  //       >
+  //         <img
+  //           src={DeleteIcon}
+  //           alt="Delete Icon"
+  //           onClick={() => handleRemoveAdults(idx)}
+  //           style={{
+  //             width: "15px",
+  //             height: "15px",
+  //           }}
+  //         />
+  //       </Col>
+  //     </Row>
+  //   ));
+  // }
   function addAdults() {
-    return adults.map((adult, idx) => (
-      <Row key={idx}>
-        <Col>
-          <label htmlFor="numAdults"> Adult {idx + 1} Name </label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={adult.name}
-            onChange={(e) => handleChangeAdults(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numAdults">Relationship to Applicant </label>
-          <input
-            type="text"
-            className="form-control"
-            name="relationship"
-            value={adult.relationship}
-            onChange={(e) => handleChangeAdults(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numAdults">Date of Birth (Mon/Date/Year)</label>
-          <input
-            type="date"
-            className="form-control"
-            name="dob"
-            value={adult.dob}
-            onChange={(e) => handleChangeAdults(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    console.log("in add adults1");
+    return (
+      <div>
+        {console.log("in add adults")}
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemoveAdults(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-    ));
+          <TableHead>
+            <TableRow>
+              <TableCell>Adult Name</TableCell>
+              <TableCell>Relationship to Applicant</TableCell>
+              <TableCell>Date of Birth (MM/DD/YYYY)</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {adults.map((adult, idx) => (
+              <TableRow key={idx}>
+                <TableCell>
+                  {/* <label htmlFor="numAdults"> Adult {idx + 1} Name </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={adult.name}
+                    onChange={(e) => handleChangeAdults(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numAdults">Relationship to Applicant </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="relationship"
+                    value={adult.relationship}
+                    onChange={(e) => handleChangeAdults(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numAdults">Date of Birth (MM/DD/YYYY)</label> */}
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="dob"
+                    value={adult.dob}
+                    onChange={(e) => handleChangeAdults(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    paddingTop: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemoveAdults(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
   function handleChangeAdults(i, event) {
     const fields = [...adults];
@@ -191,57 +285,77 @@ function TenantProfileInfo(props) {
   }
   function addChildren() {
     return children.map((child, idx) => (
-      <Row key={idx}>
-        <Col>
-          <label htmlFor="numChildren"> Children {idx + 1} Name </label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={child.name}
-            onChange={(e) => handleChangeChildren(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numChildren">Relationship to Applicant </label>
-          <input
-            type="text"
-            className="form-control"
-            name="relationship"
-            value={child.relationship}
-            onChange={(e) => handleChangeChildren(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numChildren">Date of Birth (Mon/Date/Year)</label>
-          <input
-            type="date"
-            className="form-control"
-            name="dob"
-            value={child.dob}
-            onChange={(e) => handleChangeChildren(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemoveChildren(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
+          <TableHead>
+            <TableRow>
+              <TableCell>Child Name</TableCell>
+              <TableCell>Relationship to Applicant</TableCell>
+              <TableCell>Date of Birth (MM/DD/YYYY)</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {children.map((child, idx) => (
+              <TableRow key={idx}>
+                <TableCell>
+                  {/* <label htmlFor="numChildren"> Children {idx + 1} Name </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={child.name}
+                    onChange={(e) => handleChangeChildren(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numChildren">Relationship to Applicant </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="relationship"
+                    value={child.relationship}
+                    onChange={(e) => handleChangeChildren(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numChildren">Date of Birth (MM/DD/YYYY)</label> */}
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="dob"
+                    value={child.dob}
+                    onChange={(e) => handleChangeChildren(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemoveChildren(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     ));
   }
   function handleChangeChildren(i, event) {
@@ -261,69 +375,90 @@ function TenantProfileInfo(props) {
     setPets(fields);
   }
   function addPets() {
-    return pets.map((pet, idx) => (
-      <Row>
-        <Col>
-          <label htmlFor="numPets"> Pets {idx + 1} Name </label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={pet.name}
-            onChange={(e) => handleChangePets(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numPets">Type </label>
-          <input
-            type="text"
-            className="form-control"
-            name="type"
-            value={pet.type}
-            onChange={(e) => handleChangePets(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numPets">If Dog, What Breed?</label>
-          <input
-            type="text"
-            className="form-control"
-            name="breed"
-            value={pet.breed}
-            onChange={(e) => handleChangePets(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numPets">Weight</label>
-          <input
-            type="text"
-            className="form-control"
-            name="weight"
-            value={pet.weight}
-            onChange={(e) => handleChangePets(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    return (
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemovePets(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-    ));
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>If Dog, What Breed?</TableCell>
+              <TableCell>Weight</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {pets.map((pet, idx) => (
+              <TableRow>
+                <TableCell>
+                  {/* <label htmlFor="numPets"> Pets {idx + 1} Name </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={pet.name}
+                    onChange={(e) => handleChangePets(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numPets">Type </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="type"
+                    value={pet.type}
+                    onChange={(e) => handleChangePets(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numPets">If Dog, What Breed?</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="breed"
+                    value={pet.breed}
+                    onChange={(e) => handleChangePets(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numPets">Weight</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="weight"
+                    value={pet.weight}
+                    onChange={(e) => handleChangePets(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemovePets(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
   function handleChangePets(i, event) {
     const fields = [...pets];
@@ -341,79 +476,101 @@ function TenantProfileInfo(props) {
     setVehicles(fields);
   }
   function addVehicles() {
-    return vehicles.map((vehicle, idx) => (
-      <Row>
-        <Col>
-          <label htmlFor="numVehicles"> Make </label>
-          <input
-            type="text"
-            className="form-control"
-            name="make"
-            value={vehicle.make}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numVehicles">Model </label>
-          <input
-            type="text"
-            className="form-control"
-            name="model"
-            value={vehicle.model}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numVehicles">Year</label>
-          <input
-            type="text"
-            className="form-control"
-            name="year"
-            value={vehicle.year}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numVehicles">State</label>
-          <input
-            type="text"
-            className="form-control"
-            name="state"
-            value={vehicle.state}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numVehicles">License</label>
-          <input
-            type="text"
-            className="form-control"
-            name="license"
-            value={vehicle.license}
-            onChange={(e) => handleChangeVehicles(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    return (
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemoveVehicles(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-    ));
+          <TableHead>
+            <TableRow>
+              <TableCell>Make</TableCell>
+              <TableCell>Model</TableCell>
+              <TableCell>Year</TableCell>
+              <TableCell>State</TableCell>
+              <TableCell>License</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {vehicles.map((vehicle, idx) => (
+              <TableRow>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles"> Make </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="make"
+                    value={vehicle.make}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles">Model </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="model"
+                    value={vehicle.model}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles">Year</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="year"
+                    value={vehicle.year}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles">State</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="state"
+                    value={vehicle.state}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numVehicles">License</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="license"
+                    value={vehicle.license}
+                    onChange={(e) => handleChangeVehicles(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemoveVehicles(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
   function handleChangeVehicles(i, event) {
     const fields = [...vehicles];
@@ -439,106 +596,108 @@ function TenantProfileInfo(props) {
   }
 
   function addReferences() {
-    return references.map((reference, idx) => (
-      <Row>
-        <Col>
-          <label htmlFor="numReferences"> Name </label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={reference.name}
-            onChange={(e) => handleChangeReferences(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numReferences">Address </label>
-          <input
-            type="text"
-            className="form-control"
-            name="address"
-            value={reference.address}
-            onChange={(e) => handleChangeReferences(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numReferences">Phone Number</label>
-          <input
-            // type="text"
-            className="form-control"
-            name="phone"
-            value={reference.phone}
-            type="tel"
-            placeholder="(xxx)xxx-xxxx"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            onChange={(e) => handlePhoneNumber(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numReferences">Email</label>
-          <input
-            type="text"
-            className="form-control"
-            name="email"
-            value={reference.email}
-            onChange={(e) => handleChangeReferences(idx, e)}
-          />
-        </Col>
-        <Col>
-          <label htmlFor="numReferences">Relationship</label>
-          <input
-            type="text"
-            className="form-control"
-            name="relationship"
-            value={reference.relationship}
-            onChange={(e) => handleChangeReferences(idx, e)}
-          />
-        </Col>
-        <Col
-          xs={2}
-          style={{
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    return (
+      <div>
+        <Table
+          responsive="md"
+          classes={{ root: classes.customTable }}
+          size="small"
         >
-          <img
-            src={DeleteIcon}
-            alt="Delete Icon"
-            onClick={() => handleRemoveReferences(idx)}
-            style={{
-              width: "15px",
-              height: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-    ));
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Address</TableCell>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Relationship to Applicant</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {references.map((reference, idx) => (
+              <TableRow>
+                <TableCell>
+                  {/* <label htmlFor="numReferences"> Name </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={reference.name}
+                    onChange={(e) => handleChangeReferences(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numReferences">Address </label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="address"
+                    value={reference.address}
+                    onChange={(e) => handleChangeReferences(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numReferences">Phone Number</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="phone"
+                    value={reference.phone}
+                    onChange={(e) => handlePhoneNumber(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numReferences">Email</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="email"
+                    value={reference.email}
+                    onChange={(e) => handleChangeReferences(idx, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <label htmlFor="numReferences">Relationship</label> */}
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="relationship"
+                    value={reference.relationship}
+                    onChange={(e) => handleChangeReferences(idx, e)}
+                  />
+                </TableCell>
+                <TableCell
+                  xs={2}
+                  style={{
+                    padding: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleRemoveReferences(idx)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
   const handlePhoneNumber = (i, event) => {
     const fields = [...references];
     fields[i][event.target.name] = formatPhoneNumber(event.target.value);
     setReferences(fields);
   };
-  function formatPhoneNumber(value) {
-    if (!value) return value;
 
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    const phoneNumberLength = phoneNumber.length;
-
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
   function handleChangeReferences(i, event) {
     const fields = [...references];
     fields[i][event.target.name] = event.target.value;
@@ -727,21 +886,6 @@ function TenantProfileInfo(props) {
     { name: "WYOMING", abbreviation: "WY" },
   ];
 
-  function formatSSN(value) {
-    if (!value) return value;
-
-    const ssn = value.replace(/[^\d]/g, "");
-
-    const ssnLength = ssn.length;
-
-    if (ssnLength < 4) return ssn;
-
-    if (ssnLength < 6) {
-      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
-    }
-
-    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
-  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

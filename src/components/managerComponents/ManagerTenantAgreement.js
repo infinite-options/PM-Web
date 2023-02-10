@@ -302,7 +302,8 @@ function ManagerTenantAgreement(props) {
   };
   const [errorMessage, setErrorMessage] = useState("");
   const required =
-    errorMessage === "Please fill out all fields" ? (
+    errorMessage === "Please fill out all fields" ||
+    errorMessage === "Please fill out the effective date" ? (
       <span style={red} className="ms-1">
         *
       </span>
@@ -945,7 +946,7 @@ function ManagerTenantAgreement(props) {
               <Col>
                 <Form.Group>
                   <Form.Label as="h6" className="mb-0 ms-2">
-                    Effective Date
+                    Effective Date {effectiveDate === "" ? required : ""}
                   </Form.Label>
                   <Form.Control
                     type="date"

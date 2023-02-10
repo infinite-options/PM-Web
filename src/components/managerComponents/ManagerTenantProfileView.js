@@ -23,6 +23,8 @@ import {
   gray,
   headings,
 } from "../../utils/styles";
+import { MaskCharacter, ordinal_suffix_of } from "../../utils/helper";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -65,23 +67,23 @@ function ManagerTenantProfileView(props) {
     const response = await put("/applications", request_body);
     back();
   };
-  function MaskCharacter(str, mask, n = 1) {
-    return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
-  }
-  function ordinal_suffix_of(i) {
-    var j = i % 10,
-      k = i % 100;
-    if (j === 1 && k !== 11) {
-      return i + "st";
-    }
-    if (j === 2 && k !== 12) {
-      return i + "nd";
-    }
-    if (j === 3 && k !== 13) {
-      return i + "rd";
-    }
-    return i + "th";
-  }
+  // function MaskCharacter(str, mask, n = 1) {
+  //   return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
+  // }
+  // function ordinal_suffix_of(i) {
+  //   var j = i % 10,
+  //     k = i % 100;
+  //   if (j === 1 && k !== 11) {
+  //     return i + "st";
+  //   }
+  //   if (j === 2 && k !== 12) {
+  //     return i + "nd";
+  //   }
+  //   if (j === 3 && k !== 13) {
+  //     return i + "rd";
+  //   }
+  //   return i + "th";
+  // }
   return (
     <div className="mb-5 pb-5">
       <div
@@ -400,22 +402,30 @@ function ManagerTenantProfileView(props) {
                   JSON.parse(applicant.adults).length > 0 ? (
                     <div className="mx-3 ">
                       <Row style={subHeading}>Adults</Row>
-                      <Row style={subHeading}>
-                        <Col>Name</Col>
-                        <Col>Relationship</Col>
-                        <Col>DOB(YYYY-MM-DD)</Col>
-                      </Row>
-                      {JSON.parse(applicant.adults).map((adult) => {
-                        return (
-                          <div>
-                            <Row style={gray}>
-                              <Col>{adult.name}</Col>
-                              <Col>{adult.relationship}</Col>
-                              <Col>{adult.dob}</Col>
-                            </Row>
-                          </div>
-                        );
-                      })}
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Relationship</TableCell>
+                            <TableCell>DOB(YYYY-MM-DD)</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {JSON.parse(applicant.adults).map((adult, i) => {
+                            return (
+                              <TableRow>
+                                <TableCell>{adult.name}</TableCell>
+                                <TableCell>{adult.relationship}</TableCell>
+                                <TableCell>{adult.dob}</TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
                     </div>
                   ) : (
                     <div className="mx-3 ">
@@ -429,22 +439,30 @@ function ManagerTenantProfileView(props) {
                   JSON.parse(applicant.children).length > 0 ? (
                     <div className="mx-3 ">
                       <Row style={subHeading}>Children</Row>
-                      <Row style={subHeading}>
-                        <Col>Name</Col>
-                        <Col>Relationship</Col>
-                        <Col>DOB(YYYY-MM-DD)</Col>
-                      </Row>
-                      {JSON.parse(applicant.children).map((child) => {
-                        return (
-                          <div>
-                            <Row style={gray}>
-                              <Col>{child.name}</Col>
-                              <Col>{child.relationship}</Col>
-                              <Col>{child.dob}</Col>
-                            </Row>
-                          </div>
-                        );
-                      })}
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Relationship</TableCell>
+                            <TableCell>DOB(YYYY-MM-DD)</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {JSON.parse(applicant.children).map((child) => {
+                            return (
+                              <TableRow>
+                                <TableCell>{child.name}</TableCell>
+                                <TableCell>{child.relationship}</TableCell>
+                                <TableCell>{child.dob}</TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
                     </div>
                   ) : (
                     <div className="mx-3 ">
@@ -458,24 +476,33 @@ function ManagerTenantProfileView(props) {
                   {applicant.pets && JSON.parse(applicant.pets).length > 0 ? (
                     <div className="mx-3 ">
                       <Row style={subHeading}>Pets</Row>
-                      <Row style={subHeading}>
-                        <Col>Name</Col>
-                        <Col>Type</Col>
-                        <Col>Breed</Col>
-                        <Col>Weight</Col>
-                      </Row>
-                      {JSON.parse(applicant.pets).map((pet) => {
-                        return (
-                          <div>
-                            <Row style={gray}>
-                              <Col>{pet.name}</Col>
-                              <Col>{pet.type}</Col>
-                              <Col>{pet.breed}</Col>
-                              <Col>{pet.weight}</Col>
-                            </Row>
-                          </div>
-                        );
-                      })}
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <TableHead>
+                          {" "}
+                          <TableRow style={subHeading}>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Type</TableCell>
+                            <TableCell>Breed</TableCell>
+                            <TableCell>Weight</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {JSON.parse(applicant.pets).map((pet) => {
+                            return (
+                              <TableRow>
+                                <TableCell>{pet.name}</TableCell>
+                                <TableCell>{pet.type}</TableCell>
+                                <TableCell>{pet.breed}</TableCell>
+                                <TableCell>{pet.weight}</TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
                     </div>
                   ) : (
                     <div className="mx-3 ">
@@ -490,26 +517,35 @@ function ManagerTenantProfileView(props) {
                   JSON.parse(applicant.vehicles).length > 0 ? (
                     <div className="mx-3 ">
                       <Row style={subHeading}>Vehicles</Row>
-                      <Row style={subHeading}>
-                        <Col>Make</Col>
-                        <Col>Model</Col>
-                        <Col>Year</Col>
-                        <Col>State</Col>
-                        <Col>License</Col>
-                      </Row>
-                      {JSON.parse(applicant.vehicles).map((vehicle) => {
-                        return (
-                          <div>
-                            <Row style={gray}>
-                              <Col>{vehicle.make}</Col>
-                              <Col>{vehicle.model}</Col>
-                              <Col>{vehicle.year}</Col>
-                              <Col>{vehicle.state}</Col>
-                              <Col>{vehicle.license}</Col>
-                            </Row>
-                          </div>
-                        );
-                      })}
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <TableHead>
+                          <TableRow style={subHeading}>
+                            <TableCell xs={1}></TableCell>
+                            <TableCell>Make</TableCell>
+                            <TableCell>Model</TableCell>
+                            <TableCell>Year</TableCell>
+                            <TableCell>State</TableCell>
+                            <TableCell>License</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {JSON.parse(applicant.vehicles).map((vehicle) => {
+                            return (
+                              <TableRow>
+                                <TableCell>{vehicle.make}</TableCell>
+                                <TableCell>{vehicle.model}</TableCell>
+                                <TableCell>{vehicle.year}</TableCell>
+                                <TableCell>{vehicle.state}</TableCell>
+                                <TableCell>{vehicle.license}</TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
                     </div>
                   ) : (
                     <div className="mx-3 ">
@@ -523,27 +559,39 @@ function ManagerTenantProfileView(props) {
                   {applicant.referred &&
                   JSON.parse(applicant.referred).length > 0 ? (
                     <div className="mx-3 ">
-                      <Row style={subHeading}>referred</Row>
-                      <Row style={subHeading}>
-                        <Col>Name</Col>
-                        <Col>Address</Col>
-                        <Col>Phone Number</Col>
-                        <Col>Email</Col>
-                        <Col>Relationship</Col>
-                      </Row>
-                      {JSON.parse(applicant.referred).map((reference) => {
-                        return (
-                          <div>
-                            <Row style={gray}>
-                              <Col>{reference.name}</Col>
-                              <Col>{reference.address}</Col>
-                              <Col>{reference.phone}</Col>
-                              <Col>{reference.email}</Col>
-                              <Col>{reference.relationship}</Col>
-                            </Row>
-                          </div>
-                        );
-                      })}
+                      <Row style={subHeading}>Referred</Row>
+                      <Table
+                        responsive="md"
+                        classes={{ root: classes.customTable }}
+                        size="small"
+                      >
+                        <TableHead>
+                          <TableRow style={subHeading}>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Address</TableCell>
+                            <TableCell>Phone Number</TableCell>
+                            <TableCell>Email</TableCell>
+                            <TableCell>Relationship</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {JSON.parse(applicant.referred).map((reference) => {
+                            return (
+                              <div>
+                                <TableRow>
+                                  <TableCell>{reference.name}</TableCell>
+                                  <TableCell>{reference.address}</TableCell>
+                                  <TableCell>{reference.phone}</TableCell>
+                                  <TableCell>{reference.email}</TableCell>
+                                  <TableCell>
+                                    {reference.relationship}
+                                  </TableCell>
+                                </TableRow>
+                              </div>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
                     </div>
                   ) : (
                     <div className="mx-3 ">
@@ -553,38 +601,35 @@ function ManagerTenantProfileView(props) {
                       </Row>
                     </div>
                   )}
-                  {applicant["a.documents"] &&
-                  applicant["a.documents"].length > 0 ? (
+                  {console.log(applicant)}
+                  {applicant.documents && applicant.documents.length > 0 ? (
                     <div className="mx-3 ">
                       <Row style={subHeading}>Documents</Row>
-                      {JSON.parse(applicant["a.documents"]).map(
-                        (document, i) => {
-                          return (
-                            <Row>
-                              <Col>
-                                <h6>{document.name}</h6>
-                              </Col>
-                              <Col>
-                                <a
-                                  href={document.link}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  <img
-                                    src={File}
-                                    alt="open document"
-                                    style={{
-                                      width: "15px",
-                                      height: "15px",
-                                    }}
-                                    alt="Document"
-                                  />
-                                </a>
-                              </Col>
-                            </Row>
-                          );
-                        }
-                      )}{" "}
+                      {JSON.parse(applicant.documents).map((document, i) => {
+                        return (
+                          <Row>
+                            <Col>
+                              <h6>{document.name}</h6>
+                            </Col>
+                            <Col>
+                              <a
+                                href={document.link}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <img
+                                  src={File}
+                                  alt="open document"
+                                  style={{
+                                    width: "15px",
+                                    height: "15px",
+                                  }}
+                                />
+                              </a>
+                            </Col>
+                          </Row>
+                        );
+                      })}{" "}
                     </div>
                   ) : (
                     <div className="mx-3 ">

@@ -18,6 +18,7 @@ import {
   small,
   bluePillButton,
 } from "../../utils/styles";
+import { MaskCharacter } from "../../utils/helper";
 function OwnerProfile(props) {
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
@@ -35,6 +36,7 @@ function OwnerProfile(props) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [einNumber, setEinNumber] = useState("");
   const [ssn, setSsn] = useState("");
+  const [showSSN, setShowSSN] = useState(true);
   const [paymentState, setPaymentState] = useState({
     paypal: "",
     applePay: "",
@@ -385,8 +387,12 @@ function OwnerProfile(props) {
                 <Row>
                   <Col>
                     <h6>SSN</h6>
-                    <p style={gray}>
-                      {ssn && ssn !== "NULL" ? ssn : "No SSN Provided"}
+                    <p style={gray} onClick={() => setShowSSN(!showSSN)}>
+                      {ssn && ssn !== "NULL"
+                        ? showSSN
+                          ? MaskCharacter(ssn, "*")
+                          : ssn
+                        : "No SSN Provided"}
                     </p>
                   </Col>
                   <Col>

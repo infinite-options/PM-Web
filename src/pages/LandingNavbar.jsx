@@ -68,11 +68,11 @@ function LandingNavbar() {
     }
   }, []);
   const longNames = {
-    MANAGER: "Property Manager (Owner)",
+    MANAGER: "Property Manager",
     PM_EMPLOYEE: "Property Manager (Employee)",
     OWNER: "Property Owner",
     TENANT: "Tenant",
-    MAINTENANCE: "Property Maintenance (Owner)",
+    MAINTENANCE: "Property Maintenance",
     MAINT_EMPLOYEE: "Property Maintenance (Employee)",
   };
 
