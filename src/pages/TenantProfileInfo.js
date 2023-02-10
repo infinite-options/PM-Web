@@ -191,10 +191,8 @@ function TenantProfileInfo(props) {
   //   ));
   // }
   function addAdults() {
-    console.log("in add adults1");
     return (
       <div>
-        {console.log("in add adults")}
         <Table
           responsive="md"
           classes={{ root: classes.customTable }}

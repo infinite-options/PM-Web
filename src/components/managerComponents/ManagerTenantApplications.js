@@ -68,7 +68,7 @@ function ManagerTenantApplications(props) {
         resArr.push(item);
       }
     });
-    console.log(resArr);
+    // console.log(resArr);
     setApplications(resArr);
     setNewApplications(
       applications.filter((a) => a.application_status === "NEW")
@@ -147,8 +147,15 @@ function ManagerTenantApplications(props) {
                 <TableRow>
                   <TableCell
                     align="center"
-                    hidden={forwardedApplications.length > 0}
+                    hidden={applications.some(
+                      (app) =>
+                        app.application_status !== "RENTED" ||
+                        app.application_status !== "FORWARDED" ||
+                        app.application_status !== "LEASE EXTENSION" ||
+                        app.application_status !== "TENANT LEASE EXTENSION"
+                    )}
                   ></TableCell>
+
                   <TableCell align="center">Application Status</TableCell>
                   <TableCell align="center">Name</TableCell>
                   <TableCell align="center">Message</TableCell>
@@ -166,7 +173,13 @@ function ManagerTenantApplications(props) {
                   <TableRow className="mt-2" key={i}>
                     <TableCell
                       align="center"
-                      hidden={forwardedApplications.length > 0}
+                      hidden={applications.some(
+                        (app) =>
+                          app.application_status !== "RENTED" ||
+                          app.application_status !== "FORWARDED" ||
+                          app.application_status !== "LEASE EXTENSION" ||
+                          app.application_status !== "TENANT LEASE EXTENSION"
+                      )}
                     >
                       <div>
                         <Checkbox

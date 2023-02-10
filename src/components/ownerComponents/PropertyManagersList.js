@@ -173,8 +173,8 @@ function PropertyManagersList(props) {
     reload();
     setStage("LIST");
   };
-  console.log("Property Managers", propertyManagers);
-  console.log("Property", property);
+  // console.log("Property Managers", propertyManagers);
+  // console.log("Property", property);
   return stage === "LIST" ? (
     <div className="flex-1">
       <div className="w-100  mb-5">

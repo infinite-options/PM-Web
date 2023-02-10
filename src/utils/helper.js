@@ -48,4 +48,23 @@ function formatSSN(value) {
 
   return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
 }
-export { MaskCharacter, ordinal_suffix_of, formatPhoneNumber, formatSSN };
+function formatEIN(value) {
+  if (!value) return value;
+
+  const ein = value.replace(/[^\d]/g, "");
+
+  const einLength = ein.length;
+
+  if (einLength < 4) return ein;
+  if (einLength < 10) {
+    return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
+  }
+  return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
+}
+export {
+  MaskCharacter,
+  ordinal_suffix_of,
+  formatPhoneNumber,
+  formatSSN,
+  formatEIN,
+};

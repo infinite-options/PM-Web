@@ -756,7 +756,7 @@ function ManagerPropertyView(props) {
   const yearCashFlowExpectedAmortized = (
     yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
   ).toFixed(2);
-  console.log(acceptedTenantApplications);
+  // console.log(acceptedTenantApplications);
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
       <ManagerManagementContract

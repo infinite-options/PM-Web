@@ -72,7 +72,7 @@ function ReviewPropertyLease(props) {
       const response = await get(
         `/leaseTenants?linked_tenant_id=${user.user_uid}`
       );
-      console.log("rentals", response);
+      // console.log("rentals", response);
 
       const filteredRentals = [];
       for (let i = 0; i < response.result.length; i++) {
@@ -81,7 +81,7 @@ function ReviewPropertyLease(props) {
           filteredRentals.push(response.result[i]);
         }
       }
-      console.log("required1", filteredRentals);
+      // console.log("required1", filteredRentals);
 
       if (filteredRentals && filteredRentals.length) {
         const leaseDoc = filteredRentals[0].documents
@@ -104,7 +104,7 @@ function ReviewPropertyLease(props) {
     }
     fetchRentals();
   }, [user]);
-  console.log(rentals);
+  // console.log(rentals);
 
   useEffect(() => {
     const currentMonth = new Date().getMonth();
@@ -145,9 +145,9 @@ function ReviewPropertyLease(props) {
   // console.log(properties);
 
   const approveLease = async () => {
-    console.log("in approvelease", rentals);
+    // console.log("in approvelease", rentals);
     if (rentals.length > 0) {
-      console.log("in approvelease", rentals);
+      // console.log("in approvelease", rentals);
       if (rentals.some((rental) => rental.rental_status === "PROCESSING")) {
         const updatedApplication = {
           application_uid: application_uid,
