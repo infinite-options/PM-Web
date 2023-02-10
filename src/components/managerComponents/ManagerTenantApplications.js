@@ -145,16 +145,17 @@ function ManagerTenantApplications(props) {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell
-                    align="center"
-                    hidden={applications.some(
-                      (app) =>
-                        app.application_status !== "RENTED" ||
-                        app.application_status !== "FORWARDED" ||
-                        app.application_status !== "LEASE EXTENSION" ||
-                        app.application_status !== "TENANT LEASE EXTENSION"
-                    )}
-                  ></TableCell>
+                  {applications.some(
+                    (app) =>
+                      app.application_status !== "RENTED" ||
+                      app.application_status !== "FORWARDED" ||
+                      app.application_status !== "LEASE EXTENSION" ||
+                      app.application_status !== "TENANT LEASE EXTENSION"
+                  ) ? (
+                    <TableCell align="center"></TableCell>
+                  ) : (
+                    ""
+                  )}
 
                   <TableCell align="center">Application Status</TableCell>
                   <TableCell align="center">Name</TableCell>
@@ -171,24 +172,26 @@ function ManagerTenantApplications(props) {
               <TableBody>
                 {applications.map((application, i) => (
                   <TableRow className="mt-2" key={i}>
-                    <TableCell
-                      align="center"
-                      hidden={applications.some(
-                        (app) =>
-                          app.application_status !== "RENTED" ||
-                          app.application_status !== "FORWARDED" ||
-                          app.application_status !== "LEASE EXTENSION" ||
-                          app.application_status !== "TENANT LEASE EXTENSION"
-                      )}
-                    >
-                      <div>
-                        <Checkbox
-                          type="BOX"
-                          checked={application.application_selected}
-                          onClick={() => toggleApplications(application)}
-                        />
-                      </div>
-                    </TableCell>
+                    {applications.some(
+                      (app) =>
+                        app.application_status !== "RENTED" ||
+                        app.application_status !== "FORWARDED" ||
+                        app.application_status !== "LEASE EXTENSION" ||
+                        app.application_status !== "TENANT LEASE EXTENSION"
+                    ) ? (
+                      <TableCell align="center">
+                        <div>
+                          <Checkbox
+                            type="BOX"
+                            checked={application.application_selected}
+                            onClick={() => toggleApplications(application)}
+                          />
+                        </div>
+                      </TableCell>
+                    ) : (
+                      ""
+                    )}
+
                     <TableCell
                       align="center"
                       onClick={() => selectTenantApplication(application)}
