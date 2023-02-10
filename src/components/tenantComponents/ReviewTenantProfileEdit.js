@@ -25,6 +25,7 @@ import {
   subHeading,
   red,
 } from "../../utils/styles";
+import { MaskCharacter } from "../../utils/helper";
 import { get, put, post } from "../../utils/api";
 const useStyles = makeStyles({
   customTable: {
@@ -46,6 +47,7 @@ function ReviewTenantProfileEdit(props) {
   const application_status_1 = location.state.application_status_1;
   const application = location.state.application;
 
+  const [showSSN, setShowSSN] = useState(true);
   const [profile, setProfile] = useState(null);
   const [filesOrigignal, setFilesOriginal] = useState([]);
   const [files, setFiles] = useState([]);
@@ -60,7 +62,7 @@ function ReviewTenantProfileEdit(props) {
   const [children, setChildren] = useState([]);
   const [pets, setPets] = useState([]);
   const [vehicles, setVehicles] = useState([]);
-  const [referred, setReferences] = useState([]);
+  const [references, setReferences] = useState([]);
 
   const [width, setWindowWidth] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
@@ -358,7 +360,14 @@ function ReviewTenantProfileEdit(props) {
                           {" "}
                           {profile.tenant_current_job_company}
                         </TableCell>
-                        <TableCell> {profile.tenant_ssn}</TableCell>
+                        <TableCell onClick={() => setShowSSN(!showSSN)}>
+                          {" "}
+                          {profile.tenant_ssn && profile.tenant_ssn !== "NULL"
+                            ? showSSN
+                              ? MaskCharacter(profile.tenant_ssn, "*")
+                              : profile.tenant_ssn
+                            : "No SSN Provided"}
+                        </TableCell>
                         <TableCell>
                           {profile.tenant_drivers_license_number} (
                           {profile.tenant_drivers_license_state})
@@ -557,40 +566,46 @@ function ReviewTenantProfileEdit(props) {
               {Object.values(adults).length > 0 ? (
                 <div className="mx-3 ">
                   <Row style={subHeading}>Adults</Row>
-                  <Row style={subHeading}>
-                    <Col xs={1}></Col>
-                    <Col>Name</Col>
-                    <Col>Relationship</Col>
-                    <Col>DOB(YYYY-MM-DD)</Col>
-                  </Row>
-                  {Object.values(adults).map((adult, i) => {
-                    return (
-                      <div>
-                        <Row>
-                          <Col xs={1}>
-                            {adultsApplication.some(
-                              (a) => a.name === adult.name
-                            ) ? (
-                              <img
-                                src={Radiobutton_filled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handleAdultsClick(adult)}
-                              />
-                            ) : (
-                              <img
-                                src={Radiobutton_unfilled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handleAdultsClick(adult)}
-                              />
-                            )}
-                          </Col>
-                          <Col>{adult.name}</Col>
-                          <Col>{adult.relationship}</Col>
-                          <Col>{adult.dob}</Col>
-                        </Row>
-                      </div>
-                    );
-                  })}
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Relationship</TableCell>
+                        <TableCell>DOB(YYYY-MM-DD)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.values(adults).map((adult, i) => {
+                        return (
+                          <TableRow>
+                            <TableCell xs={1}>
+                              {adultsApplication.includes(adult) ? (
+                                <img
+                                  src={Radiobutton_filled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() => handleAdultsClick(adult)}
+                                />
+                              ) : (
+                                <img
+                                  src={Radiobutton_unfilled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() => handleAdultsClick(adult)}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell>{adult.name}</TableCell>
+                            <TableCell>{adult.relationship}</TableCell>
+                            <TableCell>{adult.dob}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
                 </div>
               ) : (
                 ""
@@ -600,40 +615,46 @@ function ReviewTenantProfileEdit(props) {
               {Object.values(children).length > 0 ? (
                 <div className="mx-3 ">
                   <Row style={subHeading}>Children</Row>
-                  <Row style={subHeading}>
-                    <Col xs={1}></Col>
-                    <Col>Name</Col>
-                    <Col>Relationship</Col>
-                    <Col>DOB(YYYY-MM-DD)</Col>
-                  </Row>
-                  {Object.values(children).map((child, i) => {
-                    return (
-                      <div>
-                        <Row>
-                          <Col xs={1}>
-                            {childrenApplication.some(
-                              (c) => c.name === child.name
-                            ) ? (
-                              <img
-                                src={Radiobutton_filled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handleChildrenClick(child)}
-                              />
-                            ) : (
-                              <img
-                                src={Radiobutton_unfilled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handleChildrenClick(child)}
-                              />
-                            )}
-                          </Col>
-                          <Col>{child.name}</Col>
-                          <Col>{child.relationship}</Col>
-                          <Col>{child.dob}</Col>
-                        </Row>
-                      </div>
-                    );
-                  })}
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Relationship</TableCell>
+                        <TableCell>DOB(YYYY-MM-DD)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.values(children).map((child) => {
+                        return (
+                          <TableRow>
+                            <TableCell xs={1}>
+                              {childrenApplication.includes(child) ? (
+                                <img
+                                  src={Radiobutton_filled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() => handleChildrenClick(child)}
+                                />
+                              ) : (
+                                <img
+                                  src={Radiobutton_unfilled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() => handleChildrenClick(child)}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell>{child.name}</TableCell>
+                            <TableCell>{child.relationship}</TableCell>
+                            <TableCell>{child.dob}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
                 </div>
               ) : (
                 ""
@@ -643,43 +664,50 @@ function ReviewTenantProfileEdit(props) {
               {Object.values(pets).length > 0 ? (
                 <div className="mx-3 ">
                   <Row style={subHeading}>Pets</Row>
-                  <Row style={subHeading}>
-                    <Col xs={1}></Col>
-                    <Col>Name</Col>
-                    <Col>Type</Col>
-                    <Col>Breed</Col>
-                    <Col>Weight</Col>
-                  </Row>
-                  {Object.values(pets).map((pet) => {
-                    return (
-                      <div>
-                        <Row>
-                          {" "}
-                          <Col xs={1}>
-                            {petsApplication.some(
-                              (p) => p.name === pet.name
-                            ) ? (
-                              <img
-                                src={Radiobutton_filled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handlePetsClick(pet)}
-                              />
-                            ) : (
-                              <img
-                                src={Radiobutton_unfilled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handlePetsClick(pet)}
-                              />
-                            )}
-                          </Col>
-                          <Col>{pet.name}</Col>
-                          <Col>{pet.type}</Col>
-                          <Col>{pet.breed}</Col>
-                          <Col>{pet.weight}</Col>
-                        </Row>
-                      </div>
-                    );
-                  })}
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      {" "}
+                      <TableRow style={subHeading}>
+                        <TableCell xs={1}></TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Type</TableCell>
+                        <TableCell>Breed</TableCell>
+                        <TableCell>Weight</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.values(pets).map((pet) => {
+                        return (
+                          <TableRow>
+                            {" "}
+                            <TableCell xs={1}>
+                              {petsApplication.includes(pet) ? (
+                                <img
+                                  src={Radiobutton_filled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() => handlePetsClick(pet)}
+                                />
+                              ) : (
+                                <img
+                                  src={Radiobutton_unfilled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() => handlePetsClick(pet)}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell>{pet.name}</TableCell>
+                            <TableCell>{pet.type}</TableCell>
+                            <TableCell>{pet.breed}</TableCell>
+                            <TableCell>{pet.weight}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
                 </div>
               ) : (
                 ""
@@ -689,91 +717,109 @@ function ReviewTenantProfileEdit(props) {
               {Object.values(vehicles).length > 0 ? (
                 <div className="mx-3 ">
                   <Row style={subHeading}>Vehicles</Row>
-                  <Row style={subHeading}>
-                    <Col xs={1}></Col>
-                    <Col>Make</Col>
-                    <Col>Model</Col>
-                    <Col>Year</Col>
-                    <Col>State</Col>
-                    <Col>License</Col>
-                  </Row>
-                  {Object.values(vehicles).map((vehicle) => {
-                    return (
-                      <div>
-                        <Row>
-                          <Col xs={1}>
-                            {vehiclesApplication.some(
-                              (v) => v.model === vehicle.model
-                            ) ? (
-                              <img
-                                src={Radiobutton_filled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handleVehiclesClick(vehicle)}
-                              />
-                            ) : (
-                              <img
-                                src={Radiobutton_unfilled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handleVehiclesClick(vehicle)}
-                              />
-                            )}
-                          </Col>
-                          <Col>{vehicle.make}</Col>
-                          <Col>{vehicle.model}</Col>
-                          <Col>{vehicle.year}</Col>
-                          <Col>{vehicle.state}</Col>
-                          <Col>{vehicle.license}</Col>
-                        </Row>
-                      </div>
-                    );
-                  })}
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow style={subHeading}>
+                        <TableCell xs={1}></TableCell>
+                        <TableCell>Make</TableCell>
+                        <TableCell>Model</TableCell>
+                        <TableCell>Year</TableCell>
+                        <TableCell>State</TableCell>
+                        <TableCell>License</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.values(vehicles).map((vehicle) => {
+                        return (
+                          <TableRow>
+                            <TableCell xs={1}>
+                              {vehiclesApplication.includes(vehicle) ? (
+                                <img
+                                  src={Radiobutton_filled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() => handleVehiclesClick(vehicle)}
+                                />
+                              ) : (
+                                <img
+                                  src={Radiobutton_unfilled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() => handleVehiclesClick(vehicle)}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell>{vehicle.make}</TableCell>
+                            <TableCell>{vehicle.model}</TableCell>
+                            <TableCell>{vehicle.year}</TableCell>
+                            <TableCell>{vehicle.state}</TableCell>
+                            <TableCell>{vehicle.license}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
                 </div>
               ) : (
                 ""
               )}
             </div>
             <div>
-              {Object.values(referred).length > 0 ? (
+              {Object.values(references).length > 0 ? (
                 <div className="mx-3 ">
-                  <Row style={subHeading}>referred</Row>
-                  <Row style={subHeading}>
-                    <Col xs={1}></Col>
-                    <Col>Name</Col>
-                    <Col>Address</Col>
-                    <Col>Phone Number</Col>
-                    <Col>Email</Col>
-                    <Col>Relationship</Col>
-                  </Row>
-                  {Object.values(referred).map((reference) => {
-                    return (
-                      <div>
-                        <Row>
-                          <Col xs={1}>
-                            {referencesApplication.some(
-                              (r) => r.name === reference.name
-                            ) ? (
-                              <img
-                                src={Radiobutton_filled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handleReferencesClick(reference)}
-                              />
-                            ) : (
-                              <img
-                                src={Radiobutton_unfilled}
-                                style={{ width: "15px", height: "15px" }}
-                                onClick={() => handleReferencesClick(reference)}
-                              />
-                            )}
-                          </Col>
-                          <Col>{reference.name}</Col>
-                          <Col>{reference.address}</Col>
-                          <Col>{reference.phone}</Col>
-                          <Col>{reference.email}</Col>
-                          <Col>{reference.relationship}</Col>
-                        </Row>
-                      </div>
-                    );
-                  })}
+                  <Row style={subHeading}>References</Row>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow style={subHeading}>
+                        <TableCell xs={1}></TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Address</TableCell>
+                        <TableCell>Phone Number</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Relationship</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.values(references).map((reference) => {
+                        return (
+                          <div>
+                            <TableRow>
+                              <TableCell xs={1}>
+                                {referencesApplication.includes(reference) ? (
+                                  <img
+                                    src={Radiobutton_filled}
+                                    style={{ width: "15px", height: "15px" }}
+                                    onClick={() =>
+                                      handleReferencesClick(reference)
+                                    }
+                                  />
+                                ) : (
+                                  <img
+                                    src={Radiobutton_unfilled}
+                                    style={{ width: "15px", height: "15px" }}
+                                    onClick={() =>
+                                      handleReferencesClick(reference)
+                                    }
+                                  />
+                                )}
+                              </TableCell>
+                              <TableCell>{reference.name}</TableCell>
+                              <TableCell>{reference.address}</TableCell>
+                              <TableCell>{reference.phone}</TableCell>
+                              <TableCell>{reference.email}</TableCell>
+                              <TableCell>{reference.relationship}</TableCell>
+                            </TableRow>
+                          </div>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
                 </div>
               ) : (
                 ""

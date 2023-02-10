@@ -302,7 +302,8 @@ function ManagerTenantAgreement(props) {
   };
   const [errorMessage, setErrorMessage] = useState("");
   const required =
-    errorMessage === "Please fill out all fields" ? (
+    errorMessage === "Please fill out all fields" ||
+    errorMessage === "Please fill out the effective date" ? (
       <span style={red} className="ms-1">
         *
       </span>

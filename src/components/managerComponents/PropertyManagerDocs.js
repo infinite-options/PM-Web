@@ -214,7 +214,9 @@ function PropertyManagerDocs(props) {
         senderName={user.first_name + " " + user.last_name}
         requestCreatedBy={user.user_uid}
         userMessaged={property.owner_id}
-        receiverEmail={property.owner[0].owner_email}
+        receiverEmail={
+          property.owner_id !== "" ? property.owner[0].owner_email : ""
+        }
         onCancel={onCancel}
       />
 
@@ -243,8 +245,11 @@ function PropertyManagerDocs(props) {
               <TableBody>
                 <TableRow>
                   <TableCell>
-                    {property.owner[0].owner_first_name}{" "}
-                    {property.owner[0].owner_last_name}
+                    {property.owner_id !== ""
+                      ? property.owner[0].owner_first_name +
+                        " " +
+                        property.owner[0].owner_last_name
+                      : "No Owner"}
                   </TableCell>
 
                   <TableCell>
@@ -273,7 +278,13 @@ function PropertyManagerDocs(props) {
                     <Row>
                       <Col className="d-flex justify-content-center">
                         {" "}
-                        <a href={`tel:${property.owner[0].owner_phone_number}`}>
+                        <a
+                          href={`tel:${
+                            property.owner_id !== ""
+                              ? property.owner[0].owner_phone_number
+                              : ""
+                          }`}
+                        >
                           <img src={Phone} alt="Phone" style={smallImg} />
                         </a>
                       </Col>

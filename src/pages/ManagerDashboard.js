@@ -4697,8 +4697,12 @@ export default function ManagerDashboard() {
                                     navigate(`/owner-list`);
                                   }}
                                 >
-                                  {property.owner_first_name}{" "}
-                                  {property.owner_last_name}
+                                  {property.owner_id !== ""
+                                    ? property.owner_first_name +
+                                      " " +
+                                      property.owner_last_name
+                                    : "No Owner"}
+
                                   <div className="d-flex align-items-center flex-column">
                                     {property.management_status ===
                                     "FORWARDED" ? (

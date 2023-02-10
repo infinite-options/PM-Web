@@ -422,6 +422,7 @@ function ManagerPropertyView(props) {
   const closeAgreement = () => {
     // reload();
     setShowTenantAgreement(false);
+    setShowTenantProfile(false);
     setAcceptedTenantApplications([]);
     reloadProperty();
   };
