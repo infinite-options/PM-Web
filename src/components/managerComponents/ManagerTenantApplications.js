@@ -68,7 +68,7 @@ function ManagerTenantApplications(props) {
         resArr.push(item);
       }
     });
-    console.log(resArr);
+    // console.log(resArr);
     setApplications(resArr);
     setNewApplications(
       applications.filter((a) => a.application_status === "NEW")

@@ -132,7 +132,7 @@ export default function TenantDashboard() {
         apps.push(appRes.result[i]);
       }
     }
-    console.log(apps);
+    // console.log(apps);
     var resArr = [];
     apps.forEach(function (item) {
       var i = resArr.findIndex(
@@ -142,7 +142,7 @@ export default function TenantDashboard() {
         resArr.push(item);
       }
     });
-    console.log(resArr);
+    // console.log(resArr);
     setApplications(resArr);
 
     // setApplications(apps);

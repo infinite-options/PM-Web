@@ -41,7 +41,7 @@ function ConfirmDialog3(props) {
     button2,
     showSpinner,
   } = props;
-  console.log(props);
+  // console.log(props);
 
   Array.prototype.includesObj = function (obj) {
     for (let i = 0; i < this.length; i++) {
@@ -326,7 +326,6 @@ function ConfirmDialog3(props) {
                             (e) => fee.fee_name === e.fee_name
                           ) ? (
                           <TableRow>
-                            {console.log("fee name == new fee name")}
                             <TableCell>
                               {oldAgreement.rent_payments.find(
                                 (temp) => fee.fee_name === temp.fee_name

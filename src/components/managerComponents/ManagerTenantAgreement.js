@@ -54,7 +54,7 @@ function ManagerTenantAgreement(props) {
     acceptedTenantApplications,
     setAcceptedTenantApplications,
   } = props;
-  console.log("here", acceptedTenantApplications[0]);
+  // console.log("here", acceptedTenantApplications[0]);
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -331,7 +331,7 @@ function ManagerTenantAgreement(props) {
       ""
     );
   // console.log("feeState in tenantagreemnt", feeState);
-  console.log(startDate, startDate.split("-")[2]);
+  // console.log(startDate, startDate.split("-")[2]);
   const forwardLeaseAgreement = async () => {
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please fill out all fields");
@@ -521,8 +521,8 @@ function ManagerTenantAgreement(props) {
       documents: files,
     };
     let up = newAgreement;
-    console.log("og", oldAgreement);
-    console.log("up", up);
+    // console.log("og", oldAgreement);
+    // console.log("up", up);
     setUpdatedAgreement(up);
     setShowDialog(true);
   };
@@ -585,7 +585,7 @@ function ManagerTenantAgreement(props) {
         (application) => application.application_uid
       )
     );
-    console.log(newAgreement);
+    // console.log(newAgreement);
     const create_rental = await post("/extendLease", newAgreement, null, files);
     const extendObject = {
       application_status: "LEASE EXTENSION",
