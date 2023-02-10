@@ -7,6 +7,7 @@ import Checkbox from "../components/Checkbox";
 import Header from "../components/Header";
 import ArrowDown from "../icons/ArrowDown.svg";
 
+import { formatPhoneNumber, formatSSN } from "../utils/helper";
 function EmployeeProfile(props) {
   const { businessType, onConfirm, autofillState, setAutofillState } = props;
   const updateAutofillState = (profile) => {
@@ -137,40 +138,7 @@ function EmployeeProfile(props) {
     updateAutofillState(employeeInfo);
     onConfirm();
   };
-  function formatPhoneNumber(value) {
-    if (!value) return value;
 
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    const phoneNumberLength = phoneNumber.length;
-
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
-
-  function formatSSN(value) {
-    if (!value) return value;
-
-    const ssn = value.replace(/[^\d]/g, "");
-
-    const ssnLength = ssn.length;
-
-    if (ssnLength < 4) return ssn;
-
-    if (ssnLength < 6) {
-      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
-    }
-
-    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
-  }
   return (
     <div className="pb-5">
       <Header

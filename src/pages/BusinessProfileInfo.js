@@ -11,6 +11,7 @@ import ManagerLocations from "../components/ManagerLocations";
 import { get, post } from "../utils/api";
 import { pillButton, squareForm, hidden, red, small } from "../utils/styles";
 
+import { formatPhoneNumber, formatEIN } from "../utils/helper";
 function BusinessProfileInfo(props) {
   const context = React.useContext(AppContext);
   const { access_token, user } = context.userData;
@@ -168,37 +169,7 @@ function BusinessProfileInfo(props) {
     updateAutofillState(businessProfile);
     props.onConfirm();
   };
-  function formatPhoneNumber(value) {
-    if (!value) return value;
 
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    const phoneNumberLength = phoneNumber.length;
-
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
-  function formatEIN(value) {
-    if (!value) return value;
-
-    const ein = value.replace(/[^\d]/g, "");
-
-    const einLength = ein.length;
-
-    if (einLength < 4) return ein;
-    if (einLength < 10) {
-      return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
-    }
-    return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
-  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

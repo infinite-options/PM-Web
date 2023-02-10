@@ -11,6 +11,8 @@ import ManagerLocations from "../components/ManagerLocations";
 import { get, post } from "../utils/api";
 import { squareForm, pillButton, hidden, red, small } from "../utils/styles";
 
+import { formatPhoneNumber, formatEIN, formatSSN } from "../utils/helper";
+
 function ManagerProfileInfo(props) {
   const context = useContext(AppContext);
   const { access_token, user } = context.userData;
@@ -119,52 +121,7 @@ function ManagerProfileInfo(props) {
     updateAutofillState(managerProfile);
     props.onConfirm();
   };
-  function formatPhoneNumber(value) {
-    if (!value) return value;
 
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    const phoneNumberLength = phoneNumber.length;
-
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
-  function formatSSN(value) {
-    if (!value) return value;
-
-    const ssn = value.replace(/[^\d]/g, "");
-
-    const ssnLength = ssn.length;
-
-    if (ssnLength < 4) return ssn;
-
-    if (ssnLength < 6) {
-      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
-    }
-
-    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
-  }
-  function formatEIN(value) {
-    if (!value) return value;
-
-    const ein = value.replace(/[^\d]/g, "");
-
-    const einLength = ein.length;
-
-    if (einLength < 4) return ein;
-    if (einLength < 10) {
-      return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
-    }
-    return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
-  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

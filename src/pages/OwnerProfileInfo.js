@@ -8,7 +8,7 @@ import Checkbox from "../components/Checkbox";
 import PaymentSelection from "../components/PaymentSelection";
 import { get, post } from "../utils/api";
 import { squareForm, pillButton, hidden, red, small } from "../utils/styles";
-
+import { formatPhoneNumber, formatSSN } from "../utils/helper";
 function OwnerProfileInfo(props) {
   const context = React.useContext(AppContext);
   const { access_token, user } = context.userData;
@@ -107,39 +107,7 @@ function OwnerProfileInfo(props) {
   };
   const [showSsn, setShowSsn] = React.useState(false);
   const [showEin, setShowEin] = React.useState(false);
-  function formatPhoneNumber(value) {
-    if (!value) return value;
 
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    const phoneNumberLength = phoneNumber.length;
-
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
-  function formatSSN(value) {
-    if (!value) return value;
-
-    const ssn = value.replace(/[^\d]/g, "");
-
-    const ssnLength = ssn.length;
-
-    if (ssnLength < 4) return ssn;
-
-    if (ssnLength < 6) {
-      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
-    }
-
-    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
-  }
   const required =
     errorMessage === "Please fill out all fields" ? (
       <span style={red} className="ms-1">

@@ -11,7 +11,7 @@ import { squareForm, red } from "../utils/styles";
 import Checkbox from "../components/Checkbox";
 import { small, underline, gray, headings } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
-
+import { formatPhoneNumber, formatSSN } from "../utils/helper";
 function AddressForm(props) {
   const {
     errorMessage,
@@ -332,24 +332,6 @@ function AddressForm(props) {
     calcDifference();
   }, [lease_end, diff, setDiff]);
 
-  function formatPhoneNumber(value) {
-    if (!value) return value;
-
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    const phoneNumberLength = phoneNumber.length;
-
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
   return (
     <div>
       {editProfile ? (

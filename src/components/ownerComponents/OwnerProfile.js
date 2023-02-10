@@ -18,7 +18,11 @@ import {
   small,
   bluePillButton,
 } from "../../utils/styles";
-import { MaskCharacter } from "../../utils/helper";
+import {
+  formatPhoneNumber,
+  formatSSN,
+  MaskCharacter,
+} from "../../utils/helper";
 function OwnerProfile(props) {
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
@@ -168,39 +172,6 @@ function OwnerProfile(props) {
     ) : (
       ""
     );
-  function formatPhoneNumber(value) {
-    if (!value) return value;
-
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    const phoneNumberLength = phoneNumber.length;
-
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
-  function formatSSN(value) {
-    if (!value) return value;
-
-    const ssn = value.replace(/[^\d]/g, "");
-
-    const ssnLength = ssn.length;
-
-    if (ssnLength < 4) return ssn;
-
-    if (ssnLength < 6) {
-      return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
-    }
-
-    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
-  }
   return (
     <div>
       <div className="flex-1">
