@@ -30,8 +30,10 @@ function ManagerTenantApplications(props) {
     property,
     createNewTenantAgreement,
     selectTenantApplication,
+    selectedTenantApplication,
     reload,
   } = props;
+
   const [applications, setApplications] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [newApplications, setNewApplications] = useState([]);
@@ -57,7 +59,17 @@ function ManagerTenantApplications(props) {
       application_selected: false,
     }));
     // console.log(applications);
-    setApplications(applications);
+    var resArr = [];
+    applications.forEach(function (item) {
+      var i = resArr.findIndex(
+        (x) => x.application_uid == item.application_uid
+      );
+      if (i <= -1) {
+        resArr.push(item);
+      }
+    });
+    console.log(resArr);
+    setApplications(resArr);
     setNewApplications(
       applications.filter((a) => a.application_status === "NEW")
     );
@@ -286,7 +298,6 @@ function ManagerTenantApplications(props) {
                                   width: "15px",
                                   height: "15px",
                                 }}
-                                alt="Document"
                               />
                             </a>
                           </div>
@@ -297,27 +308,34 @@ function ManagerTenantApplications(props) {
               </TableBody>
             </Table>
           </Row>
-
-          <Row className="mt-4 d-flex w-100">
-            <Col className="d-flex justify-content-evenly">
-              <Button
-                style={bluePillButton}
-                onClick={applicationsResponse}
-                hidden={forwardedApplications.length > 0}
-              >
-                Accept Selected Applicants
-              </Button>
-            </Col>
-            <Col className="d-flex justify-content-evenly">
-              <Button
-                style={redPillButton}
-                onClick={() => setShowDialog(true)}
-                hidden={forwardedApplications.length > 0}
-              >
-                Reject Application
-              </Button>
-            </Col>
-          </Row>
+          {applications.some((app) =>
+            app.application_status === "RENTED" ||
+            app.application_status === "LEASE EXTENSION" ||
+            app.application_status === "TENANT LEASE EXTENSION" ? (
+              <Row></Row>
+            ) : (
+              <Row className="mt-4 d-flex w-100">
+                <Col className="d-flex justify-content-evenly">
+                  <Button
+                    style={bluePillButton}
+                    onClick={applicationsResponse}
+                    hidden={forwardedApplications.length > 0}
+                  >
+                    Accept Selected Applicants
+                  </Button>
+                </Col>
+                <Col className="d-flex justify-content-evenly">
+                  <Button
+                    style={redPillButton}
+                    onClick={() => setShowDialog(true)}
+                    hidden={forwardedApplications.length > 0}
+                  >
+                    Reject Application
+                  </Button>
+                </Col>
+              </Row>
+            )
+          )}
         </div>
       ) : (
         <Row className="mx-5">No New Applications</Row>

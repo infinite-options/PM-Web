@@ -71,7 +71,7 @@ function ReviewPropertyLease(props) {
       const response = await get(
         `/leaseTenants?linked_tenant_id=${user.user_uid}`
       );
-      // console.log("rentals", response);
+      console.log("rentals", response);
 
       const filteredRentals = [];
       for (let i = 0; i < response.result.length; i++) {
@@ -80,7 +80,7 @@ function ReviewPropertyLease(props) {
           filteredRentals.push(response.result[i]);
         }
       }
-      // console.log("required1", filteredRentals);
+      console.log("required1", filteredRentals);
 
       if (filteredRentals && filteredRentals.length) {
         const leaseDoc = filteredRentals[0].documents
@@ -103,6 +103,7 @@ function ReviewPropertyLease(props) {
     }
     fetchRentals();
   }, [user]);
+  console.log(rentals);
 
   useEffect(() => {
     const currentMonth = new Date().getMonth();
@@ -156,9 +157,10 @@ function ReviewPropertyLease(props) {
     return i + "th";
   }
   const approveLease = async () => {
+    console.log("in approvelease", rentals);
     if (rentals.length > 0) {
-      // console.log(rentals);
-      if (new Date(rentals[0].lease_start) > new Date()) {
+      console.log("in approvelease", rentals);
+      if (rentals.some((rental) => rental.rental_status === "PROCESSING")) {
         const updatedApplication = {
           application_uid: application_uid,
           application_status: "RENTED",
@@ -169,16 +171,26 @@ function ReviewPropertyLease(props) {
           updatedApplication,
           access_token
         );
-
         navigate("/tenant");
-      } else {
+      } else if (rentals.some((rental) => rental.rental_status === "ACTIVE")) {
         const updateLease = {
           linked_application_id: application_uid,
           rental_status: "ACTIVE",
           rental_uid: rentals[0].rental_uid,
         };
         const response2 = await put("/UpdateActiveLease", updateLease);
-
+        navigate("/tenant");
+      } else {
+        const updateLease = {
+          // linked_application_id: application_uid,
+          // rental_status: "ACTIVE",
+          // rental_uid: rentals[0].rental_uid,
+          application_uid: application_uid,
+          application_status: "RENTED",
+          property_uid: rentals[0].rental_property_id,
+          message: "Lease extended",
+        };
+        const response2 = await put("/extendLease", updateLease);
         navigate("/tenant");
       }
     }
@@ -309,13 +321,13 @@ function ReviewPropertyLease(props) {
         >
           <SideBar />
         </div>
-        <div className="mb-5" style={{ width: "100%" }}>
+        <div className="w-100 mb-5 overflow-scroll">
           <Header
             title="Property Lease Details"
             leftText="< Back"
             leftFn={() => navigate("/tenant")}
           />
-          <div className="w-100 overflow-hidden">
+          <div>
             <PropertyApplicationView forPropertyLease="true" />
           </div>
           {/* {console.log(
@@ -324,120 +336,118 @@ function ReviewPropertyLease(props) {
           )} */}
 
           {application_status_1 === "FORWARDED" ? (
-            <div>
-              <div
-                className="mx-3 my-3 p-2"
-                style={{
-                  background: "#E9E9E9 0% 0% no-repeat padding-box",
-                  borderRadius: "10px",
-                  opacity: 1,
-                }}
-              >
-                {/* {console.log("here forwarded")} */}
-                <Row className="m-3">
-                  <Col>
-                    <h3>Application Details</h3>
-                  </Col>
-                  <Col xs={2}> </Col>
-                </Row>
-                {/* {console.log("application", application.applicant_info)} */}
-                <Row className="m-3" style={{ overflow: "scroll" }}>
-                  <Table classes={{ root: classes.customTable }} size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Application Status</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Message</TableCell>
-                        <TableCell>Adults</TableCell>
-                        <TableCell>Children</TableCell>
-                        <TableCell>Pets</TableCell>
-                        <TableCell>Vehicles</TableCell>
-                        <TableCell>Referred</TableCell>
-                        <TableCell>Application Date</TableCell>
-                        <TableCell>Documents</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow className="mt-2">
-                        <TableCell>{application.application_status}</TableCell>
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              {/* {console.log("here forwarded")} */}
+              <Row className="m-3">
+                <Col>
+                  <h3>Application Details</h3>
+                </Col>
+                <Col xs={2}> </Col>
+              </Row>
+              {/* {console.log("application", application.applicant_info)} */}
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Application Status</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Message</TableCell>
+                      <TableCell>Adults</TableCell>
+                      <TableCell>Children</TableCell>
+                      <TableCell>Pets</TableCell>
+                      <TableCell>Vehicles</TableCell>
+                      <TableCell>Referred</TableCell>
+                      <TableCell>Application Date</TableCell>
+                      <TableCell>Documents</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow className="mt-2">
+                      <TableCell>{application.application_status}</TableCell>
+                      <TableCell>
+                        {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                      </TableCell>
+                      <TableCell>Note: {application.message}</TableCell>
+                      {application.adults ? (
                         <TableCell>
-                          {`${application.tenant_first_name} ${application.tenant_last_name} `}
+                          {JSON.parse(application.adults).length}
                         </TableCell>
-                        <TableCell>Note: {application.message}</TableCell>
-                        {application.adults ? (
-                          <TableCell>
-                            {JSON.parse(application.adults).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
-                        {application.children ? (
-                          <TableCell>
-                            {JSON.parse(application.children).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
-
-                        {application.pets ? (
-                          <TableCell>
-                            {JSON.parse(application.pets).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
-                        {application.vehicles ? (
-                          <TableCell>
-                            {JSON.parse(application.vehicles).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
-                        {application.referred ? (
-                          <TableCell>
-                            {JSON.parse(application.referred).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.children ? (
                         <TableCell>
-                          {application.application_date.split(" ")[0]}
+                          {JSON.parse(application.children).length}
                         </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
 
+                      {application.pets ? (
                         <TableCell>
-                          {application.documents &&
-                            application.documents.length > 0 &&
-                            JSON.parse(application.documents).map(
-                              (document, i) => (
-                                <div
-                                  className="d-flex justify-content-between align-items-end ps-0"
-                                  key={i}
+                          {JSON.parse(application.pets).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.vehicles ? (
+                        <TableCell>
+                          {JSON.parse(application.vehicles).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.referred ? (
+                        <TableCell>
+                          {JSON.parse(application.referred).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      <TableCell>
+                        {application.application_date.split(" ")[0]}
+                      </TableCell>
+
+                      <TableCell>
+                        {application.documents &&
+                          application.documents.length > 0 &&
+                          JSON.parse(application.documents).map(
+                            (document, i) => (
+                              <div
+                                className="d-flex justify-content-between align-items-end ps-0"
+                                key={i}
+                              >
+                                <h6>{document.name}</h6>
+                                <a
+                                  href={document.link}
+                                  target="_blank"
+                                  rel="noreferrer"
                                 >
-                                  <h6>{document.name}</h6>
-                                  <a
-                                    href={document.link}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    <img
-                                      src={File}
-                                      alt="open document"
-                                      style={{
-                                        width: "15px",
-                                        height: "15px",
-                                      }}
-                                      alt="Document"
-                                    />
-                                  </a>
-                                </div>
-                              )
-                            )}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </Row>
-
+                                  <img
+                                    src={File}
+                                    alt="open document"
+                                    style={{
+                                      width: "15px",
+                                      height: "15px",
+                                    }}
+                                  />
+                                </a>
+                              </div>
+                            )
+                          )}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+              <Row className="m-3">
                 {application.applicant_info.length > 0
                   ? application.applicant_info.map((applicant) =>
                       applicant.application_uid !==
@@ -532,10 +542,10 @@ function ReviewPropertyLease(props) {
                       )
                     )
                   : ""}
-              </div>
+              </Row>
 
-              <div
-                className="mx-3 my-3 p-2"
+              <Row
+                className="m-3"
                 style={{
                   background: "#E9E9E9 0% 0% no-repeat padding-box",
                   borderRadius: "10px",
@@ -645,10 +655,12 @@ function ReviewPropertyLease(props) {
                 ) : (
                   ""
                 )}
-              </div>
+              </Row>
             </div>
           ) : application_status_1 === "FORWARDED" ||
-            application_status_1 === "RENTED" ? (
+            application_status_1 === "RENTED" ||
+            application_status_1 === "LEASE EXTENSION" ||
+            application_status_1 === "TENANT LEASE EXTENSION" ? (
             <div
               className="mx-3 my-3 p-2"
               style={{
@@ -750,7 +762,6 @@ function ReviewPropertyLease(props) {
                                       width: "15px",
                                       height: "15px",
                                     }}
-                                    alt="Document"
                                   />
                                 </a>
                               </div>
@@ -857,7 +868,7 @@ function ReviewPropertyLease(props) {
                 : ""}
 
               <div
-                className="mx-3 my-3 p-2"
+                className="my-3"
                 style={{
                   background: "#E9E9E9 0% 0% no-repeat padding-box",
                   borderRadius: "10px",
@@ -1067,7 +1078,6 @@ function ReviewPropertyLease(props) {
                                       width: "15px",
                                       height: "15px",
                                     }}
-                                    alt="Document"
                                   />
                                 </a>
                               </div>
@@ -1305,7 +1315,6 @@ function ReviewPropertyLease(props) {
                                       width: "15px",
                                       height: "15px",
                                     }}
-                                    alt="Document"
                                   />
                                 </a>
                               </div>
@@ -1471,7 +1480,6 @@ function ReviewPropertyLease(props) {
                               width: "20px",
                               height: "20px",
                             }}
-                            alt="Document"
                           />
                         </a>
                       </TableCell>
@@ -1745,8 +1753,7 @@ function ReviewPropertyLease(props) {
             </Row>: null
           } */}
 
-          {rentals.length > 0 &&
-          rentals[0].rental_status !== "ACTIVE" &&
+          {application_status_1 === "END EARLY" &&
           rentals[0].early_end_date !== null ? (
             <Row>
               <Row
@@ -1762,8 +1769,7 @@ function ReviewPropertyLease(props) {
             </Row>
           ) : null}
 
-          {rentals.length > 0 &&
-          rentals[0].rental_status === "ACTIVE" &&
+          {application_status_1 === "TENANT END EARLY" &&
           rentals[0].early_end_date !== null ? (
             <Row>
               <Row
@@ -1778,10 +1784,26 @@ function ReviewPropertyLease(props) {
               </Row>
             </Row>
           ) : null}
+          {application_status_1 === "LEASE EXTENSION" ? (
+            <Row>
+              <Row
+                className="my-3 mx-2"
+                style={{ padding: "0px 40px 0px 40px", fontSize: "22px" }}
+              >
+                <b>Announcement:</b>
+                <p style={{ fontSize: "16px" }}>
+                  The tenant has requested to extend the lease. Waiting for the
+                  approval from the Property Manager.
+                </p>
+              </Row>
+            </Row>
+          ) : null}
 
           {/* ==================< Approval|Disapprove buttons >=======================================  */}
           <Row className="mt-4">
-            {application_status_1 === "FORWARDED" ? (
+            {application_status_1 === "FORWARDED" ||
+            application_status_1 === "LEASE EXTENSION" ||
+            application_status_1 === "TENANT LEASE EXTENSION" ? (
               <Col
                 style={{
                   display: "flex",
@@ -1804,7 +1826,9 @@ function ReviewPropertyLease(props) {
             )}
 
             {application_status_1 === "FORWARDED" ||
-            application_status_1 === "NEW" ? (
+            application_status_1 === "NEW" ||
+            application_status_1 === "LEASE EXTENSION" ||
+            application_status_1 === "TENANT LEASE EXTENSION" ? (
               <Col
                 style={{
                   display: "flex",

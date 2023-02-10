@@ -184,6 +184,12 @@ export default function ManagerDashboard() {
       property.pm_end_early_applications = property.applications.filter(
         (a) => a.application_status === "PM END EARLY"
       );
+      property.extend_lease_applications = property.applications.filter(
+        (a) => a.application_status === "LEASE EXTENSION"
+      );
+      property.tenant_extend_lease_applications = property.applications.filter(
+        (a) => a.application_status === "TENANT LEASE EXTENSION"
+      );
     });
 
     // console.log(properties_unique);
@@ -4875,6 +4881,33 @@ export default function ManagerDashboard() {
                                       </p>
                                     </div>
                                   </div>
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {property
+                                          .tenant_extend_lease_applications
+                                          .length > 0
+                                          ? "Tenant(s) requested to extend the lease"
+                                          : ""}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {property.extend_lease_applications
+                                          .length > 0
+                                          ? "You requested to extend the lease"
+                                          : ""}
+                                      </p>
+                                    </div>
+                                  </div>
                                 </TableCell>
 
                                 <TableCell
@@ -5388,6 +5421,33 @@ export default function ManagerDashboard() {
                                         {property.pm_end_early_applications
                                           .length > 0
                                           ? "You requested to end the lease early"
+                                          : ""}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {property
+                                          .tenant_extend_lease_applications
+                                          .length > 0
+                                          ? "Tenant(s) requested to extend the lease"
+                                          : ""}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="d-flex">
+                                    <div className="d-flex align-items-end">
+                                      <p
+                                        style={{ ...blue, ...xSmall }}
+                                        className="mb-0"
+                                      >
+                                        {property.extend_lease_applications
+                                          .length > 0
+                                          ? "You requested to extend the lease"
                                           : ""}
                                       </p>
                                     </div>

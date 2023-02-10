@@ -342,7 +342,9 @@ function ManagerPropertyView(props) {
         application.application_status === "FORWARDED" ||
         application.application_status === "RENTED" ||
         application.application_status === "PM END EARLY" ||
-        application.application_status === "TENANT END EARLY"
+        application.application_status === "TENANT END EARLY" ||
+        application.application_status === "LEASE EXTENSION" ||
+        application.application_status === "TENANT LEASE EXTENSION"
       ) {
         setAcceptedTenantApplications([application]);
       }
@@ -753,7 +755,7 @@ function ManagerPropertyView(props) {
   const yearCashFlowExpectedAmortized = (
     yearRevenueExpectedTotalAmortized - yearExpenseExpectedTotalAmortized
   ).toFixed(2);
-  // console.log(cashflowData);
+  console.log(acceptedTenantApplications);
   return Object.keys(property).length > 1 ? (
     showManagementContract ? (
       <ManagerManagementContract
@@ -5578,6 +5580,7 @@ function ManagerPropertyView(props) {
                       reload={reloadProperty}
                       createNewTenantAgreement={createNewTenantAgreement}
                       selectTenantApplication={selectTenantApplication}
+                      selectedTenantApplication={selectedTenantApplication}
                     />
                   </Row>
                 </div>

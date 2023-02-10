@@ -132,8 +132,20 @@ export default function TenantDashboard() {
         apps.push(appRes.result[i]);
       }
     }
+    console.log(apps);
+    var resArr = [];
+    apps.forEach(function (item) {
+      var i = resArr.findIndex(
+        (x) => x.application_uid == item.application_uid
+      );
+      if (i <= -1) {
+        resArr.push(item);
+      }
+    });
+    console.log(resArr);
+    setApplications(resArr);
 
-    setApplications(apps);
+    // setApplications(apps);
 
     const properties = response.result[0].properties.filter(
       (property) => property.management_status !== "REJECTED"
@@ -1401,6 +1413,16 @@ export default function TenantDashboard() {
                                 ) : application.application_status ===
                                   "ACCEPTED" ? (
                                   <h6 style={{ mediumBold, color: "green" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "LEASE EXTENSION" ? (
+                                  <h6 style={{ mediumBold, color: "blue" }}>
+                                    {application.application_status}
+                                  </h6>
+                                ) : application.application_status ===
+                                  "TENANT LEASE EXTENSION" ? (
+                                  <h6 style={{ mediumBold, color: "blue" }}>
                                     {application.application_status}
                                   </h6>
                                 ) : (

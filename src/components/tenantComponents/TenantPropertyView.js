@@ -75,8 +75,10 @@ function TenantPropertyView(props) {
   const [lastDate, setLastDate] = useState("");
   const [message, setMessage] = useState("");
   const [tenantEndEarly, setTenantEndEarly] = useState(false);
+  const [tenantExtendLease, setTenantExtendLease] = useState(false);
   const [pmEndEarly, setPmEndEarly] = useState(false);
   const [showTenantProfile, setShowTenantProfile] = useState(false);
+  const [disableEndLease, setDisable] = useState(false);
   // sorting variables
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -223,11 +225,91 @@ function TenantPropertyView(props) {
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return TotalDays;
   };
+  const extendLease = async () => {
+    // console.log("Extending Lease");
+    setShowSpinner(true);
+    const extendObject = {
+      application_status: "TENANT LEASE EXTENSION",
+      property_uid: property.property_uid,
+      message: "Requesting to Extend Lease",
+    };
+    let apps = property.applications.filter(
+      (a) => a.application_status === "RENTED"
+    );
+    extendObject.application_uid =
+      apps.length > 0 ? apps[0].application_uid : null;
+    const response6 = await put("/extendLease", extendObject, access_token);
+    const newMessage = {
+      sender_name:
+        property.rentalInfo[0].tenant_first_name +
+        " " +
+        property.rentalInfo[0].tenant_last_name,
+      sender_email: property.rentalInfo[0].tenant_email,
+      sender_phone: property.rentalInfo[0].tenant_phone_number,
+      message_subject: "Extend Lease",
+      message_details: "Tenant has requested to extend the lease",
+      message_created_by: property.rentalInfo[0].tenant_id,
+      user_messaged: property.property_manager[0].manager_id,
+      message_status: "PENDING",
+      receiver_email: property.property_manager[0].manager_email,
+    };
+    // console.log(newMessage);
+    const responseMsg = await post("/message", newMessage);
+    // console.log(response6.result);
+    setShowSpinner(false);
+    navigate("/tenant");
+  };
+  const rejectExtension = async () => {
+    setShowSpinner(true);
+    let request_body = {
+      application_status: "REFUSED",
+      property_uid: property.property_uid,
+    };
 
+    const response = await put("/extendLease", request_body);
+    const newMessage = {
+      sender_name: property.managerInfo.manager_business_name,
+      sender_email: property.managerInfo.manager_email,
+      sender_phone: property.managerInfo.manager_phone_number,
+      message_subject: "Extend Lease Request Withdraw",
+      message_details: "Tenant has withdrawn the request to extend the lease",
+      message_created_by: property.managerInfo.manager_id,
+      user_messaged: property.rentalInfo[0].tenant_id,
+      message_status: "PENDING",
+      receiver_email: property.rentalInfo[0].tenant_email,
+    };
+    // console.log(newMessage);
+    const responseMsg = await post("/message", newMessage);
+    setTenantExtendLease(false);
+    setShowSpinner(false);
+  };
   const renewLeaseAgreement = async () => {
     reloadProperty();
   };
 
+  useEffect(() => {
+    const currentMonth = new Date().getMonth();
+    const currentDay = new Date().getDate();
+    const currentYear = new Date().getFullYear();
+    let currentDate = new Date(currentYear, currentMonth, currentDay);
+    let tempEndEarlyDate = lastDate.split("-");
+    let newEndEarlyDate = new Date(
+      parseInt(tempEndEarlyDate[0]),
+      parseInt(tempEndEarlyDate[1]) - 1,
+      parseInt(tempEndEarlyDate[2])
+    );
+    // console.log(newEndEarlyDate);
+    // console.log(currentDate);
+    let difference = newEndEarlyDate - currentDate;
+    // console.log(difference);
+    if (difference < 864000000) {
+      setDisable(true);
+      // console.log("disabled");
+    } else {
+      // console.log("enabled");
+      setDisable(false);
+    }
+  }, [lastDate]);
   const terminateLeaseAgreement = async () => {
     if (lastDate === "") {
       setErrorMessage("Please select a last date");
@@ -390,6 +472,12 @@ function TenantPropertyView(props) {
         if (app) {
           setTenantEndEarly(true);
         }
+        let appEL = rental.application_status === "LEASE EXTENSION";
+
+        // console.log(app);
+        if (appEL) {
+          setTenantExtendLease(true);
+        }
         let appPM = rental.application_status === "PM END EARLY";
 
         if (appPM) {
@@ -417,10 +505,6 @@ function TenantPropertyView(props) {
     fetchProperty();
   };
 
-  const renewLease = (agreement) => {
-    setShowTenantAgreement(true);
-    setSelectedAgreement(agreement);
-  };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -1515,14 +1599,15 @@ function TenantPropertyView(props) {
                       ) : (
                         <Row className="m-3">
                           {Math.floor(
-                            (new Date().getTime() -
-                              new Date(selectedAgreement.lease_end).getTime()) /
-                              (100 * 60 * 60 * 24)
+                            (new Date(selectedAgreement.lease_end).getTime() -
+                              new Date().getTime()) /
+                              (1000 * 60 * 60 * 24)
                           ) < 60 ? (
                             <Row
                               className="pt-4 my-4"
                               hidden={
                                 selectedAgreement === null ||
+                                tenantExtendLease ||
                                 tenantEndEarly ||
                                 pmEndEarly
                               }
@@ -1531,12 +1616,40 @@ function TenantPropertyView(props) {
                                 <Button
                                   style={bluePillButton}
                                   variant="outline-primary"
-                                  onClick={() => renewLease(selectedAgreement)}
+                                  onClick={() => extendLease()}
                                 >
-                                  Renew Lease
+                                  Extend Lease
                                 </Button>
                               </Col>
                             </Row>
+                          ) : (
+                            ""
+                          )}
+                          {tenantExtendLease ? (
+                            <div className="my-4">
+                              <h5 style={mediumBold}>
+                                You requested to extend the lease. Further
+                                Information to extend your current lease will
+                                require approval from your property manager.
+                              </h5>
+
+                              <Row
+                                className="pt-4 my-4"
+                                hidden={tenantEndEarly || pmEndEarly}
+                              >
+                                <Col className="d-flex flex-row justify-content-evenly">
+                                  <Button
+                                    style={redPillButton}
+                                    variant="outline-primary"
+                                    onClick={() => {
+                                      rejectExtension();
+                                    }}
+                                  >
+                                    Withdraw request
+                                  </Button>
+                                </Col>
+                              </Row>
+                            </div>
                           ) : (
                             ""
                           )}
@@ -1545,6 +1658,7 @@ function TenantPropertyView(props) {
                             <div
                               hidden={
                                 selectedAgreement === null ||
+                                tenantExtendLease ||
                                 tenantEndEarly ||
                                 pmEndEarly
                               }
@@ -1553,7 +1667,8 @@ function TenantPropertyView(props) {
                                 <Col className="d-flex flex-row justify-content-evenly">
                                   <Form.Group className="mx-2 my-3">
                                     <Form.Label as="h6" className="mb-0 ms-2">
-                                      Select the Last Date{" "}
+                                      Please Select an end early date. (Minimum:
+                                      10 days)
                                       {lastDate === "" ? required : ""}
                                     </Form.Label>
                                     <Form.Control
@@ -1569,7 +1684,8 @@ function TenantPropertyView(props) {
                                 <Col className="d-flex flex-row justify-content-evenly">
                                   <Form.Group className="mx-2 my-3">
                                     <Form.Label as="h6" className="mb-0 ms-2">
-                                      Message {message === "" ? required : ""}
+                                      Why do you wish to end the lease early.{" "}
+                                      {message === "" ? required : ""}
                                     </Form.Label>
                                     <Form.Control
                                       style={squareForm}
@@ -1583,15 +1699,28 @@ function TenantPropertyView(props) {
                               </Row>
 
                               <Row>
-                                <Col className="d-flex flex-row justify-content-evenly">
-                                  <Button
-                                    style={redPillButton}
-                                    variant="outline-primary"
-                                    onClick={() => terminateLeaseAgreement()}
-                                  >
-                                    Notify intent to terminate
-                                  </Button>
-                                </Col>
+                                {disableEndLease ? (
+                                  <Col className="d-flex flex-row justify-content-evenly">
+                                    <Button
+                                      disabled
+                                      style={redPillButton}
+                                      variant="outline-primary"
+                                      onClick={() => terminateLeaseAgreement()}
+                                    >
+                                      Notify intent to terminate
+                                    </Button>
+                                  </Col>
+                                ) : (
+                                  <Col className="d-flex flex-row justify-content-evenly">
+                                    <Button
+                                      style={redPillButton}
+                                      variant="outline-primary"
+                                      onClick={() => terminateLeaseAgreement()}
+                                    >
+                                      Notify intent to terminate
+                                    </Button>
+                                  </Col>
+                                )}
                                 <Col className="d-flex flex-row justify-content-evenly">
                                   <Button
                                     style={bluePillButton}
@@ -1611,6 +1740,7 @@ function TenantPropertyView(props) {
                                   variant="outline-primary"
                                   hidden={
                                     selectedAgreement === null ||
+                                    tenantExtendLease ||
                                     tenantEndEarly ||
                                     pmEndEarly
                                   }
