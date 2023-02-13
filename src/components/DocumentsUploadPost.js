@@ -92,7 +92,7 @@ function DocumentsUploadPost(props) {
 
   // ======================================<Return function>=======================================
   return (
-    <Row className="m-3">
+    <div>
       {files.length > 0 ? (
         <Table
           responsive="md"
@@ -214,7 +214,7 @@ function DocumentsUploadPost(props) {
           </label>
         </div>
       )}
-    </Row>
+    </div>
   );
 }
 

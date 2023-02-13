@@ -408,7 +408,11 @@ function ReviewPropertyLease(props) {
                                 className="d-flex justify-content-between align-items-end ps-0"
                                 key={i}
                               >
-                                <h6>{document.name}</h6>
+                                <h6>
+                                  {document.description == ""
+                                    ? document.name
+                                    : document.description}
+                                </h6>
                                 <a
                                   href={document.link}
                                   target="_blank"
@@ -727,7 +731,11 @@ function ReviewPropertyLease(props) {
                                 className="d-flex justify-content-between align-items-end ps-0"
                                 key={i}
                               >
-                                <h6>{document.name}</h6>
+                                <h6>
+                                  {document.description == ""
+                                    ? document.name
+                                    : document.description}
+                                </h6>
                                 <a
                                   href={document.link}
                                   target="_blank"
@@ -1039,7 +1047,11 @@ function ReviewPropertyLease(props) {
                                 className="d-flex justify-content-between align-items-end ps-0"
                                 key={i}
                               >
-                                <h6>{document.name}</h6>
+                                <h6>
+                                  {document.description == ""
+                                    ? document.name
+                                    : document.description}
+                                </h6>
                                 <a
                                   href={document.link}
                                   target="_blank"
@@ -1281,7 +1293,11 @@ function ReviewPropertyLease(props) {
                                 className="d-flex justify-content-between align-items-end ps-0"
                                 key={i}
                               >
-                                <h6>{document.name}</h6>
+                                <h6>
+                                  {document.description == ""
+                                    ? document.name
+                                    : document.description}
+                                </h6>
                                 <a
                                   href={document.link}
                                   target="_blank"
@@ -1450,7 +1466,11 @@ function ReviewPropertyLease(props) {
                 <TableBody>
                   {lease.map((lease, i) => (
                     <TableRow>
-                      <TableCell>{lease.description}</TableCell>
+                      <TableCell>
+                        {lease.description == ""
+                          ? lease.name
+                          : lease.description}
+                      </TableCell>
                       <TableCell>
                         <a href={lease.link} target="_blank" rel="noreferrer">
                           <img

@@ -126,7 +126,39 @@ function ManagerTenantApplications(props) {
 
     createNewTenantAgreement(selected_applications);
   };
+  window.addEventListener("load", function () {
+    // does the actual opening
+    function openWindow(event) {
+      event = event || window.event;
 
+      // find the url and title to set
+      var href = this.getAttribute("href");
+      var newTitle = this.getAttribute("data-title");
+      // or if you work the title out some other way...
+      // var newTitle = "Some constant string";
+
+      // open the window
+      var newWin = window.open(href, "_blank");
+
+      // add a load listener to the window so that the title gets changed on page load
+      newWin.addEventListener("load", function () {
+        newWin.document.title = newTitle;
+      });
+
+      // stop the default `a` link or you will get 2 new windows!
+      event.returnValue = false;
+    }
+
+    // find all a tags opening in a new window
+    var links = document.querySelectorAll("a[target=_blank][data-title]");
+    // or this if you don't want to store custom titles with each link
+    //var links = document.querySelectorAll("a[target=_blank]");
+
+    // add a click event for each so we can do our own thing
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener("click", openWindow.bind(links[i]));
+    }
+  });
   return (
     <div className="mb-2 pb-2">
       <ConfirmDialog
@@ -311,21 +343,26 @@ function ManagerTenantApplications(props) {
                             className="d-flex justify-content-between align-items-end ps-0"
                             key={i}
                           >
-                            <h6>{document.description}</h6>
-                            <a
-                              href={document.link}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <img
-                                src={File}
-                                alt="open document"
-                                style={{
-                                  width: "15px",
-                                  height: "15px",
-                                }}
-                              />
-                            </a>
+                            <h6>
+                              {document.description == ""
+                                ? document.name
+                                : document.description}
+                              <a
+                                href={document.link}
+                                target="_blank"
+                                rel="noreferrer"
+                                data-title={document.description}
+                              >
+                                <img
+                                  src={File}
+                                  alt="open document"
+                                  style={{
+                                    width: "15px",
+                                    height: "15px",
+                                  }}
+                                />
+                              </a>
+                            </h6>
                           </div>
                         ))}
                     </TableCell>

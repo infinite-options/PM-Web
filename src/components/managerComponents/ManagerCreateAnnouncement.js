@@ -19,7 +19,8 @@ import Header from "../Header";
 import AppContext from "../../AppContext";
 import SideBar from "./SideBar";
 import ManagerFooter from "./ManagerFooter";
-import { post, get } from "../../utils/api";
+import { post, get, put } from "../../utils/api";
+import DeleteIcon from "../../icons/DeleteIcon.svg";
 import {
   pillButton,
   squareForm,
@@ -44,6 +45,7 @@ function ManagerCreateAnnouncement(props) {
   const { access_token, user } = userData;
   const [properties, setProperties] = useState([]);
   const [tenants, setTenants] = useState([]);
+  const [owners, setOwners] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [managerID, setManagerID] = useState("");
@@ -52,11 +54,13 @@ function ManagerCreateAnnouncement(props) {
   const [editingAnnouncement, setEditingAnnouncement] = useState(false);
   const [propertyState, setPropertyState] = useState([]);
   const [tenantState, setTenantState] = useState([]);
+  const [ownerState, setOwnerState] = useState([]);
   const [byProperty, setByProperty] = useState(false);
   const [byTenants, setByTenants] = useState(false);
+  const [byOwners, setByOwners] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [announcementDetail, setAnnouncementDetail] = useState(false);
-
+  const [deleted, setDeleted] = useState(false);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [width, setWindowWidth] = useState(0);
@@ -158,14 +162,41 @@ function ManagerCreateAnnouncement(props) {
         }
       }
     });
-    let tenat_info = [];
+    console.log(properties_unique);
+    let tenant_info = [];
     let tenant_details = {
       tenant_id: "",
       tenant_name: "",
       address: "",
       property_uid: "",
     };
+    let owner_info = [];
+    let owner_details = {
+      owner_id: "",
+      owner_name: "",
+      address: "",
+      property_uid: "",
+    };
     properties_unique.forEach((property) => {
+      if (property.owner_id !== "") {
+        owner_details = {
+          owner_id: property.owner_id,
+          owner_name:
+            property.owner_first_name + " " + property.owner_last_name,
+          property_uid: property.property_uid,
+          address:
+            property.address +
+            " " +
+            property.unit +
+            ", " +
+            property.city +
+            ", " +
+            property.state +
+            " " +
+            property.zip,
+        };
+        owner_info.push(owner_details);
+      }
       if (property.rentalInfo !== "Not Rented") {
         property.rentalInfo.forEach((tenant) => {
           tenant_details = {
@@ -184,21 +215,29 @@ function ManagerCreateAnnouncement(props) {
               " " +
               property.zip,
           };
-          tenat_info.push(tenant_details);
+          tenant_info.push(tenant_details);
         });
       }
     });
-    // console.log(tenat_info);
-    setTenants(tenat_info);
-    setTenantState(tenat_info);
+    // console.log(tenant_info);
+    setTenants(tenant_info);
+    setTenantState(tenant_info);
+    setOwners(owner_info);
+    setOwnerState(owner_info);
     setProperties(properties_unique);
     setPropertyState(properties_unique);
   };
   useEffect(() => {
     // console.log("in use effect");
     fetchProperties();
-  }, []);
-
+  }, [deleted]);
+  const deleteAnnouncement = async (announcement_id) => {
+    let delAnnouncement = {
+      announcement_uid: announcement_id,
+    };
+    const response = await put("/DeleteAnnouncement", delAnnouncement);
+    setDeleted(!deleted);
+  };
   //post announcements to database and send out emails
   const postAnnouncement = async (newAnnouncement) => {
     const management_businesses = user.businesses.filter(
@@ -215,7 +254,7 @@ function ManagerCreateAnnouncement(props) {
       management_buid = management_businesses[0].business_uid;
     }
     setManagerID(management_buid);
-    // console.log(newAnnouncement);
+    console.log(newAnnouncement);
     let receiver_uid = [];
     let receiver_properties_id = [];
     if (byProperty) {
@@ -236,11 +275,21 @@ function ManagerCreateAnnouncement(props) {
         receiver_properties_id.push(tenant.property_uid);
       });
     }
+    if (byOwners) {
+      newAnnouncement.owners.forEach((owner) => {
+        receiver_uid.push(owner.owner_id);
+        receiver_properties_id.push(owner.property_uid);
+      });
+    }
     const new_announcement = {
       pm_id: managerID,
       announcement_title: newAnnouncement.announcement_title,
       announcement_msg: newAnnouncement.announcement_msg,
-      announcement_mode: byTenants ? "Tenants" : "Properties",
+      announcement_mode: byTenants
+        ? "Tenants"
+        : byProperty
+        ? "Properties"
+        : "Owners",
       receiver: receiver_uid,
       receiver_properties: receiver_properties_id,
     };
@@ -250,8 +299,9 @@ function ManagerCreateAnnouncement(props) {
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
     tenantState.forEach((prop) => (prop.checked = false));
-
     setTenantState(tenantState);
+    ownerState.forEach((prop) => (prop.checked = false));
+    setOwnerState(ownerState);
     // setShowSpinner(false);
     setEditingAnnouncement(null);
     const newAnnouncementState = [...announcementState];
@@ -288,6 +338,13 @@ function ManagerCreateAnnouncement(props) {
         return;
       }
       newAnnouncement.tenants = [...tenantState.filter((p) => p.checked)];
+    }
+    if (byOwners) {
+      if (ownerState.filter((p) => p.checked).length < 1) {
+        setErrorMessage("Select at least one property");
+        return;
+      }
+      newAnnouncement.owners = [...ownerState.filter((p) => p.checked)];
     }
 
     setErrorMessage("");
@@ -326,6 +383,11 @@ function ManagerCreateAnnouncement(props) {
     const newTenantState = [...tenantState];
     newTenantState[i].checked = !newTenantState[i].checked;
     setTenantState(newTenantState);
+  };
+  const toggleOwner = (i) => {
+    const newOwnerState = [...ownerState];
+    newOwnerState[i].checked = !newOwnerState[i].checked;
+    setOwnerState(newOwnerState);
   };
 
   const required =
@@ -392,6 +454,11 @@ function ManagerCreateAnnouncement(props) {
       id: "announcement_date",
       numeric: false,
       label: "Announcement Date",
+    },
+    {
+      id: "",
+      numeric: false,
+      label: "Actions",
     },
   ];
   function EnhancedTableHead(props) {
@@ -461,10 +528,13 @@ function ManagerCreateAnnouncement(props) {
               setAnnouncementDetail(false);
               propertyState.forEach((prop) => (prop.checked = false));
               tenantState.forEach((prop) => (prop.checked = false));
+              ownerState.forEach((prop) => (prop.checked = false));
               setTenantState(tenantState);
+              setOwnerState(ownerState);
               setPropertyState(propertyState);
               setByProperty(false);
               setByTenants(false);
+              setByOwners(false);
               setEditingAnnouncement(false);
             }}
             rightText={editingAnnouncement || announcementDetail ? "" : "+ New"}
@@ -473,9 +543,12 @@ function ManagerCreateAnnouncement(props) {
               propertyState.forEach((prop) => (prop.checked = false));
               setPropertyState(propertyState);
               tenantState.forEach((prop) => (prop.checked = false));
+              ownerState.forEach((prop) => (prop.checked = false));
               setTenantState(tenantState);
+              setOwnerState(ownerState);
               setByProperty(false);
               setByTenants(false);
+              setByOwners(false);
               setEditingAnnouncement(true);
             }}
           />
@@ -541,7 +614,7 @@ function ManagerCreateAnnouncement(props) {
                   </Col>
                 </Row>
                 <Row>
-                  <Col xs={6}>
+                  <Col xs={4}>
                     <Form.Group
                       className="mx-2 mb-3"
                       controlId="formBasicCheckbox"
@@ -560,11 +633,11 @@ function ManagerCreateAnnouncement(props) {
                             setByTenants(false);
                           }}
                         />
-                        <p className="ms-1 mb-1">By Property</p>
+                        <p className="ms-1 mb-1">Tenants By Property</p>
                       </div>
                     </Form.Group>
                   </Col>
-                  <Col xs={6}>
+                  <Col xs={4}>
                     <Form.Group
                       className="mx-2 mb-3"
                       controlId="formBasicCheckbox"
@@ -584,7 +657,32 @@ function ManagerCreateAnnouncement(props) {
                             setByProperty(false);
                           }}
                         />
-                        <p className="ms-1 mb-1">By Tenants</p>
+                        <p className="ms-1 mb-1">Tenants By Name</p>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                  <Col xs={4}>
+                    <Form.Group
+                      className="mx-2 mb-3"
+                      controlId="formBasicCheckbox"
+                    >
+                      <div
+                        className="d-flex mx-2 ps-2 align-items-center my-2"
+                        style={{
+                          font: "normal normal normal 18px Bahnschrift-Regular",
+                        }}
+                      >
+                        {" "}
+                        <Checkbox
+                          type="BOX"
+                          checked={byOwners}
+                          onClick={() => {
+                            setByOwners(!byOwners);
+                            setByProperty(false);
+                            setByTenants(false);
+                          }}
+                        />
+                        <p className="ms-1 mb-1">Owners By Name</p>
                       </div>
                     </Form.Group>
                   </Col>
@@ -592,43 +690,54 @@ function ManagerCreateAnnouncement(props) {
                 {byProperty ? (
                   <Row className="mx-1 mt-3 mb-2">
                     <h6 style={mediumBold}>Properties</h6>
-                    {properties.map((property, i) => (
-                      <div
-                        key={i}
-                        className="d-flex mx-2 ps-2 justify-content-left align-items-left my-2 flex-column"
-                        style={{
-                          font: "normal normal normal 18px Bahnschrift-Regular",
-                        }}
-                      >
-                        <div className="d-flex mx-2 ps-2 align-items-center my-2 flex-row">
-                          {" "}
-                          <Checkbox
-                            type="BOX"
-                            checked={propertyState[i].checked}
-                            onClick={() => toggleProperty(i)}
-                          />
-                          <p className="ms-1 mb-1">
-                            {property.address} {property.unit}
-                            ,&nbsp;{property.city},&nbsp;{property.state}&nbsp;{" "}
-                            {property.zip}
-                          </p>
-                        </div>
-
-                        <div className="d-flex mx-2 ps-2 justify-content-left align-items-left my-2 flex-column">
-                          {property.rentalInfo !== "Not Rented" ? (
-                            property.rentalInfo.map((tf, i) => {
-                              return (
-                                <div>
-                                  {tf.tenant_first_name} {tf.tenant_last_name}
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <div>{property.rentalInfo}</div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell></TableCell>
+                          <TableCell align="left">Address</TableCell>
+                          <TableCell align="left">Tenant</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {properties.map((property, i) => (
+                          <TableRow key={i}>
+                            <TableCell>
+                              <Checkbox
+                                type="BOX"
+                                checked={propertyState[i].checked}
+                                onClick={() => toggleProperty(i)}
+                              />
+                            </TableCell>
+                            <TableCell align="left">
+                              {" "}
+                              <p className="ms-1 mb-1">
+                                {property.address} {property.unit}
+                                ,&nbsp;{property.city},&nbsp;{property.state}
+                                &nbsp; {property.zip}
+                              </p>
+                            </TableCell>
+                            <TableCell align="left">
+                              {property.rentalInfo !== "Not Rented" ? (
+                                property.rentalInfo.map((tf, i) => {
+                                  return (
+                                    <div>
+                                      {tf.tenant_first_name}{" "}
+                                      {tf.tenant_last_name}
+                                    </div>
+                                  );
+                                })
+                              ) : (
+                                <div>{property.rentalInfo}</div>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </Row>
                 ) : (
                   <div></div>
@@ -637,28 +746,77 @@ function ManagerCreateAnnouncement(props) {
                 {byTenants ? (
                   <Row className="mx-1 mt-3 mb-2">
                     <h6 style={mediumBold}>Tenants</h6>
-                    {tenants.map((tenant, i) => (
-                      <div
-                        key={i}
-                        className="d-flex mx-2 ps-2 justify-content-left align-items-left my-2 flex-column"
-                        style={{
-                          font: "normal normal normal 18px Bahnschrift-Regular",
-                        }}
-                      >
-                        <div className="d-flex mx-2 ps-2 align-items-center my-2 flex-row">
-                          <Checkbox
-                            type="BOX"
-                            checked={tenantState[i].checked}
-                            onClick={() => toggleTenant(i)}
-                          />
-                          <p className="ms-1 mb-1">{tenant.tenant_name}</p>
-                        </div>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell></TableCell>
+                          <TableCell align="left">Tenant</TableCell>
+                          <TableCell align="left">Address</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tenants.map((tenant, i) => (
+                          <TableRow key={i}>
+                            <TableCell>
+                              <Checkbox
+                                type="BOX"
+                                checked={tenantState[i].checked}
+                                onClick={() => toggleTenant(i)}
+                              />
+                            </TableCell>
 
-                        <div className="d-flex mx-2 ps-2 justify-content-left align-items-left my-2 flex-column">
-                          {tenant.address}
-                        </div>
-                      </div>
-                    ))}
+                            <TableCell align="left">
+                              <p className="ms-1 mb-1">{tenant.tenant_name}</p>
+                            </TableCell>
+
+                            <TableCell align="left">{tenant.address}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Row>
+                ) : (
+                  <div></div>
+                )}
+                {byOwners ? (
+                  <Row className="mx-1 mt-3 mb-2">
+                    <h6 style={mediumBold}>Owners</h6>
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell></TableCell>
+                          <TableCell align="left">Owners</TableCell>
+                          <TableCell align="left">Address</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {owners.map((owner, i) => (
+                          <TableRow key={i}>
+                            <TableCell>
+                              <Checkbox
+                                type="BOX"
+                                checked={ownerState[i].checked}
+                                onClick={() => toggleOwner(i)}
+                              />
+                            </TableCell>
+
+                            <TableCell align="left">
+                              <p className="ms-1 mb-1">{owner.owner_name}</p>
+                            </TableCell>
+
+                            <TableCell align="left">{owner.address}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </Row>
                 ) : (
                   <div></div>
@@ -751,15 +909,15 @@ function ManagerCreateAnnouncement(props) {
                               role="checkbox"
                               tabIndex={-1}
                               key={announce.announce}
-                              onClick={() =>
-                                navigate("/detailAnnouncements", {
-                                  state: {
-                                    announcement: announce,
-                                  },
-                                })
-                              }
                             >
                               <TableCell
+                                onClick={() =>
+                                  navigate("/detailAnnouncements", {
+                                    state: {
+                                      announcement: announce,
+                                    },
+                                  })
+                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -767,6 +925,13 @@ function ManagerCreateAnnouncement(props) {
                                 {announce.announcement_title}
                               </TableCell>
                               <TableCell
+                                onClick={() =>
+                                  navigate("/detailAnnouncements", {
+                                    state: {
+                                      announcement: announce,
+                                    },
+                                  })
+                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -774,6 +939,13 @@ function ManagerCreateAnnouncement(props) {
                                 {announce.announcement_msg}
                               </TableCell>
                               <TableCell
+                                onClick={() =>
+                                  navigate("/detailAnnouncements", {
+                                    state: {
+                                      announcement: announce,
+                                    },
+                                  })
+                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -782,6 +954,13 @@ function ManagerCreateAnnouncement(props) {
                               </TableCell>
 
                               <TableCell
+                                onClick={() =>
+                                  navigate("/detailAnnouncements", {
+                                    state: {
+                                      announcement: announce,
+                                    },
+                                  })
+                                }
                                 padding="none"
                                 size="small"
                                 align="center"
@@ -798,6 +977,22 @@ function ManagerCreateAnnouncement(props) {
                                   announce.date_announcement
                                 ).getFullYear()}
                               </TableCell>
+                              <TableCell
+                                padding="none"
+                                size="small"
+                                align="center"
+                              >
+                                <img
+                                  src={DeleteIcon}
+                                  alt="Delete Icon"
+                                  className="px-1 mx-2"
+                                  onClick={() =>
+                                    deleteAnnouncement(
+                                      announce.announcement_uid
+                                    )
+                                  }
+                                />
+                              </TableCell>
                             </TableRow>
                           );
                         })}
@@ -806,7 +1001,9 @@ function ManagerCreateAnnouncement(props) {
                   </Row>
                 </div>
               </div>
-            ) : (
+            ) : newAnnouncement === null &&
+              !editingAnnouncement &&
+              !announcementDetail ? (
               <div>
                 <Row className="m-3">
                   <Col>
@@ -821,6 +1018,8 @@ function ManagerCreateAnnouncement(props) {
                   <div className="m-3">No announcements</div>
                 </Row>
               </div>
+            ) : (
+              ""
             )}
           </div>
           <div hidden={responsiveSidebar.showSidebar} className="w-100 mt-3">
