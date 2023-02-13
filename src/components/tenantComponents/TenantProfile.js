@@ -1562,9 +1562,9 @@ function TenantProfile(props) {
                 <div>Who plans to live in the unit?</div>
               </Row>
               <div>
-                {adults && Object.values(children).length > 0 ? (
+                {adults && Object.values(adults).length > 0 ? (
                   <div className="mx-3 ">
-                    <Row style={subHeading}>Children</Row>
+                    <Row style={subHeading}>Adults</Row>
                     <Table
                       responsive="md"
                       classes={{ root: classes.customTable }}
@@ -1578,12 +1578,12 @@ function TenantProfile(props) {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {Object.values(children).map((child) => {
+                        {Object.values(adults).map((adult) => {
                           return (
                             <TableRow>
-                              <TableCell>{child.name}</TableCell>
-                              <TableCell>{child.relationship}</TableCell>
-                              <TableCell>{child.dob}</TableCell>
+                              <TableCell>{adult.name}</TableCell>
+                              <TableCell>{adult.relationship}</TableCell>
+                              <TableCell>{adult.dob}</TableCell>
                             </TableRow>
                           );
                         })}
