@@ -631,6 +631,7 @@ function ManagerCreateAnnouncement(props) {
                           onClick={() => {
                             setByProperty(!byProperty);
                             setByTenants(false);
+                            setByOwners(false);
                           }}
                         />
                         <p className="ms-1 mb-1">Tenants By Property</p>
@@ -655,6 +656,7 @@ function ManagerCreateAnnouncement(props) {
                           onClick={() => {
                             setByTenants(!byTenants);
                             setByProperty(false);
+                            setByOwners(false);
                           }}
                         />
                         <p className="ms-1 mb-1">Tenants By Name</p>

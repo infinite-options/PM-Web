@@ -24,7 +24,7 @@ import PayPal from "./PayPal";
 import WF_Logo from "../icons/WF-Logo.png";
 import BofA_Logo from "../icons/BofA-Logo.png";
 import Chase_Logo from "../icons/Chase-Logo.png";
-import Citi_Logo from "../icons/Citi-Logo.jpg";
+import Citi_Logo from "../icons/Citi-Logo.png";
 import ConfirmCheck from "../icons/confirmCheck.svg";
 import { get, post } from "../utils/api";
 import {
@@ -217,22 +217,7 @@ function PaymentPage(props) {
               </div>
             ) : (
               <div>
-                <Row>
-                  {/* {purchases.length > 1 ? (
-                  purchases.map((purchase) => {
-                    return (
-                      <div style={headings}>
-                        Pay Fees {purchase.description && `(Multiple Fees)`}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div style={headings}>
-                    Pay Fees{" "}
-                    {purchases[0].description &&
-                      `(${purchases[0].description})`}
-                  </div>
-                )} */}
+                <Row className="m-3">
                   <Row className="m-3">
                     <Table
                       responsive="md"
@@ -268,9 +253,8 @@ function PaymentPage(props) {
                     <div style={subHeading}>Amount to be paid: ${amount}</div>
                   ) : null}
                 </Row>
-                <div
-                  style={{ margin: "0px 0px 100px 0px" }}
-                  className="mt-5"
+                <Row
+                  className="mx-3 mt-5"
                   hidden={stripePayment || bankPayment}
                 >
                   <h2>Total Payment: ${totalSum}</h2>
@@ -395,7 +379,7 @@ function PaymentPage(props) {
                       />
                     </Col>
                   </Row>
-                </div>
+                </Row>
 
                 <div hidden={!stripePayment}>
                   <Elements stripe={stripePromise}>
