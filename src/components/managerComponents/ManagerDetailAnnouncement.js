@@ -98,8 +98,7 @@ function DetailAnnouncements(props) {
                     <Row className="mt-1 mx-2">
                       <Col>
                         <div style={subHeading}>
-                          {receiver.tenant_first_name}{" "}
-                          {receiver.tenant_last_name}
+                          {receiver.first_name} {receiver.last_name}
                         </div>
                         <div style={subText}>
                           {receiver.address} {receiver.unit}
@@ -108,7 +107,7 @@ function DetailAnnouncements(props) {
                         </div>
                       </Col>
                       <Col xs={2} className="mt-1 mb-1">
-                        <a href={`tel:${receiver.teanant_phone_number}`}>
+                        <a href={`tel:${receiver.phone_number}`}>
                           <img src={Phone} alt="Phone" />
                         </a>
                       </Col>
@@ -141,12 +140,11 @@ function DetailAnnouncements(props) {
                           {receiver.zip}
                         </div>
                         <div style={subText}>
-                          {receiver.tenant_first_name}{" "}
-                          {receiver.tenant_last_name}
+                          {receiver.first_name} {receiver.last_name}
                         </div>
                       </Col>
                       <Col xs={2} className="mt-1 mb-1">
-                        <a href={`tel:${receiver.teanant_phone_number}`}>
+                        <a href={`tel:${receiver.phone_number}`}>
                           <img src={Phone} alt="Phone" />
                         </a>
                       </Col>
