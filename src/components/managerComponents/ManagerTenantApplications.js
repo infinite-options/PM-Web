@@ -205,7 +205,7 @@ function ManagerTenantApplications(props) {
                   <TableCell align="center">Children</TableCell>
                   <TableCell align="center">Pets</TableCell>
                   <TableCell align="center">Vehicles</TableCell>
-                  <TableCell align="center">referred</TableCell>
+                  <TableCell align="center">Referred</TableCell>
                   <TableCell align="center">Application Date</TableCell>
                   <TableCell align="center">Documents</TableCell>
                 </TableRow>

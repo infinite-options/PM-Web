@@ -595,7 +595,7 @@ function ManagerTenantProfileView(props) {
                     </div>
                   ) : (
                     <div className="mx-3 ">
-                      <Row style={subHeading}>referred</Row>
+                      <Row style={subHeading}>Referred</Row>
                       <Row style={gray}>
                         <Col>None</Col>
                       </Row>

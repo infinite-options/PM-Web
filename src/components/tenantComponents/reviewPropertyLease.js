@@ -1451,42 +1451,43 @@ function ReviewPropertyLease(props) {
               </Row>
 
               {/* <div style={{marginTop:"40px",paddingLeft:"20px",fontWeight:"bold"}} > Documents</div> */}
-
-              <Table
-                responsive="md"
-                classes={{ root: classes.customTable }}
-                size="small"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>View</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {lease.map((lease, i) => (
+              <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
+                  <TableHead>
                     <TableRow>
-                      <TableCell>
-                        {lease.description == ""
-                          ? lease.name
-                          : lease.description}
-                      </TableCell>
-                      <TableCell>
-                        <a href={lease.link} target="_blank" rel="noreferrer">
-                          <img
-                            src={File}
-                            alt="open document"
-                            style={{
-                              width: "20px",
-                              height: "20px",
-                            }}
-                          />
-                        </a>
-                      </TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>View</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {lease.map((lease, i) => (
+                      <TableRow>
+                        <TableCell>
+                          {lease.description == ""
+                            ? lease.name
+                            : lease.description}
+                        </TableCell>
+                        <TableCell>
+                          <a href={lease.link} target="_blank" rel="noreferrer">
+                            <img
+                              src={File}
+                              alt="open document"
+                              style={{
+                                width: "20px",
+                                height: "20px",
+                              }}
+                            />
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Row>
             </div>
           ) : (application_status_1 === "FORWARDED" ||
               application_status_1 === "RENTED") &&
