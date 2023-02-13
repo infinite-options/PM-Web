@@ -1000,6 +1000,12 @@ function ManagerUtilities(props) {
             </div>
           ) : (
             <div>
+              <Row className="m-3">
+                <Col>
+                  {" "}
+                  <h3>Utilities </h3>
+                </Col>
+              </Row>
               {newUtility !== null &&
               editingUtility &&
               !expenseDetail &&
@@ -1851,11 +1857,7 @@ function ManagerUtilities(props) {
                 !maintenanceExpenseDetail &&
                 !payExpense ? (
                 <Row style={headings} className="m-3">
-                  <Col>
-                    {" "}
-                    <h3>No Utilities </h3>
-                  </Col>
-
+                  <Col className="m-3">No utilities</Col>
                   <Col>
                     <img
                       src={AddIcon}

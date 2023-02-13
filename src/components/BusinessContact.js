@@ -254,7 +254,7 @@ function BusinessContact(props) {
             </Button>
             <Button
               variant="outline-primary"
-              style={pillButton}
+              style={{ ...pillButton, marginTop: "1rem" }}
               onClick={addContact}
               className="mx-2"
             >

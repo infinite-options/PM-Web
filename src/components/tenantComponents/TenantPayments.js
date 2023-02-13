@@ -9,7 +9,7 @@ import TenantUpcomingPayments from "./TenantUpcomingPayments";
 import { get } from "../../utils/api";
 import "../../pages/maintenance.css";
 import TenantPaymentHistory from "./TenantPaymentHistory";
-export default function TenantDuePayments(props) {
+export default function TenantPayments(props) {
   const [propertyData, setPropertyData] = React.useState([]);
   const [tenantExpenses, setTenantExpenses] = React.useState([]);
 

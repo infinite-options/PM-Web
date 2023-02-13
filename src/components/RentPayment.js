@@ -154,7 +154,7 @@ function RentPayment(props) {
             <Form.Group>
               <Form.Label>Message</Form.Label>
               <Form.Control
-                placeholder="M4METEST"
+                placeholder="PMTEST"
                 style={squareForm}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}

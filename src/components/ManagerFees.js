@@ -251,7 +251,7 @@ function ManagerFees(props) {
           {(newFee === null) & (pageURL[3] !== "propertyDetails") ? (
             <Button
               variant="outline-primary"
-              style={smallPillButton}
+              style={{ ...smallPillButton, marginTop: "1rem" }}
               onClick={() => setNewFee({ ...emptyFee })}
             >
               Add Fee
@@ -270,7 +270,7 @@ function ManagerFees(props) {
               </Button>
               <Button
                 variant="outline-primary"
-                style={pillButton}
+                style={{ ...pillButton, marginTop: "1rem" }}
                 onClick={addFee}
                 className="mx-2"
               >

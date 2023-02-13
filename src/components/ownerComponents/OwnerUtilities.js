@@ -952,6 +952,12 @@ function OwnerUtilities(props) {
             </div>
           ) : (
             <div>
+              <Row className="m-3">
+                <Col>
+                  {" "}
+                  <h3>Utilities </h3>
+                </Col>
+              </Row>
               {newUtility !== null &&
               editingUtility &&
               !expenseDetail &&
@@ -1815,10 +1821,7 @@ function OwnerUtilities(props) {
                 !maintenanceExpenseDetail &&
                 !payExpense ? (
                 <Row className="m-3">
-                  <Col>
-                    {" "}
-                    <h3>No Utilities </h3>
-                  </Col>
+                  <Col className="m-3">No utilities</Col>
 
                   <Col>
                     <img

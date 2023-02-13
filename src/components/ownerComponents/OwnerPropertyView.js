@@ -7187,29 +7187,24 @@ function OwnerPropertyView(props) {
                                 >
                                   <TableHead>
                                     <TableRow>
-                                      <TableCell align="center">
-                                        Business Name
-                                      </TableCell>
+                                      <TableCell>Business Name</TableCell>
                                       <TableCell>Contract Name</TableCell>
                                       <TableCell>Start Date</TableCell>
                                       <TableCell>End Date</TableCell>
-                                      <TableCell align="center">
-                                        Actions
-                                      </TableCell>
+                                      <TableCell>Actions</TableCell>
                                     </TableRow>
                                   </TableHead>
                                   <TableBody>
                                     <TableRow>
                                       <TableCell>
-                                        <h6 style={mediumBold} className="mb-1">
-                                          {p.manager_business_name}
-                                        </h6>
+                                        {p.manager_business_name}
+
                                         <p
                                           style={{
-                                            mediumBold,
-                                            color: "#41fc03",
+                                            color: "#007AFF",
+                                            fontSize: "12px",
                                           }}
-                                          className="mb-1"
+                                          className="m-1"
                                         >
                                           Contract in Review
                                         </p>
@@ -7437,27 +7432,27 @@ function OwnerPropertyView(props) {
                           >
                             <TableHead>
                               <TableRow>
-                                <TableCell align="center">
-                                  Business Name
-                                </TableCell>
+                                <TableCell>Business Name</TableCell>
                                 <TableCell>Contract Name</TableCell>
                                 <TableCell>Start Date</TableCell>
                                 <TableCell>End Date</TableCell>
-                                <TableCell align="center">Actions</TableCell>
+                                <TableCell>Actions</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
                               <TableRow>
                                 <TableCell>
-                                  <h6 style={mediumBold} className="mb-1">
-                                    {
-                                      property.property_manager[0]
-                                        .manager_business_name
-                                    }
-                                  </h6>
+                                  {
+                                    property.property_manager[0]
+                                      .manager_business_name
+                                  }
+
                                   <p
-                                    style={{ mediumBold, color: "#41fc03" }}
-                                    className="mb-1"
+                                    style={{
+                                      color: "#007AFF",
+                                      fontSize: "12px",
+                                    }}
+                                    className="m-1"
                                   >
                                     Contract in Review
                                   </p>

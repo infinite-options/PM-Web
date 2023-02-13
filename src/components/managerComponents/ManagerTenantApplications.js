@@ -135,6 +135,15 @@ function ManagerTenantApplications(props) {
         onConfirm={rejectApplication}
         onCancel={onCancel}
       />
+      {console.log(
+        applications.some(
+          (app) =>
+            app.application_status === "RENTED" ||
+            app.application_status === "FORWARDED" ||
+            app.application_status === "LEASE EXTENSION" ||
+            app.application_status === "TENANT LEASE EXTENSION"
+        )
+      )}
       {applications.length > 0 ? (
         <div>
           <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
@@ -147,14 +156,14 @@ function ManagerTenantApplications(props) {
                 <TableRow>
                   {applications.some(
                     (app) =>
-                      app.application_status !== "RENTED" ||
-                      app.application_status !== "FORWARDED" ||
-                      app.application_status !== "LEASE EXTENSION" ||
-                      app.application_status !== "TENANT LEASE EXTENSION"
+                      app.application_status === "RENTED" ||
+                      app.application_status === "FORWARDED" ||
+                      app.application_status === "LEASE EXTENSION" ||
+                      app.application_status === "TENANT LEASE EXTENSION"
                   ) ? (
-                    <TableCell align="center"></TableCell>
-                  ) : (
                     ""
+                  ) : (
+                    <TableCell align="center"></TableCell>
                   )}
 
                   <TableCell align="center">Application Status</TableCell>
@@ -169,16 +178,19 @@ function ManagerTenantApplications(props) {
                   <TableCell align="center">Documents</TableCell>
                 </TableRow>
               </TableHead>
+
               <TableBody>
                 {applications.map((application, i) => (
                   <TableRow className="mt-2" key={i}>
                     {applications.some(
                       (app) =>
-                        app.application_status !== "RENTED" ||
-                        app.application_status !== "FORWARDED" ||
-                        app.application_status !== "LEASE EXTENSION" ||
-                        app.application_status !== "TENANT LEASE EXTENSION"
+                        app.application_status === "RENTED" ||
+                        app.application_status === "FORWARDED" ||
+                        app.application_status === "LEASE EXTENSION" ||
+                        app.application_status === "TENANT LEASE EXTENSION"
                     ) ? (
+                      ""
+                    ) : (
                       <TableCell align="center">
                         <div>
                           <Checkbox
@@ -188,8 +200,6 @@ function ManagerTenantApplications(props) {
                           />
                         </div>
                       </TableCell>
-                    ) : (
-                      ""
                     )}
 
                     <TableCell

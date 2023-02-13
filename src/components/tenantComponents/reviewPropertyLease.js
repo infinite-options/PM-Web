@@ -333,7 +333,11 @@ function ReviewPropertyLease(props) {
               </Row>
               {/* {console.log("application", application.applicant_info)} */}
               <Row className="m-3" style={{ overflow: "scroll" }}>
-                <Table classes={{ root: classes.customTable }} size="small">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
                   <TableHead>
                     <TableRow>
                       <TableCell>Application Status</TableCell>
@@ -448,6 +452,7 @@ function ReviewPropertyLease(props) {
                             <Table
                               classes={{ root: classes.customTable }}
                               size="small"
+                              responsive="md"
                             >
                               <TableHead>
                                 <TableRow>
@@ -524,118 +529,107 @@ function ReviewPropertyLease(props) {
                   : ""}
               </Row>
 
-              <Row
-                className="m-3"
-                style={{
-                  background: "#E9E9E9 0% 0% no-repeat padding-box",
-                  borderRadius: "10px",
-                  opacity: 1,
-                }}
-              >
-                <Row>
-                  <Col>
-                    <h3>Lease Agreement</h3>
-                  </Col>
-                  <Col xs={2}></Col>
-                </Row>
-                {rentals && rentals.length ? (
-                  <Row style={{ hidden: "overflow" }}>
-                    <h5>Lease Details</h5>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Lease Start</TableCell>
-                          <TableCell>Lease End</TableCell>
-                          <TableCell>Rent Due</TableCell>
-                          <TableCell>Late Fees After (days)</TableCell>
-                          <TableCell>Late Fee (one-time)</TableCell>
-                          <TableCell>Late Fee (per day)</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>{rentals[0].lease_start}</TableCell>
+              <Row className="m-3">
+                <Col>
+                  <h3>Lease Agreement</h3>
+                </Col>
+                <Col xs={2}></Col>
+              </Row>
+              {rentals && rentals.length ? (
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <h5>Lease Details</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Lease Start</TableCell>
+                        <TableCell>Lease End</TableCell>
+                        <TableCell>Rent Due</TableCell>
+                        <TableCell>Late Fees After (days)</TableCell>
+                        <TableCell>Late Fee (one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>{rentals[0].lease_start}</TableCell>
 
-                          <TableCell>{rentals[0].lease_end}</TableCell>
+                        <TableCell>{rentals[0].lease_end}</TableCell>
+
+                        <TableCell>
+                          {`${ordinal_suffix_of(
+                            rentals[0].due_by
+                          )} of the month`}
+                        </TableCell>
+
+                        <TableCell>{rentals[0].late_by} days</TableCell>
+                        <TableCell> ${rentals[0].late_fee}</TableCell>
+                        <TableCell> ${rentals[0].perDay_late_fee}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+              ) : (
+                ""
+              )}
+
+              {rentPayments && rentPayments.length ? (
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <h5>Lease Payments</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Fee Name</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Of</TableCell>
+                        <TableCell>Frequency</TableCell>
+                        <TableCell>Available to Pay</TableCell>
+                        <TableCell>Due Date</TableCell>
+                        <TableCell>Late After (days)</TableCell>
+                        <TableCell>Late Fee(one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rentPayments.map((fee, i) => (
+                        <TableRow>
+                          <TableCell>{fee.fee_name}</TableCell>
 
                           <TableCell>
-                            {`${ordinal_suffix_of(
-                              rentals[0].due_by
-                            )} of the month`}
+                            {fee.fee_type === "%"
+                              ? `${fee.charge}%`
+                              : `$${fee.charge}`}
                           </TableCell>
 
-                          <TableCell>{rentals[0].late_by} days</TableCell>
-                          <TableCell> ${rentals[0].late_fee}</TableCell>
-                          <TableCell> ${rentals[0].perDay_late_fee}</TableCell>
+                          <TableCell>
+                            {fee.fee_type === "%" ? `${fee.of}` : ""}
+                          </TableCell>
+
+                          <TableCell>{fee.frequency}</TableCell>
+                          <TableCell>{`${fee.available_topay} days before`}</TableCell>
+                          <TableCell>
+                            {fee.due_by === ""
+                              ? `1st of the month`
+                              : `${ordinal_suffix_of(fee.due_by)} of the month`}
+                          </TableCell>
+                          <TableCell>{fee.late_by} days</TableCell>
+                          <TableCell>${fee.late_fee}</TableCell>
+                          <TableCell>${fee.perDay_late_fee}/day</TableCell>
                         </TableRow>
-                      </TableBody>
-                    </Table>
-                  </Row>
-                ) : (
-                  ""
-                )}
-
-                {rentPayments && rentPayments.length ? (
-                  <Row style={{ overflow: "scroll" }}>
-                    <h5>Lease Payments</h5>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Fee Name</TableCell>
-                          <TableCell>Amount</TableCell>
-                          <TableCell>Of</TableCell>
-                          <TableCell>Frequency</TableCell>
-                          <TableCell>Available to Pay</TableCell>
-                          <TableCell>Due Date</TableCell>
-                          <TableCell>Late After (days)</TableCell>
-                          <TableCell>Late Fee(one-time)</TableCell>
-                          <TableCell>Late Fee (per day)</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {rentPayments.map((fee, i) => (
-                          <TableRow>
-                            <TableCell>{fee.fee_name}</TableCell>
-
-                            <TableCell>
-                              {fee.fee_type === "%"
-                                ? `${fee.charge}%`
-                                : `$${fee.charge}`}
-                            </TableCell>
-
-                            <TableCell>
-                              {fee.fee_type === "%" ? `${fee.of}` : ""}
-                            </TableCell>
-
-                            <TableCell>{fee.frequency}</TableCell>
-                            <TableCell>{`${fee.available_topay} days before`}</TableCell>
-                            <TableCell>
-                              {fee.due_by === ""
-                                ? `1st of the month`
-                                : `${ordinal_suffix_of(
-                                    fee.due_by
-                                  )} of the month`}
-                            </TableCell>
-                            <TableCell>{fee.late_by} days</TableCell>
-                            <TableCell>${fee.late_fee}</TableCell>
-                            <TableCell>${fee.perDay_late_fee}/day</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Row>
-                ) : (
-                  ""
-                )}
-              </Row>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Row>
+              ) : (
+                ""
+              )}
             </div>
           ) : application_status_1 === "FORWARDED" ||
             application_status_1 === "RENTED" ||
@@ -658,7 +652,11 @@ function ReviewPropertyLease(props) {
               </Row>
               {/* {console.log("application", application.applicant_info)} */}
               <Row className="m-3" style={{ overflow: "scroll" }}>
-                <Table classes={{ root: classes.customTable }} size="small">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
                   <TableHead>
                     <TableRow>
                       <TableCell>Application Status</TableCell>
@@ -773,6 +771,7 @@ function ReviewPropertyLease(props) {
                           <Table
                             classes={{ root: classes.customTable }}
                             size="small"
+                            responsive="md"
                           >
                             <TableHead>
                               <TableRow>
@@ -847,61 +846,52 @@ function ReviewPropertyLease(props) {
                   )
                 : ""}
 
-              <div
-                className="my-3"
-                style={{
-                  background: "#E9E9E9 0% 0% no-repeat padding-box",
-                  borderRadius: "10px",
-                  opacity: 1,
-                }}
-              >
-                <Row className="m-3">
-                  <Col>
-                    <h3>Lease Agreement</h3>
-                  </Col>
-                  <Col xs={2}></Col>
+              <Row className="m-3">
+                <Col>
+                  <h3>Lease Agreement</h3>
+                </Col>
+                <Col xs={2}></Col>
+              </Row>
+              {rentals && rentals.length ? (
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <h5>Lease Details</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Lease Start</TableCell>
+                        <TableCell>Lease End</TableCell>
+                        <TableCell>Rent Due</TableCell>
+                        <TableCell>Late Fees After (days)</TableCell>
+                        <TableCell>Late Fee (one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>{rentals[0].lease_start}</TableCell>
+
+                        <TableCell>{rentals[0].lease_end}</TableCell>
+
+                        <TableCell>
+                          {`${ordinal_suffix_of(
+                            rentals[0].due_by
+                          )} of the month`}
+                        </TableCell>
+
+                        <TableCell>{rentals[0].late_by} days</TableCell>
+                        <TableCell> ${rentals[0].late_fee}</TableCell>
+                        <TableCell> ${rentals[0].perDay_late_fee}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </Row>
-                {rentals && rentals.length ? (
-                  <Row className="m-3" style={{ hidden: "overflow" }}>
-                    <h5>Lease Details</h5>
-                    <Table
-                      responsive="md"
-                      classes={{ root: classes.customTable }}
-                      size="small"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Lease Start</TableCell>
-                          <TableCell>Lease End</TableCell>
-                          <TableCell>Rent Due</TableCell>
-                          <TableCell>Late Fees After (days)</TableCell>
-                          <TableCell>Late Fee (one-time)</TableCell>
-                          <TableCell>Late Fee (per day)</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>{rentals[0].lease_start}</TableCell>
-
-                          <TableCell>{rentals[0].lease_end}</TableCell>
-
-                          <TableCell>
-                            {`${ordinal_suffix_of(
-                              rentals[0].due_by
-                            )} of the month`}
-                          </TableCell>
-
-                          <TableCell>{rentals[0].late_by} days</TableCell>
-                          <TableCell> ${rentals[0].late_fee}</TableCell>
-                          <TableCell> ${rentals[0].perDay_late_fee}</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </Row>
-                ) : (
-                  ""
-                )}
-              </div>
+              ) : (
+                ""
+              )}
 
               {rentPayments && rentPayments.length ? (
                 <Row className="m-3" style={{ overflow: "scroll" }}>
@@ -974,7 +964,11 @@ function ReviewPropertyLease(props) {
                 <Col xs={2}> </Col>
               </Row>
               <Row className="m-3" style={{ overflow: "scroll" }}>
-                <Table classes={{ root: classes.customTable }} size="small">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
                   <TableHead>
                     <TableRow>
                       <TableCell>Application Status</TableCell>
@@ -1090,6 +1084,7 @@ function ReviewPropertyLease(props) {
                           <Table
                             classes={{ root: classes.customTable }}
                             size="small"
+                            responsive="md"
                           >
                             <TableHead>
                               <TableRow>
@@ -1211,7 +1206,11 @@ function ReviewPropertyLease(props) {
                 )}
               </Row>
               <Row className="m-3" style={{ overflow: "scroll" }}>
-                <Table classes={{ root: classes.customTable }} size="small">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
                   <TableHead>
                     <TableRow>
                       <TableCell>Application Status</TableCell>
@@ -1326,6 +1325,7 @@ function ReviewPropertyLease(props) {
                           <Table
                             classes={{ root: classes.customTable }}
                             size="small"
+                            responsive="md"
                           >
                             <TableHead>
                               <TableRow>
