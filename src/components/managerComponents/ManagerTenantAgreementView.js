@@ -197,9 +197,9 @@ function ManagerTenantAgreementView(props) {
     const send_announcement = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
-      tenant_name: responseAnnouncement["tenant_name"],
-      tenant_pno: responseAnnouncement["tenant_pno"],
-      tenant_email: responseAnnouncement["tenant_email"],
+      name: responseAnnouncement["tenant_name"],
+      pno: responseAnnouncement["tenant_pno"],
+      email: responseAnnouncement["tenant_email"],
     };
     const resSendAnnouncement = await post(
       "/SendAnnouncement",

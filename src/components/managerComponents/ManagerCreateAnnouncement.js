@@ -312,9 +312,9 @@ function ManagerCreateAnnouncement(props) {
     const send_announcement = {
       announcement_msg: new_announcement.announcement_msg,
       announcement_title: new_announcement.announcement_title,
-      tenant_name: response["tenant_name"],
-      tenant_pno: response["tenant_pno"],
-      tenant_email: response["tenant_email"],
+      name: response["tenant_name"],
+      pno: response["tenant_pno"],
+      email: response["tenant_email"],
     };
     const res = await post("/SendAnnouncement", send_announcement);
   };
