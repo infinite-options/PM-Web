@@ -1281,7 +1281,11 @@ function TenantPropertyView(props) {
                                     className="d-flex justify-content-between align-items-end ps-0"
                                     key={i}
                                   >
-                                    <h6>{document.name}</h6>
+                                    <h6>
+                                      {document.description == ""
+                                        ? document.name
+                                        : document.description}
+                                    </h6>
                                     <a
                                       href={document.link}
                                       target="_blank"
@@ -1528,7 +1532,11 @@ function TenantPropertyView(props) {
                             {files.map((file) => {
                               return (
                                 <TableRow>
-                                  <TableCell>{file.description}</TableCell>
+                                  <TableCell>
+                                    {file.description == ""
+                                      ? file.name
+                                      : file.description}
+                                  </TableCell>
                                   <TableCell>
                                     <a
                                       href={file.link}

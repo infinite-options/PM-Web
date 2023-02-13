@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     },
   },
 });
-function ConfirmDialog3(props) {
+function UpdateConfirmDialog(props) {
   const classes = useStyles();
   const {
     title,
@@ -58,18 +58,19 @@ function ConfirmDialog3(props) {
       <Dialog
         open={isOpen}
         // onClose={onCancel}
+        maxWidth="md"
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title"></DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {title}
+            <h5>{title}</h5>
           </DialogContentText>
         </DialogContent>
         {updatedAgreement !== undefined ? (
           <DialogContent>
-            <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+            <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
               <h5>Lease Details</h5>
               <div>
                 <Table
@@ -187,7 +188,7 @@ function ConfirmDialog3(props) {
             </Row>
 
             {oldAgreement.length !== 0 && updatedAgreement.length !== 0 ? (
-              <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+              <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
                 <h5>Lease Payments</h5>
                 <div>
                   <Table
@@ -739,7 +740,11 @@ function ConfirmDialog3(props) {
                         {updatedAgreement.documents.map((file) => {
                           return oldAgreement.documents.includesObj(file) ? (
                             <TableRow>
-                              <TableCell>{file.description}</TableCell>
+                              <TableCell>
+                                {file.description == ""
+                                  ? file.name
+                                  : file.description}
+                              </TableCell>
                               <TableCell>
                                 <a
                                   href={file.link}
@@ -760,7 +765,9 @@ function ConfirmDialog3(props) {
                           ) : !oldAgreement.documents.includesObj(file) ? (
                             <TableRow>
                               <TableCell style={{ color: "red" }}>
-                                {file.description}
+                                {file.description == ""
+                                  ? file.name
+                                  : file.description}
                               </TableCell>
                               <TableCell style={{ color: "red" }}>
                                 <a
@@ -781,7 +788,11 @@ function ConfirmDialog3(props) {
                             </TableRow>
                           ) : (
                             <TableRow>
-                              <TableCell>{file.description}</TableCell>
+                              <TableCell>
+                                {file.description == ""
+                                  ? file.name
+                                  : file.description}
+                              </TableCell>
                               <TableCell>
                                 <a
                                   href={file.link}
@@ -848,4 +859,4 @@ function ConfirmDialog3(props) {
   );
 }
 
-export default ConfirmDialog3;
+export default UpdateConfirmDialog;

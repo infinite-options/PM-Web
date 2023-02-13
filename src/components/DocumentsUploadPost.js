@@ -92,7 +92,7 @@ function DocumentsUploadPost(props) {
 
   // ======================================<Return function>=======================================
   return (
-    <Row className="m-3">
+    <div>
       {files.length > 0 ? (
         <Table
           responsive="md"
@@ -204,13 +204,17 @@ function DocumentsUploadPost(props) {
             className="d-none"
           />
           <label htmlFor="file">
-            <Button variant="outline-primary" style={smallPillButton} as="p">
+            <Button
+              variant="outline-primary"
+              style={{ ...smallPillButton, marginTop: "1rem" }}
+              as="p"
+            >
               Add Document
             </Button>
           </label>
         </div>
       )}
-    </Row>
+    </div>
   );
 }
 

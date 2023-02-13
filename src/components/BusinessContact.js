@@ -237,7 +237,7 @@ function BusinessContact(props) {
         newContact === null ? (
           <Button
             variant="outline-primary"
-            style={smallPillButton}
+            style={{ ...smallPillButton, marginTop: "1rem" }}
             onClick={() => setNewContact({ ...emptyContact })}
           >
             Add Person
@@ -246,7 +246,7 @@ function BusinessContact(props) {
           <div className="d-flex justify-content-center my-4">
             <Button
               variant="outline-primary"
-              style={pillButton}
+              style={{ ...pillButton }}
               onClick={cancelEdit}
               className="mx-2"
             >
@@ -254,7 +254,7 @@ function BusinessContact(props) {
             </Button>
             <Button
               variant="outline-primary"
-              style={pillButton}
+              style={{ ...pillButton }}
               onClick={addContact}
               className="mx-2"
             >

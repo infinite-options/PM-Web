@@ -30,19 +30,22 @@ export default function TenantUpcomingPayments(props) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("next_payment");
   const [purchaseUIDs, setPurchaseUIDs] = useState([]); //figure out which payment is being payed for
+  const [purchases, setPurchases] = useState([]); //figure out which payment is being payed for
   const rents = props.data; //array of objects
   const goToPayment = () => {
     navigate("/tenantDuePayments");
     // <PaymentComponent data = {rents}/>
   };
 
-  function handleCheck(event, amt, pid) {
+  function handleCheck(event, pur, amt, pid) {
     //pid is the purchase uid
     let tempPurchaseUID = purchaseUIDs;
+    let tempPurchase = purchases;
     if (event.target.checked) {
       setTotalSum((prevState) => amt + prevState);
       // setPurchaseUIDs(prev=>.)
       tempPurchaseUID.push(pid);
+      tempPurchase.push(pur);
     } else {
       setTotalSum((prevState) => prevState - amt);
       for (let uid in purchaseUIDs) {
@@ -50,9 +53,16 @@ export default function TenantUpcomingPayments(props) {
           purchaseUIDs.splice(uid, 1);
         }
       }
+      for (let uid in purchases) {
+        if (purchases[uid] === pur) {
+          purchases.splice(uid, 1);
+        }
+      }
     }
     setPurchaseUIDs(tempPurchaseUID);
+    setPurchases(tempPurchase);
   }
+  console.log(purchases);
   function navigateToPaymentPage() {
     if (props.paymentSelection[1].isActive === true) {
       // console.log("zelle selected");
@@ -69,6 +79,7 @@ export default function TenantUpcomingPayments(props) {
           amount: totalSum,
           selectedProperty: props.selectedProperty,
           purchaseUIDs: purchaseUIDs,
+          purchases: purchases,
         },
       });
     }
@@ -291,6 +302,7 @@ export default function TenantUpcomingPayments(props) {
                                   onClick={(event) =>
                                     handleCheck(
                                       event,
+                                      row,
                                       row.amount_due,
                                       row.purchase_uid
                                     )

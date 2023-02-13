@@ -609,7 +609,11 @@ function ManagerTenantProfileView(props) {
                         return (
                           <Row>
                             <Col>
-                              <h6>{document.name}</h6>
+                              <h6>
+                                {document.description == ""
+                                  ? document.name
+                                  : document.description}
+                              </h6>
                             </Col>
                             <Col>
                               <a
@@ -689,7 +693,7 @@ function ManagerTenantProfileView(props) {
                         <TableCell>Children</TableCell>
                         <TableCell>Pets</TableCell>
                         <TableCell>Vehicles</TableCell>
-                        <TableCell>referred</TableCell>
+                        <TableCell>Referred</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -887,7 +891,11 @@ function ManagerTenantProfileView(props) {
                       {files.map((file) => {
                         return (
                           <TableRow>
-                            <TableCell>{file.description}</TableCell>
+                            <TableCell>
+                              {file.description == ""
+                                ? file.name
+                                : file.description}
+                            </TableCell>
                             <TableCell>
                               <a
                                 href={file.link}

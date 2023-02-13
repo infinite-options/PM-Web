@@ -848,7 +848,9 @@ function ManagerRepairDetail(props) {
                                           textDecoration: "underline",
                                         }}
                                       >
-                                        {rp.description}
+                                        {rp.description == ""
+                                          ? rp.name
+                                          : rp.description}
                                       </Col>
                                       <Col className=" d-flex justify-content-end">
                                         <a

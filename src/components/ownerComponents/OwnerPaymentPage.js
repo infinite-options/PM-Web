@@ -198,11 +198,11 @@ function OwnerPaymentPage(props) {
                 className="mt-5"
                 hidden={stripePayment}
               >
-                <h2>Max Payment: ${totalSum}</h2>
+                <h2>Total Payment: ${totalSum}</h2>
                 <Form.Group>
                   <Form.Label>Message</Form.Label>
                   <Form.Control
-                    placeholder="M4METEST"
+                    placeholder="PMTEST"
                     style={squareForm}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}

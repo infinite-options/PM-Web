@@ -393,7 +393,11 @@ function PropertyManagerDocs(props) {
                   {activeContract.docs.map((file) => {
                     return (
                       <TableRow>
-                        <TableCell>{file.description}</TableCell>
+                        <TableCell>
+                          {file.description == ""
+                            ? file.name
+                            : file.description}
+                        </TableCell>
                         <TableCell>
                           <a href={file.link} target="_blank" rel="noreferrer">
                             <img

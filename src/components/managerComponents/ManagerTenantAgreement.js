@@ -694,28 +694,36 @@ function ManagerTenantAgreement(props) {
                         </Form.Label>
                         {application.adults &&
                         JSON.parse(application.adults).length > 0 ? (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>
-                              <Col>Name</Col>
-                              <Col>Relationship</Col>
-                              <Col>DOB(YYYY-MM-DD)</Col>
-                            </Row>
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              {" "}
+                              <TableRow style={subHeading}>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Relationship</TableCell>
+                                <TableCell>DOB(YYYY-MM-DD)</TableCell>
+                              </TableRow>
+                            </TableHead>
+
                             {JSON.parse(application.adults).map((adult) => {
                               return (
-                                <div>
-                                  <Row style={gray}>
-                                    <Col>{adult.name}</Col>
-                                    <Col>{adult.relationship}</Col>
-                                    <Col>{adult.dob}</Col>
-                                  </Row>
-                                </div>
+                                <TableBody>
+                                  <TableRow style={gray}>
+                                    <TableCell>{adult.name}</TableCell>
+                                    <TableCell>{adult.relationship}</TableCell>
+                                    <TableCell>{adult.dob}</TableCell>
+                                  </TableRow>
+                                </TableBody>
                               );
                             })}
-                          </div>
+                          </Table>
                         ) : (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>None</Row>
-                          </div>
+                          <TableBody className="mx-3 ">
+                            <TableRow style={subHeading}>None</TableRow>
+                          </TableBody>
                         )}
                       </Form.Group>
                     </Col>
@@ -728,28 +736,36 @@ function ManagerTenantAgreement(props) {
                       <Form.Group>
                         {application.children &&
                         JSON.parse(application.children).length > 0 ? (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>
-                              <Col>Name</Col>
-                              <Col>Relationship</Col>
-                              <Col>DOB(YYYY-MM-DD)</Col>
-                            </Row>
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              {" "}
+                              <TableRow style={subHeading}>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Relationship</TableCell>
+                                <TableCell>DOB(YYYY-MM-DD)</TableCell>
+                              </TableRow>
+                            </TableHead>
+
                             {JSON.parse(application.children).map((child) => {
                               return (
-                                <div>
-                                  <Row style={gray}>
-                                    <Col>{child.name}</Col>
-                                    <Col>{child.relationship}</Col>
-                                    <Col>{child.dob}</Col>
-                                  </Row>
-                                </div>
+                                <TableBody>
+                                  <TableRow style={gray}>
+                                    <TableCell>{child.name}</TableCell>
+                                    <TableCell>{child.relationship}</TableCell>
+                                    <TableCell>{child.dob}</TableCell>
+                                  </TableRow>
+                                </TableBody>
                               );
                             })}
-                          </div>
+                          </Table>
                         ) : (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>None</Row>
-                          </div>
+                          <TableBody className="mx-3 ">
+                            <TableRow style={subHeading}>None</TableRow>
+                          </TableBody>
                         )}
                       </Form.Group>
                     </Col>
@@ -762,30 +778,37 @@ function ManagerTenantAgreement(props) {
                         </Form.Label>
                         {application.pets &&
                         JSON.parse(application.pets).length > 0 ? (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>
-                              <Col>Name</Col>
-                              <Col>Type</Col>
-                              <Col>Breed</Col>
-                              <Col>Weight</Col>
-                            </Row>
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              <TableRow style={subHeading}>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Type</TableCell>
+                                <TableCell>Breed</TableCell>
+                                <TableCell>Weight</TableCell>
+                              </TableRow>
+                            </TableHead>
+
                             {JSON.parse(application.pets).map((pet) => {
                               return (
-                                <div>
-                                  <Row style={gray}>
-                                    <Col>{pet.name}</Col>
-                                    <Col>{pet.type}</Col>
-                                    <Col>{pet.breed}</Col>
-                                    <Col>{pet.weight}</Col>
-                                  </Row>
-                                </div>
+                                <TableBody>
+                                  <TableRow style={gray}>
+                                    <TableCell>{pet.name}</TableCell>
+                                    <TableCell>{pet.type}</TableCell>
+                                    <TableCell>{pet.breed}</TableCell>
+                                    <TableCell>{pet.weight}</TableCell>
+                                  </TableRow>
+                                </TableBody>
                               );
                             })}
-                          </div>
+                          </Table>
                         ) : (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>None</Row>
-                          </div>
+                          <TableBody className="mx-3 ">
+                            <TableRow style={subHeading}>None</TableRow>
+                          </TableBody>
                         )}
                       </Form.Group>
                     </Col>
@@ -798,32 +821,40 @@ function ManagerTenantAgreement(props) {
                         </Form.Label>
                         {application.vehicles &&
                         JSON.parse(application.vehicles).length > 0 ? (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>
-                              <Col>Make</Col>
-                              <Col>Model</Col>
-                              <Col>Year</Col>
-                              <Col>State</Col>
-                              <Col>License</Col>
-                            </Row>
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              {" "}
+                              <TableRow style={subHeading}>
+                                <TableCell>Make</TableCell>
+                                <TableCell>Model</TableCell>
+                                <TableCell>Year</TableCell>
+                                <TableCell>State</TableCell>
+                                <TableCell>License</TableCell>
+                              </TableRow>
+                            </TableHead>
+
                             {JSON.parse(application.vehicles).map((vehicle) => {
                               return (
-                                <div>
-                                  <Row style={gray}>
-                                    <Col>{vehicle.make}</Col>
-                                    <Col>{vehicle.model}</Col>
-                                    <Col>{vehicle.year}</Col>
-                                    <Col>{vehicle.state}</Col>
-                                    <Col>{vehicle.license}</Col>
-                                  </Row>
-                                </div>
+                                <TableBody>
+                                  <TableRow style={gray}>
+                                    <TableCell>{vehicle.make}</TableCell>
+                                    <TableCell>{vehicle.model}</TableCell>
+                                    <TableCell>{vehicle.year}</TableCell>
+                                    <TableCell>{vehicle.state}</TableCell>
+                                    <TableCell>{vehicle.license}</TableCell>
+                                  </TableRow>
+                                </TableBody>
                               );
                             })}
-                          </div>
+                          </Table>
                         ) : (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>None</Row>
-                          </div>
+                          <TableBody className="mx-3 ">
+                            <TableRow style={subHeading}>None</TableRow>
+                          </TableBody>
                         )}
                       </Form.Group>
                     </Col>
@@ -832,38 +863,47 @@ function ManagerTenantAgreement(props) {
                     <Col>
                       <Form.Group>
                         <Form.Label as="h6" className="my-2">
-                          referred
+                          Referred
                         </Form.Label>
                         {application.referred &&
                         JSON.parse(application.referred).length > 0 ? (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>
-                              <Col>Name</Col>
-                              <Col>Address</Col>
-                              <Col>Phone Number</Col>
-                              <Col>Email</Col>
-                              <Col>Relationship</Col>
-                            </Row>
+                          <Table
+                            responsive="md"
+                            classes={{ root: classes.customTable }}
+                            size="small"
+                          >
+                            <TableHead>
+                              {" "}
+                              <TableRow style={subHeading}>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Address</TableCell>
+                                <TableCell>Phone Number</TableCell>
+                                <TableCell>Email</TableCell>
+                                <TableCell>Relationship</TableCell>
+                              </TableRow>
+                            </TableHead>
                             {JSON.parse(application.referred).map(
                               (reference) => {
                                 return (
-                                  <div>
-                                    <Row style={gray}>
-                                      <Col>{reference.name}</Col>
-                                      <Col>{reference.address}</Col>
-                                      <Col>{reference.phone}</Col>
-                                      <Col>{reference.email}</Col>
-                                      <Col>{reference.relationship}</Col>
-                                    </Row>
-                                  </div>
+                                  <TableBody>
+                                    <TableRow style={gray}>
+                                      <TableCell>{reference.name}</TableCell>
+                                      <TableCell>{reference.address}</TableCell>
+                                      <TableCell>{reference.phone}</TableCell>
+                                      <TableCell>{reference.email}</TableCell>
+                                      <TableCell>
+                                        {reference.relationship}
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableBody>
                                 );
                               }
                             )}
-                          </div>
+                          </Table>
                         ) : (
-                          <div className="mx-3 ">
-                            <Row style={subHeading}>None</Row>
-                          </div>
+                          <TableBody className="mx-3 ">
+                            <TableRow style={subHeading}>None</TableRow>
+                          </TableBody>
                         )}
                       </Form.Group>
                     </Col>
@@ -921,115 +961,137 @@ function ManagerTenantAgreement(props) {
             }}
           >
             {" "}
-            <Row className="my-3">
+            <div className="my-3 mx-2">
               <h5 style={mediumBold}>Default Payment Parameters</h5>
-              <Col>
-                <Form.Group>
+              <Row>
+                <Col>
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Rent Available to pay(days before due)
                   </Form.Label>
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    style={squareForm}
-                    placeholder="days"
-                    value={available}
-                    onChange={(e) => setAvailable(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
+                </Col>
+                <Col>
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Rent Payment Due Date {dueDate === "" ? required : ""}
                   </Form.Label>
-                  {/*<Form.Control style={squareForm} placeholder='5 Days' />*/}
-                  <Form.Select
-                    style={{
-                      ...squareForm,
-                    }}
-                    value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
-                  >
-                    <option value="1">1st of the month</option>
-                    <option value="2">2nd of the month</option>
-                    <option value="3">3rd of the month</option>
-                    <option value="4">4th of the month</option>
-                    <option value="5">5th of the month</option>
-                    <option value="10">10th of the month</option>
-                    <option value="15">15th of the month</option>
-                    <option value="20">20th of the month</option>
-                    <option value="25">25th of the month</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
+                </Col>
+                <Col>
+                  {" "}
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Effective Date {effectiveDate === "" ? required : ""}
                   </Form.Label>
-                  <Form.Control
-                    type="date"
-                    style={{
-                      ...squareForm,
-                      padding: "3px",
-                    }}
-                    value={effectiveDate}
-                    onChange={(e) => setEffectiveDate(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row className="mb-2">
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      style={squareForm}
+                      placeholder="days"
+                      value={available}
+                      onChange={(e) => setAvailable(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    {/*<Form.Control style={squareForm} placeholder='5 Days' />*/}
+                    <Form.Select
+                      style={{
+                        ...squareForm,
+                      }}
+                      value={dueDate}
+                      onChange={(e) => setDueDate(e.target.value)}
+                    >
+                      <option value="1">1st of the month</option>
+                      <option value="2">2nd of the month</option>
+                      <option value="3">3rd of the month</option>
+                      <option value="4">4th of the month</option>
+                      <option value="5">5th of the month</option>
+                      <option value="10">10th of the month</option>
+                      <option value="15">15th of the month</option>
+                      <option value="20">20th of the month</option>
+                      <option value="25">25th of the month</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Control
+                      type="date"
+                      style={{
+                        ...squareForm,
+                        padding: "3px",
+                      }}
+                      value={effectiveDate}
+                      onChange={(e) => setEffectiveDate(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </div>
+            <div className="mx-2 mb-2">
               <h5 style={mediumBold}>Late Payment Details</h5>
-              <Col>
-                <Form.Group>
+              <Row>
+                <Col>
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Late fees after (days)
                     {lateAfter === "" ? required : ""}
                   </Form.Label>
-                  <Form.Control
-                    value={lateAfter}
-                    style={squareForm}
-                    placeholder="days"
-                    type="number"
-                    min="0"
-                    onChange={(e) => setLateAfter(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
+                </Col>
+                <Col>
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Late Fee (one-time) {lateFee === "" ? required : ""}
                   </Form.Label>
-                  <Form.Control
-                    value={lateFee}
-                    type="number"
-                    min="0"
-                    style={squareForm}
-                    placeholder="amount($)"
-                    onChange={(e) => setLateFee(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col>
-                <Form.Group>
+                </Col>
+                <Col>
+                  {" "}
                   <Form.Label as="h6" className="mb-0 ms-2">
                     Late Fee (per day) {lateFeePer === "" ? required : ""}
                   </Form.Label>
-                  <Form.Control
-                    value={lateFeePer}
-                    type="number"
-                    min="0"
-                    style={squareForm}
-                    placeholder="amount($)"
-                    onChange={(e) => setLateFeePer(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Control
+                      value={lateAfter}
+                      style={squareForm}
+                      placeholder="days"
+                      type="number"
+                      min="0"
+                      onChange={(e) => setLateAfter(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Control
+                      value={lateFee}
+                      type="number"
+                      min="0"
+                      style={squareForm}
+                      placeholder="amount($)"
+                      onChange={(e) => setLateFee(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+
+                <Col>
+                  <Form.Group>
+                    <Form.Control
+                      value={lateFeePer}
+                      type="number"
+                      min="0"
+                      style={squareForm}
+                      placeholder="amount($)"
+                      onChange={(e) => setLateFeePer(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </div>
           </div>
 
           <div
@@ -1067,7 +1129,9 @@ function ManagerTenantAgreement(props) {
             }}
           >
             <h5 style={mediumBold}>Contact Details</h5>
-            <BusinessContact state={contactState} />
+            <div className="mx-2">
+              <BusinessContact state={contactState} />
+            </div>
           </div>
 
           <div
@@ -1079,15 +1143,17 @@ function ManagerTenantAgreement(props) {
             }}
           >
             <h5 style={mediumBold}>Lease Documents</h5>
-
-            <DocumentsUploadPost
-              files={files}
-              setFiles={setFiles}
-              addDoc={addDoc}
-              setAddDoc={setAddDoc}
-              editingDoc={editingDoc}
-              setEditingDoc={setEditingDoc}
-            />
+            <div className="mx-2">
+              {" "}
+              <DocumentsUploadPost
+                files={files}
+                setFiles={setFiles}
+                addDoc={addDoc}
+                setAddDoc={setAddDoc}
+                editingDoc={editingDoc}
+                setEditingDoc={setEditingDoc}
+              />
+            </div>
           </div>
           {showSpinner ? (
             <div className="w-100 d-flex flex-column justify-content-center align-items-center">
