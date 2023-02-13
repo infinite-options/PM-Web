@@ -489,8 +489,8 @@ export default function OwnerDashboard2() {
   };
 
   let revenueTotal = 0;
-  revenueTotal = (
-    cashflowData.rental_revenue +
+  revenueTotal = // cashflowData.rental_revenue +
+  (
     cashflowData.extra_revenue +
     cashflowData.utility_revenue +
     cashflowData.management_revenue +
@@ -511,8 +511,8 @@ export default function OwnerDashboard2() {
   const cashFlow = (revenueTotal - expenseTotal).toFixed(2);
 
   let revenueTotalAmortized = 0;
-  revenueTotalAmortized = (
-    cashflowData.amortized_rental_revenue +
+  revenueTotalAmortized = // cashflowData.amortized_rental_revenue +
+  (
     cashflowData.amortized_extra_revenue +
     cashflowData.amortized_utility_revenue +
     cashflowData.amortized_management_revenue +
@@ -546,8 +546,8 @@ export default function OwnerDashboard2() {
   ).toFixed(2);
 
   let yearRevenueTotal = 0;
-  yearRevenueTotal = (
-    cashflowData.rental_year_revenue +
+  yearRevenueTotal = // cashflowData.rental_year_revenue +
+  (
     cashflowData.extra_year_revenue +
     cashflowData.utility_year_revenue +
     cashflowData.management_year_revenue +
@@ -568,8 +568,8 @@ export default function OwnerDashboard2() {
   ).toFixed(2);
 
   let yearRevenueTotalAmortized = 0;
-  yearRevenueTotalAmortized = (
-    cashflowData.amortized_rental_year_revenue +
+  yearRevenueTotalAmortized = // cashflowData.amortized_rental_year_revenue +
+  (
     cashflowData.amortized_extra_year_revenue +
     cashflowData.amortized_utility_year_revenue +
     cashflowData.amortized_management_year_revenue +
@@ -581,8 +581,8 @@ export default function OwnerDashboard2() {
   ).toFixed(2);
 
   let revenueExpectedTotal = 0;
-  revenueExpectedTotal = (
-    cashflowData.rental_expected_revenue +
+  revenueExpectedTotal = // cashflowData.rental_expected_revenue +
+  (
     cashflowData.extra_expected_revenue +
     cashflowData.utility_expected_revenue +
     cashflowData.management_expected_revenue +
@@ -607,14 +607,15 @@ export default function OwnerDashboard2() {
   ).toFixed(2);
 
   let revenueExpectedTotalAmortized = 0;
-  revenueExpectedTotalAmortized = (
-    cashflowData.amortized_rental_expected_revenue +
-    cashflowData.amortized_extra_expected_revenue +
-    cashflowData.amortized_utility_expected_revenue +
-    cashflowData.amortized_management_expected_revenue +
-    cashflowData.amortized_maintenance_expected_revenue +
-    cashflowData.amortized_repairs_expected_revenue
-  ).toFixed(2);
+  revenueExpectedTotalAmortized =
+    // cashflowData.amortized_rental_expected_revenue +
+    (
+      cashflowData.amortized_extra_expected_revenue +
+      cashflowData.amortized_utility_expected_revenue +
+      cashflowData.amortized_management_expected_revenue +
+      cashflowData.amortized_maintenance_expected_revenue +
+      cashflowData.amortized_repairs_expected_revenue
+    ).toFixed(2);
 
   let expenseExpectedTotalAmortized = 0;
   expenseExpectedTotalAmortized = (
@@ -632,8 +633,8 @@ export default function OwnerDashboard2() {
   ).toFixed(2);
 
   let yearRevenueExpectedTotal = 0;
-  yearRevenueExpectedTotal = (
-    cashflowData.rental_year_expected_revenue +
+  yearRevenueExpectedTotal = // cashflowData.rental_year_expected_revenue +
+  (
     cashflowData.extra_year_expected_revenue +
     cashflowData.utility_year_expected_revenue +
     cashflowData.management_year_expected_revenue +
@@ -657,14 +658,15 @@ export default function OwnerDashboard2() {
   ).toFixed(2);
 
   let yearRevenueExpectedTotalAmortized = 0;
-  yearRevenueExpectedTotalAmortized = (
-    cashflowData.amortized_rental_year_expected_revenue +
-    cashflowData.amortized_extra_year_expected_revenue +
-    cashflowData.amortized_utility_year_expected_revenue +
-    cashflowData.amortized_management_year_expected_revenue +
-    cashflowData.amortized_maintenance_year_expected_revenue +
-    cashflowData.amortized_repairs_year_expected_revenue
-  ).toFixed(2);
+  yearRevenueExpectedTotalAmortized =
+    // cashflowData.amortized_rental_year_expected_revenue +
+    (
+      cashflowData.amortized_extra_year_expected_revenue +
+      cashflowData.amortized_utility_year_expected_revenue +
+      cashflowData.amortized_management_year_expected_revenue +
+      cashflowData.amortized_maintenance_year_expected_revenue +
+      cashflowData.amortized_repairs_year_expected_revenue
+    ).toFixed(2);
 
   let yearExpenseExpectedTotalAmortized = 0;
   yearExpenseExpectedTotalAmortized = (
@@ -891,7 +893,7 @@ export default function OwnerDashboard2() {
                       </TableCell>
                     </TableRow>
 
-                    <TableRow hidden={!monthlyRevenue}>
+                    {/* <TableRow hidden={!monthlyRevenue}>
                       <TableCell width="180px">
                         &nbsp;&nbsp; Rent{" "}
                         <img
@@ -1028,7 +1030,7 @@ export default function OwnerDashboard2() {
                         ) : (
                           ""
                         );
-                      })}
+                      })} */}
                     <TableRow hidden={!monthlyRevenue}>
                       <TableCell width="180px">
                         &nbsp;&nbsp; Extra Charges

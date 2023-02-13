@@ -43,6 +43,7 @@ function TenantAnnouncements(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [width, setWindowWidth] = useState(0);
+  console.log(userData);
   useEffect(() => {
     updateDimensions();
 
