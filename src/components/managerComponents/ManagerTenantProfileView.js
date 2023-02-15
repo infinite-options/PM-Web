@@ -524,7 +524,6 @@ function ManagerTenantProfileView(props) {
                       >
                         <TableHead>
                           <TableRow style={subHeading}>
-                            <TableCell xs={1}></TableCell>
                             <TableCell>Make</TableCell>
                             <TableCell>Model</TableCell>
                             <TableCell>Year</TableCell>

@@ -28,6 +28,7 @@ import PropertyAppliances from "../PropertyAppliances";
 import AppContext from "../../AppContext";
 import ManagerManagementContract from "./ManagerManagementContract";
 import ManagerTenantAgreementView from "./ManagerTenantAgreementView";
+import ManagerTenantExtendedAgreementView from "./ManagerTenantExtendedAgreementView";
 import ConfirmDialog from "../ConfirmDialog";
 import ManagerRepairRequest from "./ManagerRepairRequest";
 import ManagerPropertyForm from "./ManagerPropertyForm";
@@ -196,6 +197,8 @@ function ManagerPropertyView(props) {
   const [showTenantAgreementEdit, setShowTenantAgreementEdit] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
   const [selectedAgreement, setSelectedAgreement] = useState(null);
+
+  const [extendedAgreement, setExtendedAgreement] = useState(null);
   const [acceptedTenantApplications, setAcceptedTenantApplications] = useState(
     []
   );
@@ -335,6 +338,14 @@ function ManagerPropertyView(props) {
         rental.rental_status === "PROCESSING"
       ) {
         setSelectedAgreement(rental);
+      }
+    });
+    property_details.rentalInfo.forEach((rental) => {
+      if (
+        rental.rental_status === "PENDING" ||
+        rental.rental_status === "TENANT APPROVED"
+      ) {
+        setExtendedAgreement(rental);
       }
     });
     property_details.applications.forEach((application) => {
@@ -5608,6 +5619,32 @@ function ManagerPropertyView(props) {
                     />
                   </Row>
                 </div>
+                {extendedAgreement ? (
+                  <div
+                    className="mx-3 my-3 p-2"
+                    style={{
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
+                      borderRadius: "10px",
+                      opacity: 1,
+                    }}
+                  >
+                    <Row style={{ overflow: "scroll" }}>
+                      <ManagerTenantExtendedAgreementView
+                        property={property}
+                        closeAgreement={closeAgreement}
+                        selectedAgreement={extendedAgreement}
+                        selectAgreement={selectAgreement}
+                        renewLease={renewLease}
+                        acceptedTenantApplications={acceptedTenantApplications}
+                        setAcceptedTenantApplications={
+                          setAcceptedTenantApplications
+                        }
+                      />
+                    </Row>
+                  </div>
+                ) : (
+                  ""
+                )}
                 <div
                   className="mx-3 my-3 p-2"
                   style={{

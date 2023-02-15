@@ -639,7 +639,7 @@ function ManagerTenantRentPayments(props) {
           </Button>
           <Button
             variant="outline-primary"
-            style={{ ...pillButton, marginTop: "1rem" }}
+            style={{ ...pillButton }}
             onClick={addFee}
             className="mx-2"
           >

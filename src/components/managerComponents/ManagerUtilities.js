@@ -198,11 +198,13 @@ function ManagerUtilities(props) {
         const index = properties_unique.findIndex(
           (item) => item.property_uid === property.property_uid
         );
+        properties_unique[index].tenants = [];
         if (
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          // console.log("here", property);
+          console.log("here", property);
+          console.log("here", properties_unique[index].tenants);
           properties_unique[index].tenants.push(property);
         }
       } else {
@@ -396,25 +398,28 @@ function ManagerUtilities(props) {
     const bill_uid = response.bill_uid;
     // console.log(bill_uid);
     let today_date = new Date().toISOString().split("T")[0];
-    const new_purchase_pm = {
-      linked_bill_id: bill_uid,
-      pur_property_id: properties_uid,
-      payer: [management_buid],
-      receiver: newUtility.provider,
-      purchase_type: "UTILITY",
-      description: newUtility.service_name,
-      amount_due: newUtility.charge,
-      purchase_notes: moment().format("MMMM"),
-      purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
-      purchase_frequency: "One-time",
-      next_payment:
-        newUtility.due_date === "" ? today_date : newUtility.due_date,
-    };
-    // console.log("new purchase pm", new_purchase_pm);
-    const response_pm = await post("/purchases", new_purchase_pm, null, null);
-    const purchase_uid = response_pm.purchase_uid;
-    // console.log(response_pm);
     splitFees(newUtility);
+    for (const property of newUtility.properties) {
+      const new_purchase_pm = {
+        linked_bill_id: bill_uid,
+        pur_property_id: [property.property_uid],
+        payer: [management_buid],
+        receiver: newUtility.provider,
+        purchase_type: "UTILITY",
+        description: newUtility.service_name,
+        amount_due: property.charge,
+        purchase_notes: moment().format("MMMM"),
+        purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
+        purchase_frequency: "One-time",
+        next_payment:
+          newUtility.due_date === "" ? today_date : newUtility.due_date,
+      };
+      // console.log("new purchase pm", new_purchase_pm);
+      const response_pm = await post("/purchases", new_purchase_pm, null, null);
+    }
+    // const purchase_uid = response_pm.purchase_uid;
+    // console.log(response_pm);
+
     for (const property of newUtility.properties) {
       // console.log(property);
       const new_purchase = {
@@ -448,13 +453,13 @@ function ManagerUtilities(props) {
       // console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
-    navigate(`/managerPaymentPage/${purchase_uid}`, {
-      state: {
-        amount: newUtility.charge,
-        selectedProperty: "",
-        purchaseUID: purchase_uid,
-      },
-    });
+    // navigate(`/managerPaymentPage/${purchase_uid}`, {
+    //   state: {
+    //     amount: newUtility.charge,
+    //     selectedProperty: "",
+    //     purchaseUID: purchase_uid,
+    //   },
+    // });
 
     setNewUtility({ ...emptyUtility });
     propertyState.forEach((prop) => (prop.checked = false));
@@ -462,7 +467,16 @@ function ManagerUtilities(props) {
     setEditingUtility(false);
     setTenantPay(false);
     setOwnerPay(false);
-    setPayExpense(true);
+    setExpenseDetail(false);
+    setExpenseDetailManager(false);
+    setMaintenanceExpenseDetail(false);
+    setPayment(null);
+    setTenantPay(false);
+    setOwnerPay(false);
+
+    setPayExpense(false);
+    setEditingUtility(false);
+    fetchProperties();
   };
 
   const addUtility = async () => {
