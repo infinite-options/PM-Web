@@ -365,26 +365,28 @@ function OwnerUtilities(props) {
     const response = await post("/bills", new_bill, null, newFiles);
     const bill_uid = response.bill_uid;
     // console.log(bill_uid);
-
-    const new_purchase_pm = {
-      linked_bill_id: bill_uid,
-      pur_property_id: properties_uid,
-      payer: [user.user_uid],
-      receiver: newUtility.provider,
-      purchase_type: "UTILITY",
-      description: newUtility.service_name,
-      amount_due: newUtility.charge,
-      purchase_notes: moment().format("MMMM"),
-      purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
-      purchase_frequency: "One-time",
-      next_payment: newUtility.due_date,
-    };
-    // console.log(new_purchase_pm);
-    const response_pm = await post("/purchases", new_purchase_pm, null, null);
-    const purchase_uid = response_pm.purchase_uid;
-    setPurchaseUID(response_pm.purchase_uid);
-    // console.log(response_pm);
     splitFees(newUtility);
+    for (const property of newUtility.properties) {
+      const new_purchase_pm = {
+        linked_bill_id: bill_uid,
+        pur_property_id: [property.property_uid],
+        payer: [user.user_uid],
+        receiver: newUtility.provider,
+        purchase_type: "UTILITY",
+        description: newUtility.service_name,
+        amount_due: property.charge,
+        purchase_notes: moment().format("MMMM"),
+        purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
+        purchase_frequency: "One-time",
+        next_payment: newUtility.due_date,
+      };
+      // console.log(new_purchase_pm);
+      const response_pm = await post("/purchases", new_purchase_pm, null, null);
+      // const purchase_uid = response_pm.purchase_uid;
+      // setPurchaseUID(response_pm.purchase_uid);
+    }
+    // console.log(response_pm);
+    // splitFees(newUtility);
     // console.log(tenantPay, ownerPay);
     for (const property of newUtility.properties) {
       // console.log("in for loop");
@@ -421,14 +423,29 @@ function OwnerUtilities(props) {
       // console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
+    //   setNewUtility({ ...emptyUtility });
+    //   propertyState.forEach((prop) => (prop.checked = false));
+    //   setPropertyState(propertyState);
+    //   setEditingUtility(false);
+    //   setTenantPay(false);
+    //   setOwnerPay(false);
+    //   // PayBill(purchase_uid);
+    //   setPayExpense(true);
     setNewUtility({ ...emptyUtility });
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
     setEditingUtility(false);
     setTenantPay(false);
     setOwnerPay(false);
-    PayBill(purchase_uid);
-    setPayExpense(true);
+    setExpenseDetail(false);
+    setMaintenanceExpenseDetail(false);
+    setPayment(null);
+    setTenantPay(false);
+    setOwnerPay(false);
+
+    setPayExpense(false);
+    setEditingUtility(false);
+    fetchProperties();
   };
 
   const addUtility = async () => {
