@@ -17,8 +17,13 @@ import PropertyApplicationView from "./PropertyApplicationView";
 import Delete from "../../icons/Delete.svg";
 import File from "../../icons/File.svg";
 import EditIconNew from "../../icons/EditIconNew.svg";
-import { get, put } from "../../utils/api";
-import { bluePillButton, greenPill, redPillButton } from "../../utils/styles";
+import { get, put, post } from "../../utils/api";
+import {
+  bluePillButton,
+  greenPill,
+  redPillButton,
+  mediumBold,
+} from "../../utils/styles";
 import { ordinal_suffix_of } from "../../utils/helper";
 const useStyles = makeStyles({
   customTable: {
@@ -54,6 +59,9 @@ function ReviewPropertyLease(props) {
   const [disableEndLease, setDisable] = useState(false);
   const [within60, setWithin60] = useState(false);
   const [width, setWindowWidth] = useState(0);
+  const [tenantExtendLease, setTenantExtendLease] = useState(false);
+  const [leaseExtended, setLeaseExtended] = useState(false);
+  const [pmExtendLease, setPmExtendLease] = useState(false);
   useEffect(() => {
     updateDimensions();
 
@@ -68,6 +76,12 @@ function ReviewPropertyLease(props) {
     showSidebar: width > 1023,
   };
   useEffect(() => {
+    if (application_status_1 === "LEASE EXTENSION") {
+      setPmExtendLease(true);
+    }
+    if (application_status_1 === "TENANT LEASE EXTENSION") {
+      setTenantExtendLease(true);
+    }
     const fetchRentals = async () => {
       const response = await get(
         `/leaseTenants?linked_tenant_id=${user.user_uid}`
@@ -158,8 +172,8 @@ function ReviewPropertyLease(props) {
           application_status: "RENTED",
           property_uid: property_uid,
         };
-        // const response2 = await put("/applications", updatedApplication);
-        // navigate("/tenant");
+        const response2 = await put("/applications", updatedApplication);
+        navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "PENDING")) {
         let i = rentals.findIndex(
           (rental) => rental.rental_status === "PENDING"
@@ -186,8 +200,8 @@ function ReviewPropertyLease(props) {
           rental_uid: rentals[i].rental_uid,
         };
         console.log("in update activr lease", updateLease);
-        // const response2 = await put("/UpdateActiveLease", updateLease);
-        // navigate("/tenant");
+        const response2 = await put("/UpdateActiveLease", updateLease);
+        navigate("/tenant");
       }
     }
   };
@@ -971,139 +985,6 @@ function ReviewPropertyLease(props) {
               ) : (
                 ""
               )}
-              {application_status_1 === "LEASE EXTENSION" ||
-              application_status_1 === "TENANT LEASE EXTENSION" ? (
-                <div>
-                  <Row className="m-3">
-                    <Col>
-                      <h3>New Lease Agreement</h3>
-                    </Col>
-                    <Col xs={2}></Col>
-                  </Row>
-                  {rentals && rentals.length ? (
-                    <Row className="m-3" style={{ overflow: "scroll" }}>
-                      <h5>Lease Details</h5>
-                      <Table
-                        responsive="md"
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Lease Start</TableCell>
-                            <TableCell>Lease End</TableCell>
-                            <TableCell>Rent Due</TableCell>
-                            <TableCell>Late Fees After (days)</TableCell>
-                            <TableCell>Late Fee (one-time)</TableCell>
-                            <TableCell>Late Fee (per day)</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rentals.map((rental) => {
-                            return rental.rental_status === "PENDING" ? (
-                              <TableRow>
-                                <TableCell>{rental.lease_start}</TableCell>
-
-                                <TableCell>{rental.lease_end}</TableCell>
-
-                                <TableCell>
-                                  {`${ordinal_suffix_of(
-                                    rental.due_by
-                                  )} of the month`}
-                                </TableCell>
-
-                                <TableCell>{rental.late_by} days</TableCell>
-                                <TableCell> ${rental.late_fee}</TableCell>
-                                <TableCell>
-                                  {" "}
-                                  ${rental.perDay_late_fee}
-                                </TableCell>
-                              </TableRow>
-                            ) : (
-                              ""
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </Row>
-                  ) : (
-                    ""
-                  )}
-
-                  {rentals && rentals.length ? (
-                    <Row className="m-3" style={{ overflow: "scroll" }}>
-                      <h5>Lease Payments</h5>
-                      <Table
-                        responsive="md"
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Fee Name</TableCell>
-                            <TableCell>Amount</TableCell>
-                            <TableCell>Of</TableCell>
-                            <TableCell>Frequency</TableCell>
-                            <TableCell>Available to Pay</TableCell>
-                            <TableCell>Due Date</TableCell>
-                            <TableCell>Late After (days)</TableCell>
-                            <TableCell>Late Fee(one-time)</TableCell>
-                            <TableCell>Late Fee (per day)</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rentals.map((rental) => {
-                            return rental.rental_status === "PENDING"
-                              ? JSON.parse(rental.rent_payments).map(
-                                  (fee, i) => {
-                                    return (
-                                      <TableRow>
-                                        <TableCell>{fee.fee_name}</TableCell>
-
-                                        <TableCell>
-                                          {fee.fee_type === "%"
-                                            ? `${fee.charge}%`
-                                            : `$${fee.charge}`}
-                                        </TableCell>
-
-                                        <TableCell>
-                                          {fee.fee_type === "%"
-                                            ? `${fee.of}`
-                                            : ""}
-                                        </TableCell>
-
-                                        <TableCell>{fee.frequency}</TableCell>
-                                        <TableCell>{`${fee.available_topay} days before`}</TableCell>
-                                        <TableCell>
-                                          {fee.due_by === ""
-                                            ? `1st of the month`
-                                            : `${ordinal_suffix_of(
-                                                fee.due_by
-                                              )} of the month`}
-                                        </TableCell>
-                                        <TableCell>
-                                          {fee.late_by} days
-                                        </TableCell>
-                                        <TableCell>${fee.late_fee}</TableCell>
-                                        <TableCell>
-                                          ${fee.perDay_late_fee}/day
-                                        </TableCell>
-                                      </TableRow>
-                                    );
-                                  }
-                                )
-                              : "";
-                          })}
-                        </TableBody>
-                      </Table>
-                    </Row>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              ) : (
-                ""
-              )}
             </div>
           ) : application_status_1 === "REJECTED" ? (
             <div
@@ -1578,6 +1459,154 @@ function ReviewPropertyLease(props) {
                 <h3>No Lease Information Available at this time</h3>
               </Row>
             </div>
+          )}
+          {application_status_1 === "LEASE EXTENSION" ||
+          application_status_1 === "TENANT LEASE EXTENSION" ? (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <Row className="m-3">
+                <Col>
+                  <h3>New Lease Agreement</h3>
+                </Col>
+                <Col xs={2}></Col>
+              </Row>
+              {rentals && rentals.length ? (
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <h5>Lease Details</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Lease Start</TableCell>
+                        <TableCell>Lease End</TableCell>
+                        <TableCell>Rent Due</TableCell>
+                        <TableCell>Late Fees After (days)</TableCell>
+                        <TableCell>Late Fee (one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rentals.map((rental) => {
+                        return rental.rental_status === "PENDING" ? (
+                          <TableRow>
+                            <TableCell>{rental.lease_start}</TableCell>
+
+                            <TableCell>{rental.lease_end}</TableCell>
+
+                            <TableCell>
+                              {`${ordinal_suffix_of(
+                                rental.due_by
+                              )} of the month`}
+                            </TableCell>
+
+                            <TableCell>{rental.late_by} days</TableCell>
+                            <TableCell> ${rental.late_fee}</TableCell>
+                            <TableCell> ${rental.perDay_late_fee}</TableCell>
+                          </TableRow>
+                        ) : (
+                          <TableRow>
+                            No Lease Information Available at this time
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              ) : (
+                ""
+              )}
+
+              {rentals && rentals.length ? (
+                <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <h5>Lease Payments</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Fee Name</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Of</TableCell>
+                        <TableCell>Frequency</TableCell>
+                        <TableCell>Available to Pay</TableCell>
+                        <TableCell>Due Date</TableCell>
+                        <TableCell>Late After (days)</TableCell>
+                        <TableCell>Late Fee(one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rentals.map((rental) => {
+                        return rental.rental_status === "PENDING" ? (
+                          JSON.parse(rental.rent_payments).map((fee, i) => {
+                            return (
+                              <TableRow>
+                                <TableCell>{fee.fee_name}</TableCell>
+
+                                <TableCell>
+                                  {fee.fee_type === "%"
+                                    ? `${fee.charge}%`
+                                    : `$${fee.charge}`}
+                                </TableCell>
+
+                                <TableCell>
+                                  {fee.fee_type === "%" ? `${fee.of}` : ""}
+                                </TableCell>
+
+                                <TableCell>{fee.frequency}</TableCell>
+                                <TableCell>{`${fee.available_topay} days before`}</TableCell>
+                                <TableCell>
+                                  {fee.due_by === ""
+                                    ? `1st of the month`
+                                    : `${ordinal_suffix_of(
+                                        fee.due_by
+                                      )} of the month`}
+                                </TableCell>
+                                <TableCell>{fee.late_by} days</TableCell>
+                                <TableCell>${fee.late_fee}</TableCell>
+                                <TableCell>
+                                  ${fee.perDay_late_fee}/day
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })
+                        ) : (
+                          <TableRow>
+                            No Lease Information Available at this time
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Row>
+              ) : (
+                ""
+              )}
+              {tenantExtendLease ? (
+                <div className="my-4">
+                  <h5 style={mediumBold}>
+                    You requested to extend the lease. Further Information to
+                    extend your current lease will require approval from your
+                    property manager.
+                  </h5>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            <div></div>
           )}
 
           {/* ==================< Lease Documents >=======================================  */}

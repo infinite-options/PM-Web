@@ -69,6 +69,7 @@ function TenantPropertyView(props) {
   const [imagesProperty, setImagesProperty] = useState([]);
   const [showTenantAgreement, setShowTenantAgreement] = useState(false);
   const [selectedAgreement, setSelectedAgreement] = useState(null);
+  const [extendedAgreement, setExtendedAgreement] = useState(null);
   const [feeState, setFeeState] = useState([]);
   const [contactState, setContactState] = useState([]);
   const [files, setFiles] = useState([]);
@@ -77,6 +78,8 @@ function TenantPropertyView(props) {
   const [message, setMessage] = useState("");
   const [tenantEndEarly, setTenantEndEarly] = useState(false);
   const [tenantExtendLease, setTenantExtendLease] = useState(false);
+  const [leaseExtended, setLeaseExtended] = useState(false);
+  const [pmExtendLease, setPmExtendLease] = useState(false);
   const [pmEndEarly, setPmEndEarly] = useState(false);
   const [showTenantProfile, setShowTenantProfile] = useState(false);
   const [disableEndLease, setDisable] = useState(false);
@@ -460,7 +463,13 @@ function TenantPropertyView(props) {
         if (app) {
           setTenantEndEarly(true);
         }
-        let appEL = rental.application_status === "LEASE EXTENSION";
+        let appPMEL = rental.application_status === "LEASE EXTENSION";
+
+        // console.log(app);
+        if (appPMEL) {
+          setPmExtendLease(true);
+        }
+        let appEL = rental.application_status === "TENANT LEASE EXTENSION";
 
         // console.log(app);
         if (appEL) {
@@ -472,9 +481,28 @@ function TenantPropertyView(props) {
           setPmEndEarly(true);
         }
       }
+      if (
+        rental.rental_status === "PENDING" ||
+        rental.rental_status === "TENANT APPROVED"
+      ) {
+        setLeaseExtended(true);
+        setExtendedAgreement(rental);
+        let appPMEL = rental.application_status === "LEASE EXTENSION";
+
+        // console.log(app);
+        if (appPMEL) {
+          setPmExtendLease(true);
+        }
+        let appEL = rental.application_status === "TENANT LEASE EXTENSION";
+
+        // console.log(app);
+        if (appEL) {
+          setTenantExtendLease(true);
+        }
+      }
     });
   };
-  // console.log(property);
+  console.log(extendedAgreement);
   useState(() => {
     fetchProperty();
   });
@@ -1604,8 +1632,10 @@ function TenantPropertyView(props) {
                               hidden={
                                 selectedAgreement === null ||
                                 tenantExtendLease ||
+                                pmExtendLease ||
                                 tenantEndEarly ||
-                                pmEndEarly
+                                pmEndEarly ||
+                                leaseExtended
                               }
                             >
                               <Col className="d-flex flex-row justify-content-evenly">
@@ -1621,7 +1651,7 @@ function TenantPropertyView(props) {
                           ) : (
                             ""
                           )}
-                          {tenantExtendLease ? (
+                          {/* {tenantExtendLease ? (
                             <div className="my-4">
                               <h5 style={mediumBold}>
                                 You requested to extend the lease. Further
@@ -1648,7 +1678,7 @@ function TenantPropertyView(props) {
                             </div>
                           ) : (
                             ""
-                          )}
+                          )} */}
 
                           {terminateLease ? (
                             <div
@@ -1656,7 +1686,8 @@ function TenantPropertyView(props) {
                                 selectedAgreement === null ||
                                 tenantExtendLease ||
                                 tenantEndEarly ||
-                                pmEndEarly
+                                pmEndEarly ||
+                                leaseExtended
                               }
                             >
                               <Row>
@@ -1738,7 +1769,8 @@ function TenantPropertyView(props) {
                                     selectedAgreement === null ||
                                     tenantExtendLease ||
                                     tenantEndEarly ||
-                                    pmEndEarly
+                                    pmEndEarly ||
+                                    leaseExtended
                                   }
                                   onClick={() => setTerminateLease(true)}
                                 >
@@ -1824,6 +1856,258 @@ function TenantPropertyView(props) {
                   )}
                 </Row>
               </div>
+              {tenantExtendLease || pmExtendLease || leaseExtended ? (
+                <div
+                  className="my-3 mx-3 p-2"
+                  style={{
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px 10px 0px 0px",
+                    opacity: 1,
+                  }}
+                >
+                  <Row className="m-3">
+                    <Col>
+                      <h3>New Lease Agreement</h3>
+                    </Col>
+                    <Col xs={2}></Col>
+                  </Row>
+                  {extendedAgreement ? (
+                    <div>
+                      <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+                        <h5>Lease Details</h5>
+                        <Table
+                          responsive="md"
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Lease Start</TableCell>
+                              <TableCell>Lease End</TableCell>
+                              <TableCell>Rent Due</TableCell>
+                              <TableCell>Later fees after(days)</TableCell>
+                              <TableCell>Late Fee (one-time)</TableCell>
+                              <TableCell>Late Fee (per day)</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>
+                                {extendedAgreement.lease_start}
+                              </TableCell>
+
+                              <TableCell>
+                                {extendedAgreement.lease_end}
+                              </TableCell>
+
+                              <TableCell>
+                                {`${ordinal_suffix_of(
+                                  extendedAgreement.due_by
+                                )} of the month`}
+                              </TableCell>
+
+                              <TableCell>
+                                {extendedAgreement.late_by} days
+                              </TableCell>
+                              <TableCell>
+                                {" "}
+                                ${extendedAgreement.late_fee}
+                              </TableCell>
+                              <TableCell>
+                                {" "}
+                                ${extendedAgreement.perDay_late_fee}
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </Row>
+
+                      <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
+                        <h5>Lease Payments</h5>
+                        <Table
+                          responsive="md"
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Fee Name</TableCell>
+                              <TableCell>Amount</TableCell>
+                              <TableCell>Of</TableCell>
+                              <TableCell>Frequency</TableCell>
+                              <TableCell>Available to Pay</TableCell>
+                              <TableCell>Due Date</TableCell>
+                              <TableCell>Late Fees After (days)</TableCell>
+                              <TableCell>Late Fee (one-time)</TableCell>
+                              <TableCell>Late Fee (per day)</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {JSON.parse(extendedAgreement.rent_payments).map(
+                              (fee, i) => (
+                                <TableRow>
+                                  <TableCell>{fee.fee_name}</TableCell>
+
+                                  <TableCell>
+                                    {fee.fee_type === "%"
+                                      ? `${fee.charge}%`
+                                      : `$${fee.charge}`}
+                                  </TableCell>
+
+                                  <TableCell>
+                                    {fee.fee_type === "%" ? `${fee.of}` : ""}
+                                  </TableCell>
+
+                                  <TableCell>{fee.frequency}</TableCell>
+                                  <TableCell>{`${fee.available_topay} days before`}</TableCell>
+                                  <TableCell>
+                                    {fee.due_by === ""
+                                      ? `1st of the month`
+                                      : `${ordinal_suffix_of(
+                                          fee.due_by
+                                        )} of the month`}
+                                  </TableCell>
+                                  <TableCell>{fee.late_by} days</TableCell>
+                                  <TableCell>${fee.late_fee}</TableCell>
+                                  <TableCell>
+                                    ${fee.perDay_late_fee}/day
+                                  </TableCell>
+                                </TableRow>
+                              )
+                            )}
+                          </TableBody>
+                        </Table>
+                      </Row>
+
+                      <Row
+                        className="mb-4 m-3"
+                        hidden={contactState.length === 0}
+                      >
+                        <h5 style={mediumBold}>Contact Details</h5>
+                        <Table
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Contact Name</TableCell>
+                              <TableCell>Role</TableCell>
+                              <TableCell>Email</TableCell>
+                              <TableCell>Phone Number</TableCell>
+
+                              <TableCell>Actions</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {contactState.map((contact, i) => (
+                              <TableRow key={i}>
+                                <TableCell>
+                                  {contact.first_name} {contact.last_name}
+                                </TableCell>
+                                <TableCell>{contact.company_role}</TableCell>
+                                <TableCell>{contact.email}</TableCell>
+                                <TableCell>{contact.phone_number}</TableCell>
+                                <TableCell>
+                                  <a href={`tel:${contact.phone_number}`}>
+                                    <img
+                                      src={Phone}
+                                      alt="Phone"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                  <a href={`mailto:${contact.email}`}>
+                                    <img
+                                      src={Message}
+                                      alt="Message"
+                                      style={smallImg}
+                                    />
+                                  </a>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Row>
+                      <Row className="m-3" hidden={files.length === 0}>
+                        <h5 style={mediumBold}>Lease Documents</h5>
+                        <Table
+                          responsive="md"
+                          classes={{ root: classes.customTable }}
+                          size="small"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Document Name</TableCell>
+                              <TableCell>View Document</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {files.map((file) => {
+                              return (
+                                <TableRow>
+                                  <TableCell>
+                                    {file.description == ""
+                                      ? file.name
+                                      : file.description}
+                                  </TableCell>
+                                  <TableCell>
+                                    <a
+                                      href={file.link}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      <img
+                                        src={File}
+                                        alt="open document"
+                                        style={{
+                                          width: "15px",
+                                          height: "15px",
+                                        }}
+                                      />
+                                    </a>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </Row>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {tenantExtendLease ? (
+                    <div className="my-4">
+                      <h5 style={mediumBold}>
+                        You requested to extend the lease. Further Information
+                        to extend your current lease will require approval from
+                        your property manager.
+                      </h5>
+
+                      <Row
+                        className="pt-4 my-4"
+                        hidden={tenantEndEarly || pmEndEarly}
+                      >
+                        <Col className="d-flex flex-row justify-content-evenly">
+                          <Button
+                            style={redPillButton}
+                            variant="outline-primary"
+                            onClick={() => {
+                              rejectExtension();
+                            }}
+                          >
+                            Withdraw request
+                          </Button>
+                        </Col>
+                      </Row>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ) : (
+                <div></div>
+              )}
               <div
                 className="mx-3 my-3 p-2"
                 style={{
