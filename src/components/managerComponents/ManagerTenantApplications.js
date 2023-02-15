@@ -167,15 +167,7 @@ function ManagerTenantApplications(props) {
         onConfirm={rejectApplication}
         onCancel={onCancel}
       />
-      {console.log(
-        applications.some(
-          (app) =>
-            app.application_status === "RENTED" ||
-            app.application_status === "FORWARDED" ||
-            app.application_status === "LEASE EXTENSION" ||
-            app.application_status === "TENANT LEASE EXTENSION"
-        )
-      )}
+
       {applications.length > 0 ? (
         <div>
           <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>

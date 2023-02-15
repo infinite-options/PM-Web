@@ -38,7 +38,7 @@ const useStyles = makeStyles({
     },
   },
 });
-function ManagerTenantAgreementView(props) {
+function ManagerTenantExtendedAgreementView(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const {
@@ -358,7 +358,7 @@ function ManagerTenantAgreementView(props) {
             {agreement !== null ? (
               <Row className="m-3">
                 <Col>
-                  <h3>Tenant Info</h3>
+                  <h3>New Lease Agreement</h3>
                 </Col>
                 {property.management_status === "ACCEPTED" ||
                 property.management_status === "OWNER END EARLY" ||
@@ -498,6 +498,7 @@ function ManagerTenantAgreementView(props) {
               </Table>
             </div>
           </Row>
+
           <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
             <h5>Lease Payments</h5>
             <div>
@@ -552,6 +553,7 @@ function ManagerTenantAgreementView(props) {
               </Table>
             </div>
           </Row>
+
           <Row className="mb-4 m-3" hidden={contactState.length === 0}>
             <h5 style={mediumBold}>Contact Details</h5>
             <div>
@@ -609,7 +611,7 @@ function ManagerTenantAgreementView(props) {
               id={agreement.rental_uid}
             />
           </div>
-          {/* {pmExtendLease ? (
+          {pmExtendLease ? (
             <div className="my-4">
               <h5 style={mediumBold}>You requested to extend the lease</h5>
               {property.management_status === "ACCEPTED" ||
@@ -638,7 +640,7 @@ function ManagerTenantAgreementView(props) {
             </div>
           ) : (
             ""
-          )} */}
+          )}
           {tenantExtendLease ? (
             <div className="my-4">
               <h5 style={mediumBold}>Tenant Requests to extend the lease</h5>
@@ -678,12 +680,9 @@ function ManagerTenantAgreementView(props) {
           ) : (
             ""
           )}
-
-          {(property.management_status === "ACCEPTED" ||
-            property.management_status === "OWNER END EARLY" ||
-            property.management_status === "PM END EARLY") &&
-          pmExtendLease === false &&
-          tenantExtendLease === false ? (
+          {property.management_status === "ACCEPTED" ||
+          property.management_status === "OWNER END EARLY" ||
+          property.management_status === "PM END EARLY" ? (
             Math.floor(
               (new Date(agreement.lease_end).getTime() - new Date().getTime()) /
                 (1000 * 60 * 60 * 24)
@@ -713,7 +712,8 @@ function ManagerTenantAgreementView(props) {
           ) : (
             ""
           )}
-          {terminateLease ? (
+
+          {/* {terminateLease ? (
             <div hidden={agreement === null || tenantEndEarly || pmEndEarly}>
               <Row>
                 <Col className="d-flex flex-row justify-content-evenly">
@@ -781,8 +781,9 @@ function ManagerTenantAgreementView(props) {
                 ""
               )}
             </Row>
-          )}
-          {tenantEndEarly ? (
+          )} */}
+
+          {/* {tenantEndEarly ? (
             <div className="my-4">
               <h5 style={mediumBold}>
                 Tenant Requests to end lease early on {agreement.early_end_date}
@@ -813,8 +814,8 @@ function ManagerTenantAgreementView(props) {
             </div>
           ) : (
             ""
-          )}
-          {pmEndEarly ? (
+          )} */}
+          {/* {pmEndEarly ? (
             <div className="my-4 ">
               <h5
                 style={mediumBold}
@@ -823,15 +824,6 @@ function ManagerTenantAgreementView(props) {
                 You requested to end lease early on {agreement.early_end_date}
               </h5>
               <Row className="my-4">
-                {/* <Col className="d-flex flex-row justify-content-evenly">
-                  <Button
-                    style={bluePillButton}
-                    variant="outline-primary"
-                    onClick={() => endEarlyRequestResponse(true)}
-                  >
-                    Terminate Lease
-                  </Button>
-                </Col> */}
                 <Col className="d-flex flex-row justify-content-evenly">
                   <Button
                     style={redPillButton}
@@ -845,7 +837,7 @@ function ManagerTenantAgreementView(props) {
             </div>
           ) : (
             ""
-          )}
+          )} */}
           {showSpinner ? (
             <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
               <ReactBootStrap.Spinner animation="border" role="status" />
@@ -861,4 +853,4 @@ function ManagerTenantAgreementView(props) {
   );
 }
 
-export default ManagerTenantAgreementView;
+export default ManagerTenantExtendedAgreementView;

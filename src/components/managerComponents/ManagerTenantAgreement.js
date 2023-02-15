@@ -519,6 +519,7 @@ function ManagerTenantAgreement(props) {
       vehicles: vehicles,
       referred: referred,
       documents: files,
+      effective_date: effectiveDate,
     };
     let up = newAgreement;
     // console.log("og", oldAgreement);
