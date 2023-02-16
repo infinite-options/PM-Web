@@ -4785,7 +4785,7 @@ export default function ManagerDashboard() {
                                 >
                                   {property.rentalInfo !== "Not Rented" ? (
                                     property.rentalInfo.map((tf, i) => {
-                                      return (
+                                      return tf.rental_status === "ACTIVE" ? (
                                         <div
                                           onClick={() => {
                                             fetchTenantDetails(tf.tenant_id);
@@ -4794,6 +4794,8 @@ export default function ManagerDashboard() {
                                           {i + 1} {tf.tenant_first_name}{" "}
                                           {tf.tenant_last_name}
                                         </div>
+                                      ) : (
+                                        ""
                                       );
                                     })
                                   ) : property.available_to_rent === 0 &&
@@ -4918,6 +4920,32 @@ export default function ManagerDashboard() {
                                   padding="none"
                                   size="small"
                                   align="center"
+                                  style={{
+                                    color:
+                                      0 <
+                                        (new Date(
+                                          property.rentalInfo[0].lease_end
+                                        ).getTime() -
+                                          new Date().getTime()) /
+                                          (1000 * 60 * 60 * 24) &&
+                                      Math.floor(
+                                        (new Date(
+                                          property.rentalInfo[0].lease_end
+                                        ).getTime() -
+                                          new Date().getTime()) /
+                                          (1000 * 60 * 60 * 24)
+                                      ) < 60
+                                        ? "#e6cc00"
+                                        : Math.floor(
+                                            (new Date(
+                                              property.rentalInfo[0].lease_end
+                                            ).getTime() -
+                                              new Date().getTime()) /
+                                              (1000 * 60 * 60 * 24)
+                                          ) > 60
+                                        ? "black"
+                                        : "red",
+                                  }}
                                   onClick={() => {
                                     navigate(
                                       `/managerPropertyDetails/${property.property_uid}`,

@@ -551,6 +551,52 @@ function ManagerTenantAgreement(props) {
     }
     setErrorMessage("");
     setShowSpinner(true);
+    for (let i = 0; i < feeState.length; i++) {
+      if (feeState[i]["fee_name"] === "Rent") {
+        if (
+          parseInt(feeState[i]["charge"]) !== parseInt(property.listed_rent)
+        ) {
+          const updateRent = {
+            property_uid: property.property_uid,
+            listed_rent: feeState[i]["charge"],
+          };
+
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateRent[key] = images[i + 1];
+          }
+
+          const response = await put("/properties", updateRent, null, images);
+        }
+      } else if (feeState[i]["fee_name"] === "Deposit") {
+        if (parseInt(feeState[i]["charge"]) !== parseInt(property.deposit)) {
+          const updateDeposit = {
+            property_uid: property.property_uid,
+            deposit: feeState[i]["charge"],
+          };
+
+          const images = JSON.parse(property.images);
+          for (let i = -1; i < images.length - 1; i++) {
+            let key = `img_${i}`;
+            if (i === -1) {
+              key = "img_cover";
+            }
+            updateDeposit[key] = images[i + 1];
+          }
+
+          const response = await put(
+            "/properties",
+            updateDeposit,
+            null,
+            images
+          );
+        }
+      }
+    }
     const newAgreement = {
       rental_property_id: property.property_uid,
       tenant_id: null,
@@ -596,9 +642,14 @@ function ManagerTenantAgreement(props) {
     let apps = property.applications.filter(
       (a) => a.application_status === "RENTED"
     );
+    // console.log(property.applications);
     extendObject.application_uid =
       apps.length > 0 ? apps[0].application_uid : null;
-    const response6 = await put("/extendLease", extendObject);
+    // console.log(apps);
+    if (apps.length > 0) {
+      const response6 = await put("/extendLease", extendObject);
+    }
+
     const newMessage = {
       sender_name: property.managerInfo.manager_business_name,
       sender_email: property.managerInfo.manager_email,

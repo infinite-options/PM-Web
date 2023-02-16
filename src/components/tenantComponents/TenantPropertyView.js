@@ -21,6 +21,7 @@ import TenantFooter from "./TenantFooter";
 import TenantRepairRequest from "./TenantRepairRequest";
 import AppContext from "../../AppContext";
 import ConfirmDialog from "../ConfirmDialog";
+import DocumentsUploadPut from "../DocumentsUploadPut";
 import SideBar from "./SideBar";
 import File from "../../icons/File.svg";
 import Phone from "../../icons/Phone.svg";
@@ -62,7 +63,8 @@ function TenantPropertyView(props) {
   const [property, setProperty] = useState({ images: "[]" });
   const [hideEdit, setHideEdit] = useState(true);
   const [showAddRequest, setShowAddRequest] = useState(false);
-
+  const [addDoc, setAddDoc] = useState(false);
+  const [editingDoc, setEditingDoc] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
   const [endEarlyDate, setEndEarlyDate] = useState("");
 
@@ -502,7 +504,7 @@ function TenantPropertyView(props) {
       }
     });
   };
-  console.log(extendedAgreement);
+  // console.log(extendedAgreement);
   useState(() => {
     fetchProperty();
   });
@@ -1477,7 +1479,14 @@ function TenantPropertyView(props) {
                                 <TableCell>{fee.frequency}</TableCell>
                                 <TableCell>{`${fee.available_topay} days before`}</TableCell>
                                 <TableCell>
-                                  {fee.due_by === ""
+                                  {fee.frequency === "Weekly" ||
+                                  fee.frequency === "Biweekly"
+                                    ? fee.due_by === ""
+                                      ? `1st day of the week`
+                                      : `${ordinal_suffix_of(
+                                          fee.due_by
+                                        )} day of the week`
+                                    : fee.due_by === ""
                                     ? `1st of the month`
                                     : `${ordinal_suffix_of(
                                         fee.due_by
@@ -1545,7 +1554,19 @@ function TenantPropertyView(props) {
                       </Row>
                       <Row className="m-3" hidden={files.length === 0}>
                         <h5 style={mediumBold}>Lease Documents</h5>
-                        <Table
+                        <div>
+                          <DocumentsUploadPut
+                            files={files}
+                            setFiles={setFiles}
+                            addDoc={addDoc}
+                            setAddDoc={setAddDoc}
+                            endpoint="/rentals"
+                            editingDoc={editingDoc}
+                            setEditingDoc={setEditingDoc}
+                            id={selectedAgreement.rental_uid}
+                          />
+                        </div>
+                        {/* <Table
                           responsive="md"
                           classes={{ root: classes.customTable }}
                           size="small"
@@ -1585,7 +1606,7 @@ function TenantPropertyView(props) {
                               );
                             })}
                           </TableBody>
-                        </Table>
+                        </Table> */}
                       </Row>
                       {selectedAgreement.application_status === "REFUSED" ||
                       selectedAgreement.application_status === "REJECTED" ||
@@ -1961,7 +1982,14 @@ function TenantPropertyView(props) {
                                   <TableCell>{fee.frequency}</TableCell>
                                   <TableCell>{`${fee.available_topay} days before`}</TableCell>
                                   <TableCell>
-                                    {fee.due_by === ""
+                                    {fee.frequency === "Weekly" ||
+                                    fee.frequency === "Biweekly"
+                                      ? fee.due_by === ""
+                                        ? `1st day of the week`
+                                        : `${ordinal_suffix_of(
+                                            fee.due_by
+                                          )} day of the week`
+                                      : fee.due_by === ""
                                       ? `1st of the month`
                                       : `${ordinal_suffix_of(
                                           fee.due_by

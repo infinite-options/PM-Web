@@ -118,7 +118,7 @@ function ReviewPropertyLease(props) {
     }
     fetchRentals();
   }, [user]);
-  console.log(rentals);
+  // console.log(rentals);
 
   useEffect(() => {
     const currentMonth = new Date().getMonth();
@@ -645,7 +645,14 @@ function ReviewPropertyLease(props) {
                           <TableCell>{fee.frequency}</TableCell>
                           <TableCell>{`${fee.available_topay} days before`}</TableCell>
                           <TableCell>
-                            {fee.due_by === ""
+                            {fee.frequency === "Weekly" ||
+                            fee.frequency === "Biweekly"
+                              ? fee.due_by === ""
+                                ? `1st day of the week`
+                                : `${ordinal_suffix_of(
+                                    fee.due_by
+                                  )} day of the week`
+                              : fee.due_by === ""
                               ? `1st of the month`
                               : `${ordinal_suffix_of(fee.due_by)} of the month`}
                           </TableCell>
@@ -970,7 +977,14 @@ function ReviewPropertyLease(props) {
                           <TableCell>{fee.frequency}</TableCell>
                           <TableCell>{`${fee.available_topay} days before`}</TableCell>
                           <TableCell>
-                            {fee.due_by === ""
+                            {fee.frequency === "Weekly" ||
+                            fee.frequency === "Biweekly"
+                              ? fee.due_by === ""
+                                ? `1st day of the week`
+                                : `${ordinal_suffix_of(
+                                    fee.due_by
+                                  )} day of the week`
+                              : fee.due_by === ""
                               ? `1st of the month`
                               : `${ordinal_suffix_of(fee.due_by)} of the month`}
                           </TableCell>
@@ -1476,7 +1490,7 @@ function ReviewPropertyLease(props) {
                 </Col>
                 <Col xs={2}></Col>
               </Row>
-              {rentals && rentals.length ? (
+              {rentals && rentals.length > 1 ? (
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <h5>Lease Details</h5>
                   <Table
@@ -1513,9 +1527,7 @@ function ReviewPropertyLease(props) {
                             <TableCell> ${rental.perDay_late_fee}</TableCell>
                           </TableRow>
                         ) : (
-                          <TableRow>
-                            No Lease Information Available at this time
-                          </TableRow>
+                          ""
                         );
                       })}
                     </TableBody>
@@ -1525,7 +1537,7 @@ function ReviewPropertyLease(props) {
                 ""
               )}
 
-              {rentals && rentals.length ? (
+              {rentals && rentals.length > 1 ? (
                 <Row className="m-3" style={{ overflow: "scroll" }}>
                   <h5>Lease Payments</h5>
                   <Table
@@ -1548,44 +1560,47 @@ function ReviewPropertyLease(props) {
                     </TableHead>
                     <TableBody>
                       {rentals.map((rental) => {
-                        return rental.rental_status === "PENDING" ? (
-                          JSON.parse(rental.rent_payments).map((fee, i) => {
-                            return (
-                              <TableRow>
-                                <TableCell>{fee.fee_name}</TableCell>
+                        return rental.rental_status === "PENDING"
+                          ? JSON.parse(rental.rent_payments).map((fee, i) => {
+                              return (
+                                <TableRow>
+                                  <TableCell>{fee.fee_name}</TableCell>
 
-                                <TableCell>
-                                  {fee.fee_type === "%"
-                                    ? `${fee.charge}%`
-                                    : `$${fee.charge}`}
-                                </TableCell>
+                                  <TableCell>
+                                    {fee.fee_type === "%"
+                                      ? `${fee.charge}%`
+                                      : `$${fee.charge}`}
+                                  </TableCell>
 
-                                <TableCell>
-                                  {fee.fee_type === "%" ? `${fee.of}` : ""}
-                                </TableCell>
+                                  <TableCell>
+                                    {fee.fee_type === "%" ? `${fee.of}` : ""}
+                                  </TableCell>
 
-                                <TableCell>{fee.frequency}</TableCell>
-                                <TableCell>{`${fee.available_topay} days before`}</TableCell>
-                                <TableCell>
-                                  {fee.due_by === ""
-                                    ? `1st of the month`
-                                    : `${ordinal_suffix_of(
-                                        fee.due_by
-                                      )} of the month`}
-                                </TableCell>
-                                <TableCell>{fee.late_by} days</TableCell>
-                                <TableCell>${fee.late_fee}</TableCell>
-                                <TableCell>
-                                  ${fee.perDay_late_fee}/day
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })
-                        ) : (
-                          <TableRow>
-                            No Lease Information Available at this time
-                          </TableRow>
-                        );
+                                  <TableCell>{fee.frequency}</TableCell>
+                                  <TableCell>{`${fee.available_topay} days before`}</TableCell>
+                                  <TableCell>
+                                    {fee.frequency === "Weekly" ||
+                                    fee.frequency === "Biweekly"
+                                      ? fee.due_by === ""
+                                        ? `1st day of the week`
+                                        : `${ordinal_suffix_of(
+                                            fee.due_by
+                                          )} day of the week`
+                                      : fee.due_by === ""
+                                      ? `1st of the month`
+                                      : `${ordinal_suffix_of(
+                                          fee.due_by
+                                        )} of the month`}
+                                  </TableCell>
+                                  <TableCell>{fee.late_by} days</TableCell>
+                                  <TableCell>${fee.late_fee}</TableCell>
+                                  <TableCell>
+                                    ${fee.perDay_late_fee}/day
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })
+                          : "";
                       })}
                     </TableBody>
                   </Table>

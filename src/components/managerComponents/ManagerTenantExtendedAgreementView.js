@@ -367,6 +367,9 @@ function ManagerTenantExtendedAgreementView(props) {
                     <img
                       src={EditIconNew}
                       alt="Edit Icon"
+                      hidden={
+                        selectedAgreement.rental_status === "TENANT APPROVED"
+                      }
                       style={{
                         width: "30px",
                         height: "30px",
@@ -540,7 +543,12 @@ function ManagerTenantExtendedAgreementView(props) {
                         {`${fee.available_topay} days before`}
                       </TableCell>
                       <TableCell>
-                        {fee.due_by === ""
+                        {fee.frequency === "Weekly" ||
+                        fee.frequency === "Biweekly"
+                          ? fee.due_by === ""
+                            ? `1st day of the week`
+                            : `${ordinal_suffix_of(fee.due_by)} day of the week`
+                          : fee.due_by === ""
                           ? `1st of the month`
                           : `${ordinal_suffix_of(fee.due_by)} of the month`}
                       </TableCell>
@@ -641,7 +649,7 @@ function ManagerTenantExtendedAgreementView(props) {
           ) : (
             ""
           )}
-          {tenantExtendLease ? (
+          {tenantExtendLease && selectedAgreement === null ? (
             <div className="my-4">
               <h5 style={mediumBold}>Tenant Requests to extend the lease</h5>
               {property.management_status === "ACCEPTED" ||
