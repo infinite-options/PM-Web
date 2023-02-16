@@ -5152,9 +5152,9 @@ function ManagerPropertyView(props) {
                       <Col></Col>
                     )}
                   </Row>
-                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Row>
                     {property.maintenanceRequests.length > 0 ? (
-                      <div>
+                      <div style={{ overflow: "hidden" }}>
                         <Table
                           classes={{ root: classes.customTable }}
                           size="small"
@@ -5610,6 +5610,7 @@ function ManagerPropertyView(props) {
                       property={property}
                       closeAgreement={closeAgreement}
                       selectedAgreement={selectedAgreement}
+                      extendedAgreement={extendedAgreement}
                       selectAgreement={selectAgreement}
                       renewLease={renewLease}
                       acceptedTenantApplications={acceptedTenantApplications}

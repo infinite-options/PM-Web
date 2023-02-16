@@ -204,10 +204,7 @@ export default function TenantPaymentHistory(props) {
                           row.zip}
                       </TableCell>
                       <TableCell align="right" style={{ width: "200px" }}>
-                        {row.purchase_frequency === "One-time" ||
-                        row.purchase_frequency === "Annually"
-                          ? row.description
-                          : row.purchase_notes + " " + row.description}
+                        {row.description}
                       </TableCell>
                       <TableCell align="right">{row.purchase_type}</TableCell>
                       <TableCell align="right">

@@ -62,7 +62,7 @@ export default function TenantUpcomingPayments(props) {
     setPurchaseUIDs(tempPurchaseUID);
     setPurchases(tempPurchase);
   }
-  console.log(purchases);
+  // console.log(purchases);
   function navigateToPaymentPage() {
     if (props.paymentSelection[1].isActive === true) {
       // console.log("zelle selected");

@@ -282,7 +282,14 @@ function UpdateConfirmDialog(props) {
                                   : "red",
                               }}
                             >
-                              {fee.due_by === ""
+                              {fee.frequency === "Weekly" ||
+                              fee.frequency === "Biweekly"
+                                ? fee.due_by === ""
+                                  ? `1st day of the week`
+                                  : `${ordinal_suffix_of(
+                                      fee.due_by
+                                    )} day of the week`
+                                : fee.due_by === ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
                                     fee.due_by
@@ -437,7 +444,14 @@ function UpdateConfirmDialog(props) {
                                 (temp) => fee.fee_name === temp.fee_name
                               ).due_by !== fee.due_by ? (
                                 <div style={{ color: "red" }}>
-                                  {fee.due_by === ""
+                                  {fee.frequency === "Weekly" ||
+                                  fee.frequency === "Biweekly"
+                                    ? fee.due_by === ""
+                                      ? `1st day of the week`
+                                      : `${ordinal_suffix_of(
+                                          fee.due_by
+                                        )} day of the week`
+                                    : fee.due_by === ""
                                     ? `1st of the month`
                                     : `${ordinal_suffix_of(
                                         fee.due_by
@@ -447,7 +461,16 @@ function UpdateConfirmDialog(props) {
                                 <div style={{ color: "black" }}>
                                   {oldAgreement.rent_payments.find(
                                     (temp) => fee.fee_name === temp.fee_name
-                                  ).due_by === ""
+                                  ).frequency === "Weekly" ||
+                                  oldAgreement.rent_payments.find(
+                                    (temp) => fee.fee_name === temp.fee_name
+                                  ).frequency === "Biweekly"
+                                    ? fee.due_by === ""
+                                      ? `1st day of the week`
+                                      : `${ordinal_suffix_of(
+                                          fee.due_by
+                                        )} day of the week`
+                                    : fee.due_by === ""
                                     ? `1st of the month`
                                     : `${ordinal_suffix_of(
                                         fee.due_by
@@ -542,7 +565,14 @@ function UpdateConfirmDialog(props) {
                                 : `${ordinal_suffix_of(
                                     fee.due_by
                                   )} of the month`} */}
-                              {fee.due_by === ""
+                              {fee.frequency === "Weekly" ||
+                              fee.frequency === "Biweekly"
+                                ? fee.due_by === ""
+                                  ? `1st day of the week`
+                                  : `${ordinal_suffix_of(
+                                      fee.due_by
+                                    )} day of the week`
+                                : fee.due_by === ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
                                     fee.due_by
@@ -611,7 +641,14 @@ function UpdateConfirmDialog(props) {
                                 : `${ordinal_suffix_of(
                                     fee.due_by
                                   )} of the month`} */}
-                              {fee.due_by === ""
+                              {fee.frequency === "Weekly" ||
+                              fee.frequency === "Biweekly"
+                                ? fee.due_by === ""
+                                  ? `1st day of the week`
+                                  : `${ordinal_suffix_of(
+                                      fee.due_by
+                                    )} day of the week`
+                                : fee.due_by === ""
                                 ? `1st of the month`
                                 : `${ordinal_suffix_of(
                                     fee.due_by

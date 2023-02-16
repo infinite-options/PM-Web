@@ -48,6 +48,7 @@ function ManagerTenantAgreementView(props) {
     acceptedTenantApplications,
     selectAgreement,
     closeAgreement,
+    extendedAgreement,
   } = props;
   // console.log(property);
   const { userData, refresh } = useContext(AppContext);
@@ -367,6 +368,14 @@ function ManagerTenantAgreementView(props) {
                     <img
                       src={EditIconNew}
                       alt="Edit Icon"
+                      hidden={
+                        extendedAgreement !== null
+                        // Math.floor(
+                        //   (new Date(selectedAgreement.lease_end).getTime() -
+                        //     new Date().getTime()) /
+                        //     (1000 * 60 * 60 * 24)
+                        // ) < 60
+                      }
                       style={{
                         width: "30px",
                         height: "30px",
@@ -539,7 +548,12 @@ function ManagerTenantAgreementView(props) {
                         {`${fee.available_topay} days before`}
                       </TableCell>
                       <TableCell>
-                        {fee.due_by === ""
+                        {fee.frequency === "Weekly" ||
+                        fee.frequency === "Biweekly"
+                          ? fee.due_by === ""
+                            ? `1st day of the week`
+                            : `${ordinal_suffix_of(fee.due_by)} day of the week`
+                          : fee.due_by === ""
                           ? `1st of the month`
                           : `${ordinal_suffix_of(fee.due_by)} of the month`}
                       </TableCell>
@@ -639,7 +653,7 @@ function ManagerTenantAgreementView(props) {
           ) : (
             ""
           )} */}
-          {tenantExtendLease ? (
+          {tenantExtendLease && extendedAgreement === null ? (
             <div className="my-4">
               <h5 style={mediumBold}>Tenant Requests to extend the lease</h5>
               {property.management_status === "ACCEPTED" ||
@@ -694,7 +708,8 @@ function ManagerTenantAgreementView(props) {
                   agreement === null ||
                   tenantEndEarly ||
                   pmEndEarly ||
-                  tenantExtendLease
+                  tenantExtendLease ||
+                  extendedAgreement !== null
                 }
               >
                 <Col className="d-flex flex-row justify-content-evenly">
@@ -764,7 +779,14 @@ function ManagerTenantAgreementView(props) {
               </Row>
             </div>
           ) : (
-            <Row hidden={agreement === null || tenantEndEarly || pmEndEarly}>
+            <Row
+              hidden={
+                agreement === null ||
+                tenantEndEarly ||
+                pmEndEarly ||
+                extendedAgreement !== null
+              }
+            >
               {property.management_status === "ACCEPTED" ||
               property.management_status === "OWNER END EARLY" ||
               property.management_status === "PM END EARLY" ? (

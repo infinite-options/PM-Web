@@ -5357,6 +5357,34 @@ export default function OwnerDashboard2() {
                               padding="none"
                               size="small"
                               align="center"
+                              style={{
+                                color:
+                                  property.rentalInfo.length !== 0
+                                    ? 0 <
+                                        (new Date(
+                                          property.rentalInfo[0].lease_end
+                                        ).getTime() -
+                                          new Date().getTime()) /
+                                          (1000 * 60 * 60 * 24) &&
+                                      Math.floor(
+                                        (new Date(
+                                          property.rentalInfo[0].lease_end
+                                        ).getTime() -
+                                          new Date().getTime()) /
+                                          (1000 * 60 * 60 * 24)
+                                      ) < 60
+                                      ? "#e6cc00"
+                                      : Math.floor(
+                                          (new Date(
+                                            property.rentalInfo[0].lease_end
+                                          ).getTime() -
+                                            new Date().getTime()) /
+                                            (1000 * 60 * 60 * 24)
+                                        ) > 60
+                                      ? "black"
+                                      : "red"
+                                    : "black",
+                              }}
                             >
                               {property.rentalInfo.length !== 0
                                 ? property.rentalInfo[0].lease_end
