@@ -97,7 +97,7 @@ export default function TenantDashboard() {
     setShowDialog(false);
     navigate("../tenantProfile");
   };
-  console.log(user.tenant_id[0].tenant_id);
+
   const fetchTenantDashboard = async () => {
     if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
