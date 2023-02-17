@@ -39,7 +39,12 @@ export default function OwnerCashflow() {
   const [toggleMonthlyRent, setToggleMonthlyRent] = useState(false);
   const [toggleMonthlyExtra, setToggleMonthlyExtra] = useState(false);
   const [toggleMonthlyUtility, setToggleMonthlyUtility] = useState(false);
-  const [toggleMonthlyOwnerPayment, setToggleMonthlyOwnerPayment] =
+  const [toggleMonthlyLateFee, setToggleMonthlyLateFee] = useState(false);
+  const [toggleMonthlyOwnerPaymentRent, setToggleMonthlyOwnerPaymentRent] =
+    useState(false);
+  const [toggleMonthlyOwnerPaymentExtra, setToggleMonthlyOwnerPaymentExtra] =
+    useState(false);
+  const [toggleMonthlyOwnerPaymentLate, setToggleMonthlyOwnerPaymentLate] =
     useState(false);
   const [toggleMonthlyMaintenanceRevenue, setToggleMonthlyMaintenanceRevenue] =
     useState(false);
@@ -156,6 +161,10 @@ export default function OwnerCashflow() {
                             setToggleMonthlyRent(false);
                             setToggleMonthlyExtra(false);
                             setToggleMonthlyUtility(false);
+                            setToggleMonthlyLateFee(false);
+                            setToggleMonthlyOwnerPaymentRent(false);
+                            setToggleMonthlyOwnerPaymentExtra(false);
+                            setToggleMonthlyOwnerPaymentLate(false);
                             setToggleMonthlyMaintenanceRevenue(false);
                             setToggleMonthlyRepairsRevenue(false);
                             setToggleMonthlyExpense(false);
@@ -184,6 +193,10 @@ export default function OwnerCashflow() {
                             setToggleMonthlyRent(false);
                             setToggleMonthlyExtra(false);
                             setToggleMonthlyUtility(false);
+                            setToggleMonthlyLateFee(false);
+                            setToggleMonthlyOwnerPaymentRent(false);
+                            setToggleMonthlyOwnerPaymentExtra(false);
+                            setToggleMonthlyOwnerPaymentLate(false);
                             setToggleMonthlyMaintenanceRevenue(false);
                             setToggleMonthlyRepairsRevenue(false);
                             setToggleMonthlyExpense(false);
@@ -248,6 +261,10 @@ export default function OwnerCashflow() {
                             setToggleMonthlyRent(false);
                             setToggleMonthlyExtra(false);
                             setToggleMonthlyUtility(false);
+                            setToggleMonthlyLateFee(false);
+                            setToggleMonthlyOwnerPaymentRent(false);
+                            setToggleMonthlyOwnerPaymentExtra(false);
+                            setToggleMonthlyOwnerPaymentLate(false);
                             setToggleMonthlyMaintenanceRevenue(false);
                             setToggleMonthlyRepairsRevenue(false);
                           }}
@@ -267,6 +284,10 @@ export default function OwnerCashflow() {
                             setToggleMonthlyRent(false);
                             setToggleMonthlyExtra(false);
                             setToggleMonthlyUtility(false);
+                            setToggleMonthlyLateFee(false);
+                            setToggleMonthlyOwnerPaymentRent(false);
+                            setToggleMonthlyOwnerPaymentExtra(false);
+                            setToggleMonthlyOwnerPaymentLate(false);
                             setToggleMonthlyMaintenanceRevenue(false);
                             setToggleMonthlyRepairsRevenue(false);
                           }}
@@ -649,21 +670,19 @@ export default function OwnerCashflow() {
                         ""
                       );
                     })}
-                    {/* owner payment */}
+                    {/* utility */}
                     {revenueSummary.find(
-                      (revS) => revS.purchase_type === "OWNER PAYMENT"
+                      (revS) => revS.purchase_type === "LATE FEE"
                     ) ? (
                       <TableRow hidden={!toggleMonthlyRevenue}>
                         <TableCell width="300px">
-                          &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment{" "}
+                          &nbsp;&nbsp;&nbsp;&nbsp;Late Fee{" "}
                           <img
                             src={SortLeft}
                             alt="Expand closed"
-                            hidden={toggleMonthlyOwnerPayment}
+                            hidden={toggleMonthlyLateFee}
                             onClick={() => {
-                              setToggleMonthlyOwnerPayment(
-                                !toggleMonthlyOwnerPayment
-                              );
+                              setToggleMonthlyLateFee(!toggleMonthlyLateFee);
                             }}
                             style={{
                               marginTop: "0.4rem",
@@ -675,11 +694,9 @@ export default function OwnerCashflow() {
                           <img
                             src={SortDown}
                             alt="Expand open"
-                            hidden={!toggleMonthlyOwnerPayment}
+                            hidden={!toggleMonthlyLateFee}
                             onClick={() => {
-                              setToggleMonthlyOwnerPayment(
-                                !toggleMonthlyOwnerPayment
-                              );
+                              setToggleMonthlyLateFee(!toggleMonthlyLateFee);
                             }}
                             style={{
                               marginTop: "0.4rem",
@@ -692,38 +709,98 @@ export default function OwnerCashflow() {
                         <TableCell align="right">
                           {
                             revenueSummary.find(
-                              (revS) => revS.purchase_type === "OWNER PAYMENT"
+                              (revS) => revS.purchase_type === "LATE FEE"
                             ).amount_paid
                           }
                         </TableCell>{" "}
                         <TableCell align="right">
                           {
                             revenueSummary.find(
-                              (revS) => revS.purchase_type === "OWNER PAYMENT"
+                              (revS) => revS.purchase_type === "LATE FEE"
                             ).amount_due
                           }
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
                           {revenueSummary.find(
-                            (revS) => revS.purchase_type === "OWNER PAYMENT"
+                            (revS) => revS.purchase_type === "LATE FEE"
                           ).amount_due -
                             revenueSummary.find(
-                              (revS) => revS.purchase_type === "OWNER PAYMENT"
+                              (revS) => revS.purchase_type === "LATE FEE"
                             ).amount_paid}
                         </TableCell>
                       </TableRow>
                     ) : (
                       <TableRow hidden={!toggleMonthlyRevenue}>
                         <TableCell width="300px">
-                          &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment{" "}
+                          &nbsp;&nbsp;&nbsp;&nbsp;Late Fee{" "}
                           <img
                             src={SortLeft}
                             alt="Expand closed"
-                            hidden={toggleMonthlyOwnerPayment}
+                            hidden={toggleMonthlyLateFee}
                             onClick={() => {
-                              setToggleMonthlyOwnerPayment(
-                                !toggleMonthlyOwnerPayment
+                              setToggleMonthlyLateFee(!toggleMonthlyLateFee);
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                          <img
+                            src={SortDown}
+                            alt="Expand open"
+                            hidden={!toggleMonthlyLateFee}
+                            onClick={() => {
+                              setToggleMonthlyLateFee(!toggleMonthlyLateFee);
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                        </TableCell>{" "}
+                        <TableCell align="right">0</TableCell>{" "}
+                        <TableCell align="right">0</TableCell>{" "}
+                        <TableCell align="right">0</TableCell>
+                      </TableRow>
+                    )}
+                    {/* utility map individual */}
+                    {revenue.map((rev, i) => {
+                      return rev.purchase_type === "LATE FEE" ? (
+                        <TableRow hidden={!toggleMonthlyLateFee}>
+                          <TableCell width="300px">
+                            &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
+                            {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
+                            {rev.zip}
+                          </TableCell>
+                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
+                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due - rev.amount_paid}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    })}
+                    {/* owner payment rent */}
+                    {revenueSummary.find(
+                      (revS) => revS.purchase_type === "OWNER PAYMENT RENT"
+                    ) ? (
+                      <TableRow hidden={!toggleMonthlyRevenue}>
+                        <TableCell width="300px">
+                          &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Rent{" "}
+                          <img
+                            src={SortLeft}
+                            alt="Expand closed"
+                            hidden={toggleMonthlyOwnerPaymentRent}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentRent(
+                                !toggleMonthlyOwnerPaymentRent
                               );
                             }}
                             style={{
@@ -736,10 +813,339 @@ export default function OwnerCashflow() {
                           <img
                             src={SortDown}
                             alt="Expand open"
-                            hidden={!toggleMonthlyOwnerPayment}
+                            hidden={!toggleMonthlyOwnerPaymentRent}
                             onClick={() => {
-                              setToggleMonthlyOwnerPayment(
-                                !toggleMonthlyOwnerPayment
+                              setToggleMonthlyOwnerPaymentRent(
+                                !toggleMonthlyOwnerPaymentRent
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type === "OWNER PAYMENT RENT"
+                            ).amount_paid
+                          }
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type === "OWNER PAYMENT RENT"
+                            ).amount_due
+                          }
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {" "}
+                          {revenueSummary.find(
+                            (revS) =>
+                              revS.purchase_type === "OWNER PAYMENT RENT"
+                          ).amount_due -
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type === "OWNER PAYMENT RENT"
+                            ).amount_paid}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      <TableRow hidden={!toggleMonthlyRevenue}>
+                        <TableCell width="300px">
+                          &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Rent{" "}
+                          <img
+                            src={SortLeft}
+                            alt="Expand closed"
+                            hidden={toggleMonthlyOwnerPaymentRent}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentRent(
+                                !toggleMonthlyOwnerPaymentRent
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                          <img
+                            src={SortDown}
+                            alt="Expand open"
+                            hidden={!toggleMonthlyOwnerPaymentRent}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentRent(
+                                !toggleMonthlyOwnerPaymentRent
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                        </TableCell>{" "}
+                        <TableCell align="right">0</TableCell>{" "}
+                        <TableCell align="right">0</TableCell>{" "}
+                        <TableCell align="right">0</TableCell>
+                      </TableRow>
+                    )}
+                    {/* owner payment rent map individual */}
+                    {revenue.map((rev, i) => {
+                      return rev.purchase_type === "OWNER PAYMENT RENT" ? (
+                        <TableRow hidden={!toggleMonthlyOwnerPaymentRent}>
+                          <TableCell width="300px">
+                            &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                            {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
+                            {rev.zip}
+                          </TableCell>
+                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
+                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due - rev.amount_paid}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    })}
+                    {/* owne payment extra */}
+                    {revenueSummary.find(
+                      (revS) =>
+                        revS.purchase_type === "OWNER PAYMENT EXTRA CHARGES"
+                    ) ? (
+                      <TableRow hidden={!toggleMonthlyRevenue}>
+                        <TableCell width="300px">
+                          &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Extra Charges{" "}
+                          <img
+                            src={SortLeft}
+                            alt="Expand closed"
+                            hidden={toggleMonthlyOwnerPaymentExtra}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentExtra(
+                                !toggleMonthlyOwnerPaymentExtra
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                          <img
+                            src={SortDown}
+                            alt="Expand open"
+                            hidden={!toggleMonthlyOwnerPaymentExtra}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentExtra(
+                                !toggleMonthlyOwnerPaymentExtra
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type ===
+                                "OWNER PAYMENT EXTRA CHARGES"
+                            ).amount_paid
+                          }
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type ===
+                                "OWNER PAYMENT EXTRA CHARGES"
+                            ).amount_due
+                          }
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {" "}
+                          {revenueSummary.find(
+                            (revS) =>
+                              revS.purchase_type ===
+                              "OWNER PAYMENT EXTRA CHARGES"
+                          ).amount_due -
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type ===
+                                "OWNER PAYMENT EXTRA CHARGES"
+                            ).amount_paid}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      <TableRow hidden={!toggleMonthlyRevenue}>
+                        <TableCell width="300px">
+                          &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Extra Charges{" "}
+                          <img
+                            src={SortLeft}
+                            alt="Expand closed"
+                            hidden={toggleMonthlyOwnerPaymentExtra}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentExtra(
+                                !toggleMonthlyOwnerPaymentExtra
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                          <img
+                            src={SortDown}
+                            alt="Expand open"
+                            hidden={!toggleMonthlyOwnerPaymentExtra}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentExtra(
+                                !toggleMonthlyOwnerPaymentExtra
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                        </TableCell>{" "}
+                        <TableCell align="right">0</TableCell>{" "}
+                        <TableCell align="right">0</TableCell>{" "}
+                        <TableCell align="right">0</TableCell>
+                      </TableRow>
+                    )}
+                    {/* OWNER PAYMENT EXTRA CHARGES map individual */}
+                    {revenue.map((rev, i) => {
+                      return rev.purchase_type ===
+                        "OWNER PAYMENT EXTRA CHARGES" ? (
+                        <TableRow hidden={!toggleMonthlyOwnerPaymentExtra}>
+                          <TableCell width="300px">
+                            &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                            {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
+                            {rev.zip}
+                          </TableCell>
+                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
+                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due - rev.amount_paid}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      );
+                    })}
+                    {/* owner payment late fee*/}
+                    {revenueSummary.find(
+                      (revS) => revS.purchase_type === "OWNER PAYMENT LATE FEE"
+                    ) ? (
+                      <TableRow hidden={!toggleMonthlyRevenue}>
+                        <TableCell width="300px">
+                          &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Late Fee{" "}
+                          <img
+                            src={SortLeft}
+                            alt="Expand closed"
+                            hidden={toggleMonthlyOwnerPaymentLate}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentLate(
+                                !toggleMonthlyOwnerPaymentLate
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                          <img
+                            src={SortDown}
+                            alt="Expand open"
+                            hidden={!toggleMonthlyOwnerPaymentLate}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentLate(
+                                !toggleMonthlyOwnerPaymentLate
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type === "OWNER PAYMENT LATE FEE"
+                            ).amount_paid
+                          }
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type === "OWNER PAYMENT LATE FEE"
+                            ).amount_due
+                          }
+                        </TableCell>{" "}
+                        <TableCell align="right">
+                          {" "}
+                          {revenueSummary.find(
+                            (revS) =>
+                              revS.purchase_type === "OWNER PAYMENT LATE FEE"
+                          ).amount_due -
+                            revenueSummary.find(
+                              (revS) =>
+                                revS.purchase_type === "OWNER PAYMENT LATE FEE"
+                            ).amount_paid}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      <TableRow hidden={!toggleMonthlyRevenue}>
+                        <TableCell width="300px">
+                          &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Late Fee{" "}
+                          <img
+                            src={SortLeft}
+                            alt="Expand closed"
+                            hidden={toggleMonthlyOwnerPaymentLate}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentLate(
+                                !toggleMonthlyOwnerPaymentLate
+                              );
+                            }}
+                            style={{
+                              marginTop: "0.4rem",
+                              width: "10px",
+                              height: "10px",
+                              float: "right",
+                            }}
+                          />
+                          <img
+                            src={SortDown}
+                            alt="Expand open"
+                            hidden={!toggleMonthlyOwnerPaymentLate}
+                            onClick={() => {
+                              setToggleMonthlyOwnerPaymentLate(
+                                !toggleMonthlyOwnerPaymentLate
                               );
                             }}
                             style={{
@@ -757,8 +1163,8 @@ export default function OwnerCashflow() {
                     )}
                     {/* owner payment map individual */}
                     {revenue.map((rev, i) => {
-                      return rev.purchase_type === "OWNER PAYMENT" ? (
-                        <TableRow hidden={!toggleMonthlyOwnerPayment}>
+                      return rev.purchase_type === "OWNER PAYMENT LATE FEE" ? (
+                        <TableRow hidden={!toggleMonthlyOwnerPaymentLate}>
                           <TableCell width="300px">
                             &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
