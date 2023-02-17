@@ -437,7 +437,7 @@ function TenantPropertyView(props) {
   };
   const fetchProperty = async () => {
     const response = await get(
-      `/propertiesTenantDetail?property_uid=${property_uid}&tenant_id=${user.user_uid}`
+      `/propertiesTenantDetail?property_uid=${property_uid}&tenant_id=${user.tenant_id[0].tenant_id}`
     );
     // console.log(response.result[0]);
     setImagesProperty(JSON.parse(response.result[0].images));

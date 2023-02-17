@@ -627,6 +627,7 @@ export default function ManagerDashboard() {
     orderMaintenanceBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
+  console.log(user);
 
   let revenueTotal = 0;
   revenueTotal = (

@@ -67,7 +67,7 @@ function TenantRepairRequest(props) {
       request_type: issueType,
       description: description,
       priority: priority,
-      request_created_by: user.user_uid,
+      request_created_by: user.tenant_id[0].tenant_id,
     };
     const files = imageState[0];
     let i = 0;

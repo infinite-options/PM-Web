@@ -713,7 +713,7 @@ function TenantProfileInfo(props) {
     }
     const fetchProfileInfo = async () => {
       const response = await get(
-        `/tenantProfileInfo?tenant_id=${user.user_uid}`
+        `/tenantProfileInfo?tenant_id=${user.tenant_id[0].tenant_idd}`
       );
       if (response.result && response.result.length !== 0) {
         // console.log("tenant profile already set up");
@@ -796,7 +796,7 @@ function TenantProfileInfo(props) {
       delete newFiles[i].file;
     }
     tenantProfile.documents = JSON.stringify(newFiles);
-    tenantProfile.tenant_id = user.user_uid;
+    tenantProfile.tenant_user_id = user.user_uid;
     await post("/tenantProfileInfo", tenantProfile, null, newFiles);
     updateAutofillState(tenantProfile);
     props.onConfirm();

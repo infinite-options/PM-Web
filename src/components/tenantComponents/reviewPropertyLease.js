@@ -84,7 +84,7 @@ function ReviewPropertyLease(props) {
     }
     const fetchRentals = async () => {
       const response = await get(
-        `/leaseTenants?linked_tenant_id=${user.user_uid}`
+        `/leaseTenants?linked_tenant_id=${user.tenant_id[0].tenant_id}`
       );
       // console.log("rentals", response);
 
