@@ -79,7 +79,7 @@ function TenantDocuments(props) {
       }
     }
     tenantProfile.documents = JSON.stringify(newFiles);
-    tenantProfile.tenant_id = user.user_uid;
+    tenantProfile.tenant_id = user.tenant_id[0].tenant_id;
     await put("/tenantProfileInfo", tenantProfile, null, files);
     setAddDoc(!addDoc);
   };
@@ -90,7 +90,7 @@ function TenantDocuments(props) {
       return;
     }
     const responseProfile = await get(
-      `/tenantProfileInfo?tenant_id=${user.user_uid}`
+      `/tenantProfileInfo?tenant_id=${user.tenant_id[0].tenant_id}`
     );
 
     if (responseProfile.msg === "Token has expired") {
@@ -107,7 +107,9 @@ function TenantDocuments(props) {
       : [];
     setFiles(docs);
 
-    const response = await get(`/tenantDocuments?tenant_id=${user.user_uid}`);
+    const response = await get(
+      `/tenantDocuments?tenant_id=${user.tenant_id[0].tenant_id}`
+    );
     setDocuments(response.result);
     // console.log(response.result[0]);
 
@@ -460,7 +462,7 @@ function TenantDocuments(props) {
                       endpoint="/tenantProfileInfo"
                       editingDoc={editingDoc}
                       setEditingDoc={setEditingDoc}
-                      id={user.user_uid}
+                      id={user.tenant_id[0].tenant_id}
                     />
                   </Row>
                 </div>

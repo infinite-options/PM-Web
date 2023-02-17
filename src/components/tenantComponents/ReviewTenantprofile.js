@@ -164,7 +164,7 @@ function ReviewTenantProfile(props) {
       delete update_tenant_docs[i].file;
     }
     tenantProfile.documents = JSON.stringify(update_tenant_docs);
-    tenantProfile.tenant_id = user.user_uid;
+    tenantProfile.tenant_id = user.tenant_id[0].tenant_id;
     const res = await put(
       "/tenantProfileInfo",
       tenantProfile,
@@ -193,7 +193,9 @@ function ReviewTenantProfile(props) {
   };
 
   const fetchProfileInfo = async () => {
-    const response = await get(`/tenantProfileInfo?tenant_id=${user.user_uid}`);
+    const response = await get(
+      `/tenantProfileInfo?tenant_id=${user.tenant_id[0].tenant_id}`
+    );
     if (response.result && response.result.length !== 0) {
       const res = response.result[0];
 

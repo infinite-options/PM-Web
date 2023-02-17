@@ -65,7 +65,7 @@ function TenantRepairList(props) {
   const fetchProperties = async () => {
     const responseProperties = await get("/tenantDashboard", access_token);
     const response = await get(
-      `/maintenanceRequestsandQuotes?tenant_id=${user.user_uid}`
+      `/maintenanceRequestsandQuotes?tenant_id=${user.tenant_id[0].tenant_id}`
     );
     const properties = responseProperties.result[0].properties;
     setProperties(properties);

@@ -97,6 +97,7 @@ export default function TenantDashboard() {
     setShowDialog(false);
     navigate("../tenantProfile");
   };
+  console.log(user.tenant_id[0].tenant_id);
   const fetchTenantDashboard = async () => {
     if (access_token === null || user.role.indexOf("TENANT") === -1) {
       navigate("/");
@@ -108,7 +109,9 @@ export default function TenantDashboard() {
     }
 
     const response = await get("/tenantDashboard", access_token);
-    const appRes = await get(`/applications?tenant_id=${user.user_uid}`);
+    const appRes = await get(
+      `/applications?tenant_id=${user.tenant_id[0].tenant_id}`
+    );
     if (response.msg === "Token has expired") {
       // console.log("here msg");
       refresh();

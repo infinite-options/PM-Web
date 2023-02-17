@@ -67,7 +67,7 @@ function TenantAnnouncements(props) {
     setIsLoading(false);
 
     const responseAnnouncement = await get(
-      `/announcement?receiver=${user.user_uid}`
+      `/announcement?receiver=${user.tenant_id[0].tenant_id}`
     );
 
     let response_announcement = responseAnnouncement.result;

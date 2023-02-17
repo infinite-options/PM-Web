@@ -61,7 +61,6 @@ function SideBar() {
             >
               Dashboard
             </NavLink>
-
             <NavLink
               to="/search-pm"
               className="sidebarButtons"
@@ -98,7 +97,6 @@ function SideBar() {
             >
               Payments
             </NavLink>
-
             <NavLink
               to="/owner-documents"
               className="sidebarButtons"
@@ -116,6 +114,15 @@ function SideBar() {
               }
             >
               Profile
+            </NavLink>{" "}
+            <NavLink
+              to="/owner-cashflow"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Cashflow
             </NavLink>
           </div>
         </nav>

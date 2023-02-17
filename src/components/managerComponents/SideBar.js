@@ -119,6 +119,15 @@ function SideBar() {
             >
               Profile
             </NavLink>
+            <NavLink
+              to="/manager-cashflow"
+              className="sidebarButtons"
+              style={({ isActive }) =>
+                isActive ? sidebarButtonsActive : sidebarButtons
+              }
+            >
+              Cashflow
+            </NavLink>
           </div>
         </nav>
       </Row>

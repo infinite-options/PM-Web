@@ -49,7 +49,9 @@ export default function TenantAvailableProperties(props) {
       await setProperties(res);
     };
     const fetchApplications = async () => {
-      const response = await get(`/applications?tenant_id=${user.user_uid}`);
+      const response = await get(
+        `/applications?tenant_id=${user.tenant_id[0].tenant_id}`
+      );
       // console.log("applications :", response);
 
       const appliedPropertes = {};

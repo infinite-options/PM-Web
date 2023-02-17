@@ -83,6 +83,8 @@ import TenantRepairRequest from "./components/tenantComponents/TenantRepairReque
 import ManagerPayments from "./components/managerComponents/ManagerPayments";
 import OwnerPayments from "./components/ownerComponents/OwnerPayments";
 import TenantPayments from "./components/tenantComponents/TenantPayments";
+import OwnerCashflow from "./components/ownerComponents/OwnerCashflow";
+import ManagerCashflow from "./components/managerComponents/ManagerCashflow";
 function App() {
   const [userData, setUserData] = React.useState({
     access_token: JSON.parse(localStorage.getItem("access_token")),
@@ -310,6 +312,8 @@ function App() {
               element={<TenantAnnouncements />}
             />
           </Route>
+          <Route path="owner-cashflow" element={<OwnerCashflow />} />
+          <Route path="manager-cashflow" element={<ManagerCashflow />} />
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>
