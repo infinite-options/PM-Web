@@ -168,7 +168,7 @@ function PaymentPage(props) {
               opacity: 1,
             }}
           >
-            <div
+            {/* <div
               style={{
                 textAlign: "center",
                 fontSize: "28px",
@@ -179,7 +179,7 @@ function PaymentPage(props) {
               {selectedProperty.city},&nbsp;
               {selectedProperty.state}&nbsp;
               {selectedProperty.zip}
-            </div>
+            </div> */}
             {paymentConfirm ? (
               <div>
                 <div
@@ -192,10 +192,50 @@ function PaymentPage(props) {
                 >
                   <Row style={headings} className="mt-2 mb-2">
                     Payment Received{" "}
-                    {purchase.purchase_notes && `(${purchase.purchase_notes})`}
                   </Row>
-                  <Row style={subHeading} className="mt-2 mb-2">
-                    {purchase.description}: ${amount}
+                  <Row style={headings} className="mt-2 mb-2">
+                    Total Payment: ${totalSum}
+                  </Row>
+
+                  <Row className="m-3">
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Address</TableCell>
+                          <TableCell>Description</TableCell>
+                          <TableCell>Type</TableCell>{" "}
+                          <TableCell>Date Due</TableCell>{" "}
+                          <TableCell>Amount</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      {purchases.map((purchase) => {
+                        return (
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>
+                                {" "}
+                                {purchase.address}
+                                {purchase.unit !== ""
+                                  ? " " + purchase.unit
+                                  : ""}
+                                , {purchase.city}, {purchase.state}{" "}
+                                {purchase.zip}
+                              </TableCell>
+                              <TableCell>{purchase.description}</TableCell>
+                              <TableCell>{purchase.purchase_type}</TableCell>
+                              <TableCell>
+                                {purchase.next_payment.substring(0, 10)}
+                              </TableCell>
+                              <TableCell>${purchase.amount_due}</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        );
+                      })}
+                    </Table>
                   </Row>
                   <Row className="mt-2 mb-2">
                     <img
@@ -226,6 +266,7 @@ function PaymentPage(props) {
                     >
                       <TableHead>
                         <TableRow>
+                          <TableCell>Address</TableCell>
                           <TableCell>Description</TableCell>
                           <TableCell>Type</TableCell>{" "}
                           <TableCell>Date Due</TableCell>{" "}
@@ -236,6 +277,15 @@ function PaymentPage(props) {
                         return (
                           <TableBody>
                             <TableRow>
+                              <TableCell>
+                                {" "}
+                                {purchase.address}
+                                {purchase.unit !== ""
+                                  ? " " + purchase.unit
+                                  : ""}
+                                , {purchase.city}, {purchase.state}{" "}
+                                {purchase.zip}
+                              </TableCell>
                               <TableCell>{purchase.description}</TableCell>
                               <TableCell>{purchase.purchase_type}</TableCell>
                               <TableCell>
@@ -250,14 +300,18 @@ function PaymentPage(props) {
                   </Row>
 
                   {stripePayment || bankPayment ? (
-                    <div style={subHeading}>Amount to be paid: ${amount}</div>
+                    <Row style={headings} className="mt-2 mb-2">
+                      Total Payment: ${totalSum}
+                    </Row>
                   ) : null}
                 </Row>
                 <Row
                   className="mx-3 mt-5"
                   hidden={stripePayment || bankPayment}
                 >
-                  <h2>Total Payment: ${totalSum}</h2>
+                  <Row style={headings} className="mt-2 mb-2">
+                    Total Payment: ${totalSum}
+                  </Row>
                   <Form.Group>
                     <Form.Label>Message</Form.Label>
                     <Form.Control
