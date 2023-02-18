@@ -29,6 +29,7 @@ import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
 import { get } from "../utils/api";
 import { green, red, blue, xSmall, gray } from "../utils/styles";
+import OwnerCashflow from "../components/ownerComponents/OwnerCashflow";
 
 const useStyles = makeStyles({
   customTable: {
@@ -708,7 +709,8 @@ export default function OwnerDashboard2() {
                 opacity: 1,
               }}
             >
-              <Row className="m-3">
+              <OwnerCashflow ownerData={ownerData} />
+              {/* <Row className="m-3">
                 <Col>
                   <h3>Portfolio Cashflow Summary</h3>
                 </Col>
@@ -724,7 +726,7 @@ export default function OwnerDashboard2() {
                       marginRight: "3rem",
                     }}
                   />
-                  {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
+                 
                 </Col>
               </Row>
               <Row className="m-3" style={{ overflow: "scroll" }}>
@@ -5057,7 +5059,7 @@ export default function OwnerDashboard2() {
                       )}
                   </TableBody>
                 </Table>
-              </Row>
+              </Row> */}
             </div>
             <div
               className="mx-3 my-3 p-2"
