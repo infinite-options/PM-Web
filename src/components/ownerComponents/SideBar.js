@@ -115,7 +115,7 @@ function SideBar() {
             >
               Profile
             </NavLink>{" "}
-            <NavLink
+            {/* <NavLink
               to="/owner-cashflow"
               className="sidebarButtons"
               style={({ isActive }) =>
@@ -123,7 +123,7 @@ function SideBar() {
               }
             >
               Cashflow
-            </NavLink>
+            </NavLink> */}
           </div>
         </nav>
       </Row>

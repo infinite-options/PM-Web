@@ -26,11 +26,13 @@ const useStyles = makeStyles({
   },
 });
 
-export default function OwnerCashflow() {
+export default function OwnerCashflow(props) {
   const navigate = useNavigate();
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
+  const { ownerData } = props;
+
   const [isLoading, setIsLoading] = useState(true);
   // monthly toggles
   const [toggleMonthlyCashFlow, setToggleMonthlyCashFlow] = useState(false);
@@ -68,6 +70,18 @@ export default function OwnerCashflow() {
   const [revenueSummary, setRevenueSummary] = useState(null);
   const [expense, setExpense] = useState(null);
   const [expenseSummary, setExpenseSummary] = useState(null);
+  const [filter, setFilter] = useState("month");
+  const [month, setMonth] = useState(
+    new Date().toLocaleString("default", {
+      month: "long",
+    })
+  );
+  const [year, setYear] = useState(
+    new Date().toLocaleString("default", {
+      year: "numeric",
+    })
+  );
+  const [propertyID, setPropertyID] = useState(null);
   const [width, setWindowWidth] = useState(0);
 
   useEffect(() => {
@@ -90,23 +104,303 @@ export default function OwnerCashflow() {
     }
 
     const cashflowResponse = await get(
-      `/CashflowOwner?owner_id=${user.user_uid}`
+      `/CashflowOwner?owner_id=${user.user_uid}&year=${year}`
     );
+    let currentRev = [];
+    let currentRevSummary = [];
+    let currentExp = [];
+    let currentExpSummary = [];
+    if (propertyID === null) {
+      cashflowResponse.result.revenue.forEach((rev) => {
+        if (rev.month === month) {
+          currentRev.push(rev);
+        }
+      });
+      cashflowResponse.result.revenue_summary.forEach((rev) => {
+        if (rev.month === month) {
+          currentRevSummary.push(rev);
+        }
+      });
+      cashflowResponse.result.expense.forEach((rev) => {
+        if (rev.month === month) {
+          currentExp.push(rev);
+        }
+      });
+      cashflowResponse.result.expense_summary.forEach((rev) => {
+        if (rev.month === month) {
+          currentExpSummary.push(rev);
+        }
+      });
 
-    setRevenue(cashflowResponse.result.revenue);
-    setExpense(cashflowResponse.result.expense);
-    setRevenueSummary(cashflowResponse.result.revenue_summary);
-    setExpenseSummary(cashflowResponse.result.expense_summary);
+      const resArr = [];
+      currentRev.forEach((item) => {
+        currentRev.forEach((x) => {
+          if (
+            x.property_uid == item.property_uid &&
+            x.description == item.description &&
+            x.month == item.month &&
+            x.year == item.year &&
+            x.purchase_date == item.purchase_date &&
+            x.purchase_type !== item.purchase_type &&
+            item.amount_due > x.amount_due
+          ) {
+            resArr.push({
+              address: item.address,
+              amount_due: (item.amount_due - x.amount_due).toFixed(2),
+              amount_paid:
+                x.purchase_status === "UNPAID"
+                  ? 0
+                  : (item.amount_paid - x.amount_paid).toFixed(2),
+              city: item.city,
+              description: item.description,
+              linked_bill_id: null,
+              month: item.month,
+              next_payment: item.next_payment,
+              owner_id: item.owner_id,
+              payer: "",
+              payment_frequency: null,
+              property_uid: item.property_uid,
+              pur_property_id: item.pur_property_id,
+              purchase_date: item.purchase_date,
+              purchase_frequency: item.purchase_frequency,
+              purchase_notes: item.purchase_notes,
+              purchase_status: item.purchase_status,
+              purchase_type: "MANAGEMENT",
+              purchase_uid: "",
+              receiver: "",
+              state: item.state,
+              unit: item.unit,
+              year: item.year,
+              zip: item.zip,
+            });
+            currentExp.push({
+              address: item.address,
+              amount_due: (item.amount_due - x.amount_due).toFixed(2),
+              amount_paid:
+                x.purchase_status === "UNPAID"
+                  ? 0
+                  : (item.amount_paid - x.amount_paid).toFixed(2),
+              city: item.city,
+              description: item.description,
+              linked_bill_id: null,
+              month: item.month,
+              next_payment: item.next_payment,
+              owner_id: item.owner_id,
+              payer: "",
+              payment_frequency: null,
+              property_uid: item.property_uid,
+              pur_property_id: item.pur_property_id,
+              purchase_date: item.purchase_date,
+              purchase_frequency: item.purchase_frequency,
+              purchase_notes: item.purchase_notes,
+              purchase_status: item.purchase_status,
+              purchase_type: "MANAGEMENT",
+              purchase_uid: "",
+              receiver: "",
+              state: item.state,
+              unit: item.unit,
+              year: item.year,
+              zip: item.zip,
+            });
+          }
+        });
+      });
+
+      if (resArr.length > 0) {
+        if (
+          currentExpSummary.some((ces) => ces.purchase_type === "MANAGEMENT")
+        ) {
+          let i = currentExpSummary.findIndex(
+            (ces) => ces.purchase_type === "MANAGEMENT"
+          );
+
+          currentExpSummary[i].amount_due =
+            currentExpSummary[i].amount_due +
+            resArr.reduce(function (prev, current) {
+              return prev + +current.amount_due;
+            }, 0);
+          currentExpSummary[i].amount_paid =
+            currentExpSummary[i].amount_paid +
+            resArr.reduce(function (prev, current) {
+              return prev + +current.amount_paid;
+            }, 0);
+        } else {
+          currentExpSummary.push({
+            owner_id: user.user_uid,
+            purchase_type: "MANAGEMENT",
+            month: month,
+            year: year,
+            amount_due: resArr.reduce(function (prev, current) {
+              return prev + +current.amount_due;
+            }, 0),
+            amount_paid: resArr.reduce(function (prev, current) {
+              return prev + +current.amount_paid;
+            }, 0),
+          });
+        }
+      }
+
+      setRevenue(currentRev);
+      setExpense(currentExp);
+      setRevenueSummary(currentRevSummary);
+      setExpenseSummary(currentExpSummary);
+    } else {
+      cashflowResponse.result.revenue.forEach((rev) => {
+        if (rev.month === month && rev.property_uid === propertyID) {
+          currentRev.push(rev);
+        }
+      });
+      cashflowResponse.result.revenue_summary.forEach((rev) => {
+        if (rev.month === month && rev.property_uid === propertyID) {
+          currentRevSummary.push(rev);
+        }
+      });
+      cashflowResponse.result.expense.forEach((rev) => {
+        if (rev.month === month && rev.property_uid === propertyID) {
+          currentExp.push(rev);
+        }
+      });
+      cashflowResponse.result.expense_summary.forEach((rev) => {
+        if (rev.month === month && rev.property_uid === propertyID) {
+          currentExpSummary.push(rev);
+        }
+      });
+      const resArr = [];
+      currentRev.forEach((item) => {
+        currentRev.forEach((x) => {
+          if (
+            x.property_uid == item.property_uid &&
+            x.description == item.description &&
+            x.month == item.month &&
+            x.year == item.year &&
+            x.purchase_date == item.purchase_date &&
+            x.purchase_type !== item.purchase_type &&
+            item.amount_due > x.amount_due
+          ) {
+            resArr.push({
+              address: item.address,
+              amount_due: (item.amount_due - x.amount_due).toFixed(2),
+              amount_paid:
+                x.purchase_status === "UNPAID"
+                  ? 0
+                  : (item.amount_paid - x.amount_paid).toFixed(2),
+              city: item.city,
+              description: item.description,
+              linked_bill_id: null,
+              month: item.month,
+              next_payment: item.next_payment,
+              owner_id: item.owner_id,
+              payer: "",
+              payment_frequency: null,
+              property_uid: item.property_uid,
+              pur_property_id: item.pur_property_id,
+              purchase_date: item.purchase_date,
+              purchase_frequency: item.purchase_frequency,
+              purchase_notes: item.purchase_notes,
+              purchase_status: item.purchase_status,
+              purchase_type: "MANAGEMENT",
+              purchase_uid: "",
+              receiver: "",
+              state: item.state,
+              unit: item.unit,
+              year: item.year,
+              zip: item.zip,
+            });
+            currentExp.push({
+              address: item.address,
+              amount_due: (item.amount_due - x.amount_due).toFixed(2),
+              amount_paid:
+                x.purchase_status === "UNPAID"
+                  ? 0
+                  : (item.amount_paid - x.amount_paid).toFixed(2),
+              city: item.city,
+              description: item.description,
+              linked_bill_id: null,
+              month: item.month,
+              next_payment: item.next_payment,
+              owner_id: item.owner_id,
+              payer: "",
+              payment_frequency: null,
+              property_uid: item.property_uid,
+              pur_property_id: item.pur_property_id,
+              purchase_date: item.purchase_date,
+              purchase_frequency: item.purchase_frequency,
+              purchase_notes: item.purchase_notes,
+              purchase_status: item.purchase_status,
+              purchase_type: "MANAGEMENT",
+              purchase_uid: "",
+              receiver: "",
+              state: item.state,
+              unit: item.unit,
+              year: item.year,
+              zip: item.zip,
+            });
+          }
+        });
+      });
+
+      if (resArr.length > 0) {
+        if (
+          currentExpSummary.some((ces) => ces.purchase_type === "MANAGEMENT")
+        ) {
+          let i = currentExpSummary.findIndex(
+            (ces) => ces.purchase_type === "MANAGEMENT"
+          );
+
+          currentExpSummary[i].amount_due =
+            currentExpSummary[i].amount_due +
+            resArr.reduce(function (prev, current) {
+              return prev + +current.amount_due;
+            }, 0);
+          currentExpSummary[i].amount_paid =
+            currentExpSummary[i].amount_paid +
+            resArr.reduce(function (prev, current) {
+              return prev + +current.amount_paid;
+            }, 0);
+        } else {
+          currentExpSummary.push({
+            owner_id: user.user_uid,
+            purchase_type: "MANAGEMENT",
+            month: month,
+            year: year,
+            amount_due: resArr.reduce(function (prev, current) {
+              return prev + +current.amount_due;
+            }, 0),
+            amount_paid: resArr.reduce(function (prev, current) {
+              return prev + +current.amount_paid;
+            }, 0),
+          });
+        }
+      }
+
+      setRevenue(currentRev);
+      setExpense(currentExp);
+      setRevenueSummary(currentRevSummary);
+      setExpenseSummary(currentExpSummary);
+    }
+
     setIsLoading(false);
   };
+
   useEffect(() => {
     fetchCashflow();
-  }, []);
+  }, [year, month, propertyID]);
+
+  const options = [];
+  const minOffset = 0;
+  const maxOffset = 60;
+  for (let i = minOffset; i <= maxOffset; i++) {
+    const year =
+      new Date().toLocaleString("default", {
+        year: "numeric",
+      }) - i;
+    options.push(<option value={year}>{year}</option>);
+  }
 
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
-        <div
+        {/* <div
           hidden={!responsive.showSidebar}
           style={{
             backgroundColor: "#229ebc",
@@ -115,9 +409,9 @@ export default function OwnerCashflow() {
           }}
         >
           <SideBar />
-        </div>
+        </div> */}
         <div className="w-100 mb-5 overflow-scroll">
-          <Header title="Owner Cashflow" />
+          {/* <Header title="Owner Cashflow" /> */}
           <div
             className="mx-3 my-3 p-2"
             style={{
@@ -131,6 +425,63 @@ export default function OwnerCashflow() {
                 <h3>Portfolio Cashflow Summary</h3>
               </Col>
               <Col></Col>
+            </Row>
+            {/* <Row className="m-3">
+              {" "}
+              <Col xs={1}>
+                <h6>Filters</h6>
+              </Col>
+            </Row> */}
+            <Row>
+              <Col xs={3}>
+                Month:{" "}
+                <select
+                  value={month}
+                  onChange={(e) => setMonth(e.currentTarget.value)}
+                >
+                  <option value="">---</option>
+                  <option value="January">January</option>
+                  <option value="February">February</option>
+                  <option value="March">March</option>
+                  <option value="April">April</option>
+                  <option value="May">May</option>
+                  <option value="June">June</option>
+                  <option value="July">July</option>
+                  <option value="August">August</option>
+                  <option value="September">September</option>
+                  <option value="October">October</option>
+                  <option value="November">November</option>
+                  <option value="December">December</option>
+                </select>
+              </Col>
+              <Col xs={2}>
+                Year:{" "}
+                <select
+                  value={year}
+                  onChange={(e) => setYear(e.currentTarget.value)}
+                >
+                  {options}
+                </select>
+              </Col>
+              <Col>
+                Property:{" "}
+                <select
+                  value={propertyID}
+                  onChange={(e) => {
+                    setPropertyID(e.currentTarget.value);
+                    setFilter("property");
+                  }}
+                >
+                  <option value={null}>All</option>
+                  {ownerData.map((od) => {
+                    return (
+                      <option value={od.property_uid}>
+                        {od.address} {od.unit}, {od.city}, {od.state} {od.zip}
+                      </option>
+                    );
+                  })}
+                </select>
+              </Col>
             </Row>
             {!isLoading ? (
               <Row className="m-3">
@@ -148,9 +499,7 @@ export default function OwnerCashflow() {
                   <TableBody>
                     <TableRow>
                       <TableCell width="300px">
-                        {new Date().toLocaleString("default", {
-                          month: "long",
-                        })}{" "}
+                        {month} {year}
                         <img
                           src={SortLeft}
                           alt="Expand closed"
@@ -217,26 +566,31 @@ export default function OwnerCashflow() {
                         />
                       </TableCell>
                       <TableCell align="right">
-                        {revenueSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_paid;
-                        }, 0) -
+                        {(
+                          revenueSummary.reduce(function (prev, current) {
+                            return prev + +current.amount_paid;
+                          }, 0) -
                           expenseSummary.reduce(function (prev, current) {
                             return prev + +current.amount_paid;
-                          }, 0)}
+                          }, 0)
+                        ).toFixed(2)}
                       </TableCell>
                       <TableCell align="right">
                         {" "}
-                        {revenueSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_due;
-                        }, 0) -
+                        {(
+                          revenueSummary.reduce(function (prev, current) {
+                            return prev + +current.amount_due;
+                          }, 0) -
                           expenseSummary.reduce(function (prev, current) {
                             return prev + +current.amount_due;
-                          }, 0)}
+                          }, 0)
+                        ).toFixed(2)}
                       </TableCell>
                       <TableCell align="right">
-                        {revenueSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_due;
-                        }, 0) -
+                        {(
+                          revenueSummary.reduce(function (prev, current) {
+                            return prev + +current.amount_due;
+                          }, 0) -
                           revenueSummary.reduce(function (prev, current) {
                             return prev + +current.amount_paid;
                           }, 0) -
@@ -245,7 +599,8 @@ export default function OwnerCashflow() {
                           }, 0) -
                             expenseSummary.reduce(function (prev, current) {
                               return prev + +current.amount_paid;
-                            }, 0))}
+                            }, 0))
+                        ).toFixed(2)}
                       </TableCell>
                     </TableRow>
                     {/* revenue */}
@@ -300,23 +655,29 @@ export default function OwnerCashflow() {
                         />
                       </TableCell>
                       <TableCell align="right">
-                        {revenueSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_paid;
-                        }, 0)}
+                        {revenueSummary
+                          .reduce(function (prev, current) {
+                            return prev + +current.amount_paid;
+                          }, 0)
+                          .toFixed(2)}
                       </TableCell>
                       <TableCell align="right">
                         {" "}
-                        {revenueSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_due;
-                        }, 0)}
+                        {revenueSummary
+                          .reduce(function (prev, current) {
+                            return prev + +current.amount_due;
+                          }, 0)
+                          .toFixed(2)}
                       </TableCell>
                       <TableCell align="right">
-                        {revenueSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_due;
-                        }, 0) -
+                        {(
+                          revenueSummary.reduce(function (prev, current) {
+                            return prev + +current.amount_due;
+                          }, 0) -
                           revenueSummary.reduce(function (prev, current) {
                             return prev + +current.amount_paid;
-                          }, 0)}
+                          }, 0)
+                        ).toFixed(2)}
                       </TableCell>
                     </TableRow>
                     {/* rent */}
@@ -356,27 +717,23 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "RENT"
-                            ).amount_paid
-                          }
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "RENT")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "RENT"
-                            ).amount_due
-                          }
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "RENT")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) => revS.purchase_type === "RENT"
-                          ).amount_due -
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "RENT"
-                            ).amount_paid}
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "RENT")
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find((revS) => revS.purchase_type === "RENT")
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -412,9 +769,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* rent map individual */}
@@ -426,10 +783,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -472,28 +834,32 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell width="300px">
-                          {
-                            revenueSummary.find(
+                        <TableCell align="right">
+                          {revenueSummary
+                            .find(
                               (revS) => revS.purchase_type === "EXTRA CHARGES"
-                            ).amount_paid
-                          }
+                            )
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) => revS.purchase_type === "EXTRA CHARGES"
-                            ).amount_due
-                          }
+                            )
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) => revS.purchase_type === "EXTRA CHARGES"
-                          ).amount_due -
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) => revS.purchase_type === "EXTRA CHARGES"
-                            ).amount_paid}
+                            )
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find(
+                                (revS) => revS.purchase_type === "EXTRA CHARGES"
+                              )
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -529,9 +895,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* extra charges  map indivial */}
@@ -543,10 +909,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -590,27 +961,23 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "UTILITY"
-                            ).amount_paid
-                          }
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "UTILITY")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "UTILITY"
-                            ).amount_due
-                          }
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "UTILITY")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) => revS.purchase_type === "UTILITY"
-                          ).amount_due -
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "UTILITY"
-                            ).amount_paid}
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "UTILITY")
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find((revS) => revS.purchase_type === "UTILITY")
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -646,9 +1013,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* utility map individual */}
@@ -660,10 +1027,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -707,27 +1079,23 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "LATE FEE"
-                            ).amount_paid
-                          }
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "LATE FEE")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "LATE FEE"
-                            ).amount_due
-                          }
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "LATE FEE")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) => revS.purchase_type === "LATE FEE"
-                          ).amount_due -
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "LATE FEE"
-                            ).amount_paid}
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "LATE FEE")
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find((revS) => revS.purchase_type === "LATE FEE")
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -763,9 +1131,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* utility map individual */}
@@ -777,10 +1145,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -828,31 +1201,35 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type === "OWNER PAYMENT RENT"
-                            ).amount_paid
-                          }
+                            )
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type === "OWNER PAYMENT RENT"
-                            ).amount_due
-                          }
+                            )
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) =>
-                              revS.purchase_type === "OWNER PAYMENT RENT"
-                          ).amount_due -
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type === "OWNER PAYMENT RENT"
-                            ).amount_paid}
+                            )
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find(
+                                (revS) =>
+                                  revS.purchase_type === "OWNER PAYMENT RENT"
+                              )
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -892,9 +1269,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* owner payment rent map individual */}
@@ -906,10 +1283,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -958,35 +1340,39 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type ===
                                 "OWNER PAYMENT EXTRA CHARGES"
-                            ).amount_paid
-                          }
+                            )
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type ===
                                 "OWNER PAYMENT EXTRA CHARGES"
-                            ).amount_due
-                          }
+                            )
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) =>
-                              revS.purchase_type ===
-                              "OWNER PAYMENT EXTRA CHARGES"
-                          ).amount_due -
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type ===
                                 "OWNER PAYMENT EXTRA CHARGES"
-                            ).amount_paid}
+                            )
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find(
+                                (revS) =>
+                                  revS.purchase_type ===
+                                  "OWNER PAYMENT EXTRA CHARGES"
+                              )
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1026,9 +1412,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* OWNER PAYMENT EXTRA CHARGES map individual */}
@@ -1041,10 +1427,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1092,31 +1483,36 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type === "OWNER PAYMENT LATE FEE"
-                            ).amount_paid
-                          }
+                            )
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type === "OWNER PAYMENT LATE FEE"
-                            ).amount_due
-                          }
+                            )
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) =>
-                              revS.purchase_type === "OWNER PAYMENT LATE FEE"
-                          ).amount_due -
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) =>
                                 revS.purchase_type === "OWNER PAYMENT LATE FEE"
-                            ).amount_paid}
+                            )
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find(
+                                (revS) =>
+                                  revS.purchase_type ===
+                                  "OWNER PAYMENT LATE FEE"
+                              )
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1156,9 +1552,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* owner payment map individual */}
@@ -1170,10 +1566,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1221,27 +1622,31 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell width="300px">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) => revS.purchase_type === "MAINTENANCE"
-                            ).amount_paid
-                          }
+                            )
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) => revS.purchase_type === "MAINTENANCE"
-                            ).amount_due
-                          }
+                            )
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) => revS.purchase_type === "MAINTENANCE"
-                          ).amount_due -
-                            revenueSummary.find(
+                          {revenueSummary
+                            .find(
                               (revS) => revS.purchase_type === "MAINTENANCE"
-                            ).amount_paid}
+                            )
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find(
+                                (revS) => revS.purchase_type === "MAINTENANCE"
+                              )
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1281,9 +1686,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}{" "}
                     {/* maintenance map individual */}
@@ -1295,10 +1700,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1346,27 +1756,23 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell width="300px">
-                          {
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "REPAIRS"
-                            ).amount_paid
-                          }
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "REPAIRS")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "REPAIRS"
-                            ).amount_due
-                          }
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "REPAIRS")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {revenueSummary.find(
-                            (revS) => revS.purchase_type === "REPAIRS"
-                          ).amount_due -
-                            revenueSummary.find(
-                              (revS) => revS.purchase_type === "REPAIRS"
-                            ).amount_paid}
+                          {revenueSummary
+                            .find((revS) => revS.purchase_type === "REPAIRS")
+                            .amount_due.toFixed(2) -
+                            revenueSummary
+                              .find((revS) => revS.purchase_type === "REPAIRS")
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1406,9 +1812,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* repairs map individual */}
@@ -1420,10 +1826,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1478,23 +1889,29 @@ export default function OwnerCashflow() {
                         />
                       </TableCell>
                       <TableCell align="right">
-                        {expenseSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_paid;
-                        }, 0)}
+                        {expenseSummary
+                          .reduce(function (prev, current) {
+                            return prev + +current.amount_paid;
+                          }, 0)
+                          .toFixed(2)}
                       </TableCell>
                       <TableCell align="right">
                         {" "}
-                        {expenseSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_due;
-                        }, 0)}
+                        {expenseSummary
+                          .reduce(function (prev, current) {
+                            return prev + +current.amount_due;
+                          }, 0)
+                          .toFixed(2)}
                       </TableCell>
                       <TableCell align="right">
-                        {expenseSummary.reduce(function (prev, current) {
-                          return prev + +current.amount_due;
-                        }, 0) -
+                        {(
+                          expenseSummary.reduce(function (prev, current) {
+                            return prev + +current.amount_due;
+                          }, 0) -
                           expenseSummary.reduce(function (prev, current) {
                             return prev + +current.amount_paid;
-                          }, 0)}
+                          }, 0)
+                        ).toFixed(2)}
                       </TableCell>
                     </TableRow>
                     {/* Management */}
@@ -1538,27 +1955,25 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "MANAGEMENT"
-                            ).amount_paid
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "MANAGEMENT")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "MANAGEMENT"
-                            ).amount_due
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "MANAGEMENT")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {expenseSummary.find(
-                            (revS) => revS.purchase_type === "MANAGEMENT"
-                          ).amount_due -
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "MANAGEMENT"
-                            ).amount_paid}
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "MANAGEMENT")
+                            .amount_due.toFixed(2) -
+                            expenseSummary
+                              .find(
+                                (revS) => revS.purchase_type === "MANAGEMENT"
+                              )
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1598,9 +2013,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* Management map individual */}
@@ -1612,10 +2027,12 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
                           <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_due - rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1663,27 +2080,31 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
+                          {expenseSummary
+                            .find(
                               (revS) => revS.purchase_type === "MAINTENANCE"
-                            ).amount_paid
-                          }
+                            )
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
+                          {expenseSummary
+                            .find(
                               (revS) => revS.purchase_type === "MAINTENANCE"
-                            ).amount_due
-                          }
+                            )
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {expenseSummary.find(
-                            (revS) => revS.purchase_type === "MAINTENANCE"
-                          ).amount_due -
-                            expenseSummary.find(
+                          {expenseSummary
+                            .find(
                               (revS) => revS.purchase_type === "MAINTENANCE"
-                            ).amount_paid}
+                            )
+                            .amount_due.toFixed(2) -
+                            expenseSummary
+                              .find(
+                                (revS) => revS.purchase_type === "MAINTENANCE"
+                              )
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1723,9 +2144,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* Maintenance map individual */}
@@ -1737,10 +2158,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1784,27 +2210,23 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "REPAIRS"
-                            ).amount_paid
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "REPAIRS")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "REPAIRS"
-                            ).amount_due
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "REPAIRS")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {expenseSummary.find(
-                            (revS) => revS.purchase_type === "REPAIRS"
-                          ).amount_due -
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "REPAIRS"
-                            ).amount_paid}
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "REPAIRS")
+                            .amount_due.toFixed(2) -
+                            expenseSummary
+                              .find((revS) => revS.purchase_type === "REPAIRS")
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1840,9 +2262,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* repairs map individual */}
@@ -1854,10 +2276,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -1901,27 +2328,23 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "MORTGAGE"
-                            ).amount_paid
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "MORTGAGE")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "MORTGAGE"
-                            ).amount_due
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "MORTGAGE")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {expenseSummary.find(
-                            (revS) => revS.purchase_type === "MORTGAGE"
-                          ).amount_due -
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "MORTGAGE"
-                            ).amount_paid}
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "MORTGAGE")
+                            .amount_due.toFixed(2) -
+                            expenseSummary
+                              .find((revS) => revS.purchase_type === "MORTGAGE")
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1957,9 +2380,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* Mortgage map individual */}
@@ -1971,10 +2394,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -2018,27 +2446,23 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "TAXES"
-                            ).amount_paid
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "TAXES")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "TAXES"
-                            ).amount_due
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "TAXES")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {expenseSummary.find(
-                            (revS) => revS.purchase_type === "TAXES"
-                          ).amount_due -
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "TAXES"
-                            ).amount_paid}
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "TAXES")
+                            .amount_due.toFixed(2) -
+                            expenseSummary
+                              .find((revS) => revS.purchase_type === "TAXES")
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -2074,9 +2498,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* Taxes map individual */}
@@ -2088,10 +2512,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -2139,27 +2568,25 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "INSURANCE"
-                            ).amount_paid
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "INSURANCE")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "INSURANCE"
-                            ).amount_due
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "INSURANCE")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {expenseSummary.find(
-                            (revS) => revS.purchase_type === "INSURANCE"
-                          ).amount_due -
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "INSURANCE"
-                            ).amount_paid}
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "INSURANCE")
+                            .amount_due.toFixed(2) -
+                            expenseSummary
+                              .find(
+                                (revS) => revS.purchase_type === "INSURANCE"
+                              )
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -2199,9 +2626,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* Insurance map individual */}
@@ -2213,10 +2640,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -2264,27 +2696,23 @@ export default function OwnerCashflow() {
                           />
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "UTILITY"
-                            ).amount_paid
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "UTILITY")
+                            .amount_paid.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
-                          {
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "UTILITY"
-                            ).amount_due
-                          }
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "UTILITY")
+                            .amount_due.toFixed(2)}
                         </TableCell>{" "}
                         <TableCell align="right">
                           {" "}
-                          {expenseSummary.find(
-                            (revS) => revS.purchase_type === "UTILITY"
-                          ).amount_due -
-                            expenseSummary.find(
-                              (revS) => revS.purchase_type === "UTILITY"
-                            ).amount_paid}
+                          {expenseSummary
+                            .find((revS) => revS.purchase_type === "UTILITY")
+                            .amount_due.toFixed(2) -
+                            expenseSummary
+                              .find((revS) => revS.purchase_type === "UTILITY")
+                              .amount_paid.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -2324,9 +2752,9 @@ export default function OwnerCashflow() {
                             }}
                           />
                         </TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>{" "}
-                        <TableCell align="right">0</TableCell>
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>{" "}
+                        <TableCell align="right">0.00</TableCell>
                       </TableRow>
                     )}
                     {/* UtilityExpense map individual */}
@@ -2338,10 +2766,15 @@ export default function OwnerCashflow() {
                             {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                             {rev.zip}
                           </TableCell>
-                          <TableCell align="right">{rev.amount_paid}</TableCell>{" "}
-                          <TableCell align="right">{rev.amount_due}</TableCell>{" "}
                           <TableCell align="right">
-                            {rev.amount_due - rev.amount_paid}
+                            {rev.amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {rev.amount_due.toFixed(2) -
+                              rev.amount_paid.toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (

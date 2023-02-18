@@ -93,10 +93,6 @@ function ManagerOwnerList(props) {
     }
     let resArr = [];
     let po = [];
-    // console.log(response.result);
-    // response.result.forEach((res) =>
-    //   res.owner_info !== [] ? po.push(res.owner_info) : ""
-    // );
     response.result.forEach(function (item) {
       // console.log(item);
       if (item.owner_id !== "") {
