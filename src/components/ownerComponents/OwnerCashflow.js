@@ -68,6 +68,7 @@ export default function OwnerCashflow(props) {
   const [revenue, setRevenue] = useState(null);
   const [revenueSummary, setRevenueSummary] = useState(null);
   const [expense, setExpense] = useState(null);
+
   const [expenseSummary, setExpenseSummary] = useState(null);
   const [filter, setFilter] = useState(false);
   const [month, setMonth] = useState(
@@ -522,7 +523,9 @@ export default function OwnerCashflow(props) {
           >
             <Row className="m-3">
               <Col>
-                <h3>Portfolio Cashflow Summary</h3>
+                <h3>
+                  {propertyView ? "Property" : "Portfolio"} Cashflow Summary
+                </h3>
               </Col>
               <Col></Col>
             </Row>
@@ -604,10 +607,12 @@ export default function OwnerCashflow(props) {
                           <img
                             src={SortLeft}
                             alt="Expand closed"
-                            hidden={toggleMonthlyCashFlow}
+                            // hidden={toggleMonthlyCashFlow}
                             onClick={() => {
                               setToggleMonthlyCashFlow(!toggleMonthlyCashFlow);
-
+                              setToggleMonthlyCashFlowProperty(
+                                !toggleMonthlyCashFlowProperty
+                              );
                               setToggleMonthlyRevenue(false);
                               setToggleMonthlyRent(false);
                               setToggleMonthlyExtra(false);
@@ -632,39 +637,10 @@ export default function OwnerCashflow(props) {
                               width: "10px",
                               height: "10px",
                               float: "right",
-                            }}
-                          />
-                          <img
-                            src={SortDown}
-                            alt="Expand open"
-                            hidden={!toggleMonthlyCashFlow}
-                            onClick={() => {
-                              setToggleMonthlyCashFlow(!toggleMonthlyCashFlow);
-
-                              setToggleMonthlyRevenue(false);
-                              setToggleMonthlyRent(false);
-                              setToggleMonthlyExtra(false);
-                              setToggleMonthlyUtility(false);
-                              setToggleMonthlyLateFee(false);
-                              setToggleMonthlyManagementRent(false);
-                              setToggleMonthlyManagementExtra(false);
-                              setToggleMonthlyManagementLate(false);
-                              setToggleMonthlyMaintenanceRevenue(false);
-                              setToggleMonthlyRepairsRevenue(false);
-                              setToggleMonthlyExpense(false);
-                              setToggleMonthlyManagement(false);
-                              setToggleMonthlyMaintenance(false);
-                              setToggleMonthlyRepairs(false);
-                              setToggleMonthlyUtilityExpense(false);
-                              setToggleMonthlyMortgage(false);
-                              setToggleMonthlyTaxes(false);
-                              setToggleMonthlyInsurance(false);
-                            }}
-                            style={{
-                              marginTop: "0.4rem",
-                              width: "10px",
-                              height: "10px",
-                              float: "right",
+                              transform: toggleMonthlyCashFlow
+                                ? "rotate(90deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.2s ease-out",
                             }}
                           />
                         </TableCell>
@@ -713,7 +689,7 @@ export default function OwnerCashflow(props) {
                           <img
                             src={SortLeft}
                             alt="Expand closed"
-                            hidden={toggleMonthlyRevenue}
+                            // hidden={toggleMonthlyRevenue}
                             onClick={() => {
                               setToggleMonthlyRevenue(!toggleMonthlyRevenue);
                               setToggleMonthlyRent(false);
@@ -729,26 +705,10 @@ export default function OwnerCashflow(props) {
                               width: "10px",
                               height: "10px",
                               float: "right",
-                            }}
-                          />
-                          <img
-                            src={SortDown}
-                            alt="Expand open"
-                            hidden={!toggleMonthlyRevenue}
-                            onClick={() => {
-                              setToggleMonthlyRevenue(!toggleMonthlyRevenue);
-                              setToggleMonthlyRent(false);
-                              setToggleMonthlyExtra(false);
-                              setToggleMonthlyUtility(false);
-                              setToggleMonthlyLateFee(false);
-                              setToggleMonthlyMaintenanceRevenue(false);
-                              setToggleMonthlyRepairsRevenue(false);
-                            }}
-                            style={{
-                              marginTop: "0.4rem",
-                              width: "10px",
-                              height: "10px",
-                              float: "right",
+                              transform: toggleMonthlyRevenue
+                                ? "rotate(90deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.2s ease-out",
                             }}
                           />
                         </TableCell>
@@ -788,7 +748,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyRent}
+                              // hidden={toggleMonthlyRent}
                               onClick={() => {
                                 setToggleMonthlyRent(!toggleMonthlyRent);
                               }}
@@ -797,20 +757,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyRent}
-                              onClick={() => {
-                                setToggleMonthlyRent(!toggleMonthlyRent);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyRent
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -841,7 +791,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyRent}
+                              // hidden={toggleMonthlyRent}
                               onClick={() => {
                                 setToggleMonthlyRent(!toggleMonthlyRent);
                               }}
@@ -850,20 +800,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyRent}
-                              onClick={() => {
-                                setToggleMonthlyRent(!toggleMonthlyRent);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyRent
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -906,7 +846,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyExtra}
+                              // hidden={toggleMonthlyExtra}
                               onClick={() => {
                                 setToggleMonthlyExtra(!toggleMonthlyExtra);
                               }}
@@ -915,20 +855,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyExtra}
-                              onClick={() => {
-                                setToggleMonthlyExtra(!toggleMonthlyExtra);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyExtra
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -968,7 +898,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyExtra}
+                              // hidden={toggleMonthlyExtra}
                               onClick={() => {
                                 setToggleMonthlyExtra(!toggleMonthlyExtra);
                               }}
@@ -977,20 +907,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyExtra}
-                              onClick={() => {
-                                setToggleMonthlyExtra(!toggleMonthlyExtra);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyExtra
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1033,7 +953,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyUtility}
+                              // hidden={toggleMonthlyUtility}
                               onClick={() => {
                                 setToggleMonthlyUtility(!toggleMonthlyUtility);
                               }}
@@ -1042,20 +962,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyUtility}
-                              onClick={() => {
-                                setToggleMonthlyUtility(!toggleMonthlyUtility);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyUtility
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1088,7 +998,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyUtility}
+                              // hidden={toggleMonthlyUtility}
                               onClick={() => {
                                 setToggleMonthlyUtility(!toggleMonthlyUtility);
                               }}
@@ -1097,20 +1007,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyUtility}
-                              onClick={() => {
-                                setToggleMonthlyUtility(!toggleMonthlyUtility);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyUtility
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1153,7 +1053,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyLateFee}
+                              // hidden={toggleMonthlyLateFee}
                               onClick={() => {
                                 setToggleMonthlyLateFee(!toggleMonthlyLateFee);
                               }}
@@ -1162,20 +1062,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyLateFee}
-                              onClick={() => {
-                                setToggleMonthlyLateFee(!toggleMonthlyLateFee);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyLateFee
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1208,7 +1098,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyLateFee}
+                              // hidden={toggleMonthlyLateFee}
                               onClick={() => {
                                 setToggleMonthlyLateFee(!toggleMonthlyLateFee);
                               }}
@@ -1217,20 +1107,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyLateFee}
-                              onClick={() => {
-                                setToggleMonthlyLateFee(!toggleMonthlyLateFee);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyLateFee
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1273,7 +1153,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyMaintenanceRevenue}
+                              // hidden={toggleMonthlyMaintenanceRevenue}
                               onClick={() => {
                                 setToggleMonthlyMaintenanceRevenue(
                                   !toggleMonthlyMaintenanceRevenue
@@ -1284,22 +1164,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyMaintenanceRevenue}
-                              onClick={() => {
-                                setToggleMonthlyMaintenanceRevenue(
-                                  !toggleMonthlyMaintenanceRevenue
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyMaintenanceRevenue
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1338,7 +1206,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyMaintenanceRevenue}
+                              // hidden={toggleMonthlyMaintenanceRevenue}
                               onClick={() => {
                                 setToggleMonthlyMaintenanceRevenue(
                                   !toggleMonthlyMaintenanceRevenue
@@ -1349,22 +1217,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyMaintenanceRevenue}
-                              onClick={() => {
-                                setToggleMonthlyMaintenanceRevenue(
-                                  !toggleMonthlyMaintenanceRevenue
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyMaintenanceRevenue
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1407,7 +1263,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyRepairsRevenue}
+                              // hidden={toggleMonthlyRepairsRevenue}
                               onClick={() => {
                                 setToggleMonthlyRepairsRevenue(
                                   !toggleMonthlyRepairsRevenue
@@ -1418,22 +1274,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyRepairsRevenue}
-                              onClick={() => {
-                                setToggleMonthlyRepairsRevenue(
-                                  !toggleMonthlyRepairsRevenue
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyRepairsRevenue
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1466,7 +1310,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyRepairsRevenue}
+                              // hidden={toggleMonthlyRepairsRevenue}
                               onClick={() => {
                                 setToggleMonthlyRepairsRevenue(
                                   !toggleMonthlyRepairsRevenue
@@ -1477,22 +1321,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyRepairsRevenue}
-                              onClick={() => {
-                                setToggleMonthlyRepairsRevenue(
-                                  !toggleMonthlyRepairsRevenue
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyRepairsRevenue
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1532,7 +1364,7 @@ export default function OwnerCashflow(props) {
                           <img
                             src={SortLeft}
                             alt="Expand closed"
-                            hidden={toggleMonthlyExpense}
+                            // hidden={toggleMonthlyExpense}
                             onClick={() => {
                               setToggleMonthlyExpense(!toggleMonthlyExpense);
                               setToggleMonthlyManagement(false);
@@ -1551,30 +1383,10 @@ export default function OwnerCashflow(props) {
                               width: "10px",
                               height: "10px",
                               float: "right",
-                            }}
-                          />
-                          <img
-                            src={SortDown}
-                            alt="Expand open"
-                            hidden={!toggleMonthlyExpense}
-                            onClick={() => {
-                              setToggleMonthlyExpense(!toggleMonthlyExpense);
-                              setToggleMonthlyManagement(false);
-                              setToggleMonthlyManagementRent(false);
-                              setToggleMonthlyManagementExtra(false);
-                              setToggleMonthlyManagementLate(false);
-                              setToggleMonthlyMaintenance(false);
-                              setToggleMonthlyRepairs(false);
-                              setToggleMonthlyUtilityExpense(false);
-                              setToggleMonthlyMortgage(false);
-                              setToggleMonthlyTaxes(false);
-                              setToggleMonthlyInsurance(false);
-                            }}
-                            style={{
-                              marginTop: "0.4rem",
-                              width: "10px",
-                              height: "10px",
-                              float: "right",
+                              transform: toggleMonthlyExpense
+                                ? "rotate(90deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.2s ease-out",
                             }}
                           />
                         </TableCell>
@@ -1614,7 +1426,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyManagement}
+                              // hidden={toggleMonthlyManagement}
                               onClick={() => {
                                 setToggleMonthlyManagement(
                                   !toggleMonthlyManagement
@@ -1625,22 +1437,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyManagement}
-                              onClick={() => {
-                                setToggleMonthlyManagement(
-                                  !toggleMonthlyManagement
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyManagement
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1679,7 +1479,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyManagement}
+                              // hidden={toggleMonthlyManagement}
                               onClick={() => {
                                 setToggleMonthlyManagement(
                                   !toggleMonthlyManagement
@@ -1690,22 +1490,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyManagement}
-                              onClick={() => {
-                                setToggleMonthlyManagement(
-                                  !toggleMonthlyManagement
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyManagement
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1747,7 +1535,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyManagementRent}
+                              // hidden={toggleMonthlyManagementRent}
                               onClick={() => {
                                 setToggleMonthlyManagementRent(
                                   !toggleMonthlyManagementRent
@@ -1758,22 +1546,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyManagementRent}
-                              onClick={() => {
-                                setToggleMonthlyManagementRent(
-                                  !toggleMonthlyManagementRent
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyManagementRent
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1816,7 +1592,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyManagementRent}
+                              // hidden={toggleMonthlyManagementRent}
                               onClick={() => {
                                 setToggleMonthlyManagementRent(
                                   !toggleMonthlyManagementRent
@@ -1827,22 +1603,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyManagementRent}
-                              onClick={() => {
-                                setToggleMonthlyManagementRent(
-                                  !toggleMonthlyManagementRent
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyManagementRent
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1885,7 +1649,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyManagementExtra}
+                              // // hidden={toggleMonthlyManagementExtra}
                               onClick={() => {
                                 setToggleMonthlyManagementExtra(
                                   !toggleMonthlyManagementExtra
@@ -1896,22 +1660,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyManagementExtra}
-                              onClick={() => {
-                                setToggleMonthlyManagementExtra(
-                                  !toggleMonthlyManagementExtra
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyManagementExtra
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -1958,7 +1710,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyManagementExtra}
+                              // hidden={toggleMonthlyManagementExtra}
                               onClick={() => {
                                 setToggleMonthlyManagementExtra(
                                   !toggleMonthlyManagementExtra
@@ -1969,22 +1721,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyManagementExtra}
-                              onClick={() => {
-                                setToggleMonthlyManagementExtra(
-                                  !toggleMonthlyManagementExtra
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyManagementExtra
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2027,7 +1767,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyManagement}
+                              // hidden={toggleMonthlyManagement}
                               onClick={() => {
                                 setToggleMonthlyManagementLate(
                                   !toggleMonthlyManagementLate
@@ -2038,22 +1778,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyManagementLate}
-                              onClick={() => {
-                                setToggleMonthlyManagementLate(
-                                  !toggleMonthlyManagementLate
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyManagementLate
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2096,7 +1824,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyManagementLate}
+                              // hidden={toggleMonthlyManagementLate}
                               onClick={() => {
                                 setToggleMonthlyManagementLate(
                                   !toggleMonthlyManagementLate
@@ -2107,22 +1835,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyManagementLate}
-                              onClick={() => {
-                                setToggleMonthlyManagementLate(
-                                  !toggleMonthlyManagementLate
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyManagementLate
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2164,7 +1880,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyMaintenance}
+                              // hidden={toggleMonthlyMaintenance}
                               onClick={() => {
                                 setToggleMonthlyMaintenance(
                                   !toggleMonthlyMaintenance
@@ -2175,22 +1891,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyMaintenance}
-                              onClick={() => {
-                                setToggleMonthlyMaintenance(
-                                  !toggleMonthlyMaintenance
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyMaintenance
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2229,7 +1933,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyMaintenance}
+                              // hidden={toggleMonthlyMaintenance}
                               onClick={() => {
                                 setToggleMonthlyMaintenance(
                                   !toggleMonthlyMaintenance
@@ -2240,22 +1944,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyMaintenance}
-                              onClick={() => {
-                                setToggleMonthlyMaintenance(
-                                  !toggleMonthlyMaintenance
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyMaintenance
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2298,7 +1990,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyRepairs}
+                              // hidden={toggleMonthlyRepairs}
                               onClick={() => {
                                 setToggleMonthlyRepairs(!toggleMonthlyRepairs);
                               }}
@@ -2307,20 +1999,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyRepairs}
-                              onClick={() => {
-                                setToggleMonthlyRepairs(!toggleMonthlyRepairs);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyRepairs
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2353,7 +2035,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyRepairs}
+                              // hidden={toggleMonthlyRepairs}
                               onClick={() => {
                                 setToggleMonthlyRepairs(!toggleMonthlyRepairs);
                               }}
@@ -2362,20 +2044,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyRepairs}
-                              onClick={() => {
-                                setToggleMonthlyRepairs(!toggleMonthlyRepairs);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyRepairs
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2418,7 +2090,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyMortgage}
+                              // hidden={toggleMonthlyMortgage}
                               onClick={() => {
                                 setToggleMonthlyMortgage(
                                   !toggleMonthlyMortgage
@@ -2429,22 +2101,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyMortgage}
-                              onClick={() => {
-                                setToggleMonthlyMortgage(
-                                  !toggleMonthlyMortgage
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyMortgage
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2477,7 +2137,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyMortgage}
+                              // hidden={toggleMonthlyMortgage}
                               onClick={() => {
                                 setToggleMonthlyMortgage(
                                   !toggleMonthlyMortgage
@@ -2488,22 +2148,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyMortgage}
-                              onClick={() => {
-                                setToggleMonthlyMortgage(
-                                  !toggleMonthlyMortgage
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyMortgage
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2546,7 +2194,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyTaxes}
+                              // hidden={toggleMonthlyTaxes}
                               onClick={() => {
                                 setToggleMonthlyTaxes(!toggleMonthlyTaxes);
                               }}
@@ -2555,20 +2203,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyTaxes}
-                              onClick={() => {
-                                setToggleMonthlyTaxes(!toggleMonthlyTaxes);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyTaxes
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2599,7 +2237,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyTaxes}
+                              // hidden={toggleMonthlyTaxes}
                               onClick={() => {
                                 setToggleMonthlyTaxes(!toggleMonthlyTaxes);
                               }}
@@ -2608,20 +2246,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyTaxes}
-                              onClick={() => {
-                                setToggleMonthlyTaxes(!toggleMonthlyTaxes);
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyTaxes
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2664,7 +2292,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyInsurance}
+                              // hidden={toggleMonthlyInsurance}
                               onClick={() => {
                                 setToggleMonthlyInsurance(
                                   !toggleMonthlyInsurance
@@ -2675,22 +2303,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyInsurance}
-                              onClick={() => {
-                                setToggleMonthlyInsurance(
-                                  !toggleMonthlyInsurance
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyInsurance
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2729,7 +2345,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyInsurance}
+                              // hidden={toggleMonthlyInsurance}
                               onClick={() => {
                                 setToggleMonthlyInsurance(
                                   !toggleMonthlyInsurance
@@ -2740,22 +2356,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyInsurance}
-                              onClick={() => {
-                                setToggleMonthlyInsurance(
-                                  !toggleMonthlyInsurance
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyInsurance
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2798,7 +2402,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyUtilityExpense}
+                              // hidden={toggleMonthlyUtilityExpense}
                               onClick={() => {
                                 setToggleMonthlyUtilityExpense(
                                   !toggleMonthlyUtilityExpense
@@ -2809,22 +2413,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyUtilityExpense}
-                              onClick={() => {
-                                setToggleMonthlyUtilityExpense(
-                                  !toggleMonthlyUtilityExpense
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyUtilityExpense
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2857,7 +2449,7 @@ export default function OwnerCashflow(props) {
                             <img
                               src={SortLeft}
                               alt="Expand closed"
-                              hidden={toggleMonthlyUtilityExpense}
+                              // hidden={toggleMonthlyUtilityExpense}
                               onClick={() => {
                                 setToggleMonthlyUtilityExpense(
                                   !toggleMonthlyUtilityExpense
@@ -2868,22 +2460,10 @@ export default function OwnerCashflow(props) {
                                 width: "10px",
                                 height: "10px",
                                 float: "right",
-                              }}
-                            />
-                            <img
-                              src={SortDown}
-                              alt="Expand open"
-                              hidden={!toggleMonthlyUtilityExpense}
-                              onClick={() => {
-                                setToggleMonthlyUtilityExpense(
-                                  !toggleMonthlyUtilityExpense
-                                );
-                              }}
-                              style={{
-                                marginTop: "0.4rem",
-                                width: "10px",
-                                height: "10px",
-                                float: "right",
+                                transform: toggleMonthlyUtilityExpense
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
                               }}
                             />
                           </TableCell>{" "}
@@ -2939,8 +2519,9 @@ export default function OwnerCashflow(props) {
                           <img
                             src={SortLeft}
                             alt="Expand closed"
-                            hidden={toggleMonthlyCashFlow}
+                            // hidden={toggleMonthlyCashFlow}
                             onClick={() => {
+                              setToggleMonthlyCashFlow(!toggleMonthlyCashFlow);
                               setToggleMonthlyCashFlowProperty(
                                 !toggleMonthlyCashFlowProperty
                               );
@@ -2968,40 +2549,10 @@ export default function OwnerCashflow(props) {
                               width: "10px",
                               height: "10px",
                               float: "right",
-                            }}
-                          />
-                          <img
-                            src={SortDown}
-                            alt="Expand open"
-                            hidden={!toggleMonthlyCashFlow}
-                            onClick={() => {
-                              setToggleMonthlyCashFlowProperty(
-                                !toggleMonthlyCashFlowProperty
-                              );
-                              setToggleMonthlyRevenue(false);
-                              setToggleMonthlyRent(false);
-                              setToggleMonthlyExtra(false);
-                              setToggleMonthlyUtility(false);
-                              setToggleMonthlyLateFee(false);
-                              setToggleMonthlyManagementRent(false);
-                              setToggleMonthlyManagementExtra(false);
-                              setToggleMonthlyManagementLate(false);
-                              setToggleMonthlyMaintenanceRevenue(false);
-                              setToggleMonthlyRepairsRevenue(false);
-                              setToggleMonthlyExpense(false);
-                              setToggleMonthlyManagement(false);
-                              setToggleMonthlyMaintenance(false);
-                              setToggleMonthlyRepairs(false);
-                              setToggleMonthlyUtilityExpense(false);
-                              setToggleMonthlyMortgage(false);
-                              setToggleMonthlyTaxes(false);
-                              setToggleMonthlyInsurance(false);
-                            }}
-                            style={{
-                              marginTop: "0.4rem",
-                              width: "10px",
-                              height: "10px",
-                              float: "right",
+                              transform: toggleMonthlyCashFlow
+                                ? "rotate(90deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.2s ease-out",
                             }}
                           />
                         </TableCell>
@@ -3054,10 +2605,10 @@ export default function OwnerCashflow(props) {
                                 <img
                                   src={SortLeft}
                                   alt="Expand closed"
-                                  hidden={
-                                    toggleMonthlyCashFlowProperty &&
-                                    !propertyID.includes(property.property_uid)
-                                  }
+                                  // hidden={
+                                  //   toggleMonthlyCashFlowProperty &&
+                                  //   !propertyID.includes(property.property_uid)
+                                  // }
                                   onClick={() => {
                                     toggleProperty(property.property_uid);
                                   }}
@@ -3066,23 +2617,12 @@ export default function OwnerCashflow(props) {
                                     width: "10px",
                                     height: "10px",
                                     float: "right",
-                                  }}
-                                />
-                                <img
-                                  src={SortDown}
-                                  alt="Expand open"
-                                  hidden={
-                                    !toggleMonthlyCashFlowProperty &&
-                                    !propertyID.includes(property.property_uid)
-                                  }
-                                  onClick={() => {
-                                    toggleProperty(property.property_uid);
-                                  }}
-                                  style={{
-                                    marginTop: "0.4rem",
-                                    width: "10px",
-                                    height: "10px",
-                                    float: "right",
+                                    transform: propertyID.includes(
+                                      property.property_uid
+                                    )
+                                      ? "rotate(90deg)"
+                                      : "rotate(0deg)",
+                                    transition: "transform 0.2s ease-out",
                                   }}
                                 />
                               </TableCell>
@@ -3182,11 +2722,12 @@ export default function OwnerCashflow(props) {
                                     <img
                                       src={SortLeft}
                                       alt="Expand closed"
-                                      hidden={toggleMonthlyRevenue}
+                                      // hidden={toggleMonthlyRevenue}
                                       onClick={() => {
                                         setToggleMonthlyRevenue(
                                           !toggleMonthlyRevenue
                                         );
+
                                         setToggleMonthlyRent(false);
                                         setToggleMonthlyExtra(false);
                                         setToggleMonthlyUtility(false);
@@ -3202,30 +2743,14 @@ export default function OwnerCashflow(props) {
                                         width: "10px",
                                         height: "10px",
                                         float: "right",
-                                      }}
-                                    />
-                                    <img
-                                      src={SortDown}
-                                      alt="Expand open"
-                                      hidden={!toggleMonthlyRevenue}
-                                      onClick={() => {
-                                        setToggleMonthlyRevenue(
-                                          !toggleMonthlyRevenue
-                                        );
-                                        setToggleMonthlyRent(false);
-                                        setToggleMonthlyExtra(false);
-                                        setToggleMonthlyUtility(false);
-                                        setToggleMonthlyLateFee(false);
-                                        setToggleMonthlyMaintenanceRevenue(
-                                          false
-                                        );
-                                        setToggleMonthlyRepairsRevenue(false);
-                                      }}
-                                      style={{
-                                        marginTop: "0.4rem",
-                                        width: "10px",
-                                        height: "10px",
-                                        float: "right",
+                                        transform:
+                                          toggleMonthlyRevenue &&
+                                          propertyID.includes(
+                                            property.property_uid
+                                          )
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                        transition: "transform 0.2s ease-out",
                                       }}
                                     />
                                   </TableCell>
@@ -3278,7 +2803,7 @@ export default function OwnerCashflow(props) {
                                     ).toFixed(2)}
                                   </TableCell>
                                 </TableRow>
-                                {/* rent */}
+                                {/* rent */}{" "}
                                 {revenueSummary.find(
                                   (revS) => revS.purchase_type === "RENT"
                                 ) ? (
@@ -3288,7 +2813,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyRent}
+                                        // hidden={toggleMonthlyRent}
                                         onClick={() => {
                                           setToggleMonthlyRent(
                                             !toggleMonthlyRent
@@ -3299,22 +2824,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyRent}
-                                        onClick={() => {
-                                          setToggleMonthlyRent(
-                                            !toggleMonthlyRent
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyRent
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3357,7 +2870,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyRent}
+                                        // hidden={toggleMonthlyRent}
                                         onClick={() => {
                                           setToggleMonthlyRent(
                                             !toggleMonthlyRent
@@ -3368,22 +2881,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyRent}
-                                        onClick={() => {
-                                          setToggleMonthlyRent(
-                                            !toggleMonthlyRent
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyRent
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3430,7 +2931,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyExtra}
+                                        // hidden={toggleMonthlyExtra}
                                         onClick={() => {
                                           setToggleMonthlyExtra(
                                             !toggleMonthlyExtra
@@ -3441,22 +2942,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyExtra}
-                                        onClick={() => {
-                                          setToggleMonthlyExtra(
-                                            !toggleMonthlyExtra
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyExtra
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3504,7 +2993,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyExtra}
+                                        // hidden={toggleMonthlyExtra}
                                         onClick={() => {
                                           setToggleMonthlyExtra(
                                             !toggleMonthlyExtra
@@ -3515,22 +3004,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyExtra}
-                                        onClick={() => {
-                                          setToggleMonthlyExtra(
-                                            !toggleMonthlyExtra
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyExtra
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3576,7 +3053,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyUtility}
+                                        // hidden={toggleMonthlyUtility}
                                         onClick={() => {
                                           setToggleMonthlyUtility(
                                             !toggleMonthlyUtility
@@ -3587,22 +3064,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyUtility}
-                                        onClick={() => {
-                                          setToggleMonthlyUtility(
-                                            !toggleMonthlyUtility
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyUtility
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3645,7 +3110,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyUtility}
+                                        // hidden={toggleMonthlyUtility}
                                         onClick={() => {
                                           setToggleMonthlyUtility(
                                             !toggleMonthlyUtility
@@ -3656,22 +3121,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyUtility}
-                                        onClick={() => {
-                                          setToggleMonthlyUtility(
-                                            !toggleMonthlyUtility
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyUtility
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3717,7 +3170,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyLateFee}
+                                        // hidden={toggleMonthlyLateFee}
                                         onClick={() => {
                                           setToggleMonthlyLateFee(
                                             !toggleMonthlyLateFee
@@ -3728,22 +3181,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyLateFee}
-                                        onClick={() => {
-                                          setToggleMonthlyLateFee(
-                                            !toggleMonthlyLateFee
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyLateFee
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3787,7 +3228,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyLateFee}
+                                        // hidden={toggleMonthlyLateFee}
                                         onClick={() => {
                                           setToggleMonthlyLateFee(
                                             !toggleMonthlyLateFee
@@ -3798,22 +3239,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyLateFee}
-                                        onClick={() => {
-                                          setToggleMonthlyLateFee(
-                                            !toggleMonthlyLateFee
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyLateFee
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3858,7 +3287,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyMaintenanceRevenue}
+                                        // hidden={toggleMonthlyMaintenanceRevenue}
                                         onClick={() => {
                                           setToggleMonthlyMaintenanceRevenue(
                                             !toggleMonthlyMaintenanceRevenue
@@ -3869,24 +3298,11 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={
-                                          !toggleMonthlyMaintenanceRevenue
-                                        }
-                                        onClick={() => {
-                                          setToggleMonthlyMaintenanceRevenue(
-                                            !toggleMonthlyMaintenanceRevenue
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform:
+                                            toggleMonthlyMaintenanceRevenue
+                                              ? "rotate(90deg)"
+                                              : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -3930,7 +3346,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyMaintenanceRevenue}
+                                        // hidden={toggleMonthlyMaintenanceRevenue}
                                         onClick={() => {
                                           setToggleMonthlyMaintenanceRevenue(
                                             !toggleMonthlyMaintenanceRevenue
@@ -3941,24 +3357,11 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={
-                                          !toggleMonthlyMaintenanceRevenue
-                                        }
-                                        onClick={() => {
-                                          setToggleMonthlyMaintenanceRevenue(
-                                            !toggleMonthlyMaintenanceRevenue
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform:
+                                            toggleMonthlyMaintenanceRevenue
+                                              ? "rotate(90deg)"
+                                              : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4005,7 +3408,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyRepairsRevenue}
+                                        // hidden={toggleMonthlyRepairsRevenue}
                                         onClick={() => {
                                           setToggleMonthlyRepairsRevenue(
                                             !toggleMonthlyRepairsRevenue
@@ -4016,22 +3419,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyRepairsRevenue}
-                                        onClick={() => {
-                                          setToggleMonthlyRepairsRevenue(
-                                            !toggleMonthlyRepairsRevenue
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyRepairsRevenue
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4074,7 +3465,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyRepairsRevenue}
+                                        // hidden={toggleMonthlyRepairsRevenue}
                                         onClick={() => {
                                           setToggleMonthlyRepairsRevenue(
                                             !toggleMonthlyRepairsRevenue
@@ -4085,22 +3476,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyRepairsRevenue}
-                                        onClick={() => {
-                                          setToggleMonthlyRepairsRevenue(
-                                            !toggleMonthlyRepairsRevenue
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyRepairsRevenue
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4143,7 +3522,7 @@ export default function OwnerCashflow(props) {
                                     <img
                                       src={SortLeft}
                                       alt="Expand closed"
-                                      hidden={toggleMonthlyExpense}
+                                      // hidden={toggleMonthlyExpense}
                                       onClick={() => {
                                         setToggleMonthlyExpense(
                                           !toggleMonthlyExpense
@@ -4164,32 +3543,10 @@ export default function OwnerCashflow(props) {
                                         width: "10px",
                                         height: "10px",
                                         float: "right",
-                                      }}
-                                    />
-                                    <img
-                                      src={SortDown}
-                                      alt="Expand open"
-                                      hidden={!toggleMonthlyExpense}
-                                      onClick={() => {
-                                        setToggleMonthlyExpense(
-                                          !toggleMonthlyExpense
-                                        );
-                                        setToggleMonthlyManagement(false);
-                                        setToggleMonthlyManagementRent(false);
-                                        setToggleMonthlyManagementExtra(false);
-                                        setToggleMonthlyManagementLate(false);
-                                        setToggleMonthlyMaintenance(false);
-                                        setToggleMonthlyRepairs(false);
-                                        setToggleMonthlyUtilityExpense(false);
-                                        setToggleMonthlyMortgage(false);
-                                        setToggleMonthlyTaxes(false);
-                                        setToggleMonthlyInsurance(false);
-                                      }}
-                                      style={{
-                                        marginTop: "0.4rem",
-                                        width: "10px",
-                                        height: "10px",
-                                        float: "right",
+                                        transform: toggleMonthlyExpense
+                                          ? "rotate(90deg)"
+                                          : "rotate(0deg)",
+                                        transition: "transform 0.2s ease-out",
                                       }}
                                     />
                                   </TableCell>
@@ -4250,7 +3607,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyManagement}
+                                        // hidden={toggleMonthlyManagement}
                                         onClick={() => {
                                           setToggleMonthlyManagement(
                                             !toggleMonthlyManagement
@@ -4261,22 +3618,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyManagement}
-                                        onClick={() => {
-                                          setToggleMonthlyManagement(
-                                            !toggleMonthlyManagement
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyManagement
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4320,7 +3665,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyManagement}
+                                        // hidden={toggleMonthlyManagement}
                                         onClick={() => {
                                           setToggleMonthlyManagement(
                                             !toggleMonthlyManagement
@@ -4331,22 +3676,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyManagement}
-                                        onClick={() => {
-                                          setToggleMonthlyManagement(
-                                            !toggleMonthlyManagement
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyManagement
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4393,7 +3726,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyManagementRent}
+                                        // hidden={toggleMonthlyManagementRent}
                                         onClick={() => {
                                           setToggleMonthlyManagementRent(
                                             !toggleMonthlyManagementRent
@@ -4404,22 +3737,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyManagementRent}
-                                        onClick={() => {
-                                          setToggleMonthlyManagementRent(
-                                            !toggleMonthlyManagementRent
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyManagementRent
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4467,7 +3788,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyManagementRent}
+                                        // hidden={toggleMonthlyManagementRent}
                                         onClick={() => {
                                           setToggleMonthlyManagementRent(
                                             !toggleMonthlyManagementRent
@@ -4478,22 +3799,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyManagementRent}
-                                        onClick={() => {
-                                          setToggleMonthlyManagementRent(
-                                            !toggleMonthlyManagementRent
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyManagementRent
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4544,7 +3853,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyManagementExtra}
+                                        // hidden={toggleMonthlyManagementExtra}
                                         onClick={() => {
                                           setToggleMonthlyManagementExtra(
                                             !toggleMonthlyManagementExtra
@@ -4555,22 +3864,11 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyManagementExtra}
-                                        onClick={() => {
-                                          setToggleMonthlyManagementExtra(
-                                            !toggleMonthlyManagementExtra
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform:
+                                            toggleMonthlyManagementExtra
+                                              ? "rotate(90deg)"
+                                              : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4618,7 +3916,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyManagementExtra}
+                                        // hidden={toggleMonthlyManagementExtra}
                                         onClick={() => {
                                           setToggleMonthlyManagementExtra(
                                             !toggleMonthlyManagementExtra
@@ -4629,22 +3927,11 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyManagementExtra}
-                                        onClick={() => {
-                                          setToggleMonthlyManagementExtra(
-                                            !toggleMonthlyManagementExtra
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform:
+                                            toggleMonthlyManagementExtra
+                                              ? "rotate(90deg)"
+                                              : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4694,7 +3981,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyManagement}
+                                        // hidden={toggleMonthlyManagement}
                                         onClick={() => {
                                           setToggleMonthlyManagementLate(
                                             !toggleMonthlyManagementLate
@@ -4705,22 +3992,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyManagementLate}
-                                        onClick={() => {
-                                          setToggleMonthlyManagementLate(
-                                            !toggleMonthlyManagementLate
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyManagementLate
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4768,7 +4043,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyManagementLate}
+                                        // hidden={toggleMonthlyManagementLate}
                                         onClick={() => {
                                           setToggleMonthlyManagementLate(
                                             !toggleMonthlyManagementLate
@@ -4779,22 +4054,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyManagementLate}
-                                        onClick={() => {
-                                          setToggleMonthlyManagementLate(
-                                            !toggleMonthlyManagementLate
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyManagementLate
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4842,7 +4105,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyMaintenance}
+                                        // hidden={toggleMonthlyMaintenance}
                                         onClick={() => {
                                           setToggleMonthlyMaintenance(
                                             !toggleMonthlyMaintenance
@@ -4853,22 +4116,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyMaintenance}
-                                        onClick={() => {
-                                          setToggleMonthlyMaintenance(
-                                            !toggleMonthlyMaintenance
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyMaintenance
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4912,7 +4163,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyMaintenance}
+                                        // hidden={toggleMonthlyMaintenance}
                                         onClick={() => {
                                           setToggleMonthlyMaintenance(
                                             !toggleMonthlyMaintenance
@@ -4923,22 +4174,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyMaintenance}
-                                        onClick={() => {
-                                          setToggleMonthlyMaintenance(
-                                            !toggleMonthlyMaintenance
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyMaintenance
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -4985,7 +4224,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyRepairs}
+                                        // hidden={toggleMonthlyRepairs}
                                         onClick={() => {
                                           setToggleMonthlyRepairs(
                                             !toggleMonthlyRepairs
@@ -4996,22 +4235,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyRepairs}
-                                        onClick={() => {
-                                          setToggleMonthlyRepairs(
-                                            !toggleMonthlyRepairs
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyRepairs
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5054,7 +4281,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyRepairs}
+                                        // hidden={toggleMonthlyRepairs}
                                         onClick={() => {
                                           setToggleMonthlyRepairs(
                                             !toggleMonthlyRepairs
@@ -5065,22 +4292,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyRepairs}
-                                        onClick={() => {
-                                          setToggleMonthlyRepairs(
-                                            !toggleMonthlyRepairs
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyRepairs
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5127,7 +4342,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyMortgage}
+                                        // hidden={toggleMonthlyMortgage}
                                         onClick={() => {
                                           setToggleMonthlyMortgage(
                                             !toggleMonthlyMortgage
@@ -5138,22 +4353,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyMortgage}
-                                        onClick={() => {
-                                          setToggleMonthlyMortgage(
-                                            !toggleMonthlyMortgage
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyMortgage
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5196,7 +4399,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyMortgage}
+                                        // hidden={toggleMonthlyMortgage}
                                         onClick={() => {
                                           setToggleMonthlyMortgage(
                                             !toggleMonthlyMortgage
@@ -5207,22 +4410,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyMortgage}
-                                        onClick={() => {
-                                          setToggleMonthlyMortgage(
-                                            !toggleMonthlyMortgage
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyMortgage
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5267,7 +4458,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyTaxes}
+                                        // hidden={toggleMonthlyTaxes}
                                         onClick={() => {
                                           setToggleMonthlyTaxes(
                                             !toggleMonthlyTaxes
@@ -5278,22 +4469,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyTaxes}
-                                        onClick={() => {
-                                          setToggleMonthlyTaxes(
-                                            !toggleMonthlyTaxes
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyTaxes
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5336,7 +4515,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyTaxes}
+                                        // hidden={toggleMonthlyTaxes}
                                         onClick={() => {
                                           setToggleMonthlyTaxes(
                                             !toggleMonthlyTaxes
@@ -5347,22 +4526,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyTaxes}
-                                        onClick={() => {
-                                          setToggleMonthlyTaxes(
-                                            !toggleMonthlyTaxes
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyTaxes
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5407,7 +4574,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyInsurance}
+                                        // hidden={toggleMonthlyInsurance}
                                         onClick={() => {
                                           setToggleMonthlyInsurance(
                                             !toggleMonthlyInsurance
@@ -5418,22 +4585,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyInsurance}
-                                        onClick={() => {
-                                          setToggleMonthlyInsurance(
-                                            !toggleMonthlyInsurance
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyInsurance
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5476,7 +4631,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyInsurance}
+                                        // hidden={toggleMonthlyInsurance}
                                         onClick={() => {
                                           setToggleMonthlyInsurance(
                                             !toggleMonthlyInsurance
@@ -5487,22 +4642,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyInsurance}
-                                        onClick={() => {
-                                          setToggleMonthlyInsurance(
-                                            !toggleMonthlyInsurance
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyInsurance
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5547,7 +4690,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyUtilityExpense}
+                                        // hidden={toggleMonthlyUtilityExpense}
                                         onClick={() => {
                                           setToggleMonthlyUtilityExpense(
                                             !toggleMonthlyUtilityExpense
@@ -5558,22 +4701,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyUtilityExpense}
-                                        onClick={() => {
-                                          setToggleMonthlyUtilityExpense(
-                                            !toggleMonthlyUtilityExpense
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyUtilityExpense
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
@@ -5616,7 +4747,7 @@ export default function OwnerCashflow(props) {
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
-                                        hidden={toggleMonthlyUtilityExpense}
+                                        // hidden={toggleMonthlyUtilityExpense}
                                         onClick={() => {
                                           setToggleMonthlyUtilityExpense(
                                             !toggleMonthlyUtilityExpense
@@ -5627,22 +4758,10 @@ export default function OwnerCashflow(props) {
                                           width: "10px",
                                           height: "10px",
                                           float: "right",
-                                        }}
-                                      />
-                                      <img
-                                        src={SortDown}
-                                        alt="Expand open"
-                                        hidden={!toggleMonthlyUtilityExpense}
-                                        onClick={() => {
-                                          setToggleMonthlyUtilityExpense(
-                                            !toggleMonthlyUtilityExpense
-                                          );
-                                        }}
-                                        style={{
-                                          marginTop: "0.4rem",
-                                          width: "10px",
-                                          height: "10px",
-                                          float: "right",
+                                          transform: toggleMonthlyUtilityExpense
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
                                         }}
                                       />
                                     </TableCell>{" "}
