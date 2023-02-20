@@ -570,12 +570,13 @@ export default function OwnerCashflow(props) {
               </Col>
               {byProperty ? (
                 <Col>
-                  By Property:
+                  By Category
                   <Switch
                     checked={filter}
                     onChange={() => setFilter(!filter)}
                     inputProps={{ "aria-label": "controlled" }}
                   />
+                  By Property
                 </Col>
               ) : (
                 <Col>
