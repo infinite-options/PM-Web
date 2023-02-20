@@ -39,6 +39,8 @@ export default function OwnerCashflow(props) {
   const [toggleMonthlyRevenue, setToggleMonthlyRevenue] = useState(false);
   const [toggleMonthlyRent, setToggleMonthlyRent] = useState(false);
   const [toggleMonthlyExtra, setToggleMonthlyExtra] = useState(false);
+
+  const [toggleMonthlyDeposit, setToggleMonthlyDeposit] = useState(false);
   const [toggleMonthlyUtility, setToggleMonthlyUtility] = useState(false);
   const [toggleMonthlyLateFee, setToggleMonthlyLateFee] = useState(false);
   const [toggleMonthlyManagementRent, setToggleMonthlyManagementRent] =
@@ -923,6 +925,107 @@ export default function OwnerCashflow(props) {
                       {revenue.map((rev, i) => {
                         return rev.purchase_type === "EXTRA CHARGES" ? (
                           <TableRow hidden={!toggleMonthlyExtra}>
+                            <TableCell width="500px">
+                              &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
+                              {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
+                              {rev.zip}
+                            </TableCell>
+                            <TableCell align="right">
+                              {rev.amount_paid.toFixed(2)}
+                            </TableCell>{" "}
+                            <TableCell align="right">
+                              {rev.amount_due.toFixed(2)}
+                            </TableCell>{" "}
+                            <TableCell align="right">
+                              {rev.amount_due.toFixed(2) -
+                                rev.amount_paid.toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          ""
+                        );
+                      })}
+                      {/* Deposit */}
+                      {revenueSummary.find(
+                        (revS) => revS.purchase_type === "Deposit"
+                      ) ? (
+                        <TableRow hidden={!toggleMonthlyRevenue}>
+                          <TableCell width="500px">
+                            &nbsp;&nbsp;&nbsp;&nbsp;Deposit{" "}
+                            <img
+                              src={SortLeft}
+                              alt="Expand closed"
+                              // hidden={toggleMonthlyExtra}
+                              onClick={() => {
+                                setToggleMonthlyDeposit(!toggleMonthlyDeposit);
+                              }}
+                              style={{
+                                marginTop: "0.4rem",
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                                transform: toggleMonthlyDeposit
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
+                              }}
+                            />
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {revenueSummary
+                              .find((revS) => revS.purchase_type === "Deposit")
+                              .amount_paid.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {revenueSummary
+                              .find((revS) => revS.purchase_type === "Deposit")
+                              .amount_due.toFixed(2)}
+                          </TableCell>{" "}
+                          <TableCell align="right">
+                            {" "}
+                            {revenueSummary
+                              .find((revS) => revS.purchase_type === "Deposit")
+                              .amount_due.toFixed(2) -
+                              revenueSummary
+                                .find(
+                                  (revS) => revS.purchase_type === "Deposit"
+                                )
+                                .amount_paid.toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        <TableRow hidden={!toggleMonthlyRevenue}>
+                          <TableCell width="500px">
+                            &nbsp;&nbsp;&nbsp;&nbsp;Deposit{" "}
+                            <img
+                              src={SortLeft}
+                              alt="Expand closed"
+                              // hidden={toggleMonthlyDeposit}
+                              onClick={() => {
+                                setToggleMonthlyDeposit(!toggleMonthlyDeposit);
+                              }}
+                              style={{
+                                marginTop: "0.4rem",
+                                width: "10px",
+                                height: "10px",
+                                float: "right",
+                                transform: toggleMonthlyDeposit
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.2s ease-out",
+                              }}
+                            />
+                          </TableCell>{" "}
+                          <TableCell align="right">0.00</TableCell>{" "}
+                          <TableCell align="right">0.00</TableCell>{" "}
+                          <TableCell align="right">0.00</TableCell>
+                        </TableRow>
+                      )}
+                      {/* Deposit charges  map indivial */}
+                      {revenue.map((rev, i) => {
+                        return rev.purchase_type === "EXTRA CHARGES" &&
+                          rev.description === "Deposit" ? (
+                          <TableRow hidden={!toggleMonthlyDeposit}>
                             <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
@@ -3073,6 +3176,149 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyExtra}>
+                                      <TableCell width="500px" maxWidth="500px">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;{" "}
+                                        {rev.description}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        {rev.amount_paid.toFixed(2)}
+                                      </TableCell>{" "}
+                                      <TableCell align="right">
+                                        {rev.amount_due.toFixed(2)}
+                                      </TableCell>{" "}
+                                      <TableCell align="right">
+                                        {rev.amount_due.toFixed(2) -
+                                          rev.amount_paid.toFixed(2)}
+                                      </TableCell>
+                                    </TableRow>
+                                  ) : (
+                                    ""
+                                  );
+                                })}
+                                {/* extra charges */}
+                                {revenueSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "Deposit"
+                                  ) ? (
+                                  <TableRow hidden={!toggleMonthlyRevenue}>
+                                    <TableCell width="500px" maxWidth="500px">
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deposit
+                                      <img
+                                        src={SortLeft}
+                                        alt="Expand closed"
+                                        // hidden={toggleMonthlyExtra}
+                                        onClick={() => {
+                                          setToggleMonthlyDeposit(
+                                            !toggleMonthlyDeposit
+                                          );
+                                        }}
+                                        style={{
+                                          marginTop: "0.4rem",
+                                          width: "10px",
+                                          height: "10px",
+                                          float: "right",
+                                          transform: toggleMonthlyDeposit
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
+                                        }}
+                                      />
+                                    </TableCell>{" "}
+                                    <TableCell align="right">
+                                      {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
+                                        .find(
+                                          (revS) =>
+                                            revS.purchase_type === "Deposit"
+                                        )
+                                        .amount_paid.toFixed(2)}
+                                    </TableCell>{" "}
+                                    <TableCell align="right">
+                                      {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
+                                        .find(
+                                          (revS) =>
+                                            revS.purchase_type === "Deposit"
+                                        )
+                                        .amount_due.toFixed(2)}
+                                    </TableCell>{" "}
+                                    <TableCell align="right">
+                                      {" "}
+                                      {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
+                                        .find(
+                                          (revS) =>
+                                            revS.purchase_type === "Deposit"
+                                        )
+                                        .amount_due.toFixed(2) -
+                                        revenueSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
+                                          .find(
+                                            (revS) =>
+                                              revS.purchase_type === "Deposit"
+                                          )
+                                          .amount_paid.toFixed(2)}
+                                    </TableCell>
+                                  </TableRow>
+                                ) : (
+                                  <TableRow hidden={!toggleMonthlyRevenue}>
+                                    <TableCell width="500px" maxWidth="500px">
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deposit
+                                      <img
+                                        src={SortLeft}
+                                        alt="Expand closed"
+                                        // hidden={toggleMonthlyDeposit}
+                                        onClick={() => {
+                                          setToggleMonthlyDeposit(
+                                            !toggleMonthlyDeposit
+                                          );
+                                        }}
+                                        style={{
+                                          marginTop: "0.4rem",
+                                          width: "10px",
+                                          height: "10px",
+                                          float: "right",
+                                          transform: toggleMonthlyDeposit
+                                            ? "rotate(90deg)"
+                                            : "rotate(0deg)",
+                                          transition: "transform 0.2s ease-out",
+                                        }}
+                                      />
+                                    </TableCell>{" "}
+                                    <TableCell align="right">0.00</TableCell>{" "}
+                                    <TableCell align="right">0.00</TableCell>{" "}
+                                    <TableCell align="right">0.00</TableCell>
+                                  </TableRow>
+                                )}
+                                {/* Deposit charges  map indivial */}
+                                {revenue.map((rev, i) => {
+                                  return rev.purchase_type ===
+                                    "EXTRA CHARGES" &&
+                                    rev.description === "Deposit" &&
+                                    rev.property_uid ===
+                                      property.property_uid ? (
+                                    <TableRow hidden={!toggleMonthlyDeposit}>
                                       <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
