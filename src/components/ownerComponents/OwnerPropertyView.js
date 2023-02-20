@@ -51,6 +51,7 @@ import {
 } from "../../utils/styles";
 import "react-multi-carousel/lib/styles.css";
 import PropertyManagersList from "./PropertyManagersList";
+import OwnerCashflow from "./OwnerCashflow";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -1043,7 +1044,7 @@ function OwnerPropertyView(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row className="m-3">
+                    {/* <Row className="m-3">
                       <Col>
                         <h3>Property Cashflow Summary</h3>
                       </Col>
@@ -1060,8 +1061,8 @@ function OwnerPropertyView(props) {
                           }}
                         />
                       </Col>
-                    </Row>
-                    <Row className="m-3" style={{ overflow: "scroll" }}>
+                    </Row> */}
+                    {/* <Row className="m-3" style={{ overflow: "scroll" }}>
                       <div>
                         <Table
                           responsive="md"
@@ -5982,7 +5983,12 @@ function OwnerPropertyView(props) {
                           </TableBody>
                         </Table>
                       </div>
-                    </Row>
+                    </Row> */}
+                    <OwnerCashflow
+                      ownerData={[property]}
+                      byProperty={false}
+                      propertyView={true}
+                    />
                   </div>
                   <div
                     className="mx-3 my-3 p-2"

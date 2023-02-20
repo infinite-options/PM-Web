@@ -28,7 +28,7 @@ export default function OwnerCashflow(props) {
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const { ownerData } = props;
+  const { ownerData, byProperty, propertyView } = props;
 
   const [isLoading, setIsLoading] = useState(true);
   // monthly toggles
@@ -96,6 +96,7 @@ export default function OwnerCashflow(props) {
   const responsive = {
     showSidebar: width > 1023,
   };
+  console.log(ownerData);
   const fetchCashflow = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
       navigate("/");
@@ -110,26 +111,61 @@ export default function OwnerCashflow(props) {
     let currentExp = [];
     let currentExpSummary = [];
     if (filter === false) {
-      cashflowResponse.result.revenue.forEach((rev) => {
-        if (rev.month === month) {
-          currentRev.push(rev);
-        }
-      });
-      cashflowResponse.result.revenue_summary.forEach((rev) => {
-        if (rev.month === month) {
-          currentRevSummary.push(rev);
-        }
-      });
-      cashflowResponse.result.expense.forEach((rev) => {
-        if (rev.month === month) {
-          currentExp.push(rev);
-        }
-      });
-      cashflowResponse.result.expense_summary.forEach((rev) => {
-        if (rev.month === month) {
-          currentExpSummary.push(rev);
-        }
-      });
+      if (propertyView === false) {
+        cashflowResponse.result.revenue.forEach((rev) => {
+          if (rev.month === month) {
+            currentRev.push(rev);
+          }
+        });
+        cashflowResponse.result.revenue_summary.forEach((rev) => {
+          if (rev.month === month) {
+            currentRevSummary.push(rev);
+          }
+        });
+        cashflowResponse.result.expense.forEach((rev) => {
+          if (rev.month === month) {
+            currentExp.push(rev);
+          }
+        });
+        cashflowResponse.result.expense_summary.forEach((rev) => {
+          if (rev.month === month) {
+            currentExpSummary.push(rev);
+          }
+        });
+      } else {
+        cashflowResponse.result.revenue.forEach((rev) => {
+          if (
+            rev.month === month &&
+            rev.property_uid === ownerData[0].property_uid
+          ) {
+            currentRev.push(rev);
+          }
+        });
+        cashflowResponse.result.revenue_unit.forEach((rev) => {
+          if (
+            rev.month === month &&
+            rev.property_uid === ownerData[0].property_uid
+          ) {
+            currentRevSummary.push(rev);
+          }
+        });
+        cashflowResponse.result.expense.forEach((rev) => {
+          if (
+            rev.month === month &&
+            rev.property_uid === ownerData[0].property_uid
+          ) {
+            currentExp.push(rev);
+          }
+        });
+        cashflowResponse.result.expense_unit.forEach((rev) => {
+          if (
+            rev.month === month &&
+            rev.property_uid === ownerData[0].property_uid
+          ) {
+            currentExpSummary.push(rev);
+          }
+        });
+      }
 
       const resArr = [];
       currentRev.forEach((item) => {
@@ -248,26 +284,61 @@ export default function OwnerCashflow(props) {
       setRevenueSummary(resArrRevSum);
       setExpenseSummary(currentExpSummary);
     } else {
-      cashflowResponse.result.revenue.forEach((rev) => {
-        if (rev.month === month) {
-          currentRev.push(rev);
-        }
-      });
-      cashflowResponse.result.revenue_unit.forEach((rev) => {
-        if (rev.month === month) {
-          currentRevSummary.push(rev);
-        }
-      });
-      cashflowResponse.result.expense.forEach((rev) => {
-        if (rev.month === month) {
-          currentExp.push(rev);
-        }
-      });
-      cashflowResponse.result.expense_unit.forEach((rev) => {
-        if (rev.month === month) {
-          currentExpSummary.push(rev);
-        }
-      });
+      if (propertyView === false) {
+        cashflowResponse.result.revenue.forEach((rev) => {
+          if (rev.month === month) {
+            currentRev.push(rev);
+          }
+        });
+        cashflowResponse.result.revenue_unit.forEach((rev) => {
+          if (rev.month === month) {
+            currentRevSummary.push(rev);
+          }
+        });
+        cashflowResponse.result.expense.forEach((rev) => {
+          if (rev.month === month) {
+            currentExp.push(rev);
+          }
+        });
+        cashflowResponse.result.expense_unit.forEach((rev) => {
+          if (rev.month === month) {
+            currentExpSummary.push(rev);
+          }
+        });
+      } else {
+        cashflowResponse.result.revenue.forEach((rev) => {
+          if (
+            rev.month === month &&
+            rev.property_uid === ownerData[0].property_uid
+          ) {
+            currentRev.push(rev);
+          }
+        });
+        cashflowResponse.result.revenue_unit.forEach((rev) => {
+          if (
+            rev.month === month &&
+            rev.property_uid === ownerData[0].property_uid
+          ) {
+            currentRevSummary.push(rev);
+          }
+        });
+        cashflowResponse.result.expense.forEach((rev) => {
+          if (
+            rev.month === month &&
+            rev.property_uid === ownerData[0].property_uid
+          ) {
+            currentExp.push(rev);
+          }
+        });
+        cashflowResponse.result.expense_unit.forEach((rev) => {
+          if (
+            rev.month === month &&
+            rev.property_uid === ownerData[0].property_uid
+          ) {
+            currentExpSummary.push(rev);
+          }
+        });
+      }
 
       const resArr = [];
       currentRev.forEach((item) => {
@@ -492,14 +563,25 @@ export default function OwnerCashflow(props) {
                   {options}
                 </select>
               </Col>
-              <Col>
-                By Property:
-                <Switch
-                  checked={filter}
-                  onChange={() => setFilter(!filter)}
-                  inputProps={{ "aria-label": "controlled" }}
-                />
-              </Col>
+              {byProperty ? (
+                <Col>
+                  By Property:
+                  <Switch
+                    checked={filter}
+                    onChange={() => setFilter(!filter)}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </Col>
+              ) : (
+                <Col>
+                  By Property:
+                  <Switch
+                    checked={filter}
+                    onChange={() => setFilter(!filter)}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </Col>
+              )}
             </Row>
             {!isLoading ? (
               filter === false ? (
@@ -525,6 +607,7 @@ export default function OwnerCashflow(props) {
                             hidden={toggleMonthlyCashFlow}
                             onClick={() => {
                               setToggleMonthlyCashFlow(!toggleMonthlyCashFlow);
+
                               setToggleMonthlyRevenue(false);
                               setToggleMonthlyRent(false);
                               setToggleMonthlyExtra(false);
@@ -557,6 +640,7 @@ export default function OwnerCashflow(props) {
                             hidden={!toggleMonthlyCashFlow}
                             onClick={() => {
                               setToggleMonthlyCashFlow(!toggleMonthlyCashFlow);
+
                               setToggleMonthlyRevenue(false);
                               setToggleMonthlyRent(false);
                               setToggleMonthlyExtra(false);
@@ -2857,7 +2941,9 @@ export default function OwnerCashflow(props) {
                             alt="Expand closed"
                             hidden={toggleMonthlyCashFlow}
                             onClick={() => {
-                              setToggleMonthlyCashFlow(!toggleMonthlyCashFlow);
+                              setToggleMonthlyCashFlowProperty(
+                                !toggleMonthlyCashFlowProperty
+                              );
                               setToggleMonthlyRevenue(false);
                               setToggleMonthlyRent(false);
                               setToggleMonthlyExtra(false);
@@ -2889,7 +2975,9 @@ export default function OwnerCashflow(props) {
                             alt="Expand open"
                             hidden={!toggleMonthlyCashFlow}
                             onClick={() => {
-                              setToggleMonthlyCashFlow(!toggleMonthlyCashFlow);
+                              setToggleMonthlyCashFlowProperty(
+                                !toggleMonthlyCashFlowProperty
+                              );
                               setToggleMonthlyRevenue(false);
                               setToggleMonthlyRent(false);
                               setToggleMonthlyExtra(false);
@@ -5244,7 +5332,7 @@ export default function OwnerCashflow(props) {
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
                                     <TableCell width="300px">
-                                      &nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"

@@ -709,7 +709,11 @@ export default function OwnerDashboard2() {
                 opacity: 1,
               }}
             >
-              <OwnerCashflow ownerData={ownerData} />
+              <OwnerCashflow
+                ownerData={ownerData}
+                byProperty={true}
+                propertyView={false}
+              />
               {/* <Row className="m-3">
                 <Col>
                   <h3>Portfolio Cashflow Summary</h3>
