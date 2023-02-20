@@ -618,6 +618,7 @@ export default function OwnerCashflow(props) {
                               );
                               setToggleMonthlyRevenue(false);
                               setToggleMonthlyRent(false);
+                              setToggleMonthlyDeposit(false);
                               setToggleMonthlyExtra(false);
                               setToggleMonthlyUtility(false);
                               setToggleMonthlyLateFee(false);
@@ -697,9 +698,9 @@ export default function OwnerCashflow(props) {
                               setToggleMonthlyRevenue(!toggleMonthlyRevenue);
                               setToggleMonthlyRent(false);
                               setToggleMonthlyExtra(false);
+                              setToggleMonthlyDeposit(false);
                               setToggleMonthlyUtility(false);
                               setToggleMonthlyLateFee(false);
-
                               setToggleMonthlyMaintenanceRevenue(false);
                               setToggleMonthlyRepairsRevenue(false);
                             }}
@@ -924,7 +925,8 @@ export default function OwnerCashflow(props) {
                       )}
                       {/* extra charges  map indivial */}
                       {revenue.map((rev, i) => {
-                        return rev.purchase_type === "EXTRA CHARGES" ? (
+                        return rev.purchase_type === "EXTRA CHARGES" &&
+                          rev.description !== "Deposit" ? (
                           <TableRow hidden={!toggleMonthlyExtra}>
                             <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
@@ -2630,6 +2632,7 @@ export default function OwnerCashflow(props) {
                                 !toggleMonthlyCashFlowProperty
                               );
                               setToggleMonthlyRevenue(false);
+                              setToggleMonthlyDeposit(false);
                               setToggleMonthlyRent(false);
                               setToggleMonthlyExtra(false);
                               setToggleMonthlyUtility(false);
@@ -2831,7 +2834,7 @@ export default function OwnerCashflow(props) {
                                         setToggleMonthlyRevenue(
                                           !toggleMonthlyRevenue
                                         );
-
+                                        setToggleMonthlyDeposit(false);
                                         setToggleMonthlyRent(false);
                                         setToggleMonthlyExtra(false);
                                         setToggleMonthlyUtility(false);
@@ -3174,6 +3177,7 @@ export default function OwnerCashflow(props) {
                                 {revenue.map((rev, i) => {
                                   return rev.purchase_type ===
                                     "EXTRA CHARGES" &&
+                                    rev.description !== "Deposit" &&
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyExtra}>
