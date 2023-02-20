@@ -595,14 +595,14 @@ export default function OwnerCashflow(props) {
                     size="small"
                   >
                     <TableHead>
-                      <TableCell width="300px"></TableCell>
+                      <TableCell width="500px"></TableCell>
                       <TableCell align="right">To Date</TableCell>
                       <TableCell align="right">Expected</TableCell>
                       <TableCell align="right">Delta</TableCell>
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell width="300px">
+                        <TableCell width="500px">
                           {month} {year}
                           <img
                             src={SortLeft}
@@ -684,7 +684,7 @@ export default function OwnerCashflow(props) {
                       </TableRow>
                       {/* revenue */}
                       <TableRow hidden={!toggleMonthlyCashFlow}>
-                        <TableCell width="300px">
+                        <TableCell width="500px">
                           &nbsp;&nbsp;Revenue
                           <img
                             src={SortLeft}
@@ -743,7 +743,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "RENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                             <img
                               src={SortLeft}
@@ -786,7 +786,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                             <img
                               src={SortLeft}
@@ -816,7 +816,7 @@ export default function OwnerCashflow(props) {
                       {revenue.map((rev, i) => {
                         return rev.purchase_type === "RENT" ? (
                           <TableRow hidden={!toggleMonthlyRent}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -841,7 +841,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "EXTRA CHARGES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -893,7 +893,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -923,7 +923,7 @@ export default function OwnerCashflow(props) {
                       {revenue.map((rev, i) => {
                         return rev.purchase_type === "EXTRA CHARGES" ? (
                           <TableRow hidden={!toggleMonthlyExtra}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -948,7 +948,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "UTILITY"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                             <img
                               src={SortLeft}
@@ -993,7 +993,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                             <img
                               src={SortLeft}
@@ -1023,7 +1023,7 @@ export default function OwnerCashflow(props) {
                       {revenue.map((rev, i) => {
                         return rev.purchase_type === "UTILITY" ? (
                           <TableRow hidden={!toggleMonthlyUtility}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1048,7 +1048,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "LATE FEE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1093,7 +1093,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1123,7 +1123,7 @@ export default function OwnerCashflow(props) {
                       {revenue.map((rev, i) => {
                         return rev.purchase_type === "LATE FEE" ? (
                           <TableRow hidden={!toggleMonthlyLateFee}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1148,7 +1148,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MAINTENANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -1171,7 +1171,7 @@ export default function OwnerCashflow(props) {
                               }}
                             />
                           </TableCell>{" "}
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             {revenueSummary
                               .find(
                                 (revS) => revS.purchase_type === "MAINTENANCE"
@@ -1201,7 +1201,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance
                             <img
                               src={SortLeft}
@@ -1233,7 +1233,7 @@ export default function OwnerCashflow(props) {
                       {revenue.map((rev, i) => {
                         return rev.purchase_type === "MAINTENANCE" ? (
                           <TableRow hidden={!toggleMonthlyMaintenanceRevenue}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1258,7 +1258,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "REPAIRS"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs
                             <img
                               src={SortLeft}
@@ -1281,7 +1281,7 @@ export default function OwnerCashflow(props) {
                               }}
                             />
                           </TableCell>{" "}
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             {revenueSummary
                               .find((revS) => revS.purchase_type === "REPAIRS")
                               .amount_paid.toFixed(2)}
@@ -1305,7 +1305,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs
                             <img
                               src={SortLeft}
@@ -1337,7 +1337,7 @@ export default function OwnerCashflow(props) {
                       {revenue.map((rev, i) => {
                         return rev.purchase_type === "REPAIRS" ? (
                           <TableRow hidden={!toggleMonthlyRepairsRevenue}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1359,7 +1359,7 @@ export default function OwnerCashflow(props) {
                       })}
                       {/* monthly cashflow */}
                       <TableRow hidden={!toggleMonthlyCashFlow}>
-                        <TableCell width="300px">
+                        <TableCell width="500px">
                           &nbsp;&nbsp;Expense
                           <img
                             src={SortLeft}
@@ -1421,7 +1421,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MANAGEMENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                             <img
                               src={SortLeft}
@@ -1474,7 +1474,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                             <img
                               src={SortLeft}
@@ -1506,7 +1506,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MANAGEMENT" ? (
                           <TableRow hidden={!toggleMonthlyManagement}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1530,7 +1530,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MANAGEMENT RENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Rent{" "}
                             <img
                               src={SortLeft}
@@ -1587,7 +1587,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Rent{" "}
                             <img
                               src={SortLeft}
@@ -1619,7 +1619,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MANAGEMENT RENT" ? (
                           <TableRow hidden={!toggleMonthlyManagementRent}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1644,7 +1644,7 @@ export default function OwnerCashflow(props) {
                           revS.purchase_type === "MANAGEMENT EXTRA CHARGES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -1705,7 +1705,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -1738,7 +1738,7 @@ export default function OwnerCashflow(props) {
                         return rev.purchase_type ===
                           "MANAGEMENT EXTRA CHARGES" ? (
                           <TableRow hidden={!toggleMonthlyManagementExtra}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1762,7 +1762,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MANAGEMENT LATE FEE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1819,7 +1819,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Late fee{" "}
                             <img
                               src={SortLeft}
@@ -1851,7 +1851,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MANAGEMENT LATE FEE" ? (
                           <TableRow hidden={!toggleMonthlyManagementLate}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1875,7 +1875,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MAINTENANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -1928,7 +1928,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -1960,7 +1960,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MAINTENANCE" ? (
                           <TableRow hidden={!toggleMonthlyMaintenance}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1985,7 +1985,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "REPAIRS"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                             <img
                               src={SortLeft}
@@ -2030,7 +2030,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                             <img
                               src={SortLeft}
@@ -2060,7 +2060,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "REPAIRS" ? (
                           <TableRow hidden={!toggleMonthlyMaintenance}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2085,7 +2085,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MORTGAGE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                             <img
                               src={SortLeft}
@@ -2132,7 +2132,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                             <img
                               src={SortLeft}
@@ -2164,7 +2164,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MORTGAGE" ? (
                           <TableRow hidden={!toggleMonthlyMortgage}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2189,7 +2189,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "TAXES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                             <img
                               src={SortLeft}
@@ -2232,7 +2232,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                             <img
                               src={SortLeft}
@@ -2262,7 +2262,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "TAXES" ? (
                           <TableRow hidden={!toggleMonthlyTaxes}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2287,7 +2287,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "INSURANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                             <img
                               src={SortLeft}
@@ -2340,7 +2340,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                             <img
                               src={SortLeft}
@@ -2372,7 +2372,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "INSURANCE" ? (
                           <TableRow hidden={!toggleMonthlyInsurance}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2397,7 +2397,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "UTILITY"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Utility
                             <img
                               src={SortLeft}
@@ -2444,7 +2444,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="300px">
+                          <TableCell width="500px">
                             &nbsp;&nbsp;&nbsp;&nbsp;Utility
                             <img
                               src={SortLeft}
@@ -2476,7 +2476,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "UTILITY" ? (
                           <TableRow hidden={!toggleMonthlyUtilityExpense}>
-                            <TableCell width="300px">
+                            <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2507,14 +2507,14 @@ export default function OwnerCashflow(props) {
                     size="small"
                   >
                     <TableHead>
-                      <TableCell width="300px"></TableCell>
+                      <TableCell width="500px"></TableCell>
                       <TableCell align="right">To Date</TableCell>
                       <TableCell align="right">Expected</TableCell>
                       <TableCell align="right">Delta</TableCell>
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell width="300px">
+                        <TableCell width="500px">
                           {month} {year}
                           <img
                             src={SortLeft}
@@ -2599,7 +2599,7 @@ export default function OwnerCashflow(props) {
                           <>
                             {" "}
                             <TableRow hidden={!toggleMonthlyCashFlow}>
-                              <TableCell width="300px">
+                              <TableCell width="500px">
                                 &nbsp;&nbsp;{property.address} {property.unit},{" "}
                                 {property.city}, {property.state} {property.zip}
                                 <img
@@ -2804,11 +2804,16 @@ export default function OwnerCashflow(props) {
                                   </TableCell>
                                 </TableRow>
                                 {/* rent */}{" "}
-                                {revenueSummary.find(
-                                  (revS) => revS.purchase_type === "RENT"
-                                ) ? (
+                                {revenueSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "RENT"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                                       <img
                                         src={SortLeft}
@@ -2833,6 +2838,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "RENT"
@@ -2841,6 +2851,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "RENT"
@@ -2850,12 +2865,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "RENT"
                                         )
                                         .amount_due.toFixed(2) -
                                         revenueSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "RENT"
@@ -2865,7 +2890,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                                       <img
                                         src={SortLeft}
@@ -2899,7 +2924,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyRent}>
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -2920,12 +2945,17 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* extra charges */}
-                                {revenueSummary.find(
-                                  (revS) =>
-                                    revS.purchase_type === "EXTRA CHARGES"
-                                ) ? (
+                                {revenueSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) =>
+                                      revS.purchase_type === "EXTRA CHARGES"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extra
                                       Charges{" "}
                                       <img
@@ -2951,6 +2981,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -2960,6 +2995,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -2970,6 +3010,11 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -2977,6 +3022,11 @@ export default function OwnerCashflow(props) {
                                         )
                                         .amount_due.toFixed(2) -
                                         revenueSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type ===
@@ -2987,7 +3037,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extra
                                       Charges{" "}
                                       <img
@@ -3023,7 +3073,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyExtra}>
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                                         {rev.description}
@@ -3044,11 +3094,16 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* utility */}
-                                {revenueSummary.find(
-                                  (revS) => revS.purchase_type === "UTILITY"
-                                ) ? (
+                                {revenueSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "UTILITY"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                                       <img
                                         src={SortLeft}
@@ -3073,6 +3128,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "UTILITY"
@@ -3081,6 +3141,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "UTILITY"
@@ -3090,12 +3155,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "UTILITY"
                                         )
                                         .amount_due.toFixed(2) -
                                         revenueSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "UTILITY"
@@ -3105,7 +3180,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                                       <img
                                         src={SortLeft}
@@ -3139,7 +3214,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyUtility}>
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                                         {rev.description}
@@ -3160,11 +3235,16 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* utility */}
-                                {revenueSummary.find(
-                                  (revS) => revS.purchase_type === "LATE FEE"
-                                ) ? (
+                                {revenueSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "LATE FEE"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Late
                                       Fee{" "}
                                       <img
@@ -3190,6 +3270,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "LATE FEE"
@@ -3198,6 +3283,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "LATE FEE"
@@ -3207,12 +3297,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "LATE FEE"
                                         )
                                         .amount_due.toFixed(2) -
                                         revenueSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "LATE FEE"
@@ -3222,7 +3322,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Late
                                       Fee{" "}
                                       <img
@@ -3257,7 +3357,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyLateFee}>
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3278,11 +3378,17 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* maintenance */}
-                                {revenueSummary.find(
-                                  (revS) => revS.purchase_type === "MAINTENANCE"
-                                ) ? (
+                                {revenueSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) =>
+                                      revS.purchase_type === "MAINTENANCE"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -3306,8 +3412,13 @@ export default function OwnerCashflow(props) {
                                         }}
                                       />
                                     </TableCell>{" "}
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MAINTENANCE"
@@ -3316,6 +3427,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MAINTENANCE"
@@ -3325,12 +3441,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MAINTENANCE"
                                         )
                                         .amount_due.toFixed(2) -
                                         revenueSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type ===
@@ -3341,7 +3467,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance
                                       <img
                                         src={SortLeft}
@@ -3378,7 +3504,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenanceRevenue}
                                     >
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3399,11 +3525,16 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* repairs */}
-                                {revenueSummary.find(
-                                  (revS) => revS.purchase_type === "REPAIRS"
-                                ) ? (
+                                {revenueSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "REPAIRS"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs
                                       <img
                                         src={SortLeft}
@@ -3426,8 +3557,13 @@ export default function OwnerCashflow(props) {
                                         }}
                                       />
                                     </TableCell>{" "}
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "REPAIRS"
@@ -3436,6 +3572,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "REPAIRS"
@@ -3445,12 +3586,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {revenueSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "REPAIRS"
                                         )
                                         .amount_due.toFixed(2) -
                                         revenueSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "REPAIRS"
@@ -3460,7 +3611,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs
                                       <img
                                         src={SortLeft}
@@ -3496,7 +3647,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyRepairsRevenue}
                                     >
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3598,11 +3749,17 @@ export default function OwnerCashflow(props) {
                                   </TableCell>
                                 </TableRow>
                                 {/* Management */}
-                                {expenseSummary.find(
-                                  (revS) => revS.purchase_type === "MANAGEMENT"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) =>
+                                      revS.purchase_type === "MANAGEMENT"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                                       <img
                                         src={SortLeft}
@@ -3627,6 +3784,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MANAGEMENT"
@@ -3635,6 +3797,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MANAGEMENT"
@@ -3644,12 +3811,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MANAGEMENT"
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type ===
@@ -3660,7 +3837,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                                       <img
                                         src={SortLeft}
@@ -3694,7 +3871,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyManagement}>
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3715,12 +3892,17 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* Management Rent*/}
-                                {expenseSummary.find(
-                                  (revS) =>
-                                    revS.purchase_type === "MANAGEMENT RENT"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) =>
+                                      revS.purchase_type === "MANAGEMENT RENT"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Rent{" "}
                                       <img
@@ -3746,6 +3928,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -3755,6 +3942,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -3765,6 +3957,11 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -3772,6 +3969,11 @@ export default function OwnerCashflow(props) {
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type ===
@@ -3782,7 +3984,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Rent{" "}
                                       <img
@@ -3820,7 +4022,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementRent}
                                     >
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3841,13 +4043,18 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* Management extra charges*/}
-                                {expenseSummary.find(
-                                  (revS) =>
-                                    revS.purchase_type ===
-                                    "MANAGEMENT EXTRA CHARGES"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) =>
+                                      revS.purchase_type ===
+                                      "MANAGEMENT EXTRA CHARGES"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Extra Charges{" "}
                                       <img
@@ -3874,6 +4081,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -3883,6 +4095,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -3893,6 +4110,11 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -3900,6 +4122,11 @@ export default function OwnerCashflow(props) {
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type ===
@@ -3910,7 +4137,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Extra Charges{" "}
                                       <img
@@ -3949,7 +4176,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementExtra}
                                     >
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3970,12 +4197,18 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* Management */}
-                                {expenseSummary.find(
-                                  (revS) =>
-                                    revS.purchase_type === "MANAGEMENT LATE FEE"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) =>
+                                      revS.purchase_type ===
+                                      "MANAGEMENT LATE FEE"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Late Fee{" "}
                                       <img
@@ -4001,6 +4234,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -4010,6 +4248,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -4020,6 +4263,11 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type ===
@@ -4027,6 +4275,11 @@ export default function OwnerCashflow(props) {
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type ===
@@ -4037,7 +4290,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Late fee{" "}
                                       <img
@@ -4075,7 +4328,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementLate}
                                     >
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4096,11 +4349,17 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* Maintenance */}
-                                {expenseSummary.find(
-                                  (revS) => revS.purchase_type === "MAINTENANCE"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) =>
+                                      revS.purchase_type === "MAINTENANCE"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -4125,6 +4384,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MAINTENANCE"
@@ -4133,6 +4397,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MAINTENANCE"
@@ -4142,12 +4411,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MAINTENANCE"
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type ===
@@ -4158,7 +4437,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -4194,7 +4473,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenance}
                                     >
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4215,11 +4494,16 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* repairs */}
-                                {expenseSummary.find(
-                                  (revS) => revS.purchase_type === "REPAIRS"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "REPAIRS"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                                       <img
                                         src={SortLeft}
@@ -4244,6 +4528,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "REPAIRS"
@@ -4252,6 +4541,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "REPAIRS"
@@ -4261,12 +4555,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "REPAIRS"
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "REPAIRS"
@@ -4276,7 +4580,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                                       <img
                                         src={SortLeft}
@@ -4312,7 +4616,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenance}
                                     >
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4333,11 +4637,16 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* Mortgage */}
-                                {expenseSummary.find(
-                                  (revS) => revS.purchase_type === "MORTGAGE"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "MORTGAGE"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                                       <img
                                         src={SortLeft}
@@ -4362,6 +4671,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MORTGAGE"
@@ -4370,6 +4684,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MORTGAGE"
@@ -4379,12 +4698,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "MORTGAGE"
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "MORTGAGE"
@@ -4394,7 +4723,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                                       <img
                                         src={SortLeft}
@@ -4428,7 +4757,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyMortgage}>
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4449,11 +4778,16 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* Taxes */}
-                                {expenseSummary.find(
-                                  (revS) => revS.purchase_type === "TAXES"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "TAXES"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                                       <img
                                         src={SortLeft}
@@ -4478,6 +4812,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "TAXES"
@@ -4486,6 +4825,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "TAXES"
@@ -4495,12 +4839,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "TAXES"
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "TAXES"
@@ -4510,7 +4864,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                                       <img
                                         src={SortLeft}
@@ -4544,7 +4898,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyTaxes}>
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4565,11 +4919,16 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* Insurance */}
-                                {expenseSummary.find(
-                                  (revS) => revS.purchase_type === "INSURANCE"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "INSURANCE"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                                       <img
                                         src={SortLeft}
@@ -4594,6 +4953,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "INSURANCE"
@@ -4602,6 +4966,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "INSURANCE"
@@ -4611,12 +4980,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "INSURANCE"
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "INSURANCE"
@@ -4626,7 +5005,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                                       <img
                                         src={SortLeft}
@@ -4660,7 +5039,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyInsurance}>
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4681,11 +5060,16 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 {/* UtilityExpense */}
-                                {expenseSummary.find(
-                                  (revS) => revS.purchase_type === "UTILITY"
-                                ) ? (
+                                {expenseSummary
+                                  .filter(
+                                    (rev) =>
+                                      rev.property_uid === property.property_uid
+                                  )
+                                  .find(
+                                    (revS) => revS.purchase_type === "UTILITY"
+                                  ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utility
                                       <img
                                         src={SortLeft}
@@ -4710,6 +5094,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "UTILITY"
@@ -4718,6 +5107,11 @@ export default function OwnerCashflow(props) {
                                     </TableCell>{" "}
                                     <TableCell align="right">
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "UTILITY"
@@ -4727,12 +5121,22 @@ export default function OwnerCashflow(props) {
                                     <TableCell align="right">
                                       {" "}
                                       {expenseSummary
+                                        .filter(
+                                          (rev) =>
+                                            rev.property_uid ===
+                                            property.property_uid
+                                        )
                                         .find(
                                           (revS) =>
                                             revS.purchase_type === "UTILITY"
                                         )
                                         .amount_due.toFixed(2) -
                                         expenseSummary
+                                          .filter(
+                                            (rev) =>
+                                              rev.property_uid ===
+                                              property.property_uid
+                                          )
                                           .find(
                                             (revS) =>
                                               revS.purchase_type === "UTILITY"
@@ -4742,7 +5146,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="300px">
+                                    <TableCell width="500px" maxWidth="500px">
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utility
                                       <img
                                         src={SortLeft}
@@ -4778,7 +5182,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyUtilityExpense}
                                     >
-                                      <TableCell width="300px">
+                                      <TableCell width="500px" maxWidth="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
