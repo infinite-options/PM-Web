@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as ReactBootStrap from "react-bootstrap";
 import { Switch } from "@material-ui/core";
 import AppContext from "../../AppContext";
-import SortDown from "../../icons/Sort-down.svg";
+import AddIcon from "../../icons/AddIcon.svg";
 import SortLeft from "../../icons/Sort-left.svg";
 import { get } from "../../utils/api";
 import {
@@ -28,7 +28,8 @@ export default function OwnerCashflow(props) {
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
-  const { ownerData, byProperty, propertyView } = props;
+  const { ownerData, byProperty, propertyView, addExpense, setAddExpense } =
+    props;
 
   const [isLoading, setIsLoading] = useState(true);
   // monthly toggles
@@ -529,7 +530,23 @@ export default function OwnerCashflow(props) {
                   {propertyView ? "Property" : "Portfolio"} Cashflow Summary
                 </h3>
               </Col>
-              <Col></Col>
+              <Col>
+                <img
+                  src={AddIcon}
+                  alt="Add Icon"
+                  onClick={() =>
+                    propertyView
+                      ? setAddExpense(true)
+                      : setAddExpense("ADDEXPENSE")
+                  }
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    float: "right",
+                    marginRight: "3rem",
+                  }}
+                />
+              </Col>
             </Row>
 
             <Row className="m-3">
@@ -925,8 +942,7 @@ export default function OwnerCashflow(props) {
                       )}
                       {/* extra charges  map indivial */}
                       {revenue.map((rev, i) => {
-                        return rev.purchase_type === "EXTRA CHARGES" &&
-                          rev.description !== "Deposit" ? (
+                        return rev.purchase_type === "EXTRA CHARGES" ? (
                           <TableRow hidden={!toggleMonthlyExtra}>
                             <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
@@ -950,7 +966,7 @@ export default function OwnerCashflow(props) {
                       })}
                       {/* Deposit */}
                       {revenueSummary.find(
-                        (revS) => revS.purchase_type === "Deposit"
+                        (revS) => revS.purchase_type === "DEPOSIT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
                           <TableCell width="500px">
@@ -976,22 +992,22 @@ export default function OwnerCashflow(props) {
                           </TableCell>{" "}
                           <TableCell align="right">
                             {revenueSummary
-                              .find((revS) => revS.purchase_type === "Deposit")
+                              .find((revS) => revS.purchase_type === "DEPOSIT")
                               .amount_paid.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {revenueSummary
-                              .find((revS) => revS.purchase_type === "Deposit")
+                              .find((revS) => revS.purchase_type === "DEPOSIT")
                               .amount_due.toFixed(2)}
                           </TableCell>{" "}
                           <TableCell align="right">
                             {" "}
                             {revenueSummary
-                              .find((revS) => revS.purchase_type === "Deposit")
+                              .find((revS) => revS.purchase_type === "DEPOSIT")
                               .amount_due.toFixed(2) -
                               revenueSummary
                                 .find(
-                                  (revS) => revS.purchase_type === "Deposit"
+                                  (revS) => revS.purchase_type === "DEPOSIT"
                                 )
                                 .amount_paid.toFixed(2)}
                           </TableCell>
@@ -1026,8 +1042,7 @@ export default function OwnerCashflow(props) {
                       )}
                       {/* Deposit charges  map indivial */}
                       {revenue.map((rev, i) => {
-                        return rev.purchase_type === "EXTRA CHARGES" &&
-                          rev.description === "Deposit" ? (
+                        return rev.purchase_type === "DEPOSIT" ? (
                           <TableRow hidden={!toggleMonthlyDeposit}>
                             <TableCell width="500px">
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;{" "}
@@ -3177,7 +3192,6 @@ export default function OwnerCashflow(props) {
                                 {revenue.map((rev, i) => {
                                   return rev.purchase_type ===
                                     "EXTRA CHARGES" &&
-                                    rev.description !== "Deposit" &&
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyExtra}>
@@ -3208,7 +3222,7 @@ export default function OwnerCashflow(props) {
                                       rev.property_uid === property.property_uid
                                   )
                                   .find(
-                                    (revS) => revS.purchase_type === "Deposit"
+                                    (revS) => revS.purchase_type === "DEPOSIT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
                                     <TableCell width="500px" maxWidth="500px">
@@ -3243,7 +3257,7 @@ export default function OwnerCashflow(props) {
                                         )
                                         .find(
                                           (revS) =>
-                                            revS.purchase_type === "Deposit"
+                                            revS.purchase_type === "DEPOSIT"
                                         )
                                         .amount_paid.toFixed(2)}
                                     </TableCell>{" "}
@@ -3256,7 +3270,7 @@ export default function OwnerCashflow(props) {
                                         )
                                         .find(
                                           (revS) =>
-                                            revS.purchase_type === "Deposit"
+                                            revS.purchase_type === "DEPOSIT"
                                         )
                                         .amount_due.toFixed(2)}
                                     </TableCell>{" "}
@@ -3270,7 +3284,7 @@ export default function OwnerCashflow(props) {
                                         )
                                         .find(
                                           (revS) =>
-                                            revS.purchase_type === "Deposit"
+                                            revS.purchase_type === "DEPOSIT"
                                         )
                                         .amount_due.toFixed(2) -
                                         revenueSummary
@@ -3281,7 +3295,7 @@ export default function OwnerCashflow(props) {
                                           )
                                           .find(
                                             (revS) =>
-                                              revS.purchase_type === "Deposit"
+                                              revS.purchase_type === "DEPOSIT"
                                           )
                                           .amount_paid.toFixed(2)}
                                     </TableCell>
@@ -3318,9 +3332,7 @@ export default function OwnerCashflow(props) {
                                 )}
                                 {/* Deposit charges  map indivial */}
                                 {revenue.map((rev, i) => {
-                                  return rev.purchase_type ===
-                                    "EXTRA CHARGES" &&
-                                    rev.description === "Deposit" &&
+                                  return rev.purchase_type === "DEPOSIT" &&
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyDeposit}>
