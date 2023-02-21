@@ -119,7 +119,7 @@ function SideBar() {
             >
               Profile
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to="/manager-cashflow"
               className="sidebarButtons"
               style={({ isActive }) =>
@@ -127,7 +127,7 @@ function SideBar() {
               }
             >
               Cashflow
-            </NavLink>
+            </NavLink> */}
           </div>
         </nav>
       </Row>
