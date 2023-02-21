@@ -43,6 +43,7 @@ import RepairImg from "../../icons/RepairImg.svg";
 import { green, red } from "../../utils/styles";
 import { get, put } from "../../utils/api";
 import "react-multi-carousel/lib/styles.css";
+import ManagerCashflow from "./ManagerCashflow";
 
 const useStyles = makeStyles({
   customTable: {
@@ -903,8 +904,14 @@ function ManagerPropertyView(props) {
                     opacity: 1,
                   }}
                 >
-                  {" "}
-                  <Row className="m-3">
+                  <ManagerCashflow
+                    managerData={[property]}
+                    byProperty={false}
+                    propertyView={true}
+                    addExpense={showCreateExpense}
+                    setAddExpense={setShowCreateExpense}
+                  />
+                  {/* <Row className="m-3">
                     <Col>
                       <h3>Property Cashflow Summary</h3>
                     </Col>
@@ -925,8 +932,8 @@ function ManagerPropertyView(props) {
                     ) : (
                       <Col></Col>
                     )}
-                  </Row>
-                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                  </Row> */}
+                  {/* <Row className="m-3" style={{ overflow: "scroll" }}>
                     <div>
                       <Table
                         responsive="md"
@@ -1464,7 +1471,6 @@ function ManagerPropertyView(props) {
 
                                 return revenue.purchase_type === "LATE FEE" ? (
                                   <TableRow hidden={!monthlyLateFee}>
-                                    {/* {console.log("in rent", revenue)} */}
                                     <TableCell>
                                       &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                       {revenue.unit}
@@ -4833,7 +4839,7 @@ function ManagerPropertyView(props) {
                         </TableBody>
                       </Table>
                     </div>
-                  </Row>{" "}
+                  </Row>{" "} */}
                 </div>
                 <div
                   className="mx-3 my-3 p-2"

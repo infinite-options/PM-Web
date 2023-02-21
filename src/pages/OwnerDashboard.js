@@ -27,7 +27,7 @@ import AddIcon from "../icons/AddIcon.svg";
 import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
 import { get } from "../utils/api";
-import { green, red, blue, xSmall, gray } from "../utils/styles";
+import { blue, xSmall } from "../utils/styles";
 import OwnerCashflow from "../components/ownerComponents/OwnerCashflow";
 
 const useStyles = makeStyles({
@@ -43,7 +43,6 @@ export default function OwnerDashboard2() {
   const classes = useStyles();
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [ownerData, setOwnerData] = useState([]);
-  const [cashflowData, setCashflowData] = useState({});
   const [editAppliances, setEditAppliances] = useState(false);
   const [stage, setStage] = useState("LIST");
   const [isLoading, setIsLoading] = useState(true);

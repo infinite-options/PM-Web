@@ -35,6 +35,7 @@ export default function UpcomingManagerPayments(props) {
   const [orderIncoming, setOrderIncoming] = useState("asc");
   const [orderIncomingBy, setOrderIncomingBy] = useState("next_payment");
   const [purchaseUIDs, setPurchaseUIDs] = useState([]); //figure out which payment is being payed for
+  const [purchases, setPurchases] = useState([]); //figure out which payment is being payed for
   const rents = props.data; //array of objects
   const { deleted, setDeleted } = props;
   const managerID = props.managerID;
@@ -43,13 +44,15 @@ export default function UpcomingManagerPayments(props) {
     // <PaymentComponent data = {rents}/>
   };
 
-  function handleCheck(event, amt, pid) {
+  function handleCheck(event, pur, amt, pid) {
     //pid is the purchase uid
     let tempPurchaseUID = purchaseUIDs;
+    let tempPurchase = purchases;
     if (event.target.checked) {
       setTotalSum((prevState) => amt + prevState);
       // setPurchaseUIDs(prev=>.)
       tempPurchaseUID.push(pid);
+      tempPurchase.push(pur);
     } else {
       setTotalSum((prevState) => prevState - amt);
       for (let uid in purchaseUIDs) {
@@ -57,8 +60,14 @@ export default function UpcomingManagerPayments(props) {
           purchaseUIDs.splice(uid, 1);
         }
       }
+      for (let uid in purchases) {
+        if (purchases[uid] === pur) {
+          purchases.splice(uid, 1);
+        }
+      }
     }
     setPurchaseUIDs(tempPurchaseUID);
+    setPurchases(tempPurchase);
   }
   function navigateToPaymentPage() {
     if (props.paymentSelection[1].isActive === true) {
@@ -76,6 +85,7 @@ export default function UpcomingManagerPayments(props) {
           amount: totalSum,
           selectedProperty: props.selectedProperty,
           purchaseUIDs: purchaseUIDs,
+          purchases: purchases,
         },
       });
     }
@@ -442,6 +452,7 @@ export default function UpcomingManagerPayments(props) {
                                   onClick={(event) =>
                                     handleCheck(
                                       event,
+                                      row,
                                       row.amount_due,
                                       row.purchase_uid
                                     )

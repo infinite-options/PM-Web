@@ -28,6 +28,7 @@ import PropertyIcon from "../icons/PropertyIcon.svg";
 import RepairImg from "../icons/RepairImg.svg";
 import { get } from "../utils/api";
 import { green, red, blue, xSmall } from "../utils/styles";
+import ManagerCashflow from "../components/managerComponents/ManagerCashflow";
 
 const useStyles = makeStyles({
   customTable: {
@@ -834,7 +835,14 @@ export default function ManagerDashboard() {
                 opacity: 1,
               }}
             >
-              <Row className="m-3">
+              <ManagerCashflow
+                managerData={managerData}
+                byProperty={true}
+                propertyView={false}
+                addExpense={stage}
+                setAddExpense={setStage}
+              />
+              {/* <Row className="m-3">
                 <Col>
                   <h3>Portfolio Cashflow Summary</h3>
                 </Col>
@@ -850,10 +858,9 @@ export default function ManagerDashboard() {
                       marginRight: "3rem",
                     }}
                   />
-                  {/* <h3 style={{ float: "right", marginRight: "3rem" }}>+</h3> */}
                 </Col>
-              </Row>
-              <Row className="m-3" style={{ overflow: "scroll" }}>
+              </Row> */}
+              {/* <Row className="m-3" style={{ overflow: "scroll" }}>
                 <div>
                   <Table
                     responsive="md"
@@ -1081,7 +1088,7 @@ export default function ManagerDashboard() {
 
                           return revenue.purchase_type === "RENT" ? (
                             <TableRow hidden={!monthlyRent}>
-                              {/* {console.log("in rent", revenue)} */}
+                         
                               <TableCell>
                                 &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                 {revenue.unit}
@@ -1360,7 +1367,7 @@ export default function ManagerDashboard() {
 
                           return revenue.purchase_type === "LATE FEE" ? (
                             <TableRow hidden={!monthlyLateFee}>
-                              {/* {console.log("in rent", revenue)} */}
+                    
                               <TableCell>
                                 &nbsp;&nbsp;&nbsp; {revenue.address}{" "}
                                 {revenue.unit}
@@ -4519,7 +4526,7 @@ export default function ManagerDashboard() {
                     </TableBody>
                   </Table>
                 </div>
-              </Row>{" "}
+              </Row> */}
             </div>
             <div
               className="mx-3 my-3 p-2"

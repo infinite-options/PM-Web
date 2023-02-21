@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
-import { makeStyles } from "@material-ui/core/styles";
-import * as ReactBootStrap from "react-bootstrap";
-import { Switch } from "@material-ui/core";
-import AppContext from "../../AppContext";
-import AddIcon from "../../icons/AddIcon.svg";
-import SortLeft from "../../icons/Sort-left.svg";
-import { get } from "../../utils/api";
 import {
   Table,
   TableBody,
@@ -15,6 +8,14 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
+import { Switch } from "@material-ui/core";
+import AppContext from "../../AppContext";
+import AddIcon from "../../icons/AddIcon.svg";
+import SortLeft from "../../icons/Sort-left.svg";
+import { get } from "../../utils/api";
+
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -85,22 +86,7 @@ export default function OwnerCashflow(props) {
     })
   );
   const [propertyID, setPropertyID] = useState([]);
-  const [width, setWindowWidth] = useState(0);
 
-  useEffect(() => {
-    updateDimensions();
-
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
-  const updateDimensions = () => {
-    const width = window.innerWidth;
-    setWindowWidth(width);
-  };
-  const responsive = {
-    showSidebar: width > 1023,
-  };
-  console.log(ownerData);
   const fetchCashflow = async () => {
     if (access_token === null || user.role.indexOf("OWNER") === -1) {
       navigate("/");
@@ -467,10 +453,6 @@ export default function OwnerCashflow(props) {
     setIsLoading(false);
   };
 
-  console.log(revenue);
-  console.log(expense);
-  console.log(revenueSummary);
-  console.log(expenseSummary);
   useEffect(() => {
     fetchCashflow();
   }, [year, month, filter]);
