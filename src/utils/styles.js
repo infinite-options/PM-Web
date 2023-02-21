@@ -13,8 +13,12 @@ const small = {
   fontSize: "small",
 };
 const mediumBold = {
-  fontWeight: "600",
-  font: "normal normal normal 20px Bahnschrift-Regular",
+  fontWeight: "700",
+  fontSize: "18px",
+};
+const semiMediumBold = {
+  fontWeight: "700",
+  fontSize: "16px",
 };
 const bold = {
   fontWeight: "bold",
@@ -134,7 +138,7 @@ const smallGray = {
 
 const headings = {
   fontWeight: "600",
-  font: "normal normal normal 24px Bahnschrift-Regular",
+  fontSize: "20px",
   letterSpacing: "0px",
   color: "#000000",
   marginBottom: "0.5rem",
@@ -383,6 +387,7 @@ export {
   hidden,
   none,
   mediumBold,
+  semiMediumBold,
   bold,
   bolder,
   greenPill,

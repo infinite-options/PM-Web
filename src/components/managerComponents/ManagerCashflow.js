@@ -15,6 +15,7 @@ import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
 import SortLeft from "../../icons/Sort-left.svg";
 import { get } from "../../utils/api";
+import { headings, mediumBold, semiMediumBold, bold } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -375,7 +376,7 @@ export default function ManagerCashflow(props) {
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell width="500px">
+                        <TableCell width="500px" style={headings}>
                           {month} {year}
                           <img
                             src={SortLeft}
@@ -458,7 +459,7 @@ export default function ManagerCashflow(props) {
                       </TableRow>
                       {/* revenue */}
                       <TableRow hidden={!toggleMonthlyCashFlow}>
-                        <TableCell width="500px">
+                        <TableCell width="500px" style={mediumBold}>
                           &nbsp;&nbsp;Revenue
                           <img
                             src={SortLeft}
@@ -518,7 +519,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "RENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                             <img
                               src={SortLeft}
@@ -561,7 +562,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                             <img
                               src={SortLeft}
@@ -616,7 +617,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "EXTRA CHARGES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -668,7 +669,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -723,7 +724,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "DEPOSIT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Deposit{" "}
                             <img
                               src={SortLeft}
@@ -768,7 +769,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Deposit{" "}
                             <img
                               src={SortLeft}
@@ -823,7 +824,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "MANAGEMENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                             <img
                               src={SortLeft}
@@ -876,7 +877,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                             <img
                               src={SortLeft}
@@ -932,7 +933,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "UTILITY"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                             <img
                               src={SortLeft}
@@ -977,7 +978,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                             <img
                               src={SortLeft}
@@ -1032,7 +1033,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "LATE FEE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1077,7 +1078,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1132,7 +1133,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "MAINTENANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -1155,7 +1156,7 @@ export default function ManagerCashflow(props) {
                               }}
                             />
                           </TableCell>{" "}
-                          <TableCell width="500px">
+                          <TableCell>
                             {revenueSummary
                               .find(
                                 (revS) => revS.purchase_type === "MAINTENANCE"
@@ -1185,7 +1186,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance
                             <img
                               src={SortLeft}
@@ -1242,7 +1243,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "REPAIRS"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs
                             <img
                               src={SortLeft}
@@ -1265,7 +1266,7 @@ export default function ManagerCashflow(props) {
                               }}
                             />
                           </TableCell>{" "}
-                          <TableCell width="500px">
+                          <TableCell>
                             {revenueSummary
                               .find((revS) => revS.purchase_type === "REPAIRS")
                               .amount_paid.toFixed(2)}
@@ -1289,7 +1290,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs
                             <img
                               src={SortLeft}
@@ -1343,7 +1344,7 @@ export default function ManagerCashflow(props) {
                       })}
                       {/* monthly cashflow */}
                       <TableRow hidden={!toggleMonthlyCashFlow}>
-                        <TableCell width="500px">
+                        <TableCell width="500px" style={mediumBold}>
                           &nbsp;&nbsp;Expense
                           <img
                             src={SortLeft}
@@ -1405,7 +1406,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "OWNER PAYMENT RENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Rent{" "}
                             <img
                               src={SortLeft}
@@ -1462,7 +1463,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Rent{" "}
                             <img
                               src={SortLeft}
@@ -1519,7 +1520,7 @@ export default function ManagerCashflow(props) {
                           revS.purchase_type === "OWNER PAYMENT EXTRA CHARGES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -1580,7 +1581,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -1638,7 +1639,7 @@ export default function ManagerCashflow(props) {
                           revS.purchase_type === "OWNER PAYMENT LATE FEE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1699,7 +1700,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Owner Payment Late fee{" "}
                             <img
                               src={SortLeft}
@@ -1756,7 +1757,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "MAINTENANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -1809,7 +1810,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -1866,7 +1867,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "REPAIRS"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                             <img
                               src={SortLeft}
@@ -1911,7 +1912,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                             <img
                               src={SortLeft}
@@ -1966,7 +1967,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "MORTGAGE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                             <img
                               src={SortLeft}
@@ -2013,7 +2014,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                             <img
                               src={SortLeft}
@@ -2070,7 +2071,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "TAXES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                             <img
                               src={SortLeft}
@@ -2113,7 +2114,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                             <img
                               src={SortLeft}
@@ -2168,7 +2169,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "INSURANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                             <img
                               src={SortLeft}
@@ -2221,7 +2222,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                             <img
                               src={SortLeft}
@@ -2278,7 +2279,7 @@ export default function ManagerCashflow(props) {
                         (revS) => revS.purchase_type === "UTILITY"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Utility
                             <img
                               src={SortLeft}
@@ -2325,7 +2326,7 @@ export default function ManagerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Utility
                             <img
                               src={SortLeft}
@@ -2395,7 +2396,7 @@ export default function ManagerCashflow(props) {
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell width="500px">
+                        <TableCell width="500px" style={headings}>
                           {month} {year}
                           <img
                             src={SortLeft}
@@ -2481,7 +2482,7 @@ export default function ManagerCashflow(props) {
                           <>
                             {" "}
                             <TableRow hidden={!toggleMonthlyCashFlow}>
-                              <TableCell width="500px">
+                              <TableCell width="500px" style={mediumBold}>
                                 &nbsp;&nbsp;{property.address} {property.unit},{" "}
                                 {property.city}, {property.state} {property.zip}
                                 <img
@@ -2599,7 +2600,10 @@ export default function ManagerCashflow(props) {
                               <>
                                 {" "}
                                 <TableRow>
-                                  <TableCell>
+                                  <TableCell
+                                    width="500px"
+                                    style={semiMediumBold}
+                                  >
                                     &nbsp;&nbsp;&nbsp;&nbsp;Revenue
                                     <img
                                       src={SortLeft}
@@ -2695,7 +2699,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "RENT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                                       <img
                                         src={SortLeft}
@@ -2772,7 +2776,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                                       <img
                                         src={SortLeft}
@@ -2806,7 +2810,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyRent}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -2837,7 +2841,7 @@ export default function ManagerCashflow(props) {
                                       revS.purchase_type === "EXTRA CHARGES"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extra
                                       Charges{" "}
                                       <img
@@ -2919,7 +2923,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extra
                                       Charges{" "}
                                       <img
@@ -2955,7 +2959,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyExtra}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                                         {rev.description}
@@ -2985,7 +2989,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "DEPOSIT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deposit
                                       <img
                                         src={SortLeft}
@@ -3062,7 +3066,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deposit
                                       <img
                                         src={SortLeft}
@@ -3096,7 +3100,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyDeposit}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                                         {rev.description}
@@ -3126,7 +3130,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "UTILITY"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                                       <img
                                         src={SortLeft}
@@ -3203,7 +3207,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                                       <img
                                         src={SortLeft}
@@ -3237,7 +3241,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyUtility}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                                         {rev.description}
@@ -3267,7 +3271,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "LATE FEE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Late
                                       Fee{" "}
                                       <img
@@ -3345,7 +3349,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Late
                                       Fee{" "}
                                       <img
@@ -3380,7 +3384,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyLateFee}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3410,7 +3414,7 @@ export default function ManagerCashflow(props) {
                                       revS.purchase_type === "MANAGEMENT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                                       <img
                                         src={SortLeft}
@@ -3488,7 +3492,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                                       <img
                                         src={SortLeft}
@@ -3522,7 +3526,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyManagement}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3553,7 +3557,7 @@ export default function ManagerCashflow(props) {
                                       revS.purchase_type === "MAINTENANCE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -3577,7 +3581,7 @@ export default function ManagerCashflow(props) {
                                         }}
                                       />
                                     </TableCell>{" "}
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell>
                                       {revenueSummary
                                         .filter(
                                           (rev) =>
@@ -3632,7 +3636,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance
                                       <img
                                         src={SortLeft}
@@ -3669,7 +3673,7 @@ export default function ManagerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenanceRevenue}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3699,7 +3703,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "REPAIRS"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs
                                       <img
                                         src={SortLeft}
@@ -3722,7 +3726,7 @@ export default function ManagerCashflow(props) {
                                         }}
                                       />
                                     </TableCell>{" "}
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell>
                                       {revenueSummary
                                         .filter(
                                           (rev) =>
@@ -3776,7 +3780,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs
                                       <img
                                         src={SortLeft}
@@ -3812,7 +3816,7 @@ export default function ManagerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyRepairsRevenue}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3833,7 +3837,10 @@ export default function ManagerCashflow(props) {
                                   );
                                 })}
                                 <TableRow>
-                                  <TableCell>
+                                  <TableCell
+                                    width="500px"
+                                    style={semiMediumBold}
+                                  >
                                     &nbsp;&nbsp;&nbsp;&nbsp;Expense
                                     <img
                                       src={SortLeft}
@@ -3928,7 +3935,7 @@ export default function ManagerCashflow(props) {
                                       "OWNER PAYMENT RENT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owner
                                       Payment Rent{" "}
                                       <img
@@ -4011,7 +4018,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owner
                                       Payment Rent{" "}
                                       <img
@@ -4050,7 +4057,7 @@ export default function ManagerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyOwnerPaymentRent}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4082,7 +4089,7 @@ export default function ManagerCashflow(props) {
                                       "OWNER PAYMENT EXTRA CHARGES"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owner
                                       Payment Extra Charges{" "}
                                       <img
@@ -4165,7 +4172,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owner
                                       Payment Extra Charges{" "}
                                       <img
@@ -4204,7 +4211,7 @@ export default function ManagerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyOwnerPaymentExtra}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4236,7 +4243,7 @@ export default function ManagerCashflow(props) {
                                       "OWNER PAYMENT LATE FEE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owner
                                       Payment Late Fee{" "}
                                       <img
@@ -4319,7 +4326,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owner
                                       Payment Late fee{" "}
                                       <img
@@ -4358,7 +4365,7 @@ export default function ManagerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyOwnerPaymentLate}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4389,7 +4396,7 @@ export default function ManagerCashflow(props) {
                                       revS.purchase_type === "MAINTENANCE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -4467,7 +4474,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -4503,7 +4510,7 @@ export default function ManagerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenance}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4533,7 +4540,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "REPAIRS"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                                       <img
                                         src={SortLeft}
@@ -4610,7 +4617,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                                       <img
                                         src={SortLeft}
@@ -4646,7 +4653,7 @@ export default function ManagerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenance}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4676,7 +4683,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "MORTGAGE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                                       <img
                                         src={SortLeft}
@@ -4753,7 +4760,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                                       <img
                                         src={SortLeft}
@@ -4787,7 +4794,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyMortgage}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4817,7 +4824,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "TAXES"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                                       <img
                                         src={SortLeft}
@@ -4894,7 +4901,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                                       <img
                                         src={SortLeft}
@@ -4928,7 +4935,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyTaxes}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4958,7 +4965,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "INSURANCE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                                       <img
                                         src={SortLeft}
@@ -5035,7 +5042,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                                       <img
                                         src={SortLeft}
@@ -5069,7 +5076,7 @@ export default function ManagerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyInsurance}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -5099,7 +5106,7 @@ export default function ManagerCashflow(props) {
                                     (revS) => revS.purchase_type === "UTILITY"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utility
                                       <img
                                         src={SortLeft}
@@ -5176,7 +5183,7 @@ export default function ManagerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utility
                                       <img
                                         src={SortLeft}
@@ -5212,7 +5219,7 @@ export default function ManagerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyUtilityExpense}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}

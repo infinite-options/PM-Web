@@ -15,7 +15,7 @@ import AppContext from "../../AppContext";
 import AddIcon from "../../icons/AddIcon.svg";
 import SortLeft from "../../icons/Sort-left.svg";
 import { get } from "../../utils/api";
-
+import { bold, headings, mediumBold, semiMediumBold } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -597,14 +597,17 @@ export default function OwnerCashflow(props) {
                     size="small"
                   >
                     <TableHead>
-                      <TableCell width="500px"></TableCell>
+                      <TableCell
+                        width="500px"
+                        style={semiMediumBold}
+                      ></TableCell>
                       <TableCell align="right">To Date</TableCell>
                       <TableCell align="right">Expected</TableCell>
                       <TableCell align="right">Delta</TableCell>
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell width="500px">
+                        <TableCell width="500px" style={headings}>
                           {month} {year}
                           <img
                             src={SortLeft}
@@ -687,7 +690,7 @@ export default function OwnerCashflow(props) {
                       </TableRow>
                       {/* revenue */}
                       <TableRow hidden={!toggleMonthlyCashFlow}>
-                        <TableCell width="500px">
+                        <TableCell width="500px" style={mediumBold}>
                           &nbsp;&nbsp;Revenue
                           <img
                             src={SortLeft}
@@ -746,7 +749,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "RENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                             <img
                               src={SortLeft}
@@ -789,7 +792,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                             <img
                               src={SortLeft}
@@ -844,7 +847,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "EXTRA CHARGES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -896,7 +899,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -951,7 +954,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "DEPOSIT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Deposit{" "}
                             <img
                               src={SortLeft}
@@ -996,7 +999,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Deposit{" "}
                             <img
                               src={SortLeft}
@@ -1051,7 +1054,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "UTILITY"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                             <img
                               src={SortLeft}
@@ -1096,7 +1099,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                             <img
                               src={SortLeft}
@@ -1151,7 +1154,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "LATE FEE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1196,7 +1199,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1251,7 +1254,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MAINTENANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -1274,7 +1277,7 @@ export default function OwnerCashflow(props) {
                               }}
                             />
                           </TableCell>{" "}
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             {revenueSummary
                               .find(
                                 (revS) => revS.purchase_type === "MAINTENANCE"
@@ -1304,7 +1307,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance
                             <img
                               src={SortLeft}
@@ -1361,7 +1364,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "REPAIRS"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs
                             <img
                               src={SortLeft}
@@ -1384,7 +1387,7 @@ export default function OwnerCashflow(props) {
                               }}
                             />
                           </TableCell>{" "}
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             {revenueSummary
                               .find((revS) => revS.purchase_type === "REPAIRS")
                               .amount_paid.toFixed(2)}
@@ -1408,7 +1411,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyRevenue}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs
                             <img
                               src={SortLeft}
@@ -1462,7 +1465,7 @@ export default function OwnerCashflow(props) {
                       })}
                       {/* monthly cashflow */}
                       <TableRow hidden={!toggleMonthlyCashFlow}>
-                        <TableCell width="500px">
+                        <TableCell width="500px" style={mediumBold}>
                           &nbsp;&nbsp;Expense
                           <img
                             src={SortLeft}
@@ -1524,7 +1527,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MANAGEMENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                             <img
                               src={SortLeft}
@@ -1577,7 +1580,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                             <img
                               src={SortLeft}
@@ -1609,7 +1612,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MANAGEMENT" ? (
                           <TableRow hidden={!toggleMonthlyManagement}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1633,7 +1636,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MANAGEMENT RENT"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Rent{" "}
                             <img
                               src={SortLeft}
@@ -1690,7 +1693,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Rent{" "}
                             <img
                               src={SortLeft}
@@ -1722,7 +1725,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MANAGEMENT RENT" ? (
                           <TableRow hidden={!toggleMonthlyManagementRent}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1747,7 +1750,7 @@ export default function OwnerCashflow(props) {
                           revS.purchase_type === "MANAGEMENT EXTRA CHARGES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -1808,7 +1811,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Extra Charges{" "}
                             <img
                               src={SortLeft}
@@ -1841,7 +1844,7 @@ export default function OwnerCashflow(props) {
                         return rev.purchase_type ===
                           "MANAGEMENT EXTRA CHARGES" ? (
                           <TableRow hidden={!toggleMonthlyManagementExtra}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1865,7 +1868,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MANAGEMENT LATE FEE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Late Fee{" "}
                             <img
                               src={SortLeft}
@@ -1922,7 +1925,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Management Late fee{" "}
                             <img
                               src={SortLeft}
@@ -1954,7 +1957,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MANAGEMENT LATE FEE" ? (
                           <TableRow hidden={!toggleMonthlyManagementLate}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -1978,7 +1981,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MAINTENANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -2031,7 +2034,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                             <img
                               src={SortLeft}
@@ -2063,7 +2066,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MAINTENANCE" ? (
                           <TableRow hidden={!toggleMonthlyMaintenance}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2088,7 +2091,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "REPAIRS"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                             <img
                               src={SortLeft}
@@ -2133,7 +2136,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                             <img
                               src={SortLeft}
@@ -2163,7 +2166,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "REPAIRS" ? (
                           <TableRow hidden={!toggleMonthlyMaintenance}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2188,7 +2191,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "MORTGAGE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                             <img
                               src={SortLeft}
@@ -2235,7 +2238,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                             <img
                               src={SortLeft}
@@ -2267,7 +2270,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "MORTGAGE" ? (
                           <TableRow hidden={!toggleMonthlyMortgage}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2292,7 +2295,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "TAXES"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                             <img
                               src={SortLeft}
@@ -2335,7 +2338,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                             <img
                               src={SortLeft}
@@ -2365,7 +2368,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "TAXES" ? (
                           <TableRow hidden={!toggleMonthlyTaxes}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2390,7 +2393,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "INSURANCE"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                             <img
                               src={SortLeft}
@@ -2443,7 +2446,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                             <img
                               src={SortLeft}
@@ -2475,7 +2478,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "INSURANCE" ? (
                           <TableRow hidden={!toggleMonthlyInsurance}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2500,7 +2503,7 @@ export default function OwnerCashflow(props) {
                         (revS) => revS.purchase_type === "UTILITY"
                       ) ? (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Utility
                             <img
                               src={SortLeft}
@@ -2547,7 +2550,7 @@ export default function OwnerCashflow(props) {
                         </TableRow>
                       ) : (
                         <TableRow hidden={!toggleMonthlyExpense}>
-                          <TableCell width="500px">
+                          <TableCell width="500px" style={semiMediumBold}>
                             &nbsp;&nbsp;&nbsp;&nbsp;Utility
                             <img
                               src={SortLeft}
@@ -2579,7 +2582,7 @@ export default function OwnerCashflow(props) {
                       {expense.map((rev, i) => {
                         return rev.purchase_type === "UTILITY" ? (
                           <TableRow hidden={!toggleMonthlyUtilityExpense}>
-                            <TableCell width="500px">
+                            <TableCell width="500px" style={semiMediumBold}>
                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                               {rev.address} {rev.unit}, {rev.city}, {rev.state}{" "}
                               {rev.zip}
@@ -2610,14 +2613,17 @@ export default function OwnerCashflow(props) {
                     size="small"
                   >
                     <TableHead>
-                      <TableCell width="500px"></TableCell>
+                      <TableCell
+                        width="500px"
+                        style={semiMediumBold}
+                      ></TableCell>
                       <TableCell align="right">To Date</TableCell>
                       <TableCell align="right">Expected</TableCell>
                       <TableCell align="right">Delta</TableCell>
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell width="500px">
+                        <TableCell width="500px" style={headings}>
                           {month} {year}
                           <img
                             src={SortLeft}
@@ -2703,7 +2709,7 @@ export default function OwnerCashflow(props) {
                           <>
                             {" "}
                             <TableRow hidden={!toggleMonthlyCashFlow}>
-                              <TableCell width="500px">
+                              <TableCell width="500px" style={mediumBold}>
                                 &nbsp;&nbsp;{property.address} {property.unit},{" "}
                                 {property.city}, {property.state} {property.zip}
                                 <img
@@ -2821,7 +2827,10 @@ export default function OwnerCashflow(props) {
                               <>
                                 {" "}
                                 <TableRow>
-                                  <TableCell>
+                                  <TableCell
+                                    width="500px"
+                                    style={semiMediumBold}
+                                  >
                                     &nbsp;&nbsp;&nbsp;&nbsp;Revenue
                                     <img
                                       src={SortLeft}
@@ -2917,7 +2926,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "RENT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                                       <img
                                         src={SortLeft}
@@ -2994,8 +3003,8 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
-                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
+                                    <TableCell width="500px" style={bold}>
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rent{" "}
                                       <img
                                         src={SortLeft}
                                         alt="Expand closed"
@@ -3028,7 +3037,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyRent}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3059,7 +3068,7 @@ export default function OwnerCashflow(props) {
                                       revS.purchase_type === "EXTRA CHARGES"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extra
                                       Charges{" "}
                                       <img
@@ -3141,7 +3150,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extra
                                       Charges{" "}
                                       <img
@@ -3177,7 +3186,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyExtra}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                                         {rev.description}
@@ -3207,7 +3216,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "DEPOSIT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deposit
                                       <img
                                         src={SortLeft}
@@ -3284,7 +3293,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deposit
                                       <img
                                         src={SortLeft}
@@ -3318,7 +3327,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyDeposit}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                                         {rev.description}
@@ -3348,7 +3357,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "UTILITY"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                                       <img
                                         src={SortLeft}
@@ -3425,7 +3434,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilities{" "}
                                       <img
                                         src={SortLeft}
@@ -3459,7 +3468,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyUtility}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;{" "}
                                         {rev.description}
@@ -3489,7 +3498,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "LATE FEE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Late
                                       Fee{" "}
                                       <img
@@ -3567,7 +3576,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Late
                                       Fee{" "}
                                       <img
@@ -3602,7 +3611,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyLateFee}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3633,7 +3642,7 @@ export default function OwnerCashflow(props) {
                                       revS.purchase_type === "MAINTENANCE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -3657,7 +3666,7 @@ export default function OwnerCashflow(props) {
                                         }}
                                       />
                                     </TableCell>{" "}
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       {revenueSummary
                                         .filter(
                                           (rev) =>
@@ -3712,7 +3721,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance
                                       <img
                                         src={SortLeft}
@@ -3749,7 +3758,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenanceRevenue}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3779,7 +3788,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "REPAIRS"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs
                                       <img
                                         src={SortLeft}
@@ -3802,7 +3811,7 @@ export default function OwnerCashflow(props) {
                                         }}
                                       />
                                     </TableCell>{" "}
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell>
                                       {revenueSummary
                                         .filter(
                                           (rev) =>
@@ -3856,7 +3865,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyRevenue}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs
                                       <img
                                         src={SortLeft}
@@ -3892,7 +3901,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyRepairsRevenue}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -3913,7 +3922,10 @@ export default function OwnerCashflow(props) {
                                   );
                                 })}
                                 <TableRow>
-                                  <TableCell>
+                                  <TableCell
+                                    width="500px"
+                                    style={semiMediumBold}
+                                  >
                                     &nbsp;&nbsp;&nbsp;&nbsp;Expense
                                     <img
                                       src={SortLeft}
@@ -4004,7 +4016,7 @@ export default function OwnerCashflow(props) {
                                       revS.purchase_type === "MANAGEMENT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                                       <img
                                         src={SortLeft}
@@ -4082,7 +4094,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management{" "}
                                       <img
                                         src={SortLeft}
@@ -4116,7 +4128,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyManagement}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4147,7 +4159,7 @@ export default function OwnerCashflow(props) {
                                       revS.purchase_type === "MANAGEMENT RENT"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Rent{" "}
                                       <img
@@ -4229,7 +4241,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Rent{" "}
                                       <img
@@ -4267,7 +4279,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementRent}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4299,7 +4311,7 @@ export default function OwnerCashflow(props) {
                                       "MANAGEMENT EXTRA CHARGES"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Extra Charges{" "}
                                       <img
@@ -4382,7 +4394,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Extra Charges{" "}
                                       <img
@@ -4421,7 +4433,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementExtra}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4453,7 +4465,7 @@ export default function OwnerCashflow(props) {
                                       "MANAGEMENT LATE FEE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Late Fee{" "}
                                       <img
@@ -4535,7 +4547,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Management
                                       Late fee{" "}
                                       <img
@@ -4573,7 +4585,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyManagementLate}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4604,7 +4616,7 @@ export default function OwnerCashflow(props) {
                                       revS.purchase_type === "MAINTENANCE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -4682,7 +4694,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maintenance{" "}
                                       <img
                                         src={SortLeft}
@@ -4718,7 +4730,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenance}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4748,7 +4760,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "REPAIRS"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                                       <img
                                         src={SortLeft}
@@ -4825,7 +4837,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Repairs{" "}
                                       <img
                                         src={SortLeft}
@@ -4861,7 +4873,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyMaintenance}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -4891,7 +4903,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "MORTGAGE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                                       <img
                                         src={SortLeft}
@@ -4968,7 +4980,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mortgage{" "}
                                       <img
                                         src={SortLeft}
@@ -5002,7 +5014,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyMortgage}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -5032,7 +5044,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "TAXES"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                                       <img
                                         src={SortLeft}
@@ -5109,7 +5121,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Taxes{" "}
                                       <img
                                         src={SortLeft}
@@ -5143,7 +5155,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyTaxes}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -5173,7 +5185,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "INSURANCE"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                                       <img
                                         src={SortLeft}
@@ -5250,7 +5262,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Insurance{" "}
                                       <img
                                         src={SortLeft}
@@ -5284,7 +5296,7 @@ export default function OwnerCashflow(props) {
                                     rev.property_uid ===
                                       property.property_uid ? (
                                     <TableRow hidden={!toggleMonthlyInsurance}>
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
@@ -5314,7 +5326,7 @@ export default function OwnerCashflow(props) {
                                     (revS) => revS.purchase_type === "UTILITY"
                                   ) ? (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utility
                                       <img
                                         src={SortLeft}
@@ -5391,7 +5403,7 @@ export default function OwnerCashflow(props) {
                                   </TableRow>
                                 ) : (
                                   <TableRow hidden={!toggleMonthlyExpense}>
-                                    <TableCell width="500px" maxWidth="500px">
+                                    <TableCell width="500px" style={bold}>
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utility
                                       <img
                                         src={SortLeft}
@@ -5427,7 +5439,7 @@ export default function OwnerCashflow(props) {
                                     <TableRow
                                       hidden={!toggleMonthlyUtilityExpense}
                                     >
-                                      <TableCell width="500px" maxWidth="500px">
+                                      <TableCell width="500px">
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         {rev.description}
