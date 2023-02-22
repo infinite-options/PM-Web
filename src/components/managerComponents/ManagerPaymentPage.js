@@ -48,7 +48,7 @@ function ManagerPaymentPage(props) {
   const navigate = useNavigate();
   const { purchase_uid } = useParams();
   const location = useLocation();
-  const [totalSum, setTotalSum] = useState(location.state.amount.toFixed(2));
+  const [totalSum, setTotalSum] = useState(location.state.amount);
   const selectedProperty = location.state.selectedProperty;
   const purchaseUIDs = location.state.purchaseUIDs;
   const purchases = location.state.purchases;
