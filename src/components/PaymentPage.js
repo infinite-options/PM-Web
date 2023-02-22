@@ -48,7 +48,7 @@ function PaymentPage(props) {
   const navigate = useNavigate();
   const { purchase_uid } = useParams();
   const location = useLocation();
-  const [totalSum, setTotalSum] = useState(location.state.amount);
+  const [totalSum, setTotalSum] = useState(location.state.amount.toFixed(2));
   const selectedProperty = location.state.selectedProperty;
   const purchaseUIDs = location.state.purchaseUIDs;
   const purchases = location.state.purchases;
@@ -199,7 +199,7 @@ function PaymentPage(props) {
                     Payment Received{" "}
                   </Row>
                   <Row style={headings} className="mt-2 mb-2">
-                    Total Payment: ${totalSum.toFixed(2)}
+                    Total Payment: ${totalSum}
                   </Row>
 
                   <Row className="m-3">
@@ -266,7 +266,7 @@ function PaymentPage(props) {
               <div>
                 <Row className="m-3">
                   <Row style={headings} className="mt-2 mb-2">
-                    Total Payment: ${totalSum.toFixed(2)}
+                    Total Payment: ${totalSum}
                   </Row>
                   <Row className="m-3">
                     <Table
