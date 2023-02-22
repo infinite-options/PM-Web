@@ -229,7 +229,7 @@ function PropertyManagerDocs(props) {
         property.management_status === "END EARLY") &&
       activeContract ? (
         <Row className="mx-2">
-          <div>
+          <div style={{ overflow: "scroll" }}>
             <Table
               responsive="md"
               classes={{ root: classes.customTable }}
@@ -303,7 +303,7 @@ function PropertyManagerDocs(props) {
             </Table>
           </div>
 
-          <div className="my-4">
+          <div className="my-4" style={{ overflow: "scroll" }}>
             <h5>Property Manager Fee Details</h5>
 
             <Table classes={{ root: classes.customTable }} size="small">
@@ -337,7 +337,7 @@ function PropertyManagerDocs(props) {
           {activeContract.contacts.length === 0 ? (
             ""
           ) : (
-            <div className="my-4">
+            <div className="my-4" style={{ overflow: "scroll" }}>
               <h5>Contact Details</h5>
 
               <Table classes={{ root: classes.customTable }} size="small">
@@ -377,7 +377,7 @@ function PropertyManagerDocs(props) {
           {activeContract.docs.length === 0 ? (
             ""
           ) : (
-            <div className="my-3">
+            <div className="my-3" style={{ overflow: "scroll" }}>
               <h5>Contract Documents</h5>
 
               <Table

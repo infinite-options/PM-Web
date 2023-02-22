@@ -40,7 +40,7 @@ export default function UpcomingManagerPayments(props) {
   const { deleted, setDeleted } = props;
   const managerID = props.managerID;
   const goToPayment = () => {
-    navigate("/tenantDuePayments");
+    navigate("/manager-payments");
     // <PaymentComponent data = {rents}/>
   };
 
@@ -74,7 +74,7 @@ export default function UpcomingManagerPayments(props) {
       // console.log("zelle selected");
       navigate("/zelle", {
         state: {
-          amount: totalSum,
+          amount: totalSum.toFixed(2),
           selectedProperty: props.selectedProperty,
           purchaseUIDs: purchaseUIDs,
         },
@@ -82,7 +82,7 @@ export default function UpcomingManagerPayments(props) {
     } else {
       navigate(`/managerPaymentPage/${purchaseUIDs[0]}`, {
         state: {
-          amount: totalSum,
+          amount: totalSum.toFixed(2),
           selectedProperty: props.selectedProperty,
           purchaseUIDs: purchaseUIDs,
           purchases: purchases,
@@ -476,7 +476,7 @@ export default function UpcomingManagerPayments(props) {
         </Row>
         {props.type === false && (
           <div className="amount-pay">
-            <h4 className="amount">Amount: ${totalSum}</h4>
+            <h4 className="amount">Amount: ${totalSum.toFixed(2)}</h4>
             {totalSum === 0 ? (
               <button className="pay-button2">Pay Now</button>
             ) : (

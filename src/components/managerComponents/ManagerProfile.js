@@ -1,6 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Form } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import AppContext from "../../AppContext";
 import Header from "../Header";
@@ -25,7 +33,16 @@ import {
   formatSSN,
   MaskCharacter,
 } from "../../utils/helper";
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function ManagerProfile(props) {
+  const classes = useStyles();
   const context = useContext(AppContext);
   const { userData, refresh, logout } = context;
   const { access_token, user } = userData;
@@ -421,47 +438,53 @@ function ManagerProfile(props) {
               <Row className="mb-4" style={headings}>
                 <div>Personal Details</div>
               </Row>
-              <h6>Company Name</h6>
-              <p style={gray}>
-                {companyName && companyName !== "NULL"
-                  ? companyName
-                  : "No Company Details Provided"}
-              </p>
-
-              <Row>
-                <Col>
-                  <h6>First Name</h6>
-                  <p style={gray}>
-                    {firstName && firstName !== "NULL"
-                      ? firstName
-                      : "No First Name Provided"}
-                  </p>
-                </Col>
-                <Col>
-                  <h6>Last Name</h6>
-                  <p style={gray}>
-                    {lastName && lastName !== "NULL"
-                      ? lastName
-                      : "No Last Name Provided"}
-                  </p>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <h6>Phone Number</h6>
-                  <p style={gray}>
-                    {phoneNumber && phoneNumber !== "NULL"
-                      ? phoneNumber
-                      : "No Phone Number Provided"}
-                  </p>
-                </Col>
-                <Col>
-                  <h6>Email</h6>
-                  <p style={gray}>
-                    {email && email !== "NULL" ? email : "No Email Provided"}
-                  </p>
-                </Col>
+              <Row className="mx-3">
+                <Table
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> Company Name</TableCell>
+                      <TableCell> First Name</TableCell>
+                      <TableCell> Last Name</TableCell>
+                      <TableCell> Phone Number</TableCell>
+                      <TableCell> Email</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        {companyName && companyName !== "NULL"
+                          ? companyName
+                          : "No Company Details Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {" "}
+                        {firstName && firstName !== "NULL"
+                          ? firstName
+                          : "No First Name Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {" "}
+                        {lastName && lastName !== "NULL"
+                          ? lastName
+                          : "No Last Name Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {phoneNumber && phoneNumber !== "NULL"
+                          ? phoneNumber
+                          : "No Phone Number Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {email && email !== "NULL"
+                          ? email
+                          : "No Email Provided"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
               </Row>
 
               <div className="my-2">
@@ -469,25 +492,36 @@ function ManagerProfile(props) {
                   <div>Identification Details</div>
                 </Row>
 
-                <Row>
-                  <Col>
-                    <h6>SSN</h6>
-                    <p style={gray} onClick={() => setShowSSN(!showSSN)}>
-                      {ssn && ssn !== "NULL"
-                        ? showSSN
-                          ? MaskCharacter(ssn, "*")
-                          : ssn
-                        : "No SSN Provided"}
-                    </p>
-                  </Col>
-                  <Col>
-                    <h6>EIN</h6>
-                    <p style={gray}>
-                      {einNumber && einNumber !== "NULL"
-                        ? einNumber
-                        : "No EIN Provided"}
-                    </p>
-                  </Col>
+                <Row className="mx-3">
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell> SSN</TableCell>
+                        <TableCell> EIN</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell onClick={() => setShowSSN(!showSSN)}>
+                          {" "}
+                          {ssn && ssn !== "NULL"
+                            ? showSSN
+                              ? MaskCharacter(ssn, "*")
+                              : ssn
+                            : "No SSN Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {einNumber && einNumber !== "NULL"
+                            ? einNumber
+                            : "No EIN Provided"}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </Row>
               </div>
             </div>

@@ -117,7 +117,9 @@ function ManagerPaymentPage(props) {
         newPayment = {
           pay_purchase_id: purchase.purchase_uid,
           //Need to make change here
-          amount: parseFloat(purchase.amount_due - purchase.amount_paid),
+          amount: parseFloat(
+            purchase.amount_due.toFixed(2) - purchase.amount_paid.toFixed(2)
+          ),
           payment_notes: message,
           charge_id: confirmationCode,
           payment_type: paymentType,
@@ -153,7 +155,10 @@ function ManagerPaymentPage(props) {
     }
   }, [amount]);
 
-  const cancel = () => setStripePayment(false);
+  const cancel = () => {
+    setStripePayment(false);
+    setBankPayment(false);
+  };
   const submit = () => {
     cancel();
     setPaymentConfirm(true);
@@ -204,7 +209,7 @@ function ManagerPaymentPage(props) {
                     Payment Received{" "}
                   </Row>
                   <Row style={headings} className="mt-2 mb-2">
-                    Total Payment: ${totalSum}
+                    Total Payment: ${totalSum.toFixed(2)}
                   </Row>
                   <Row className="m-3">
                     <Table
@@ -239,7 +244,9 @@ function ManagerPaymentPage(props) {
                               <TableCell>
                                 {purchase.next_payment.substring(0, 10)}
                               </TableCell>
-                              <TableCell>${purchase.amount_due}</TableCell>
+                              <TableCell>
+                                ${purchase.amount_due.toFixed(2)}
+                              </TableCell>
                             </TableRow>
                           </TableBody>
                         );
@@ -267,6 +274,9 @@ function ManagerPaymentPage(props) {
             ) : (
               <div>
                 <Row className="m-3">
+                  <Row style={headings} className="mt-2 mb-2">
+                    Total Payment: ${totalSum.toFixed(2)}
+                  </Row>
                   <Row className="m-3">
                     <Table
                       responsive="md"
@@ -300,27 +310,20 @@ function ManagerPaymentPage(props) {
                               <TableCell>
                                 {purchase.next_payment.substring(0, 10)}
                               </TableCell>
-                              <TableCell>${purchase.amount_due}</TableCell>
+                              <TableCell>
+                                ${purchase.amount_due.toFixed(2)}
+                              </TableCell>
                             </TableRow>
                           </TableBody>
                         );
                       })}
                     </Table>
                   </Row>
-
-                  {stripePayment || bankPayment ? (
-                    <Row style={headings} className="mt-2 mb-2">
-                      Total Payment: ${totalSum}
-                    </Row>
-                  ) : null}
                 </Row>
                 <Row
                   className="mx-3 mt-5"
                   hidden={stripePayment || bankPayment}
                 >
-                  <Row style={headings} className="mt-2 mb-2">
-                    Total Payment: ${totalSum}
-                  </Row>
                   <Form.Group>
                     <Form.Label>Message</Form.Label>
                     <Form.Control
@@ -495,7 +498,7 @@ function ManagerPaymentPage(props) {
                       <Col>
                         <Button
                           variant="outline-primary"
-                          onClick={props.cancel}
+                          onClick={cancel}
                           style={pillButton}
                         >
                           Cancel

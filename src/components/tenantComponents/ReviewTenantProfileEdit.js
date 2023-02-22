@@ -678,7 +678,7 @@ function ReviewTenantProfileEdit(props) {
                         <TableCell>Name</TableCell>
                         <TableCell>Type</TableCell>
                         <TableCell>Breed</TableCell>
-                        <TableCell>Weight</TableCell>
+                        <TableCell>Weight (lbs)</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

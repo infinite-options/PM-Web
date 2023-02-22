@@ -264,7 +264,7 @@ function OwnerContacts() {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        <div className="w-100 mb-5">
           <Header title="Contacts" />
           {!isLoading ? (
             <div>

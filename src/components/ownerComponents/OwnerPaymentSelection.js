@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Checkbox from "../Checkbox";
 import { squareForm, hidden, gray, headings } from "../../utils/styles";
-
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function OwnerPaymentSelection(props) {
+  const classes = useStyles();
   const { editProfile, paymentState, setPaymentState } = props;
   const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
     paymentState;
@@ -150,61 +166,62 @@ function OwnerPaymentSelection(props) {
             <div>Payment Details</div>
           </Row>
 
-          <Row>
-            <Col>
-              <h6>PayPal</h6>
-              <p style={gray}>
-                {paymentState.paypal !== ""
-                  ? paymentState.paypal
-                  : "No PayPal Provided"}
-              </p>
-            </Col>
-            <Col>
-              <h6>Apple Pay</h6>
-              <p style={gray}>
-                {paymentState.applePay !== ""
-                  ? paymentState.applePay
-                  : "No Apple Pay Provided"}
-              </p>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              <h6>Zelle</h6>
-              <p style={gray}>
-                {paymentState.applePay !== ""
-                  ? paymentState.applePay
-                  : "No Zelle Provided"}
-              </p>
-            </Col>
-            <Col>
-              <h6>Venmo</h6>
-              <p style={gray}>
-                {paymentState.venmo !== ""
-                  ? paymentState.venmo
-                  : "No Venmo Provided"}
-              </p>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              <h6>Checking Acc. Number</h6>
-              <p style={gray}>
-                {paymentState.accountNumber !== ""
-                  ? paymentState.accountNumber
-                  : "No Acct No. Provided"}
-              </p>
-            </Col>
-            <Col>
-              <h6>Checking Acc. Routing Number</h6>
-              <p style={gray}>
-                {paymentState.routingNumber !== ""
-                  ? paymentState.routingNumber
-                  : "No Routing No. Provided"}
-              </p>
-            </Col>
+          <Row className="mx-3">
+            <Table
+              classes={{ root: classes.customTable }}
+              size="small"
+              responsive="md"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>PayPal</TableCell>
+                  <TableCell>Apple Pay</TableCell>
+                  <TableCell>Zelle</TableCell>
+                  <TableCell>Venmo</TableCell>
+                  <TableCell>Checking Acc. Number</TableCell>
+                  <TableCell>Checking Acc. Routing Number</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    {paymentState.paypal !== ""
+                      ? paymentState.paypal
+                      : "No PayPal Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {paymentState.applePay !== ""
+                      ? paymentState.applePay
+                      : "No Apple Pay Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {paymentState.applePay !== ""
+                      ? paymentState.applePay
+                      : "No Zelle Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {paymentState.venmo !== ""
+                      ? paymentState.venmo
+                      : "No Venmo Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {paymentState.accountNumber !== ""
+                      ? paymentState.accountNumber
+                      : "No Acct No. Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {paymentState.routingNumber !== ""
+                      ? paymentState.routingNumber
+                      : "No Routing No. Provided"}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </Row>
         </div>
       )}

@@ -116,7 +116,9 @@ function OwnerPaymentPage(props) {
         newPayment = {
           pay_purchase_id: purchase.purchase_uid,
           //Need to make change here
-          amount: parseFloat(purchase.amount_due - purchase.amount_paid),
+          amount: parseFloat(
+            purchase.amount_due.toFixed(2) - purchase.amount_paid.toFixed(2)
+          ),
           payment_notes: message,
           charge_id: confirmationCode,
           payment_type: paymentType,
@@ -151,12 +153,15 @@ function OwnerPaymentPage(props) {
     }
   }, [amount]);
 
-  const cancel = () => setStripePayment(false);
+  const cancel = () => {
+    setStripePayment(false);
+    setBankPayment(false);
+  };
   const submit = () => {
     cancel();
     setPaymentConfirm(true);
   };
-
+  console.log(totalSum);
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">
@@ -187,329 +192,333 @@ function OwnerPaymentPage(props) {
               borderRadius: "10px",
               opacity: 1,
             }}
-          ></Row>
-          {paymentConfirm ? (
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Row style={headings} className="mt-2 mb-2">
-                  Payment Received{" "}
-                </Row>
-                <Row style={headings} className="mt-2 mb-2">
-                  Total Payment: ${totalSum}
-                </Row>
-                <Row className="m-3">
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Address</TableCell>
-                        <TableCell>Description</TableCell>
-                        <TableCell>Type</TableCell>{" "}
-                        <TableCell>Date Due</TableCell>{" "}
-                        <TableCell>Amount</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    {purchases.map((purchase) => {
-                      return (
-                        <TableBody>
-                          <TableRow>
-                            <TableCell>
-                              {" "}
-                              {purchase.address}
-                              {purchase.unit !== ""
-                                ? " " + purchase.unit
-                                : ""}, {purchase.city}, {purchase.state}{" "}
-                              {purchase.zip}
-                            </TableCell>
-                            <TableCell>{purchase.description}</TableCell>
-                            <TableCell>{purchase.purchase_type}</TableCell>
-                            <TableCell>
-                              {purchase.next_payment.substring(0, 10)}
-                            </TableCell>
-                            <TableCell>${purchase.amount_due}</TableCell>
-                          </TableRow>
-                        </TableBody>
-                      );
-                    })}
-                  </Table>
-                </Row>
-                <Row className="mt-2 mb-2">
-                  <img
-                    alt=""
-                    src={ConfirmCheck}
-                    style={{ width: "58px", height: "58px" }}
-                  />
-                </Row>
-                <Button
-                  className="mt-8 mb-2"
-                  variant="outline-primary"
-                  onClick={() => {
-                    navigate("/owner-payments"); //should change the navigation to tenantDashboard
+          >
+            {paymentConfirm ? (
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  style={bluePillButton}
                 >
-                  Go to payment history
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <Row className="m-3">
-                <Row className="m-3">
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Address</TableCell>
-                        <TableCell>Description</TableCell>
-                        <TableCell>Type</TableCell>{" "}
-                        <TableCell>Date Due</TableCell>{" "}
-                        <TableCell>Amount</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    {purchases.map((purchase) => {
-                      return (
-                        <TableBody>
-                          <TableRow>
-                            <TableCell>
-                              {" "}
-                              {purchase.address}
-                              {purchase.unit !== ""
-                                ? " " + purchase.unit
-                                : ""}, {purchase.city}, {purchase.state}{" "}
-                              {purchase.zip}
-                            </TableCell>
-                            <TableCell>{purchase.description}</TableCell>
-                            <TableCell>{purchase.purchase_type}</TableCell>
-                            <TableCell>
-                              {purchase.next_payment.substring(0, 10)}
-                            </TableCell>
-                            <TableCell>${purchase.amount_due}</TableCell>
-                          </TableRow>
-                        </TableBody>
-                      );
-                    })}
-                  </Table>
-                </Row>
-
-                {stripePayment || bankPayment ? (
+                  <Row style={headings} className="mt-2 mb-2">
+                    Payment Received{" "}
+                  </Row>
                   <Row style={headings} className="mt-2 mb-2">
                     Total Payment: ${totalSum}
                   </Row>
-                ) : null}
-              </Row>
-              <Row className="mx-3 mt-5" hidden={stripePayment || bankPayment}>
-                <Row style={headings} className="mt-2 mb-2">
-                  Total Payment: ${totalSum}
-                </Row>
-                <Form.Group>
-                  <Form.Label>Message</Form.Label>
-                  <Form.Control
-                    placeholder="PMTEST"
-                    style={squareForm}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                  />
-                </Form.Group>
-                <Row className="text-center mt-5">
-                  <Col>
-                    <a
-                      href="https://www.bankofamerica.com"
-                      target="_blank"
-                      rel="noreferrer"
+                  <Row className="m-3">
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
                     >
-                      <img
-                        onClick={() => {
-                          setBankPayment(true);
-                          setPaymentType("BANK OF AMERICA");
-                        }}
-                        src={BofA_Logo}
-                        style={{
-                          width: "160px",
-                          height: "100px",
-                          objectFit: "contain",
-                        }}
-                      />
-                    </a>
-                  </Col>
-                  <Col>
-                    <a
-                      href="https://www.chase.com"
-                      target="_blank"
-                      rel="noreferrer"
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Address</TableCell>
+                          <TableCell>Description</TableCell>
+                          <TableCell>Type</TableCell>{" "}
+                          <TableCell>Date Due</TableCell>{" "}
+                          <TableCell>Amount</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      {purchases.map((purchase) => {
+                        return (
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>
+                                {" "}
+                                {purchase.address}
+                                {purchase.unit !== ""
+                                  ? " " + purchase.unit
+                                  : ""}
+                                , {purchase.city}, {purchase.state}{" "}
+                                {purchase.zip}
+                              </TableCell>
+                              <TableCell>{purchase.description}</TableCell>
+                              <TableCell>{purchase.purchase_type}</TableCell>
+                              <TableCell>
+                                {purchase.next_payment.substring(0, 10)}
+                              </TableCell>
+                              <TableCell>
+                                ${purchase.amount_due.toFixed(2)}
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        );
+                      })}
+                    </Table>
+                  </Row>
+                  <Row className="mt-2 mb-2">
+                    <img
+                      alt=""
+                      src={ConfirmCheck}
+                      style={{ width: "58px", height: "58px" }}
+                    />
+                  </Row>
+                  <Button
+                    className="mt-8 mb-2"
+                    variant="outline-primary"
+                    onClick={() => {
+                      navigate("/owner-payments"); //should change the navigation to tenantDashboard
+                    }}
+                    style={bluePillButton}
+                  >
+                    Go to payment history
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <Row className="m-3">
+                  <Row style={headings} className="mt-2 mb-2">
+                    Total Payment: ${totalSum}
+                  </Row>
+                  <Row className="m-3">
+                    <Table
+                      responsive="md"
+                      classes={{ root: classes.customTable }}
+                      size="small"
                     >
-                      <img
-                        onClick={() => {
-                          setBankPayment(true);
-                          setPaymentType("CHASE");
-                        }}
-                        src={Chase_Logo}
-                        style={{
-                          width: "160px",
-                          height: "100px",
-                          objectFit: "contain",
-                        }}
-                      />
-                    </a>
-                  </Col>
-                  <Col>
-                    <a
-                      href="https://www.citi.com/login?deepdrop=true&checkAuth=Y"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <img
-                        onClick={() => {
-                          setBankPayment(true);
-                          setPaymentType("CITI");
-                        }}
-                        src={Citi_Logo}
-                        style={{
-                          width: "160px",
-                          height: "100px",
-                          objectFit: "contain",
-                        }}
-                      />
-                    </a>
-                  </Col>
-                  <Col>
-                    <a
-                      href="https://www.wellsfargo.com"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <img
-                        onClick={() => {
-                          setBankPayment(true);
-                          setPaymentType("WELLS FARGO");
-                        }}
-                        src={WF_Logo}
-                        style={{
-                          width: "160px",
-                          height: "100px",
-                          objectFit: "contain",
-                        }}
-                      />
-                    </a>
-                  </Col>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Address</TableCell>
+                          <TableCell>Description</TableCell>
+                          <TableCell>Type</TableCell>{" "}
+                          <TableCell>Date Due</TableCell>{" "}
+                          <TableCell>Amount</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      {purchases.map((purchase) => {
+                        return (
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>
+                                {" "}
+                                {purchase.address}
+                                {purchase.unit !== ""
+                                  ? " " + purchase.unit
+                                  : ""}
+                                , {purchase.city}, {purchase.state}{" "}
+                                {purchase.zip}
+                              </TableCell>
+                              <TableCell>{purchase.description}</TableCell>
+                              <TableCell>{purchase.purchase_type}</TableCell>
+                              <TableCell>
+                                {purchase.next_payment.substring(0, 10)}
+                              </TableCell>
+                              <TableCell>
+                                ${purchase.amount_due.toFixed(2)}
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        );
+                      })}
+                    </Table>
+                  </Row>
                 </Row>
                 <Row
-                  className="text-center mt-5"
-                  style={{
-                    display: "text",
-                    flexDirection: "column",
-                    textAlign: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Col>
-                    <Button
-                      className="mt-2 mb-2"
-                      variant="outline-primary"
-                      onClick={() => {
-                        //navigate("/tenant");
-                        toggleKeys();
-                        setStripePayment(true);
-                      }}
-                      style={bluePillButton}
-                    >
-                      Pay with Stripe
-                    </Button>
-                    <PayPal
-                      pay_purchase_id={purchase_uid}
-                      amount={totalSum}
-                      payment_notes={message}
-                      payment_type={"PAYPAL"}
-                    />
-                  </Col>
-                </Row>
-              </Row>
-
-              <div hidden={!stripePayment}>
-                <Elements stripe={stripePromise}>
-                  <StripePayment
-                    cancel={cancel}
-                    submit={submit}
-                    purchases={allPurchases}
-                    message={message}
-                    amount={amount}
-                  />
-                </Elements>
-              </div>
-              <div hidden={!bankPayment}>
-                <div
-                  style={{
-                    border: "1px solid black",
-                    borderRadius: "10px",
-                    padding: "10px",
-                    margin: "20px",
-                  }}
+                  className="mx-3 mt-5"
+                  hidden={stripePayment || bankPayment}
                 >
                   <Form.Group>
-                    <Form.Label>Please enter confirmation code</Form.Label>
+                    <Form.Label>Message</Form.Label>
                     <Form.Control
-                      placeholder="Confirmation Code"
+                      placeholder="PMTEST"
                       style={squareForm}
-                      value={confirmationCode}
-                      onChange={(e) => setConfirmationCode(e.target.value)}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                     />
                   </Form.Group>
-                </div>
-                <div className="text-center mt-2">
-                  {showSpinner ? (
-                    <div className="w-100 d-flex flex-column justify-content-center align-items-center">
-                      <ReactBootStrap.Spinner
-                        animation="border"
-                        role="status"
-                      />
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                  <Row className="text-center mt-5">
+                    <Col>
+                      <a
+                        href="https://www.bankofamerica.com"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          onClick={() => {
+                            setBankPayment(true);
+                            setPaymentType("BANK OF AMERICA");
+                          }}
+                          src={BofA_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </a>
+                    </Col>
+                    <Col>
+                      <a
+                        href="https://www.chase.com"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          onClick={() => {
+                            setBankPayment(true);
+                            setPaymentType("CHASE");
+                          }}
+                          src={Chase_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </a>
+                    </Col>
+                    <Col>
+                      <a
+                        href="https://www.citi.com/login?deepdrop=true&checkAuth=Y"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          onClick={() => {
+                            setBankPayment(true);
+                            setPaymentType("CITI");
+                          }}
+                          src={Citi_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </a>
+                    </Col>
+                    <Col>
+                      <a
+                        href="https://www.wellsfargo.com"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          onClick={() => {
+                            setBankPayment(true);
+                            setPaymentType("WELLS FARGO");
+                          }}
+                          src={WF_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </a>
+                    </Col>
+                  </Row>
                   <Row
+                    className="text-center mt-5"
                     style={{
                       display: "text",
-                      flexDirection: "row",
+                      flexDirection: "column",
                       textAlign: "center",
+                      justifyContent: "space-between",
                     }}
                   >
                     <Col>
                       <Button
+                        className="mt-2 mb-2"
                         variant="outline-primary"
-                        onClick={props.cancel}
-                        style={pillButton}
-                      >
-                        Cancel
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button
-                        variant="outline-primary"
-                        //onClick={submitForm}
+                        onClick={() => {
+                          //navigate("/tenant");
+                          toggleKeys();
+                          setStripePayment(true);
+                        }}
                         style={bluePillButton}
-                        onClick={submitPayment}
                       >
-                        Pay Now
+                        Pay with Stripe
                       </Button>
+                      <PayPal
+                        pay_purchase_id={purchase_uid}
+                        amount={totalSum}
+                        payment_notes={message}
+                        payment_type={"PAYPAL"}
+                      />
                     </Col>
                   </Row>
+                </Row>
+
+                <div hidden={!stripePayment}>
+                  <Elements stripe={stripePromise}>
+                    <StripePayment
+                      cancel={cancel}
+                      submit={submit}
+                      purchases={allPurchases}
+                      message={message}
+                      amount={amount}
+                    />
+                  </Elements>
+                </div>
+                <div hidden={!bankPayment}>
+                  <div
+                    style={{
+                      border: "1px solid black",
+                      borderRadius: "10px",
+                      padding: "10px",
+                      margin: "20px",
+                    }}
+                  >
+                    <Form.Group>
+                      <Form.Label>Please enter confirmation code</Form.Label>
+                      <Form.Control
+                        placeholder="Confirmation Code"
+                        style={squareForm}
+                        value={confirmationCode}
+                        onChange={(e) => setConfirmationCode(e.target.value)}
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="text-center mt-2">
+                    {showSpinner ? (
+                      <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                        <ReactBootStrap.Spinner
+                          animation="border"
+                          role="status"
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <Row
+                      style={{
+                        display: "text",
+                        flexDirection: "row",
+                        textAlign: "center",
+                      }}
+                    >
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          onClick={cancel}
+                          style={pillButton}
+                        >
+                          Cancel
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          //onClick={submitForm}
+                          style={bluePillButton}
+                          onClick={submitPayment}
+                        >
+                          Pay Now
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </Row>
         </div>
         <div hidden={responsive.showSidebar} className="w-100 mt-3">
           <OwnerFooter />

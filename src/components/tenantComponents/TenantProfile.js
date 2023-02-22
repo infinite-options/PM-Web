@@ -648,7 +648,7 @@ function TenantProfile(props) {
               <TableCell>Name</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>If Dog, What Breed?</TableCell>
-              <TableCell>Weight</TableCell>
+              <TableCell>Weight (lbs)</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -686,7 +686,7 @@ function TenantProfile(props) {
                   />
                 </TableCell>
                 <TableCell>
-                  {/* <label htmlFor="numPets">Weight</label> */}
+                  {/* <label htmlFor="numPets">Weight (lbs)</label> */}
                   <input
                     type="text"
                     className="form-control"
@@ -1674,7 +1674,7 @@ function TenantProfile(props) {
                           <TableCell>Name</TableCell>
                           <TableCell>Type</TableCell>
                           <TableCell>Breed</TableCell>
-                          <TableCell>Weight</TableCell>
+                          <TableCell>Weight (lbs)</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -1760,15 +1760,13 @@ function TenantProfile(props) {
                       <TableBody>
                         {Object.values(references).map((reference) => {
                           return (
-                            <div>
-                              <TableRow>
-                                <TableCell>{reference.name}</TableCell>
-                                <TableCell>{reference.address}</TableCell>
-                                <TableCell>{reference.phone}</TableCell>
-                                <TableCell>{reference.email}</TableCell>
-                                <TableCell>{reference.relationship}</TableCell>
-                              </TableRow>
-                            </div>
+                            <TableRow>
+                              <TableCell>{reference.name}</TableCell>
+                              <TableCell>{reference.address}</TableCell>
+                              <TableCell>{reference.phone}</TableCell>
+                              <TableCell>{reference.email}</TableCell>
+                              <TableCell>{reference.relationship}</TableCell>
+                            </TableRow>
                           );
                         })}
                       </TableBody>

@@ -387,7 +387,7 @@ function ManagerTenantExtendedAgreementView(props) {
               <Col xs={2}></Col>
             )}
           </Row>
-          <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
+          <Row className="m-3 mb-4" style={{ overflow: "scroll" }}>
             <div>
               <Table
                 responsive="md"
@@ -464,7 +464,7 @@ function ManagerTenantExtendedAgreementView(props) {
               </Table>
             </div>
           </Row>
-          <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+          <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
             <h5>Lease Details</h5>
             <div>
               <Table
@@ -502,7 +502,7 @@ function ManagerTenantExtendedAgreementView(props) {
             </div>
           </Row>
 
-          <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+          <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
             <h5>Lease Payments</h5>
             <div>
               <Table

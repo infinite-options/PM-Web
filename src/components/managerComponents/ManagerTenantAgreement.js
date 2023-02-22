@@ -690,7 +690,7 @@ function ManagerTenantAgreement(props) {
       >
         <SideBar />
       </div>
-      <div className="w-100 mb-5 overflow-scroll overflow-hidden">
+      <div className="w-100 mb-5 overflow-hidden">
         <Header
           title="Tenant Agreement"
           leftText="< Back"
@@ -840,7 +840,7 @@ function ManagerTenantAgreement(props) {
                                 <TableCell>Name</TableCell>
                                 <TableCell>Type</TableCell>
                                 <TableCell>Breed</TableCell>
-                                <TableCell>Weight</TableCell>
+                                <TableCell>Weight (lbs)</TableCell>
                               </TableRow>
                             </TableHead>
 
@@ -915,7 +915,7 @@ function ManagerTenantAgreement(props) {
                     <Col>
                       <Form.Group>
                         <Form.Label as="h6" className="my-2">
-                          Referred
+                          References
                         </Form.Label>
                         {application.referred &&
                         JSON.parse(application.referred).length > 0 ? (

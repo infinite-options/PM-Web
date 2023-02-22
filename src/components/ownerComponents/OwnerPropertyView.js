@@ -1114,9 +1114,9 @@ function OwnerPropertyView(props) {
                         />
                       </Col>
                     </Row>
-                    <Row className="m-3" style={{ overflow: "scroll" }}>
+                    <Row className="m-3">
                       {property.maintenanceRequests.length > 0 ? (
-                        <div>
+                        <div style={{ overflow: "scroll" }}>
                           <Table
                             classes={{ root: classes.customTable }}
                             size="small"

@@ -170,7 +170,7 @@ function ManagerTenantApplications(props) {
 
       {applications.length > 0 ? (
         <div>
-          <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
+          <Row className="m-3 mb-4" style={{ overflow: "scroll" }}>
             <Table
               responsive="md"
               classes={{ root: classes.customTable }}
@@ -197,7 +197,7 @@ function ManagerTenantApplications(props) {
                   <TableCell align="center">Children</TableCell>
                   <TableCell align="center">Pets</TableCell>
                   <TableCell align="center">Vehicles</TableCell>
-                  <TableCell align="center">Referred</TableCell>
+                  <TableCell align="center">References</TableCell>
                   <TableCell align="center">Application Date</TableCell>
                   <TableCell align="center">Documents</TableCell>
                 </TableRow>

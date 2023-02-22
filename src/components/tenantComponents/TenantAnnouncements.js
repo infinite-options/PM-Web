@@ -302,7 +302,10 @@ function TenantAnnouncements(props) {
                 </Row>
               </div>
             ) : (
-              ""
+              <Row className="m-3">
+                {" "}
+                <div className="m-3">No announcements</div>
+              </Row>
             )}
             {announcementDetail ? (
               <Row className="m-3 p-2">

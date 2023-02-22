@@ -164,7 +164,7 @@ function TenantDocuments(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        <div className="w-100 mb-5">
           <Header title="Documents" />
 
           <Row style={{ overflow: "scroll" }}>
@@ -452,7 +452,7 @@ function TenantDocuments(props) {
                     opacity: 1,
                   }}
                 >
-                  <Row className="m-3" style={{ overflow: "scroll" }}>
+                  <Row className="m-3">
                     <h5>Tenant Documents</h5>{" "}
                     <DocumentsUploadPut
                       files={files}

@@ -327,7 +327,7 @@ function ReviewPropertyLease(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        <div className="w-100 mb-5 overflow-hidden">
           <Header
             title="Property Lease Details"
             leftText="< Back"
@@ -373,7 +373,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>Referred</TableCell>
+                      <TableCell>References</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -496,7 +496,9 @@ function ReviewPropertyLease(props) {
                                   <TableCell align="center">Children</TableCell>
                                   <TableCell align="center">Pets</TableCell>
                                   <TableCell align="center">Vehicles</TableCell>
-                                  <TableCell align="center">Referred</TableCell>
+                                  <TableCell align="center">
+                                    References
+                                  </TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -701,7 +703,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>Referred</TableCell>
+                      <TableCell>References</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -823,7 +825,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">Referred</TableCell>
+                                <TableCell align="center">References</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -1030,7 +1032,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>Referred</TableCell>
+                      <TableCell>References</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -1153,7 +1155,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">Referred</TableCell>
+                                <TableCell align="center">References</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -1276,7 +1278,7 @@ function ReviewPropertyLease(props) {
                       <TableCell>Children</TableCell>
                       <TableCell>Pets</TableCell>
                       <TableCell>Vehicles</TableCell>
-                      <TableCell>Referred</TableCell>
+                      <TableCell>References</TableCell>
                       <TableCell>Application Date</TableCell>
                       <TableCell>Documents</TableCell>
                     </TableRow>
@@ -1398,7 +1400,7 @@ function ReviewPropertyLease(props) {
                                 <TableCell align="center">Children</TableCell>
                                 <TableCell align="center">Pets</TableCell>
                                 <TableCell align="center">Vehicles</TableCell>
-                                <TableCell align="center">Referred</TableCell>
+                                <TableCell align="center">References</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>

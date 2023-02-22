@@ -347,7 +347,7 @@ function PropertyApplicationView(props) {
                 </Col>
                 <Col></Col>
               </Row>
-              <Row className="m-3" style={{ overflow: "scroll" }}>
+              <Row className="m-3">
                 <Table
                   responsive="md"
                   classes={{ root: classes.customTable }}
