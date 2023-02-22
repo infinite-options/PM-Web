@@ -327,7 +327,7 @@ function ReviewPropertyLease(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        <div className="w-100 mb-5 overflow-hidden">
           <Header
             title="Property Lease Details"
             leftText="< Back"

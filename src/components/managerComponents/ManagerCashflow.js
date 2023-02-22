@@ -351,12 +351,13 @@ export default function ManagerCashflow(props) {
                 </Col>
               ) : (
                 <Col>
-                  By Property:
+                  By Category
                   <Switch
                     checked={filter}
                     onChange={() => setFilter(!filter)}
                     inputProps={{ "aria-label": "controlled" }}
                   />
+                  By Property
                 </Col>
               )}
             </Row>

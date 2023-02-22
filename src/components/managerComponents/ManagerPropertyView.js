@@ -592,7 +592,7 @@ function ManagerPropertyView(props) {
           >
             <SideBar />
           </div>
-          <div className="w-100 mb-5 overflow-scroll overflow-hidden">
+          <div className="w-100 mb-5  overflow-hidden">
             <Header
               title="Property Details"
               leftText={location.state === null ? "" : "< Back"}
@@ -1449,7 +1449,7 @@ function ManagerPropertyView(props) {
                     opacity: 1,
                   }}
                 >
-                  <Row style={{ overflow: "scroll" }}>
+                  <Row>
                     <ManagerTenantApplications
                       property={property}
                       reload={reloadProperty}
@@ -1468,7 +1468,7 @@ function ManagerPropertyView(props) {
                     opacity: 1,
                   }}
                 >
-                  <Row style={{ overflow: "scroll" }}>
+                  <Row>
                     <ManagerTenantAgreementView
                       property={property}
                       closeAgreement={closeAgreement}
@@ -1492,7 +1492,7 @@ function ManagerPropertyView(props) {
                       opacity: 1,
                     }}
                   >
-                    <Row style={{ overflow: "scroll" }}>
+                    <Row>
                       <ManagerTenantExtendedAgreementView
                         property={property}
                         closeAgreement={closeAgreement}
@@ -1517,7 +1517,7 @@ function ManagerPropertyView(props) {
                     opacity: 1,
                   }}
                 >
-                  <Row style={{ overflow: "scroll" }}>
+                  <Row>
                     {" "}
                     <PropertyManagerDocs
                       property={property}

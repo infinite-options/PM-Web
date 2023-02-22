@@ -393,8 +393,8 @@ function ManagerTenantAgreementView(props) {
               <Col xs={2}></Col>
             )}
           </Row>
-          <Row className="m-3 mb-4" style={{ hidden: "overflow" }}>
-            <div>
+          <Row className="m-3 mb-4">
+            <div style={{ overflow: "scroll" }}>
               <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}
@@ -470,9 +470,9 @@ function ManagerTenantAgreementView(props) {
               </Table>
             </div>
           </Row>
-          <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+          <Row className="mb-4 m-3">
             <h5>Lease Details</h5>
-            <div>
+            <div style={{ overflow: "scroll" }}>
               <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}
@@ -507,9 +507,9 @@ function ManagerTenantAgreementView(props) {
               </Table>
             </div>
           </Row>
-          <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+          <Row className="mb-4 m-3">
             <h5>Lease Payments</h5>
-            <div>
+            <div style={{ overflow: "scroll" }}>
               <Table
                 responsive="md"
                 classes={{ root: classes.customTable }}
@@ -568,7 +568,7 @@ function ManagerTenantAgreementView(props) {
           </Row>
           <Row className="mb-4 m-3" hidden={contactState.length === 0}>
             <h5 style={mediumBold}>Contact Details</h5>
-            <div>
+            <div style={{ overflow: "scroll" }}>
               <Table classes={{ root: classes.customTable }} size="small">
                 <TableHead>
                   <TableRow>

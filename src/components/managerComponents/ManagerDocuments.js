@@ -134,7 +134,7 @@ function ManagerDocuments(props) {
         >
           <SideBar />
         </div>
-        <div className="w-100 mb-5 overflow-scroll">
+        <div className="w-100 mb-5">
           <Header title="Documents" />
           <Row>
             {!isLoading ? (

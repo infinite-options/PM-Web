@@ -33,7 +33,7 @@ export default function TenantUpcomingPayments(props) {
   const [purchases, setPurchases] = useState([]); //figure out which payment is being payed for
   const rents = props.data; //array of objects
   const goToPayment = () => {
-    navigate("/tenantDuePayments");
+    navigate("/tenant-payments");
     // <PaymentComponent data = {rents}/>
   };
 
@@ -68,7 +68,7 @@ export default function TenantUpcomingPayments(props) {
       // console.log("zelle selected");
       navigate("/zelle", {
         state: {
-          amount: totalSum,
+          amount: totalSum.toFixed(2),
           selectedProperty: props.selectedProperty,
           purchaseUIDs: purchaseUIDs,
         },
@@ -76,7 +76,7 @@ export default function TenantUpcomingPayments(props) {
     } else {
       navigate(`/paymentPage/${purchaseUIDs[0]}`, {
         state: {
-          amount: totalSum,
+          amount: totalSum.toFixed(2),
           selectedProperty: props.selectedProperty,
           purchaseUIDs: purchaseUIDs,
           purchases: purchases,
@@ -323,7 +323,7 @@ export default function TenantUpcomingPayments(props) {
         </Row>
         {props.type === false && (
           <div className="amount-pay">
-            <h4 className="amount">Amount: ${totalSum}</h4>
+            <h4 className="amount">Amount: ${totalSum.toFixed(2)}</h4>
             {totalSum === 0 ? (
               <button className="pay-button2">Pay Now</button>
             ) : (

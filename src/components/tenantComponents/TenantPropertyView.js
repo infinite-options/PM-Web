@@ -859,7 +859,7 @@ function TenantPropertyView(props) {
                     />
                   </Col>
                 </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Row className="m-3">
                   {property.maintenanceRequests.length > 0 ? (
                     <Table
                       classes={{ root: classes.customTable }}
@@ -1023,7 +1023,7 @@ function TenantPropertyView(props) {
                   </Col>
                   <Col></Col>
                 </Row>
-                <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Row className="m-3">
                   <Table
                     responsive="md"
                     classes={{ root: classes.customTable }}
