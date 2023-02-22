@@ -455,7 +455,7 @@ function TenantProfile(props) {
 
   function addAdults() {
     return (
-      <div>
+      <div className="my-2">
         <Table
           responsive="md"
           classes={{ root: classes.customTable }}
@@ -1218,118 +1218,142 @@ function TenantProfile(props) {
                 opacity: 1,
               }}
             >
-              <Row className="mb-4" style={headings}>
-                <div>Personal Details</div>
-              </Row>
-
-              <Row>
-                <Col>
-                  <h6>First Name</h6>
-                  <p style={gray}>
-                    {firstName && firstName !== "NULL"
-                      ? firstName
-                      : "No First Name Provided"}
-                  </p>
-                </Col>
-                <Col>
-                  <h6>Last Name</h6>
-                  <p style={gray}>
-                    {lastName && lastName !== "NULL"
-                      ? lastName
-                      : "No Last Name Provided"}
-                  </p>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <h6>Phone Number</h6>
-                  <p style={gray}>
-                    {phone && phone !== "NULL"
-                      ? phone
-                      : "No Phone Number Provided"}
-                  </p>
-                </Col>
-                <Col>
-                  <h6>Email</h6>
-                  <p style={gray}>
-                    {email && email !== "NULL" ? email : "No Email Provided"}
-                  </p>
-                </Col>
-              </Row>
-
               <div className="my-2">
-                <Row className="mb-4" style={headings}>
-                  <div>Identification Details</div>
+                <Row className="mb-2" style={headings}>
+                  <div>Personal Details</div>
                 </Row>
-
-                <Row>
-                  <Col>
-                    <h6>SSN</h6>
-                    <p style={gray} onClick={() => setShowSSN(!showSSN)}>
-                      {ssn && ssn !== "NULL"
-                        ? showSSN
-                          ? MaskCharacter(ssn, "*")
-                          : ssn
-                        : "No SSN Provided"}
-                    </p>
-                  </Col>
-                  <Col>
-                    <h6>DL</h6>
-                    <p style={gray}>
-                      {dlNumber && dlNumber !== "NULL"
-                        ? dlNumber
-                        : "No DL Provided"}
-                    </p>
-                  </Col>
-                  <Col>
-                    <h6>DL State</h6>
-                    <p style={gray}>
-                      {selectedDlState && selectedDlState !== "NULL"
-                        ? selectedDlState
-                        : "No DL state Provided"}
-                    </p>
-                  </Col>
+                <Row className="mx-3">
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell> First Name</TableCell>
+                        <TableCell> Last Name</TableCell>
+                        <TableCell> Phone Number</TableCell>
+                        <TableCell> Email</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          {" "}
+                          {firstName && firstName !== "NULL"
+                            ? firstName
+                            : "No First Name Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {lastName && lastName !== "NULL"
+                            ? lastName
+                            : "No Last Name Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {phone && phone !== "NULL"
+                            ? phone
+                            : "No Phone Number Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {email && email !== "NULL"
+                            ? email
+                            : "No Email Provided"}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </Row>
               </div>
+
               <div className="my-2">
-                <Row className="mb-4" style={headings}>
+                <Row className="mb-2" style={headings}>
+                  <div>Identification Details</div>
+                </Row>
+                <Row className="mx-3">
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell> SSN</TableCell>
+                        <TableCell> Driver's Licence Number</TableCell>
+                        <TableCell> Driver's Licence State</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell onClick={() => setShowSSN(!showSSN)}>
+                          {" "}
+                          {ssn && ssn !== "NULL"
+                            ? showSSN
+                              ? MaskCharacter(ssn, "*")
+                              : ssn
+                            : "No SSN Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {dlNumber && dlNumber !== "NULL"
+                            ? dlNumber
+                            : "No DL Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {selectedDlState && selectedDlState !== "NULL"
+                            ? selectedDlState
+                            : "No DL state Provided"}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+
+              <div className="my-2">
+                <Row className="mb-2" style={headings}>
                   <div>Current Job Details</div>
                 </Row>
-
-                <Row>
-                  <Col>
-                    <h6>Job Title</h6>
-                    <p style={gray}>
-                      {jobTitle && jobTitle !== "NULL"
-                        ? jobTitle
-                        : "No Job Title Provided"}
-                    </p>
-                  </Col>
-                  <Col>
-                    <h6>Company</h6>
-                    <p style={gray}>
-                      {company && company !== "NULL"
-                        ? company
-                        : "No Company Provided"}
-                    </p>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <h6>Salary</h6>
-                    <p style={gray}>
-                      {salary && salary !== "NULL" ? salary : "No SSN Provided"}
-                    </p>
-                  </Col>
-                  <Col>
-                    <h6>Frequency</h6>
-                    <p style={gray}>
-                      {frequency && frequency !== "NULL"
-                        ? frequency
-                        : "No SSN Provided"}
-                    </p>
-                  </Col>
+                <Row className="mx-3">
+                  <Table
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                    responsive="md"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell> Current Salary</TableCell>
+                        <TableCell>Salary Frequency</TableCell>
+                        <TableCell> Current Job Title</TableCell>
+                        <TableCell> Current Company Name</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          {salary && salary !== "NULL"
+                            ? salary
+                            : "No Salary Info Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {frequency && frequency !== "NULL"
+                            ? frequency
+                            : "No Salary Info Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {jobTitle && jobTitle !== "NULL"
+                            ? jobTitle
+                            : "No Job Title Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {company && company !== "NULL"
+                            ? company
+                            : "No Company Provided"}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </Row>
               </div>
             </div>
