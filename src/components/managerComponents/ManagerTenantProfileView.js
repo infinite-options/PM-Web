@@ -487,7 +487,7 @@ function ManagerTenantProfileView(props) {
                             <TableCell>Name</TableCell>
                             <TableCell>Type</TableCell>
                             <TableCell>Breed</TableCell>
-                            <TableCell>Weight</TableCell>
+                            <TableCell>Weight (lbs)</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -558,7 +558,7 @@ function ManagerTenantProfileView(props) {
                   {applicant.referred &&
                   JSON.parse(applicant.referred).length > 0 ? (
                     <div className="mx-3 ">
-                      <Row style={subHeading}>Referred</Row>
+                      <Row style={subHeading}>References</Row>
                       <Table
                         responsive="md"
                         classes={{ root: classes.customTable }}
@@ -576,17 +576,13 @@ function ManagerTenantProfileView(props) {
                         <TableBody>
                           {JSON.parse(applicant.referred).map((reference) => {
                             return (
-                              <div>
-                                <TableRow>
-                                  <TableCell>{reference.name}</TableCell>
-                                  <TableCell>{reference.address}</TableCell>
-                                  <TableCell>{reference.phone}</TableCell>
-                                  <TableCell>{reference.email}</TableCell>
-                                  <TableCell>
-                                    {reference.relationship}
-                                  </TableCell>
-                                </TableRow>
-                              </div>
+                              <TableRow>
+                                <TableCell>{reference.name}</TableCell>
+                                <TableCell>{reference.address}</TableCell>
+                                <TableCell>{reference.phone}</TableCell>
+                                <TableCell>{reference.email}</TableCell>
+                                <TableCell>{reference.relationship}</TableCell>
+                              </TableRow>
                             );
                           })}
                         </TableBody>
@@ -594,7 +590,7 @@ function ManagerTenantProfileView(props) {
                     </div>
                   ) : (
                     <div className="mx-3 ">
-                      <Row style={subHeading}>Referred</Row>
+                      <Row style={subHeading}>References</Row>
                       <Row style={gray}>
                         <Col>None</Col>
                       </Row>
@@ -692,7 +688,7 @@ function ManagerTenantProfileView(props) {
                         <TableCell>Children</TableCell>
                         <TableCell>Pets</TableCell>
                         <TableCell>Vehicles</TableCell>
-                        <TableCell>Referred</TableCell>
+                        <TableCell>References</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

@@ -385,7 +385,7 @@ function TenantProfileInfo(props) {
               <TableCell>Name</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>If Dog, What Breed?</TableCell>
-              <TableCell>Weight</TableCell>
+              <TableCell>Weight (lbs)</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -423,7 +423,7 @@ function TenantProfileInfo(props) {
                   />
                 </TableCell>
                 <TableCell>
-                  {/* <label htmlFor="numPets">Weight</label> */}
+                  {/* <label htmlFor="numPets">Weight (lbs)</label> */}
                   <input
                     type="text"
                     className="form-control"

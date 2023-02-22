@@ -671,7 +671,7 @@ function ReviewTenantProfile(props) {
                         <TableCell>Name</TableCell>
                         <TableCell>Type</TableCell>
                         <TableCell>Breed</TableCell>
-                        <TableCell>Weight</TableCell>
+                        <TableCell>Weight (lbs)</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -783,34 +783,32 @@ function ReviewTenantProfile(props) {
                     <TableBody>
                       {Object.values(references).map((reference) => {
                         return (
-                          <div>
-                            <TableRow>
-                              <TableCell xs={1}>
-                                {referencesApplication.includes(reference) ? (
-                                  <img
-                                    src={Radiobutton_filled}
-                                    style={{ width: "15px", height: "15px" }}
-                                    onClick={() =>
-                                      handleReferencesClick(reference)
-                                    }
-                                  />
-                                ) : (
-                                  <img
-                                    src={Radiobutton_unfilled}
-                                    style={{ width: "15px", height: "15px" }}
-                                    onClick={() =>
-                                      handleReferencesClick(reference)
-                                    }
-                                  />
-                                )}
-                              </TableCell>
-                              <TableCell>{reference.name}</TableCell>
-                              <TableCell>{reference.address}</TableCell>
-                              <TableCell>{reference.phone}</TableCell>
-                              <TableCell>{reference.email}</TableCell>
-                              <TableCell>{reference.relationship}</TableCell>
-                            </TableRow>
-                          </div>
+                          <TableRow>
+                            <TableCell xs={1}>
+                              {referencesApplication.includes(reference) ? (
+                                <img
+                                  src={Radiobutton_filled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() =>
+                                    handleReferencesClick(reference)
+                                  }
+                                />
+                              ) : (
+                                <img
+                                  src={Radiobutton_unfilled}
+                                  style={{ width: "15px", height: "15px" }}
+                                  onClick={() =>
+                                    handleReferencesClick(reference)
+                                  }
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell>{reference.name}</TableCell>
+                            <TableCell>{reference.address}</TableCell>
+                            <TableCell>{reference.phone}</TableCell>
+                            <TableCell>{reference.email}</TableCell>
+                            <TableCell>{reference.relationship}</TableCell>
+                          </TableRow>
                         );
                       })}
                     </TableBody>

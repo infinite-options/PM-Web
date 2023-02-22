@@ -1246,7 +1246,7 @@ function TenantPropertyView(props) {
                           <TableCell>Children</TableCell>
                           <TableCell>Pets</TableCell>
                           <TableCell>Vehicles</TableCell>
-                          <TableCell>Referred</TableCell>
+                          <TableCell>References</TableCell>
                           <TableCell>Application Date</TableCell>
                           <TableCell>Documents</TableCell>
                         </TableRow>
