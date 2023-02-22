@@ -61,6 +61,7 @@ function ManagerPaymentPage(props) {
   const [confirmationCode, setConfirmationCode] = useState("");
   const [amount, setAmount] = useState(totalSum);
   const [allPurchases, setAllPurchases] = useState([]);
+  const [purchase, setPurchase] = useState({});
   const [bankPayment, setBankPayment] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
@@ -79,23 +80,17 @@ function ManagerPaymentPage(props) {
   const responsive = {
     showSidebar: width > 1023,
   };
-  // const submitForm = () => {
-  //   const requestTitle = requestTitleRef.current.value;
-  //   const requestDescription = requestDescriptionRef.current.value;
-  //   const tagPriority = tagPriorityRef.current.value;
-  //   props.onConfirm(requestTitle, requestDescription, tagPriority);
-  // };
 
-  // useEffect(async () => {
-  //   let tempAllPurchases = [];
-  //   for (let i in purchaseUIDs) {
-  //     let response1 = await get(`/purchases?purchase_uid=${purchaseUIDs[i]}`);
-  //     tempAllPurchases.push(response1.result[0]);
-  //   }
-  //   let response = await get(`/purchases?purchase_uid=${purchase_uid}`);
-  //   setPurchase(response.result[0]);
-  //   setAllPurchases(tempAllPurchases);
-  // }, []);
+  useEffect(async () => {
+    let tempAllPurchases = [];
+    for (let i in purchaseUIDs) {
+      let response1 = await get(`/purchases?purchase_uid=${purchaseUIDs[i]}`);
+      tempAllPurchases.push(response1.result[0]);
+    }
+    let response = await get(`/purchases?purchase_uid=${purchase_uid}`);
+    setPurchase(response.result[0]);
+    setAllPurchases(tempAllPurchases);
+  }, []);
   const submitPayment = async () => {
     setShowSpinner(true);
 
