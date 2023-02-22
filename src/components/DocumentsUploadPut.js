@@ -80,7 +80,7 @@ function DocumentsUploadPut(props) {
       delete newFiles[i].file;
     }
     tenantProfile.documents = JSON.stringify(newFiles);
-    if (id.charAt(0) === "3") {
+    if (endpoint === "/rentals") {
       tenantProfile.rental_uid = id;
     } else {
       tenantProfile.tenant_id = id;

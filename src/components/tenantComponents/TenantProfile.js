@@ -1819,16 +1819,38 @@ function TenantProfile(props) {
               <Row className="mb-4" style={headings}>
                 <div>Tenant Documents</div>
               </Row>
-              <DocumentsUploadPut
-                files={files}
-                setFiles={setFiles}
-                addDoc={addDoc}
-                setAddDoc={setAddDoc}
-                endpoint="/tenantProfileInfo"
-                editingDoc={editingDoc}
-                setEditingDoc={setEditingDoc}
-                id={user.tenant_id[0].tenant_id}
-              />
+              {files.length > 0 ? (
+                files.map((file, i) => (
+                  <div key={i}>
+                    <div className="d-flex justify-content-between align-items-end">
+                      <div>
+                        <h6 style={subHeading}>{file.name}</h6>
+                        <p style={gray} className="m-0">
+                          {file.description}
+                        </p>
+                      </div>
+                      <div>
+                        <a href={file.link} target="_blank" rel="noreferrer">
+                          <img
+                            src={File}
+                            alt="open document"
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              float: "right",
+                            }}
+                          />
+                        </a>
+                      </div>
+                    </div>
+                    <hr style={{ opacity: 1 }} />
+                  </div>
+                ))
+              ) : (
+                <div className="mx-2" style={gray}>
+                  No documents uploaded
+                </div>
+              )}
             </div>
           )}
           {editProfile ? (

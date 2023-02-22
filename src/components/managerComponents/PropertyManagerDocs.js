@@ -41,6 +41,7 @@ function PropertyManagerDocs(props) {
   // console.log(user);
   let pageURL = window.location.href.split("/");
 
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const {
     addDocument,
@@ -166,6 +167,7 @@ function PropertyManagerDocs(props) {
     }
 
     setContracts(response.result);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -420,7 +422,11 @@ function PropertyManagerDocs(props) {
         </Row>
       ) : (
         <div className="w-100 d-flex flex-column justify-content-center align-items-center h-50">
-          <ReactBootStrap.Spinner animation="border" role="status" />
+          {!isLoading ? (
+            ""
+          ) : (
+            <ReactBootStrap.Spinner animation="border" role="status" />
+          )}
         </div>
       )}
 
