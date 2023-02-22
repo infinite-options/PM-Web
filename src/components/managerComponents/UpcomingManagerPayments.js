@@ -161,6 +161,12 @@ export default function UpcomingManagerPayments(props) {
     },
 
     {
+      id: "linked_bill_id",
+      numeric: true,
+      label: "Split Payment",
+    },
+
+    {
       id: "next_payment",
       numeric: true,
       label: "Date Due",
@@ -286,6 +292,12 @@ export default function UpcomingManagerPayments(props) {
       id: "purchase_type",
       numeric: false,
       label: "Type",
+    },
+
+    {
+      id: "linked_bill_id",
+      numeric: true,
+      label: "Split Payment",
     },
 
     {
@@ -417,6 +429,9 @@ export default function UpcomingManagerPayments(props) {
                           </TableCell>
                           <TableCell align="right">
                             {row.purchase_type}
+                          </TableCell>
+                          <TableCell align="right">
+                            {row.linked_bill_id === null ? "No" : "Yes"}
                           </TableCell>
                           <TableCell
                             align="right"
@@ -560,6 +575,9 @@ export default function UpcomingManagerPayments(props) {
                           {row.description}
                         </TableCell>
                         <TableCell align="right">{row.purchase_type}</TableCell>
+                        <TableCell align="right">
+                          {row.linked_bill_id === null ? "No" : "Yes"}
+                        </TableCell>
                         <TableCell
                           align="right"
                           style={{

@@ -148,6 +148,12 @@ export default function UpcomingOwnerPayments(props) {
     },
 
     {
+      id: "linked_bill_id",
+      numeric: true,
+      label: "Split Payment",
+    },
+
+    {
       id: "next_payment",
       numeric: false,
       label: "Date Due",
@@ -270,6 +276,9 @@ export default function UpcomingOwnerPayments(props) {
                           </TableCell>
                           <TableCell align="right">
                             {row.purchase_type}
+                          </TableCell>
+                          <TableCell align="right">
+                            {row.linked_bill_id === null ? "No" : "Yes"}
                           </TableCell>
                           <TableCell
                             align="right"

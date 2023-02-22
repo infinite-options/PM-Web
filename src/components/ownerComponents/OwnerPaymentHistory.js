@@ -90,10 +90,17 @@ export default function OwnerPaymentHistory(props) {
     },
 
     {
+      id: "linked_bill_id",
+      numeric: true,
+      label: "Split Payment",
+    },
+
+    {
       id: "payment_date",
       numeric: false,
       label: "Date Paid",
     },
+    { id: "payment_type", numeric: false, label: "Payment Type" },
     {
       id: "",
       numeric: false,
@@ -209,9 +216,17 @@ export default function OwnerPaymentHistory(props) {
                       </TableCell>
                       <TableCell align="right">{row.purchase_type}</TableCell>
                       <TableCell align="right">
+                        {row.linked_bill_id === null ? "No" : "Yes"}
+                      </TableCell>
+                      <TableCell align="right">
                         {row.payment_date !== null
                           ? row.payment_date.substring(0, 10)
                           : "Not Available"}
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.payment_type !== null
+                          ? row.payment_type
+                          : "Not Available"}{" "}
                       </TableCell>
                       <TableCell
                         align="right"
