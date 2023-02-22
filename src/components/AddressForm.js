@@ -7,11 +7,28 @@ import {
   DropdownButton,
   Dropdown,
 } from "react-bootstrap";
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { squareForm, red } from "../utils/styles";
 import Checkbox from "../components/Checkbox";
 import { small, underline, gray, headings } from "../utils/styles";
 import ArrowDown from "../icons/ArrowDown.svg";
 import { formatPhoneNumber, formatSSN } from "../utils/helper";
+
+const useStyles = makeStyles({
+  customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+});
 function AddressForm(props) {
   const {
     errorMessage,
@@ -26,6 +43,7 @@ function AddressForm(props) {
     setDiff,
   } = props;
   const [addressState, setAddressState] = props.state;
+  const classes = useStyles();
 
   // const extraDet = !!(addressState && (addressState.pm_name || addressState.pm_number));
   const [useDetailsIfRenting, setUseDetailsIfRenting] = React.useState(false);
@@ -553,78 +571,85 @@ function AddressForm(props) {
         </div>
       ) : (
         <div className="my-2">
-          <Row>
-            <Col>
-              {" "}
-              <h6>Street</h6>
-              <p style={gray}>
-                {street && street !== "NULL"
-                  ? street
-                  : "No street address Provided"}
-              </p>
-            </Col>
-            <Col>
-              <h6>Unit</h6>
-              <p style={gray}>{unit && unit !== "NULL" ? unit : ""}</p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <h6>City</h6>
-              <p style={gray}>{city && city !== "NULL" ? city : ""}</p>
-            </Col>
-            <Col>
-              <h6>State</h6>
-              <p style={gray}>{state && state !== "NULL" ? state : ""}</p>
-            </Col>
-            <Col>
-              <h6>Zip</h6>
-              <p style={gray}>{zip && zip !== "NULL" ? zip : ""}</p>
-            </Col>
+          <Row className="mx-3">
+            <Table
+              classes={{ root: classes.customTable }}
+              size="small"
+              responsive="md"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell> Street</TableCell>
+                  <TableCell> Unit</TableCell>
+                  <TableCell> City</TableCell>
+                  <TableCell> State</TableCell>
+                  <TableCell> Zip</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    {" "}
+                    {street == "" ? "No Info Provided" : street}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {unit == "" ? "No Info Provided" : unit}
+                  </TableCell>
+                  <TableCell>
+                    {city == "" ? "No Info Provided" : city}
+                  </TableCell>
+                  <TableCell>
+                    {state == "" ? "No Info Provided" : state}
+                  </TableCell>
+                  <TableCell>{zip == "" ? "No Info Provided" : zip}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </Row>
 
           <div>
-            <Row className="mb-4" style={headings}>
+            <Row className="my-2" style={headings}>
               <div>Additional details</div>
             </Row>
-
-            <Row>
-              <Col>
-                <h6> Name of Property Manager (if renting)</h6>
-                <p style={gray}>
-                  {pm_name && pm_name !== "NULL"
-                    ? pm_name
-                    : "No  name Provided"}
-                </p>
-              </Col>
-              <Col>
-                {" "}
-                <h6>Property Manager's phone number (if renting)</h6>
-                <p style={gray}>
-                  {pm_number && pm_number !== "NULL"
-                    ? pm_number
-                    : "No phone number Provided"}
-                </p>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col>
-                <h6>Lease Start Date</h6>
-                <p style={gray}>
-                  {lease_start && lease_start !== "NULL" ? lease_start : ""}
-                </p>
-              </Col>
-              <Col>
-                <h6>Lease End Date</h6>
-                <p style={gray}>
-                  {lease_end && lease_end !== "NULL" ? lease_end : ""}
-                </p>
-              </Col>
-              <Col>
-                <h6> Monthly Rent</h6>
-                <p style={gray}>{rent && rent !== "NULL" ? rent : ""}</p>
-              </Col>
+            <Row className="mx-3">
+              {" "}
+              <Table
+                classes={{ root: classes.customTable }}
+                size="small"
+                responsive="md"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell> Name of the Property Manager</TableCell>
+                    <TableCell> Property Manager's Phone Number</TableCell>
+                    <TableCell> Lease Start Dates</TableCell>
+                    <TableCell> Lease End Dates</TableCell>
+                    <TableCell> Monthly Rent</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      {" "}
+                      {pm_name == "" ? "No Info Provided" : pm_name}
+                    </TableCell>
+                    <TableCell>
+                      {" "}
+                      {pm_number == "" ? "No Info Provided" : pm_number}
+                    </TableCell>
+                    <TableCell>
+                      {lease_start == "" ? "No Info Provided" : lease_start}
+                    </TableCell>
+                    <TableCell>
+                      {lease_end == "" ? "No Info Provided" : lease_end}
+                    </TableCell>
+                    <TableCell>
+                      {rent == "" ? "No Info Provided" : rent}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </Row>
           </div>
         </div>
