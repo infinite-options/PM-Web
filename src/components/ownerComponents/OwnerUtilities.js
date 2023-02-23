@@ -409,7 +409,11 @@ function OwnerUtilities(props) {
         new_purchase.next_payment = "0000-00-00 00:00:00";
       }
       if (tenantPay) {
-        if (property.rental_status === "ACTIVE") {
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "TENANT APPROVED" ||
+          property.rental_status === "PENDING"
+        ) {
           // console.log("property.tenants", property.rentalInfo[0]);
           let tenant_ids = property.rentalInfo[0].tenant_id;
           new_purchase.payer = [tenant_ids];

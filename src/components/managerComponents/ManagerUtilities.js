@@ -440,7 +440,11 @@ function ManagerUtilities(props) {
         new_purchase.next_payment = "0000-00-00 00:00:00";
       }
       if (tenantPay) {
-        if (property.rental_status === "ACTIVE") {
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "TENANT APPROVED" ||
+          property.rental_status === "PENDING"
+        ) {
           let tenant_ids = property.tenants.map((t) => t.tenant_id);
           new_purchase.payer = tenant_ids;
         } else {
