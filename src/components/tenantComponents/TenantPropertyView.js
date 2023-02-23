@@ -1404,7 +1404,7 @@ function TenantPropertyView(props) {
                               <TableCell>Lease Start</TableCell>
                               <TableCell>Lease End</TableCell>
                               <TableCell>Rent Due</TableCell>
-                              <TableCell>Later fees after(days)</TableCell>
+                              <TableCell>Later Fees After (days)</TableCell>
                               <TableCell>Late Fee (one-time)</TableCell>
                               <TableCell>Late Fee (per day)</TableCell>
                             </TableRow>
@@ -1906,7 +1906,7 @@ function TenantPropertyView(props) {
                               <TableCell>Lease Start</TableCell>
                               <TableCell>Lease End</TableCell>
                               <TableCell>Rent Due</TableCell>
-                              <TableCell>Later fees after(days)</TableCell>
+                              <TableCell>Later Fees After (days)</TableCell>
                               <TableCell>Late Fee (one-time)</TableCell>
                               <TableCell>Late Fee (per day)</TableCell>
                             </TableRow>

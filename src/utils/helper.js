@@ -1,6 +1,7 @@
 const MaskCharacter = (str, mask, n = 1) => {
   return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
 };
+
 const ordinal_suffix_of = (i) => {
   var j = i % 10,
     k = i % 100;

@@ -21,6 +21,7 @@ import ManagerFooter from "./ManagerFooter";
 import Phone from "../../icons/Phone.svg";
 import Message from "../../icons/Message.svg";
 import RepairImg from "../../icons/RepairImg.svg";
+import { put } from "../../utils/api";
 import {
   mediumBold,
   subText,
@@ -28,13 +29,20 @@ import {
   hidden,
   redPill,
   greenPill,
+  headings,
 } from "../../utils/styles";
-import { ordinal_suffix_of } from "../../utils/helper";
+import { ordinal_suffix_of, MaskCharacter } from "../../utils/helper";
 
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
       padding: "6px 16px 6px 16px", // <-- arbitrary value
+    },
+  },
+  customTableDetail: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
     },
   },
 });
@@ -226,10 +234,6 @@ function ManagerTenantListDetail(props) {
   };
   // console.log(selectedTenant);
 
-  function MaskCharacter(str, mask, n = 1) {
-    return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
-  }
-
   return (
     <div>
       <div className="flex-1">
@@ -257,47 +261,6 @@ function ManagerTenantListDetail(props) {
               opacity: 1,
             }}
           >
-            <Row className="p-1">
-              <Col>
-                <div className="d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0" style={mediumBold}>
-                    {selectedTenant.tenant_first_name}{" "}
-                    {selectedTenant.tenant_last_name}
-                  </h5>
-                </div>
-              </Col>
-            </Row>
-            <Row className="px-1 mb-1">
-              <Col
-                style={{
-                  color: "#777777",
-                  font: "normal normal normal 14px Bahnschrift-Regular",
-                }}
-              >
-                {selectedTenant.address}
-                {selectedTenant.unit !== ""
-                  ? " " + selectedTenant.unit
-                  : ""}, <br />
-                {selectedTenant.city}, {selectedTenant.state}{" "}
-                {selectedTenant.zip}
-              </Col>
-
-              <Col>
-                <div className="d-flex  justify-content-end ">
-                  <div
-                    style={selectedTenant.tenant_id ? {} : hidden}
-                    onClick={stopPropagation}
-                  >
-                    <a href={`tel:${selectedTenant.tenant_phone_number}`}>
-                      <img src={Phone} alt="Phone" style={smallImg} />
-                    </a>
-                    <a href={`mailto:${selectedTenant.tenant_email}`}>
-                      <img src={Message} alt="Message" style={smallImg} />
-                    </a>
-                  </div>
-                </div>
-              </Col>
-            </Row>
             <Row
               className="d-flex justify-content-center my-2"
               style={mediumBold}
@@ -305,217 +268,368 @@ function ManagerTenantListDetail(props) {
               Personal Info
             </Row>
 
-            <Container
+            <div
+              className="mx-3 my-3 p-2"
               style={{
-                background: "#FFFFFF 0% 0% no-repeat padding-box",
-                boxShadow: "0px 3px 6px #00000029",
-                border: "0.5px solid #707070",
-                borderRadius: "5px",
-                maxHeight: "500px",
-                overflow: "scroll",
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
               }}
             >
-              <div
-                className="my-3 p-2"
-                style={{
-                  boxShadow: " 0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                <Row className="mx-2">
-                  Current Job Details
-                  <Row className="mx-2">
-                    <Col style={subText}>Job Company</Col>
-                    <Col style={subText}>
-                      {selectedTenant.tenant_current_job_company}
-                    </Col>
-                  </Row>
-                  <Row className="mx-2">
-                    <Col style={subText}>Job Title</Col>
-                    <Col style={subText}>
-                      {selectedTenant.tenant_current_job_title}
-                    </Col>
-                  </Row>
-                  <Row className="mx-2">
-                    <Col style={subText}>Job Salary</Col>
-                    <Col style={subText}>
-                      {selectedTenant.tenant_current_salary}/{" "}
-                      {selectedTenant.tenant_salary_frequency}
-                    </Col>
-                  </Row>
-                </Row>
-              </div>
-              <div
-                className="my-3 p-2"
-                style={{
-                  boxShadow: " 0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                <Row className="mx-2">
-                  Personal Details
-                  <Row className="mx-2">
-                    <Col style={subText}>DL Number</Col>
-                    <Col style={subText} onClick={() => setShowDL(!showDL)}>
-                      {showDL ? (
-                        <div>
-                          {MaskCharacter(
-                            selectedTenant.tenant_drivers_license_number,
-                            "*"
-                          )}
-                        </div>
-                      ) : (
-                        <div>
-                          {selectedTenant.tenant_drivers_license_number}
-                        </div>
-                      )}
-                    </Col>
-                  </Row>
-                  <Row className="mx-2">
-                    <Col style={subText}>SSN</Col>
-                    <Col style={subText} onClick={() => setShowSSN(!showSSN)}>
-                      {showSSN ? (
-                        <div>
-                          {MaskCharacter(selectedTenant.tenant_ssn, "*")}
-                        </div>
-                      ) : (
-                        <div>{selectedTenant.tenant_ssn}</div>
-                      )}
-                      {}
-                    </Col>
-                  </Row>
-                  <Row className="mx-2">
-                    <Col style={subText}>Email</Col>
-                    <Col style={subText}>{selectedTenant.tenant_email}</Col>
-                  </Row>
-                  <Row className="mx-2">
-                    <Col style={subText}>Phone Number</Col>
-                    <Col style={subText}>
-                      {selectedTenant.tenant_phone_number}
-                    </Col>
-                  </Row>
-                </Row>
-              </div>
-            </Container>
+              <Row className="mb-4 m-3">
+                <h5 style={mediumBold}>Personal Details</h5>
 
+                <Table
+                  classes={{ root: classes.customTableDetail }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> First Name</TableCell>
+                      <TableCell> Last Name</TableCell>
+                      <TableCell> Address</TableCell>
+                      <TableCell> Phone Number</TableCell>
+                      <TableCell> Email</TableCell>
+                      <TableCell> Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        {" "}
+                        {selectedTenant.tenant_first_name &&
+                        selectedTenant.tenant_first_name !== "NULL"
+                          ? selectedTenant.tenant_first_name
+                          : "No First Name Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {" "}
+                        {selectedTenant.tenant_last_name &&
+                        selectedTenant.tenant_last_name !== "NULL"
+                          ? selectedTenant.tenant_last_name
+                          : "No Last Name Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {selectedTenant.address}
+                        {selectedTenant.unit !== ""
+                          ? " " + selectedTenant.unit
+                          : ""}
+                        , <br />
+                        {selectedTenant.city}, {selectedTenant.state}{" "}
+                        {selectedTenant.zip}
+                      </TableCell>
+                      <TableCell>
+                        {selectedTenant.tenant_phone_number &&
+                        selectedTenant.tenant_phone_number !== "NULL"
+                          ? selectedTenant.tenant_phone_number
+                          : "No Phone Number Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {selectedTenant.tenant_email &&
+                        selectedTenant.tenant_email !== "NULL"
+                          ? selectedTenant.tenant_email
+                          : "No Email Provided"}
+                      </TableCell>
+                      <TableCell>
+                        <div className="d-flex  justify-content-end ">
+                          <div
+                            style={selectedTenant.tenant_id ? {} : hidden}
+                            onClick={stopPropagation}
+                          >
+                            <a
+                              href={`tel:${selectedTenant.tenant_phone_number}`}
+                            >
+                              <img src={Phone} alt="Phone" style={smallImg} />
+                            </a>
+                            <a href={`mailto:${selectedTenant.tenant_email}`}>
+                              <img
+                                src={Message}
+                                alt="Message"
+                                style={smallImg}
+                              />
+                            </a>
+                          </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+
+              <Row className="mb-4 m-3">
+                <h5 style={mediumBold}>Current Job Details</h5>
+
+                <Table
+                  classes={{ root: classes.customTableDetail }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> Current Salary</TableCell>
+                      <TableCell>Salary Frequency</TableCell>
+                      <TableCell> Current Job Title</TableCell>
+                      <TableCell> Current Company Name</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        {selectedTenant.tenant_current_salary &&
+                        selectedTenant.tenant_current_salary !== "NULL"
+                          ? selectedTenant.tenant_current_salary
+                          : "No Salary Info Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {selectedTenant.tenant_salary_frequency &&
+                        selectedTenant.tenant_salary_frequency !== "NULL"
+                          ? selectedTenant.tenant_salary_frequency
+                          : "No Salary Info Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {" "}
+                        {selectedTenant.tenant_current_job_title &&
+                        selectedTenant.tenant_current_job_title !== "NULL"
+                          ? selectedTenant.tenant_current_job_title
+                          : "No Job Title Provided"}
+                      </TableCell>
+                      <TableCell>
+                        {" "}
+                        {selectedTenant.tenant_current_job_company &&
+                        selectedTenant.tenant_current_job_company !== "NULL"
+                          ? selectedTenant.tenant_current_job_company
+                          : "No Company Provided"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+              <Row className="mb-4 m-3">
+                <h5 style={mediumBold}>Identification Details</h5>
+
+                <Table
+                  classes={{ root: classes.customTableDetail }}
+                  size="small"
+                  responsive="md"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> SSN</TableCell>
+                      <TableCell> Driver's Licence Number</TableCell>
+                      <TableCell> Driver's Licence State</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell onClick={() => setShowSSN(!showSSN)}>
+                        {" "}
+                        {showSSN ? (
+                          <div>
+                            {MaskCharacter(selectedTenant.tenant_ssn, "*")}
+                          </div>
+                        ) : (
+                          <div>{selectedTenant.tenant_ssn}</div>
+                        )}
+                      </TableCell>
+                      <TableCell onClick={() => setShowDL(!showDL)}>
+                        {showDL ? (
+                          <div>
+                            {MaskCharacter(
+                              selectedTenant.tenant_drivers_license_number,
+                              "*"
+                            )}
+                          </div>
+                        ) : (
+                          <div>
+                            {selectedTenant.tenant_drivers_license_number}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {selectedTenant.tenant_drivers_license_state &&
+                        selectedTenant.tenant_drivers_license_state !== "NULL"
+                          ? selectedTenant.tenant_drivers_license_state
+                          : "No DL state Provided"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+            </div>
+            {console.log(selectedTenant)}
             <Row
               className="d-flex justify-content-center my-2"
               style={mediumBold}
             >
               Lease Details
             </Row>
-            <Container
-              className="my-3"
+            <div
+              className="mx-3 p-2"
               style={{
-                background: "#FFFFFF 0% 0% no-repeat padding-box",
-                boxShadow: "0px 3px 6px #00000029",
-                border: "0.5px solid #707070",
-                borderRadius: "5px",
-                maxHeight: "500px",
-                overflow: "scroll",
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "0px 0px 10px 10px",
+                opacity: 1,
               }}
             >
-              <Row
-                className="my-3 p-2 mx-1"
-                style={{
-                  boxShadow: " 0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                <Col className="d-flex justify-content-start flex-column">
-                  <h6>Lease Start Date</h6>
-                  <h6>Lease End Date</h6>
-                  <h6>Rent Due</h6>
-                  <h6>Late Fees After (days)</h6>
-                  <h6>Late Fee (one-time)</h6>
-                  <h6>Late Fee (per day)</h6>
-                </Col>
-                <Col className="d-flex flex-column ">
-                  <h6
-                    className="d-flex justify-content-end"
-                    style={{
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
+              <div>
+                <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+                  <h5>Lease Details</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTableDetail }}
+                    size="small"
                   >
-                    {selectedTenant.lease_start}
-                  </h6>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Lease Start</TableCell>
+                        <TableCell>Lease End</TableCell>
+                        <TableCell>Rent Due</TableCell>
+                        <TableCell>Later Fees After (days)</TableCell>
+                        <TableCell>Late Fee (one-time)</TableCell>
+                        <TableCell>Late Fee (per day)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>{selectedTenant.lease_start}</TableCell>
 
-                  <h6
-                    className="d-flex justify-content-end"
-                    style={{
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
+                        <TableCell>{selectedTenant.lease_end}</TableCell>
+
+                        <TableCell>
+                          {`${ordinal_suffix_of(
+                            selectedTenant.due_by
+                          )} of the month`}
+                        </TableCell>
+
+                        <TableCell>{selectedTenant.late_by} days</TableCell>
+                        <TableCell> ${selectedTenant.late_fee}</TableCell>
+                        <TableCell>
+                          {" "}
+                          ${selectedTenant.perDay_late_fee}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Row>
+
+                <Row className="mb-4 m-3" style={{ overflow: "scroll" }}>
+                  <h5>Lease Payments</h5>
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTableDetail }}
+                    size="small"
                   >
-                    {selectedTenant.lease_end}
-                  </h6>
-                  <h6
-                    className="d-flex justify-content-end"
-                    style={{
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Fee Name</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Of</TableCell>
+                        <TableCell>Frequency</TableCell>
+                        <TableCell>Available to Pay</TableCell>
+                        <TableCell>Due Date</TableCell>
+                        <TableCell>Late Fees After (days)</TableCell>
+                        <TableCell>
+                          Late Fee <br /> (one-time)
+                        </TableCell>
+                        <TableCell>
+                          Late Fee <br /> (per day)
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {JSON.parse(selectedTenant.rent_payments).map(
+                        (fee, i) => (
+                          <TableRow>
+                            <TableCell>{fee.fee_name}</TableCell>
+
+                            <TableCell>
+                              {fee.fee_type === "%"
+                                ? `${fee.charge}%`
+                                : `$${fee.charge}`}
+                            </TableCell>
+
+                            <TableCell>
+                              {fee.fee_type === "%" ? `${fee.of}` : ""}
+                            </TableCell>
+
+                            <TableCell>{fee.frequency}</TableCell>
+                            <TableCell>{`${fee.available_topay} days before`}</TableCell>
+                            <TableCell>
+                              {fee.frequency === "Weekly" ||
+                              fee.frequency === "Biweekly"
+                                ? fee.due_by === ""
+                                  ? `1st day of the week`
+                                  : `${ordinal_suffix_of(
+                                      fee.due_by
+                                    )} day of the week`
+                                : fee.due_by === ""
+                                ? `1st of the month`
+                                : `${ordinal_suffix_of(
+                                    fee.due_by
+                                  )} of the month`}
+                            </TableCell>
+                            <TableCell>{fee.late_by} days</TableCell>
+                            <TableCell>${fee.late_fee}</TableCell>
+                            <TableCell>${fee.perDay_late_fee}/day</TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </Row>
+
+                <Row
+                  className="mb-4 m-3"
+                  hidden={
+                    JSON.parse(selectedTenant.assigned_contacts).length === 0
+                  }
+                >
+                  <h5 style={mediumBold}>Contact Details</h5>
+                  <Table
+                    classes={{ root: classes.customTableDetail }}
+                    size="small"
                   >
-                    {`${ordinal_suffix_of(selectedTenant.due_by)} of the month`}
-                  </h6>
-                  <h6
-                    className="d-flex justify-content-end"
-                    style={{
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
-                  >
-                    {selectedTenant.late_by} days
-                  </h6>
-                  <h6
-                    className="d-flex justify-content-end"
-                    style={{
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
-                  >
-                    ${selectedTenant.late_fee}
-                  </h6>
-                  <h6
-                    className="d-flex justify-content-end"
-                    style={{
-                      font: "normal normal normal 16px Bahnschrift-Regular",
-                    }}
-                  >
-                    ${selectedTenant.perDay_late_fee}
-                  </h6>
-                </Col>
-              </Row>
-              <Row
-                className="my-3 p-2 mx-1"
-                style={{
-                  boxShadow: " 0px 1px 6px #00000029",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                <h6 style={mediumBold}>Rent Payments</h6>
-                {JSON.parse(selectedTenant.rent_payments).map((fee, i) => (
-                  <Row key={i}>
-                    <Col className="d-flex justify-content-start">
-                      <h6 className="mb-1">{fee.fee_name}</h6>
-                    </Col>
-                    <Col className="d-flex justify-content-end">
-                      <h6
-                        style={{
-                          font: "normal normal normal 16px Bahnschrift-Regular",
-                        }}
-                        className="mb-1"
-                      >
-                        {fee.fee_type === "%"
-                          ? `${fee.charge}% of ${fee.of}`
-                          : `$${fee.charge}`}{" "}
-                        {fee.frequency}
-                      </h6>
-                    </Col>
-                  </Row>
-                ))}
-              </Row>
-            </Container>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Contact Name</TableCell>
+                        <TableCell>Role</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Phone Number</TableCell>
+
+                        <TableCell>Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {JSON.parse(selectedTenant.assigned_contacts).map(
+                        (contact, i) => (
+                          <TableRow key={i}>
+                            <TableCell>
+                              {contact.first_name} {contact.last_name}
+                            </TableCell>
+                            <TableCell>{contact.company_role}</TableCell>
+                            <TableCell>{contact.email}</TableCell>
+                            <TableCell>{contact.phone_number}</TableCell>
+                            <TableCell>
+                              <a href={`tel:${contact.phone_number}`}>
+                                <img src={Phone} alt="Phone" style={smallImg} />
+                              </a>
+                              <a href={`mailto:${contact.email}`}>
+                                <img
+                                  src={Message}
+                                  alt="Message"
+                                  style={smallImg}
+                                />
+                              </a>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
+            </div>
 
             <Row
               className="d-flex justify-content-center my-2"
@@ -524,60 +638,85 @@ function ManagerTenantListDetail(props) {
               Payment History
             </Row>
             {selectedTenant.user_payments.length > 0 ? (
-              <Container
+              <div
+                className="mx-3 my-3 p-2"
                 style={{
-                  background: "#FFFFFF 0% 0% no-repeat padding-box",
-                  boxShadow: "0px 3px 6px #00000029",
-                  border: "0.5px solid #707070",
-                  borderRadius: "5px",
-                  maxHeight: "500px",
-                  overflow: "scroll",
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
                 }}
               >
-                {selectedTenant.user_payments.map((payment) => (
-                  <div
-                    className="my-3 p-2"
-                    style={{
-                      boxShadow: " 0px 1px 6px #00000029",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
+                {console.log(selectedTenant.user_payments)}
+                <Row className="m-3">
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTableDetail }}
+                    size="small"
                   >
-                    <Row className="mx-2">
-                      <Col style={subText}>
-                        {moment(payment.payment_date).format("MMM D, YYYY")}
-                      </Col>
-                    </Row>
-                    <Row style={mediumBold} className="d-flex mx-2">
-                      <Col>
-                        {payment.description}{" "}
-                        {payment.purchase_notes &&
-                          `(${payment.purchase_notes})`}
-                      </Col>
-                      <Col
-                        xs={2}
-                        style={{
-                          fontWeight: "600",
-                          font: "normal normal normal 20px/28px Bahnschrift-Regular",
-                          color: "#007Aff",
-                        }}
-                        className="d-flex justify-content-end"
-                      >
-                        {formatter.format(payment.amount)}
-                      </Col>
-                      <Col xs={3} className="d-flex justify-content-center">
-                        {payment.payment_date > payment.next_payment ? (
-                          <div style={redPill}>Late</div>
-                        ) : (
-                          <div style={greenPill}>On-time</div>
-                        )}
-                      </Col>
-                    </Row>
-                  </div>
-                ))}
-              </Container>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Description</TableCell>
+                        <TableCell>Purchase Type</TableCell>
+                        <TableCell>Split Payment</TableCell>
+                        <TableCell>Payment Type</TableCell>
+                        <TableCell>Due Date</TableCell>
+                        <TableCell>Payment Date</TableCell>
+                        <TableCell>Purchase Status</TableCell>
+                        <TableCell>Amount</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {selectedTenant.user_payments.map((payment) => (
+                        <TableRow>
+                          <TableCell>{payment.description}</TableCell>
+                          <TableCell>{payment.purchase_type}</TableCell>
+
+                          <TableCell>
+                            {payment.linked_bill_id === null ? "No" : "Yes"}
+                          </TableCell>
+                          <TableCell>
+                            {payment.payment_type !== null
+                              ? payment.payment_type
+                              : "Not Available"}
+                          </TableCell>
+                          <TableCell>
+                            {moment(payment.next_payment).format("MMM D, YYYY")}
+                          </TableCell>
+                          <TableCell>
+                            {moment(payment.payment_date).format("MMM D, YYYY")}
+                          </TableCell>
+                          <TableCell>
+                            {payment.purchase_status === "PAID" ? (
+                              <div style={greenPill}>Paid</div>
+                            ) : payment.payment_date > payment.next_payment ? (
+                              <div style={redPill}>Unpaid</div>
+                            ) : payment.payment_date < payment.next_payment ? (
+                              <div style={greenPill}>On-time</div>
+                            ) : (
+                              <div style={redPill}>Unpaid</div>
+                            )}
+                          </TableCell>
+
+                          <TableCell>
+                            {formatter.format(payment.amount)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Row>
+              </div>
             ) : (
-              <Container className="d-flex my-2">No payments made</Container>
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">No payments added</Row>
+              </div>
             )}
 
             <Row
@@ -587,20 +726,18 @@ function ManagerTenantListDetail(props) {
               Repair Requests
             </Row>
             {selectedTenant.user_repairRequests.length > 0 ? (
-              <Container
+              <div
+                className="mx-3 my-3 p-2"
                 style={{
-                  background: "#FFFFFF 0% 0% no-repeat padding-box",
-                  boxShadow: "0px 3px 6px #00000029",
-                  border: "0.5px solid #707070",
-                  borderRadius: "5px",
-                  maxHeight: "500px",
-                  overflow: "scroll",
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
                 }}
               >
-                <Row className="m-3" style={{ overflow: "scroll" }}>
+                <Row className="m-3">
                   <Table
                     responsive="md"
-                    classes={{ root: classes.customTable }}
+                    classes={{ root: classes.customTableDetail }}
                     size="small"
                   >
                     <EnhancedTableHead
@@ -685,11 +822,18 @@ function ManagerTenantListDetail(props) {
                     </TableBody>
                   </Table>
                 </Row>
-              </Container>
+              </div>
             ) : (
-              <Container className="d-flex my-2">
-                No repairs requested
-              </Container>
+              <div
+                className="mx-3 my-3 p-2"
+                style={{
+                  background: "#E9E9E9 0% 0% no-repeat padding-box",
+                  borderRadius: "10px",
+                  opacity: 1,
+                }}
+              >
+                <Row className="m-3">No repairs requested</Row>
+              </div>
             )}
           </div>
         </div>
