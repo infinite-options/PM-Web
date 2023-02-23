@@ -1731,13 +1731,13 @@ export default function OwnerCashflow(props) {
                               {rev.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {rev.amount_paid}
                             </TableCell>{" "}
                             <TableCell align="right">
                               {rev.amount_due}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due - rev.amount_paid.toFixed(2)}
+                              {rev.amount_due - rev.amount_paid}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1850,13 +1850,13 @@ export default function OwnerCashflow(props) {
                               {rev.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {rev.amount_paid}
                             </TableCell>{" "}
                             <TableCell align="right">
                               {rev.amount_due}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due - rev.amount_paid.toFixed(2)}
+                              {rev.amount_due - rev.amount_paid}
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -1963,13 +1963,13 @@ export default function OwnerCashflow(props) {
                               {rev.zip}
                             </TableCell>
                             <TableCell align="right">
-                              {rev.amount_paid.toFixed(2)}
+                              {rev.amount_paid}
                             </TableCell>{" "}
                             <TableCell align="right">
                               {rev.amount_due}
                             </TableCell>{" "}
                             <TableCell align="right">
-                              {rev.amount_due - rev.amount_paid.toFixed(2)}
+                              {rev.amount_due - rev.amount_paid}
                             </TableCell>
                           </TableRow>
                         ) : (

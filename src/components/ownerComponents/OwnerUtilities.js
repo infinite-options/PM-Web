@@ -74,6 +74,9 @@ function OwnerUtilities(props) {
   const [maintenanceExpenseDetail, setMaintenanceExpenseDetail] =
     useState(false);
   const [payExpense, setPayExpense] = useState(false);
+  const [payExpenseOwner, setPayExpenseOwner] = useState(false);
+  const [allPurchases, setAllPurchases] = useState([]);
+  const [purchaseUIDs, setPurchaseUIDs] = useState([]);
   const [payment, setPayment] = useState(false);
   const emptyUtility = {
     provider: "",
@@ -128,7 +131,17 @@ function OwnerUtilities(props) {
     const tagPriority = tagPriorityRef.current.value;
     props.onConfirm(requestTitle, requestDescription, tagPriority);
   };
-
+  const toggleKeys = async () => {
+    //console.log("inside toggle keys");
+    const url =
+      message === "PMTEST"
+        ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
+        : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
+    let response = await fetch(url);
+    const responseData = await response.json();
+    const stripePromise = loadStripe(responseData.publicKey);
+    setStripePromise(stripePromise);
+  };
   const PayBill = async (pid) => {
     let response = await get(`/purchases?purchase_uid=${pid}`);
     // console.log("GET PURCHASE RESPONSE", response);
@@ -136,17 +149,22 @@ function OwnerUtilities(props) {
     setTotalSum(response.result[0].amount_due);
     setAmount(response.result[0].amount_due - response.result[0].amount_paid);
   };
+  const PayBillOwner = async (pids) => {
+    let tempAllPurchases = [];
+    let tempAmountDue = 0;
+    let tempAmountPaid = 0;
 
-  const toggleKeys = async () => {
-    const url =
-      message === "PMTEST"
-        ? "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PMTEST"
-        : "https://t00axvabvb.execute-api.us-west-1.amazonaws.com/dev/stripe_key/PM";
-    let response = await fetch(url);
-    const responseData = await response.json();
-    // console.log(responseData.publicKey);
-    const stripePromise = loadStripe(responseData.publicKey);
-    setStripePromise(stripePromise);
+    for (let i = 0; i < pids.length; i++) {
+      let response1 = await get(`/purchases?purchase_uid=${pids[i]}`);
+      tempAllPurchases.push(response1.result[0]);
+      tempAmountDue = tempAmountDue + response1.result[0].amount_due;
+      tempAmountPaid = tempAmountPaid + response1.result[0].amount_paid;
+    }
+
+    setAllPurchases(tempAllPurchases);
+
+    setTotalSum(tempAmountDue);
+    setAmount(tempAmountDue - tempAmountPaid);
   };
 
   useEffect(() => {
@@ -164,6 +182,7 @@ function OwnerUtilities(props) {
   const submit = () => {
     cancel();
     setPayExpense(false);
+    setPayExpenseOwner(false);
   };
 
   //group an array by property
@@ -380,17 +399,10 @@ function OwnerUtilities(props) {
         purchase_frequency: "One-time",
         next_payment: newUtility.due_date,
       };
-      // console.log(new_purchase_pm);
+
       const response_pm = await post("/purchases", new_purchase_pm, null, null);
-      // const purchase_uid = response_pm.purchase_uid;
-      // setPurchaseUID(response_pm.purchase_uid);
     }
-    // console.log(response_pm);
-    // splitFees(newUtility);
-    // console.log(tenantPay, ownerPay);
     for (const property of newUtility.properties) {
-      // console.log("in for loop");
-      // console.log(property);
       const new_purchase = {
         linked_bill_id: bill_uid,
         pur_property_id: [property.property_uid],
@@ -427,14 +439,7 @@ function OwnerUtilities(props) {
       // console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
-    //   setNewUtility({ ...emptyUtility });
-    //   propertyState.forEach((prop) => (prop.checked = false));
-    //   setPropertyState(propertyState);
-    //   setEditingUtility(false);
-    //   setTenantPay(false);
-    //   setOwnerPay(false);
-    //   // PayBill(purchase_uid);
-    //   setPayExpense(true);
+
     setNewUtility({ ...emptyUtility });
     propertyState.forEach((prop) => (prop.checked = false));
     setPropertyState(propertyState);
@@ -444,9 +449,6 @@ function OwnerUtilities(props) {
     setExpenseDetail(false);
     setMaintenanceExpenseDetail(false);
     setPayment(null);
-    setTenantPay(false);
-    setOwnerPay(false);
-
     setPayExpense(false);
     setEditingUtility(false);
     fetchProperties();
@@ -471,12 +473,141 @@ function OwnerUtilities(props) {
         setErrorMessage("Please fill out all fields");
         return;
       }
-      // let due_date = new Date(newUtility.due_date);
-      // let current_date = new Date();
-      // if (current_date >= due_date) {
-      //   setErrorMessage("Select a Due by Date later than current date");
-      //   return;
-      // }
+    }
+
+    setErrorMessage("");
+
+    newUtility.properties = [...propertyState.filter((p) => p.checked)];
+
+    await postCharges(newUtility);
+    const newUtilityState = [...utilityState];
+    newUtilityState.push({ ...newUtility });
+    setUtilityState(newUtilityState);
+    setNewUtility(null);
+  };
+
+  const postChargesandPay = async (newUtility) => {
+    if (access_token === null || user.role.indexOf("OWNER") === -1) {
+      navigate("/");
+      return;
+    }
+    let properties_uid = [];
+    newUtility.properties.forEach((prop) =>
+      properties_uid.push(prop.property_uid)
+    );
+    const new_bill = {
+      bill_created_by: user.user_uid,
+      bill_description: newUtility.provider,
+      bill_utility_type: newUtility.service_name,
+      bill_algorithm: newUtility.split_type,
+      bill_docs: files,
+    };
+    const newFiles = [...files];
+
+    for (let i = 0; i < newFiles.length; i++) {
+      let key = `doc_${i}`;
+      if (newFiles[i].file !== undefined) {
+        new_bill[key] = newFiles[i].file;
+      } else {
+        new_bill[key] = newFiles[i].link;
+      }
+      delete newFiles[i].file;
+    }
+    new_bill.bill_docs = JSON.stringify(newFiles);
+    const response = await post("/bills", new_bill, null, newFiles);
+    const bill_uid = response.bill_uid;
+
+    let today_date = new Date().toISOString().split("T")[0];
+    splitFees(newUtility);
+    let purchase_uids = [];
+    let purchase_uid = "";
+    for (const property of newUtility.properties) {
+      const new_purchase_pm = {
+        linked_bill_id: bill_uid,
+        pur_property_id: [property.property_uid],
+        payer: [user.user_uid],
+        receiver: newUtility.provider,
+        purchase_type: "UTILITY",
+        description: newUtility.service_name,
+        amount_due: property.charge,
+        purchase_notes: moment().format("MMMM"),
+        purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
+        purchase_frequency: "One-time",
+        next_payment:
+          newUtility.due_date === "" ? today_date : newUtility.due_date,
+      };
+
+      const response_pm = await post("/purchases", new_purchase_pm, null, null);
+      console.log(response_pm);
+      purchase_uids.push(response_pm.purchase_uid);
+    }
+    purchase_uid = purchase_uids[0];
+    setPurchaseUIDs(purchase_uids);
+
+    for (const property of newUtility.properties) {
+      const new_purchase = {
+        linked_bill_id: bill_uid,
+        pur_property_id: [property.property_uid],
+        payer: "",
+        receiver: user.user_uid,
+        purchase_type: "UTILITY",
+        description: newUtility.service_name,
+        amount_due: property.charge,
+        purchase_notes: moment().format("MMMM"),
+        purchase_date: moment().format("YYYY-MM-DD") + " 00:00:00",
+        purchase_frequency: "One-time",
+        next_payment: newUtility.due_date,
+      };
+
+      if (newUtility.add_to_rent) {
+        new_purchase.next_payment = "0000-00-00 00:00:00";
+      }
+      if (tenantPay) {
+        if (
+          property.rental_status === "ACTIVE" ||
+          property.rental_status === "TENANT APPROVED" ||
+          property.rental_status === "PENDING"
+        ) {
+          let tenant_ids = property.tenants.map((t) => t.tenant_id);
+          new_purchase.payer = tenant_ids;
+        } else {
+          new_purchase.payer = [property.owner_id];
+        }
+      } else {
+        new_purchase.payer = [property.owner_id];
+      }
+
+      const response_t = await post("/purchases", new_purchase, null, null);
+    }
+
+    setNewUtility({ ...emptyUtility });
+    propertyState.forEach((prop) => (prop.checked = false));
+    setPropertyState(propertyState);
+    setEditingUtility(false);
+    setTenantPay(false);
+    setOwnerPay(false);
+    PayBillOwner(purchase_uids);
+    setPayExpenseOwner(true);
+  };
+  const addUtilityandPay = async () => {
+    if (
+      newUtility.service_name === "" ||
+      newUtility.charge === "" ||
+      newUtility.provider === ""
+    ) {
+      setErrorMessage("Please fill out all fields");
+      return;
+    }
+    if (propertyState.filter((p) => p.checked).length < 1) {
+      setErrorMessage("Select at least one property");
+      return;
+    }
+
+    if (!newUtility.add_to_rent) {
+      if (newUtility.due_date === "") {
+        setErrorMessage("Please fill out all fields");
+        return;
+      }
     }
 
     setErrorMessage("");
@@ -484,12 +615,13 @@ function OwnerUtilities(props) {
     newUtility.properties = [...propertyState.filter((p) => p.checked)];
     // newUtility.properties = propertyState.filter((p) => p.checked)
     // splitFees(newUtility);
-    await postCharges(newUtility);
+    await postChargesandPay(newUtility);
     const newUtilityState = [...utilityState];
     newUtilityState.push({ ...newUtility });
     setUtilityState(newUtilityState);
     setNewUtility(null);
   };
+
   const cancelEdit = () => {
     setNewUtility(null);
     setErrorMessage("");
@@ -929,7 +1061,8 @@ function OwnerUtilities(props) {
               expenseDetail ||
               expenseDetailOwner ||
               maintenanceExpenseDetail ||
-              payExpense
+              payExpense ||
+              payExpenseOwner
                 ? "< Back"
                 : ""
             }
@@ -944,26 +1077,10 @@ function OwnerUtilities(props) {
               setTenantPay(false);
               setOwnerPay(false);
               setPayExpense(false);
+              setPayExpenseOwner(false);
               setStripePayment(false);
               setEditingUtility(false);
             }}
-            // rightText={
-            //   editingUtility ||
-            //   expenseDetail ||
-            //   expenseDetailOwner ||
-            //   maintenanceExpenseDetail ||
-            //   payExpense
-            //     ? ""
-            //     : "+ New"
-            // }
-            // rightFn={() => {
-            //   setNewUtility({ ...emptyUtility });
-            //   propertyState.forEach((prop) => (prop.checked = false));
-            //   setPropertyState(propertyState);
-            //   setTenantPay(false);
-            //   setOwnerPay(false);
-            //   setEditingUtility(true);
-            // }}
           />
           {isLoading ? (
             <div className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3">
@@ -985,10 +1102,10 @@ function OwnerUtilities(props) {
               !maintenanceExpenseDetail &&
               !expenseDetailOwner ? (
                 <div
-                  className="mx-2 mt-2 p-3"
+                  className="mx-3 my-3 p-2"
                   style={{
-                    background: "#FFFFFF 0% 0% no-repeat padding-box",
-                    borderRadius: "5px",
+                    background: "#E9E9E9 0% 0% no-repeat padding-box",
+                    borderRadius: "10px",
                     opacity: 1,
                   }}
                 >
@@ -1193,7 +1310,7 @@ function OwnerUtilities(props) {
                   <div
                     className="d-flex justify-content-center mb-4 mx-2 mb-2 p-3"
                     style={{
-                      background: "#FFFFFF 0% 0% no-repeat padding-box",
+                      background: "#E9E9E9 0% 0% no-repeat padding-box",
 
                       opacity: 1,
                     }}
@@ -1201,18 +1318,26 @@ function OwnerUtilities(props) {
                     <Button
                       variant="outline-primary"
                       style={pillButton}
-                      onClick={cancelEdit}
-                      className="mx-2"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="outline-primary"
-                      style={pillButton}
                       onClick={addUtility}
                       className="mx-2"
                     >
                       Save
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      onClick={addUtilityandPay}
+                      className="mx-2"
+                    >
+                      Pay Now
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      style={pillButton}
+                      onClick={cancelEdit}
+                      className="mx-2"
+                    >
+                      Cancel
                     </Button>
                   </div>
                 </div>
@@ -1226,7 +1351,8 @@ function OwnerUtilities(props) {
               !expenseDetailOwner &&
               !expenseDetail &&
               !maintenanceExpenseDetail &&
-              !payExpense ? (
+              !payExpense &&
+              !payExpenseOwner ? (
                 <div className="mx-2 my-2 p-3">
                   <div
                     className="mx-3 my-3 p-2"
@@ -1840,7 +1966,8 @@ function OwnerUtilities(props) {
                 !expenseDetail &&
                 !expenseDetailOwner &&
                 !maintenanceExpenseDetail &&
-                !payExpense ? (
+                !payExpense &&
+                !payExpenseOwner ? (
                 <Row className="m-3">
                   <Col className="m-3">No utilities</Col>
 
@@ -2271,6 +2398,7 @@ function OwnerUtilities(props) {
             ""
           )}
           {payExpense &&
+          !payExpenseOwner &&
           !editingUtility &&
           !expenseDetailOwner &&
           !expenseDetail &&
@@ -2423,6 +2551,200 @@ function OwnerUtilities(props) {
                   </Elements>
                 </div>
               </div>{" "}
+            </div>
+          ) : (
+            ""
+          )}
+          {payExpenseOwner &&
+          !payExpense &&
+          !editingUtility &&
+          !expenseDetailOwner &&
+          !expenseDetail &&
+          !maintenanceExpenseDetail ? (
+            <div
+              className="mx-3 my-3 p-2"
+              style={{
+                background: "#E9E9E9 0% 0% no-repeat padding-box",
+                borderRadius: "10px",
+                opacity: 1,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <Row style={headings} className="m-3">
+                  Total Payment: ${totalSum}
+                </Row>
+                <Row className="m-3">
+                  <Table
+                    responsive="md"
+                    classes={{ root: classes.customTable }}
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Address</TableCell>
+                        <TableCell>Description</TableCell>
+                        <TableCell>Utility Type</TableCell>{" "}
+                        <TableCell>Date Due</TableCell>{" "}
+                        <TableCell>Amount</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    {allPurchases.map((purchase) => {
+                      return (
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>
+                              {" "}
+                              {purchase.address}
+                              {purchase.unit !== ""
+                                ? " " + purchase.unit
+                                : ""}, {purchase.city}, {purchase.state}{" "}
+                              {purchase.zip}
+                            </TableCell>
+                            <TableCell>{purchase.bill_description}</TableCell>
+                            <TableCell>{purchase.bill_utility_type}</TableCell>
+                            <TableCell>
+                              {purchase.next_payment.substring(0, 10)}
+                            </TableCell>
+                            <TableCell>
+                              ${purchase.amount_due.toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      );
+                    })}
+                  </Table>
+                </Row>
+                <Row className="m-3">
+                  <div className="mt-3" hidden={stripePayment}>
+                    <Form.Group style={mediumBold}>
+                      <Form.Label>Amount</Form.Label>
+                      {purchaseUID.length === 1 ? (
+                        <Form.Control
+                          placeholder={amount}
+                          style={squareForm}
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value)}
+                        />
+                      ) : (
+                        <Form.Control
+                          disabled
+                          placeholder={amount}
+                          style={squareForm}
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value)}
+                        />
+                      )}
+                    </Form.Group>
+
+                    <Form.Group style={mediumBold}>
+                      <Form.Label>Message</Form.Label>
+                      <Form.Control
+                        placeholder="PMTEST"
+                        style={squareForm}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                      />
+                    </Form.Group>
+                    <Row
+                      className="text-center mt-5"
+                      style={{
+                        display: "text",
+                        flexDirection: "column",
+                        textAlign: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {disabled ? (
+                        <Row style={{ width: "80%", margin: " 10%" }}>
+                          Amount to be paid must be greater than 0 and less than
+                          or equal total:
+                        </Row>
+                      ) : null}
+
+                      {disabled ? (
+                        <Col>
+                          <Button
+                            className="mt-2 mb-2"
+                            variant="outline-primary"
+                            disabled
+                            style={bluePillButton}
+                          >
+                            Pay with Stripe
+                          </Button>
+                        </Col>
+                      ) : (
+                        <Col>
+                          <Button
+                            className="mt-2 mb-2"
+                            variant="outline-primary"
+                            onClick={() => {
+                              toggleKeys();
+                              setStripePayment(true);
+                            }}
+                            style={bluePillButton}
+                          >
+                            Pay with Stripe
+                          </Button>
+                        </Col>
+                      )}
+                      {disabled ? (
+                        <Col>
+                          <Button
+                            className="mt-2 mb-2"
+                            variant="outline-primary"
+                            disabled
+                            style={pillButton}
+                          >
+                            Pay with PayPal
+                          </Button>
+                        </Col>
+                      ) : (
+                        <Col>
+                          <Button
+                            className="mt-2 mb-2"
+                            variant="outline-primary"
+                            onClick={submitForm}
+                            style={pillButton}
+                          >
+                            Pay with PayPal
+                          </Button>
+                        </Col>
+                      )}
+                      <Col>
+                        <Button
+                          className="mt-2 mb-2"
+                          variant="outline-primary"
+                          onClick={() => {
+                            submit();
+                          }}
+                          style={bluePillButton}
+                        >
+                          Pay later
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                </Row>
+                <Row className="m-3">
+                  <div hidden={!stripePayment}>
+                    <Elements stripe={stripePromise}>
+                      <StripePayment
+                        cancel={cancel}
+                        submit={submit}
+                        purchases={allPurchases}
+                        message={message}
+                        amount={amount}
+                      />
+                    </Elements>
+                  </div>
+                </Row>
+              </div>
             </div>
           ) : (
             ""
