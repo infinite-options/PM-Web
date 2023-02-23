@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import Verified from "../../icons/Verified.jpg";
 import { put } from "../../utils/api";
-import { headings, subHeading } from "../../utils/styles";
+import { headings, subHeading, blue, xSmall } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -365,6 +365,13 @@ export default function ManagerPaymentHistory(props) {
                           row.state +
                           " " +
                           row.zip}
+                        <div className="d-flex">
+                          <div className="d-flex align-items-end">
+                            <p style={{ ...blue, ...xSmall }} className="mb-0">
+                              {row.payment_notes}
+                            </p>
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell align="right"> {row.receiver}</TableCell>
                       <TableCell align="right" style={{ width: "200px" }}>
@@ -448,6 +455,13 @@ export default function ManagerPaymentHistory(props) {
                         row.state +
                         " " +
                         row.zip}
+                      <div className="d-flex">
+                        <div className="d-flex align-items-end">
+                          <p style={{ ...blue, ...xSmall }} className="mb-0">
+                            {row.payment_notes}
+                          </p>
+                        </div>
+                      </div>
                     </TableCell>
 
                     <TableCell align="right"> {row.payer}</TableCell>

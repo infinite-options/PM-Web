@@ -13,6 +13,8 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import { makeStyles } from "@material-ui/core/styles";
 import Verified from "../../icons/Verified.jpg";
+
+import { green, red, blue, xSmall } from "../../utils/styles";
 const useStyles = makeStyles({
   customTable: {
     "& .MuiTableCell-sizeSmall": {
@@ -208,6 +210,13 @@ export default function TenantPaymentHistory(props) {
                           row.state +
                           " " +
                           row.zip}
+                        <div className="d-flex">
+                          <div className="d-flex align-items-end">
+                            <p style={{ ...blue, ...xSmall }} className="mb-0">
+                              {row.payment_notes}
+                            </p>
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell align="right" style={{ width: "200px" }}>
                         {row.description}
