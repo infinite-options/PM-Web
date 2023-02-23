@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import {
   Table,
   TableRow,
@@ -27,6 +27,12 @@ import { MaskCharacter, ordinal_suffix_of } from "../../utils/helper";
 
 const useStyles = makeStyles({
   customTable: {
+    "& .MuiTableCell-sizeSmall": {
+      padding: "6px 6px 6px 6px",
+      border: "0.5px solid grey ",
+    },
+  },
+  customTableDetail: {
     "& .MuiTableCell-sizeSmall": {
       padding: "6px 6px 6px 6px",
       border: "0.5px solid grey ",
@@ -67,23 +73,8 @@ function ManagerTenantProfileView(props) {
     const response = await put("/applications", request_body);
     back();
   };
-  // function MaskCharacter(str, mask, n = 1) {
-  //   return ("" + str).slice(0, -n).replace(/./g, mask) + ("" + str).slice(-n);
-  // }
-  // function ordinal_suffix_of(i) {
-  //   var j = i % 10,
-  //     k = i % 100;
-  //   if (j === 1 && k !== 11) {
-  //     return i + "st";
-  //   }
-  //   if (j === 2 && k !== 12) {
-  //     return i + "nd";
-  //   }
-  //   if (j === 3 && k !== 13) {
-  //     return i + "rd";
-  //   }
-  //   return i + "th";
-  // }
+  console.log(application);
+
   return (
     <div className="mb-5 pb-5">
       <div
@@ -97,122 +88,183 @@ function ManagerTenantProfileView(props) {
         <Row className="d-flex justify-content-center my-2" style={mediumBold}>
           Personal Info
         </Row>
-
-        <Container
+        <div
+          className="mx-3 my-3 p-2"
           style={{
-            background: "#FFFFFF 0% 0% no-repeat padding-box",
-            boxShadow: "0px 3px 6px #00000029",
-            border: "0.5px solid #707070",
-            borderRadius: "5px",
-            maxHeight: "500px",
-            overflow: "scroll",
+            background: "#E9E9E9 0% 0% no-repeat padding-box",
+            borderRadius: "10px",
+            opacity: 1,
           }}
         >
-          <Row className="p-1">
-            <Col>
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0" style={mediumBold}>
-                  {application.tenant_first_name} {application.tenant_last_name}
-                </h5>
-              </div>
-            </Col>
+          <Row className="mb-4 m-3">
+            <h5 style={mediumBold}>Personal Details</h5>
 
-            <Col>
-              <div className="d-flex  justify-content-end ">
-                <div
-                  style={application.tenant_id ? {} : hidden}
-                  onClick={stopPropagation}
-                >
-                  <a href={`tel:${application.tenant_phone_number}`}>
-                    <img src={Phone} alt="Phone" style={smallImg} />
-                  </a>
-                  <a href={`mailto:${application.tenant_email}`}>
-                    <img src={Message} alt="Message" style={smallImg} />
-                  </a>
-                </div>
-              </div>
-            </Col>
-          </Row>
-          <div
-            className="my-3 p-2"
-            style={{
-              boxShadow: " 0px 1px 6px #00000029",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            <Row className="mx-2">
-              Current Job Details
-              <Row className="mx-2">
-                <Col style={subText}>Job Company</Col>
-                <Col style={subText}>
-                  {application.tenant_current_job_company}
-                </Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>Job Title</Col>
-                <Col style={subText}>
-                  {application.tenant_current_job_title}
-                </Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>Job Salary</Col>
-                <Col style={subText}>
-                  {application.tenant_current_salary}/{" "}
-                  {application.tenant_salary_frequency}
-                </Col>
-              </Row>
-            </Row>
-          </div>
-          <div
-            className="my-3 p-2"
-            style={{
-              boxShadow: " 0px 1px 6px #00000029",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            <Row className="mx-2">
-              Personal Details
-              <Row className="mx-2">
-                <Col style={subText}>DL Number</Col>
-                <Col style={subText} onClick={() => setShowDL(!showDL)}>
-                  {showDL ? (
-                    <div>
-                      {MaskCharacter(
-                        application.tenant_drivers_license_number,
-                        "*"
-                      )}
+            <Table
+              classes={{ root: classes.customTableDetail }}
+              size="small"
+              responsive="md"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell> First Name</TableCell>
+                  <TableCell> Last Name</TableCell>
+                  <TableCell> Address</TableCell>
+                  <TableCell> Phone Number</TableCell>
+                  <TableCell> Email</TableCell>
+                  <TableCell> Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    {" "}
+                    {application.tenant_first_name &&
+                    application.tenant_first_name !== "NULL"
+                      ? application.tenant_first_name
+                      : "No First Name Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {application.tenant_last_name &&
+                    application.tenant_last_name !== "NULL"
+                      ? application.tenant_last_name
+                      : "No Last Name Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {application.address}
+                    {application.unit !== "" ? " " + application.unit : ""}
+                    , <br />
+                    {application.city}, {application.state} {application.zip}
+                  </TableCell>
+                  <TableCell>
+                    {application.tenant_phone_number &&
+                    application.tenant_phone_number !== "NULL"
+                      ? application.tenant_phone_number
+                      : "No Phone Number Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {application.tenant_email &&
+                    application.tenant_email !== "NULL"
+                      ? application.tenant_email
+                      : "No Email Provided"}
+                  </TableCell>
+                  <TableCell>
+                    <div className="d-flex  justify-content-end ">
+                      <div
+                        style={application.tenant_id ? {} : hidden}
+                        onClick={stopPropagation}
+                      >
+                        <a href={`tel:${application.tenant_phone_number}`}>
+                          <img src={Phone} alt="Phone" style={smallImg} />
+                        </a>
+                        <a href={`mailto:${application.tenant_email}`}>
+                          <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                      </div>
                     </div>
-                  ) : (
-                    <div>{application.tenant_drivers_license_number}</div>
-                  )}
-                </Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>SSN</Col>
-                <Col style={subText} onClick={() => setShowSSN(!showSSN)}>
-                  {showSSN ? (
-                    <div>{MaskCharacter(application.tenant_ssn, "*")}</div>
-                  ) : (
-                    <div>{application.tenant_ssn}</div>
-                  )}
-                  {}
-                </Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>Email</Col>
-                <Col style={subText}>{application.tenant_email}</Col>
-              </Row>
-              <Row className="mx-2">
-                <Col style={subText}>Phone Number</Col>
-                <Col style={subText}>{application.tenant_phone_number}</Col>
-              </Row>
-            </Row>
-          </div>
-        </Container>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Row>
 
-        {application.applicant_info.length > 0
+          <Row className="mb-4 m-3">
+            <h5 style={mediumBold}>Current Job Details</h5>
+
+            <Table
+              classes={{ root: classes.customTableDetail }}
+              size="small"
+              responsive="md"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell> Current Salary</TableCell>
+                  <TableCell>Salary Frequency</TableCell>
+                  <TableCell> Current Job Title</TableCell>
+                  <TableCell> Current Company Name</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    {application.tenant_current_salary &&
+                    application.tenant_current_salary !== "NULL"
+                      ? application.tenant_current_salary
+                      : "No Salary Info Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {application.tenant_salary_frequency &&
+                    application.tenant_salary_frequency !== "NULL"
+                      ? application.tenant_salary_frequency
+                      : "No Salary Info Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {application.tenant_current_job_title &&
+                    application.tenant_current_job_title !== "NULL"
+                      ? application.tenant_current_job_title
+                      : "No Job Title Provided"}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {application.tenant_current_job_company &&
+                    application.tenant_current_job_company !== "NULL"
+                      ? application.tenant_current_job_company
+                      : "No Company Provided"}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Row>
+          <Row className="mb-4 m-3">
+            <h5 style={mediumBold}>Identification Details</h5>
+
+            <Table
+              classes={{ root: classes.customTableDetail }}
+              size="small"
+              responsive="md"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell> SSN</TableCell>
+                  <TableCell> Driver's Licence Number</TableCell>
+                  <TableCell> Driver's Licence State</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell onClick={() => setShowSSN(!showSSN)}>
+                    {" "}
+                    {showSSN ? (
+                      <div>{MaskCharacter(application.tenant_ssn, "*")}</div>
+                    ) : (
+                      <div>{application.tenant_ssn}</div>
+                    )}
+                  </TableCell>
+                  <TableCell onClick={() => setShowDL(!showDL)}>
+                    {showDL ? (
+                      <div>
+                        {MaskCharacter(
+                          application.tenant_drivers_license_number,
+                          "*"
+                        )}
+                      </div>
+                    ) : (
+                      <div>{application.tenant_drivers_license_number}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {application.tenant_drivers_license_state &&
+                    application.tenant_drivers_license_state !== "NULL"
+                      ? application.tenant_drivers_license_state
+                      : "No DL state Provided"}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Row>
+        </div>
+        {application.applicant_info.length > 1
           ? application.applicant_info.map((applicant) =>
               applicant.application_uid !== application.application_uid ? (
                 <Row
@@ -226,10 +278,211 @@ function ManagerTenantProfileView(props) {
               )
             )
           : ""}
+
+        {application.applicant_info.length > 1 ? (
+          <Row className="m-3">
+            <Row className="mb-4">
+              <h5 style={mediumBold}>Personal Details</h5>
+
+              <Table
+                classes={{ root: classes.customTableDetail }}
+                size="small"
+                responsive="md"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell> First Name</TableCell>
+                    <TableCell> Last Name</TableCell>
+                    <TableCell> Address</TableCell>
+                    <TableCell> Phone Number</TableCell>
+                    <TableCell> Email</TableCell>
+                    <TableCell> Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {application.applicant_info.map((applicant) =>
+                    applicant.application_uid !==
+                    application.application_uid ? (
+                      <TableRow>
+                        <TableCell>
+                          {" "}
+                          {applicant.tenant_first_name &&
+                          applicant.tenant_first_name !== "NULL"
+                            ? applicant.tenant_first_name
+                            : "No First Name Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {applicant.tenant_last_name &&
+                          applicant.tenant_last_name !== "NULL"
+                            ? applicant.tenant_last_name
+                            : "No Last Name Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {applicant.address}
+                          {applicant.unit !== "" ? " " + applicant.unit : ""}
+                          , <br />
+                          {applicant.city}, {applicant.state} {applicant.zip}
+                        </TableCell>
+                        <TableCell>
+                          {applicant.tenant_phone_number &&
+                          applicant.tenant_phone_number !== "NULL"
+                            ? applicant.tenant_phone_number
+                            : "No Phone Number Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {applicant.tenant_email &&
+                          applicant.tenant_email !== "NULL"
+                            ? applicant.tenant_email
+                            : "No Email Provided"}
+                        </TableCell>
+                        <TableCell>
+                          <div className="d-flex  justify-content-end ">
+                            <div
+                              style={applicant.tenant_id ? {} : hidden}
+                              onClick={stopPropagation}
+                            >
+                              <a href={`tel:${applicant.tenant_phone_number}`}>
+                                <img src={Phone} alt="Phone" style={smallImg} />
+                              </a>
+                              <a href={`mailto:${applicant.tenant_email}`}>
+                                <img
+                                  src={Message}
+                                  alt="Message"
+                                  style={smallImg}
+                                />
+                              </a>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      ""
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </Row>
+
+            <Row className="mb-4">
+              <h5 style={mediumBold}>Current Job Details</h5>
+
+              <Table
+                classes={{ root: classes.customTableDetail }}
+                size="small"
+                responsive="md"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell> Current Salary</TableCell>
+                    <TableCell>Salary Frequency</TableCell>
+                    <TableCell> Current Job Title</TableCell>
+                    <TableCell> Current Company Name</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {application.applicant_info.map((applicant) =>
+                    applicant.application_uid !==
+                    application.application_uid ? (
+                      <TableRow>
+                        <TableCell>
+                          {applicant.tenant_current_salary &&
+                          applicant.tenant_current_salary !== "NULL"
+                            ? applicant.tenant_current_salary
+                            : "No Salary Info Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {applicant.tenant_salary_frequency &&
+                          applicant.tenant_salary_frequency !== "NULL"
+                            ? applicant.tenant_salary_frequency
+                            : "No Salary Info Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {applicant.tenant_current_job_title &&
+                          applicant.tenant_current_job_title !== "NULL"
+                            ? applicant.tenant_current_job_title
+                            : "No Job Title Provided"}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {applicant.tenant_current_job_company &&
+                          applicant.tenant_current_job_company !== "NULL"
+                            ? applicant.tenant_current_job_company
+                            : "No Company Provided"}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      ""
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </Row>
+            <Row className="mb-4">
+              <h5 style={mediumBold}>Identification Details</h5>
+
+              <Table
+                classes={{ root: classes.customTableDetail }}
+                size="small"
+                responsive="md"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell> SSN</TableCell>
+                    <TableCell> Driver's Licence Number</TableCell>
+                    <TableCell> Driver's Licence State</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {application.applicant_info.map((applicant) =>
+                    applicant.application_uid !==
+                    application.application_uid ? (
+                      <TableRow>
+                        <TableCell onClick={() => setShowSSN(!showSSN)}>
+                          {" "}
+                          {showSSN ? (
+                            <div>
+                              {MaskCharacter(applicant.tenant_ssn, "*")}
+                            </div>
+                          ) : (
+                            <div>{applicant.tenant_ssn}</div>
+                          )}
+                        </TableCell>
+                        <TableCell onClick={() => setShowDL(!showDL)}>
+                          {showDL ? (
+                            <div>
+                              {MaskCharacter(
+                                applicant.tenant_drivers_license_number,
+                                "*"
+                              )}
+                            </div>
+                          ) : (
+                            <div>{applicant.tenant_drivers_license_number}</div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {applicant.tenant_drivers_license_state &&
+                          applicant.tenant_drivers_license_state !== "NULL"
+                            ? applicant.tenant_drivers_license_state
+                            : "No DL state Provided"}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      ""
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </Row>
+          </Row>
+        ) : (
+          ""
+        )}
         {application.applicant_info.length > 0
           ? application.applicant_info.map((applicant) =>
               applicant.application_uid !== application.application_uid ? (
-                <Container
+                <div
                   style={{
                     background: "#FFFFFF 0% 0% no-repeat padding-box",
                     boxShadow: "0px 3px 6px #00000029",
@@ -349,7 +602,7 @@ function ManagerTenantProfileView(props) {
                       </Row>
                     </Row>
                   </div>
-                </Container>
+                </div>
               ) : (
                 ""
               )
@@ -358,259 +611,108 @@ function ManagerTenantProfileView(props) {
         <Row className="d-flex justify-content-center my-2" style={mediumBold}>
           Application Details
         </Row>
-
-        <Container
+        <div
+          className="mx-3 p-2"
           style={{
-            background: "#FFFFFF 0% 0% no-repeat padding-box",
-            boxShadow: "0px 3px 6px #00000029",
-            border: "0.5px solid #707070",
-            borderRadius: "5px",
-            maxHeight: "500px",
-            overflow: "scroll",
+            background: "#E9E9E9 0% 0% no-repeat padding-box",
+            borderRadius: "10px 10px 0px 0px",
+            opacity: 1,
           }}
         >
-          {application.applicant_info.map((applicant) => (
-            <div
-              className="my-3 p-2"
-              style={{
-                boxShadow: " 0px 1px 6px #00000029",
-                borderRadius: "5px",
-              }}
-            >
-              <Row className="mx-2">
-                <Row className="mx-2">
-                  <Col style={subText}>Applicant Name</Col>
-                  <Col style={subText}>
-                    {applicant.tenant_first_name} {applicant.tenant_last_name}
-                  </Col>
-                </Row>
-                <Row className="mx-2">
-                  <Col style={subText}>Phone Number</Col>
-                  <Col style={subText}>{applicant.tenant_phone_number}</Col>
-                </Row>
-                <Row className="mx-2">
-                  <Col style={subText}>Email</Col>
-                  <Col style={subText}>{applicant.tenant_email}</Col>
-                </Row>
-              </Row>
-              <Row className="mx-2 my-2">
-                <Row className="mx-2" style={headings}>
-                  <div>Who plans to live in the unit?</div>
-                </Row>
-                <Row className="mx-2">
-                  {applicant.adults &&
-                  JSON.parse(applicant.adults).length > 0 ? (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Adults</Row>
-                      <Table
-                        responsive="md"
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Relationship</TableCell>
-                            <TableCell>DOB(YYYY-MM-DD)</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {JSON.parse(applicant.adults).map((adult, i) => {
-                            return (
-                              <TableRow>
-                                <TableCell>{adult.name}</TableCell>
-                                <TableCell>{adult.relationship}</TableCell>
-                                <TableCell>{adult.dob}</TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Adults</Row>
-                      <Row style={gray}>
-                        <Col>None</Col>
-                      </Row>
-                    </div>
-                  )}
-                  {applicant.children &&
-                  JSON.parse(applicant.children).length > 0 ? (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Children</Row>
-                      <Table
-                        responsive="md"
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Relationship</TableCell>
-                            <TableCell>DOB(YYYY-MM-DD)</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {JSON.parse(applicant.children).map((child) => {
-                            return (
-                              <TableRow>
-                                <TableCell>{child.name}</TableCell>
-                                <TableCell>{child.relationship}</TableCell>
-                                <TableCell>{child.dob}</TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Children</Row>
-                      <Row style={gray}>
-                        <Col>None</Col>
-                      </Row>
-                    </div>
-                  )}
+          <Row className="m-3">
+            <Col>
+              <h3>Application Details</h3>
+            </Col>
+            <Col xs={2}> </Col>
+          </Row>
+        </div>
 
-                  {applicant.pets && JSON.parse(applicant.pets).length > 0 ? (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Pets</Row>
-                      <Table
-                        responsive="md"
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          {" "}
-                          <TableRow style={subHeading}>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Type</TableCell>
-                            <TableCell>Breed</TableCell>
-                            <TableCell>Weight (lbs)</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {JSON.parse(applicant.pets).map((pet) => {
-                            return (
-                              <TableRow>
-                                <TableCell>{pet.name}</TableCell>
-                                <TableCell>{pet.type}</TableCell>
-                                <TableCell>{pet.breed}</TableCell>
-                                <TableCell>{pet.weight}</TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Pets</Row>
-                      <Row style={gray}>
-                        <Col>None</Col>
-                      </Row>
-                    </div>
-                  )}
+        <div
+          className="mx-3 mb-3 p-2"
+          style={{
+            background: "#E9E9E9 0% 0% no-repeat padding-box",
+            borderRadius: "0px 0px 10px 10px",
+            opacity: 1,
+          }}
+        >
+          <Row className="m-3" style={{ overflow: "scroll" }}>
+            <Table classes={{ root: classes.customTable }} size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Application Status</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Message</TableCell>
+                  <TableCell>Adults</TableCell>
+                  <TableCell>Children</TableCell>
+                  <TableCell>Pets</TableCell>
+                  <TableCell>Vehicles</TableCell>
+                  <TableCell>References</TableCell>
+                  <TableCell>Application Date</TableCell>
+                  <TableCell>Documents</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {application.applicant_info.map((applicant) => {
+                  return (
+                    <TableRow className="mt-2">
+                      <TableCell>{applicant.application_status}</TableCell>
+                      <TableCell>
+                        {`${applicant.tenant_first_name} ${applicant.tenant_last_name} `}
+                      </TableCell>
+                      <TableCell>Note: {applicant.message}</TableCell>
+                      {applicant.adults ? (
+                        <TableCell align="center">
+                          {JSON.parse(applicant.adults).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell align="center">0</TableCell>
+                      )}
+                      {applicant.children ? (
+                        <TableCell align="center">
+                          {JSON.parse(applicant.children).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell align="center">0</TableCell>
+                      )}
 
-                  {applicant.vehicles &&
-                  JSON.parse(applicant.vehicles).length > 0 ? (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Vehicles</Row>
-                      <Table
-                        responsive="md"
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow style={subHeading}>
-                            <TableCell>Make</TableCell>
-                            <TableCell>Model</TableCell>
-                            <TableCell>Year</TableCell>
-                            <TableCell>State</TableCell>
-                            <TableCell>License</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {JSON.parse(applicant.vehicles).map((vehicle) => {
-                            return (
-                              <TableRow>
-                                <TableCell>{vehicle.make}</TableCell>
-                                <TableCell>{vehicle.model}</TableCell>
-                                <TableCell>{vehicle.year}</TableCell>
-                                <TableCell>{vehicle.state}</TableCell>
-                                <TableCell>{vehicle.license}</TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Vehicles</Row>
-                      <Row style={gray}>
-                        <Col>None</Col>
-                      </Row>
-                    </div>
-                  )}
+                      {applicant.pets ? (
+                        <TableCell align="center">
+                          {JSON.parse(applicant.pets).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell align="center">0</TableCell>
+                      )}
+                      {applicant.vehicles ? (
+                        <TableCell align="center">
+                          {JSON.parse(applicant.vehicles).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell align="center">0</TableCell>
+                      )}
+                      {applicant.referred ? (
+                        <TableCell align="center">
+                          {JSON.parse(applicant.referred).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell align="center">0</TableCell>
+                      )}
+                      <TableCell>
+                        {applicant.application_date.split(" ")[0]}
+                      </TableCell>
 
-                  {applicant.referred &&
-                  JSON.parse(applicant.referred).length > 0 ? (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>References</Row>
-                      <Table
-                        responsive="md"
-                        classes={{ root: classes.customTable }}
-                        size="small"
-                      >
-                        <TableHead>
-                          <TableRow style={subHeading}>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Address</TableCell>
-                            <TableCell>Phone Number</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Relationship</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {JSON.parse(applicant.referred).map((reference) => {
-                            return (
-                              <TableRow>
-                                <TableCell>{reference.name}</TableCell>
-                                <TableCell>{reference.address}</TableCell>
-                                <TableCell>{reference.phone}</TableCell>
-                                <TableCell>{reference.email}</TableCell>
-                                <TableCell>{reference.relationship}</TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>References</Row>
-                      <Row style={gray}>
-                        <Col>None</Col>
-                      </Row>
-                    </div>
-                  )}
-                  {console.log(applicant)}
-                  {applicant.documents && applicant.documents.length > 0 ? (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Documents</Row>
-                      {JSON.parse(applicant.documents).map((document, i) => {
-                        return (
-                          <Row>
-                            <Col>
+                      <TableCell>
+                        {applicant.documents &&
+                          applicant.documents.length > 0 &&
+                          JSON.parse(applicant.documents).map((document, i) => (
+                            <div
+                              className="d-flex justify-content-between align-items-end ps-0"
+                              key={i}
+                            >
                               <h6>
                                 {document.description == ""
                                   ? document.name
                                   : document.description}
                               </h6>
-                            </Col>
-                            <Col>
                               <a
                                 href={document.link}
                                 target="_blank"
@@ -625,24 +727,17 @@ function ManagerTenantProfileView(props) {
                                   }}
                                 />
                               </a>
-                            </Col>
-                          </Row>
-                        );
-                      })}{" "}
-                    </div>
-                  ) : (
-                    <div className="mx-3 ">
-                      <Row style={subHeading}>Documents</Row>
-                      <Row style={gray}>
-                        <Col>None</Col>
-                      </Row>
-                    </div>
-                  )}
-                </Row>
-              </Row>
-            </div>
-          ))}
-        </Container>
+                            </div>
+                          ))}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Row>
+        </div>
+
         <Row className="d-flex justify-content-center my-2">
           <p
             className="d-flex justify-content-center my-2"
@@ -653,278 +748,237 @@ function ManagerTenantProfileView(props) {
           </p>
         </Row>
         {application.rental_uid !== null ? (
-          <Container
+          <div
+            className="mx-3 p-2"
             style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              boxShadow: "0px 3px 6px #00000029",
-              border: "0.5px solid #707070",
-              borderRadius: "5px",
-              maxHeight: "500px",
-              overflow: "scroll",
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px 10px 0px 0px",
+              opacity: 1,
             }}
           >
-            <div
-              className="my-3 p-2"
-              style={{
-                boxShadow: " 0px 1px 6px #00000029",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              <Row className="mx-2">
-                <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
-                  <h5>Lease Details</h5>
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Lease Start</TableCell>
-                        <TableCell>Lease End</TableCell>
-                        <TableCell>Rent Due</TableCell>
-                        <TableCell>Adults</TableCell>
-                        <TableCell>Children</TableCell>
-                        <TableCell>Pets</TableCell>
-                        <TableCell>Vehicles</TableCell>
-                        <TableCell>References</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>{application.lease_start}</TableCell>
+            <Row className="m-3">
+              <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+                <h5>Lease Details</h5>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Lease Start</TableCell>
+                      <TableCell>Lease End</TableCell>
+                      <TableCell>Rent Due</TableCell>
+                      <TableCell>Adults</TableCell>
+                      <TableCell>Children</TableCell>
+                      <TableCell>Pets</TableCell>
+                      <TableCell>Vehicles</TableCell>
+                      <TableCell>References</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>{application.lease_start}</TableCell>
 
-                        <TableCell>{application.lease_end}</TableCell>
+                      <TableCell>{application.lease_end}</TableCell>
+
+                      <TableCell>
+                        {`${ordinal_suffix_of(
+                          application.due_by
+                        )} of the month`}
+                      </TableCell>
+
+                      {application.adults ? (
+                        <TableCell>
+                          {JSON.parse(application.adults).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.children ? (
+                        <TableCell>
+                          {JSON.parse(application.children).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+
+                      {application.pets ? (
+                        <TableCell>
+                          {JSON.parse(application.pets).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.vehicles ? (
+                        <TableCell>
+                          {JSON.parse(application.vehicles).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                      {application.referred ? (
+                        <TableCell>
+                          {JSON.parse(application.referred).length}
+                        </TableCell>
+                      ) : (
+                        <TableCell>0</TableCell>
+                      )}
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Row>
+            </Row>
+
+            <Row className="m-3">
+              <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
+                <h5>Lease Payments</h5>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Fee Name</TableCell>
+                      <TableCell>Amount</TableCell>
+                      <TableCell>Of</TableCell>
+                      <TableCell>Frequency</TableCell>
+                      <TableCell>Available to Pay</TableCell>
+                      <TableCell>Due Date</TableCell>
+                      <TableCell>Late Fees After (days)</TableCell>
+                      <TableCell>Late Fee (one-time)</TableCell>
+                      <TableCell>Late Fee (per day)</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {feeState.map((fee, i) => (
+                      <TableRow>
+                        <TableCell>{fee.fee_name}</TableCell>
 
                         <TableCell>
-                          {`${ordinal_suffix_of(
-                            application.due_by
-                          )} of the month`}
+                          {fee.fee_type === "%"
+                            ? `${fee.charge}%`
+                            : `$${fee.charge}`}
                         </TableCell>
 
-                        {application.adults ? (
-                          <TableCell>
-                            {JSON.parse(application.adults).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
-                        {application.children ? (
-                          <TableCell>
-                            {JSON.parse(application.children).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
+                        <TableCell>
+                          {fee.fee_type === "%" ? `${fee.of}` : ""}
+                        </TableCell>
 
-                        {application.pets ? (
-                          <TableCell>
-                            {JSON.parse(application.pets).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
-                        {application.vehicles ? (
-                          <TableCell>
-                            {JSON.parse(application.vehicles).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
-                        {application.referred ? (
-                          <TableCell>
-                            {JSON.parse(application.referred).length}
-                          </TableCell>
-                        ) : (
-                          <TableCell>0</TableCell>
-                        )}
+                        <TableCell>{fee.frequency}</TableCell>
+                        <TableCell>
+                          {`${fee.available_topay} days before`}
+                        </TableCell>
+                        <TableCell>
+                          {fee.frequency === "Weekly" ||
+                          fee.frequency === "Biweekly"
+                            ? fee.due_by === ""
+                              ? `1st day of the week`
+                              : `${ordinal_suffix_of(
+                                  fee.due_by
+                                )} day of the week`
+                            : fee.due_by === ""
+                            ? `1st of the month`
+                            : `${ordinal_suffix_of(fee.due_by)} of the month`}
+                        </TableCell>
+                        <TableCell>{fee.late_by} days</TableCell>
+                        <TableCell>${fee.late_fee}</TableCell>
+                        <TableCell>${fee.perDay_late_fee}/day</TableCell>
                       </TableRow>
-                    </TableBody>
-                  </Table>
-                </Row>
+                    ))}
+                  </TableBody>
+                </Table>
               </Row>
-            </div>{" "}
-            <div
-              className="my-3 p-2"
-              style={{
-                boxShadow: " 0px 1px 6px #00000029",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              <Row className="mx-2">
-                <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
-                  <h5>Lease Payments</h5>
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Fee Name</TableCell>
-                        <TableCell>Amount</TableCell>
-                        <TableCell>Of</TableCell>
-                        <TableCell>Frequency</TableCell>
-                        <TableCell>Available to Pay</TableCell>
-                        <TableCell>Due Date</TableCell>
-                        <TableCell>Late Fees After (days)</TableCell>
-                        <TableCell>Late Fee (one-time)</TableCell>
-                        <TableCell>Late Fee (per day)</TableCell>
+            </Row>
+
+            <Row className="m-3">
+              <Row className="mb-4 m-3" hidden={contactState.length === 0}>
+                <h5 style={mediumBold}>Contact Details</h5>
+                <Table classes={{ root: classes.customTable }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Contact Name</TableCell>
+                      <TableCell>Role</TableCell>
+                      <TableCell>Email</TableCell>
+                      <TableCell>Phone Number</TableCell>
+
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {contactState.map((contact, i) => (
+                      <TableRow key={i}>
+                        <TableCell>
+                          {contact.first_name} {contact.last_name}
+                        </TableCell>
+                        <TableCell>{contact.company_role}</TableCell>
+                        <TableCell>{contact.email}</TableCell>
+                        <TableCell>{contact.phone_number}</TableCell>
+                        <TableCell>
+                          <a href={`tel:${contact.phone_number}`}>
+                            <img src={Phone} alt="Phone" style={smallImg} />
+                          </a>
+                          <a href={`mailto:${contact.email}`}>
+                            <img src={Message} alt="Message" style={smallImg} />
+                          </a>
+                        </TableCell>
                       </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {feeState.map((fee, i) => (
+                    ))}
+                  </TableBody>
+                </Table>
+              </Row>
+            </Row>
+
+            <Row className="m-3">
+              <Row className="m-3">
+                <h5 style={mediumBold}>Lease Documents</h5>
+                <Table
+                  responsive="md"
+                  classes={{ root: classes.customTable }}
+                  size="small"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Document Name</TableCell>
+                      <TableCell>View Document</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {files.map((file) => {
+                      return (
                         <TableRow>
-                          <TableCell>{fee.fee_name}</TableCell>
-
                           <TableCell>
-                            {fee.fee_type === "%"
-                              ? `${fee.charge}%`
-                              : `$${fee.charge}`}
-                          </TableCell>
-
-                          <TableCell>
-                            {fee.fee_type === "%" ? `${fee.of}` : ""}
-                          </TableCell>
-
-                          <TableCell>{fee.frequency}</TableCell>
-                          <TableCell>
-                            {`${fee.available_topay} days before`}
+                            {file.description == ""
+                              ? file.name
+                              : file.description}
                           </TableCell>
                           <TableCell>
-                            {fee.frequency === "Weekly" ||
-                            fee.frequency === "Biweekly"
-                              ? fee.due_by === ""
-                                ? `1st day of the week`
-                                : `${ordinal_suffix_of(
-                                    fee.due_by
-                                  )} day of the week`
-                              : fee.due_by === ""
-                              ? `1st of the month`
-                              : `${ordinal_suffix_of(fee.due_by)} of the month`}
-                          </TableCell>
-                          <TableCell>{fee.late_by} days</TableCell>
-                          <TableCell>${fee.late_fee}</TableCell>
-                          <TableCell>${fee.perDay_late_fee}/day</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Row>
-              </Row>
-            </div>
-            <div
-              className="my-3 p-2"
-              style={{
-                boxShadow: " 0px 1px 6px #00000029",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-              hidden={application.rental_uid !== null}
-            >
-              <Row className="mx-2">
-                <Row className="mb-4 m-3" hidden={contactState.length === 0}>
-                  <h5 style={mediumBold}>Contact Details</h5>
-                  <Table classes={{ root: classes.customTable }} size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Contact Name</TableCell>
-                        <TableCell>Role</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Phone Number</TableCell>
-
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {contactState.map((contact, i) => (
-                        <TableRow key={i}>
-                          <TableCell>
-                            {contact.first_name} {contact.last_name}
-                          </TableCell>
-                          <TableCell>{contact.company_role}</TableCell>
-                          <TableCell>{contact.email}</TableCell>
-                          <TableCell>{contact.phone_number}</TableCell>
-                          <TableCell>
-                            <a href={`tel:${contact.phone_number}`}>
-                              <img src={Phone} alt="Phone" style={smallImg} />
-                            </a>
-                            <a href={`mailto:${contact.email}`}>
+                            <a
+                              href={file.link}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
                               <img
-                                src={Message}
-                                alt="Message"
-                                style={smallImg}
+                                src={File}
+                                alt="open document"
+                                style={{
+                                  width: "15px",
+                                  height: "15px",
+                                }}
                               />
                             </a>
                           </TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Row>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
               </Row>
-            </div>
-            <div
-              className="my-3 p-2"
-              style={{
-                boxShadow: " 0px 1px 6px #00000029",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-              hidden={application.rental_uid !== null}
-            >
-              <Row className="mx-2">
-                <Row className="m-3">
-                  <h5 style={mediumBold}>Lease Documents</h5>
-                  <Table
-                    responsive="md"
-                    classes={{ root: classes.customTable }}
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Document Name</TableCell>
-                        <TableCell>View Document</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {files.map((file) => {
-                        return (
-                          <TableRow>
-                            <TableCell>
-                              {file.description == ""
-                                ? file.name
-                                : file.description}
-                            </TableCell>
-                            <TableCell>
-                              <a
-                                href={file.link}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                <img
-                                  src={File}
-                                  alt="open document"
-                                  style={{
-                                    width: "15px",
-                                    height: "15px",
-                                  }}
-                                />
-                              </a>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </Row>
-              </Row>
-            </div>
-          </Container>
+            </Row>
+          </div>
         ) : (
-          <Container
+          <div
             style={{
               background: "#FFFFFF 0% 0% no-repeat padding-box",
               boxShadow: "0px 3px 6px #00000029",
@@ -944,7 +998,7 @@ function ManagerTenantProfileView(props) {
             >
               No lease created yet
             </div>
-          </Container>
+          </div>
         )}
       </div>
 

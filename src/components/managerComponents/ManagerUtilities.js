@@ -24,10 +24,11 @@ import Checkbox from "../Checkbox";
 import Header from "../Header";
 import AppContext from "../../AppContext";
 import ArrowDown from "../../icons/ArrowDown.svg";
-import EditIcon from "../../icons/EditIcon.svg";
-import DeleteIcon from "../../icons/DeleteIcon.svg";
-import File from "../../icons/File.svg";
 import AddIcon from "../../icons/AddIcon.svg";
+import WF_Logo from "../../icons/WF-Logo.png";
+import BofA_Logo from "../../icons/BofA-Logo.png";
+import Chase_Logo from "../../icons/Chase-Logo.png";
+import Citi_Logo from "../../icons/Citi-Logo.png";
 import { post, get } from "../../utils/api";
 import {
   pillButton,
@@ -53,16 +54,11 @@ const useStyles = makeStyles({
 });
 function ManagerUtilities(props) {
   const navigate = useNavigate();
-  const location = useLocation();
   const classes = useStyles();
   const { userData, refresh } = useContext(AppContext);
   const { access_token, user } = userData;
   const [stripePromise, setStripePromise] = useState(null);
 
-  // const { properties, expenses } = props;
-  const useLiveStripeKey = false;
-  // const properties = location.state.properties;
-  // const expenses = location.state.expenses;
   const [properties, setProperties] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,6 +79,10 @@ function ManagerUtilities(props) {
     useState(false);
   const [payExpense, setPayExpense] = useState(false);
   const [payExpenseManager, setPayExpenseManager] = useState(false);
+  const [bankPayment, setBankPayment] = useState(false);
+  const [paymentType, setPaymentType] = useState("");
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
   const [allPurchases, setAllPurchases] = useState([]);
   const [purchaseUIDs, setPurchaseUIDs] = useState([]);
   const [payment, setPayment] = useState(false);
@@ -137,6 +137,40 @@ function ManagerUtilities(props) {
     const requestDescription = requestDescriptionRef.current.value;
     const tagPriority = tagPriorityRef.current.value;
     props.onConfirm(requestTitle, requestDescription, tagPriority);
+  };
+  const submitPayment = async () => {
+    setShowSpinner(true);
+
+    let newPayment = {};
+    if (allPurchases.length === 1) {
+      // console.log(allPurchases[0]);
+      newPayment = {
+        pay_purchase_id: allPurchases[0].purchase_uid,
+        //Need to make change here
+        amount: parseFloat(amount),
+        payment_notes: message,
+        charge_id: confirmationCode,
+        payment_type: paymentType,
+      };
+      await post("/payments", newPayment);
+    } else {
+      for (let purchase of allPurchases) {
+        // console.log(purchase);
+        newPayment = {
+          pay_purchase_id: purchase.purchase_uid,
+          //Need to make change here
+          amount: parseFloat(
+            purchase.amount_due.toFixed(2) - purchase.amount_paid.toFixed(2)
+          ),
+          payment_notes: message,
+          charge_id: confirmationCode,
+          payment_type: paymentType,
+        };
+        await post("/payments", newPayment);
+      }
+    }
+    setShowSpinner(false);
+    submit();
   };
   const toggleKeys = async () => {
     //console.log("inside toggle keys");
@@ -316,6 +350,7 @@ function ManagerUtilities(props) {
 
   const cancel = () => {
     setStripePayment(false);
+    setBankPayment(false);
     fetchProperties();
   };
   const submit = () => {
@@ -2491,7 +2526,7 @@ function ManagerUtilities(props) {
                     ${payment.amount_due.toFixed(2)}
                   </Col>
                 </Row>
-                <div className="mt-3" hidden={stripePayment}>
+                <div className="mt-3" hidden={stripePayment || bankPayment}>
                   <Form.Group style={mediumBold}>
                     <Form.Label>Amount</Form.Label>
                     {purchaseUID.length === 1 ? (
@@ -2521,6 +2556,88 @@ function ManagerUtilities(props) {
                       onChange={(e) => setMessage(e.target.value)}
                     />
                   </Form.Group>
+                  <Row className="text-center mt-5">
+                    <Col>
+                      <a
+                        href="https://www.bankofamerica.com"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          onClick={() => {
+                            setBankPayment(true);
+                            setPaymentType("BANK OF AMERICA");
+                          }}
+                          src={BofA_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </a>
+                    </Col>
+                    <Col>
+                      <a
+                        href="https://www.chase.com"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          onClick={() => {
+                            setBankPayment(true);
+                            setPaymentType("CHASE");
+                          }}
+                          src={Chase_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </a>
+                    </Col>
+                    <Col>
+                      <a
+                        href="https://www.citi.com/login?deepdrop=true&checkAuth=Y"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          onClick={() => {
+                            setBankPayment(true);
+                            setPaymentType("CITI");
+                          }}
+                          src={Citi_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </a>
+                    </Col>
+                    <Col>
+                      <a
+                        href="https://www.wellsfargo.com"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          onClick={() => {
+                            setBankPayment(true);
+                            setPaymentType("WELLS FARGO");
+                          }}
+                          src={WF_Logo}
+                          style={{
+                            width: "160px",
+                            height: "100px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </a>
+                    </Col>
+                  </Row>
                   <Row
                     className="text-center mt-5"
                     style={{
@@ -2611,6 +2728,65 @@ function ManagerUtilities(props) {
                     />
                   </Elements>
                 </div>
+                <div hidden={!bankPayment}>
+                  <div
+                    style={{
+                      border: "1px solid black",
+                      borderRadius: "10px",
+                      padding: "10px",
+                      margin: "20px",
+                    }}
+                  >
+                    <Form.Group>
+                      <Form.Label>Please enter confirmation code</Form.Label>
+                      <Form.Control
+                        placeholder="Confirmation Code"
+                        style={squareForm}
+                        value={confirmationCode}
+                        onChange={(e) => setConfirmationCode(e.target.value)}
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="text-center mt-2">
+                    {showSpinner ? (
+                      <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                        <ReactBootStrap.Spinner
+                          animation="border"
+                          role="status"
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <Row
+                      style={{
+                        display: "text",
+                        flexDirection: "row",
+                        textAlign: "center",
+                      }}
+                    >
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          onClick={cancel}
+                          style={pillButton}
+                        >
+                          Cancel
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          variant="outline-primary"
+                          //onClick={submitForm}
+                          style={bluePillButton}
+                          onClick={submitPayment}
+                        >
+                          Pay Now
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
               </div>{" "}
             </div>
           ) : (
@@ -2682,7 +2858,7 @@ function ManagerUtilities(props) {
                   </Table>
                 </Row>
                 <Row className="m-3">
-                  <div className="mt-3" hidden={stripePayment}>
+                  <div className="mt-3" hidden={stripePayment || bankPayment}>
                     <Form.Group style={mediumBold}>
                       <Form.Label>Amount</Form.Label>
                       {purchaseUID.length === 1 ? (
@@ -2712,6 +2888,88 @@ function ManagerUtilities(props) {
                         onChange={(e) => setMessage(e.target.value)}
                       />
                     </Form.Group>
+                    <Row className="text-center mt-5">
+                      <Col>
+                        <a
+                          href="https://www.bankofamerica.com"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <img
+                            onClick={() => {
+                              setBankPayment(true);
+                              setPaymentType("BANK OF AMERICA");
+                            }}
+                            src={BofA_Logo}
+                            style={{
+                              width: "160px",
+                              height: "100px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        </a>
+                      </Col>
+                      <Col>
+                        <a
+                          href="https://www.chase.com"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <img
+                            onClick={() => {
+                              setBankPayment(true);
+                              setPaymentType("CHASE");
+                            }}
+                            src={Chase_Logo}
+                            style={{
+                              width: "160px",
+                              height: "100px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        </a>
+                      </Col>
+                      <Col>
+                        <a
+                          href="https://www.citi.com/login?deepdrop=true&checkAuth=Y"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <img
+                            onClick={() => {
+                              setBankPayment(true);
+                              setPaymentType("CITI");
+                            }}
+                            src={Citi_Logo}
+                            style={{
+                              width: "160px",
+                              height: "100px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        </a>
+                      </Col>
+                      <Col>
+                        <a
+                          href="https://www.wellsfargo.com"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <img
+                            onClick={() => {
+                              setBankPayment(true);
+                              setPaymentType("WELLS FARGO");
+                            }}
+                            src={WF_Logo}
+                            style={{
+                              width: "160px",
+                              height: "100px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        </a>
+                      </Col>
+                    </Row>
                     <Row
                       className="text-center mt-5"
                       style={{
@@ -2803,6 +3061,65 @@ function ManagerUtilities(props) {
                         amount={amount}
                       />
                     </Elements>
+                  </div>
+                  <div hidden={!bankPayment}>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        borderRadius: "10px",
+                        padding: "10px",
+                        margin: "20px",
+                      }}
+                    >
+                      <Form.Group>
+                        <Form.Label>Please enter confirmation code</Form.Label>
+                        <Form.Control
+                          placeholder="Confirmation Code"
+                          style={squareForm}
+                          value={confirmationCode}
+                          onChange={(e) => setConfirmationCode(e.target.value)}
+                        />
+                      </Form.Group>
+                    </div>
+                    <div className="text-center mt-2">
+                      {showSpinner ? (
+                        <div className="w-100 d-flex flex-column justify-content-center align-items-center">
+                          <ReactBootStrap.Spinner
+                            animation="border"
+                            role="status"
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <Row
+                        style={{
+                          display: "text",
+                          flexDirection: "row",
+                          textAlign: "center",
+                        }}
+                      >
+                        <Col>
+                          <Button
+                            variant="outline-primary"
+                            onClick={cancel}
+                            style={pillButton}
+                          >
+                            Cancel
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button
+                            variant="outline-primary"
+                            //onClick={submitForm}
+                            style={bluePillButton}
+                            onClick={submitPayment}
+                          >
+                            Pay Now
+                          </Button>
+                        </Col>
+                      </Row>
+                    </div>
                   </div>
                 </Row>
               </div>
