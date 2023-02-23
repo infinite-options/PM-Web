@@ -205,8 +205,8 @@ function OwnerUtilities(props) {
 
     setAllPurchases(tempAllPurchases);
 
-    setTotalSum(tempAmountDue);
-    setAmount(tempAmountDue - tempAmountPaid);
+    setTotalSum(Math.round(tempAmountDue));
+    setAmount(Math.round(tempAmountDue - tempAmountPaid));
   };
 
   useEffect(() => {
@@ -470,7 +470,13 @@ function OwnerUtilities(props) {
           property.rental_status === "PENDING"
         ) {
           // console.log("property.tenants", property.rentalInfo[0]);
-          let tenant_ids = property.rentalInfo[0].tenant_id;
+          let tenant_ids = [];
+          property.rentalInfo.forEach((r) => {
+            if (r.rental_status === "ACTIVE") {
+              tenant_ids = r.tenant_id;
+            }
+          });
+          console.log(tenant_ids);
           new_purchase.payer = [tenant_ids];
         } else {
           new_purchase.payer = [property.owner_id];
@@ -479,7 +485,7 @@ function OwnerUtilities(props) {
         new_purchase.payer = [property.owner_id];
       }
 
-      // console.log("New Purchase", new_purchase);
+      console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
 
@@ -611,8 +617,15 @@ function OwnerUtilities(props) {
           property.rental_status === "TENANT APPROVED" ||
           property.rental_status === "PENDING"
         ) {
-          let tenant_ids = property.tenants.map((t) => t.tenant_id);
-          new_purchase.payer = tenant_ids;
+          // console.log("property.tenants", property.rentalInfo[0]);
+          let tenant_ids = [];
+          property.rentalInfo.forEach((r) => {
+            if (r.rental_status === "ACTIVE") {
+              tenant_ids = r.tenant_id;
+            }
+          });
+          console.log(tenant_ids);
+          new_purchase.payer = [tenant_ids];
         } else {
           new_purchase.payer = [property.owner_id];
         }
@@ -2760,7 +2773,7 @@ function OwnerUtilities(props) {
                 }}
               >
                 <Row style={headings} className="m-3">
-                  Total Payment: ${totalSum}
+                  Total Payment: ${Math.round(totalSum)}
                 </Row>
                 <Row className="m-3">
                   <Table
@@ -2805,26 +2818,6 @@ function OwnerUtilities(props) {
                 </Row>
                 <Row className="m-3">
                   <div className="mt-3" hidden={stripePayment || bankPayment}>
-                    <Form.Group style={mediumBold}>
-                      <Form.Label>Amount</Form.Label>
-                      {purchaseUID.length === 1 ? (
-                        <Form.Control
-                          placeholder={amount}
-                          style={squareForm}
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                        />
-                      ) : (
-                        <Form.Control
-                          disabled
-                          placeholder={amount}
-                          style={squareForm}
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                        />
-                      )}
-                    </Form.Group>
-
                     <Form.Group style={mediumBold}>
                       <Form.Label>Message</Form.Label>
                       <Form.Control

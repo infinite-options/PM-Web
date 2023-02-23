@@ -2814,7 +2814,7 @@ function ManagerUtilities(props) {
                 }}
               >
                 <Row style={headings} className="m-3">
-                  Total Payment: ${totalSum}
+                  Total Payment: ${Math.round(totalSum)}
                 </Row>
                 <Row className="m-3">
                   <Table
@@ -2859,26 +2859,6 @@ function ManagerUtilities(props) {
                 </Row>
                 <Row className="m-3">
                   <div className="mt-3" hidden={stripePayment || bankPayment}>
-                    <Form.Group style={mediumBold}>
-                      <Form.Label>Amount</Form.Label>
-                      {purchaseUID.length === 1 ? (
-                        <Form.Control
-                          placeholder={amount}
-                          style={squareForm}
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                        />
-                      ) : (
-                        <Form.Control
-                          disabled
-                          placeholder={amount}
-                          style={squareForm}
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                        />
-                      )}
-                    </Form.Group>
-
                     <Form.Group style={mediumBold}>
                       <Form.Label>Message</Form.Label>
                       <Form.Control
