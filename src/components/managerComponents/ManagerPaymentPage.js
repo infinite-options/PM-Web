@@ -83,14 +83,14 @@ function ManagerPaymentPage(props) {
 
   useEffect(async () => {
     let tempAllPurchases = [];
-    for (let i in purchaseUIDs) {
-      let response1 = await get(`/purchases?purchase_uid=${purchaseUIDs[i]}`);
+    let pids = purchaseUIDs;
+    for (let i = 0; i < pids.length; i++) {
+      let response1 = await get(`/purchases?purchase_uid=${pids[i]}`);
       tempAllPurchases.push(response1.result[0]);
     }
-    let response = await get(`/purchases?purchase_uid=${purchase_uid}`);
-    setPurchase(response.result[0]);
     setAllPurchases(tempAllPurchases);
   }, []);
+
   const submitPayment = async () => {
     setShowSpinner(true);
 

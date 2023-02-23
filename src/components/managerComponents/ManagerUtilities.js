@@ -257,8 +257,8 @@ function ManagerUtilities(props) {
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          console.log("here", property);
-          console.log("here", properties_unique[index].tenants);
+          // console.log("here", property);
+          // console.log("here", properties_unique[index].tenants);
           properties_unique[index].tenants.push(property);
         }
       } else {
@@ -555,7 +555,7 @@ function ManagerUtilities(props) {
     setUtilityState(newUtilityState);
     setNewUtility(null);
   };
-  console.log(allPurchases);
+  // console.log(allPurchases);
   const postChargesandPay = async (newUtility) => {
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
@@ -617,12 +617,12 @@ function ManagerUtilities(props) {
       };
 
       const response_pm = await post("/purchases", new_purchase_pm, null, null);
-      console.log(response_pm);
+      // console.log(response_pm);
       purchase_uids.push(response_pm.purchase_uid);
     }
     purchase_uid = purchase_uids[0];
     setPurchaseUIDs(purchase_uids);
-    console.log(purchase_uids);
+    // console.log(purchase_uids);
     for (const property of newUtility.properties) {
       const new_purchase = {
         linked_bill_id: bill_uid,
@@ -2814,7 +2814,7 @@ function ManagerUtilities(props) {
                 }}
               >
                 <Row style={headings} className="m-3">
-                  Total Payment: ${totalSum}
+                  Total Payment: ${Math.round(totalSum)}
                 </Row>
                 <Row className="m-3">
                   <Table
@@ -2859,26 +2859,6 @@ function ManagerUtilities(props) {
                 </Row>
                 <Row className="m-3">
                   <div className="mt-3" hidden={stripePayment || bankPayment}>
-                    <Form.Group style={mediumBold}>
-                      <Form.Label>Amount</Form.Label>
-                      {purchaseUID.length === 1 ? (
-                        <Form.Control
-                          placeholder={amount}
-                          style={squareForm}
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                        />
-                      ) : (
-                        <Form.Control
-                          disabled
-                          placeholder={amount}
-                          style={squareForm}
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                        />
-                      )}
-                    </Form.Group>
-
                     <Form.Group style={mediumBold}>
                       <Form.Label>Message</Form.Label>
                       <Form.Control

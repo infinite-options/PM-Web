@@ -90,7 +90,7 @@ function ManagerProfile(props) {
     showSidebar: width > 1023,
   };
   const loadProfile = (profile) => {
-    console.log(profile);
+    // console.log(profile);
     setProfileInfo(profile);
     setCompanyName(profile.business_name);
     setFirstName(profile.employee_first_name);
@@ -137,7 +137,7 @@ function ManagerProfile(props) {
       );
       const business = business_response.result[0];
       setBusinessInfo(business);
-      console.log(business);
+      // console.log(business);
       const profile = { ...employee, ...business };
       // console.log(profile)
       loadProfile(profile);
@@ -147,9 +147,9 @@ function ManagerProfile(props) {
   useEffect(fetchProfileInfo, [access_token]);
 
   const saveProfile = async () => {
-    console.log(businessInfo.length);
+    // console.log(businessInfo.length);
     if (businessInfo.length === 0) {
-      console.log("in if");
+      // console.log("in if");
       const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
         paymentState;
       // const employee_info = {
@@ -189,7 +189,7 @@ function ManagerProfile(props) {
       setEditProfile(false);
       fetchProfileInfo();
     } else {
-      console.log("in else");
+      // console.log("in else");
       const { paypal, applePay, zelle, venmo, accountNumber, routingNumber } =
         paymentState;
       const employee_info = {

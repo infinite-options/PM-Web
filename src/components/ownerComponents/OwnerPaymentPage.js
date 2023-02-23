@@ -78,23 +78,17 @@ function OwnerPaymentPage(props) {
   const responsive = {
     showSidebar: width > 1023,
   };
-  // const submitForm = () => {
-  //   const requestTitle = requestTitleRef.current.value;
-  //   const requestDescription = requestDescriptionRef.current.value;
-  //   const tagPriority = tagPriorityRef.current.value;
-  //   props.onConfirm(requestTitle, requestDescription, tagPriority);
-  // };
 
-  // useEffect(async () => {
-  //   let tempAllPurchases = [];
-  //   for (let i in purchaseUIDs) {
-  //     let response1 = await get(`/purchases?purchase_uid=${purchaseUIDs[i]}`);
-  //     tempAllPurchases.push(response1.result[0]);
-  //   }
-  //   let response = await get(`/purchases?purchase_uid=${purchase_uid}`);
-  //   setPurchase(response.result[0]);
-  //   setAllPurchases(tempAllPurchases);
-  // }, []);
+  useEffect(async () => {
+    let tempAllPurchases = [];
+    let pids = purchaseUIDs;
+    for (let i = 0; i < pids.length; i++) {
+      let response1 = await get(`/purchases?purchase_uid=${pids[i]}`);
+      tempAllPurchases.push(response1.result[0]);
+    }
+
+    setAllPurchases(tempAllPurchases);
+  }, []);
   const submitPayment = async () => {
     setShowSpinner(true);
 
@@ -161,7 +155,7 @@ function OwnerPaymentPage(props) {
     cancel();
     setPaymentConfirm(true);
   };
-  console.log(totalSum);
+  // console.log(totalSum);
   return (
     <div className="w-100 overflow-hidden">
       <div className="flex-1">

@@ -457,7 +457,7 @@ function ManagerTenantListDetail(props) {
                 </Table>
               </Row>
             </div>
-            {console.log(selectedTenant)}
+
             <Row
               className="d-flex justify-content-center my-2"
               style={mediumBold}
@@ -646,7 +646,6 @@ function ManagerTenantListDetail(props) {
                   opacity: 1,
                 }}
               >
-                {console.log(selectedTenant.user_payments)}
                 <Row className="m-3">
                   <Table
                     responsive="md"

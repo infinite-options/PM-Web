@@ -73,7 +73,6 @@ function ManagerTenantProfileView(props) {
     const response = await put("/applications", request_body);
     back();
   };
-  console.log(application);
 
   return (
     <div className="mb-5 pb-5">

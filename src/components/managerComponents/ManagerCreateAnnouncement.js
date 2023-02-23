@@ -162,7 +162,7 @@ function ManagerCreateAnnouncement(props) {
         }
       }
     });
-    console.log(properties_unique);
+    // console.log(properties_unique);
     let tenant_info = [];
     let tenant_details = {
       tenant_id: "",
@@ -254,7 +254,7 @@ function ManagerCreateAnnouncement(props) {
       management_buid = management_businesses[0].business_uid;
     }
     setManagerID(management_buid);
-    console.log(newAnnouncement);
+    // console.log(newAnnouncement);
     let receiver_uid = [];
     let receiver_properties_id = [];
     if (byProperty) {
