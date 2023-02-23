@@ -233,10 +233,10 @@ export default function ManagerCashflow(props) {
 
     setIsLoading(false);
   };
-  console.log(revenue);
-  console.log(expense);
-  console.log(revenueSummary);
-  console.log(expenseSummary);
+  // console.log(revenue);
+  // console.log(expense);
+  // console.log(revenueSummary);
+  // console.log(expenseSummary);
 
   useEffect(() => {
     fetchCashflow();

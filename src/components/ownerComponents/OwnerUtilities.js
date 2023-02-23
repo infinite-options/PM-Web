@@ -476,7 +476,7 @@ function OwnerUtilities(props) {
               tenant_ids = r.tenant_id;
             }
           });
-          console.log(tenant_ids);
+          // console.log(tenant_ids);
           new_purchase.payer = [tenant_ids];
         } else {
           new_purchase.payer = [property.owner_id];
@@ -485,7 +485,7 @@ function OwnerUtilities(props) {
         new_purchase.payer = [property.owner_id];
       }
 
-      console.log("New Purchase", new_purchase);
+      // console.log("New Purchase", new_purchase);
       const response_t = await post("/purchases", new_purchase, null, null);
     }
 
@@ -587,7 +587,7 @@ function OwnerUtilities(props) {
       };
 
       const response_pm = await post("/purchases", new_purchase_pm, null, null);
-      console.log(response_pm);
+      // console.log(response_pm);
       purchase_uids.push(response_pm.purchase_uid);
     }
     purchase_uid = purchase_uids[0];
@@ -624,7 +624,7 @@ function OwnerUtilities(props) {
               tenant_ids = r.tenant_id;
             }
           });
-          console.log(tenant_ids);
+          // console.log(tenant_ids);
           new_purchase.payer = [tenant_ids];
         } else {
           new_purchase.payer = [property.owner_id];

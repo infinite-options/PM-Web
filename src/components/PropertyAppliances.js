@@ -276,7 +276,7 @@ function PropertyAppliances(props) {
     setApplianceWarrantyInfo("");
     setApplianceType("");
   };
-  console.log(property);
+  // console.log(property);
 
   return (
     <div style={({ padding: "0px" }, mediumBold)} className="my-4">

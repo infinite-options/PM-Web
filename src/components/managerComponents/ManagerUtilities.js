@@ -257,8 +257,8 @@ function ManagerUtilities(props) {
           property.rental_status === "ACTIVE" ||
           property.rental_status === "PROCESSING"
         ) {
-          console.log("here", property);
-          console.log("here", properties_unique[index].tenants);
+          // console.log("here", property);
+          // console.log("here", properties_unique[index].tenants);
           properties_unique[index].tenants.push(property);
         }
       } else {
@@ -555,7 +555,7 @@ function ManagerUtilities(props) {
     setUtilityState(newUtilityState);
     setNewUtility(null);
   };
-  console.log(allPurchases);
+  // console.log(allPurchases);
   const postChargesandPay = async (newUtility) => {
     const management_businesses = user.businesses.filter(
       (business) => business.business_type === "MANAGEMENT"
@@ -617,12 +617,12 @@ function ManagerUtilities(props) {
       };
 
       const response_pm = await post("/purchases", new_purchase_pm, null, null);
-      console.log(response_pm);
+      // console.log(response_pm);
       purchase_uids.push(response_pm.purchase_uid);
     }
     purchase_uid = purchase_uids[0];
     setPurchaseUIDs(purchase_uids);
-    console.log(purchase_uids);
+    // console.log(purchase_uids);
     for (const property of newUtility.properties) {
       const new_purchase = {
         linked_bill_id: bill_uid,

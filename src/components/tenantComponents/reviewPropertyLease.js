@@ -187,7 +187,7 @@ function ReviewPropertyLease(props) {
           property_uid: rentals[i].rental_property_id,
           message: "Lease extended",
         };
-        console.log("in extendlease", updateLease);
+        // console.log("in extendlease", updateLease);
         const response2 = await put("/extendLease", updateLease);
         navigate("/tenant");
       } else if (rentals.some((rental) => rental.rental_status === "ACTIVE")) {
@@ -199,7 +199,7 @@ function ReviewPropertyLease(props) {
           rental_status: "ACTIVE",
           rental_uid: rentals[i].rental_uid,
         };
-        console.log("in update activr lease", updateLease);
+        // console.log("in update activr lease", updateLease);
         const response2 = await put("/UpdateActiveLease", updateLease);
         navigate("/tenant");
       }
