@@ -543,11 +543,13 @@ function ManagerProfile(props) {
             <Row className="mb-4" style={headings}>
               <div>Fee Details</div>
             </Row>
-            <ManagerFees
-              feeState={feeState}
-              setFeeState={setFeeState}
-              editProfile={editProfile}
-            />
+            <Row className="mx-1">
+              <ManagerFees
+                feeState={feeState}
+                setFeeState={setFeeState}
+                editProfile={editProfile}
+              />
+            </Row>
           </div>
           <div
             className="mx-3 my-3"

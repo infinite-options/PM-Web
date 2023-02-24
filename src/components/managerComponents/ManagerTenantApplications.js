@@ -170,7 +170,7 @@ function ManagerTenantApplications(props) {
 
       {applications.length > 0 ? (
         <div>
-          <Row className="m-3 mb-4" style={{ overflow: "scroll" }}>
+          <Row className="mx-3 mb-4" style={{ overflow: "scroll" }}>
             <Table
               responsive="md"
               classes={{ root: classes.customTable }}

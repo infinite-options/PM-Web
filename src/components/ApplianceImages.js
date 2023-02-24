@@ -12,6 +12,7 @@ import {
   red,
   small,
   hidden,
+  semiMediumBold,
 } from "../utils/styles";
 
 function ApplianceImages(props) {
@@ -67,7 +68,7 @@ function ApplianceImages(props) {
 
   return (
     <Container>
-      <h6 style={mediumBold}>Upload Photos</h6>
+      <p style={semiMediumBold}>Upload Photos</p>
       <p style={{ ...xSmall, ...bold }} className="my-1">
         File size under 5MB
       </p>
