@@ -611,7 +611,7 @@ function ManagerTenantAgreementView(props) {
           <Row className="m-3">
             <h5 style={mediumBold}>Lease Documents</h5>
           </Row>
-          <div>
+          <div className="mx-3" style={{ overflow: "scroll" }}>
             <DocumentsUploadPut
               files={files}
               setFiles={setFiles}

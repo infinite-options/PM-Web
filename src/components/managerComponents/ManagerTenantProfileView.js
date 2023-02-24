@@ -755,248 +755,221 @@ function ManagerTenantProfileView(props) {
               opacity: 1,
             }}
           >
-            <Row className="m-3">
-              <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
-                <h5>Lease Details</h5>
-                <Table
-                  responsive="md"
-                  classes={{ root: classes.customTable }}
-                  size="small"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Lease Start</TableCell>
-                      <TableCell>Lease End</TableCell>
-                      <TableCell>Rent Due</TableCell>
-                      <TableCell>Adults</TableCell>
-                      <TableCell>Children</TableCell>
-                      <TableCell>Pets</TableCell>
-                      <TableCell>Vehicles</TableCell>
-                      <TableCell>References</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>{application.lease_start}</TableCell>
+            <Row className="m-3" style={{ hidden: "overflow" }}>
+              <h5>Lease Details</h5>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Lease Start</TableCell>
+                    <TableCell>Lease End</TableCell>
+                    <TableCell>Rent Due</TableCell>
+                    <TableCell>Adults</TableCell>
+                    <TableCell>Children</TableCell>
+                    <TableCell>Pets</TableCell>
+                    <TableCell>Vehicles</TableCell>
+                    <TableCell>References</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>{application.lease_start}</TableCell>
 
-                      <TableCell>{application.lease_end}</TableCell>
+                    <TableCell>{application.lease_end}</TableCell>
+
+                    <TableCell>
+                      {`${ordinal_suffix_of(application.due_by)} of the month`}
+                    </TableCell>
+
+                    {application.adults ? (
+                      <TableCell>
+                        {JSON.parse(application.adults).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell>0</TableCell>
+                    )}
+                    {application.children ? (
+                      <TableCell>
+                        {JSON.parse(application.children).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell>0</TableCell>
+                    )}
+
+                    {application.pets ? (
+                      <TableCell>
+                        {JSON.parse(application.pets).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell>0</TableCell>
+                    )}
+                    {application.vehicles ? (
+                      <TableCell>
+                        {JSON.parse(application.vehicles).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell>0</TableCell>
+                    )}
+                    {application.referred ? (
+                      <TableCell>
+                        {JSON.parse(application.referred).length}
+                      </TableCell>
+                    ) : (
+                      <TableCell>0</TableCell>
+                    )}
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Row>
+
+            <Row className="m-3" style={{ hidden: "overflow" }}>
+              <h5>Lease Payments</h5>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Fee Name</TableCell>
+                    <TableCell>Amount</TableCell>
+                    <TableCell>Of</TableCell>
+                    <TableCell>Frequency</TableCell>
+                    <TableCell>Available to Pay</TableCell>
+                    <TableCell>Due Date</TableCell>
+                    <TableCell>Late Fees After (days)</TableCell>
+                    <TableCell>Late Fee (one-time)</TableCell>
+                    <TableCell>Late Fee (per day)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {feeState.map((fee, i) => (
+                    <TableRow>
+                      <TableCell>{fee.fee_name}</TableCell>
 
                       <TableCell>
-                        {`${ordinal_suffix_of(
-                          application.due_by
-                        )} of the month`}
+                        {fee.fee_type === "%"
+                          ? `${fee.charge}%`
+                          : `$${fee.charge}`}
                       </TableCell>
 
-                      {application.adults ? (
-                        <TableCell>
-                          {JSON.parse(application.adults).length}
-                        </TableCell>
-                      ) : (
-                        <TableCell>0</TableCell>
-                      )}
-                      {application.children ? (
-                        <TableCell>
-                          {JSON.parse(application.children).length}
-                        </TableCell>
-                      ) : (
-                        <TableCell>0</TableCell>
-                      )}
+                      <TableCell>
+                        {fee.fee_type === "%" ? `${fee.of}` : ""}
+                      </TableCell>
 
-                      {application.pets ? (
-                        <TableCell>
-                          {JSON.parse(application.pets).length}
-                        </TableCell>
-                      ) : (
-                        <TableCell>0</TableCell>
-                      )}
-                      {application.vehicles ? (
-                        <TableCell>
-                          {JSON.parse(application.vehicles).length}
-                        </TableCell>
-                      ) : (
-                        <TableCell>0</TableCell>
-                      )}
-                      {application.referred ? (
-                        <TableCell>
-                          {JSON.parse(application.referred).length}
-                        </TableCell>
-                      ) : (
-                        <TableCell>0</TableCell>
-                      )}
+                      <TableCell>{fee.frequency}</TableCell>
+                      <TableCell>
+                        {`${fee.available_topay} days before`}
+                      </TableCell>
+                      <TableCell>
+                        {fee.frequency === "Weekly" ||
+                        fee.frequency === "Biweekly"
+                          ? fee.due_by === ""
+                            ? `1st day of the week`
+                            : `${ordinal_suffix_of(fee.due_by)} day of the week`
+                          : fee.due_by === ""
+                          ? `1st of the month`
+                          : `${ordinal_suffix_of(fee.due_by)} of the month`}
+                      </TableCell>
+                      <TableCell>{fee.late_by} days</TableCell>
+                      <TableCell>${fee.late_fee}</TableCell>
+                      <TableCell>${fee.perDay_late_fee}/day</TableCell>
                     </TableRow>
-                  </TableBody>
-                </Table>
-              </Row>
+                  ))}
+                </TableBody>
+              </Table>
+            </Row>
+
+            <Row className="m-3" hidden={contactState.length === 0}>
+              <h5 style={mediumBold}>Contact Details</h5>
+              <Table classes={{ root: classes.customTable }} size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Contact Name</TableCell>
+                    <TableCell>Role</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Phone Number</TableCell>
+
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {contactState.map((contact, i) => (
+                    <TableRow key={i}>
+                      <TableCell>
+                        {contact.first_name} {contact.last_name}
+                      </TableCell>
+                      <TableCell>{contact.company_role}</TableCell>
+                      <TableCell>{contact.email}</TableCell>
+                      <TableCell>{contact.phone_number}</TableCell>
+                      <TableCell>
+                        <a href={`tel:${contact.phone_number}`}>
+                          <img src={Phone} alt="Phone" style={smallImg} />
+                        </a>
+                        <a href={`mailto:${contact.email}`}>
+                          <img src={Message} alt="Message" style={smallImg} />
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Row>
 
             <Row className="m-3">
-              <Row className="mb-4 m-3" style={{ hidden: "overflow" }}>
-                <h5>Lease Payments</h5>
-                <Table
-                  responsive="md"
-                  classes={{ root: classes.customTable }}
-                  size="small"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Fee Name</TableCell>
-                      <TableCell>Amount</TableCell>
-                      <TableCell>Of</TableCell>
-                      <TableCell>Frequency</TableCell>
-                      <TableCell>Available to Pay</TableCell>
-                      <TableCell>Due Date</TableCell>
-                      <TableCell>Late Fees After (days)</TableCell>
-                      <TableCell>Late Fee (one-time)</TableCell>
-                      <TableCell>Late Fee (per day)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {feeState.map((fee, i) => (
+              <h5 style={mediumBold}>Lease Documents</h5>
+              <Table
+                responsive="md"
+                classes={{ root: classes.customTable }}
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Document Name</TableCell>
+                    <TableCell>View Document</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {files.map((file) => {
+                    return (
                       <TableRow>
-                        <TableCell>{fee.fee_name}</TableCell>
-
                         <TableCell>
-                          {fee.fee_type === "%"
-                            ? `${fee.charge}%`
-                            : `$${fee.charge}`}
-                        </TableCell>
-
-                        <TableCell>
-                          {fee.fee_type === "%" ? `${fee.of}` : ""}
-                        </TableCell>
-
-                        <TableCell>{fee.frequency}</TableCell>
-                        <TableCell>
-                          {`${fee.available_topay} days before`}
+                          {file.description == ""
+                            ? file.name
+                            : file.description}
                         </TableCell>
                         <TableCell>
-                          {fee.frequency === "Weekly" ||
-                          fee.frequency === "Biweekly"
-                            ? fee.due_by === ""
-                              ? `1st day of the week`
-                              : `${ordinal_suffix_of(
-                                  fee.due_by
-                                )} day of the week`
-                            : fee.due_by === ""
-                            ? `1st of the month`
-                            : `${ordinal_suffix_of(fee.due_by)} of the month`}
-                        </TableCell>
-                        <TableCell>{fee.late_by} days</TableCell>
-                        <TableCell>${fee.late_fee}</TableCell>
-                        <TableCell>${fee.perDay_late_fee}/day</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Row>
-            </Row>
-
-            <Row className="m-3">
-              <Row className="mb-4 m-3" hidden={contactState.length === 0}>
-                <h5 style={mediumBold}>Contact Details</h5>
-                <Table classes={{ root: classes.customTable }} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Contact Name</TableCell>
-                      <TableCell>Role</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Phone Number</TableCell>
-
-                      <TableCell>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {contactState.map((contact, i) => (
-                      <TableRow key={i}>
-                        <TableCell>
-                          {contact.first_name} {contact.last_name}
-                        </TableCell>
-                        <TableCell>{contact.company_role}</TableCell>
-                        <TableCell>{contact.email}</TableCell>
-                        <TableCell>{contact.phone_number}</TableCell>
-                        <TableCell>
-                          <a href={`tel:${contact.phone_number}`}>
-                            <img src={Phone} alt="Phone" style={smallImg} />
-                          </a>
-                          <a href={`mailto:${contact.email}`}>
-                            <img src={Message} alt="Message" style={smallImg} />
+                          <a href={file.link} target="_blank" rel="noreferrer">
+                            <img
+                              src={File}
+                              alt="open document"
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                              }}
+                            />
                           </a>
                         </TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Row>
-            </Row>
-
-            <Row className="m-3">
-              <Row className="m-3">
-                <h5 style={mediumBold}>Lease Documents</h5>
-                <Table
-                  responsive="md"
-                  classes={{ root: classes.customTable }}
-                  size="small"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Document Name</TableCell>
-                      <TableCell>View Document</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {files.map((file) => {
-                      return (
-                        <TableRow>
-                          <TableCell>
-                            {file.description == ""
-                              ? file.name
-                              : file.description}
-                          </TableCell>
-                          <TableCell>
-                            <a
-                              href={file.link}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <img
-                                src={File}
-                                alt="open document"
-                                style={{
-                                  width: "15px",
-                                  height: "15px",
-                                }}
-                              />
-                            </a>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </Row>
+                    );
+                  })}
+                </TableBody>
+              </Table>
             </Row>
           </div>
         ) : (
           <div
+            className="mx-3 p-2"
             style={{
-              background: "#FFFFFF 0% 0% no-repeat padding-box",
-              boxShadow: "0px 3px 6px #00000029",
-              border: "0.5px solid #707070",
-              borderRadius: "5px",
-              maxHeight: "500px",
-              overflow: "scroll",
+              background: "#E9E9E9 0% 0% no-repeat padding-box",
+              borderRadius: "10px 10px 0px 0px",
+              opacity: 1,
             }}
           >
-            <div
-              className="my-3 p-2"
-              style={{
-                boxShadow: " 0px 1px 6px #00000029",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              No lease created yet
-            </div>
+            <div>No lease created yet</div>
           </div>
         )}
       </div>
@@ -1005,6 +978,9 @@ function ManagerTenantProfileView(props) {
         className="mt-4 "
         style={
           application.application_status === "FORWARDED" ||
+          application.application_status === "RENTED" ||
+          application.application_status === "LEASE EXTENSION" ||
+          application.application_status === "TENANT LEASE EXTENSION" ||
           application.application_status === "REJECTED" ||
           application.application_status === "REFUSED"
             ? hidden
@@ -1023,7 +999,18 @@ function ManagerTenantProfileView(props) {
           </Button>
         </Col>
       </Row>
-      <Row style={application.application_status !== "FORWARDED" ? hidden : {}}>
+      <Row
+        style={
+          application.application_status === "FORWARDED" ||
+          application.application_status === "RENTED" ||
+          application.application_status === "LEASE EXTENSION" ||
+          application.application_status === "TENANT LEASE EXTENSION" ||
+          application.application_status === "REJECTED" ||
+          application.application_status === "REFUSED"
+            ? hidden
+            : {}
+        }
+      >
         <Col className="d-flex justify-content-evenly">
           <Button style={redPillButton} onClick={rejectApplication}>
             Reject Application

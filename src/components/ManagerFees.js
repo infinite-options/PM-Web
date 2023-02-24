@@ -92,7 +92,7 @@ function ManagerFees(props) {
   return (
     <div>
       {editProfile ? (
-        <div className="mx-3">
+        <div>
           <Table classes={{ root: classes.customTable }} size="small">
             <TableHead>
               <TableRow>
@@ -280,7 +280,7 @@ function ManagerFees(props) {
           )}
         </div>
       ) : (
-        <div className="mx-3">
+        <div>
           <Table classes={{ root: classes.customTable }} size="small">
             <TableHead>
               <TableRow>

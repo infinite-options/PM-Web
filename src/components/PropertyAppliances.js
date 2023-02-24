@@ -323,7 +323,10 @@ function PropertyAppliances(props) {
           )}
         </Col> */}
       </Row>
-      <Row className="d-flex justify-content-center align-items-center overflow-scroll p-3">
+      <Row
+        className="d-flex justify-content-center align-items-center m-3"
+        style={{ overflow: "scroll" }}
+      >
         <Table
           classes={{ root: classes.customTable }}
           responsive="md"

@@ -580,9 +580,18 @@ function ReviewPropertyLease(props) {
                         <TableCell>Lease Start</TableCell>
                         <TableCell>Lease End</TableCell>
                         <TableCell>Rent Due</TableCell>
-                        <TableCell>Late Fees After (days)</TableCell>
-                        <TableCell>Late Fee (one-time)</TableCell>
-                        <TableCell>Late Fee (per day)</TableCell>
+                        <TableCell>
+                          Late Fees After <br />
+                          (days)
+                        </TableCell>
+                        <TableCell>
+                          Late Fee <br />
+                          (one-time)
+                        </TableCell>
+                        <TableCell>
+                          Late Fee <br />
+                          (per day)
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -905,9 +914,18 @@ function ReviewPropertyLease(props) {
                         <TableCell>Lease Start</TableCell>
                         <TableCell>Lease End</TableCell>
                         <TableCell>Rent Due</TableCell>
-                        <TableCell>Late Fees After (days)</TableCell>
-                        <TableCell>Late Fee (one-time)</TableCell>
-                        <TableCell>Late Fee (per day)</TableCell>
+                        <TableCell>
+                          Late Fees After
+                          <br /> (days)
+                        </TableCell>
+                        <TableCell>
+                          Late Fee
+                          <br /> (one-time)
+                        </TableCell>
+                        <TableCell>
+                          Late Fee
+                          <br /> (per day)
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -1505,9 +1523,18 @@ function ReviewPropertyLease(props) {
                         <TableCell>Lease Start</TableCell>
                         <TableCell>Lease End</TableCell>
                         <TableCell>Rent Due</TableCell>
-                        <TableCell>Late Fees After (days)</TableCell>
-                        <TableCell>Late Fee (one-time)</TableCell>
-                        <TableCell>Late Fee (per day)</TableCell>
+                        <TableCell>
+                          Late Fees After <br />
+                          (days)
+                        </TableCell>
+                        <TableCell>
+                          Late Fee <br />
+                          (one-time)
+                        </TableCell>
+                        <TableCell>
+                          Late Fee <br />
+                          (per day)
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

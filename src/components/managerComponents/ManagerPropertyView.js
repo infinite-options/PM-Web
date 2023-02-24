@@ -1313,7 +1313,7 @@ function ManagerPropertyView(props) {
                                 )}
                               </TableRow>
                             ) : (
-                              ""
+                              <TableRow>Add Appliance Information</TableRow>
                             );
                           })}
                         </TableBody>
@@ -1449,7 +1449,7 @@ function ManagerPropertyView(props) {
                     opacity: 1,
                   }}
                 >
-                  <Row>
+                  <div className="mx-3">
                     <ManagerTenantApplications
                       property={property}
                       reload={reloadProperty}
@@ -1457,7 +1457,7 @@ function ManagerPropertyView(props) {
                       selectTenantApplication={selectTenantApplication}
                       selectedTenantApplication={selectedTenantApplication}
                     />
-                  </Row>
+                  </div>
                 </div>
 
                 <div
