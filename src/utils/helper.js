@@ -62,10 +62,16 @@ function formatEIN(value) {
   }
   return `${ein.slice(0, 2)}-${ein.slice(2, 9)}`;
 }
+const days = (date_1, date_2) => {
+  let difference = date_2.getTime() - date_1.getTime();
+  let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+  return TotalDays;
+};
 export {
   MaskCharacter,
   ordinal_suffix_of,
   formatPhoneNumber,
   formatSSN,
   formatEIN,
+  days,
 };

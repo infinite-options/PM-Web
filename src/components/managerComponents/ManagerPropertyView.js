@@ -1222,6 +1222,7 @@ function ManagerPropertyView(props) {
                           </TableRow>
                         </TableHead>
                         {/* {console.log("appliances", appliances, applianceState)} */}
+
                         <TableBody>
                           {appliances.map((appliance, i) => {
                             return applianceState[0][appliance]["available"] ==
@@ -1313,11 +1314,20 @@ function ManagerPropertyView(props) {
                                 )}
                               </TableRow>
                             ) : (
-                              <TableRow>Add Appliance Information</TableRow>
+                              ""
                             );
                           })}
                         </TableBody>
                       </Table>
+                      {appliances.filter(
+                        (appliance, i) =>
+                          applianceState[0][appliance]["available"] == true ||
+                          applianceState[0][appliance]["available"] == "True"
+                      ) ? (
+                        <Row className="m-3">Add Appliance Information</Row>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </Row>
                 </div>
