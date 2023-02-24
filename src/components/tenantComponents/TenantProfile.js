@@ -545,8 +545,8 @@ function TenantProfile(props) {
     setChildren(fields);
   }
   function addChildren() {
-    return children.map((child, idx) => (
-      <div>
+    return (
+      <div className="my-2">
         <Table
           responsive="md"
           classes={{ root: classes.customTable }}
@@ -617,7 +617,7 @@ function TenantProfile(props) {
           </TableBody>
         </Table>
       </div>
-    ));
+    );
   }
   function handleChangeChildren(i, event) {
     const fields = [...children];
