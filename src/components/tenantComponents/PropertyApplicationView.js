@@ -123,11 +123,12 @@ function PropertyApplicationView(props) {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
-      breakpoint: { max: 3000, min: 1920 },
+      breakpoint: { max: 3000, min: 1560 },
       items: 5,
     },
+
     desktop: {
-      breakpoint: { max: 1920, min: 1024 },
+      breakpoint: { max: 1560, min: 1024 },
       items: 4,
     },
     tablet: {
@@ -215,18 +216,53 @@ function PropertyApplicationView(props) {
               </p>
             </div>
           )}
-          <div className="m-0 p-0">
-            {property && JSON.parse(property.images).length > 0 ? (
-              <Row className=" d-flex align-items-center justify-content-center m-3">
-                <Carousel
-                  responsive={responsive}
-                  infinite={true}
-                  arrows={true}
-                  // className=" d-flex align-items-center justify-content-center"
-                >
-                  {JSON.parse(property.images).map((imagesGroup) => {
-                    return (
-                      // <div className="d-flex align-items-center justify-content-center">
+
+          <Row className=" d-flex align-items-center justify-content-center m-3">
+            {property && JSON.parse(property.images).length === 0 ? (
+              <img
+                src={PropertyIcon}
+                alt="Property"
+                style={{
+                  width: "200px",
+                  height: "200px",
+                  objectFit: "cover",
+                }}
+              />
+            ) : property && JSON.parse(property.images).length > 4 ? (
+              <Carousel
+                responsive={responsive}
+                infinite={true}
+                arrows={true}
+                partialVisible={false}
+                // className=" d-flex align-items-center justify-content-center"
+              >
+                {JSON.parse(property.images).map((imagesGroup) => {
+                  return (
+                    // <div className="d-flex align-items-center justify-content-center">
+                    <img
+                      key={Date.now()}
+                      src={`${imagesGroup}?${Date.now()}`}
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                        objectFit: "cover",
+                      }}
+                    />
+                    // </div>
+                  );
+                })}
+              </Carousel>
+            ) : property && JSON.parse(property.images).length < 4 ? (
+              <Carousel
+                responsive={responsive}
+                infinite={true}
+                arrows={true}
+                partialVisible={false}
+                className=" d-flex align-items-center justify-content-center"
+              >
+                {JSON.parse(property.images).map((imagesGroup) => {
+                  return (
+                    <div className="d-flex align-items-center justify-content-center">
                       <img
                         key={Date.now()}
                         src={`${imagesGroup}?${Date.now()}`}
@@ -236,15 +272,14 @@ function PropertyApplicationView(props) {
                           objectFit: "cover",
                         }}
                       />
-                      // </div>
-                    );
-                  })}
-                </Carousel>
-              </Row>
+                    </div>
+                  );
+                })}
+              </Carousel>
             ) : (
               ""
             )}
-          </div>
+          </Row>
 
           {property ? (
             <div
