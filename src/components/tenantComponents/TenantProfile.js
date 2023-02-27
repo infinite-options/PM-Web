@@ -1222,7 +1222,7 @@ function TenantProfile(props) {
                 <Row className="mb-2" style={headings}>
                   <div>Personal Details</div>
                 </Row>
-                <Row className="mx-3">
+                <Row className="mx-3" style={{ overflow: "scroll" }}>
                   <Table
                     classes={{ root: classes.customTable }}
                     size="small"
@@ -1270,7 +1270,7 @@ function TenantProfile(props) {
                 <Row className="mb-2" style={headings}>
                   <div>Identification Details</div>
                 </Row>
-                <Row className="mx-3">
+                <Row className="mx-3" style={{ overflow: "scroll" }}>
                   <Table
                     classes={{ root: classes.customTable }}
                     size="small"
@@ -1313,7 +1313,7 @@ function TenantProfile(props) {
                 <Row className="mb-2" style={headings}>
                   <div>Current Job Details</div>
                 </Row>
-                <Row className="mx-3">
+                <Row className="mx-3" style={{ overflow: "scroll" }}>
                   <Table
                     classes={{ root: classes.customTable }}
                     size="small"
@@ -1589,7 +1589,7 @@ function TenantProfile(props) {
               </Row>
               <div>
                 {adults && Object.values(adults).length > 0 ? (
-                  <div className="mx-3 ">
+                  <div className="mx-3 " style={{ overflow: "scroll" }}>
                     <Row style={subHeading}>Adults</Row>
                     <Table
                       responsive="md"
@@ -1619,13 +1619,15 @@ function TenantProfile(props) {
                 ) : (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Adults</Row>
-                    <Row style={gray}>None</Row>
+                    <Row style={gray} className="mx-3 ">
+                      None
+                    </Row>
                   </div>
                 )}
               </div>
               <div>
                 {children && Object.values(children).length > 0 ? (
-                  <div className="mx-3 ">
+                  <div className="mx-3 " style={{ overflow: "scroll" }}>
                     <Row style={subHeading}>Children</Row>
                     <Table
                       responsive="md"
@@ -1655,13 +1657,15 @@ function TenantProfile(props) {
                 ) : (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Children</Row>
-                    <Row style={gray}>None</Row>
+                    <Row style={gray} className="mx-3 ">
+                      None
+                    </Row>
                   </div>
                 )}
               </div>
               <div>
                 {pets && Object.values(pets).length > 0 ? (
-                  <div className="mx-3 ">
+                  <div className="mx-3 " style={{ overflow: "scroll" }}>
                     <Row style={subHeading}>Pets</Row>
                     <Table
                       responsive="md"
@@ -1695,13 +1699,15 @@ function TenantProfile(props) {
                 ) : (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Pets</Row>
-                    <Row style={gray}>None</Row>
+                    <Row style={gray} className="mx-3 ">
+                      None
+                    </Row>
                   </div>
                 )}
               </div>
               <div>
                 {vehicles && Object.values(vehicles).length > 0 ? (
-                  <div className="mx-3 ">
+                  <div className="mx-3 " style={{ overflow: "scroll" }}>
                     <Row style={subHeading}>Vehicles</Row>
                     <Table
                       responsive="md"
@@ -1735,13 +1741,15 @@ function TenantProfile(props) {
                 ) : (
                   <div className="mx-3 ">
                     <Row style={subHeading}>Vehicles</Row>
-                    <Row style={gray}>None</Row>
+                    <Row style={gray} className="mx-3 ">
+                      None
+                    </Row>
                   </div>
                 )}
               </div>
               <div>
                 {references && Object.values(references).length > 0 ? (
-                  <div className="mx-3 ">
+                  <div className="mx-3 " style={{ overflow: "scroll" }}>
                     <Row style={subHeading}>References</Row>
                     <Table
                       responsive="md"
@@ -1775,7 +1783,9 @@ function TenantProfile(props) {
                 ) : (
                   <div className="mx-3 ">
                     <Row style={subHeading}>References</Row>
-                    <Row style={gray}>None</Row>
+                    <Row style={gray} className="mx-3 ">
+                      None
+                    </Row>
                   </div>
                 )}
               </div>

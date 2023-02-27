@@ -859,7 +859,7 @@ function TenantPropertyView(props) {
                     />
                   </Col>
                 </Row>
-                <Row className="m-3">
+                <Row className="m-3" style={{ overflow: "scroll" }}>
                   {property.maintenanceRequests.length > 0 ? (
                     <Table
                       classes={{ root: classes.customTable }}
@@ -1023,7 +1023,7 @@ function TenantPropertyView(props) {
                   </Col>
                   <Col></Col>
                 </Row>
-                <Row className="m-3">
+                <Row className="m-3" style={{ overflow: "scroll" }}>
                   <Table
                     responsive="md"
                     classes={{ root: classes.customTable }}
@@ -1552,62 +1552,19 @@ function TenantPropertyView(props) {
                           </TableBody>
                         </Table>
                       </Row>
-                      <Row className="m-3" hidden={files.length === 0}>
+                      <Row className="m-3">
                         <h5 style={mediumBold}>Lease Documents</h5>
-                        <div>
-                          <DocumentsUploadPut
-                            files={files}
-                            setFiles={setFiles}
-                            addDoc={addDoc}
-                            setAddDoc={setAddDoc}
-                            endpoint="/rentals"
-                            editingDoc={editingDoc}
-                            setEditingDoc={setEditingDoc}
-                            id={selectedAgreement.rental_uid}
-                          />
-                        </div>
-                        {/* <Table
-                          responsive="md"
-                          classes={{ root: classes.customTable }}
-                          size="small"
-                        >
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Document Name</TableCell>
-                              <TableCell>View Document</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {files.map((file) => {
-                              return (
-                                <TableRow>
-                                  <TableCell>
-                                    {file.description == ""
-                                      ? file.name
-                                      : file.description}
-                                  </TableCell>
-                                  <TableCell>
-                                    <a
-                                      href={file.link}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                    >
-                                      <img
-                                        src={File}
-                                        alt="open document"
-                                        style={{
-                                          width: "15px",
-                                          height: "15px",
-                                        }}
-                                      />
-                                    </a>
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            })}
-                          </TableBody>
-                        </Table> */}
                       </Row>
+                      <DocumentsUploadPut
+                        files={files}
+                        setFiles={setFiles}
+                        addDoc={addDoc}
+                        setAddDoc={setAddDoc}
+                        endpoint="/rentals"
+                        editingDoc={editingDoc}
+                        setEditingDoc={setEditingDoc}
+                        id={selectedAgreement.rental_uid}
+                      />
                       {selectedAgreement.application_status === "REFUSED" ||
                       selectedAgreement.application_status === "REJECTED" ||
                       selectedAgreement.application_status === "ENDED" ? (

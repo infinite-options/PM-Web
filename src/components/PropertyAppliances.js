@@ -15,6 +15,7 @@ import ApplianceImages from "./ApplianceImages";
 import ConfirmDialog from "../components/ConfirmDialog";
 import AddIcon from "../icons/AddIcon.svg";
 import MinusIcon from "../icons/MinusIcon.svg";
+import DeleteIcon from "../icons/DeleteIcon.svg";
 import { squareForm, pillButton, mediumBold } from "../utils/styles";
 import { get, put } from "../utils/api";
 const useStyles = makeStyles({
@@ -306,10 +307,12 @@ function PropertyAppliances(props) {
             Appliances
           </h6>
         </Col>
-        {/* <Col>
+
+        <Col>
           {newAppliance === null && edit ? (
             <img
-              src={AddIcon} alt="Add Icon"
+              src={AddIcon}
+              alt="Add Icon"
               onClick={() => setNewAppliance("")}
               style={{
                 width: "15px",
@@ -321,7 +324,7 @@ function PropertyAppliances(props) {
           ) : (
             ""
           )}
-        </Col> */}
+        </Col>
       </Row>
       <Row
         className="d-flex justify-content-center align-items-center m-3"
@@ -625,7 +628,7 @@ function PropertyAppliances(props) {
                   {!og_appliances.includes(appliance) ? (
                     <TableCell>
                       <img
-                        src={MinusIcon}
+                        src={DeleteIcon}
                         onClick={() => {
                           setShowDialog(true);
                           setApplianceRem(appliance);
@@ -1046,25 +1049,7 @@ function PropertyAppliances(props) {
           </Row>
         ))} */}
       </Row>
-      <Row className="d-flex justify-content-center align-items-center">
-        <Col>
-          {newAppliance === null && edit ? (
-            <img
-              src={AddIcon}
-              alt="Add Icon"
-              onClick={() => setNewAppliance("")}
-              style={{
-                width: "15px",
-                height: "15px",
-                float: "left",
-                marginRight: "5rem",
-              }}
-            />
-          ) : (
-            ""
-          )}
-        </Col>
-      </Row>
+
       <Row className="d-flex flex-column justify-content-left overflow-scroll"></Row>
     </div>
   );

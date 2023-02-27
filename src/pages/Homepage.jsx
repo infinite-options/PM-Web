@@ -21,6 +21,7 @@ function Homepage() {
   const { userData } = React.useContext(AppContext);
   React.useEffect(() => {
     if (userData.access_token !== null) {
+      window.scrollTo(0, 0);
       login();
     }
   }, []);

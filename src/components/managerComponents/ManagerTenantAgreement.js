@@ -773,9 +773,7 @@ function ManagerTenantAgreement(props) {
                             })}
                           </Table>
                         ) : (
-                          <TableBody className="mx-3 ">
-                            <TableRow style={subHeading}>None</TableRow>
-                          </TableBody>
+                          <Row className="mx-3 ">None</Row>
                         )}
                       </Form.Group>
                     </Col>
@@ -815,9 +813,7 @@ function ManagerTenantAgreement(props) {
                             })}
                           </Table>
                         ) : (
-                          <TableBody className="mx-3 ">
-                            <TableRow style={subHeading}>None</TableRow>
-                          </TableBody>
+                          <Row className="mx-3 ">None</Row>
                         )}
                       </Form.Group>
                     </Col>
@@ -858,9 +854,7 @@ function ManagerTenantAgreement(props) {
                             })}
                           </Table>
                         ) : (
-                          <TableBody className="mx-3 ">
-                            <TableRow style={subHeading}>None</TableRow>
-                          </TableBody>
+                          <Row className="mx-3 ">None</Row>
                         )}
                       </Form.Group>
                     </Col>
@@ -904,9 +898,7 @@ function ManagerTenantAgreement(props) {
                             })}
                           </Table>
                         ) : (
-                          <TableBody className="mx-3 ">
-                            <TableRow style={subHeading}>None</TableRow>
-                          </TableBody>
+                          <Row className="mx-3 ">None</Row>
                         )}
                       </Form.Group>
                     </Col>
@@ -953,9 +945,7 @@ function ManagerTenantAgreement(props) {
                             )}
                           </Table>
                         ) : (
-                          <TableBody className="mx-3 ">
-                            <TableRow style={subHeading}>None</TableRow>
-                          </TableBody>
+                          <Row className="mx-3 ">None</Row>
                         )}
                       </Form.Group>
                     </Col>
@@ -1018,7 +1008,8 @@ function ManagerTenantAgreement(props) {
               <Row>
                 <Col>
                   <Form.Label as="h6" className="mb-0 ms-2">
-                    Rent Available to pay(days before due)
+                    Rent Available to Pay(days before due){" "}
+                    {available === "" ? required : ""}
                   </Form.Label>
                 </Col>
                 <Col>

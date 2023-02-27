@@ -98,7 +98,7 @@ export default function ManagerPaymentHistory(props) {
     {
       id: "linked_bill_id",
       numeric: true,
-      label: "Split Payment",
+      label: "Split",
     },
 
     {
@@ -131,7 +131,7 @@ export default function ManagerPaymentHistory(props) {
           {paymentsOutgoingHeadCell.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align="right"
+              align="center"
               size="small"
               sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -229,7 +229,7 @@ export default function ManagerPaymentHistory(props) {
     {
       id: "linked_bill_id",
       numeric: true,
-      label: "Split Payment",
+      label: "Split",
     },
 
     {
@@ -262,7 +262,7 @@ export default function ManagerPaymentHistory(props) {
           {paymentsIncomingHeadCell.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align="right"
+              align="center"
               size="small"
               sortDirection={
                 orderIncomingBy === headCell.id ? orderIncoming : false
@@ -332,8 +332,7 @@ export default function ManagerPaymentHistory(props) {
         }}
       >
         <Row className="m-3" style={subHeading}>
-          {" "}
-          Outgoing Payments
+          <h5> Outgoing Payments</h5>
         </Row>
         <Row className="m-3" style={{ overflow: "scroll" }}>
           <Table
@@ -354,8 +353,8 @@ export default function ManagerPaymentHistory(props) {
                     row.receiver !== managerID &&
                     row.amount_paid > 0 ? (
                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      <TableCell align="right">{row.purchase_uid}</TableCell>
-                      <TableCell align="right" style={{ width: "300px" }}>
+                      <TableCell align="left">{row.purchase_uid}</TableCell>
+                      <TableCell align="left">
                         {row.address +
                           " " +
                           row.unit +
@@ -373,15 +372,13 @@ export default function ManagerPaymentHistory(props) {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell align="right"> {row.receiver}</TableCell>
-                      <TableCell align="right" style={{ width: "200px" }}>
-                        {row.description}
-                      </TableCell>
+                      <TableCell align="left"> {row.receiver}</TableCell>
+                      <TableCell align="left">{row.description}</TableCell>
                       <TableCell align="right">{row.purchase_type}</TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">
                         {row.linked_bill_id === null ? "No" : "Yes"}
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">
                         {row.payment_date !== null
                           ? row.payment_date.substring(0, 10)
                           : "Not Available"}
@@ -417,8 +414,7 @@ export default function ManagerPaymentHistory(props) {
         }}
       >
         <Row className="m-3" style={subHeading}>
-          {" "}
-          Incoming Payments
+          <h5> Incoming Payments</h5>
         </Row>
         <Row className="m-3" style={{ overflow: "scroll" }}>
           <Table
@@ -444,8 +440,8 @@ export default function ManagerPaymentHistory(props) {
                     row.receiver !== managerID &&
                     row.amount_paid < 0) ? (
                   <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    <TableCell align="right">{row.purchase_uid}</TableCell>
-                    <TableCell align="right" style={{ width: "300px" }}>
+                    <TableCell align="left">{row.purchase_uid}</TableCell>
+                    <TableCell align="left">
                       {row.address +
                         " " +
                         row.unit +
@@ -464,15 +460,13 @@ export default function ManagerPaymentHistory(props) {
                       </div>
                     </TableCell>
 
-                    <TableCell align="right"> {row.payer}</TableCell>
-                    <TableCell align="right" style={{ width: "200px" }}>
-                      {row.description}
-                    </TableCell>
+                    <TableCell align="left"> {row.payer}</TableCell>
+                    <TableCell align="left">{row.description}</TableCell>
                     <TableCell align="right">{row.purchase_type}</TableCell>
-                    <TableCell align="right">
+                    <TableCell align="center">
                       {row.linked_bill_id === null ? "No" : "Yes"}
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell align="center">
                       {row.payment_date !== null
                         ? row.payment_date.substring(0, 10)
                         : "Not Available"}

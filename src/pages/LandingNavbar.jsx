@@ -64,6 +64,7 @@ function LandingNavbar() {
   };
   React.useEffect(() => {
     if (availableRoles.length === 1) {
+      window.scrollTo(0, 0);
       navigateToRole(availableRoles[0]);
     }
   }, []);

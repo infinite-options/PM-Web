@@ -8,6 +8,7 @@ import {
   TableCell,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import * as ReactBootStrap from "react-bootstrap";
 import AppContext from "../../AppContext";
 import Checkbox from "../Checkbox";
 import ConfirmDialog from "../ConfirmDialog";
@@ -38,9 +39,9 @@ function ManagerTenantApplications(props) {
   const [showDialog, setShowDialog] = useState(false);
   const [newApplications, setNewApplications] = useState([]);
   // const [selectedApplications, setSelectedApplications] = useState([])
-  const [forwardedApplications, setForwardedApplications] = useState([]);
-  const [rejectedApplications, setRejectedApplications] = useState([]);
-
+  // const [forwardedApplications, setForwardedApplications] = useState([]);
+  // const [rejectedApplications, setRejectedApplications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const fetchApplications = async () => {
     if (access_token === null) {
       return;
@@ -73,12 +74,13 @@ function ManagerTenantApplications(props) {
     setNewApplications(
       applications.filter((a) => a.application_status === "NEW")
     );
-    setForwardedApplications(
-      applications.filter((a) => a.application_status === "FORWARDED")
-    );
-    setRejectedApplications(
-      applications.filter((a) => a.application_status === "REJECTED")
-    );
+    setIsLoading(false);
+    // setForwardedApplications(
+    //   applications.filter((a) => a.application_status === "FORWARDED")
+    // );
+    // setRejectedApplications(
+    //   applications.filter((a) => a.application_status === "REJECTED")
+    // );
   };
 
   useEffect(fetchApplications, [property]);
@@ -395,8 +397,10 @@ function ManagerTenantApplications(props) {
             </Row>
           )}
         </div>
-      ) : (
+      ) : !isLoading ? (
         <Row className="mx-5">No New Applications</Row>
+      ) : (
+        <ReactBootStrap.Spinner animation="border" role="status" />
       )}
     </div>
   );

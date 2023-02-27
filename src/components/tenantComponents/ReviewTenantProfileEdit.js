@@ -896,7 +896,7 @@ function ReviewTenantProfileEdit(props) {
           {/* =======================================Application Message================================================ */}
           <Row className="m-3">
             <Form.Group className="mx-2 my-3">
-              <Form.Label as="h6" className="mb-0 ms-2">
+              <Form.Label as="h6" className="mb-2 ms-2">
                 Application Message
               </Form.Label>
               <Form.Control

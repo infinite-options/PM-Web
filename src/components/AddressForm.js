@@ -571,7 +571,7 @@ function AddressForm(props) {
         </div>
       ) : (
         <div className="my-2">
-          <Row className="mx-3">
+          <Row className="mx-3" style={{ overflow: "scroll" }}>
             <Table
               classes={{ root: classes.customTable }}
               size="small"
@@ -612,7 +612,7 @@ function AddressForm(props) {
             <Row className="my-2" style={headings}>
               <div>Additional details</div>
             </Row>
-            <Row className="mx-3">
+            <Row className="mx-3" style={{ overflow: "scroll" }}>
               {" "}
               <Table
                 classes={{ root: classes.customTable }}
